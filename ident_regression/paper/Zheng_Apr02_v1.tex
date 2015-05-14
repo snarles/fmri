@@ -1,0 +1,751 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Beamer Presentation
+% LaTeX Template
+% Version 1.0 (10/11/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass{beamer}
+
+\mode<presentation> {
+
+% The Beamer class comes with a number of default slide themes
+% which change the colors and layouts of slides. Below this is a list
+% of all the themes, uncomment each in turn to see what they look like.
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+% As well as themes, the Beamer class has a number of color themes
+% for any slide theme. Uncomment each of these in turn to see how it
+% changes the colors of your current slide theme.
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{multirow}
+\newcommand{\xmark}{\textcolor{red}{\text{\sffamily X}}}
+\newcommand{\cmark}{\textcolor{green}{\checkmark}}
+\newcommand{\tr}{\text{tr}}
+\newcommand{\E}{\textbf{E}}
+\newcommand{\diag}{\text{diag}}
+\newcommand{\argmax}{\text{argmax}}
+\newcommand{\argmin}{\text{argmin}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Vol}{\text{Vol}}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+
+\title[Group talk]{A functional MRI mind-reading game}
+
+\author{Charles Zheng and Yuval Benjamini} % Your name
+\institute[Stanford] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+{Stanford University}
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+
+\begin{frame}
+\titlepage % Print the title page as the first slide
+\end{frame}
+
+\section{Introduction}
+
+\begin{frame}
+\frametitle{Functional MRI}
+\begin{center}
+\begin{tabular}{ccc}
+\hline
+Stimuli & & Response\\ \hline
+\includegraphics[scale = .52]{img1.png} & \hspace{1in} & \includegraphics[scale = 0.07]{brain1.png} \\ \hline
+\includegraphics[scale = .52]{img2.png} & \hspace{1in} & \includegraphics[scale = 0.07]{brain2.png} \\ \hline
+\hspace{1in} & \hspace{1in} & \hspace{1in}
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Functional MRI}
+\begin{center}
+\begin{tabular}{ccc}
+\hline
+Stimuli $x$ & & Response $y$\\ \hline
+$\begin{pmatrix}1.0 \\ 0 \\ 3.0 \\ 0\\ -1.2\end{pmatrix}$ & \hspace{1in} & $\begin{pmatrix}1.2 \\ 0 \\ -1.8\\ -1.2\end{pmatrix}$ \\ \hline
+$\begin{pmatrix}0 \\ -2.2 \\ -3.1 \\ 4.5\\ 0\end{pmatrix}$ & \hspace{1in} & $\begin{pmatrix}-1.2 \\ -1.9\\ 0.5\\ 0.6\end{pmatrix}$ \\ \hline
+\hspace{1in} & \hspace{1in} & \hspace{1in}
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Encoding vs Decoding}
+\begin{itemize}
+\item Encoding: predict $y$ from $x$.
+\item Decoding: reconstruct $x$ from $y$ (mind-reading).
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{A mind-reading game: Classification}
+\begin{center}
+Training Data
+\\
+\begin{tabular}{ccc||ccc}
+\hline
+\includegraphics[scale = .26]{img1.png} & \hspace{0.2in} & \includegraphics[scale = 0.035]{brain1.png} &
+\includegraphics[scale = .26]{img3.png} & \hspace{0.2in} & \includegraphics[scale = 0.035]{brain3.png} \\ \hline
+\includegraphics[scale = .26]{img2.png} & \hspace{0.2in} & \includegraphics[scale = 0.035]{brain2.png} &
+\includegraphics[scale = .26]{img4.png} & \hspace{0.2in} & \includegraphics[scale = 0.035]{brain5.png} \\ \hline
+\end{tabular}\\
+\vspace{0.1in}
+Test Data \\
+\begin{tabular}{c|c|cccc}
+\hline
+ & & ? & ? & ? & ? \\
+\includegraphics[scale = 0.035]{brain3.png} & \hspace{0.5in} 
+& \includegraphics[scale = .26]{img1.png}
+& \includegraphics[scale = .26]{img2.png}
+& \includegraphics[scale = .26]{img3.png}
+& \includegraphics[scale = .26]{img4.png}\\
+\hline
+ & & ? & ? & ? & ? \\
+\includegraphics[scale = 0.035]{brain1.png} & \hspace{0.5in} 
+& \includegraphics[scale = .26]{img1.png}
+& \includegraphics[scale = .26]{img2.png}
+& \includegraphics[scale = .26]{img3.png}
+& \includegraphics[scale = .26]{img4.png}\\
+\hline
+\end{tabular}
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{A mind-reading game: Classification}
+\begin{center}
+Training Data
+\\
+\begin{tabular}{ccc||ccc}
+\hline
+\includegraphics[scale = .26]{img1.png} & \hspace{0.2in} & \includegraphics[scale = 0.035]{brain1.png} &
+\includegraphics[scale = .26]{img3.png} & \hspace{0.2in} & \includegraphics[scale = 0.035]{brain3.png} \\ \hline
+\includegraphics[scale = .26]{img2.png} & \hspace{0.2in} & \includegraphics[scale = 0.035]{brain2.png} &
+\includegraphics[scale = .26]{img4.png} & \hspace{0.2in} & \includegraphics[scale = 0.035]{brain5.png} \\ \hline
+\end{tabular}\\
+\vspace{0.1in}
+Test Data \\
+\begin{tabular}{c|c|cccc}
+\hline
+ & & \xmark & \xmark & \cmark & \xmark \\
+\includegraphics[scale = 0.035]{brain3.png} & \hspace{0.5in} 
+& \includegraphics[scale = .26]{img1.png}
+& \includegraphics[scale = .26]{img2.png}
+& \includegraphics[scale = .26]{img3.png}
+& \includegraphics[scale = .26]{img4.png}\\
+\hline
+ & & \cmark & \xmark & \xmark & \xmark \\
+\includegraphics[scale = 0.035]{brain1.png} & \hspace{0.5in} 
+& \includegraphics[scale = .26]{img1.png}
+& \includegraphics[scale = .26]{img2.png}
+& \includegraphics[scale = .26]{img3.png}
+& \includegraphics[scale = .26]{img4.png}\\
+\hline
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{A mind-reading game: Identification}
+\begin{center}
+Training Data
+\\
+\begin{tabular}{ccc||ccc}
+\hline
+\includegraphics[scale = .26]{img1.png} & \hspace{0.2in} & \includegraphics[scale = 0.035]{brain1.png} &
+\includegraphics[scale = .26]{img3.png} & \hspace{0.2in} & \includegraphics[scale = 0.035]{brain3.png} \\ \hline
+\includegraphics[scale = .26]{img2.png} & \hspace{0.2in} & \includegraphics[scale = 0.035]{brain2.png} &
+\includegraphics[scale = .26]{img4.png} & \hspace{0.2in} & \includegraphics[scale = 0.035]{brain5.png} \\ \hline
+\end{tabular}\\
+\vspace{0.1in}
+Test Data \emph{(new images!)} \\
+\begin{tabular}{c|c|cccc}
+\hline
+ & & ? & ? & ? & ? \\
+\includegraphics[scale = 0.035]{brain7.png} & \hspace{0.5in} 
+& \includegraphics[scale = .26]{img5.png}
+& \includegraphics[scale = .26]{img6.png}
+& \includegraphics[scale = .26]{img7.png}
+& \includegraphics[scale = .26]{img8.png}\\
+\hline
+ & & ? & ? & ? & ? \\
+\includegraphics[scale = 0.035]{brain8.png} & \hspace{0.5in} 
+& \includegraphics[scale = .26]{img5.png}
+& \includegraphics[scale = .26]{img6.png}
+& \includegraphics[scale = .26]{img7.png}
+& \includegraphics[scale = .26]{img8.png}\\
+\hline
+\end{tabular}
+\end{center}
+\end{frame}
+
+\section{Theory}
+
+\frame{\sectionpage}
+
+\begin{frame}
+\frametitle{Statistical formulation I}
+\emph{Training data.}
+\begin{itemize}
+\item
+Given training classes $S_{\text{train}} = \{\text{train:}1,\hdots,
+\text{train:}k\}$ where each class $\text{train:}i$ has features
+$x_{\text{train:}i}$.
+\item
+For $t = 1,\hdots, T_{\text{train}}$, choose class label
+$z_{\text{train:} t} \in S_{\text{train}}$; generate
+\[
+y_{\text{train:} t} = f(x_{z_{\text{train:} t}}) + \epsilon_t
+\]
+where $f$ is an unknown function, and $\epsilon_t$ is i.i.d. from a
+known or unknown distribution.
+\end{itemize}
+\emph{Test data.}
+\begin{itemize}
+\item
+Given test stimuli $S_{\text{test}} = \{\text{test:}1,\hdots,
+\text{test:}\ell\}$ with features $\{x_{\text{test:} 1}, \hdots,
+x_{\text{test:} \ell}\}$
+\item
+Task: for $t = 1,\hdots, T_{\text{test}}$, label $y_{\text{test}: t}$
+by stimulus $\hat{z}_{\text{test:} t} \in S_{\text{train}}$; try to
+minimize misclassification rate
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Statistical formulation II}
+\begin{itemize}
+\item $f$ is an unknown function
+\item $P$ is a known or unknown distribution over image features
+\item \emph{Training data.} Draw $x_{\text{train:} i} \sim P$ for $i = 1\,hdots, k$.
+\item \emph{Test data.} Draw $x_{\text{train:} i} \sim P$ for $i = 1\,hdots, \ell$.
+\item Theoretical question: Analyze average misclassification rate when classes are generated this way
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Toy example I}
+\begin{center}
+\includegraphics[scale = 0.3]{1d_0.pdf}
+\end{center}
+\begin{itemize}
+\item Features $x$ are one-dimensional real numbers, as are responses
+  $y$.  Parameter $\beta$ is also a real number.
+\item Model is linear: $y \sim N(x\beta, \sigma^2_\epsilon)$
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\includegraphics[scale = 0.4]{ti1.pdf}
+\end{center}
+Suppose we estimated $\hat{\beta}$ from training data.
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\includegraphics[scale = 0.4]{ti2.pdf}
+\end{center}
+Generate features $x_{\text{test:} 1}, \hdots, x_{\text{test:} \ell}$ iid $N(0, \sigma^2_x)$.
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\includegraphics[scale = 0.4]{ti3.pdf}
+\end{center}
+Hidden labels $z_{\text{test:} t}$ are iid uniform from $S_{\text{train}}$.\\
+Generate $y_{\text{test:} t} \sim N(\beta x_{z_{\text{test:} t}}, \sigma^2_\epsilon)$
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\includegraphics[scale = 0.4]{ti4.pdf}
+\end{center}
+Classify $\hat{y}_{\text{test:} t}$
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\includegraphics[scale = 0.4]{ti5.pdf}
+\end{center}
+$\hat{\mu}_{\text{test:} i} = \hat{\beta} x_{\text{test:} i}$
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\includegraphics[scale = 0.4]{ti6.pdf}
+\end{center}
+$\hat{z}_{\text{test:} t} = \text{argmin}_{z} \ell_{\hat{\mu}_z}(y_{\text{test:} t})$
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\includegraphics[scale = 0.4]{ti7.pdf}
+\end{center}
+$\hat{z}_{\text{test:} t} = \text{argmin}_{z} (\hat{\mu}_z -
+y_{\text{test:} t})^2$
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\includegraphics[scale = 0.4]{ti8.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\includegraphics[scale = 0.4]{ti9.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Toy example I}
+\begin{center}
+\includegraphics[scale = 0.2]{ti2.pdf}
+\includegraphics[scale = 0.2]{ti3.pdf}
+\includegraphics[scale = 0.2]{ti8.pdf}
+\end{center}
+\begin{itemize}
+\item
+Generate features $x_{\text{test:} 1}, \hdots,
+x_{\text{test:} \ell}$ iid $N(0, \sigma^2_x)$.
+\item
+Hidden labels  $z_{\text{test:} t}$ are iid uniform from $S_{\text{train}}$.
+Generate $y_{\text{test:} t} \sim N(\beta x_{z_{\text{test:} t}}, \sigma^2_\epsilon)$
+\item
+Classify $\hat{y}_{\text{test:} t}$ by maximum likelihood assuming
+$\hat{\beta}$ is correct.  Thus:
+\[
+\hat{z}_{\text{test:} t} = \text{argmin}_{z} (\hat{\beta} x_z -
+y_{\text{test:} t})^2
+\]
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Toy example I: Questions}
+\begin{enumerate}
+\item
+We know the prediction error is minimized when $\hat{\beta} = \beta$.
+Is it also true that misclassification error in the mind-reading game
+is minimized when $\hat{\beta} = \beta$?
+\item
+Even if the answer to 1. is yes, should we estimate $\hat{\beta}$
+using the same methods as in least-squares regression?
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Toy example I: Analysis}
+\begin{itemize}
+\item
+The expected misclassification error is the same if we take $T_{\text{test}} = 1$.
+Then let $(x_*, y_*)$ be the feature-response pair in the test set, where
+\[
+y_* = x_* \beta + \epsilon_*
+\]
+\item
+Denote the features for the incorrect classes as $x_1, \hdots, x_{\ell -1}$.
+\item
+Let $\delta = \hat{\beta} - \beta$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+Ignore the possibility of ties.
+The response $y_*$ is misclassified if and only if
+\[
+\min_{i=1,\hdots, \ell-1} |y_* -  x_i \hat{\beta}| < |y_* - x_*\hat{\beta}|
+\]
+equivalently
+\[
+\cup_{i=1,\hdots, \ell-1} E_i
+\]
+where $E_i$ is the event
+\[
+|x_* \beta + \epsilon_* - x_i (\beta + \delta)| < |- \delta x_* + \epsilon_*|
+\]
+with probability
+\[
+\Pr[E_i] = \left|
+\Phi\left(\frac{x_*}{\sigma_x}\right)
+ - 
+\Phi\left(\frac{x_*(\beta - \delta) + 2\epsilon_*}{\sigma_x (\beta + \delta)}\right)
+\right|
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Toy example I: Analysis}
+\begin{itemize}
+\item
+Use the following conditioning
+\[
+\E[\text{misclassification}] = \E[\E[\Pr_{x_1,\hdots,x_\ell}[\cup_i E_i] | x_* = x, \epsilon_* = \epsilon]]
+\]
+\item
+An exact expression for expected misclassification is therefore\\
+$
+1 - \int_\epsilon \left[\int_x  
+\left(1 - 
+\left|
+\Phi\left(\frac{x}{\sigma_x}\right)
+ - 
+\Phi\left(\frac{x(\beta - \delta) + 2\epsilon}{\sigma_x (\beta + \delta)}\right)
+\right|\right)^{\ell - 1}
+ d\Phi(\frac{x}{\sigma_x}) \right]  d\Phi(\frac{\epsilon}{\sigma_\epsilon})
+$
+\item Question 1: Is this minimized at $\hat{\beta} = \beta$?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+Answer: yes.  (Part of a proof:)
+
+Fix $\epsilon > 0$.
+The derivative of the inner integral wrt $\delta = 0$ is proportional to
+\begin{center}
+$\int_x (1 - \Phi(\frac{x\beta + 2\epsilon}{\sigma_x \beta}) + \Phi(\frac{x}{\sigma_x})) \phi(\frac{x\beta + 2\epsilon}{\sigma_x \beta})(x + \frac{\epsilon}{\beta}) \phi(\frac{x}{\sigma_x}) dx
+$\end{center}
+In turn
+\[
+\phi\left(\frac{x\beta + 2\epsilon}{\sigma_x \beta}\right)
+\phi\left(\frac{x}{\sigma_x}\right) \propto 
+\phi\left(\frac{\sqrt{2} (x + \frac{\epsilon}{\beta})}{\sigma_x}\right)
+\]
+which is the density of a normal variate with mean $-\epsilon/\beta$\\
+
+But now note that the other terms
+\[
+\left(1 - \Phi\left(\frac{x\beta + 2\epsilon}{\sigma_x \beta}\right)
+ + \Phi\left(\frac{x}{\sigma_x}\right)\right)
+\left(x - \frac{\epsilon}{\beta}\right)
+\]
+are symmetric about $x = -\frac{\epsilon}{\beta}$.
+
+Thus by symmetry, the derivative of the inner integral $\delta = 0$ vanishes.
+The same argument works for $\epsilon < 0$, hence the misclassification rate is stationary at $\hat{\beta} = \beta$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Toy example I: Estimation}
+\begin{itemize}
+\item Second question: what about estimation?
+\item Take a Bayesian viewpoint: suppose we have a posterior distribution for $\hat{\beta}$, e.g. $\beta \sim N(\hat{\beta}_{MAP}, \sigma^2_\beta)$.
+\item For \emph{least-squares regression}, we would use $\hat{\beta} = \hat{\beta}_{MAP}$, the posterior mean.
+\item For \emph{identification}, we would choose
+\[
+\hat{\beta}_{Bayes} = \argmin_{\hat{\beta}} \int R(\beta; \hat{\beta}) \phi\left(\frac{\beta - \hat{\beta}_{MAP}}{\sigma_\beta}\right) d\beta
+\]
+where $R$ is the expected misclassification rate.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Toy example I: Estimation}
+\begin{center}
+\includegraphics[scale = .3]{rmat.pdf}
+\includegraphics[scale = .3]{toy_est.pdf}
+\end{center}
+The Bayes point estimate for identification is larger than the Bayes point estimate for least-squares prediction.
+\end{frame}
+
+\begin{frame}
+\frametitle{More questions}
+\begin{enumerate}
+\setcounter{enumi}{2}
+\item
+What happens if the true regression function $f$ is nonlinear,
+but we restrict $\hat{f}$ to be linear?
+\item
+What happens when the number of classes $\ell$ increases?
+What if $\ell$ increases while $\sigma^2_\epsilon$ decreases?
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Toy example IIa}
+\begin{center}
+\includegraphics[scale = 0.4]{toy3a_plot.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Toy example IIa}
+\begin{center}
+\includegraphics[scale = 0.3]{toy3a_l3.pdf}
+\includegraphics[scale = 0.3]{toy3a_l20.pdf}
+\end{center}
+Effect of increasing $\ell$.
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\includegraphics[scale = 0.4]{toy3a_plot2.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Why is this?}
+\begin{itemize}
+\item We can relate identification to regression with a different loss function
+\item
+Least squares loss
+\[
+\E[(y - \hat{y})^2]
+\]
+\item
+Identification loss
+\[
+\E[1 - \Pr[|y - \hat{y}'| < |y - \hat{y}|]^{\ell - 1}]
+\]
+where $\hat{y}'$ is the predicted value for a randomly drawn $x$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Why is this?}
+Identification loss more closely resembles 0-1 loss as $\ell$ increases.
+\begin{center}
+\begin{tabular}{c|c|c}
+Squared error & $\ell = 3$ & $\ell = 20$\\ \hline
+\includegraphics[scale = 0.2]{loss_se.pdf} &
+\includegraphics[scale = 0.2]{loss_3.pdf} &
+\includegraphics[scale = 0.2]{loss_20.pdf} \\ \hline
+\includegraphics[scale = 0.2]{plot_loss_sq.pdf} &
+\includegraphics[scale = 0.2]{plot_loss_3.pdf} &
+\includegraphics[scale = 0.2]{plot_loss_20.pdf} \\ \hline
+\end{tabular}
+\end{center}
+\end{frame}
+
+\section{Methodology}
+\frame{\sectionpage}
+
+\begin{frame}
+\frametitle{Linear identification}
+\emph{Model fitting}
+\begin{itemize}
+\item Inputs: features for training classes $\{x_{\text{train:} i}\}_{i = 1}^k$ and points $y_t$  with labels $z_t$ for $t = 1,\hdots, T$.
+Features $x$ have dimension $p$, responses $y$ have dimension $q$.
+\item Outputs: $p \times q$ coefficient matrix $B$ and $1 \times q$ intercept term $b$ for a linear model
+\[
+y \approx B^T x + b^T
+\]
+and estimated covariance $\hat{\Sigma}_\epsilon$ for noise in $y$.
+\end{itemize}
+\emph{Identification}
+\begin{itemize}
+\item Inputs: test class features $x_{\text{test: }i}$ for $i = 1,\hdots, \ell$.  New point $y_*$.
+\item Output: label $\hat{z}_*$ given by
+\[
+\hat{z}_* = \argmin_{z = \text{test:} 1,\hdots, \text{test:} \ell} d_{\hat{\Sigma}_\epsilon}(B^T x_z + b, y_*)^2
+\]
+where $d_\Sigma(\cdot, \cdot)$ is the Mahalanobis distance.
+\item Evaluation: misclassification comparing $\hat{z}_*$ with true label $z_*$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Model fitting}
+\begin{itemize}
+\item Inputs: features for training classes $\{x_{\text{train:} i}\}_{i = 1}^k$ and points $y_t$  with labels $z_t$ for $t = 1,\hdots, T$.
+\end{itemize}
+\emph{Procedure}
+\begin{enumerate}
+\item Estimate $\hat{\Sigma}_x$ from sample covariance of $\{x_{\text{train:} i}\}_{i = 1}^k$ and $\hat{\mu}_x$ from sample mean.
+Let $\hat{P}_x$ be the distribution of $N(\hat{\mu}_x, \hat{\Sigma}_x)$
+\item Estimate $\hat{\Sigma}_\epsilon$ from pooled sample within-class covariance of $y_t$
+\item Maximize for $B, b$:
+\[
+\sum_{t = 1}^T \left[\int_{\mathbb{R}^p} I\{d(B^T x + b^T, y_t) < d(B^T x_{z_t} + b^T, y_t) \} d\hat{P}_x(x)\right]^{\ell-1}
+\]
+\item Output $B$, $b$, $\hat{\Sigma}_\epsilon$
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Computation}
+\begin{itemize}
+\item
+Maximize for $B, b$:
+\[
+\sum_{t = 1}^T 1-\mathcal{L}((x_{z_t}, y_t); B, b)
+\]
+where
+\[
+\mathcal{L}((x_{z_t}, y_t), B, b) = 1- \left[\int_{\mathbb{R}^p} I\{d(B^T x + b^T, y_t) < d(B^T x_{z_t} + b^T, y_t) \} d\hat{P}_x(x)\right]^{\ell-1}
+\]
+\item
+Use iteratively reweighted least squares.  In iteration $k+1$, update 
+\[
+(B^{(k+1)}, b^{(k+1)}) = \argmin_{B, b} \sum_{t = 1}^T w_t^{(k)}||y_t - B^T x_{z_t} - b^T||^2
+\]
+where
+\[
+w^{(k)} = \frac{\mathcal{L}((x_{z_t}, y_t), B^{(k)}, b^{(k)})}{||y_t - (B^{(k)})^T x_{z_t} -  (b^{(k)})^T||^2}
+\]
+\end{itemize}
+\end{frame}
+
+\section{Issues}
+\frame{\sectionpage}
+
+\begin{frame}
+\frametitle{Toy example IIb}
+\begin{center}
+\includegraphics[scale = 0.4]{toy2_plot.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Toy example IIb}
+\begin{center}
+\includegraphics[scale = 0.3]{toy2_l3.pdf}
+\includegraphics[scale = 0.3]{toy2_l20.pdf}
+\end{center}
+Effect of increasing $\ell$.
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\includegraphics[scale = 0.4]{toy2_plot2.pdf}
+\end{center}
+Effect of increasing $\ell$: global trends will become ignored in
+favor of locally linear trends!
+\end{frame}
+
+\begin{frame}
+\frametitle{Implications}
+\begin{itemize}
+\item
+``The model is always wrong''
+\item
+Statistical methods should be robust to small deviations from the
+model
+\item
+Even when minor nonlinearities exist in the model, identification
+performance fails to reflect global fit
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Solution: Label sets}
+\begin{itemize}
+\item
+One option is to only use small $\ell$.  However, this is not
+satisfactory since with good signal-to-noise ratio, we should be able
+to identify a stimuli from a large set of candidates.
+\item
+Develop a method for producing a \emph{set of labels} for each point
+rather than a single label.  Evaluate the method using a metric such
+as precision-recall.
+\item
+The labeller would assign a proportional number of labels to each
+point as $\ell$ increases, thus maintaining coverage probability.
+Thus, it will no longer become optimal to just ``give up'' on global
+estimation as $\ell$ increases.
+\item
+It would be desirable to find a loss function so that
+the optimal parametric model is fixed as $\ell$ varies.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{References}
+\begin{itemize}
+\item Kay, KN., Naselaris, T., Prenger, R. J., and Gallant, J. L.
+  ``Identifying natural images from human brain
+  activity''. \emph{Nature} (2008)
+\item Vu, V. Q., Ravikumar, P., Naselaris, T., Kay, K. N., and Yu, B.
+  ``Encoding and decoding V1 fMRI responses to natural images with
+  sparse nonparametric models'', \emph{The Annals of Applied
+    Statistics}. (2011)
+\item Chen, M., Han, J,. Hu, X., Jiang, Xi., Guo, L. and Liu, T.
+  ``Survey of encoding and decoding of visual stimulus via fMRI: an
+  image analysis perspective.'' \emph{Brain Imaging and
+    Behavior}. (2014)
+\end{itemize}
+\end{frame}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
