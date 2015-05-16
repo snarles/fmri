@@ -22,37 +22,42 @@ ddir <- "~/stat312data"
 #ddir <- "/home/ubuntu/stat312data"
 list.files(ddir)
 
-
-## get indices of V1 from larger matrix
-load(paste0(ddir, "/forCharlesSNR.Rdata"))
-best_v <- order(-snr_ests)[1:100]
 load(paste0(ddir, "/all_voxel_locations.RData"))
 dim(voxel.loc) # 25915 3
-load(paste0(ddir, "/v1_locations.RData"))
-v1_locations <- v1_locations[best_v, ]
-dim(v1_locations) # 100 3
-library(prodlim)
-v1_inds <- row.match(data.frame(v1_locations), data.frame(voxel.loc))
+load(paste0(ddir, "/roi.RData"))
 
+#temp <- read.csv(paste0(ddir, "/allVoxTrain.csv"), header = FALSE,
+#                 stringsAsFactors = FALSE)
+#temp[, 1] <- as.numeric(temp[, 1])
+#table(sapply(temp, class))
+#voxels <- t(temp)
+#dim(voxels)
+#cnv <- character(dim(voxels)[2])
+#for (i in 1:length(roi)) {
+#  nn <- roi %>% names %>% `[[`(i)
+#  cnv[roi[[i]]] <- paste0(nn, "_", 1:length(roi[[i]]))
+#}
+#save(voxels, file = paste0(ddir, "/voxels_train.RData"))
 
+load(paste0(ddir, "/voxels_train.RData"))
 
-## extract V1 voxels in training data
-temp <- read.csv(paste0(ddir, "/allVoxTrain.csv"), header = FALSE,
-                 stringsAsFactors = FALSE)
-train_v1 <- temp[v1_inds, ]
-train_v1[,1] <- as.numeric(train_v1[, 1])
+#train_index <- read.csv(paste0(ddir, "/indexTrain.csv"), header = FALSE)
+#train_index <- as.numeric(train_index)
+#u_inds <- sort(unique(train_index))
+#length(u_inds)
+#temp <- numeric(max(u_inds))
+#temp[u_inds] <- 1:1750
+#train_index <- temp[train_index]
+#save(train_index, file = paste0(ddir, "/indexTrain.RData"))
+load(paste0(ddir, "/indexTrain.RData"))
 
-load(paste0(ddir, "/valid_index.RData"))
-
-train_index <- read.csv(paste0(ddir, "/indexTrain.csv"), header = FALSE)
-train_index <- as.numeric(train_index)
-
-load(paste0(ddir, "/train_resp.RData"))
-
-load(paste0(ddir, "/feature_valid.RData"))
 load(paste0(ddir, "/feature_train.RData"))
 dim(feature_train) # 1750 10921
-dim(feature_valid) # 120 10921
+feature_train2 <- feature_train[train_index, ]
+
+## cluster by raw vox, 
+nacount <- apply(voxels, 2, function(v) sum(is.na(v)))
+
 
 load(paste0(ddir, "/valid_v1.RData"))
 valid_v1 <- valid_v1[best_v, ]
