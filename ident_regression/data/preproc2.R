@@ -55,16 +55,57 @@ dim(feature_train) # 1750 10921
 feature_train2 <- feature_train[train_index, ]
 
 ## cluster by raw vox, 
-nacount <- apply(voxels, 2, function(v) sum(is.na(v)))
-complete_vox <- which(nacount == 0)
+nacount <- is.na(colSums(voxels))
+complete_vox <- which(!nacount)
 length(complete_vox)
 
-train_resp <- read.csv(paste0(ddir, "/train_resp_all.csv"), header = FALSE)
-dim(train_resp) #25915 1750
-train_resp <- t(train_resp)
-colnames(train_resp) <- colnames(voxels)
+#train_resp <- read.csv(paste0(ddir, "/train_resp_all.csv"), header = FALSE)
+#dim(train_resp) #25915 1750
+#train_resp <- t(train_resp)
+#colnames(train_resp) <- colnames(voxels)
+#save(train_resp, file = paste0(ddir, "/train_resp_all.RData"))
+load(paste0(ddir, "/train_resp_all.RData"))
+dim(train_resp)
+nacount2 <- train_resp %>% colSums %>% is.na
+length(nacount2)
+dim(voxel.loc)
+table(cbind(nacount, nacount2))
+which(is.na(ss))
 train_resp[1:10, 1:10]
 plot(train_index)
+
+
+nacount <- voxels %>% apply(2, function(v) sum(is.na(v)))
+nacount2 <- train_resp %>% apply(2, function(v) sum(is.na(v)))
+table(nacount)
+table(nacount2 * 2)
+match_counts <- numeric()
+for (i in unique(nacount2 * 2)) {
+  if (sum(nacount2 * 2 == i) == sum(nacount == i)) match_counts <- c(match_counts, i)
+}
+match_counts
+
+nafilt <- nacount %in% match_counts
+nafilt2 <- (nacount2 * 2) %in% match_counts
+sum(nafilt)
+sum(nafilt2)
+
+nacount[1:10]
+sum(nacount == 1400)
+nacount2[1:10] * 2
+
+library(pracma)
+repmat(nacount, length(nacount2), 1)
+nacount
+
+## verify
+
+for (i in 1:1750) {
+  
+}
+
+
+## no obvious correlation effect
 
 gaps <- sapply(1:1750, function(i) { which(train_index == i) %>% {max(.) - min(.)}  })
 intradist <- sapply(1:1750, function(i) {
@@ -75,6 +116,9 @@ plot(gaps, intradist)
 cfs <- lm(intradist ~ gaps)$coefficients
 abline(cfs[1], cfs[2], col = "red")
 mean(intradist)
+
+plot(gaps, intradist, pch = ".")
+points(1:132, sapply(1:132, function(i) mean(intradist[gaps == i])), cex = 3, col = "blue")
 
 feat_attr <- read.csv(paste0(ddir, "/featAttr.csv"), header = TRUE,
                  stringsAsFactors = FALSE)
