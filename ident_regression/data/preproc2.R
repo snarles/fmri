@@ -2,8 +2,7 @@
 ##                DATA PREPROCESSING                       ##
 #############################################################
 
-savelist <- c()
-
+library(magrittr)
 isqrtm <- function(m) {
   res <- eigen(m)
   d <- res$values
@@ -22,8 +21,8 @@ ddir <- "~/stat312data"
 #ddir <- "/home/ubuntu/stat312data"
 list.files(ddir)
 
-load(paste0(ddir, "/all_voxel_locations.RData"))
-dim(voxel.loc) # 25915 3
+#load(paste0(ddir, "/all_voxel_locations.RData"))
+#dim(voxel.loc) # 25915 3
 load(paste0(ddir, "/roi.RData"))
 
 #temp <- read.csv(paste0(ddir, "/allVoxTrain.csv"), header = FALSE,
@@ -57,17 +56,25 @@ feature_train2 <- feature_train[train_index, ]
 
 ## cluster by raw vox, 
 nacount <- apply(voxels, 2, function(v) sum(is.na(v)))
-
-
-load(paste0(ddir, "/valid_v1.RData"))
-valid_v1 <- valid_v1[best_v, ]
-dim(train_v1)
-dim(valid_v1)
-
+complete_vox <- which(nacount == 0)
+length(complete_vox)
 
 train_resp <- read.csv(paste0(ddir, "/train_resp_all.csv"), header = FALSE)
 dim(train_resp) #25915 1750
-train_resp <- train_resp[v1_inds, ]
+train_resp <- t(train_resp)
+colnames(train_resp) <- colnames(voxels)
+train_resp[1:10, 1:10]
+plot(train_index)
+
+gaps <- sapply(1:1750, function(i) { which(train_index == i) %>% {max(.) - min(.)}  })
+intradist <- sapply(1:1750, function(i) {
+    temp <- voxels[train_index == i, complete_vox]
+    sum((temp[, 1] - temp[, 2])^2)
+  })
+plot(gaps, intradist)
+cfs <- lm(intradist ~ gaps)$coefficients
+abline(cfs[1], cfs[2], col = "red")
+mean(intradist)
 
 feat_attr <- read.csv(paste0(ddir, "/featAttr.csv"), header = TRUE,
                  stringsAsFactors = FALSE)
