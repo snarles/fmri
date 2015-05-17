@@ -31,25 +31,29 @@ load(paste0(ddir, "/roi.RData"))
 #table(sapply(temp, class))
 #voxels <- t(temp)
 #dim(voxels)
-dim(voxel.loc)
-cnv <- character(length(train_index))
-for (i in 1:length(roi)) {
-  nn <- roi %>% names %>% `[[`(i)
-  cnv[roi[[i]]] <- paste0(nn, "_", 1:length(roi[[i]]))
-}
 #save(voxels, file = paste0(ddir, "/voxels_train.RData"))
 
 load(paste0(ddir, "/voxels_train.RData"))
 
 train_index <- read.csv(paste0(ddir, "/indexTrain.csv"), header = FALSE)
 train_index <- as.numeric(train_index)
-u_inds <- unique(train_index)
+u_inds <- sort(unique(train_index))
+#u_inds <- unique(train_index)
 length(u_inds)
 temp <- numeric(max(u_inds))
 temp[u_inds] <- 1:1750
 train_index <- temp[train_index]
-save(train_index, file = paste0(ddir, "/indexTrain.RData"))
-load(paste0(ddir, "/indexTrain.RData"))
+#save(train_index, file = paste0(ddir, "/indexTrain.RData"))
+#load(paste0(ddir, "/indexTrain.RData"))
+
+
+dim(voxel.loc)
+cnv <- character(length(train_index))
+for (i in 1:length(roi)) {
+  nn <- roi %>% names %>% `[[`(i)
+  cnv[roi[[i]]] <- paste0(nn, "_", 1:length(roi[[i]]))
+}
+
 
 load(paste0(ddir, "/feature_train.RData"))
 
@@ -88,10 +92,14 @@ sum(nafilt2)
 
 
 train_avg_filt <- train_avg[, nafilt]
+colnames(train_avg_filt) <- cnv[nafilt2]
 train_resp_filt <- train_resp[, nafilt2]
+colnames(train_resp_filt) <- cnv[nafilt2]
+voxels_filt <- voxels[, nafilt]
+colnames(voxels_filt) <- cnv[nafilt2]
 
 i <- 2
-voxels[train_index ==i, ] %>% t %>% plot
+#voxels[train_index ==i, ] %>% t %>% plot
 voxcc <- voxels %>% colSums %>% is.na %>% `!`
 diffs <- sapply(1:1750, function(v) {
   temp <- voxels[train_index == i, voxcc]
