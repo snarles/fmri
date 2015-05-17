@@ -31,33 +31,31 @@ load(paste0(ddir, "/roi.RData"))
 #table(sapply(temp, class))
 #voxels <- t(temp)
 #dim(voxels)
-#cnv <- character(dim(voxels)[2])
-#for (i in 1:length(roi)) {
-#  nn <- roi %>% names %>% `[[`(i)
-#  cnv[roi[[i]]] <- paste0(nn, "_", 1:length(roi[[i]]))
-#}
+dim(voxel.loc)
+cnv <- character(length(train_index))
+for (i in 1:length(roi)) {
+  nn <- roi %>% names %>% `[[`(i)
+  cnv[roi[[i]]] <- paste0(nn, "_", 1:length(roi[[i]]))
+}
 #save(voxels, file = paste0(ddir, "/voxels_train.RData"))
 
 load(paste0(ddir, "/voxels_train.RData"))
 
-#train_index <- read.csv(paste0(ddir, "/indexTrain.csv"), header = FALSE)
-#train_index <- as.numeric(train_index)
-#u_inds <- sort(unique(train_index))
-#length(u_inds)
-#temp <- numeric(max(u_inds))
-#temp[u_inds] <- 1:1750
-#train_index <- temp[train_index]
-#save(train_index, file = paste0(ddir, "/indexTrain.RData"))
+train_index <- read.csv(paste0(ddir, "/indexTrain.csv"), header = FALSE)
+train_index <- as.numeric(train_index)
+u_inds <- unique(train_index)
+length(u_inds)
+temp <- numeric(max(u_inds))
+temp[u_inds] <- 1:1750
+train_index <- temp[train_index]
+save(train_index, file = paste0(ddir, "/indexTrain.RData"))
 load(paste0(ddir, "/indexTrain.RData"))
 
 load(paste0(ddir, "/feature_train.RData"))
-dim(feature_train) # 1750 10921
-feature_train2 <- feature_train[train_index, ]
 
-## cluster by raw vox, 
-nacount <- is.na(colSums(voxels))
-complete_vox <- which(!nacount)
-length(complete_vox)
+dim(feature_train) # 1750 10921
+#feature_train2 <- feature_train[train_index, ]
+
 
 #train_resp <- read.csv(paste0(ddir, "/train_resp_all.csv"), header = FALSE)
 #dim(train_resp) #25915 1750
@@ -66,37 +64,64 @@ length(complete_vox)
 #save(train_resp, file = paste0(ddir, "/train_resp_all.RData"))
 load(paste0(ddir, "/train_resp_all.RData"))
 dim(train_resp)
-nacount2 <- train_resp %>% colSums %>% is.na
-length(nacount2)
-dim(voxel.loc)
-table(cbind(nacount, nacount2))
-which(is.na(ss))
-train_resp[1:10, 1:10]
-plot(train_index)
 
 
-nacount <- voxels %>% apply(2, function(v) sum(is.na(v)))
+## create the per-image average
+
+train_avg <- matrix(0, 1750, dim(voxels)[2])
+for (i in 1:1750) train_avg[i, ] <- voxels[train_index == i, ] %>% colMeans
+
+nacount <- train_avg %>% apply(2, function(v) sum(is.na(v)))
 nacount2 <- train_resp %>% apply(2, function(v) sum(is.na(v)))
 table(nacount)
-table(nacount2 * 2)
+table(nacount2)
 match_counts <- numeric()
-for (i in unique(nacount2 * 2)) {
-  if (sum(nacount2 * 2 == i) == sum(nacount == i)) match_counts <- c(match_counts, i)
+for (i in unique(nacount2)) {
+  if (sum(nacount2== i) == sum(nacount == i)) match_counts <- c(match_counts, i)
 }
 match_counts
 
 nafilt <- nacount %in% match_counts
-nafilt2 <- (nacount2 * 2) %in% match_counts
+nafilt2 <- nacount2 %in% match_counts
 sum(nafilt)
 sum(nafilt2)
 
-nacount[1:10]
-sum(nacount == 1400)
-nacount2[1:10] * 2
 
-library(pracma)
-repmat(nacount, length(nacount2), 1)
-nacount
+train_avg_filt <- train_avg[, nafilt]
+train_resp_filt <- train_resp[, nafilt2]
+
+i <- 2
+voxels[train_index ==i, ] %>% t %>% plot
+voxcc <- voxels %>% colSums %>% is.na %>% `!`
+diffs <- sapply(1:1750, function(v) {
+  temp <- voxels[train_index == i, voxcc]
+  sum((temp[1, ] - temp[2, ])^2)
+})
+mean(diffs)
+x <- sample(3500, 1750); (voxels[x, voxcc] - voxels[-x, voxcc]) %>% `^`(2) %>% rowSums %>% mean
+
+
+
+
+cc <- train_avg_filt %>% colSums %>% is.na
+train_avg_cc <- train_avg_filt[, !cc]
+train_resp_cc <- train_resp_filt[, !cc]
+
+avg_vars <- train_avg_cc %>% apply(1, var)
+resp_vars <- train_resp_cc %>% apply(1, var)
+plot(avg_vars, resp_vars)
+
+
+dim(train_avg_cc)
+i <- 20000
+plot(train_avg_cc[, i], train_resp_cc[, i])
+i <- 50
+plot(train_avg_cc[i, ], train_resp_cc[i, ])
+
+(train_avg_cc - train_resp_cc)^2 %>% rowSums %>% mean
+(train_avg_cc - train_resp_cc[sample(1750, 1750)])^2 %>% rowSums %>% mean
+
+
 
 ## verify
 
