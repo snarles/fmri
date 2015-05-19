@@ -8,7 +8,7 @@ library(Rcpp)
 library(parallel)
 library(glmnet)
 library(class)
-
+source('transfer/source.R')
 sourceCpp('ident_regression/data/pdist.cpp') # code from http://blog.felixriedel.com/2013/05/pairwise-distances-in-r/
 ddir <- "~/stat312data"
 list.files(ddir)
@@ -93,5 +93,23 @@ te_set2 <- ivoxels[lookup[cbind(te_inds, 3 - te_pick)], ]
 
 nclass <- 10
 a <- diag(rep(1, nvox))
-res <- err_test(te_set1, te_set2, a, 10, 100)
-summary(res)
+res_id <- err_test(te_set1, te_set2, a, 10, 100)
+summary(res_id) # 0.43
+
+## PERFORMANCE WITH SAMPLE COV
+
+diffs <- (tr_set1 - tr_set2)[, -1]
+sigma_est <- cov(diffs)
+a <- isqrtm(sigma_est)
+res_sc <- err_test(te_set1, te_set2, a, 10, 100)
+summary(res_sc) # 0.27
+
+## PERFORMANCE WITH SHRUNKEN SAMPLE COV
+
+lambdas <- 0:10/10
+res_lambdas <- mclapply(lambdas, function(x) {
+  mean(err_test(te_set1, te_set2, a * (1-x) + x * diag(rep(1, nvox)), 10, 100))
+}, mc.cores = 7)
+plot(lambdas, unlist(res_lambdas))
+
+
