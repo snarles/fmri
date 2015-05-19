@@ -34,7 +34,9 @@ nvox0 <- dim(voxels_c)[2]
 ## SNR analysis
 
 withinss <- (voxels_c[lookup[, 1], ] - voxels_c[lookup[, 2], ])^2 %>% colSums
-vars <- apply(voxels_c, 2, var)
+blockss <- (voxels_c[1:1750 * 2 - 1, ] - voxels_c[1:1750 * 2, ])^2 %>% colSums
+plot(blockss, withinss, pch = "."); abline(0, 1)
+sum(withinss < blockss)/nvox0
 res <- hist(withinss, breaks = 40)
 histmat <- cbind(res$mids, res$counts)
 # truncated hist mat
@@ -61,16 +63,18 @@ ivoxels <- cbind(index, voxels_s)
 
 ## PERFORMANCE ON A TEST SET GIVEN AN ESTIMATE OF 'A'
 
-nclass <- 10
-a <- diag(rep(1, nvox))
 err_test <- function(te_set1, te_set2, a, nclass, nreps = 10) {
   n_te <- dim(te_set1)[1]
   res <- numeric(nreps)
   for (i in 1:nreps) {
     ch_inds <- sample(n_te, nclass)
-    mu_a <- te_set1[ch_inds, ] %*% a
-    y_a <- te_set2[ch_inds, ] %*% a
+    mu_a <- te_set1[ch_inds, -1] %*% a
+    y_a <- te_set2[ch_inds, -1] %*% a
+    choice <- knn(mu_a, y_a, cl = 1:nclass)
+    n_err <- sum(choice != 1:nclass)
+    res[i] <- n_err/nclass
   }
+  res
 }
 
 ## GENERATE TRAINING SET, ETC
@@ -80,11 +84,14 @@ n_te <- 1750 - n_tr
 tr_inds <- sample(1750, n_tr)
 te_pick <- rbinom(n_te, 1, .5) + 1
 te_inds <- setdiff(1:1750, tr_inds)
-
 tr_set1 <- ivoxels[lookup[tr_inds, 1], ]
 tr_set2 <- ivoxels[lookup[tr_inds, 2], ]
 te_set1 <- ivoxels[lookup[cbind(te_inds, te_pick)], ]
 te_set2 <- ivoxels[lookup[cbind(te_inds, 3 - te_pick)], ]
 
+## PERFORMANCE WITH IDENTTIY
 
-
+nclass <- 10
+a <- diag(rep(1, nvox))
+res <- err_test(te_set1, te_set2, a, 10, 100)
+summary(res)
