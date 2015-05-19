@@ -7,6 +7,7 @@ library(magrittr)
 library(Rcpp)
 library(parallel)
 library(glmnet)
+library(class)
 
 sourceCpp('ident_regression/data/pdist.cpp') # code from http://blog.felixriedel.com/2013/05/pairwise-distances-in-r/
 ddir <- "~/stat312data"
@@ -14,6 +15,7 @@ list.files(ddir)
 
 nafilt <- voxels %>% colSums %>% is.na %>% `!`
 voxels_c <- voxels[, nafilt]
+nvox <- dim(voxels_c)[2]
 
 load(paste0(ddir, "/voxels_train.RData"))
 load(paste0(ddir, "/indexTrain.RData"))
@@ -22,6 +24,20 @@ lookup <- matrix(0, 1750, 2)
 for (i in 1:1750) lookup[i, ] <- which(index == i)
 
 ivoxels <- cbind(index, voxels_c)
+
+## PERFORMANCE ON A TEST SET GIVEN AN ESTIMATE OF 'A'
+
+nclass <- 10
+a <- diag(rep(1, nvox))
+err_test <- function(te_set1, te_set2, a, nclass, nreps = 10) {
+  n_te <- dim(te_set1)[1]
+  res <- numeric(nreps)
+  for (i in 1:nreps) {
+    ch_inds <- sample(n_te, nclass)
+    mu_a <- te_set1[ch_inds, ] %*% a
+    y_a <- te_set2[ch_inds, ] %*% a
+  }
+}
 
 ## GENERATE TRAINING SET, ETC
 
@@ -35,5 +51,6 @@ tr_set1 <- ivoxels[lookup[tr_inds, 1], ]
 tr_set2 <- ivoxels[lookup[tr_inds, 2], ]
 te_set1 <- ivoxels[lookup[cbind(te_inds, te_pick)], ]
 te_set2 <- ivoxels[lookup[cbind(te_inds, 3 - te_pick)], ]
+
 
 
