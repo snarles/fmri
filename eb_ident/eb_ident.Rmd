@@ -155,13 +155,76 @@ for (i in 1:L) {
   covs[[i]] <- f_post_cov_mu(X_te[i, ], X_te[i, ])
   pprob <- -log(det(covs[[i]])) - (y_star - mus[[i]]) %*% solve(covs[[i]]) %*% t(y_star - mus[[i]])
   plot(y_star[1, ], type = "l", lwd = 2)
-  for (j in 1:100) lines(mvrnorm(1, mu = mus[[i]], Sigma = covs[[i]]), col = cc)
+  for (j in 1:100) lines(mvrnorm(1, mu = mus[[i]], Sigma = covs[[i]] + Sigma_E), col = cc)
   if (i == i_chosen) {
     title(paste("i = ", i, "(correct)"), sub = paste("log Pr = ", floor(pprob)))
   } else {
     title(paste("i = ", i), sub = paste("log Pr = ", floor(pprob)))
   }
+  lines(y_star[1, ], type = "l", lwd = 2)
+}
+layout(1)
+```
+
+# Empirical Bayes
+
+The previous approach relies on knowing $\Sigma_\epsilon$, $\Sigma_B$.
+However, in practice, we seldom have a prior estimate of these quantities.
+We can estimate $\hat{\Sigma}_\epsilon$ from the covariance of the residuals.
+But what about $\Sigma_B$?
+Taking advantage of the connection between ridge regression and the normal prior $\beta \sim N(0, \lambda^{-1} I)$, we propose to estimate $\Sigma_B$ using the optimal ridge regression shrinkage values.
+
+```{r}
+library(glmnet)
+B_mu_EB <- matrix(0, q, p) # placeholder for estimate
+resids <- matrix(0, K, p)
+lambdas <- numeric(p) # lambda for each column of B
+for (i in 1:p) {
+  res <- cv.glmnet(X, Y[, i], alpha = 0, intercept = FALSE, standardize = FALSE)
+  lambdas[i] <- res$lambda.1se
+  pre <- predict(res, s = lambdas[i], newx = X)
+  resids[, i] <- pre - Y[, i]
+  B_mu_EB[, i] <- as.numeric(coefficients(res))[-1]  
 }
 ```
 
+Compare $\hat{B}_{EB}$ from empirical bayes, $\hat{B}_{bayes}$ and true $B$.
+```{r}
+o <- order(as.numeric(B0))
+plot(as.numeric(B0)[o], type = "l", xlab = "sorted", ylab = "coeffs")
+lines(as.numeric(B_mu)[o], col = "blue")
+lines(as.numeric(B_mu_EB)[o], col = "red")
+title("True B (black), Bayes mean( blue), Empirical (red)")
+```
 
+Form empirical bayes estimates of $\Sigma_E$ and $\Sigma_B$
+```{r}
+Sigma_E_hat <- cov(resids)
+Inv_Sigma_B <- diag(rep(lambdas, each = q))
+EB_cov_B_vec <- solve(solve(Sigma_E_hat) %x% (t(X) %*% X) + Inv_Sigma_B)
+f_EB_cov_mu <- function(xi, xj) {
+  (diag(rep(1, p)) %x% t(xi)) %*% EB_cov_B_vec %*% (diag(rep(1, p)) %x% t(t(xj)))
+}
+```
+
+Identify $y^*$ using Empirical Bayes.
+```{r, fig.width= 7, fig.height= 10}
+layout(matrix(1:3, 3, 1))
+mus <- list(L)
+covs <- list(L)
+cc <- rgb(0, 0, 1, alpha = 0.2)
+for (i in 1:L) {
+  mus[[i]] <- X_te[i, , drop = FALSE] %*% B_mu_EB
+  covs[[i]] <- f_EB_cov_mu(X_te[i, ], X_te[i, ])
+  pprob <- -log(det(covs[[i]])) - (y_star - mus[[i]]) %*% solve(covs[[i]]) %*% t(y_star - mus[[i]])
+  plot(y_star[1, ], type = "l", lwd = 2)
+  for (j in 1:100) lines(mvrnorm(1, mu = mus[[i]], Sigma = covs[[i]] + Sigma_E_hat), col = cc)
+  if (i == i_chosen) {
+    title(paste("i = ", i, "(correct)"), sub = paste("log Pr = ", floor(pprob)))
+  } else {
+    title(paste("i = ", i), sub = paste("log Pr = ", floor(pprob)))
+  }
+  lines(y_star[1, ], type = "l", lwd = 2)
+}
+layout(1)
+```
