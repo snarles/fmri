@@ -11,9 +11,9 @@ library(class)
 
 ## Generate parameters
 
-n <- 100
-p <- 10
-q <- 20
+n <- 50
+p <- 20
+q <- 50
 
 Sigma_X <- 1/(2 * q) * randn(2 * q, q) %>% { t(.) %*% . }
 Sigma_e <- 10/(2 * p) * randn(2 * p, p) %>% { t(.) %*% . }
@@ -40,7 +40,10 @@ for (i in 1:p) {
   B_mu_EB[, i] <- as.numeric(coefficients(res))[-1]  
   lambdas[i] <- (sum(as.numeric(coefficients(res))[-1]^2)/q)  
 }
-Sigma_E_hat <- cov(resids)
+#lambdas[lambdas < 1e-3] <- 1e-3
+lambdas <- rep(mean(lambdas), p)
+#lambdas <- s0s
+Sigma_E_hat <- 0.5 * cov(resids) + 0.5 * diag(diag(cov(resids)))
 Inv_Sigma_B <- diag(rep(1/lambdas, each = q))
 EB_cov_B_vec <- solve(solve(Sigma_E_hat) %x% (t(X) %*% X) + Inv_Sigma_B)
 f_EB_cov_mu <- function(xi, xj) {
@@ -64,7 +67,7 @@ a <- isqrtm(Sigma_E_hat)
 mle_cl <- knn(mu_hat %*% a, y_star %*% a, 1:L)
 (mle_err <- sum(mle_cl != i_chosen))
 
-## EM-bayes
+## E-bayes
 
 mus <- list(L)
 covs <- list(L)
