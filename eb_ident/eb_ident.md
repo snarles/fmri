@@ -49,10 +49,23 @@ $$
 $$
 where $\Sigma_E = \Sigma_\epsilon \otimes I_{2K}$.
 
-```{r}
+
+```r
 set.seed(0)
 library(pracma)
 library(magrittr)
+```
+
+```
+## 
+## Attaching package: 'magrittr'
+## 
+## The following objects are masked from 'package:pracma':
+## 
+##     and, mod, or
+```
+
+```r
 library(MASS)
 K <- 30 # number of stimuli
 p <- 20 # dimension of response
@@ -77,7 +90,8 @@ $$
 (Z^T \Sigma_E^{-1} Z +\Sigma_B^{-1})^{-1})
 $$
 
-```{r}
+
+```r
 # posterior mean
 B_mu <- solve(t(X) %*% X + 1/sB0 * diag(rep(1, q))) %*% t(X) %*% Y
 # posterior variance per column
@@ -101,6 +115,8 @@ for (i in 1:q) { for (j in 1:p) {
 points(B0, B_mu)
 ```
 
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png) 
+
 The posterior distribution of $\mu_i$ are given as follows:
 
 $$
@@ -111,7 +127,8 @@ $$
 \text{Cov}(\mu_i, \mu_j) = (I_p \otimes (x_i)^T) \text{Cov}(B) (I_p \otimes x_j)
 $$
 
-```{r}
+
+```r
 post_cov_B_vec <- solve(solve(Sigma_E) %x% (t(X) %*% X) + 1/sB0 * diag(rep(1, p * q)))
 f_post_cov_mu <- function(xi, xj) {
   (diag(rep(1, p)) %x% t(xi)) %*% post_cov_B_vec %*% (diag(rep(1, p)) %x% t(t(xj)))
@@ -127,7 +144,8 @@ and record the response of the subject, $y^*$.
 The scientist challenges the statistician to identify which stimuli $x^{te}_i$
 from among $\{x^{te}_1,..., x^{te}_L\}$ was presented to the subject, based on the response $y^*$.
 
-```{r}
+
+```r
 # new stimuli
 L <- 3
 X_te <- randn(L, q) 
@@ -135,6 +153,8 @@ i_chosen <- sample(L, 1)
 y_star <- X_te[i_chosen, , drop = FALSE] %*% B0 +  mvrnorm(1, rep(0, p), Sigma_E)
 plot(y_star[1, ], type = "l", main = "New Stimulus")
 ```
+
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
 
 The statistician can compute the posterior distribution of $\mu_i^{te}$ for each of the candidate images, and compute the posterior probability that the new response came from each stimulus.
 The log posterior probability is proportional to
@@ -145,7 +165,8 @@ $$
 
 The plot shows $y^*$ superimposed on posterior draws from each distribution.
 
-```{r, fig.width= 7, fig.height= 10}
+
+```r
 layout(matrix(1:3, 3, 1))
 mus <- list(L)
 covs <- list(L)
@@ -163,6 +184,11 @@ for (i in 1:L) {
   }
   lines(y_star[1, ], type = "l", lwd = 2)
 }
+```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
+
+```r
 layout(1)
 ```
 
@@ -174,8 +200,32 @@ We can estimate $\hat{\Sigma}_\epsilon$ from the covariance of the residuals.
 But what about $\Sigma_B$?
 Taking advantage of the connection between ridge regression and the normal prior $\beta \sim N(0, \lambda^{-1} I)$, we propose to estimate $\Sigma_B$ using the optimal ridge regression shrinkage values.
 
-```{r}
+
+```r
 library(glmnet)
+```
+
+```
+## Loading required package: Matrix
+## 
+## Attaching package: 'Matrix'
+## 
+## The following objects are masked from 'package:pracma':
+## 
+##     expm, lu, tril, triu
+## 
+## The following objects are masked from 'package:base':
+## 
+##     crossprod, tcrossprod
+## 
+## Loading required package: foreach
+## foreach: simple, scalable parallel programming from Revolution Analytics
+## Use Revolution R for scalability, fault tolerance and more.
+## http://www.revolutionanalytics.com
+## Loaded glmnet 2.0-2
+```
+
+```r
 B_mu_EB <- matrix(0, q, p) # placeholder for estimate
 resids <- matrix(0, K, p)
 lambdas <- numeric(p) # lambda for each column of B
@@ -189,7 +239,8 @@ for (i in 1:p) {
 ```
 
 Compare $\hat{B}_{EB}$ from empirical bayes, $\hat{B}_{bayes}$ and true $B$.
-```{r}
+
+```r
 o <- order(as.numeric(B0))
 plot(as.numeric(B0)[o], type = "l", xlab = "sorted", ylab = "coeffs")
 lines(as.numeric(B_mu)[o], col = "blue")
@@ -197,8 +248,11 @@ lines(as.numeric(B_mu_EB)[o], col = "red")
 title("True B (black), Bayes mean( blue), Empirical (red)")
 ```
 
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
+
 Form empirical bayes estimates of $\Sigma_E$ and $\Sigma_B$
-```{r}
+
+```r
 Sigma_E_hat <- cov(resids)
 Inv_Sigma_B <- diag(rep(lambdas, each = q))
 EB_cov_B_vec <- solve(solve(Sigma_E_hat) %x% (t(X) %*% X) + Inv_Sigma_B)
@@ -208,7 +262,8 @@ f_EB_cov_mu <- function(xi, xj) {
 ```
 
 Identify $y^*$ using Empirical Bayes.
-```{r, fig.width= 7, fig.height= 10}
+
+```r
 layout(matrix(1:3, 3, 1))
 mus <- list(L)
 covs <- list(L)
@@ -226,5 +281,10 @@ for (i in 1:L) {
   }
   lines(y_star[1, ], type = "l", lwd = 2)
 }
+```
+
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png) 
+
+```r
 layout(1)
 ```

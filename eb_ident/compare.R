@@ -11,7 +11,7 @@ library(class)
 
 ## Generate parameters
 
-n <- 50
+n <- 100
 p <- 20
 q <- 50
 
@@ -27,6 +27,7 @@ B0 <- matrix(Bvec, q, p)
 
 X <- mvrnorm(n, mu = rep(0, q), Sigma = Sigma_X)
 Y <- X %*% B0 + mvrnorm(n, mu = rep(0, p), Sigma = Sigma_e)
+Sigma_Bhat_vec <- solve(solve(Sigma_e) %x% (t(X) %*% X) + diag(1/diag(Sigma_B)))
 
 ## Estimate parameters
 
@@ -46,12 +47,9 @@ lambdas <- rep(mean(lambdas), p)
 Sigma_E_hat <- 0.5 * cov(resids) + 0.5 * diag(diag(cov(resids)))
 Inv_Sigma_B <- diag(rep(1/lambdas, each = q))
 EB_cov_B_vec <- solve(solve(Sigma_E_hat) %x% (t(X) %*% X) + Inv_Sigma_B)
-f_EB_cov_mu <- function(xi, xj) {
-  (diag(rep(1, p)) %x% t(xi)) %*% EB_cov_B_vec %*% (diag(rep(1, p)) %x% t(t(xj)))
-}
 
 # compare estimated sigma_B with true sigma_B
-plot(s0s, lambdas)
+#plot(s0s, lambdas)
 
 ## Generate new stimuli
 L <- 100
@@ -60,27 +58,39 @@ X_te <- randn(L, q)
 i_chosen <- sample(L, n_te, TRUE)
 y_star <- X_te[i_chosen, , drop = FALSE] %*% B0 +  mvrnorm(n_te, rep(0, p), Sigma_e)
 
-## Maximum likelihood
+## functions
 
+post_probs <- function(Sigma_e, Sigma_vec_B, B_hat, X, Y) {
+  L <- dim(X)[1]
+  n <- dim(Y)[1]
+  mus <- list(L)
+  covs <- list(L)
+  pprobs <- matrix(0, n, L)
+  for (i in 1:L) {
+    mus[[i]] <- X[i, , drop = FALSE] %*% B_hat
+    covs[[i]] <- (diag(rep(1, p)) %x% t(X[i, ])) %*% 
+      Sigma_vec_B %*% (diag(rep(1, p)) %x% t(t(X[i, ]))) + Sigma_e
+    for (j in 1:n_te) {
+      pprobs[j, i] <- -log(det(covs[[i]])) - 
+        (y_star[j, , drop = FALSE] - mus[[i]]) %*% solve(covs[[i]]) %*% 
+        t(y_star[j, , drop = FALSE] - mus[[i]])
+    }  
+  }
+  pprobs
+}
+
+## Bayes
+pp_bayes <- post_probs(Sigma_e, Sigma_Bhat_vec, B0, X_te, y_star)
+bayes_cl <- apply(pp_bayes, 1, function(v) order(-v)[1])
+(bayes_err <- sum(bayes_cl != i_chosen))
+
+## Maximum likelihood
 mu_hat <- X_te %*% B_mu_EB
 a <- isqrtm(Sigma_E_hat)
 mle_cl <- knn(mu_hat %*% a, y_star %*% a, 1:L)
 (mle_err <- sum(mle_cl != i_chosen))
 
 ## E-bayes
-
-mus <- list(L)
-covs <- list(L)
-cc <- rgb(0, 0, 1, alpha = 0.2)
-pprobs <- matrix(0, n_te, L)
-for (i in 1:L) {
-  mus[[i]] <- X_te[i, , drop = FALSE] %*% B_mu_EB
-  covs[[i]] <- f_EB_cov_mu(X_te[i, ], X_te[i, ])
-  for (j in 1:n_te) {
-    pprobs[j, i] <- -log(det(covs[[i]])) - 
-      (y_star[j, , drop = FALSE] - mus[[i]]) %*% solve(covs[[i]]) %*% 
-      t(y_star[j, , drop = FALSE] - mus[[i]])    
-  }  
-}
-eb_cl <- apply(pprobs, 1, function(v) order(-v)[1])
+pp_eb <- post_probs(Sigma_E_hat, EB_cov_B_vec, B_mu_EB, X_te, y_star)
+eb_cl <- apply(pp_eb, 1, function(v) order(-v)[1])
 (eb_err <- sum(eb_cl != i_chosen))
