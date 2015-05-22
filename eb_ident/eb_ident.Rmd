@@ -8,10 +8,9 @@ output: html_document
 # Setup
 
 A scientist and statistician are collaborating on understanding the visual system.
-The scientist presents a series of $2 K$ stimuli (pictures) to the subject
+The scientist presents a series of $K$ stimuli (pictures) to the subject
 and records the subject's response to each stimuli as a $p$-dimensional vector.
-The $2K$ stimuli consist of $K$ different pictures, each picture repeated twice.
-Let $y_{i}^1$ and $y_i^2$ denote the subject's responses to the $i$ th picture.
+Let $y_i$ denote the subject's responses to the $i$ th picture.
 
 The statistican seeks to model the subject's response to the stimuli
 in terms of a set of $q$ stimulus features.  For example, the statistician might define
@@ -20,7 +19,7 @@ Let $x_i$ denote the $q$-dimensional feature vector for each picture.
 
 Let us assume the following multivariate regression model for the data.  We have
 $$
-y_i^j = x_i^T B + \epsilon_i^j
+y_i = x_i^T B + \epsilon_i
 $$
 so the subject's response is a linear function of the image features plus noise.
 Here $B$ is a $q \times p$ matrix.  Let us write $\vec{B}$ as the $qp \times 1$ vectorized
@@ -28,14 +27,14 @@ representation of $B$, and further suppose that $\vec{B}$ is a random variate
 $$
 \vec{B} \sim N(0, \Sigma_B)
 $$
-and that the $\epsilon_i^j$ are indenpendent of the $B$, with $\epsilon_i^j$ 
+and that the $\epsilon_i$ are indenpendent of the $B$, with $\epsilon_i$ 
 i.i.d.
 $$
-\epsilon_i^j \sim N(0,\Sigma_\epsilon)
+\epsilon_i \sim N(0,\Sigma_\epsilon)
 $$
 
-Let $Y$ denote the matrix of responses $Y = [(y_1^1)^T, (y_1^2)^T, ..., (y_K^1)^T, (y_K^2)^T]$
-and $X$ denote the corresponding design matrix $X = [x_1^T, x_1^T, ..., x_K, x_K]$, so that the model can be written
+Let $Y$ denote the matrix of responses $Y = [(y_1^1)^T, ...,  (y_K^2)^T]$
+and $X$ denote the corresponding design matrix $X = [x_1^T, ..., x_K^T]$, so that the model can be written
 $$
 Y = XB + E
 $$
@@ -51,6 +50,7 @@ $$
 where $\Sigma_E = \Sigma_\epsilon \otimes I_{2K}$.
 
 ```{r}
+set.seed(0)
 library(pracma)
 library(magrittr)
 library(MASS)
@@ -63,9 +63,9 @@ Sigma_E <- 2/p * randn(2 * p, p) %>% { t(.) %*% . }
 sB0 <- 2
 B0 <- sqrt(sB0) * randn(q, p)
 # random features
-X <- randn(K, q) %>% repmat(n = 2, m = 1)
+X <- randn(K, q)
 # noise
-E <- mvrnorm(2 * K, rep(0, p), Sigma_E)
+E <- mvrnorm(K, rep(0, p), Sigma_E)
 # observations
 Y <- X %*% B0 + E
 ```
@@ -113,10 +113,55 @@ $$
 
 ```{r}
 post_cov_B_vec <- solve(solve(Sigma_E) %x% (t(X) %*% X) + 1/sB0 * diag(rep(1, p * q)))
-f_post_cov_mu <- function(i, j) {
-  (diag(rep(1, p)) %x% X[i, , drop = FALSE]) %*% post_cov_B_vec %*% (diag(rep(1, p)) %x% t(t(X[j, ])))
+f_post_cov_mu <- function(xi, xj) {
+  (diag(rep(1, p)) %x% t(xi)) %*% post_cov_B_vec %*% (diag(rep(1, p)) %x% t(t(xj)))
 }
 ```
 
 # Identification
+
+Now the scientist wishes to test the statistician's model.
+The scientist obtains *new* stimuli $x^{te}_1, ..., x^{te}_L$.
+They randomly present one of the stimuli $i^* \sim Unif\{1,..., L \}$
+and record the response of the subject, $y^*$.
+The scientist challenges the statistician to identify which stimuli $x^{te}_i$
+from among $\{x^{te}_1,..., x^{te}_L\}$ was presented to the subject, based on the response $y^*$.
+
+```{r}
+# new stimuli
+L <- 3
+X_te <- randn(L, q) 
+i_chosen <- sample(L, 1)
+y_star <- X_te[i_chosen, , drop = FALSE] %*% B0 +  mvrnorm(1, rep(0, p), Sigma_E)
+plot(y_star[1, ], type = "l", main = "New Stimulus")
+```
+
+The statistician can compute the posterior distribution of $\mu_i^{te}$ for each of the candidate images, and compute the posterior probability that the new response came from each stimulus.
+The log posterior probability is proportional to
+
+$$
+\text{Pr}(i^* = i) = -\log \det(\text{Cov}(\mu_i^{te})) - (y^* - \text{E}[\mu_i^{te}])^T \text{Cov}(\mu_i^{te})^{-1} (y^* - \text{E}[\mu_i^{te}])
+$$
+
+The plot shows $y^*$ superimposed on posterior draws from each distribution.
+
+```{r, fig.width= 7, fig.height= 10}
+layout(matrix(1:3, 3, 1))
+mus <- list(L)
+covs <- list(L)
+cc <- rgb(0, 0, 1, alpha = 0.2)
+for (i in 1:L) {
+  mus[[i]] <- X_te[i, , drop = FALSE] %*% B_mu
+  covs[[i]] <- f_post_cov_mu(X_te[i, ], X_te[i, ])
+  pprob <- -log(det(covs[[i]])) - (y_star - mus[[i]]) %*% solve(covs[[i]]) %*% t(y_star - mus[[i]])
+  plot(y_star[1, ], type = "l", lwd = 2)
+  for (j in 1:100) lines(mvrnorm(1, mu = mus[[i]], Sigma = covs[[i]]), col = cc)
+  if (i == i_chosen) {
+    title(paste("i = ", i, "(correct)"), sub = paste("log Pr = ", floor(pprob)))
+  } else {
+    title(paste("i = ", i), sub = paste("log Pr = ", floor(pprob)))
+  }
+}
+```
+
 
