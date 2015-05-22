@@ -1,0 +1,58 @@
+---
+title: "An Empirical Bayes Approach to Identification"
+author: "Charles Zheng"
+date: "05/21/2015"
+output: html_document
+---
+
+# Setup
+
+A scientist and statistician are collaborating on understanding the visual system.
+The scientist presents a series of $2 K$ stimuli (pictures) to the subject
+and records the subject's response to each stimuli as a $p$-dimensional vector.
+The $2K$ stimuli consist of $K$ different pictures, each picture repeated twice.
+Let $y_{i}^1$ and $y_i^2$ denote the subject's responses to the $i$ th picture.
+
+The statistican seeks to model the subject's response to the stimuli
+in terms of a set of $q$ stimulus features.  For example, the statistician might define
+a library of $q = 10000$ Gabor filters to featurize each picture.
+Let $x_i$ denote the $q$-dimensional feature vector for each picture.
+
+Let us assume the following multivariate regression model for the data.  We have
+$$
+y_i^j = x_i^T B + \epsilon_i^j
+$$
+so the subject's response is a linear function of the image features plus noise.
+Here $B$ is a $q \times p$ matrix.  Let us write $\vec{B}$ as the $qp \times 1$ vectorized
+representation of $B$, and further suppose that $\vec{B}$ is a random variate 
+$$
+\vec{B} \sim N(0, \Sigma_B)
+$$
+and that the $\epsilon_i^j$ are indenpendent of the $B$, with $\epsilon_i^j$ 
+i.i.d.
+$$
+\epsilon_i^j \sim N(0,\Sigma_\epsilon)
+$$
+
+Let $Y$ denote the matrix of responses $Y = [y_1^1, y_1^2, ..., y_K^1, y_K^2]$
+and $X$ denote the corresponding design matrix $X = [x_1, x_1, ..., x_K, x_K]$, so that the model can be written
+$$
+Y = XB + E
+$$
+Further, let $\vec{Y}$ denote the vectorized matrix of responses and $Z = I_p \otimes X$
+the corresponding expanded design matrix, so that the model can be written
+$$
+\vec{Y} = Z\vec{B} + \vec{E}
+$$
+The assumed dsitribution of the noise can be restated as
+$$
+\vec{E} \sim N(0, \Sigma_E)
+$$
+where $\Sigma_E = \Sigma_\epsilon \otimes I_{2K}$.
+
+Now supposing the statistican knows the exact value of $\Sigma_\beta$ and $\Sigma_\epsilon$,
+it is a standard result in Bayesian inference that the posterior distribution for $\vec{B}$ can be obtained as
+$$
+\vec{B} \sim N( (Z^T \Sigma_E^{-1} Z + \Sigma_B^{-1})^{-1} Z^T \Sigma_E^{-1} y,
+(Z^T \Sigma_E^{-1} Z +\Sigma_B^{-1})^{-1})
+$$
