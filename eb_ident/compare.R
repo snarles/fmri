@@ -11,9 +11,9 @@ library(class)
 
 ## Generate parameters
 
-n <- 100
-p <- 20
-q <- 50
+n <- 80
+p <- 30
+q <- 60
 
 Sigma_X <- 1/(2 * q) * randn(2 * q, q) %>% { t(.) %*% . }
 Sigma_e <- 10/(2 * p) * randn(2 * p, p) %>% { t(.) %*% . }
@@ -27,6 +27,10 @@ B0 <- matrix(Bvec, q, p)
 
 X <- mvrnorm(n, mu = rep(0, q), Sigma = Sigma_X)
 Y <- X %*% B0 + mvrnorm(n, mu = rep(0, p), Sigma = Sigma_e)
+B_mu <- matrix(0, q, p)
+for (i in 1:p) {
+  B_mu[, i] <- solve(t(X) %*% X + diag(rep(1/s0s[i], q))) %*% t(X) %*% Y[, i]    
+}
 Sigma_Bhat_vec <- solve(solve(Sigma_e) %x% (t(X) %*% X) + diag(1/diag(Sigma_B)))
 
 ## Estimate parameters
@@ -41,19 +45,19 @@ for (i in 1:p) {
   B_mu_EB[, i] <- as.numeric(coefficients(res))[-1]  
   lambdas[i] <- (sum(as.numeric(coefficients(res))[-1]^2)/q)  
 }
-#lambdas[lambdas < 1e-3] <- 1e-3
-lambdas <- rep(mean(lambdas), p)
+lambdas[lambdas < 1e-3] <- 1e-3
+#lambdas <- rep(mean(lambdas), p)
 #lambdas <- s0s
 Sigma_E_hat <- 0.5 * cov(resids) + 0.5 * diag(diag(cov(resids)))
 Inv_Sigma_B <- diag(rep(1/lambdas, each = q))
 EB_cov_B_vec <- solve(solve(Sigma_E_hat) %x% (t(X) %*% X) + Inv_Sigma_B)
 
 # compare estimated sigma_B with true sigma_B
-#plot(s0s, lambdas)
+plot(s0s, lambdas)
 
 ## Generate new stimuli
-L <- 100
-n_te <- 20
+L <- 200
+n_te <- 200
 X_te <- randn(L, q) 
 i_chosen <- sample(L, n_te, TRUE)
 y_star <- X_te[i_chosen, , drop = FALSE] %*% B0 +  mvrnorm(n_te, rep(0, p), Sigma_e)
@@ -63,6 +67,7 @@ y_star <- X_te[i_chosen, , drop = FALSE] %*% B0 +  mvrnorm(n_te, rep(0, p), Sigm
 post_probs <- function(Sigma_e, Sigma_vec_B, B_hat, X, Y) {
   L <- dim(X)[1]
   n <- dim(Y)[1]
+  p <- dim(Y)[2]
   mus <- list(L)
   covs <- list(L)
   pprobs <- matrix(0, n, L)
@@ -70,17 +75,17 @@ post_probs <- function(Sigma_e, Sigma_vec_B, B_hat, X, Y) {
     mus[[i]] <- X[i, , drop = FALSE] %*% B_hat
     covs[[i]] <- (diag(rep(1, p)) %x% t(X[i, ])) %*% 
       Sigma_vec_B %*% (diag(rep(1, p)) %x% t(t(X[i, ]))) + Sigma_e
-    for (j in 1:n_te) {
+    for (j in 1:n) {
       pprobs[j, i] <- -log(det(covs[[i]])) - 
-        (y_star[j, , drop = FALSE] - mus[[i]]) %*% solve(covs[[i]]) %*% 
-        t(y_star[j, , drop = FALSE] - mus[[i]])
+        (Y[j, , drop = FALSE] - mus[[i]]) %*% solve(covs[[i]]) %*% 
+        t(Y[j, , drop = FALSE] - mus[[i]])
     }  
   }
   pprobs
 }
 
 ## Bayes
-pp_bayes <- post_probs(Sigma_e, Sigma_Bhat_vec, B0, X_te, y_star)
+pp_bayes <- post_probs(Sigma_e, Sigma_Bhat_vec, B_mu, X_te, y_star)
 bayes_cl <- apply(pp_bayes, 1, function(v) order(-v)[1])
 (bayes_err <- sum(bayes_cl != i_chosen))
 
