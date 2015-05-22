@@ -50,9 +50,60 @@ $$
 $$
 where $\Sigma_E = \Sigma_\epsilon \otimes I_{2K}$.
 
+```{r}
+library(pracma)
+library(magrittr)
+library(MASS)
+K <- 30 # number of stimuli
+p <- 20 # dimension of response
+q <- 8 # dimension of features
+# true noise covariance
+Sigma_E <- 2/p * randn(2 * p, p) %>% { t(.) %*% . }
+# true signal covariance = sB * I
+sB0 <- 2
+B0 <- sqrt(sB0) * randn(q, p)
+# random features
+X <- randn(K, q) %>% repmat(n = 2, m = 1)
+# noise
+E <- mvrnorm(2 * K, rep(0, p), Sigma_E)
+# observations
+Y <- X %*% B0 + E
+```
+
 Now supposing the statistican knows the exact value of $\Sigma_\beta$ and $\Sigma_\epsilon$,
 it is a standard result in Bayesian inference that the posterior distribution for $\vec{B}$ can be obtained as
 $$
 \vec{B} \sim N( (Z^T \Sigma_E^{-1} Z + \Sigma_B^{-1})^{-1} Z^T \Sigma_E^{-1} y,
 (Z^T \Sigma_E^{-1} Z +\Sigma_B^{-1})^{-1})
 $$
+
+```{r}
+# posterior mean
+B_mu <- solve(t(X) %*% X + 1/sB0 * diag(rep(1, q))) %*% t(X) %*% Y
+# posterior variance per column
+post_cov_B_col <- solve(t(X) %*% X + 1/sB0 * diag(rep(1, q)) )
+# marginal variances of B
+post_var_B <- t(t(diag(post_cov_B_col))) %*% diag(Sigma_E)
+# upper and lower intervals
+B_up <- B_mu + 2 * sqrt(post_var_B)
+B_low <- B_mu - 2 * sqrt(post_var_B)
+# plot
+plot(B0, B_mu, main = "Posterior mean B vs true B"); abline(0, 1, col = "green")
+for (i in 1:q) { for (j in 1:p) {
+  if (B_low[i,j] < B0[i, j] && B_up[i, j] > B0[i, j]) {
+    cc <- "blue"
+  } else {
+    cc <- "red"
+  }
+  lines(rep(B0[i, j], 2), c(B_low[i, j], B_up[i, j]), col = cc)
+  points(rep(B0[i, j], 2), c(B_low[i, j], B_up[i, j]), pch = "-", col = cc)
+}}
+points(B0, B_mu)
+```
+
+```{r}
+
+```
+
+# Identification
+
