@@ -34,8 +34,8 @@ $$
 \epsilon_i^j \sim N(0,\Sigma_\epsilon)
 $$
 
-Let $Y$ denote the matrix of responses $Y = [y_1^1, y_1^2, ..., y_K^1, y_K^2]$
-and $X$ denote the corresponding design matrix $X = [x_1, x_1, ..., x_K, x_K]$, so that the model can be written
+Let $Y$ denote the matrix of responses $Y = [(y_1^1)^T, (y_1^2)^T, ..., (y_K^1)^T, (y_K^2)^T]$
+and $X$ denote the corresponding design matrix $X = [x_1^T, x_1^T, ..., x_K, x_K]$, so that the model can be written
 $$
 Y = XB + E
 $$
@@ -73,7 +73,7 @@ Y <- X %*% B0 + E
 Now supposing the statistican knows the exact value of $\Sigma_\beta$ and $\Sigma_\epsilon$,
 it is a standard result in Bayesian inference that the posterior distribution for $\vec{B}$ can be obtained as
 $$
-\vec{B} \sim N( (Z^T \Sigma_E^{-1} Z + \Sigma_B^{-1})^{-1} Z^T \Sigma_E^{-1} y,
+\vec{B} \sim N( (Z^T \Sigma_E^{-1} Z + \Sigma_B^{-1})^{-1} Z^T \Sigma_E^{-1} \vec{Y},
 (Z^T \Sigma_E^{-1} Z +\Sigma_B^{-1})^{-1})
 $$
 
@@ -101,8 +101,21 @@ for (i in 1:q) { for (j in 1:p) {
 points(B0, B_mu)
 ```
 
-```{r}
+The posterior distribution of $\mu_i$ are given as follows:
 
+$$
+\text{E}(\mu_i) = (x_i)^T \text{E}(B)
+$$
+
+$$
+\text{Cov}(\mu_i, \mu_j) = (I_p \otimes (x_i)^T) \text{Cov}(B) (I_p \otimes x_j)
+$$
+
+```{r}
+post_cov_B_vec <- solve(solve(Sigma_E) %x% (t(X) %*% X) + 1/sB0 * diag(rep(1, p * q)))
+f_post_cov_mu <- function(i, j) {
+  (diag(rep(1, p)) %x% X[i, , drop = FALSE]) %*% post_cov_B_vec %*% (diag(rep(1, p)) %x% t(t(X[j, ])))
+}
 ```
 
 # Identification
