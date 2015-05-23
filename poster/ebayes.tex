@@ -98,7 +98,7 @@ Y_{T \times p} = X_{T \times q} B_{q \times p} + E_{T \times p}
 \[
 \{x_1^{te}, \hdots, x_\ell^{te}\}
 \]
-\item Scientist picks a stimulus from $S$ and measures the subject's reponse $y^*$
+\item Scientist picks a stimulus $i^*$ from $S$ and measures the subject's reponse $y^*$
 \item Can the statistician \emph{identify} the stimulus from $y^*$?
 \end{itemize}
 \begin{center}
@@ -110,38 +110,71 @@ Y_{T \times p} = X_{T \times q} B_{q \times p} + E_{T \times p}
 
 \begin{column}{\sepwid}\end{column} % Empty spacer column
 
+
+
 \begin{column}{\onecolwid}
 
 %----------------------------------------------------------------------------------------
 %	MATERIALS
 %----------------------------------------------------------------------------------------
 
-\begin{alertblock}{Objectives}
+\begin{block}{Objectives}
 \begin{itemize}
-\item 
-\end{itemize}
-\end{alertblock}
-
-
-\begin{block}{Methods}
-
-The following materials were required to complete the research:
-
-\begin{itemize}
-\item Curabitur pellentesque dignissim
-\item Eu facilisis est tempus quis
-\item Duis porta consequat lorem
-\item Eu facilisis est tempus quis
+\item Develop new methodology for optimal identification
 \end{itemize}
 
-The materials were prepared according to the steps outlined below:
+\emph{Key theoretical problems:}
+\begin{itemize}
+\item Optimal identification given parameter estimates
+\item Estimation of model (e.g. linear model $Y = XB$)
+\item Estimation of noise $\Sigma_E = \text{Cov}(E)$
+\end{itemize}
 
-\begin{enumerate}
-\item Curabitur pellentesque dignissim
-\item Eu facilisis est tempus quis
-\item Duis porta consequat lorem
-\item Curabitur pellentesque dignissim
-\end{enumerate}
+\emph{Optimality criteria:}
+\begin{itemize}
+\item Bayes (average case) under parametric models
+\item Minimax regret under nonparametric models
+\end{itemize}
+
+We consider two methods: \emph{maximum likelihood} and \emph{empirical
+  Bayes}, and compare to \emph{Bayes risk}.
+\end{block}
+
+
+
+\begin{block}{Maximum Likelihood}
+
+Procedure for identification of $y^*$,
+variants used in Kay (2008), Vu (2011)
+
+\begin{itemize}
+\item Obtain point estimates of coefficients $B$ and noise covariance $\Sigma_E$
+\item E.g. $B$ estimated using elastic net with CV (Zou 2005),
+shrinkage estimate for covariance
+\[
+\hat{\Sigma}_E = \frac{1}{2}\hat{\text{Cov}}(Y - \hat{Y}) + \frac{1}{2}\text{diag}(\hat{\text{Cov}}(Y - \hat{Y}))
+\]
+where $\hat{\text{Cov}}$ denotes sample covariance
+\item Obtain predicted means for test stimuli
+\[
+\hat{\mu}_i^{te} = (x_i^{te})^T B
+\]
+\item Identify the stimulus $i^*$ by
+\[
+i^* = \text{argmin}_{i} (\hat{\mu}_i^{te} - y^*)^T \hat{\Sigma}_E^{-1} (\hat{\mu}_i^{te} - y^*)
+\]
+\item Results in \emph{linear decision boundaries}
+\end{itemize}
+
+\begin{center}
+\includegraphics[scale = 1.0]{illus1_A.pdf}
+\end{center}
+
+%\emph{Theoretical results}
+%\begin{itemize}
+%\item Asymptotic consistency to optimal procedure $T \to \infty$ under correct model specification
+%\item Inconsistency given model misspecification (nonlinearity)
+%\end{itemize}
 
 \end{block}
 
@@ -149,30 +182,57 @@ The materials were prepared according to the steps outlined below:
 
 \end{column} % End of column 2.1
 
+\begin{column}{\sepwid}\end{column} % Empty spacer column
+
+
 \begin{column}{\onecolwid}
 
 %----------------------------------------------------------------------------------------
 %	METHODS
 %----------------------------------------------------------------------------------------
-\begin{block}{Methods}
+\begin{alertblock}{What is Empirical Bayes?}
+\begin{itemize}
+\item General approach for statistical problems (e.g. Efron 2004)
+\item Start with a hierarchical Bayes model with hyperparameters
+\item \emph{Estimate} hyperparameters from data, e.g. maximizing marginal likelihood
+\end{itemize}
+\end{alertblock}
 
-The following materials were required to complete the research:
+\begin{block}{Empirical Bayes}
+
+\emph{Model}
 
 \begin{itemize}
-\item Curabitur pellentesque dignissim
-\item Eu facilisis est tempus quis
-\item Duis porta consequat lorem
-\item Eu facilisis est tempus quis
+\item Noise $E_t \sim N(0, \Sigma_E)$ iid 
+\item Coefficients $B_i \sim N(0, \sigma^2_i I)$ for $i = 1, \hdots, p$
+\item $X$ non-random
 \end{itemize}
 
-The materials were prepared according to the steps outlined below:
+\emph{Estimate hyperparameters}
 
-\begin{enumerate}
-\item Curabitur pellentesque dignissim
-\item Eu facilisis est tempus quis
-\item Duis porta consequat lorem
-\item Curabitur pellentesque dignissim
-\end{enumerate}
+\begin{itemize}
+\item Use \emph{eigenprism} (Janson 2015) to estimate $\theta_i^2 = ||B_i||^2$ for $i =1,\hdots, p$
+\item Set $\sigma^2_i = \hat{\theta}_i^2/q$
+\item Estimate $\hat{B}$ as posterior mean given estimated $\sigma^2_i$
+\item Estimate $\Sigma_E$ using residuals (same as in Maximum Likelihood)
+\end{itemize}
+
+\emph{Compute posterior}
+\begin{itemize}
+\item Closed-form expressions for posteriors of $B$, $\mu_i^{te}$
+\item Computational bottleneck: inverting the $pq \times pq$ covariance matrix of $\vec{B}$
+\end{itemize}
+
+\emph{Apply Bayes rule}
+
+\begin{itemize}
+\item \emph{Uncertainty} in $B$ is reflected as \emph{added noise}
+\item Result: posterior $\text{Cov}(y^*|i^*)$ varies, hence \emph{quadratic boundaries}
+\end{itemize}
+
+\begin{center}
+\includegraphics[scale = 1.0]{illus1_B.pdf}
+\end{center}
 
 \end{block}
 
@@ -189,25 +249,15 @@ The materials were prepared according to the steps outlined below:
 %	CONCLUSION
 %----------------------------------------------------------------------------------------
 
-\begin{block}{Conclusion}
-
-Nunc tempus venenatis facilisis. \textbf{Curabitur suscipit} consequat eros non porttitor. Sed a massa dolor, id ornare enim. Fusce quis massa dictum tortor \textbf{tincidunt mattis}. Donec quam est, lobortis quis pretium at, laoreet scelerisque lacus. Nam quis odio enim, in molestie libero. Vivamus cursus mi at \textit{nulla elementum sollicitudin}.
+\begin{block}{Simulation Results}
 
 \end{block}
 
-%----------------------------------------------------------------------------------------
-%	ADDITIONAL INFORMATION
-%----------------------------------------------------------------------------------------
-
-\begin{block}{Additional Information}
-
-Maecenas ultricies feugiat velit non mattis. Fusce tempus arcu id ligula varius dictum. 
+\begin{block}{Ongoing Work}
 \begin{itemize}
-\item Curabitur pellentesque dignissim
-\item Eu facilisis est tempus quis
-\item Duis porta consequat lorem
+\item Estimate noise covariance based on correlation structure of fMRI data (e.g. spatial correlation)
+\item Apply methods to data of Kay (2008)
 \end{itemize}
-
 \end{block}
 
 %----------------------------------------------------------------------------------------
