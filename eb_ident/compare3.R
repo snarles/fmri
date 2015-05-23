@@ -1,6 +1,12 @@
 source("eb_ident/compare2.R")
 
+#pars <- list(n= 30, p= 100, q= 5, W_X= 4, s_e= 2, W_e= 4, L= 100, n_te= 100)
+#attach(pars)
+#detach(pars)
+
 ## Test the code
+run_exp(n= 30, p= 60, q= 60, W_X= 2, s_e= 10, W_e= 2, L= 100, n_te= 100)
+
 run_exp(n= 30, p= 100, q= 2, W_X= 4, s_e= 2, W_e= 4, L= 100, n_te= 100)
 run_exp(n= 30, p= 200, q= 2, W_X= 4, s_e= 2, W_e= 4, L= 100, n_te= 100)
 
