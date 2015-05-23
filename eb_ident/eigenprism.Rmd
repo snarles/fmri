@@ -1,0 +1,172 @@
+---
+title: "Eigenprism"
+author: "Charles Zheng"
+date: "05/22/2015"
+output: html_document
+---
+
+See Janson et al 2015 http://arxiv.org/pdf/1505.02097v1.pdf
+
+Problem setup.  Goal: estimate $\theta^2 = ||\beta||^2$.
+
+```{r}
+library(pracma)
+library(magrittr)
+library(MASS)
+n <- 100
+p <- 200
+Sigma_X <- (1/(2 * p)) * (randn(2 * p, p) %>% {t(.) %*% .})
+X <- mvrnorm(n, mu = rep(0, p), Sigma = Sigma_X)
+b <- rnorm(p)
+y <- X %*% b + 0.1 * rnorm(n)
+norm_b <- sum(b^2)
+norm_b
+```
+
+Quantities needed for eigenprism
+```{r}
+res <- svd(X)
+dim(res$u)
+z <- t(res$u) %*% y
+l <- res$d^2/p #lambdas
+```
+
+Eigenprism optimization problem
+$$
+\text{minimize}_w \max\{\sum_{i=1}^n w_i^2, \sum_{i=1}^n w_i^2 \lambda_i^2\}
+\text{ such that }1^T w = 0, \lambda^T w = 1
+$$
+
+Here a simple algorithm for solving the optimization problem.
+Let $f_i(w) = w^T \Lambda_i w$, for $i = 0, 1$, where $\Lambda_0 = I$ and $\Lambda_1 = \text{diag}(\lambda)$, so that $f = \max(f_0, f_1)$.
+Let $L = [1, \lambda]$ and let $P = I - L(L^T L )^{1} L$ (the projection onto
+subspace of allowed directions).
+
+Beginning at some feasible $w = w_0$, evaluate the constrained Newton direction $g$.
+(Any $w - t g$ is feasible.)
+Let $\iota = 1$ if $f_1 > f_2$ and $\iota = 2$ otherwise.
+Now, instead of doing a line search, we only check up to 3 distinct values of $t$.
+We will solve for $t_{min}$ which minimizes $f_\iota(w - t g)$
+and also solve for $t_{eq}$ such that $f_1(w - t g) = f_2(w - t g)$ (if possible).
+It may also be possible that $t_{eq}$ has two solutions, in which case we check both.
+Note that
+$$
+f_1(w - tg) = ||w||^2 - 2t w^T g + t^2 ||g||^2
+$$
+$$
+f_2(w - tg) = ||(w\circ \lambda)||^2 - 2t (w \circ \lambda)^T (g\circ \lambda) + t^2 ||(g \circ \lambda)||^2
+$$
+Hence expressions for $t_{min}$ and $t_{eq}$ are easily obtained.
+
+```{r}
+# Get an initial point
+w0 <- 1/(l[1] - l[2]) * c(1, -1, rep(0, n - 2))
+w <- w0
+# objective function
+f <- function(w) {
+  max(sum(w^2), sum((w * l)^2))
+}
+f(w)
+# Form the null space where we are free to move
+res <- svd(cbind(1, l))
+P <- -(res$u %>% {(.) %*% t(.)})
+diag(P) <- diag(P) + 1
+A <- P[, -c(1, 2)]
+# Newton operators
+Ls <- list(diag(rep(1, n)), diag(l))
+Ns <- lapply(Ls, function(L) A %*% solve(t(A) %*% L %*% A) %*% t(A) %*% L)
+tz <- 0:200/100
+```
+
+Iteration demo (run this yourself...)
+
+```{r}
+## LOOP
+# evaluate the gradient
+f_flag <- sum(w^2) < sum((w * l)^2)
+lterm <- l^(2 * f_flag)
+# constrained Newton direction
+g <- Ns[[1 + f_flag]] %*% w
+# t_minimize and t_eq
+t_min <- sum(w * g * lterm)/(sum(g^2 * lterm) + 1e-10)
+aa <- sum(g ^ 2) - sum((g * l)^2)
+bb <- -2 * (sum(g * w) - sum(l^2 * g * w))
+cc <- sum(w^2) - sum((w * l)^2)
+suppressWarnings({t_eq <- (-bb + c(-1, 1)*sqrt(bb^2 - 4 * aa * cc))/(2 * aa)})
+ts <- c(t_min, t_eq[!is.na(t_eq)])
+vals <- sapply(ts, function(t) f(w - t * g))
+t_best <- ts[order(vals)[1]]
+
+f0t <- function(t) sum((w - t * g)^2)
+f1t <- function(t) sum((w - t * g)^2 * l^2)
+plot(tz, sapply(tz, f0t), type = "l", col = "blue")
+lines(tz, sapply(tz, f1t), col = "red")
+abline(v = t_min, col = "green")
+if (sum(!is.na(t_eq)) > 0) abline(v = t_eq[!is.na(t_eq)], col = "violet")
+
+w <- w - t_best * g
+print(list(f_flag, ts, vals, f(w)))
+```
+
+The function for finding w
+```{r}
+eigenprism_w <- function(l, tol = 1e-4) {
+  n <- length(l)
+  f <- function(w) max(sum(w^2), sum((w * l)^2))
+  # null space directions
+  res <- svd(cbind(1, l))
+  P <- -(res$u %>% {(.) %*% t(.)})
+  diag(P) <- diag(P) + 1
+  A <- P[, -c(1, 2)]
+  # Newton operators
+  Ls <- list(diag(rep(1, n)), diag(l))
+  Ns <- lapply(Ls, function(L) A %*% solve(t(A) %*% L %*% A) %*% t(A) %*% L)
+  # initialization
+  w <- 1/(l[1] - l[2]) * c(1, -1, rep(0, n - 2))
+  f_old <- f(w)  
+  iter_flag <- TRUE
+  while(iter_flag) {
+    # evaluate the gradient
+    f_flag <- sum(w^2) < sum((w * l)^2)
+    lterm <- l^(2 * f_flag)
+    # constrained Newton direction
+    g <- Ns[[1 + f_flag]] %*% w
+    # t_minimize and t_eq
+    t_min <- sum(w * g * lterm)/(sum(g^2 * lterm) + 1e-10)
+    aa <- sum(g ^ 2) - sum((g * l)^2)
+    bb <- -2 * (sum(g * w) - sum(l^2 * g * w))
+    cc <- sum(w^2) - sum((w * l)^2)
+    suppressWarnings({t_eq <- (-bb + c(-1, 1)*sqrt(bb^2 - 4 * aa * cc))/(2 * aa)})
+    ts <- c(t_min, t_eq[!is.na(t_eq)])
+    vals <- sapply(ts, function(t) f(w - t * g))
+    t_best <- ts[order(vals)[1]]    
+    w <- w - t_best * g
+    f_new <- min(vals)
+    if (f_old - f_new < tol) iter_flag <- FALSE
+    f_old <- f_new
+  }
+  list(w = w, val = f_old)
+}
+
+eigenprism <- function(X, y, alpha = 0.05) {
+  n <- length(y)
+  res <- svd(X)
+  dim(res$u)
+  z <- t(res$u) %*% y
+  l <- res$d^2/p
+  res <- eigenprism_w(l)
+  w <- res$w; val <- res$val
+  T2 <- sum(z^2 * w)
+  qq <- qnorm(1 - alpha/2)
+  width <- qq * sqrt(2 * val) * sum(y^2)/n
+  lower <- max(T2 - width, 0)
+  upper <- T2 + width
+  list(T2 = T2, lower = lower, upper = upper)
+}
+```
+
+Application to regression problem:
+```{r}
+norm_b
+eigenprism(X, y)
+```
