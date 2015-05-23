@@ -1,13 +1,14 @@
 ####
-## COMPARE E BAYES WITH ML
+## COMPARE E BAYES (+ with eigenprism) WITH ML
 ###
 
 library(magrittr)
 library(pracma)
 library(MASS)
 library(glmnet)
-source('transfer/source.R')
 library(class)
+source('transfer/source.R')
+source('eb_ident/eigenprism.R')
 
 ## Generate parameters
 
@@ -35,6 +36,7 @@ Sigma_Bhat_vec <- solve(solve(Sigma_e) %x% (t(X) %*% X) + diag(1/diag(Sigma_B)))
 
 ## Estimate parameters
 
+# using CV
 B_mu_EB <- matrix(0, q, p) # placeholder for estimate
 resids <- matrix(0, n, p)
 lambdas <- numeric(p) # lambda for each column of B
@@ -45,15 +47,29 @@ for (i in 1:p) {
   B_mu_EB[, i] <- as.numeric(coefficients(res))[-1]  
   lambdas[i] <- (sum(as.numeric(coefficients(res))[-1]^2)/q)  
 }
-lambdas[lambdas < 1e-3] <- 1e-3
-#lambdas <- rep(mean(lambdas), p)
-#lambdas <- s0s
+lambdas <- pmax(lambdas, 1e-5)
 Sigma_E_hat <- 0.5 * cov(resids) + 0.5 * diag(diag(cov(resids)))
 Inv_Sigma_B <- diag(rep(1/lambdas, each = q))
 EB_cov_B_vec <- solve(solve(Sigma_E_hat) %x% (t(X) %*% X) + Inv_Sigma_B)
 
+# Using eigenprism
+res_EP <- eigenprisms(X, Y)
+lambdas_EP <-  pmax(res_EP$T2/q, 1e-5)
+B_mu_EP <- matrix(0, q, p)
+for (i in 1:p) {
+  B_mu_EP[, i] <- solve(t(X) %*% X + diag(rep(lambdas_EP[i], q))) %*% t(X) %*% Y[, i]    
+}
+Yhat_EP <- X %*% B_mu_EP
+Sigma_e_EP <- cov(Y - Yhat_EP) %>% {0.5 * . + 0.5 * diag(diag(.))}
+Sigma_B_EP <- diag(rep(1/lambdas_EP, each = q))
+EP_cov_B_vec <- solve(solve(Sigma_e_EP) %x% (t(X) %*% X) + diag(1/diag(Sigma_B_EP)))
+
 # compare estimated sigma_B with true sigma_B
-plot(s0s, lambdas)
+#plot(s0s, lambdas)
+plot(colSums(B0^2)/q, lambdas, col = "blue")
+points(colSums(B0^2)/q, s0s)
+points(colSums(B0^2)/q, res_EP$T2/q, col = "red")
+abline(0, 1)
 
 ## Generate new stimuli
 L <- 200
@@ -95,7 +111,18 @@ a <- isqrtm(Sigma_E_hat)
 mle_cl <- knn(mu_hat %*% a, y_star %*% a, 1:L)
 (mle_err <- sum(mle_cl != i_chosen))
 
+## Maximum likelihood with EP
+mu_hat <- X_te %*% B_mu_EP
+a <- isqrtm(Sigma_e_EP)
+mle_cl_EP <- knn(mu_hat %*% a, y_star %*% a, 1:L)
+(mle_err_EP <- sum(mle_cl_EP != i_chosen))
+
 ## E-bayes
 pp_eb <- post_probs(Sigma_E_hat, EB_cov_B_vec, B_mu_EB, X_te, y_star)
 eb_cl <- apply(pp_eb, 1, function(v) order(-v)[1])
 (eb_err <- sum(eb_cl != i_chosen))
+
+## E-bayes with EP
+pp_ep <- post_probs(Sigma_e_EP, EP_cov_B_vec, B_mu_EP, X_te, y_star)
+ep_cl <- apply(pp_ep, 1, function(v) order(-v)[1])
+(ep_err <- sum(ep_cl != i_chosen))

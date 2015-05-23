@@ -54,6 +54,7 @@ eigenprism <- function(X, y, alpha = 0.05) {
 
 eigenprisms <- function(X, Y, alpha = 0.05) {
   n <- dim(X)[1]
+  p <- dim(X)[2]
   res <- svd(X)
   dim(res$u)
   z <- t(res$u) %*% Y
