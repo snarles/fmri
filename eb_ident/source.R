@@ -88,7 +88,7 @@ params_EP <- function(X, Y, Xte, Yte) {
     B_mu_EP[, i] <- solve(t(X) %*% X + diag(rep(lambdas_EP[i], q))) %*% t(X) %*% Y_EP[, i]    
   }
   Yhat_EP <- X %*% B_mu_EP
-  Sigma_e_EP <- cov(Y_EP - Yhat_EP) %>% {0.5 * . + 0.5 * diag(diag(.))}
+  Sigma_e_EP <- cov(Y_EP - Yhat_EP) %>% {0.5 * . + 0.5 * diag(1e-4 + diag(.))}
   Sigma_B_EP <- diag(rep(1/lambdas_EP, each = q))
   EP_cov_B_vec <- solve(solve(Sigma_e_EP) %x% (t(X) %*% X) + diag(1/diag(Sigma_B_EP)))
   list(lambdas = lambdas_EP, filt = filt_EP, B = B_mu_EP, Sigma_e = Sigma_e_EP,

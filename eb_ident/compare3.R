@@ -21,13 +21,13 @@ def_settings <- function(xx) {
   run_exp(n=driver_n, p= 60, q= 60, W_X= 2, s_e= 10, W_e= 2, L= 100, n_te= 100)  
 }
 
-n_seeds <- 7
-n_iters <- 10
+n_seeds <- 30
+n_iters <- 15
 results <- array(0, dim = c(n_seeds, 5, n_iters))
 
 for (ii in 1:n_iters) {
-  driver_n <- ii * 10
-  res <- mclapply(1:n_seeds, def_settings, mc.cores = 7)
+  driver_n <- ii * 5 + 5
+  res <- mclapply(1:n_seeds, def_settings, mc.cores = n_seeds)
   results[, , ii] <- t(matrix(unlist(res), nrow = 5))  
 }
 
