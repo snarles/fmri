@@ -66,7 +66,14 @@ run_exp <- function(n, p, q, W_X, s_e, W_e,
   Yhat_EP <- X %*% B_mu_EP
   Sigma_e_EP <- cov(Y_EP - Yhat_EP) %>% {0.5 * . + 0.5 * diag(diag(.))}
   Sigma_B_EP <- diag(rep(1/lambdas_EP, each = q))
-  EP_cov_B_vec <- solve(solve(Sigma_e_EP) %x% (t(X) %*% X) + diag(1/diag(Sigma_B_EP)))
+  tryCatch({
+    EP_cov_B_vec <- solve(solve(Sigma_e_EP) %x% (t(X) %*% X) + diag(1/diag(Sigma_B_EP)))    
+  }, warning = function(w) {
+    EP_cov_B_vec <- list(X  = X, Y = Y)
+  })
+  if (class(EP_cov_B_vec) == "list") {
+    return(EP_cov_B_vec)
+  }
   ## Generate new stimuli
   X_te <- randn(L, q) 
   i_chosen <- sample(L, n_te, TRUE)
