@@ -79,13 +79,27 @@ iloop1 <- function(i) {
   }
   ans
 }
+iloop2 <- function(i) {
+  ans <- numeric(res)
+  for (j in 1:res) {
+    ans[j] <- theory1(bts[j], sigma2_x, sigma2_eps, bts[i], k_cl, 300)
+  }
+  ans
+}
 
 proc.time()
 temp <- mclapply(1:res, iloop1, mc.cores = 26)
 proc.time()
 
+proc.time()
+newtemp <- mclapply(198:204, iloop2, mc.cores = 7)
+proc.time()
+
+lines(newtemp[[4]], col = "red")
+
 sapply(temp, length)
 rmat <- do.call(rbind, temp)
+rmat[, 198:204] <- do.call(cbind, newtemp)
 
 #pdf("paper/rmat.pdf")
 filled.contour(bts, bts, rmat, xlab = expression(hat(beta)), ylab = expression(beta))
@@ -95,11 +109,70 @@ title(expression(paste("R(", beta, "; ", hat(beta), ")")))
 ## Optimal beta hat given the prior
 opt_bth <- function(mu, sigma2) {
   dn <- dnorm(bts, mean = mu, sd = sqrt(sigma2))
-  dn <- dn/sum(dn)
+  #dn <- dn/sum(dn)
   lala <- dn %*% rmat
   bth = bts[lala == min(lala)]
   bth
 }
+
+####
+## SMOOTH OUT THE RMAT
+####
+rmat_old <- rmat
+rmat <- rmat_old
+
+
+
+nn <- dim(rmat)[1]
+s2d <- diag(rep(1, nn))
+s2d[abs(row(s2d) - col(s2d)) == 1] <- -.5
+s2ds <- s2d %*% rmat
+s2ds[1, ] <- 0; s2ds[nn, ] <- 0
+plot(abs(s2ds)[, 100])
+plot(abs(s2ds)[, 200])
+plotit <- function(k, thres) {
+  s2ds <- s2d %*% rmat
+  s2ds[1, ] <- 0; s2ds[nn, ] <- 0
+  lala <- which(abs(s2ds)[, k] > thres)
+  plot(rmat[, k], type = "l")
+  points(lala, rmat[lala, k], col = "red")
+}
+thres <- 0.001
+smooth_rmat <- function(rmat, thres) {
+  for (k in which(apply(abs(s2ds), 2, max) > thres)) {
+    lala <- which(abs(s2ds)[, k] > thres)
+    for (i in lala) {
+      minl <- max(1, i - 10)
+      maxl <- min(nn, i + 10)
+      inds <- setdiff(minl:maxl, lala)
+      if (length(inds) < 4) inds <- setdiff(minl:maxl, i)
+      y <- rmat[inds, k]
+      x <- cbind(1, inds, inds^2, inds^3)
+      cf <- lm(y ~ x + 0)$ coefficients
+      rmat[i, k] <- sum(c(1, i, i^2, i^3) * cf)
+    }
+  }
+  rmat
+}
+rmat <- smooth_rmat(rmat, 0.01)
+rmat <- smooth_rmat(rmat, 0.005)
+rmat <- smooth_rmat(rmat, 0.003)
+rmat <- smooth_rmat(rmat, 0.001)
+
+
+plotit(210, 0.001)
+
+plotit(203, 0.001)
+plotit(202, 0.001)
+plotit(201, 0.001)
+lines(rmat[, 202], col = "red")
+lines(rmat[, 203], col = "blue")
+
+plotit(200, 0.001)
+
+plotit(190, 0.001)
+plotit(150, 0.001)
+plotit(100, 0.001)
 
 sigma2 <- 0.5
 cand_bts <- (-200:200)/40 + 1e-3
@@ -107,11 +180,14 @@ temp1 <- function(i) {
   opt_bth(cand_bts[i], sigma2)
 }
 #temp1(1)
+pdf("poster/zero.pdf")
 res <- sapply(1:length(cand_bts), temp1)
-plot(cand_bts, res, type = 'l')
+layout(1)
+plot(cand_bts, res, type = 'l', xlab = "Point estimate", ylab = "Optimal")
 lines(cand_bts, cand_bts, lty = 2)
-title(expression(paste(sigma^2, "=")))
-title(paste("        ", sigma2))
+dev.off()
+#title(expression(paste(sigma^2, "=")))
+#title(paste("        ", sigma2))
 
 ## minimal estimate phenomenon
 
@@ -134,3 +210,4 @@ for (i in 1:length(sds)) {
   plot(bts, y,
         type = 'l', col = rainbow(length(sds))[i])  
 }
+par(mar = oldmar)
