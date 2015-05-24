@@ -109,8 +109,9 @@ title(expression(paste("R(", beta, "; ", hat(beta), ")")))
 ## Optimal beta hat given the prior
 opt_bth <- function(mu, sigma2) {
   dn <- dnorm(bts, mean = mu, sd = sqrt(sigma2))
-  #dn <- dn/sum(dn)
+  dn <- dn/sum(dn)
   lala <- dn %*% rmat
+  lala[201] <- 1
   bth = bts[lala == min(lala)]
   bth
 }
@@ -168,19 +169,22 @@ plotit(201, 0.001)
 lines(rmat[, 202], col = "red")
 lines(rmat[, 203], col = "blue")
 
+plot((rmat[, 200] + rmat[, 202])/2, type = "l")
+
+
 plotit(200, 0.001)
 
 plotit(190, 0.001)
 plotit(150, 0.001)
 plotit(100, 0.001)
 
-sigma2 <- 0.5
+sigma2 <- 1
 cand_bts <- (-200:200)/40 + 1e-3
 temp1 <- function(i) {
   opt_bth(cand_bts[i], sigma2)
 }
 #temp1(1)
-pdf("poster/zero.pdf")
+pdf("poster/zero2.pdf")
 res <- sapply(1:length(cand_bts), temp1)
 layout(1)
 plot(cand_bts, res, type = 'l', xlab = "Point estimate", ylab = "Optimal")
