@@ -31,7 +31,8 @@ for (ii in 1:n_iters) {
   results[, , ii] <- t(matrix(unlist(res), nrow = 5))  
 }
 
-## plotting
+# plotting
 
-
-
+mus <- apply(results, c(2, 3), mean)
+mus
+matplot(t(mus))
