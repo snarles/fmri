@@ -31,3 +31,7 @@ for (ii in 1:n_iters) {
   results[, , ii] <- t(matrix(unlist(res), nrow = 5))  
 }
 
+## plotting
+
+
+

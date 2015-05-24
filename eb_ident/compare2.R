@@ -64,13 +64,10 @@ run_exp <- function(n, p, q, W_X, s_e, W_e,
     B_mu_EP[, i] <- solve(t(X) %*% X + diag(rep(lambdas_EP[i], q))) %*% t(X) %*% Y_EP[, i]    
   }
   Yhat_EP <- X %*% B_mu_EP
-  Sigma_e_EP <- cov(Y_EP - Yhat_EP) %>% {0.5 * . + 0.5 * diag(diag(.))}
+  Sigma_e_EP <- cov(Y_EP - Yhat_EP) %>% {0.5 * . + 0.5 * diag(1e-4 + diag(.))}
   Sigma_B_EP <- diag(rep(1/lambdas_EP, each = q))
-  tryCatch({
-    EP_cov_B_vec <- solve(solve(Sigma_e_EP) %x% (t(X) %*% X) + diag(1/diag(Sigma_B_EP)))    
-  }, warning = function(w) {
-    EP_cov_B_vec <- list(X  = X, Y = Y)
-  })
+  EP_cov_B_vec <-tryCatch({solve(solve(Sigma_e_EP) %x% (t(X) %*% X) + diag(1/diag(Sigma_B_EP)))    
+  }, error = function(w) list(X  = X, Y = Y))
   if (class(EP_cov_B_vec) == "list") {
     return(EP_cov_B_vec)
   }
