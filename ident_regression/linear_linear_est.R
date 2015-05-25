@@ -111,7 +111,6 @@ opt_bth <- function(mu, sigma2) {
   dn <- dnorm(bts, mean = mu, sd = sqrt(sigma2))
   dn <- dn/sum(dn)
   lala <- dn %*% rmat
-  lala[201] <- 1
   bth = bts[lala == min(lala)]
   bth
 }
@@ -215,3 +214,5 @@ for (i in 1:length(sds)) {
         type = 'l', col = rainbow(length(sds))[i])  
 }
 par(mar = oldmar)
+
+plot(rmat[200, ], type = "l")
