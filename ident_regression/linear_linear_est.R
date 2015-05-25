@@ -70,6 +70,7 @@ sd(ps)/sqrt(length(ps))
 theory1(bt, sigma2_x, sigma2_eps, bt, 3, 400)
 
 bts <- (-200:200)/20
+bts2 <- (-400:400)/80
 k_cl <- 4
 res <- length(bts)
 iloop1 <- function(i) {
@@ -83,11 +84,23 @@ iloop1 <- function(i) {
   ans
 }
 
+iloop2 <- function(i) {
+  ff <- function(x) theory1(bts[i], sigma2_x, sigma2_eps, x, k_cl, 500)
+  unlist(mclapply(bts2, ff, mc.cores = 26))
+}
+
+
 proc.time()
 temp <- mclapply(1:res, iloop1, mc.cores = 26)
 proc.time()
 
-lines(newtemp[[4]], col = "red")
+huh <- sapply(195:200, iloop2)
+
+dim(huh)
+matplot(bts2, huh, type = "l")
+huh[is.na(huh)] <- 1- (1/k_cl)
+
+save(huh, file = "huh.RData")
 
 sapply(temp, length)
 rmat <- do.call(cbind, temp)
@@ -209,5 +222,7 @@ for (i in 1:length(sds)) {
 }
 par(mar = oldmar)
 
-plot(rmat[200, ], type = "l")
-save(rmat, file = "rmat3.RData")
+plot(res, type = "l")
+which(res == max(res[1:200]))
+matplot(t(rmat[170:201, ]), type = "l", col = rainbow(32))
+matplot(t(rmat[195:201, ]), type = "l", col = rainbow(7))
