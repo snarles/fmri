@@ -69,18 +69,14 @@ mean(ps)
 sd(ps)/sqrt(length(ps))
 theory1(bt, sigma2_x, sigma2_eps, bt, 3, 400)
 
-bts <- (-200:200)/20 + 1e-3
+bts <- (-200:200)/20
 k_cl <- 4
 res <- length(bts)
 iloop1 <- function(i) {
   ans <- numeric(res)
-  for (j in 1:res) {
-    ans[j] <- theory1(bts[i], sigma2_x, sigma2_eps, bts[j], k_cl, 100)
+  if (bts[i] == 0) {
+    ans <- rep(1 - 1/k_cl, res)
   }
-  ans
-}
-iloop2 <- function(i) {
-  ans <- numeric(res)
   for (j in 1:res) {
     ans[j] <- theory1(bts[j], sigma2_x, sigma2_eps, bts[i], k_cl, 300)
   }
@@ -91,15 +87,13 @@ proc.time()
 temp <- mclapply(1:res, iloop1, mc.cores = 26)
 proc.time()
 
-proc.time()
-newtemp <- mclapply(198:204, iloop2, mc.cores = 7)
-proc.time()
-
 lines(newtemp[[4]], col = "red")
 
 sapply(temp, length)
-rmat <- do.call(rbind, temp)
+rmat <- do.call(cbind, temp)
 rmat[, 198:204] <- do.call(cbind, newtemp)
+
+rmat[, 201] <- 1 - (1/k_cl)
 
 #pdf("paper/rmat.pdf")
 filled.contour(bts, bts, rmat, xlab = expression(hat(beta)), ylab = expression(beta))
@@ -178,7 +172,7 @@ plotit(150, 0.001)
 plotit(100, 0.001)
 
 sigma2 <- 1
-cand_bts <- (-200:200)/40 + 1e-3
+cand_bts <- (-200:200)/40
 temp1 <- function(i) {
   opt_bth(cand_bts[i], sigma2)
 }
@@ -216,3 +210,4 @@ for (i in 1:length(sds)) {
 par(mar = oldmar)
 
 plot(rmat[200, ], type = "l")
+save(rmat, file = "rmat3.RData")
