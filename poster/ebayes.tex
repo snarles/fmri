@@ -46,6 +46,7 @@
 
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{multirow}
 \title{Stimulus Identification from fMRI scans}
 
 \author{Charles Zheng and Yuval Benjamini} % Author(s)
@@ -162,8 +163,8 @@ $y^*$ &     & &  $i^* = ?$  &   \\
 \item Kay (2008) uses \emph{Gabor filters} to describe each picture in terms of $q = 10000$ real-valued features
 \begin{center}\includegraphics[scale = 0.7, trim = 0in 2.5in 0in 0in, clip]{gabor.png}
 \end{center}
-\item Notation: write $Y_{T \times p}$ is a matrix containing the $T$ of recorded responses, and
-where $X_{T \times q}$ is the matrix of the \emph{image features} of the corresponding stimuli
+\item $Y_{T \times p}$ matrix containing the $T$ of recorded responses
+\item $X_{T \times q}$ is the matrix of the \emph{image features} of the corresponding stimuli
 \end{itemize}
 
 Now consider a parametric model
@@ -187,18 +188,20 @@ i^* = \text{argmax}_i \ell_\theta(y^*| x_i)
 \begin{itemize}
 \item Assume the normal mutivariate linear model
 \[Y \sim N( XB , \Sigma_E), \text{ where }B \in \mathbb{R}^{q \times p}\]
-\item Obtain point estimates of $B$ using elastic net [4], and $\Sigma_E$ using the sample covariance of residuals with off-diagonal shrinkage
+\item Obtain point estimates of $B$ using elastic net [4], and $\Sigma_E$ using off-diagonal shrinkage
 \item The ML rule takes the form
-\[
+\begin{equation}\label{mlrule}
 i^* = \text{argmin}_{i} (x_i^T \hat{B} - y^*)^T \hat{\Sigma}_E^{-1} (x_i^T \hat{B} - y^*)
-\]
+\end{equation}
 \end{itemize}
 \end{block}
 
 \begin{block}{Initial Questions}
 \begin{itemize}
-\item Can ML (e.g. the method above) be considered an optimal method for identification in any sense?
-\item If not, how can we do better? Can we find a good method which is computationally tractable?
+\item Consider the Gaussian model for now...
+\item Is ML optimal for identification?
+\item If not, are there near-optimal rules of the form \eqref{mlrule}?
+Or do we need to consider a richer class of decision rules?
 \end{itemize}
 \end{block}
 
@@ -224,25 +227,26 @@ i^* = \text{argmin}_{i} (x_i^T \hat{B} - y^*)^T \hat{\Sigma}_E^{-1} (x_i^T \hat{
 
 \begin{column}{\onecolwid}
 
-\begin{block}{Limitations of ML}
+\begin{block}{Theory}
 \begin{itemize}
 \item ML is consistent given the correct model, but can be rather poor in finite samples
-\item The point estimates $\hat{B}$ is generally obtained by minimizing \emph{prediction error}, but the loss function for identification is different
-\item Perhaps we can find point estimates tailored for the identification loss function.  But the nonconvexity makes it difficult!
+\item $\hat{B}$ minimizes log-likelihood--but that isn't the loss function for identification!
+\item We can compute optimal $\hat{B}$ for $p = q = 1$... 
+\item Optimal rule of form \eqref{mlrule} intractable in higher dimensions due to nonconvexity
 \end{itemize}
 \begin{center}
-\begin{tabular}{ccc}
-(a) & (b) & (c)\\
-\includegraphics[scale = 0.5, trim = 1in 1in 0.5in 1in, clip]{loss_se.pdf} & 
-\includegraphics[scale = 0.5, trim = 1in 1in 0.5in 1in, clip]{loss_3.pdf} &
-\includegraphics[scale = 0.5, trim = 1in 1in 0.5in 1in, clip]{zero2.pdf}\\
+\begin{tabular}{cc|c}
+\multicolumn{2}{c}{\emph{Loss functions}} & {\emph{1D example}}\\
+{\small Log-likelihood} & {\small Identification} & \\
+\includegraphics[scale = 0.6, trim = 1in 1in 0.5in 1in, clip]{loss_se.pdf} & 
+\includegraphics[scale = 0.6, trim = 1in 1in 0.5in 1in, clip]{loss_3.pdf} &
+\includegraphics[scale = 0.6, trim = 1in 1in 0.5in 1in, clip]{zero2.pdf}\\
 {\small 0} & {\small 0} & {\small 0}\\
+{\small $ y - \hat{y}$} & {\small $y - \hat{y}$} & $\text{E}[B]$
 \end{tabular}
 \end{center}
 {\small
-\emph{(a)} Squared error loss and \emph{(b)} loss function for identification,
-as a function of the difference between the true mean signal and the predicted signal.\\
-\emph{(c)} A $p = q = 1$-dimensional example where ML (actually MAP) fails. The Bayes estimate for identification (black) and the MAP estimate (red)
+\emph{Right:} A $p = q = 1$-dimensional example where ML (actually MAP) fails. The Bayes estimate for identification (black) and the MAP estimate (red)
 diverge sharply when $B \sim N(0, 1)$.  The same phenomenon can be found in higher dimensions.
 }
 \end{block}
@@ -254,11 +258,11 @@ diverge sharply when $B \sim N(0, 1)$.  The same phenomenon can be found in high
 \item \emph{Empirical Bayes}: use the data to estimate the covariances
 $\Sigma_B$ and $\Sigma_E$, then compute posterior distribution of $B$
 \item Assume coefficients of $B$ independent; diagonals of $\Sigma_B$ can be estimated using any estimate of signal strength, e.g. \emph{Eigenprism} [3].
-\item Similar decision rule to ML
+\item Decision rule is same as \eqref{mlrule} but with ``added noise'' due to uncertainty of $B$.
 \[
 \text{min} (x_i^T B - y^*)^T (\text{Cov}(x_i^T B) + \hat{\Sigma}_E)^{-1} (x_i^T B - y^*)
 \]
-but with ``added noise'' due to uncertainty of $B$
+\item Analogous to LDA vs QDA
 \begin{center}
 \begin{tabular}{cc}
 \includegraphics[scale = 0.5, trim = 0in 1.5in 0in 0in]{illus1_A.pdf} & 
@@ -289,11 +293,11 @@ ML & EB
 
 \begin{block}{Simulation Results}
 \begin{itemize}
-\item Parameters $p = q = 60$, random $B$ and $\Sigma_E$
-\item Empirical bayes outperforms ML when $n < q$... however, still unstable!
+\item Parameters $p = q = 60$, random $B$ and $\Sigma_E$, number of classes $|S| = 100$
+\item Empirical bayes \emph{does} outperform ML given small sample sizes... however...
 \end{itemize}
 \begin{center}
-\includegraphics[scale = 1.3]{simulation1.pdf}
+\includegraphics[scale = 1.3, trim = 0in 0in 0in 0.5in]{simulation1.pdf}
 \end{center}
 \small{
  \textcolor{blue}{(E)} Empirical Bayes,  \textcolor{red}{(M)} Maximum likelihood,
@@ -303,7 +307,7 @@ ML & EB
 \begin{block}{Ongoing Work}
 \begin{itemize}
 \item Why does error \emph{increase} with sample size!?
-\item Refine the crucial step of estimating $\Sigma_B$
+\item Clearly, we need refine the EB procedure
 \item Required cost of $O((pq)^3)$ hinders application to real data... develop tractable approximations
 \end{itemize}
 \end{block}
@@ -313,9 +317,10 @@ ML & EB
 
 \begin{block}{Conclusions}
 \begin{itemize}
-\item ML-based approaches rely on point estimates, and hence optimize the wrong objective function
-\item Empirical bayes achieves better performance by approximating the Bayes rule, but the ``empirical'' part remains tricky
-\item Better theoretical understanding is needed to explain why EB succeeds (and sometimes fails)
+\item We studied optimal identification under the multivariate linear model
+\item ``LDA''-like rules of the form \eqref{mlrule} (such as ML) are too restrictive.
+But ``QDA''-like rules include the optimal Bayes rule!
+\item We propose EB to approximate the Bayes rule-- but we need better theory to do it correctly
 \end{itemize}
 \end{block}
 
