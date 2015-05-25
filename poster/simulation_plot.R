@@ -5,7 +5,7 @@ n <- 1:15 * 5 + 5
 mus
 
 pdf("poster/simulation1.pdf", width = 7, height = 4)
-plot(n, mus[1, ], ylim = c(0, 1), ylab = "err", type = "o", lwd = 2)
+plot(n, mus[1, ], ylim = c(0, 1), ylab = "err", type = "o", lwd = 2, cex.lab = 2, cex.axis = 2)
 lines(n, mus[4, ], col = "red", type = "o", pch = "M", lwd = 2)
 lines(n, mus[5, ], col = "blue", type = "o", pch = "E", lwd = 2)
 for (i in 1:15) {

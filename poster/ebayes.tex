@@ -82,11 +82,11 @@
 
 Seeking to explain the processes behind human perception, scientists
 employ \emph{forward models} to model the causal relationship between
-stimulus and neural activity.  But how can we measure the quality of
+perception of stimuli and neural activity.  But how can we measure the quality of
 these models?  Kay et al (2008) introduced the
 task of \emph{identification} as a way to demonstrate the fidelity and
 generalizability of the model.
-\vspace{0.7in}
+\vspace{0.6in}
 
 Using the data of Kay \emph{et al.} as a motivating example, we
 consider the statistical problem of optimal identification.  While
@@ -98,21 +98,21 @@ with high-dimensional discrimination.
 \begin{block}{Data}
 \begin{itemize}
 \item Sequence of stimuli (pictures) shown at time $t = 1,\hdots, T = 3500$
-\item Record subject's multivariate response $y_t \in \mathbb{R}^p$, here $p \approx 20000$
+\item Record subject's multivariate response $y_t \in \mathbb{R}^p$, here $p \approx 20000$ voxels
 \end{itemize}
 
 \begin{center}
 \begin{tabular}{ccccc}
 $t = 1$ & $t = 2$ & $t = 3$ & $t = 4$ & $\cdots$\\ \hline
-\includegraphics[scale = 0.5]{img1.png} &
-\includegraphics[scale = 0.5]{img2.png} &
-\includegraphics[scale = 0.5]{img3.png} &
-\includegraphics[scale = 0.5]{img4.png} & $\cdots$\\ \hline
-$Y_1$ & $Y_2$ & $Y_3$ & $Y_4$ & $\cdots$\\ \hline
-\includegraphics[scale = 0.06]{brain1.png} &
-\includegraphics[scale = 0.06]{brain2.png} &
-\includegraphics[scale = 0.06]{brain3.png} &
-\includegraphics[scale = 0.06]{brain4.png} & $\cdots$\\ \hline
+\includegraphics[scale = 0.8]{img1.png} &
+\includegraphics[scale = 0.8]{img2.png} &
+\includegraphics[scale = 0.8]{img3.png} &
+\includegraphics[scale = 0.8]{img4.png} & $\cdots$\\ \hline
+$y_1$ & $y_2$ & $y_3$ & $y_4$ & $\cdots$\\ \hline
+\includegraphics[scale = 0.10]{brain1.png} &
+\includegraphics[scale = 0.10]{brain2.png} &
+\includegraphics[scale = 0.10]{brain3.png} &
+\includegraphics[scale = 0.10]{brain4.png} & $\cdots$\\ \hline
 \end{tabular}
 \end{center}
 \end{block}
@@ -125,11 +125,11 @@ $Y_1$ & $Y_2$ & $Y_3$ & $Y_4$ & $\cdots$\\ \hline
 \begin{tabular}{c|c|cccc}
 \hline
 $y^*$ &     & &  $i^* = ?$  &   \\
-\includegraphics[scale = 0.06]{brain7.png} & \hspace{0.5in} 
-& \includegraphics[scale = .5]{img5.png}
-& \includegraphics[scale = .5]{img6.png}
-& \includegraphics[scale = .5]{img7.png}
-& \includegraphics[scale = .5]{img8.png}\\
+\includegraphics[scale = 0.09]{brain7.png} & \hspace{0.5in} 
+& \includegraphics[scale = .7]{img5.png}
+& \includegraphics[scale = .7]{img6.png}
+& \includegraphics[scale = .7]{img7.png}
+& \includegraphics[scale = .7]{img8.png}\\
 \hline
 \end{tabular}
 \end{center}
@@ -137,9 +137,8 @@ $y^*$ &     & &  $i^* = ?$  &   \\
 \item Let $S$ be a set of stimuli, possibly outside the training set! $|S|$ can range from 120 to 10000
 \item Scientist picks a stimulus $i^*$ from $S$ and measures the subject's reponse $y^*$
 \item Can the statistician \emph{identify} $i^* \in S$ from $y^*$?
+\item \emph{Objective}: minimize misclassification rate
 \end{itemize}
-\emph{Remark.} In order to identify images outside the training set,
-we need some way to generalize beyond the training set!
 \end{block}
 
 \end{column} % End of the first column
@@ -156,62 +155,53 @@ we need some way to generalize beyond the training set!
 
 
 
-\begin{block}{Previous work}
+\begin{block}{Previous approaches}
 
-Previous work [1][2] generally follows likelihood-based approaches.
-Consider a parametric model
+\begin{itemize}
+\item In order to generalize to new stimuli, we need to find some quantitative representation
+\item Kay (2008) uses \emph{Gabor filters} to describe each picture in terms of $q = 10000$ real-valued features
+\begin{center}\includegraphics[scale = 0.7, trim = 0in 2.5in 0in 0in, clip]{gabor.png}
+\end{center}
+\item Notation: write $Y_{T \times p}$ is a matrix containing the $T$ of recorded responses, and
+where $X_{T \times q}$ is the matrix of the \emph{image features} of the corresponding stimuli
+\end{itemize}
+
+Now consider a parametric model
 \[
 Y \sim F_\theta(X)
 \]
-where $Y_{T \times p}$ is a matrix containing the $T$ of recorded responses, and
-where $X_{T \times q}$ is the matrix of the \emph{image features} of the corresponding stimuli. 
-E.g. columns of $X$ are Gabor filters with
-$q \approx 10000$, and $\theta$ is some parameter to be estimated.
+Such a \emph{forward model} gives the distribution of the
+response conditional on the stimuli features;
+while identification requires the converse.
+
+However, the \emph{maximum likelihood} (ML) principle can be invoked to
+identify the stimuli $i \in S$ ``most likely'' to have produced $y^*$.
+
 Let $x_i : i \in S$ denote features of the test stimuli, and
-identify $y^*$ based on the maximimum likelihood (ML) principle
+identify $y^*$ based on the maximum likelihood (ML) principle
 \[
-i^* = \text{argmax}_i \ell(y^*, x_i)
+i^* = \text{argmax}_i \ell_\theta(y^*| x_i)
 \]
 
-We take the following as a representative approach
+\emph{Example.} We take the following as a representative approach, combining features of [1] and [2]:
 \begin{itemize}
 \item Assume the normal mutivariate linear model
+\[Y \sim N( XB , \Sigma_E), \text{ where }B \in \mathbb{R}^{q \times p}\]
+\item Obtain point estimates of $B$ using elastic net [4], and $\Sigma_E$ using the sample covariance of residuals with off-diagonal shrinkage
+\item The ML rule takes the form
 \[
-Y \sim N(XB, \Sigma_E^2)
-\]
-\item Obtain point estimates of $B$ and $\Sigma_E$. E.g. $B$ estimated using elastic net [4], and
-\[
-\hat{\Sigma}_E = (1-\alpha) \hat{\text{Cov}}(Y - \hat{Y}) + \alpha\text{diag}(\hat{\text{Cov}}(Y - \hat{Y}))
-\]
-where $\hat{\text{Cov}}$ = sample covariance, $\alpha \in (0, 1)$.
-\item Identify the stimulus $i^*$ by
-\[
-i^* = \text{argmin}_{i} (x_i^T B - y^*)^T \hat{\Sigma}_E^{-1} (x_i^T B - y^*)
+i^* = \text{argmin}_{i} (x_i^T \hat{B} - y^*)^T \hat{\Sigma}_E^{-1} (x_i^T \hat{B} - y^*)
 \]
 \end{itemize}
 \end{block}
 
-\begin{block}{Limitations of ML}
+\begin{block}{Initial Questions}
 \begin{itemize}
-\item Point estimates obtained by minimizing \emph{prediction error}, but the loss function for identification is different!
-\item In fact, any estimate of $B$ which is degenerate (identical columns up to scaling) is suboptimal
+\item Can ML (e.g. the method above) be considered an optimal method for identification in any sense?
+\item If not, how can we do better? Can we find a good method which is computationally tractable?
 \end{itemize}
-\begin{center}
-\begin{tabular}{ccc}
-(a) & (b) & (c)\\
-\includegraphics[scale = 0.5, trim = 1in 1in 0.5in 1in, clip]{loss_se.pdf} & 
-\includegraphics[scale = 0.5, trim = 1in 1in 0.5in 1in, clip]{loss_3.pdf} &
-\includegraphics[scale = 0.5, trim = 1in 1in 0.5in 1in, clip]{zero2.pdf}\\
-{\small 0} & {\small 0} & {\small 0}\\
-\end{tabular}
-\end{center}
-{\small
-\emph{(a)} Squared error loss (vertical axis) and \emph{(b)} loss function for identification,
-as a function of the difference between the true mean signal and the predicted signal.\\
-\emph{(c)} The optimal point estimate for identification (solid) vs the optimal point estimate for regression (dashed)
-diverge sharply at $B = 0$ in the one-dimensional case.  The same phenomenon occurs for higher dimensions when $B$ is degenerate.
-}
 \end{block}
+
 
 %\begin{center}
 %\includegraphics[scale = 1.0]{illus1_A.pdf}
@@ -234,62 +224,55 @@ diverge sharply at $B = 0$ in the one-dimensional case.  The same phenomenon occ
 
 \begin{column}{\onecolwid}
 
+\begin{block}{Limitations of ML}
+\begin{itemize}
+\item ML is consistent given the correct model, but can be rather poor in finite samples
+\item The point estimates $\hat{B}$ is generally obtained by minimizing \emph{prediction error}, but the loss function for identification is different
+\item Perhaps we can find point estimates tailored for the identification loss function.  But the nonconvexity makes it difficult!
+\end{itemize}
+\begin{center}
+\begin{tabular}{ccc}
+(a) & (b) & (c)\\
+\includegraphics[scale = 0.5, trim = 1in 1in 0.5in 1in, clip]{loss_se.pdf} & 
+\includegraphics[scale = 0.5, trim = 1in 1in 0.5in 1in, clip]{loss_3.pdf} &
+\includegraphics[scale = 0.5, trim = 1in 1in 0.5in 1in, clip]{zero2.pdf}\\
+{\small 0} & {\small 0} & {\small 0}\\
+\end{tabular}
+\end{center}
+{\small
+\emph{(a)} Squared error loss and \emph{(b)} loss function for identification,
+as a function of the difference between the true mean signal and the predicted signal.\\
+\emph{(c)} A $p = q = 1$-dimensional example where ML (actually MAP) fails. The Bayes estimate for identification (black) and the MAP estimate (red)
+diverge sharply when $B \sim N(0, 1)$.  The same phenomenon can be found in higher dimensions.
+}
+\end{block}
+
 \begin{block}{Empirical Bayes}
 
-Can we find a principled alternative to ML?
-
 \begin{itemize}
-\item \emph{Idea}: Unlike ML, the Bayes rule surely optimizes the ``correct'' objective function
-\item \emph{Problem}: We don't know the hyperparameters for Bayesian inference
-\item \emph{Emprical Bayes}: use the data to estimate the covariances
+\item \emph{Idea}: Unlike ML, the Bayes rule surely optimizes the ``correct'' objective function.  Can we approximate the Bayes rule?
+\item \emph{Empirical Bayes}: use the data to estimate the covariances
 $\Sigma_B$ and $\Sigma_E$, then compute posterior distribution of $B$
-\item In contrast to ML, which results in \emph{linear decision
-  boundaries} (below: left), Empirical Bayes (EB) results in \emph{quadratic boundaries} (below: right)
-\end{itemize}
-
+\item Assume coefficients of $B$ independent; diagonals of $\Sigma_B$ can be estimated using any estimate of signal strength, e.g. \emph{Eigenprism} [3].
+\item Similar decision rule to ML
+\[
+\text{min} (x_i^T B - y^*)^T (\text{Cov}(x_i^T B) + \hat{\Sigma}_E)^{-1} (x_i^T B - y^*)
+\]
+but with ``added noise'' due to uncertainty of $B$
 \begin{center}
 \begin{tabular}{cc}
-\includegraphics[scale = 0.5]{illus1_A.pdf} & 
-\includegraphics[scale = 0.5]{illus1_B.pdf}\\
+\includegraphics[scale = 0.5, trim = 0in 1.5in 0in 0in]{illus1_A.pdf} & 
+\includegraphics[scale = 0.5, trim = 0in 1.5in 0in 0in]{illus1_B.pdf}\\
 ML & EB
 \end{tabular}
 \end{center}
+\item \emph{Computation:} requires inverting $pq \times pq$ matrix
+\end{itemize}
+
 \end{block}
 
-\setbeamercolor{block alerted title}{fg=black,bg=BlueViolet!20} % Change the alert block title colors
-\setbeamercolor{block alerted body}{fg=black,bg=white} % Change the alert block body colors
 
-\begin{alertblock}{Technical details}
-\emph{Model}
 
-\begin{itemize}
-\item Noise $E_t \sim N(0, \Sigma_E)$ iid 
-\item Coefficients $B_i \sim N(0, \sigma^2_i I)$ for $i = 1, \hdots, p$
-\end{itemize}
-
-\emph{Estimate hyperparameters}
-
-\begin{itemize}
-\item Use \emph{eigenprism} (Janson 2015) to estimate $\theta_i^2 = ||B_i||^2$ for $i =1,\hdots, p$
-\item Set $\sigma^2_i = \hat{\theta}_i^2/q$
-\item Estimate $\hat{B}$ as posterior mean
-\item Estimate $\Sigma_E$ (same as in ML)
-\end{itemize}
-
-\emph{Compute posterior}
-\begin{itemize}
-\item Closed-form expressions for posterior of $B$
-\item Computational bottleneck: inverting a $pq \times pq$ covariance matrix
-\end{itemize}
-
-\emph{Apply Bayes rule}
-
-\begin{itemize}
-\item \emph{Uncertainty} in $B$ is reflected as \emph{added noise}
-\item Result: posterior $\text{Cov}(y^*|i^*)$ varies, hence \emph{quadratic boundaries}
-\end{itemize}
-
-\end{alertblock}
 
 
 %----------------------------------------------------------------------------------------
@@ -319,8 +302,9 @@ ML & EB
 
 \begin{block}{Ongoing Work}
 \begin{itemize}
-\item Why does error \emph{increase} with sample size!? Refine covariance estimation methods..
-\item Required cost of $O((pq)^3)$ unacceptable for real data... develop tractable approximations
+\item Why does error \emph{increase} with sample size!?
+\item Refine the crucial step of estimating $\Sigma_B$
+\item Required cost of $O((pq)^3)$ hinders application to real data... develop tractable approximations
 \end{itemize}
 \end{block}
 
