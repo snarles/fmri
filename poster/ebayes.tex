@@ -91,9 +91,9 @@ generalizability of the model.
 
 Using the data of Kay \emph{et al.} as a motivating example, we
 consider the statistical problem of optimal identification.  While
-identification superficially resembles a classification task (with
+identification resembles a classification task (with
 many classes), it combines the challenge of multivariate regression
-with high-dimensional discrimination.
+with high-dimensional covariance estimation.
 \end{alertblock}
 
 \begin{block}{Data}
@@ -164,22 +164,21 @@ $y^*$ &     & &  $i^* = ?$  &   \\
 \begin{center}\includegraphics[scale = 0.7, trim = 0in 2.5in 0in 0in, clip]{gabor.png}
 \end{center}
 \item $Y_{T \times p}$ matrix containing the $T$ of recorded responses
-\item $X_{T \times q}$ is the matrix of the \emph{image features} of the corresponding stimuli
+\item $X_{T \times q}$ matrix of the \emph{image features} of the corresponding stimuli
+\item Correct featurization is crucial... but outside the scope of the current work
 \end{itemize}
 
-Now consider a parametric model
+Consider a parametric model
 \[
 Y \sim F_\theta(X)
 \]
 Such a \emph{forward model} gives the distribution of the
-response conditional on the stimuli features;
-while identification requires the converse.
+response conditional on the stimuli features.
 
-However, the \emph{maximum likelihood} (ML) principle can be invoked to
+The \emph{maximum likelihood} (ML) principle can be invoked to
 identify the stimuli $i \in S$ ``most likely'' to have produced $y^*$.
-
 Let $x_i : i \in S$ denote features of the test stimuli, and
-identify $y^*$ based on the maximum likelihood (ML) principle
+identify $y^*$
 \[
 i^* = \text{argmax}_i \ell_\theta(y^*| x_i)
 \]
@@ -188,7 +187,8 @@ i^* = \text{argmax}_i \ell_\theta(y^*| x_i)
 \begin{itemize}
 \item Assume the normal mutivariate linear model
 \[Y \sim N( XB , \Sigma_E), \text{ where }B \in \mathbb{R}^{q \times p}\]
-\item Obtain point estimates of $B$ using elastic net [4], and $\Sigma_E$ using off-diagonal shrinkage
+\item Estimate $B$ using elastic net [4]
+\item Estimate $\Sigma_E$ using off-diagonal shrinkage of sample covariance matrix of residuals
 \item The ML rule takes the form
 \begin{equation}\label{mlrule}
 i^* = \text{argmin}_{i} (x_i^T \hat{B} - y^*)^T \hat{\Sigma}_E^{-1} (x_i^T \hat{B} - y^*)
@@ -199,9 +199,8 @@ i^* = \text{argmin}_{i} (x_i^T \hat{B} - y^*)^T \hat{\Sigma}_E^{-1} (x_i^T \hat{
 \begin{block}{Initial Questions}
 \begin{itemize}
 \item Consider the Gaussian model for now...
-\item Is ML optimal for identification?
-\item If not, are there near-optimal rules of the form \eqref{mlrule}?
-Or do we need to consider a richer class of decision rules?
+\item Is ML (or MAP) optimal for identification?
+\item Suppose not, then can we find other rules of the form \eqref{mlrule}, by estimating $\hat{B}$ or $\hat{\Sigma}_E$ differently, which are near optimal?
 \end{itemize}
 \end{block}
 
@@ -230,24 +229,24 @@ Or do we need to consider a richer class of decision rules?
 \begin{block}{Theory}
 \begin{itemize}
 \item ML is consistent given the correct model, but can be rather poor in finite samples
-\item $\hat{B}$ minimizes log-likelihood--but that isn't the loss function for identification!
-\item We can compute optimal $\hat{B}$ for $p = q = 1$... 
+\item $\hat{B}$ minimizes squared error--but that isn't the loss function for identification!
+\item We can compute optimal $\hat{B}$ for $p = q = 1$
 \item Optimal rule of form \eqref{mlrule} intractable in higher dimensions due to nonconvexity
 \end{itemize}
 \begin{center}
 \begin{tabular}{cc|c}
 \multicolumn{2}{c}{\emph{Loss functions}} & {\emph{1D example}}\\
-{\small Log-likelihood} & {\small Identification} & \\
+{\small Squared error} & {\small Identification} & {\small Optimal $\hat{B}$}\\
 \includegraphics[scale = 0.6, trim = 1in 1in 0.5in 1in, clip]{loss_se.pdf} & 
 \includegraphics[scale = 0.6, trim = 1in 1in 0.5in 1in, clip]{loss_3.pdf} &
 \includegraphics[scale = 0.6, trim = 1in 1in 0.5in 1in, clip]{zero2.pdf}\\
 {\small 0} & {\small 0} & {\small 0}\\
-{\small $ y - \hat{y}$} & {\small $y - \hat{y}$} & $\text{E}[B]$
+{\small $ y - \hat{y}$} & {\small $y - \hat{y}$} & $\hat{B}_{ML}$
 \end{tabular}
 \end{center}
 {\small
-\emph{Right:} A $p = q = 1$-dimensional example where ML (actually MAP) fails. The Bayes estimate for identification (black) and the MAP estimate (red)
-diverge sharply when $B \sim N(0, 1)$.  The same phenomenon can be found in higher dimensions.
+\emph{Right:} A $p = q = 1$-dimensional example where we can compare the optimal $\hat{B}$ to $\hat{B}_{ML}$.
+They disagree around 0 since it is \emph{never} optimal to estimate $\hat{B}=0$ in identification (as opposed to regression, where $\hat{y} = 0$ is often a good estimate!)
 }
 \end{block}
 
@@ -258,7 +257,7 @@ diverge sharply when $B \sim N(0, 1)$.  The same phenomenon can be found in high
 \item \emph{Empirical Bayes}: use the data to estimate the covariances
 $\Sigma_B$ and $\Sigma_E$, then compute posterior distribution of $B$
 \item Assume coefficients of $B$ independent; diagonals of $\Sigma_B$ can be estimated using any estimate of signal strength, e.g. \emph{Eigenprism} [3].
-\item Decision rule is same as \eqref{mlrule} but with ``added noise'' due to uncertainty of $B$.
+\item Decision rule similiar to \eqref{mlrule} but with ``added noise'' due to uncertainty of $B$.
 \[
 \text{min} (x_i^T B - y^*)^T (\text{Cov}(x_i^T B) + \hat{\Sigma}_E)^{-1} (x_i^T B - y^*)
 \]
@@ -307,8 +306,8 @@ ML & EB
 \begin{block}{Ongoing Work}
 \begin{itemize}
 \item Why does error \emph{increase} with sample size!?
-\item Clearly, we need refine the EB procedure
-\item Required cost of $O((pq)^3)$ hinders application to real data... develop tractable approximations
+\item Clearly, we need to refine the EB procedure
+\item Cost of $O((pq)^3)$ hinders application to real data... develop tractable approximations
 \end{itemize}
 \end{block}
 
