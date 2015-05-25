@@ -50,7 +50,7 @@
 
 \author{Charles Zheng and Yuval Benjamini} % Author(s)
 
-\institute{Stanford University} % Institution(s)
+\institute{Stanford University, Department of Statistics} % Institution(s)
 
 %----------------------------------------------------------------------------------------
 
@@ -73,37 +73,80 @@
 %----------------------------------------------------------------------------------------
 %	INTRODUCTION
 %----------------------------------------------------------------------------------------
-\begin{block}{Setting}
+
+\setbeamercolor{block alerted title}{fg=white,bg=Violet} % Change the alert block title colors
+\setbeamercolor{block alerted body}{fg=black,bg=white} % Change the alert block body colors
+
+\begin{alertblock}{Overview}
+\vspace{0.3in}
+
+Seeking to explain the processes behind human perception, scientists
+employ \emph{forward models} to model the causal relationship between
+stimulus and neural activity.  But how can we measure the quality of
+these models?  Kay et al (2008) introduced the
+task of \emph{identification} as a way to demonstrate the fidelity and
+generalizability of the model.
+\vspace{0.7in}
+
+Using the data of Kay \emph{et al.} as a motivating example, we
+consider the statistical problem of optimal identification.  While
+identification superficially resembles a classification task (with
+many classes), it combines the challenge of multivariate regression
+with high-dimensional discrimination.
+\end{alertblock}
+
+\begin{block}{Data}
 \begin{itemize}
-\item Sequence of stimuli (pictures) shown at time $t = 1,\hdots, T$
-\item Record subject's multivariate response $Y_t \in \mathbb{R}^p$
-\item Stimuli represented as \emph{feature vector} $X_t \in \mathbb{R}^q$
-\item Linear model:
-\[
-Y_{T \times p} = X_{T \times q} B_{q \times p} + E_{T \times p}
-\]
-\item E.g. Kay (2008)
+\item Sequence of stimuli (pictures) shown at time $t = 1,\hdots, T = 3500$
+\item Record subject's multivariate response $Y_t \in \mathbb{R}^p$, here $p \approx 20000$
 \end{itemize}
 
 \begin{center}
-\includegraphics[scale = 0.5, trim=3in 3in 3in 3in, clip]{screen1.png}
+\begin{tabular}{ccccc}
+$t = 1$ & $t = 2$ & $t = 3$ & $t = 4$ & $\cdots$\\ \hline
+\includegraphics[scale = 0.5]{img1.png} &
+\includegraphics[scale = 0.5]{img2.png} &
+\includegraphics[scale = 0.5]{img3.png} &
+\includegraphics[scale = 0.5]{img4.png} & $\cdots$\\ \hline
+$Y_1$ & $Y_2$ & $Y_3$ & $Y_4$ & $\cdots$\\ \hline
+\includegraphics[scale = 0.06]{brain1.png} &
+\includegraphics[scale = 0.06]{brain2.png} &
+\includegraphics[scale = 0.06]{brain3.png} &
+\includegraphics[scale = 0.06]{brain4.png} & $\cdots$\\ \hline
+\end{tabular}
 \end{center}
 \end{block}
 
+
+
+%\begin{itemize}
+%\item Stimuli represented as \emph{feature vector} $X_t \in \mathbb{R}^q$
+%\item Linear model:
+%\[
+%
+%\]
+%\item E.g. Kay (2008)
+%\end{itemize}
+
+
 \begin{block}{Identification}
-\begin{itemize}
-\item Introduced in Kay (2008)
-\item Supervised learning task, validates the power of the linear model $Y = XB + E$
-\item Let $S$ be a set of \emph{new} stimuli (not in the training set) with features
-\[
-\{x_1^{te}, \hdots, x_\ell^{te}\}
-\]
-\item Scientist picks a stimulus $i^*$ from $S$ and measures the subject's reponse $y^*$
-\item Can the statistician \emph{identify} the stimulus from $y^*$?
-\end{itemize}
 \begin{center}
-\includegraphics[scale = 0.5, trim=1in 1.5in 1in 2in, clip]{screen4.png}
+\begin{tabular}{c|c|cccc}
+\hline
+$y^*$ &     & &  $i^* = ?$  &   \\
+\includegraphics[scale = 0.06]{brain7.png} & \hspace{0.5in} 
+& \includegraphics[scale = .5]{img5.png}
+& \includegraphics[scale = .5]{img6.png}
+& \includegraphics[scale = .5]{img7.png}
+& \includegraphics[scale = .5]{img8.png}\\
+\hline
+\end{tabular}
 \end{center}
+\begin{itemize}
+\item Let $S$ be a set of \emph{new} stimuli--no repeats from the training set!  Here $|S| = 120$.
+\item Scientist picks a stimulus $i^*$ from $S$ and measures the subject's reponse $y^*$
+\item Can the statistician \emph{identify} $i^* \in S$ from $y^*$?
+\end{itemize}
 \end{block}
 
 \end{column} % End of the first column
@@ -118,34 +161,18 @@ Y_{T \times p} = X_{T \times q} B_{q \times p} + E_{T \times p}
 %	MATERIALS
 %----------------------------------------------------------------------------------------
 
-\begin{block}{Objectives}
-\begin{itemize}
-\item Develop new methodology for optimal identification
-\end{itemize}
-
-\emph{Key theoretical problems:}
-\begin{itemize}
-\item Optimal identification given parameter estimates
-\item Estimation of model (e.g. linear model $Y = XB$)
-\item Estimation of noise $\Sigma_E = \text{Cov}(E)$
-\end{itemize}
-
-\emph{Optimality criteria:}
-\begin{itemize}
-\item Bayes (average case) under parametric models
-\item Minimax regret under nonparametric models
-\end{itemize}
-
-We consider two methods: \emph{maximum likelihood} and \emph{empirical
-  Bayes}, and compare to \emph{Bayes risk}.
-\end{block}
 
 
+\begin{block}{Previous Work}
 
-\begin{block}{Maximum Likelihood}
+Kay (2008) and Vu (2011) reduce the dimensionality of $Y$ (by applying
+a filter based on SNR) and consider a linear model
+\[
+Y_{T \times p} = X_{T \times q} B_{q \times p} + E_{T \times p}
+\]
+where $X$ are a set of \emph{image features} (Gabor filters), $q \approx 10000$.
 
-Procedure for identification of $y^*$,
-variants used in Kay (2008), Vu (2011)
+They identify the stimuli based on the \emph{maximum likelihood} (ML) principle:
 
 \begin{itemize}
 \item Obtain point estimates of coefficients $B$ and noise covariance $\Sigma_E$
@@ -163,12 +190,34 @@ where $\hat{\text{Cov}}$ denotes sample covariance
 \[
 i^* = \text{argmin}_{i} (\hat{\mu}_i^{te} - y^*)^T \hat{\Sigma}_E^{-1} (\hat{\mu}_i^{te} - y^*)
 \]
-\item Results in \emph{linear decision boundaries}
 \end{itemize}
+\end{block}
 
+\begin{block}{Limitations of ML}
+\begin{itemize}
+\item Estimation of $B$ are motivated by \emph{prediction error}: the loss function for identification is different!
+\item \emph{Fact:} Any estimate of $B$ which is degenerate (low-rank) is suboptimal
+\end{itemize}
 \begin{center}
-\includegraphics[scale = 1.0]{illus1_A.pdf}
+\begin{tabular}{ccc}
+(a) & (b) & (c)\\
+\includegraphics[scale = 0.5, trim = 1in 1in 0.5in 1in, clip]{loss_se.pdf} & 
+\includegraphics[scale = 0.5, trim = 1in 1in 0.5in 1in, clip]{loss_3.pdf} &
+\includegraphics[scale = 0.5, trim = 1in 1in 0.5in 1in, clip]{zero2.pdf}\\
+{\small 0} & {\small 0} & {\small 0}\\
+\end{tabular}
 \end{center}
+{\small
+\emph{(a)} Squared error loss (vertical axis) and \emph{(b)} loss function for identification,
+as a function of the difference between the true mean signal and the predicted signal.\\
+\emph{(c)} The optimal point estimate for identification (solid) vs the optimal point estimate for regression (dashed)
+diverge sharply at 0 in the one-dimensional case.  ($B = 0$ a special case of degenerate $B$)
+}
+\end{block}
+
+%\begin{center}
+%\includegraphics[scale = 1.0]{illus1_A.pdf}
+%\end{center}
 
 %\emph{Theoretical results}
 %\begin{itemize}
@@ -176,7 +225,7 @@ i^* = \text{argmin}_{i} (\hat{\mu}_i^{te} - y^*)^T \hat{\Sigma}_E^{-1} (\hat{\mu
 %\item Inconsistency given model misspecification (nonlinearity)
 %\end{itemize}
 
-\end{block}
+
 
 %----------------------------------------------------------------------------------------
 
@@ -187,19 +236,29 @@ i^* = \text{argmin}_{i} (\hat{\mu}_i^{te} - y^*)^T \hat{\Sigma}_E^{-1} (\hat{\mu
 
 \begin{column}{\onecolwid}
 
-%----------------------------------------------------------------------------------------
-%	METHODS
-%----------------------------------------------------------------------------------------
-\begin{alertblock}{What is Empirical Bayes?}
-\begin{itemize}
-\item General approach for statistical problems (e.g. Efron 2004)
-\item Start with a hierarchical Bayes model with hyperparameters
-\item \emph{Estimate} hyperparameters from data, e.g. maximizing marginal likelihood
-\end{itemize}
-\end{alertblock}
-
 \begin{block}{Empirical Bayes}
 
+\begin{itemize}
+\item 
+\emph{Proposal}: improve on ML by accounting for the uncertainty of the
+estimate $B$.
+\item We consider a hierarchical model with a prior
+distribution on $B$, but we use the data to set the prior covariance
+$\Sigma_B$--hence we are being \emph{empirical Bayesians}
+\item In contrast to ML, which results in \emph{linear decision
+  boundaries} (below: left), Empirical Bayes (EB) results in \emph{quadratic boundaries} (below: right)
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[scale = 0.5]{illus1_A.pdf} & 
+\includegraphics[scale = 0.5]{illus1_B.pdf}\\
+ML & EB
+\end{tabular}
+\end{center}
+\end{block}
+
+\begin{alertblock}{Technical details}
 \emph{Model}
 
 \begin{itemize}
@@ -213,14 +272,14 @@ i^* = \text{argmin}_{i} (\hat{\mu}_i^{te} - y^*)^T \hat{\Sigma}_E^{-1} (\hat{\mu
 \begin{itemize}
 \item Use \emph{eigenprism} (Janson 2015) to estimate $\theta_i^2 = ||B_i||^2$ for $i =1,\hdots, p$
 \item Set $\sigma^2_i = \hat{\theta}_i^2/q$
-\item Estimate $\hat{B}$ as posterior mean given estimated $\sigma^2_i$
-\item Estimate $\Sigma_E$ using residuals (same as in Maximum Likelihood)
+\item Estimate $\hat{B}$ as posterior mean
+\item Estimate $\Sigma_E$ (same as in ML)
 \end{itemize}
 
 \emph{Compute posterior}
 \begin{itemize}
 \item Closed-form expressions for posteriors of $B$, $\mu_i^{te}$
-\item Computational bottleneck: inverting the $pq \times pq$ covariance matrix of $\vec{B}$
+\item Computational bottleneck: inverting a $pq \times pq$ covariance matrix
 \end{itemize}
 
 \emph{Apply Bayes rule}
@@ -230,11 +289,7 @@ i^* = \text{argmin}_{i} (\hat{\mu}_i^{te} - y^*)^T \hat{\Sigma}_E^{-1} (\hat{\mu
 \item Result: posterior $\text{Cov}(y^*|i^*)$ varies, hence \emph{quadratic boundaries}
 \end{itemize}
 
-\begin{center}
-\includegraphics[scale = 1.0]{illus1_B.pdf}
-\end{center}
-
-\end{block}
+\end{alertblock}
 
 
 %----------------------------------------------------------------------------------------
@@ -250,13 +305,35 @@ i^* = \text{argmin}_{i} (\hat{\mu}_i^{te} - y^*)^T \hat{\Sigma}_E^{-1} (\hat{\mu
 %----------------------------------------------------------------------------------------
 
 \begin{block}{Simulation Results}
-
+\begin{itemize}
+\item Parameters $p = q = 60$, random coefficients
+\item Empirical bayes outperforms ML when $n < q$... however, still unstable!
+\end{itemize}
+\begin{center}
+\includegraphics[scale = 1.3]{simulation1.pdf}
+\end{center}
+\small{
+ \textcolor{blue}{(E)} Empirical Bayes,  \textcolor{red}{(M)} Maximum likliehood,
+(o) Bayes risk \emph{(knowing true $\Sigma_B$, $\Sigma_E$)}}
 \end{block}
 
 \begin{block}{Ongoing Work}
 \begin{itemize}
-\item Estimate noise covariance based on correlation structure of fMRI data (e.g. spatial correlation)
+\item Why does error \emph{increase} with sample size!? Refine covariance estimation methods..
+\item Required cost of $O((pq)^3)$ unacceptable for real data... develop tractable approximations
 \item Apply methods to data of Kay (2008)
+\end{itemize}
+\end{block}
+
+\setbeamercolor{block alerted title}{fg=white,bg=Violet} % Change the alert block title colors
+\setbeamercolor{block alerted body}{fg=black,bg=white} % Change the alert block body colors
+
+\begin{block}{Conclusions}
+\begin{itemize}
+\item We determine theoretical limitations of Maximum Likelihood, and
+  illustrate the promise of Empirical Bayes... but our own method
+  still has obvious flaws
+\item Many challenges remain for optimal identification!
 \end{itemize}
 \end{block}
 
@@ -266,9 +343,14 @@ i^* = \text{argmin}_{i} (\hat{\mu}_i^{te} - y^*)^T \hat{\Sigma}_E^{-1} (\hat{\mu
 
 \begin{block}{References}
 
-\nocite{*} % Insert publications even if they are not cited in the poster
-\small{\bibliographystyle{unsrt}
-\bibliography{sample}\vspace{0.75in}}
+
+\small{
+\begin{itemize}
+\item Kay et al. \emph{Nature} (2008)
+\item Vu et al. \emph{Annals of Applied Statistics} (2011)
+\item Janson et al. (2015) http://arxiv.org/abs/1505.02097
+\end{itemize}
+}
 
 \end{block}
 
@@ -276,36 +358,16 @@ i^* = \text{argmin}_{i} (\hat{\mu}_i^{te} - y^*)^T \hat{\Sigma}_E^{-1} (\hat{\mu
 %	ACKNOWLEDGEMENTS
 %----------------------------------------------------------------------------------------
 
-\setbeamercolor{block title}{fg=red,bg=white} % Change the block title color
-
 \begin{block}{Acknowledgements}
 
-\small{\rmfamily{Nam mollis tristique neque eu luctus. Suspendisse rutrum congue nisi sed convallis. Aenean id neque dolor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.}} \\
+
+\small{ This work was supported by an NSF graduate research fellowship.
+  We are also grateful to the travel support provided by the SAND 7 conference.  }
 
 \end{block}
 
-%----------------------------------------------------------------------------------------
-%	CONTACT INFORMATION
-%----------------------------------------------------------------------------------------
 
-\setbeamercolor{block alerted title}{fg=black,bg=norange} % Change the alert block title colors
-\setbeamercolor{block alerted body}{fg=black,bg=white} % Change the alert block body colors
 
-\begin{alertblock}{Contact Information}
-
-\begin{itemize}
-\item Web: \href{http://www.university.edu/smithlab}{http://www.university.edu/smithlab}
-\item Email: \href{mailto:john@smith.com}{john@smith.com}
-\item Phone: +1 (000) 111 1111
-\end{itemize}
-
-\end{alertblock}
-
-\begin{center}
-\begin{tabular}{ccc}
-\includegraphics[width=0.4\linewidth]{logo.png} & \hfill & \includegraphics[width=0.4\linewidth]{logo.png}
-\end{tabular}
-\end{center}
 
 %----------------------------------------------------------------------------------------
 
