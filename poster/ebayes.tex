@@ -74,7 +74,7 @@
 %	INTRODUCTION
 %----------------------------------------------------------------------------------------
 
-\setbeamercolor{block alerted title}{fg=white,bg=Violet} % Change the alert block title colors
+\setbeamercolor{block alerted title}{fg=white,bg=BlueViolet} % Change the alert block title colors
 \setbeamercolor{block alerted body}{fg=black,bg=white} % Change the alert block body colors
 
 \begin{alertblock}{Overview}
@@ -98,7 +98,7 @@ with high-dimensional discrimination.
 \begin{block}{Data}
 \begin{itemize}
 \item Sequence of stimuli (pictures) shown at time $t = 1,\hdots, T = 3500$
-\item Record subject's multivariate response $Y_t \in \mathbb{R}^p$, here $p \approx 20000$
+\item Record subject's multivariate response $y_t \in \mathbb{R}^p$, here $p \approx 20000$
 \end{itemize}
 
 \begin{center}
@@ -119,15 +119,6 @@ $Y_1$ & $Y_2$ & $Y_3$ & $Y_4$ & $\cdots$\\ \hline
 
 
 
-%\begin{itemize}
-%\item Stimuli represented as \emph{feature vector} $X_t \in \mathbb{R}^q$
-%\item Linear model:
-%\[
-%
-%\]
-%\item E.g. Kay (2008)
-%\end{itemize}
-
 
 \begin{block}{Identification}
 \begin{center}
@@ -143,10 +134,12 @@ $y^*$ &     & &  $i^* = ?$  &   \\
 \end{tabular}
 \end{center}
 \begin{itemize}
-\item Let $S$ be a set of \emph{new} stimuli--no repeats from the training set!  Here $|S| = 120$.
+\item Let $S$ be a set of stimuli, possibly outside the training set! $|S|$ can range from 120 to 10000
 \item Scientist picks a stimulus $i^*$ from $S$ and measures the subject's reponse $y^*$
 \item Can the statistician \emph{identify} $i^* \in S$ from $y^*$?
 \end{itemize}
+\emph{Remark.} In order to identify images outside the training set,
+we need some way to generalize beyond the training set!
 \end{block}
 
 \end{column} % End of the first column
@@ -163,40 +156,45 @@ $y^*$ &     & &  $i^* = ?$  &   \\
 
 
 
-\begin{block}{Previous Work}
+\begin{block}{Previous work}
 
-Kay (2008) and Vu (2011) reduce the dimensionality of $Y$ (by applying
-a filter based on SNR) and consider a linear model
+Previous work [1][2] generally follows likelihood-based approaches.
+Consider a parametric model
 \[
-Y_{T \times p} = X_{T \times q} B_{q \times p} + E_{T \times p}
+Y \sim F_\theta(X)
 \]
-where $X$ are a set of \emph{image features} (Gabor filters), $q \approx 10000$.
+where $Y_{T \times p}$ is a matrix containing the $T$ of recorded responses, and
+where $X_{T \times q}$ is the matrix of the \emph{image features} of the corresponding stimuli. 
+E.g. columns of $X$ are Gabor filters with
+$q \approx 10000$, and $\theta$ is some parameter to be estimated.
+Let $x_i : i \in S$ denote features of the test stimuli, and
+identify $y^*$ based on the maximimum likelihood (ML) principle
+\[
+i^* = \text{argmax}_i \ell(y^*, x_i)
+\]
 
-They identify the stimuli based on the \emph{maximum likelihood} (ML) principle:
-
+We take the following as a representative approach
 \begin{itemize}
-\item Obtain point estimates of coefficients $B$ and noise covariance $\Sigma_E$
-\item E.g. $B$ estimated using elastic net with CV (Zou 2005),
-shrinkage estimate for covariance
+\item Assume the normal mutivariate linear model
 \[
-\hat{\Sigma}_E = \frac{1}{2}\hat{\text{Cov}}(Y - \hat{Y}) + \frac{1}{2}\text{diag}(\hat{\text{Cov}}(Y - \hat{Y}))
+Y \sim N(XB, \Sigma_E^2)
 \]
-where $\hat{\text{Cov}}$ denotes sample covariance
-\item Obtain predicted means for test stimuli
+\item Obtain point estimates of $B$ and $\Sigma_E$. E.g. $B$ estimated using elastic net [4], and
 \[
-\hat{\mu}_i^{te} = (x_i^{te})^T B
+\hat{\Sigma}_E = (1-\alpha) \hat{\text{Cov}}(Y - \hat{Y}) + \alpha\text{diag}(\hat{\text{Cov}}(Y - \hat{Y}))
 \]
+where $\hat{\text{Cov}}$ = sample covariance, $\alpha \in (0, 1)$.
 \item Identify the stimulus $i^*$ by
 \[
-i^* = \text{argmin}_{i} (\hat{\mu}_i^{te} - y^*)^T \hat{\Sigma}_E^{-1} (\hat{\mu}_i^{te} - y^*)
+i^* = \text{argmin}_{i} (x_i^T B - y^*)^T \hat{\Sigma}_E^{-1} (x_i^T B - y^*)
 \]
 \end{itemize}
 \end{block}
 
 \begin{block}{Limitations of ML}
 \begin{itemize}
-\item Estimation of $B$ are motivated by \emph{prediction error}: the loss function for identification is different!
-\item \emph{Fact:} Any estimate of $B$ which is degenerate (low-rank) is suboptimal
+\item Point estimates obtained by minimizing \emph{prediction error}, but the loss function for identification is different!
+\item In fact, any estimate of $B$ which is degenerate (identical columns up to scaling) is suboptimal
 \end{itemize}
 \begin{center}
 \begin{tabular}{ccc}
@@ -211,7 +209,7 @@ i^* = \text{argmin}_{i} (\hat{\mu}_i^{te} - y^*)^T \hat{\Sigma}_E^{-1} (\hat{\mu
 \emph{(a)} Squared error loss (vertical axis) and \emph{(b)} loss function for identification,
 as a function of the difference between the true mean signal and the predicted signal.\\
 \emph{(c)} The optimal point estimate for identification (solid) vs the optimal point estimate for regression (dashed)
-diverge sharply at 0 in the one-dimensional case.  ($B = 0$ a special case of degenerate $B$)
+diverge sharply at $B = 0$ in the one-dimensional case.  The same phenomenon occurs for higher dimensions when $B$ is degenerate.
 }
 \end{block}
 
@@ -238,13 +236,13 @@ diverge sharply at 0 in the one-dimensional case.  ($B = 0$ a special case of de
 
 \begin{block}{Empirical Bayes}
 
+Can we find a principled alternative to ML?
+
 \begin{itemize}
-\item 
-\emph{Proposal}: improve on ML by accounting for the uncertainty of the
-estimate $B$.
-\item We consider a hierarchical model with a prior
-distribution on $B$, but we use the data to set the prior covariance
-$\Sigma_B$--hence we are being \emph{empirical Bayesians}
+\item \emph{Idea}: Unlike ML, the Bayes rule surely optimizes the ``correct'' objective function
+\item \emph{Problem}: We don't know the hyperparameters for Bayesian inference
+\item \emph{Emprical Bayes}: use the data to estimate the covariances
+$\Sigma_B$ and $\Sigma_E$, then compute posterior distribution of $B$
 \item In contrast to ML, which results in \emph{linear decision
   boundaries} (below: left), Empirical Bayes (EB) results in \emph{quadratic boundaries} (below: right)
 \end{itemize}
@@ -258,13 +256,15 @@ ML & EB
 \end{center}
 \end{block}
 
+\setbeamercolor{block alerted title}{fg=black,bg=BlueViolet!20} % Change the alert block title colors
+\setbeamercolor{block alerted body}{fg=black,bg=white} % Change the alert block body colors
+
 \begin{alertblock}{Technical details}
 \emph{Model}
 
 \begin{itemize}
 \item Noise $E_t \sim N(0, \Sigma_E)$ iid 
 \item Coefficients $B_i \sim N(0, \sigma^2_i I)$ for $i = 1, \hdots, p$
-\item $X$ non-random
 \end{itemize}
 
 \emph{Estimate hyperparameters}
@@ -278,7 +278,7 @@ ML & EB
 
 \emph{Compute posterior}
 \begin{itemize}
-\item Closed-form expressions for posteriors of $B$, $\mu_i^{te}$
+\item Closed-form expressions for posterior of $B$
 \item Computational bottleneck: inverting a $pq \times pq$ covariance matrix
 \end{itemize}
 
@@ -306,14 +306,14 @@ ML & EB
 
 \begin{block}{Simulation Results}
 \begin{itemize}
-\item Parameters $p = q = 60$, random coefficients
+\item Parameters $p = q = 60$, random $B$ and $\Sigma_E$
 \item Empirical bayes outperforms ML when $n < q$... however, still unstable!
 \end{itemize}
 \begin{center}
 \includegraphics[scale = 1.3]{simulation1.pdf}
 \end{center}
 \small{
- \textcolor{blue}{(E)} Empirical Bayes,  \textcolor{red}{(M)} Maximum likliehood,
+ \textcolor{blue}{(E)} Empirical Bayes,  \textcolor{red}{(M)} Maximum likelihood,
 (o) Bayes risk \emph{(knowing true $\Sigma_B$, $\Sigma_E$)}}
 \end{block}
 
@@ -321,7 +321,6 @@ ML & EB
 \begin{itemize}
 \item Why does error \emph{increase} with sample size!? Refine covariance estimation methods..
 \item Required cost of $O((pq)^3)$ unacceptable for real data... develop tractable approximations
-\item Apply methods to data of Kay (2008)
 \end{itemize}
 \end{block}
 
@@ -330,10 +329,9 @@ ML & EB
 
 \begin{block}{Conclusions}
 \begin{itemize}
-\item We determine theoretical limitations of Maximum Likelihood, and
-  illustrate the promise of Empirical Bayes... but our own method
-  still has obvious flaws
-\item Many challenges remain for optimal identification!
+\item ML-based approaches rely on point estimates, and hence optimize the wrong objective function
+\item Empirical bayes achieves better performance by approximating the Bayes rule, but the ``empirical'' part remains tricky
+\item Better theoretical understanding is needed to explain why EB succeeds (and sometimes fails)
 \end{itemize}
 \end{block}
 
@@ -343,13 +341,11 @@ ML & EB
 
 \begin{block}{References}
 
-
 \small{
-\begin{itemize}
-\item Kay et al. \emph{Nature} (2008)
-\item Vu et al. \emph{Annals of Applied Statistics} (2011)
-\item Janson et al. (2015) http://arxiv.org/abs/1505.02097
-\end{itemize}
+\noindent [1] Kay et al. \emph{Nature} (2008)\\
+\noindent [2] Vu et al. \emph{Annals of Applied Statistics} (2011)\\
+\noindent [3] Janson et al. (2015) http://arxiv.org/abs/1505.02097\\
+\noindent [4] Zou et al. \emph{J. R. Statist. Soc. B} (2005)
 }
 
 \end{block}
