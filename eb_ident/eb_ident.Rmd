@@ -2,7 +2,7 @@
 title: "An Empirical Bayes Approach to Identification"
 author: "Charles Zheng"
 date: "05/21/2015"
-output: html_document
+output: pdf_document
 ---
 
 # Setup
