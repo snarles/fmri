@@ -33,7 +33,7 @@ for (i in 1:p) {
 }
 Sigma_Bhat_vec <- solve(solve(Sigma_e) %x% (t(X) %*% X) + diag(1/diag(Sigma_B)))
 
-## Estimate parameters
+## Estimate parameters: Full EB
 
 B_mu_EB <- matrix(0, q, p) # placeholder for estimate
 resids <- matrix(0, n, p)
@@ -50,7 +50,13 @@ lambdas[lambdas < 1e-3] <- 1e-3
 #lambdas <- s0s
 Sigma_E_hat <- 0.5 * cov(resids) + 0.5 * diag(diag(cov(resids)))
 Inv_Sigma_B <- diag(rep(1/lambdas, each = q))
+Lambda <- diag(rep(lambdas, each = q))
+
 EB_cov_B_vec <- solve(solve(Sigma_E_hat) %x% (t(X) %*% X) + Inv_Sigma_B)
+
+## Estimate parameters: Sampling distribution
+temp <- solve((diag(rep(1, p)) %x% (t(X) %*% X)) + Lambda)
+sampling_cov_B_vec <- temp %*% (Sigma_E_hat %x% diag(rep(1, q))) %*% temp
 
 # compare estimated sigma_B with true sigma_B
 plot(s0s, lambdas)
@@ -99,3 +105,9 @@ mle_cl <- knn(mu_hat %*% a, y_star %*% a, 1:L)
 pp_eb <- post_probs(Sigma_E_hat, EB_cov_B_vec, B_mu_EB, X_te, y_star)
 eb_cl <- apply(pp_eb, 1, function(v) order(-v)[1])
 (eb_err <- sum(eb_cl != i_chosen))
+
+## Sampling dist
+pp_sd <- post_probs(Sigma_E_hat, sampling_cov_B_vec, B_mu_EB, X_te, y_star)
+sd_cl <- apply(pp_sd, 1, function(v) order(-v)[1])
+(sd_err <- sum(sd_cl != i_chosen))
+
