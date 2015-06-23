@@ -73,14 +73,18 @@ params_CV <- function(X, Y, Xte, Yte) {
        filt = rep(TRUE, p))
 }
 
-params_EP <- function(X, Y, Xte, Yte) {
+params_EP <- function(X, Y, Xte, Yte, avg = FALSE) {
   q <- dim(X)[2]
   p <- dim(Y)[2]
   nte <- dim(Yte)[1]
   
   res_EP <- eigenprisms(X, Y)
-  filt_EP <- (res_EP$T2 > 0)
-  lambdas_EP <-  res_EP$T2[filt_EP]/q
+  T2 <- res_EP$T2
+  if (avg) {
+    T2 <- rep(mean(T2), length(T2))
+  }
+  filt_EP <- (T2 > 0)
+  lambdas_EP <-  T2[filt_EP]/q
   p_EP <- sum(filt_EP)
   B_mu_EP <- matrix(0, q, p_EP)
   Y_EP <- Y[, filt_EP]
@@ -93,6 +97,21 @@ params_EP <- function(X, Y, Xte, Yte) {
   EP_cov_B_vec <- solve(solve(Sigma_e_EP) %x% (t(X) %*% X) + diag(1/diag(Sigma_B_EP)))
   list(lambdas = lambdas_EP, filt = filt_EP, B = B_mu_EP, Sigma_e = Sigma_e_EP,
        Sigma_B = EP_cov_B_vec, res_EP = res_EP)
+}
+
+p_EP_2_sd <- function(X, Y, pars) {
+  q <- dim(X)[2]
+  p <- dim(Y)[2]
+  p_EP <- sum(pars$filt)
+  lambdas_EP <- pars$lambdas
+  Sigma_e_EP <- pars$Sigma_e
+  Sigma_B_EP <- diag(rep(1/lambdas_EP, each = q))
+  Lambda <- diag(rep(lambdas_EP, each = q))
+  temp <- solve((diag(rep(1, p_EP)) %x% (t(X) %*% X)) + Lambda)
+  sampling_cov_B_vec <- temp %*% (Sigma_e_EP %x% diag(rep(1, q))) %*% temp
+  pars2 <- pars
+  pars2$Sigma_B <- sampling_cov_B_vec
+  pars2
 }
 
 params_Bayes <- function(X, Y, Sigma_e, Sigma_B, s0s) {

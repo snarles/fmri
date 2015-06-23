@@ -17,3 +17,5 @@ sqrtm <- function(m) {
   v <- res$vectors
   return (v %*% diag(d) %*% t(v))
 }
+
+zattach <- function(ll) for (i in 1:length(ll)) assign(names(ll)[i], ll[[i]], envir = globalenv())
