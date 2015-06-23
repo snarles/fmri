@@ -1,4 +1,4 @@
-eigenprism_w <- function(l, tol = 1e-4) {
+eigenprism_w <- function(l, tol = 1e-4, sigma2 = FALSE) {
   n <- length(l)
   f <- function(w) max(sum(w^2), sum((w * l)^2))
   # null space directions
@@ -11,6 +11,9 @@ eigenprism_w <- function(l, tol = 1e-4) {
   Ns <- lapply(Ls, function(L) A %*% solve(t(A) %*% L %*% A) %*% t(A) %*% L)
   # initialization
   w <- 1/(l[1] - l[2]) * c(1, -1, rep(0, n - 2))
+  if (sigma2) {
+    w <- 1/(l[1] - l[2]) * c(-l[2], l[1], rep(0, n - 2))
+  }
   f_old <- f(w)  
   iter_flag <- TRUE
   while(iter_flag) {
@@ -36,20 +39,20 @@ eigenprism_w <- function(l, tol = 1e-4) {
   list(w = w[, 1], val = f_old)
 }
 
-eigenprism <- function(X, y, alpha = 0.05) {
+eigenprism <- function(X, y, alpha = 0.05, sigma2 = FALSE) {
   n <- length(y)
   res <- svd(X)
   dim(res$u)
   z <- t(res$u) %*% y
   l <- res$d^2/p
-  res <- eigenprism_w(l)
+  res <- eigenprism_w(l, sigma2 = sigma2)
   w <- res$w; val <- res$val
   T2 <- sum(z^2 * w)
   qq <- qnorm(1 - alpha/2)
   width <- qq * sqrt(2 * val) * sum(y^2)/n
   lower <- max(T2 - width, 0)
   upper <- T2 + width
-  list(T2 = T2, lower = lower, upper = upper)
+  list(T2 = T2, lower = lower, upper = upper, w = w, l = l)
 }
 
 eigenprisms <- function(X, Y, alpha = 0.05) {
