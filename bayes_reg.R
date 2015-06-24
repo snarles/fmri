@@ -9,10 +9,10 @@ library(pracma, warn.conflicts = FALSE)
 library(MASS)
 f2 <- function(x) sum(x^2)
 
-n <- 20
+n <- 30
 nte <- 20
-pX <- 30 # number of X-features
-pY <- 7 # number of Y-responses
+pX <- 60 # number of X-features
+pY <- 70 # number of Y-responses
 sigma_b <- 0.1 # size of each random coefficent
 # noise covariance
 Sigma_e <- 10 * (1/10/pY) * randn(10 * pY, pY) %>% {t(.) %*% .}
@@ -49,8 +49,10 @@ yVec <- as.numeric(Y)
 xtx <- t(X) %*% X
 xt.o.y <- t(IX) %*% Omega_E %*% yVec
 
-post_cov <- solve(Omega_e %x% xtx + Omega_B)
+#post_cov <- solve(Omega_e %x% xtx + Omega_B)
+tt <- proc.time()
 post_mu <- solve(Omega_e %x% xtx + Omega_B, xt.o.y)
+proc.time() -tt
 Yte_post <- Xte %*% matrix(post_mu, pX, pY)
 (err_post <- f2(Yte - Yte_post))
 
@@ -67,13 +69,16 @@ IDU <- eye(pY) %x% DU
 icov_post <- Omega_e %x% xtx + Omega_B
 icov_svd <- IV %*% (Omega_e %x% D^2 + (1/sigma_b^2) * eye(pY * pX)) %*% t(IV)
 #f2(icov_post - icov_svd)
-cov_svd <- IV %*% solve(Omega_e %x% D^2 + (1/sigma_b^2) * eye(pY * pX), t(IV))
+#cov_svd <- IV %*% solve(Omega_e %x% D^2 + (1/sigma_b^2) * eye(pY * pX), t(IV))
 #f2(cov_svd - post_cov)
+tt <- proc.time()
 mu_svd <- IV %*% solve(Omega_e %x% D^2 + (1/sigma_b^2) * eye(pY * pX), t(IV) %*% t(IX) %*% Omega_E %*% yVec)
+proc.time() -tt
 Yte_svd <- Xte %*% matrix(mu_svd, pX, pY)
 (err_svd <- f2(Yte - Yte_svd))
 
 #f2(post_cov_svd - post_cov)
 #max(abs((post_cov_svd - post_cov)))
 
-
+## Avoid computing the entire inverse
+temp0 <- (eye(pY) %x% Xte) %*% IV
