@@ -8,11 +8,16 @@ library(magrittr)
 library(pracma, warn.conflicts = FALSE)
 library(MASS)
 f2 <- function(x) sum(x^2)
+solvediag <- function(D, b) 1/diag(D) * b
+#lala <- rnorm(10); dada <-abs(diag(rnorm(10)))
+#solve(dada, lala)
+#solvediag(dada, lala)
 
-n <- 30
+
+n <- 5
 nte <- 20
-pX <- 60 # number of X-features
-pY <- 70 # number of Y-responses
+pX <- 10 # number of X-features
+pY <- 10 # number of Y-responses
 Sigma_b <- 0.01 * diag(abs(rnorm(pY))) # size of each random coefficent
 # noise covariance
 Sigma_e <- 10 * (1/10/pY) * randn(10 * pY, pY) %>% {t(.) %*% .}
@@ -39,6 +44,7 @@ ridge_Yte <- Xte %*% ridge_mu
 
 Omega_e <- solve(Sigma_e)
 IX <- eye(pY) %x% X
+Omega_b <- diag(1/diag(Sigma_b))
 Sigma_B <- Sigma_b %x% eye(pX)
 Omega_B <- diag(1/diag(Sigma_b)) %x% eye(pX)
 Sigma_E <- Sigma_e %x% eye(n)
@@ -47,10 +53,45 @@ yVec <- as.numeric(Y)
 xtx <- t(X) %*% X
 xt.o.y <- t(IX) %*% Omega_E %*% yVec
 
-#post_cov <- solve(Omega_e %x% xtx + Omega_B)
+tt <- proc.time()
+icov <- Omega_e %x% xtx + Omega_B
+post_cov <- solve(Omega_e %x% xtx + Omega_B)
+proc.time() -tt
 tt <- proc.time()
 post_mu <- solve(Omega_e %x% xtx + Omega_B, xt.o.y)
 proc.time() -tt
 Yte_post <- Xte %*% matrix(post_mu, pX, pY)
 (err_post <- f2(Yte - Yte_post))
+
+## Using simultaneous diagonalization of Omega_e and Omega_b
+
+homega_b <- diag(1/sqrt(diag(Sigma_b)))
+hsigma_b <- diag(sqrt(diag(Sigma_b)))
+res <- eigen(hsigma_b %*% Omega_e %*% hsigma_b)
+D_e <- diag(res$values)
+V_e <- homega_b %*% res$vectors
+f2(V_e %*% D_e %*% t(V_e) - Omega_e)
+f2(V_e %*% t(V_e) - Omega_b)
+iV_e <- solve(V_e)
+f2(iV_e %*% V_e - eye(pY))
+
+VI <- V_e %x% eye(pX)
+icov2 <- VI %*% (D_e %x% xtx + eye(pX * pY)) %*% t(VI)
+f2(icov - icov2)
+
+resX <- svd(rbind(X, zeros(pX - n, pX)))
+V_x <- resX$v
+D_x <- diag(resX$d)
+#f2(V_x %*% D_x^2 %*% t(V_x) - xtx)
+f2(V_x %*% t(V_x) - eye(pX))
+VV <- V_e %x% V_x
+iVV <- iV_e %x% t(V_x)
+f2(iVV %*% VV - eye(pX * pY))
+
+
+icov2 <- VV %*% (D_e %x% D_x^2 + eye(pX * pY)) %*% t(VV)
+f2(icov2 - icov)
+image(VV %*% t(VV))
+post_cov2 <- t(iVV) %*% solvediag(D_e %x% D_x^2 + eye(pX * pY), iVV)
+f2(post_cov2 - post_cov)
 
