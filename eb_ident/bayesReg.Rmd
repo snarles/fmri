@@ -1,0 +1,47 @@
+---
+title: "Multivariate Bayesian Regression"
+author: "Charles Zheng"
+date: "06/25/2015"
+output: html_document
+---
+
+# Setup
+
+Suppose we have a $n \times p_Y$ response matrix $Y$ and a $n \times p_X$ covariate matrix $X$.
+We have the model
+$$
+Y = XB + E
+$$
+where $B$ is a $p_X \times p_Y$ coefficient matrix and $E$ is a matrix of noise.
+Write $$
+E = \begin{pmatrix} e_1^T\\e_2^T\\ ... \\ e_n^T \end{pmatrix}
+$$
+Assume the rows of $E$ are independent, and each row is distributed
+$$
+e_i \sim N(0, \Sigma_e)
+$$
+
+Let us assume a prior distribution on the coefficients,
+$$
+B_{ij} \sim N(0, \sigma^2_{B, j})
+$$
+and where $B_{ij}$ are independent.
+Note that each column $j = 1,...,p_Y$ has a different prior coviarance $\sigma^2_{B, j}$.
+This reflects our prior knowledge that some column of $Y$ may have more signal than other columns.
+
+Bayes' rule gives us the posterior mean and covariance of the coefficients $B_{ij}$.
+First, we introduce the vectorized notation $\vec{B}$ to denote the $p_X p_Y \times 1$ vector obtained by 
+stacking the columns of $B$, and similarly $\vec{Y}$ to denote the $p_Y n \times 1$ vector obtained by stacking the columns of $Y$.  Also recall the definition of Kronecker product,
+
+$$
+A \otimes B = \begin{pmatrix}a_{11} B & a_{12} B & ...\\
+a_{21} B & a_{22} B & ...\\
+... & ... & ...\end{pmatrix}
+$$
+
+The posterior mean and covariance are given as follows.
+
+$$
+
+$$
+
