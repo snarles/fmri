@@ -86,6 +86,154 @@ A \otimes B = \begin{pmatrix}a_{11} B &amp; a_{12} B &amp; ...\\
 a_{21} B &amp; a_{22} B &amp; ...\\
 ... &amp; ... &amp; ...\end{pmatrix}
 \]</span></p>
+<p>Also define <span class="math">\[
+\Omega_e = \Sigma_e^{-1}
+\]</span> <span class="math">\[
+\Omega_b = \text{diag}\left(\frac{1}{\sigma^2_{b, 1}},..., \frac{1}{\sigma^2_{b, p_Y}}\right)
+\]</span></p>
+<p>The posterior mean and covariance are given as follows.</p>
+<p><span class="math">\[
+\text{E}[\vec{B}|Y] = (\Omega_e \otimes X^T X + \Omega_b \otimes I_{p_X})^{-1} ((I\otimes X)^T (\Omega_e \otimes I) \vec{y})
+\]</span> <span class="math">\[
+\text{Cov}(\vec{B}|Y) = = (\Omega_e \otimes X^T X + \Omega_b \otimes I_{p_X})^{-1}
+\]</span></p>
+<div id="simulated-example" class="section level2">
+<h2>Simulated Example</h2>
+<p>Setup the parameters and generate the data.</p>
+<pre class="r"><code>library(magrittr)
+library(pracma, warn.conflicts = FALSE)
+library(MASS)
+f2 &lt;- function(x) sum(x^2)
+solvediag &lt;- function(D, b) 1/diag(D) * b
+n &lt;- 20
+pX &lt;- 60 # number of X-features: assume larger than n
+pY &lt;- 60 # number of Y-responses
+Sigma_b &lt;- 0.01 * diag(abs(rnorm(pY))) # size of each random coefficent
+# noise covariance
+Sigma_e &lt;- 10 * (1/10/pY) * randn(10 * pY, pY) %&gt;% {t(.) %*% .}
+X &lt;- randn(n, pX)
+# Generate coefficents
+B &lt;- mvrnorm(n = pX, mu = rep(0, pY), Sigma = Sigma_b)
+Y &lt;- X %*% B + mvrnorm(n = n, mu = rep(0, pY), Sigma = Sigma_e)</code></pre>
+<p>Compute the posterior mean and covariance, also timing the computation. In the timings, we assume <span class="math">\(X^T X\)</span> and <span class="math">\(\Omega_e\)</span> are pre-computed.</p>
+<pre class="r"><code>Omega_e &lt;- solve(Sigma_e)
+Omega_b &lt;- diag(1/diag(Sigma_b))
+yVec &lt;- as.numeric(Y)
+xtx &lt;- t(X) %*% X</code></pre>
+<p>Computation of the posterior covariance.</p>
+<pre class="r"><code>tt &lt;- proc.time()
+post_cov &lt;- solve(Omega_e %x% xtx + Omega_b %x% eye(pY))
+proc.time() -tt</code></pre>
+<pre><code>##    user  system elapsed 
+##  23.071   0.220  23.342</code></pre>
+<p>Computation of the posterior mean.</p>
+<pre class="r"><code>tt &lt;- proc.time()
+post_mu &lt;- solve(Omega_e %x% xtx + Omega_b %x% eye(pY),
+                 t(eye(pY) %x% X) %*% (Omega_e %x% eye(n)) %*% yVec)
+proc.time() -tt</code></pre>
+<pre><code>##    user  system elapsed 
+##   9.346   0.175   9.542</code></pre>
+</div>
+</div>
+<div id="computation" class="section level1">
+<h1>Computation</h1>
+<p>In the following, we assume that <span class="math">\(p_X &gt; n\)</span>.</p>
+<p>Naively, computing the posterior covariance takes <span class="math">\(O(p_X^3 p_Y^3)\)</span> operations and computing the posterior mean takes <span class="math">\(O(p_X^2 p_Y^2)\)</span> operations.</p>
+<p>However, by diagonalizing the covariance matrix and taking advantage of the properties of Kronecker products, we can make the computation much more efficient.</p>
+<p>Using simultaneous diagonalization, find <span class="math">\(V_e, D_e\)</span> such that <span class="math">\[
+\Omega_e = V_e D_e V_e^T
+\]</span> and <span class="math">\[
+\Omega_b = V_e V_e^T
+\]</span> Note that <span class="math">\(V_e\)</span> is not orthogonal. The procedure for finding <span class="math">\(V_e, D_e\)</span> is well-known and also given in the code.</p>
+<p>Furthermore, define <span class="math">\[\tilde{X} = \begin{pmatrix} X \\ 0\end{pmatrix}\]</span> so that <span class="math">\(\tilde{X}\)</span> is an <span class="math">\(p_X \times p_X\)</span> matrix. Then take the SVD <span class="math">\[
+\tilde{X} = U_X D_X V_X^T
+\]</span> so that <span class="math">\(D_X\)</span> and <span class="math">\(V_X\)</span> are both <span class="math">\(p_X \times p_X\)</span>. We have <span class="math">\[
+V_X V_X^T = V_X V_X^T = I_{p_X}
+\]</span> and <span class="math">\[
+V_X D_X^2 V_X^T = X^T X.
+\]</span></p>
+<p>Now we can rewrite the expression <span class="math">\[
+\text{Cov}(\vec{B}|Y) = = (\Omega_e \otimes X^T X + \Omega_b \otimes I_{p_X})^{-1}
+\]</span> <span class="math">\[
+= ((V_e D_e V_e^T) \otimes (V_X D_X^2 V_X^T) + (V_e V_e^T) \otimes (V_X V_X^T))^{-1}
+\]</span> <span class="math">\[
+= [(V_e \otimes V_X) (D_e \otimes D_X^2+ I_{p_X p_Y})(V_e^T \otimes V_X^T)]^{-1}
+\]</span> <span class="math">\[
+= (V_e^{-1} \otimes V_X^{T})^T (D_e \otimes D_X^2+ I_{p_X p_Y})^{-1} (V_e^{-1} \otimes V_X^{T})
+\]</span></p>
+<p>In this form the expression is much each to compute since</p>
+<ul>
+<li>Only a diagonal matrix needs be inverted, and yields a diagonal matrix</li>
+<li>Multiplying the tranpose of a Kronecker product with a diagonal with itself is easy to compute.</li>
+</ul>
+<p>To see the second point, consider computing the product</p>
+<p><span class="math">\[
+C = (A \otimes B)^T D (A \otimes B)
+\]</span> where <span class="math">\(A\)</span> is <span class="math">\(a_1 \times a_2\)</span>, <span class="math">\(B\)</span> is <span class="math">\(b_1 \times b_2\)</span>, and <span class="math">\(D\)</span> is diagonal with <span class="math">\[
+D = \begin{pmatrix} D_1 &amp; 0 &amp; 0 &amp; 0 &amp;... \\
+0 &amp; D_2 &amp; 0 &amp; 0 &amp; ...\\
+0 &amp; 0 &amp; D_3 &amp; 0 &amp; ...\\
+... &amp; ...&amp; ... &amp; ... &amp; ...
+\end{pmatrix}
+\]</span> such that each <span class="math">\(D_1,..., D_{a_1}\)</span> is <span class="math">\(b_1 \times b_1\)</span>.</p>
+<p>For <span class="math">\(i, j = 1..., a_2\)</span>, let <span class="math">\(C_{[ij]}\)</span> denote <span class="math">\(b_2 \times b_2\)</span> blocks such that <span class="math">\[
+C = \begin{pmatrix} C_{[11]} &amp; C_{[12]} &amp; ...\\
+C_{[21]} &amp; C_{[22]} &amp; ... \\
+... &amp; ... &amp; ...\end{pmatrix}
+\]</span></p>
+<p>Now we can write <span class="math">\[
+C_{[ij]} = \sum_{k=1}^{a_1} a_{ki}a_{kj} B^T D_k B = B^T \left(\sum_{k=1}^{a_1} a_{ki} a_{kj} D_k \right) B.
+\]</span></p>
+<p>Thus to compute each block of <span class="math">\(C\)</span>, it takes <span class="math">\(O(a_1 b_1)\)</span> operations to compute the weighted sum of <span class="math">\(D_1,..., D_{a_1}\)</span>, and then <span class="math">\(O(b_2^1 b_1)\)</span> to multiply on the left with <span class="math">\(B^T\)</span> and on the right with <span class="math">\(B\)</span>. Therefore, we see that it takes <span class="math">\(O(a_2^2 b_2^2 b_1)\)</span> operations to compute <span class="math">\(C\)</span>.</p>
+<p>Applying to our problem, we see that the cost to evaluate the posterior covariance using this method is <span class="math">\(O(p_Y^2 p_X^3)\)</span>, which is a saves a power of <span class="math">\(p_Y\)</span> compared to the naive approach.</p>
+<div id="example-cont." class="section level2">
+<h2>Example (cont.)</h2>
+<p>Computing <span class="math">\(V_e, D_e, V_X, D_X\)</span> and also <span class="math">\(V_e^{-1}\)</span>.</p>
+<pre class="r"><code>homega_b &lt;- diag(1/sqrt(diag(Sigma_b)))
+hsigma_b &lt;- diag(sqrt(diag(Sigma_b)))
+res &lt;- eigen(hsigma_b %*% Omega_e %*% hsigma_b)
+D_e &lt;- diag(res$values)
+V_e &lt;- homega_b %*% res$vectors
+iV_e &lt;- solve(V_e)
+resX &lt;- svd(rbind(X, zeros(pX - n, pX)))
+V_x &lt;- resX$v
+D_x &lt;- diag(resX$d)</code></pre>
+<p>Function for computing Kronecker times diagonal times transposed Kromnecker, and demo.</p>
+<pre class="r"><code># computes t(A %x% B) %*% diag(d) %*% (A %*% B)
+tkron_d_kron &lt;- function(A, B, d) {
+  a1 &lt;- dim(A)[1]; a2 &lt;- dim(A)[2]; b1 &lt;- dim(B)[1]; b2 &lt;- dim(B)[2]
+  dmat &lt;- matrix(d, b1, a1) # columns of dmat are diag(D1), diag(D2), ...
+  AtA &lt;- t(A) %*% A
+  C &lt;- zeros(a2 * b2)
+  for (i in 1:a2) {
+    for (j in i:a2) {
+      dtemp &lt;- as.numeric(dmat %*% (A[, i] * A[, j]))
+      Cij &lt;- t(B) %*% (dtemp * B)
+      C[(i-1) * b2 + (1:b2), (j-1) * b2 + (1:b2)] &lt;- Cij
+      C[(j-1) * b2 + (1:b2), (i-1) * b2 + (1:b2)] &lt;- t(Cij)
+    }
+  }
+  C
+}
+A &lt;- randn(10, 20)
+B &lt;- randn(20, 30)
+d &lt;- rnorm(10 * 20)
+C &lt;- t(A %x% B) %*% diag(d) %*% (A %x% B)
+C2 &lt;- tkron_d_kron(A, B, d)
+f2(C - C2)</code></pre>
+<pre><code>## [1] 4.929467e-24</code></pre>
+<p>Compute the posterior covariance and time it</p>
+<pre class="r"><code>tt &lt;- proc.time()
+# invert diagonal matrix
+d &lt;- 1/(diag(D_e) %x% diag(D_x)^2 + 1)
+post_cov2 &lt;- tkron_d_kron(iV_e, t(V_x), d)
+proc.time() -tt</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.872   0.136   1.009</code></pre>
+<p>Check that the answer matches</p>
+<pre class="r"><code>f2(post_cov2 - post_cov)</code></pre>
+<pre><code>## [1] 6.213982e-30</code></pre>
+</div>
 </div>
 
 
