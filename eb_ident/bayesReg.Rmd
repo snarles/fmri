@@ -56,6 +56,16 @@ $$
 \text{Cov}(\vec{B}|Y) = = (\Omega_e \otimes X^T X + \Omega_b \otimes I_{p_X})^{-1}
 $$
 
+Given a new observation $y_* = B^T x_* + e_*$, where $y_*$ and $x_*$ are column vectors,
+the posterior predictive distribution is
+$$
+\text{E}[y_* | Y] = (I_{p_Y} \otimes x_*^T) \text{E}[\vec{B}|Y]
+$$
+$$
+\text{Cov}[y_* | Y] = (I_{p_Y} \otimes x_*^T) \text{Cov}(\vec{B}|Y) (I_{p_Y} \otimes x_*) + \Sigma_e
+$$
+
+
 ## Simulated Example
 
 Setup the parameters and generate the data.
@@ -66,16 +76,18 @@ library(pracma, warn.conflicts = FALSE)
 library(MASS)
 f2 <- function(x) sum(x^2)
 solvediag <- function(D, b) 1/diag(D) * b
-n <- 20
-pX <- 60 # number of X-features: assume larger than n
-pY <- 60 # number of Y-responses
+n <- 30
+pX <- 200 # number of X-features: assume larger than n
+pY <- 30 # number of Y-responses
 Sigma_b <- 0.01 * diag(abs(rnorm(pY))) # size of each random coefficent
 # noise covariance
 Sigma_e <- 10 * (1/10/pY) * randn(10 * pY, pY) %>% {t(.) %*% .}
 X <- randn(n, pX)
+x_star <- rnorm(pX)
 # Generate coefficents
 B <- mvrnorm(n = pX, mu = rep(0, pY), Sigma = Sigma_b)
 Y <- X %*% B + mvrnorm(n = n, mu = rep(0, pY), Sigma = Sigma_e)
+ystar <- t(B) %*% x_star + mvrnorm(n = 1, mu = rep(0, pY), Sigma = Sigma_e)
 ```
 
 Compute the posterior mean and covariance, also timing the computation.
@@ -88,22 +100,44 @@ yVec <- as.numeric(Y)
 xtx <- t(X) %*% X
 ```
 
-Computation of the posterior covariance.
-
-```{r}
-tt <- proc.time()
-post_cov <- solve(Omega_e %x% xtx + Omega_b %x% eye(pY))
-proc.time() -tt
-```
 
 Computation of the posterior mean.
 
 ```{r}
 tt <- proc.time()
-post_mu <- solve(Omega_e %x% xtx + Omega_b %x% eye(pY),
+post_mu <- solve(Omega_e %x% xtx + Omega_b %x% eye(pX),
                  t(eye(pY) %x% X) %*% (Omega_e %x% eye(n)) %*% yVec)
 proc.time() -tt
 ```
+
+Computation of the posterior covariance.
+
+```{r}
+tt <- proc.time()
+post_cov <- solve(Omega_e %x% xtx + Omega_b %x% eye(pX))
+proc.time() -tt
+```
+
+Computation of the posterior predictive mean.  
+Timing does not assume previous results have been computed, since we are interested in cases when we only compute the predictive distribution.
+
+```{r}
+tt <- proc.time()
+post_pre_mu <- (eye(pY) %x% t(x_star)) %*% solve(Omega_e %x% xtx + Omega_b %x% eye(pX),
+                 t(eye(pY) %x% X) %*% (Omega_e %x% eye(n)) %*% yVec)
+proc.time() -tt
+```
+
+Computation of the posterior predictive covariance.
+
+```{r}
+tt <- proc.time()
+post_pre_cov <- (eye(pY) %x% t(x_star)) %*% 
+  solve(Omega_e %x% xtx + Omega_b %x% eye(pX), (eye(pY) %x% x_star)) + Sigma_e
+proc.time() -tt
+```
+
+
 
 # Computation
 
@@ -184,13 +218,19 @@ $$
 
 Now we can write
 $$
-C_{[ij]} = \sum_{k=1}^{a_1} a_{ki}a_{kj} B^T D_k B = B^T \left(\sum_{k=1}^{a_1} a_{ki} a_{kj} D_k \right) B.
+C_{[ij]} = \sum_{k=1}^{a_1} a_{ki}a_{kj} B^T D_k B 
+= \left(\sum_{k=1}^{a_1} a_{ki} a_{kj} B^T D_k B \right)
+= B^T \left(\sum_{k=1}^{a_1} a_{ki} a_{kj} D_k \right) B.
 $$
 
-Thus to compute each block of $C$, it takes $O(a_1 b_1)$ operations to compute the weighted sum of $D_1,..., D_{a_1}$, and then $O(b_2^1 b_1)$ to multiply on the left with $B^T$ and on the right with $B$.
+The second-to-last and last equality present two alternative methods to compute $C_{[ij]}$.
+
+* Using the second-to-last equality, one precomputes each of the matrices $B^T D_i B$, which takes $O(b_2^2 b_1 a_1)$ operations.  To compute each block, it takes $O(b_2^2 a_1)$ operations.  Hence, to compute $C$ takes $O(a_1 a_2^2 b_2^2)$.
+* Using the last equality, for each block one takes $O(a_1 b_1)$ operations to compute the weighted sum of $D_1,..., D_{a_1}$, and then $O(b_2^1 b_1)$ to multiply on the left with $B^T$ and on the right with $B$.
 Therefore, we see that it takes $O(a_2^2 b_2^2 b_1)$ operations to compute $C$.
 
-Applying to our problem, we see that the cost to evaluate the posterior covariance using this method is $O(p_Y^2 p_X^3)$, which is a saves a power of $p_Y$ compared to the naive approach.
+Choosing the best of the two methods, the cost to compute $C$ is $O(a_2^2 b_2^2 \min(a_1, b_1))$.
+Applying to our problem, we see that the cost to evaluate the posterior covariance using this method is $O(p_Y^2 p_X^2 \min(p_X, p_Y))$, which is a saves a factor of $\max(p_Y, p_X)$ compared to the naive approach.
 
 ## Example (cont.)
 
@@ -214,16 +254,28 @@ Function for computing Kronecker times diagonal times transposed Kromnecker, and
 # computes t(A %x% B) %*% diag(d) %*% (A %*% B)
 tkron_d_kron <- function(A, B, d) {
   a1 <- dim(A)[1]; a2 <- dim(A)[2]; b1 <- dim(B)[1]; b2 <- dim(B)[2]
-  dmat <- matrix(d, b1, a1) # columns of dmat are diag(D1), diag(D2), ...
-  AtA <- t(A) %*% A
+  dmat <- matrix(d, b1, a1)
+  # columns of dmat are diag(D1), diag(D2), ...
   C <- zeros(a2 * b2)
-  for (i in 1:a2) {
-    for (j in i:a2) {
-      dtemp <- as.numeric(dmat %*% (A[, i] * A[, j]))
-      Cij <- t(B) %*% (dtemp * B)
-      C[(i-1) * b2 + (1:b2), (j-1) * b2 + (1:b2)] <- Cij
-      C[(j-1) * b2 + (1:b2), (i-1) * b2 + (1:b2)] <- t(Cij)
+  if (a1 < b1) {
+    bdbmat <- zeros(b2^2, a1)
+    for (i in 1:a1) bdbmat[, i] <- as.numeric(t(B) %*% (dmat[, i] * B))
+    for (i in 1:a2) {
+      for (j in i:a2) {
+        Cij <- matrix(bdbmat %*% (A[, i] * A[, j]), b2, b2)
+        C[(i-1) * b2 + (1:b2), (j-1) * b2 + (1:b2)] <- Cij
+        C[(j-1) * b2 + (1:b2), (i-1) * b2 + (1:b2)] <- t(Cij)
+      }
     }
+  } else {
+    for (i in 1:a2) {
+      for (j in i:a2) {
+        dtemp <- as.numeric(dmat %*% (A[, i] * A[, j]))
+        Cij <- t(B) %*% (dtemp * B)
+        C[(i-1) * b2 + (1:b2), (j-1) * b2 + (1:b2)] <- Cij
+        C[(j-1) * b2 + (1:b2), (i-1) * b2 + (1:b2)] <- t(Cij)
+      }
+    }  
   }
   C
 }
@@ -233,6 +285,26 @@ d <- rnorm(10 * 20)
 C <- t(A %x% B) %*% diag(d) %*% (A %x% B)
 C2 <- tkron_d_kron(A, B, d)
 f2(C - C2)
+```
+
+Other functions for Kronecker computations.   $(A \otimes B) \vec{C} = \vec{BCA^T}$.
+```{r}
+kron_v <- function(A, B, cc) {
+  a1 <- dim(A)[1]; a2 <- dim(A)[2]; b1 <- dim(B)[1]; b2 <- dim(B)[2]
+  as.numeric(B %*% matrix(cc, b2, a2) %*% t(A))
+}
+```
+
+
+Compute the posterior mean and time it
+
+```{r}
+tt <- proc.time()
+# invert diagonal matrix
+d <- 1/(diag(D_e) %x% diag(D_x)^2 + 1)
+temp <- kron_v(iV_e %*% Omega_e, t(V_x) %*% t(X), yVec)
+post_mu2 <- kron_v(t(iV_e), V_x, d * temp)
+proc.time() -tt
 ```
 
 Compute the posterior covariance and time it
@@ -245,10 +317,35 @@ post_cov2 <- tkron_d_kron(iV_e, t(V_x), d)
 proc.time() -tt
 ```
 
-Check that the answer matches
+Compute the posterior predictive mean.
 
 ```{r}
+tt <- proc.time()
+# invert diagonal matrix
+d <- 1/(diag(D_e) %x% diag(D_x)^2 + 1)
+temp <- kron_v(iV_e %*% Omega_e, t(V_x) %*% t(X), yVec)
+post_pre_mu2 <- kron_v(t(iV_e), t(x_star) %*% V_x, d * temp)
+proc.time() -tt
+```
+
+Compute the posterior predictive covariance.
+
+```{r}
+tt <- proc.time()
+# invert diagonal matrix
+d <- 1/(diag(D_e) %x% diag(D_x)^2 + 1)
+post_pre_cov2 <- tkron_d_kron(iV_e,  t(V_x) %*% x_star, d) + Sigma_e
+proc.time() -tt
+```
+
+
+Check that the answers match.
+
+```{r}
+f2(post_mu2 - post_mu)
 f2(post_cov2 - post_cov)
+f2(post_pre_mu2 - post_pre_mu)
+f2(post_pre_cov2 - post_pre_cov)
 ```
 
 

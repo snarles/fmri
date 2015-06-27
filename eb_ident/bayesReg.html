@@ -97,6 +97,11 @@ a_{21} B &amp; a_{22} B &amp; ...\\
 \]</span> <span class="math">\[
 \text{Cov}(\vec{B}|Y) = = (\Omega_e \otimes X^T X + \Omega_b \otimes I_{p_X})^{-1}
 \]</span></p>
+<p>Given a new observation <span class="math">\(y_* = B^T x_* + e_*\)</span>, where <span class="math">\(y_*\)</span> and <span class="math">\(x_*\)</span> are column vectors, the posterior predictive distribution is <span class="math">\[
+\text{E}[y_* | Y] = (I_{p_Y} \otimes x_*^T) \text{E}[\vec{B}|Y]
+\]</span> <span class="math">\[
+\text{Cov}[y_* | Y] = (I_{p_Y} \otimes x_*^T) \text{Cov}(\vec{B}|Y) (I_{p_Y} \otimes x_*) + \Sigma_e
+\]</span></p>
 <div id="simulated-example" class="section level2">
 <h2>Simulated Example</h2>
 <p>Setup the parameters and generate the data.</p>
@@ -105,34 +110,50 @@ library(pracma, warn.conflicts = FALSE)
 library(MASS)
 f2 &lt;- function(x) sum(x^2)
 solvediag &lt;- function(D, b) 1/diag(D) * b
-n &lt;- 20
-pX &lt;- 60 # number of X-features: assume larger than n
-pY &lt;- 60 # number of Y-responses
+n &lt;- 30
+pX &lt;- 200 # number of X-features: assume larger than n
+pY &lt;- 30 # number of Y-responses
 Sigma_b &lt;- 0.01 * diag(abs(rnorm(pY))) # size of each random coefficent
 # noise covariance
 Sigma_e &lt;- 10 * (1/10/pY) * randn(10 * pY, pY) %&gt;% {t(.) %*% .}
 X &lt;- randn(n, pX)
+x_star &lt;- rnorm(pX)
 # Generate coefficents
 B &lt;- mvrnorm(n = pX, mu = rep(0, pY), Sigma = Sigma_b)
-Y &lt;- X %*% B + mvrnorm(n = n, mu = rep(0, pY), Sigma = Sigma_e)</code></pre>
+Y &lt;- X %*% B + mvrnorm(n = n, mu = rep(0, pY), Sigma = Sigma_e)
+ystar &lt;- t(B) %*% x_star + mvrnorm(n = 1, mu = rep(0, pY), Sigma = Sigma_e)</code></pre>
 <p>Compute the posterior mean and covariance, also timing the computation. In the timings, we assume <span class="math">\(X^T X\)</span> and <span class="math">\(\Omega_e\)</span> are pre-computed.</p>
 <pre class="r"><code>Omega_e &lt;- solve(Sigma_e)
 Omega_b &lt;- diag(1/diag(Sigma_b))
 yVec &lt;- as.numeric(Y)
 xtx &lt;- t(X) %*% X</code></pre>
-<p>Computation of the posterior covariance.</p>
-<pre class="r"><code>tt &lt;- proc.time()
-post_cov &lt;- solve(Omega_e %x% xtx + Omega_b %x% eye(pY))
-proc.time() -tt</code></pre>
-<pre><code>##    user  system elapsed 
-##  23.071   0.220  23.342</code></pre>
 <p>Computation of the posterior mean.</p>
 <pre class="r"><code>tt &lt;- proc.time()
-post_mu &lt;- solve(Omega_e %x% xtx + Omega_b %x% eye(pY),
+post_mu &lt;- solve(Omega_e %x% xtx + Omega_b %x% eye(pX),
                  t(eye(pY) %x% X) %*% (Omega_e %x% eye(n)) %*% yVec)
 proc.time() -tt</code></pre>
 <pre><code>##    user  system elapsed 
-##   9.346   0.175   9.542</code></pre>
+##  33.485   0.527  34.093</code></pre>
+<p>Computation of the posterior covariance.</p>
+<pre class="r"><code>tt &lt;- proc.time()
+post_cov &lt;- solve(Omega_e %x% xtx + Omega_b %x% eye(pX))
+proc.time() -tt</code></pre>
+<pre><code>##    user  system elapsed 
+## 111.379   0.619 112.263</code></pre>
+<p>Computation of the posterior predictive mean.<br />Timing does not assume previous results have been computed, since we are interested in cases when we only compute the predictive distribution.</p>
+<pre class="r"><code>tt &lt;- proc.time()
+post_pre_mu &lt;- (eye(pY) %x% t(x_star)) %*% solve(Omega_e %x% xtx + Omega_b %x% eye(pX),
+                 t(eye(pY) %x% X) %*% (Omega_e %x% eye(n)) %*% yVec)
+proc.time() -tt</code></pre>
+<pre><code>##    user  system elapsed 
+##  34.220   0.427  34.722</code></pre>
+<p>Computation of the posterior predictive covariance.</p>
+<pre class="r"><code>tt &lt;- proc.time()
+post_pre_cov &lt;- (eye(pY) %x% t(x_star)) %*% 
+  solve(Omega_e %x% xtx + Omega_b %x% eye(pX), (eye(pY) %x% x_star)) + Sigma_e
+proc.time() -tt</code></pre>
+<pre><code>##    user  system elapsed 
+##  30.024   0.423  30.531</code></pre>
 </div>
 </div>
 <div id="computation" class="section level1">
@@ -182,10 +203,16 @@ C_{[21]} &amp; C_{[22]} &amp; ... \\
 ... &amp; ... &amp; ...\end{pmatrix}
 \]</span></p>
 <p>Now we can write <span class="math">\[
-C_{[ij]} = \sum_{k=1}^{a_1} a_{ki}a_{kj} B^T D_k B = B^T \left(\sum_{k=1}^{a_1} a_{ki} a_{kj} D_k \right) B.
+C_{[ij]} = \sum_{k=1}^{a_1} a_{ki}a_{kj} B^T D_k B 
+= \left(\sum_{k=1}^{a_1} a_{ki} a_{kj} B^T D_k B \right)
+= B^T \left(\sum_{k=1}^{a_1} a_{ki} a_{kj} D_k \right) B.
 \]</span></p>
-<p>Thus to compute each block of <span class="math">\(C\)</span>, it takes <span class="math">\(O(a_1 b_1)\)</span> operations to compute the weighted sum of <span class="math">\(D_1,..., D_{a_1}\)</span>, and then <span class="math">\(O(b_2^1 b_1)\)</span> to multiply on the left with <span class="math">\(B^T\)</span> and on the right with <span class="math">\(B\)</span>. Therefore, we see that it takes <span class="math">\(O(a_2^2 b_2^2 b_1)\)</span> operations to compute <span class="math">\(C\)</span>.</p>
-<p>Applying to our problem, we see that the cost to evaluate the posterior covariance using this method is <span class="math">\(O(p_Y^2 p_X^3)\)</span>, which is a saves a power of <span class="math">\(p_Y\)</span> compared to the naive approach.</p>
+<p>The second-to-last and last equality present two alternative methods to compute <span class="math">\(C_{[ij]}\)</span>.</p>
+<ul>
+<li>Using the second-to-last equality, one precomputes each of the matrices <span class="math">\(B^T D_i B\)</span>, which takes <span class="math">\(O(b_2^2 b_1 a_1)\)</span> operations. To compute each block, it takes <span class="math">\(O(b_2^2 a_1)\)</span> operations. Hence, to compute <span class="math">\(C\)</span> takes <span class="math">\(O(a_1 a_2^2 b_2^2)\)</span>.</li>
+<li>Using the last equality, for each block one takes <span class="math">\(O(a_1 b_1)\)</span> operations to compute the weighted sum of <span class="math">\(D_1,..., D_{a_1}\)</span>, and then <span class="math">\(O(b_2^1 b_1)\)</span> to multiply on the left with <span class="math">\(B^T\)</span> and on the right with <span class="math">\(B\)</span>. Therefore, we see that it takes <span class="math">\(O(a_2^2 b_2^2 b_1)\)</span> operations to compute <span class="math">\(C\)</span>.</li>
+</ul>
+<p>Choosing the best of the two methods, the cost to compute <span class="math">\(C\)</span> is <span class="math">\(O(a_2^2 b_2^2 \min(a_1, b_1))\)</span>. Applying to our problem, we see that the cost to evaluate the posterior covariance using this method is <span class="math">\(O(p_Y^2 p_X^2 \min(p_X, p_Y))\)</span>, which is a saves a factor of <span class="math">\(\max(p_Y, p_X)\)</span> compared to the naive approach.</p>
 <div id="example-cont." class="section level2">
 <h2>Example (cont.)</h2>
 <p>Computing <span class="math">\(V_e, D_e, V_X, D_X\)</span> and also <span class="math">\(V_e^{-1}\)</span>.</p>
@@ -202,16 +229,28 @@ D_x &lt;- diag(resX$d)</code></pre>
 <pre class="r"><code># computes t(A %x% B) %*% diag(d) %*% (A %*% B)
 tkron_d_kron &lt;- function(A, B, d) {
   a1 &lt;- dim(A)[1]; a2 &lt;- dim(A)[2]; b1 &lt;- dim(B)[1]; b2 &lt;- dim(B)[2]
-  dmat &lt;- matrix(d, b1, a1) # columns of dmat are diag(D1), diag(D2), ...
-  AtA &lt;- t(A) %*% A
+  dmat &lt;- matrix(d, b1, a1)
+  # columns of dmat are diag(D1), diag(D2), ...
   C &lt;- zeros(a2 * b2)
-  for (i in 1:a2) {
-    for (j in i:a2) {
-      dtemp &lt;- as.numeric(dmat %*% (A[, i] * A[, j]))
-      Cij &lt;- t(B) %*% (dtemp * B)
-      C[(i-1) * b2 + (1:b2), (j-1) * b2 + (1:b2)] &lt;- Cij
-      C[(j-1) * b2 + (1:b2), (i-1) * b2 + (1:b2)] &lt;- t(Cij)
+  if (a1 &lt; b1) {
+    bdbmat &lt;- zeros(b2^2, a1)
+    for (i in 1:a1) bdbmat[, i] &lt;- as.numeric(t(B) %*% (dmat[, i] * B))
+    for (i in 1:a2) {
+      for (j in i:a2) {
+        Cij &lt;- matrix(bdbmat %*% (A[, i] * A[, j]), b2, b2)
+        C[(i-1) * b2 + (1:b2), (j-1) * b2 + (1:b2)] &lt;- Cij
+        C[(j-1) * b2 + (1:b2), (i-1) * b2 + (1:b2)] &lt;- t(Cij)
+      }
     }
+  } else {
+    for (i in 1:a2) {
+      for (j in i:a2) {
+        dtemp &lt;- as.numeric(dmat %*% (A[, i] * A[, j]))
+        Cij &lt;- t(B) %*% (dtemp * B)
+        C[(i-1) * b2 + (1:b2), (j-1) * b2 + (1:b2)] &lt;- Cij
+        C[(j-1) * b2 + (1:b2), (i-1) * b2 + (1:b2)] &lt;- t(Cij)
+      }
+    }  
   }
   C
 }
@@ -221,7 +260,21 @@ d &lt;- rnorm(10 * 20)
 C &lt;- t(A %x% B) %*% diag(d) %*% (A %x% B)
 C2 &lt;- tkron_d_kron(A, B, d)
 f2(C - C2)</code></pre>
-<pre><code>## [1] 4.929467e-24</code></pre>
+<pre><code>## [1] 7.380656e-24</code></pre>
+<p>Other functions for Kronecker computations. <span class="math">\((A \otimes B) \vec{C} = \vec{BCA^T}\)</span>.</p>
+<pre class="r"><code>kron_v &lt;- function(A, B, cc) {
+  a1 &lt;- dim(A)[1]; a2 &lt;- dim(A)[2]; b1 &lt;- dim(B)[1]; b2 &lt;- dim(B)[2]
+  as.numeric(B %*% matrix(cc, b2, a2) %*% t(A))
+}</code></pre>
+<p>Compute the posterior mean and time it</p>
+<pre class="r"><code>tt &lt;- proc.time()
+# invert diagonal matrix
+d &lt;- 1/(diag(D_e) %x% diag(D_x)^2 + 1)
+temp &lt;- kron_v(iV_e %*% Omega_e, t(V_x) %*% t(X), yVec)
+post_mu2 &lt;- kron_v(t(iV_e), V_x, d * temp)
+proc.time() -tt</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.011   0.000   0.012</code></pre>
 <p>Compute the posterior covariance and time it</p>
 <pre class="r"><code>tt &lt;- proc.time()
 # invert diagonal matrix
@@ -229,10 +282,33 @@ d &lt;- 1/(diag(D_e) %x% diag(D_x)^2 + 1)
 post_cov2 &lt;- tkron_d_kron(iV_e, t(V_x), d)
 proc.time() -tt</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.872   0.136   1.009</code></pre>
-<p>Check that the answer matches</p>
+##   7.016   0.471   7.508</code></pre>
+<p>Compute the posterior predictive mean.</p>
+<pre class="r"><code>tt &lt;- proc.time()
+# invert diagonal matrix
+d &lt;- 1/(diag(D_e) %x% diag(D_x)^2 + 1)
+temp &lt;- kron_v(iV_e %*% Omega_e, t(V_x) %*% t(X), yVec)
+post_pre_mu2 &lt;- kron_v(t(iV_e), t(x_star) %*% V_x, d * temp)
+proc.time() -tt</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.010   0.004   0.015</code></pre>
+<p>Compute the posterior predictive covariance.</p>
+<pre class="r"><code>tt &lt;- proc.time()
+# invert diagonal matrix
+d &lt;- 1/(diag(D_e) %x% diag(D_x)^2 + 1)
+post_pre_cov2 &lt;- tkron_d_kron(iV_e,  t(V_x) %*% x_star, d) + Sigma_e
+proc.time() -tt</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.027   0.000   0.027</code></pre>
+<p>Check that the answers match.</p>
+<pre class="r"><code>f2(post_mu2 - post_mu)</code></pre>
+<pre><code>## [1] 6.194118e-29</code></pre>
 <pre class="r"><code>f2(post_cov2 - post_cov)</code></pre>
-<pre><code>## [1] 6.213982e-30</code></pre>
+<pre><code>## [1] 1.602749e-29</code></pre>
+<pre class="r"><code>f2(post_pre_mu2 - post_pre_mu)</code></pre>
+<pre><code>## [1] 6.703728e-29</code></pre>
+<pre class="r"><code>f2(post_pre_cov2 - post_pre_cov)</code></pre>
+<pre><code>## [1] 3.144423e-27</code></pre>
 </div>
 </div>
 
