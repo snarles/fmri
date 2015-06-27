@@ -50,7 +50,7 @@ kron_v <- function(A, B, cc) {
 ##  and noise prior of form Sigma_e %x% Sigma_t
 
 post_moments <- function(X, Y, Sigma_e, Sigma_b, Sigma_t = eye(dim(X)[1]), 
-                         computeCov = TRUE, naive = FALSE) {
+                         computeCov = TRUE, naive = FALSE, matrix = TRUE) {
   n <- dim(X)[1]; pX <- dim(X)[2]; pY <- dim(Y)[2]
   Omega_e <- solve(Sigma_e)
   Omega_t <- solve(Sigma_t)
@@ -60,6 +60,7 @@ post_moments <- function(X, Y, Sigma_e, Sigma_b, Sigma_t = eye(dim(X)[1]),
   if (naive) {
     ans_mu <- solve(Omega_e %x% xtx + Omega_b %x% eye(pX),
                      t(eye(pY) %x% X) %*% (Omega_e %x% Omega_t) %*% yVec)
+    if (matrix) ans_mu <- matrix(ans_mu, pX, pY)
     if (computeCov) {
       ans_cov <- solve(Omega_e %x% xtx + Omega_b %x% eye(pX))
       return(list(Mu = ans_mu, Cov = ans_cov))
@@ -78,6 +79,7 @@ post_moments <- function(X, Y, Sigma_e, Sigma_b, Sigma_t = eye(dim(X)[1]),
   d <- 1/(diag(D_e) %x% diag(D_x) + 1)
   temp <- kron_v(iV_e %*% Omega_e, t(V_x) %*% t(X) %*% Omega_t, yVec)
   ans_mu <- kron_v(t(iV_e), V_x, d * temp)
+  if (matrix) ans_mu <- matrix(ans_mu, pX, pY)
   if (computeCov) {
     ans_cov <- tkron_d_kron(iV_e, t(V_x), d)
     return(list(Mu = ans_mu, Cov = ans_cov))
