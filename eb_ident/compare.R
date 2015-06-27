@@ -1,10 +1,10 @@
 library(magrittr)
-library(pracma)
+library(pracma, warn.conflicts = FALSE)
 library(MASS)
-library(glmnet)
+library(`glmnet, warn.conflicts = FALSE)
 source('transfer/source.R')
 source('eb_ident/eigenprism.R')
-source('eb_ident/source.R')
+#source('eb_ident/source.R')
 library(class)
 
 #set.seed(1)
@@ -14,9 +14,10 @@ zattach(pars)
 
 Sigma_X <- 1/(W_X * q) * randn(W_X * q, q) %>% { t(.) %*% . }
 Sigma_e <- s_e/(W_e * p) * randn(W_e * p, p) %>% { t(.) %*% . }
-s0s <- 0* rnorm(p)^2 + 1
+s0s <- 1* rnorm(p)^2 + 1
+Sigma_b <- diag(s0s)
 Sigma_B <- diag(rep(s0s, each = q))
-Bvec <- sqrt(Sigma_B) %*% rnorm(p * q)
+Bvec <- sqrt(diag(Sigma_B)) * rnorm(p * q)
 B0 <- matrix(Bvec, q, p)
 ## Generate data
 X <- mvrnorm(n, mu = rep(0, q), Sigma = Sigma_X)
