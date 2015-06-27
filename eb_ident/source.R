@@ -41,7 +41,7 @@ post_probs <- function(X_te, y_star, pre_moments, filt, ...) {
   for (i in 1:L) {
     Mu <- pre_moments[[i]]$Mu
     Cov <- pre_moments[[i]]$Cov
-    ld <- -log(det(Cov))
+    ld <- log(det(Cov))
     resid <- t(t(y_filt) - Mu)
     ss <- solve(Cov, t(resid))
     ips <- rowSums(resid * t(ss))
