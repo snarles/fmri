@@ -32,6 +32,21 @@ predictive_Bayes <- function(X, Y, X_te, Sigma_e, Sigma_b, ...) {
   list(pre_moments = res, filt = rep(TRUE, pY), B = B, Sigma_e = Sigma_e)
 }
 
+predictive_EP <- function(X, Y, X_te, Sigma_e, ...) {
+  pX <- dim(X)[2]; pY <- dim(Y)[2]
+  res_EP <- eigenprisms(X, Y)
+  T2 <- res_EP$T2
+  filt_EP <- (T2 > 0)
+  lambdas_EP <-  T2[filt_EP]/pX
+  Sigma_b <- diag(lambdas_EP)
+  Yf <- Y[, filt_EP]
+  Sigma_e <- Sigma_e[filt_EP, filt_EP]
+  B <- post_moments(X, Yf, Sigma_e, Sigma_b, computeCov = FALSE)
+  res <- post_predictive(X, Yf, X_te, Sigma_e, Sigma_b)
+  list(pre_moments = res, filt = filt_EP, B = B, Sigma_e = Sigma_e, Sigma_b = Sigma_b)
+}
+
+
 post_probs <- function(X_te, y_star, pre_moments, filt, ...) {
   y_filt <- y_star[, filt]
   L <- dim(X_te)[1]
@@ -66,6 +81,30 @@ params_CV1 <- function(X, Y, ...) {
     B[, i] <- coef(res, newx = X, s = res$lambda.min)[-1]
     lambdas[i] <- (Norm(B[, i])^2/pX)  
   }
+  #filt <- (lambdas > 1e-5)
+  filt <- rep(TRUE, pY)
+  lambdas <- lambdas[filt]
+  B <- B[, filt, drop = FALSE]
+  resids <- resids[, filt, drop = FALSE]
+  Sigma_e <- 0.5 * cov(resids) + 0.5 * diag(diag(cov(resids)))
+  list(pre_moments = NULL, filt = filt, B = B, Sigma_e = Sigma_e, Sigma_b = diag(lambdas))
+}
+
+params_CV1f <- function(X, Y, ...) {
+  n <- dim(X)[1]
+  pX <- dim(X)[2]
+  pY <- dim(Y)[2]
+  B <- matrix(0, pX, pY) # placeholder for estimate
+  resids <- matrix(0, n, pY)
+  lambdas <- numeric(pY) # lambda for each column of B
+  for (i in 1:pY) {
+    res <- cv.glmnet(X, Y[, i], alpha = 0, intercept = FALSE, standardize = FALSE,
+                     grouped = FALSE)
+    pre <- predict(res, newx = X, s = res$lambda.min)
+    resids[, i] <- pre - Y[, i]
+    B[, i] <- coef(res, newx = X, s = res$lambda.min)[-1]
+    lambdas[i] <- (Norm(B[, i])^2/pX)  
+  }
   filt <- (lambdas > 1e-5)
   lambdas <- lambdas[filt]
   B <- B[, filt, drop = FALSE]
@@ -73,6 +112,7 @@ params_CV1 <- function(X, Y, ...) {
   Sigma_e <- 0.5 * cov(resids) + 0.5 * diag(diag(cov(resids)))
   list(pre_moments = NULL, filt = filt, B = B, Sigma_e = Sigma_e, Sigma_b = diag(lambdas))
 }
+
 
 pre_mle <- function(X_te, B, Sigma_e, filt, ...) {
   L <- dim(X_te)[1]
