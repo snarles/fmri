@@ -2,13 +2,15 @@
 ## Multivariate Bayesian Regression
 ####
 
-library(magrittr)
-library(pracma, warn.conflicts = FALSE)
-library(MASS)
+require(magrittr)
+require(pracma)
+require(MASS)
+require(parallel)
 
 ## Utility functions
 
 f2 <- function(x) sum(x^2)
+
 
 ## Functions for Kronecker products
 
@@ -92,7 +94,7 @@ post_moments <- function(X, Y, Sigma_e, Sigma_b, Sigma_t = eye(dim(X)[1]),
 ## Returns a list with entry for every row of Xte, which is a list with mu, cov
 
 post_predictive <- function(X, Y, X_te, Sigma_e, Sigma_b, Sigma_t = eye(dim(X)[1]), 
-                         naive = FALSE, ...) {
+                         naive = FALSE, mc.cores = 0, ...) {
   n <- dim(X)[1]; pX <- dim(X)[2]; pY <- dim(Y)[2]
   L <- dim(X_te)[1]; ans <- as.list(numeric(L))
   Omega_e <- solve(Sigma_e)
@@ -124,12 +126,17 @@ post_predictive <- function(X, Y, X_te, Sigma_e, Sigma_b, Sigma_t = eye(dim(X)[1
     D_x <- diag(resX$values)
     d <- 1/(diag(D_e) %x% diag(D_x) + 1)
     temp <- d * kron_v(iV_e %*% Omega_e, t(V_x) %*% t(X) %*% Omega_t, yVec)
-    for (i in 1:L) {
+    pre_moments <- function(i) {
       x_star <- X_te[i, ]
       Mu <- kron_v(t(iV_e), t(x_star) %*% V_x, temp)
       Cov <- tkron_d_kron(iV_e, t(V_x) %*% x_star, d) + Sigma_e
-      ans[[i]] <- list(Mu = Mu, Cov = Cov)
-    } 
+      list(Mu = Mu, Cov = Cov)
+    }
+    if (mc.cores == 0) {
+      ans <- lapply(1:L, pre_moments)
+    } else {
+      ans <- mclapply(1:L, pre_moments, mc.cores = mc.cores)
+    }
   }
   ans
 }
