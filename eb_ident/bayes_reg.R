@@ -140,3 +140,35 @@ post_predictive <- function(X, Y, X_te, Sigma_e, Sigma_b, Sigma_t = eye(dim(X)[1
   }
   ans
 }
+
+####
+## Sampling distribution of ridge regression
+####
+
+samp_moments <- function(X, Y, Sigma_e, lambdas, Sigma_t = eye(dim(X)[1]), 
+                         computeCov = TRUE, matrix = TRUE, ...) {
+  n <- dim(X)[1]; pX <- dim(X)[2]; pY <- dim(Y)[2]
+  xtx <- t(X) %*% X
+  xtsx <- t(X) %*% Sigma_t %*% X
+  temp <- lapply(1:pY, function(i) solve(xtx + lambdas[i] * eye(pX), t(X) %*% Y[, i]))
+  if (matrix) {
+    ans_mu <- do.call(rbind, temp)
+  } else {
+    ans_mu <- do.call(c, temp)
+  }
+  if (computeCov) {
+    ans_cov <- zeros(pX * pY, pX * pY)
+    d1s <- lapply(1:pY, function(i) solve(xtx + lambdas[i] * eye(pX), xtsx))
+    d2s <- lapply(1:pY, function(i) solve(xtx + lambdas[i] * eye(pX)))
+    for (i in 1:pY) {
+      for (j in i:pY) {
+        temp <- Sigma_e[i, j] * d1s[[i]] %*% d2s[[j]]
+        ans_cov[(i-1)*pX+(1:pX),(j-1)*pX+(1:pX)] <- temp
+        ans_cov[(j-1)*pX+(1:pX),(i-1)*pX+(1:pX)] <- t(temp)
+      }
+    }
+    return(list(Mu = ans_mu, Cov = ans_cov))
+  }
+  ans_mu
+}
+

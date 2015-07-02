@@ -111,13 +111,16 @@ params_CV1 <- function(X, Y, ...) {
   B <- matrix(0, pX, pY) # placeholder for estimate
   resids <- matrix(0, n, pY)
   lambdas <- numeric(pY) # lambda for each column of B
+  s0s <- numeric(pY)
   for (i in 1:pY) {
     res <- cv.glmnet(X, Y[, i], alpha = 0, intercept = FALSE, standardize = FALSE,
                      grouped = FALSE)
+    lambda_cv <- 2 * res$lambda.1se * n
     pre <- predict(res, newx = X, s = res$lambda.min)
     resids[, i] <- pre - Y[, i]
     B[, i] <- coef(res, newx = X, s = res$lambda.min)[-1]
-    lambdas[i] <- (Norm(B[, i])^2/pX)  
+    s0s[i] <- (Norm(B[, i])^2/pX)  
+    lambdas[i] <- lambda_cv
   }
   #filt <- (lambdas > 1e-5)
   filt <- rep(TRUE, pY)
@@ -128,7 +131,7 @@ params_CV1 <- function(X, Y, ...) {
   #Sigma_t <- 0.5 * cov(t(resids)) + 0.5 * diag(diag(cov(t(resids))))
   Sigma_t <- eye(n)
   list(pre_moments = NULL, filt = filt, B = B, 
-       Sigma_e = Sigma_e, Sigma_t = Sigma_t, Sigma_b = diag(lambdas))
+       Sigma_e = Sigma_e, Sigma_t = Sigma_t, Sigma_b = diag(s0s), lambdas = lambdas)
 }
 
 params_CV1f <- function(X, Y, ...) {
