@@ -70,6 +70,13 @@ predictive_Bayes <- function(X, Y, X_te, Sigma_e, Sigma_t, Sigma_b, mc.cores = 0
   list(pre_moments = res, filt = rep(TRUE, pY), B = B, Sigma_e = Sigma_e)
 }
 
+predictive_samp <- function(X, Y, X_te, Sigma_e, Sigma_t, lambdas, mc.cores = 0,...) {
+  pX <- dim(X)[2]; pY <- dim(Y)[2]
+  B <- samp_moments(X, Y, Sigma_e, Sigma_b, Sigma_t, computeCov = FALSE)
+  res <- samp_predictive(X, Y, X_te, Sigma_e, lambdas, Sigma_t, mc.cores = mc.cores)
+  list(pre_moments = res, filt = rep(TRUE, pY), B = B, Sigma_e = Sigma_e)
+}
+
 predictive_EP <- function(X, Y, X_te, Sigma_e, Sigma_t, mc.cores = 0, ...) {
   pX <- dim(X)[2]; pY <- dim(Y)[2]
   res_EP <- eigenprisms(X, Y)

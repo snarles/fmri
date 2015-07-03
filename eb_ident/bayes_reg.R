@@ -203,7 +203,7 @@ samp_predictive <- function(X, Y, X_te, Sigma_e, lambdas, Sigma_t = eye(dim(X)[1
   BCov <- res$Cov
   pre_moments <- function(i) {
     x_star <- X_te[i, ]
-    Mu <- t(x_star) %*% BMu
+    Mu <- as.numeric(t(x_star) %*% BMu)
     temp <- zeros(pY, pY * pX)
     for (ii in 1:pY) {
       temp[ii, ] <- t(x_star) %*% BCov[(ii - 1)*pX + (1:pX), ]
