@@ -145,24 +145,46 @@ post_predictive <- function(X, Y, X_te, Sigma_e, Sigma_b, Sigma_t = eye(dim(X)[1
 ## Sampling distribution of ridge regression
 ####
 
+## computes solve(xtx + lambda, t(X) %*% Y)
+## as 1/lambda * t(X) %*% Y
+## V_X, d_X are from svd of X
+fast_ridge <- function(X, V_X, d_X, lambda, Y, naive = FALSE) {
+  if (naive) {
+    return(solve(t(X) %*% X + lambda * eye(dim(X)[2]), t(X) %*% Y))
+  }
+  if (!is.null(X)) {
+    xty <- t(X) %*% Y    
+  } else {
+    xty <- Y
+  }
+  temp1 <- 1/lambda * xty
+  d2 <- (1/(d_X^2 + lambda)) - 1/lambda
+  temp2 <- V_X %*% (d2 * (t(V_X) %*% xty))
+  temp1 + temp2
+}
+
 samp_moments <- function(X, Y, Sigma_e, lambdas, Sigma_t = eye(dim(X)[1]), 
                          computeCov = TRUE, matrix = TRUE, ...) {
   n <- dim(X)[1]; pX <- dim(X)[2]; pY <- dim(Y)[2]
+  res_X <- svd(X); V_X <- res_X$v; d_X <- res_X$d
   xtx <- t(X) %*% X
   xtsx <- t(X) %*% Sigma_t %*% X
-  temp <- lapply(1:pY, function(i) solve(xtx + lambdas[i] * eye(pX), t(X) %*% Y[, i]))
+  #temp <- lapply(1:pY, function(i) solve(xtx + lambdas[i] * eye(pX), t(X) %*% Y[, i]))
+  temp <- lapply(1:pY, function(i) fast_ridge(X, V_X, d_X, lambdas[i], Y[, i]))
   if (matrix) {
-    ans_mu <- do.call(rbind, temp)
+    ans_mu <- do.call(cbind, temp)
   } else {
     ans_mu <- do.call(c, temp)
   }
   if (computeCov) {
     ans_cov <- zeros(pX * pY, pX * pY)
-    d1s <- lapply(1:pY, function(i) solve(xtx + lambdas[i] * eye(pX), xtsx))
-    d2s <- lapply(1:pY, function(i) solve(xtx + lambdas[i] * eye(pX)))
+    #d1s <- lapply(1:pY, function(i) solve(xtx + lambdas[i] * eye(pX), xtsx))
+    #d2s <- lapply(1:pY, function(i) solve(xtx + lambdas[i] * eye(pX)))
     for (i in 1:pY) {
       for (j in i:pY) {
-        temp <- Sigma_e[i, j] * d1s[[i]] %*% d2s[[j]]
+        #temp <- Sigma_e[i, j] * d1s[[i]] %*% d2s[[j]]
+        temp0 <- fast_ridge(X, V_X, d_X, lambdas[j], Sigma_t)
+        temp <- Sigma_e[i, j] * fast_ridge(X, V_X, d_X, lambdas[i], t(temp0))
         ans_cov[(i-1)*pX+(1:pX),(j-1)*pX+(1:pX)] <- temp
         ans_cov[(j-1)*pX+(1:pX),(i-1)*pX+(1:pX)] <- t(temp)
       }
@@ -172,3 +194,27 @@ samp_moments <- function(X, Y, Sigma_e, lambdas, Sigma_t = eye(dim(X)[1]),
   ans_mu
 }
 
+samp_predictive <- function(X, Y, X_te, Sigma_e, lambdas, Sigma_t = eye(dim(X)[1]), 
+                            mc.cores = 0, ...) {
+  n <- dim(X)[1]; pX <- dim(X)[2]; pY <- dim(Y)[2]
+  L <- dim(X_te)[1]; ans <- as.list(numeric(L))
+  res <- samp_moments(X, Y, Sigma_e, lambdas, Sigma_t, computeCov = TRUE, matrix = TRUE)
+  BMu <- res$Mu
+  BCov <- res$Cov
+  pre_moments <- function(i) {
+    x_star <- X_te[i, ]
+    Mu <- t(x_star) %*% BMu
+    temp <- zeros(pY, pY * pX)
+    for (ii in 1:pY) {
+      temp[ii, ] <- t(x_star) %*% BCov[(ii - 1)*pX + (1:pX), ]
+    }
+    Cov <- temp %*% (eye(pY) %x% t(t(x_star)))
+    list(Mu = Mu, Cov = Cov)
+  }
+  if (mc.cores == 0) {
+    ans <- lapply(1:L, pre_moments)
+  } else {
+    ans <- mclapply(1:L, pre_moments, mc.cores = mc.cores)
+  }
+  ans
+}

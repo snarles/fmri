@@ -21,10 +21,20 @@ lambdas <- rep(1, hyperpars$pX)
 nreps <- 100
 Bs <- mclapply(1:nreps, function(i) {
   truth <- do.call(gen_data, pars)
-  do.call2(samp_moments, truth, lambdas = lambdas,  computeCov = FALSE)
+  do.call2(samp_moments, truth, lambdas = lambdas,  matrix = TRUE, computeCov = FALSE)
 }, mc.cores = 3)
 truth <- do.call(gen_data, pars)
+
+
 Bcov <- do.call2(samp_moments, truth, lambdas = lambdas, computeCov = TRUE)$Cov
+
+x_star <- truth$X_te[1, ]
+pres <- do.call(rbind, lapply(Bs, function(b) t(x_star) %*% b))
+preCovE <- cov(pres)
+
+pre_stuff <- do.call2(samp_predictive, truth, lambdas = lambdas)
+preCov <- pre_stuff[[1]]$Cov
+f2(preCovE - preCov)
 
 Bs <- do.call(rbind, lapply(Bs, as.numeric))
 BcovE <- cov(Bs)
