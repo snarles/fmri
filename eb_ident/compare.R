@@ -32,12 +32,12 @@ pre_MLEb <- do.call(pre_mle, c(obs, pre_Bayes))
 MLEb_cl <- do.call(post_probs, c(obs, pre_MLEb))$cl
 (MLEb_err <- sum(MLEb_cl != truth$i_chosen))
 
-p_CV <- do.call(params_CV1f, obs)
+p_CV <- do.call2(params_CV1, obs, mc.cores = 3)
 pre_CV <- do.call(pre_mle, c(obs, p_CV))
 CV_cl <- do.call(post_probs, c(obs, pre_CV))$cl
 (CV_err <- sum(CV_cl != truth$i_chosen))
 
-p_CV0 <- do.call(params_CV1, obs)
-pre_EB <- do.call(predictive_EP, c(obs, p_CV0))
+p_CV0 <- do.call2(params_CV1, obs, filtr = FALSE, mc.cores = 3)
+pre_EB <- do.call2(predictive_EP, c(obs, p_CV0), mc.cores = 3)
 EB_cl <- do.call(post_probs, c(obs, pre_EB))$cl
 (EB_err <- sum(EB_cl != truth$i_chosen))

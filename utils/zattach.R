@@ -13,3 +13,18 @@ do.call2 <- function(f, ll, ...) {
   ll <- modifyList(ll, dots)
   do.call(f, ll)
 }
+
+listcomb <- function(dots) {
+  nms <- names(dots[[1]])
+  ans <- as.list(nms)
+  names(ans) <- nms
+  for (nm in nms) {
+    ans[[nm]] <- lapply(1:length(dots), function(i) dots[[i]][[nm]])
+  }
+  ans
+}
+
+lclapply <- function(...) {
+  listcomb(mclapply(...))
+}
+

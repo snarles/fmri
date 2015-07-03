@@ -63,10 +63,10 @@ gen_data <- function(X, X_te, B, Sigma_b,
 
 obs_data <- function(X, X_te, Y, y_star, ...) list(X = X, X_te = X_te, Y = Y, y_star = y_star)
 
-predictive_Bayes <- function(X, Y, X_te, Sigma_e, Sigma_t, Sigma_b, ...) {
+predictive_Bayes <- function(X, Y, X_te, Sigma_e, Sigma_t, Sigma_b, mc.cores = 0,...) {
   pX <- dim(X)[2]; pY <- dim(Y)[2]
   B <- post_moments(X, Y, Sigma_e, Sigma_b, Sigma_t, computeCov = FALSE)
-  res <- post_predictive(X, Y, X_te, Sigma_e, Sigma_b, Sigma_t)
+  res <- post_predictive(X, Y, X_te, Sigma_e, Sigma_b, Sigma_t, mc.cores = mc.cores)
   list(pre_moments = res, filt = rep(TRUE, pY), B = B, Sigma_e = Sigma_e)
 }
 
@@ -104,59 +104,45 @@ post_probs <- function(X_te, y_star, pre_moments, filt, ...) {
   list(pprobs = pprobs, cl = cl)
 }
 
-params_CV1 <- function(X, Y, ...) {
+params_CV1 <- function(X, Y, filtr = TRUE, 
+                       shrink = 0.5, rule = "lambda.1se", mc.cores = 1, ...) {
   n <- dim(X)[1]
   pX <- dim(X)[2]
   pY <- dim(Y)[2]
-  B <- matrix(0, pX, pY) # placeholder for estimate
-  resids <- matrix(0, n, pY)
-  lambdas <- numeric(pY) # lambda for each column of B
-  s0s <- numeric(pY)
-  for (i in 1:pY) {
+  #B <- matrix(0, pX, pY) # placeholder for estimate
+  #resids <- matrix(0, n, pY)
+  #lambdas <- numeric(pY) # lambda for each column of B
+  #s0s <- numeric(pY)
+  stuff <- function(i) {
     res <- cv.glmnet(X, Y[, i], alpha = 0, intercept = FALSE, standardize = FALSE,
                      grouped = FALSE)
-    lambda_cv <- 2 * res$lambda.1se * n
-    pre <- predict(res, newx = X, s = res$lambda.min)
-    resids[, i] <- pre - Y[, i]
-    B[, i] <- coef(res, newx = X, s = res$lambda.min)[-1]
-    s0s[i] <- (Norm(B[, i])^2/pX)  
-    lambdas[i] <- lambda_cv
+    lambda_cv <- 2 * res[[rule]] * n
+    pre <- predict(res, newx = X, s = res[[rule]])
+    resid <- pre - Y[, i]
+    b <- coef(res, newx = X, s = res$lambda.min)[-1]
+    s0s <- (Norm(b)^2/pX)  
+    list(b = b, s0s = s0s, lambda_cv = lambda_cv, resid = resid)
   }
-  #filt <- (lambdas > 1e-5)
-  filt <- rep(TRUE, pY)
+  ss <- lclapply(1:pY, stuff, mc.cores = mc.cores)
+  lambdas <- do.call(c, ss$lambda_cv)
+  s0s <- do.call(c, ss$s0s)
+  B <- do.call(cbind, ss$b)
+  resids <- do.call(cbind, ss$resid)
+  
+  if (filtr == TRUE) {
+    filt <- (lambdas > 1e-5)    
+  } else {
+    filt <- rep(TRUE, pY)    
+  }
   lambdas <- lambdas[filt]
   B <- B[, filt, drop = FALSE]
   resids <- resids[, filt, drop = FALSE]
-  Sigma_e <- 0.5 * cov(resids) + 0.5 * diag(diag(cov(resids)))
+  Sigma_e <- (1- shrink) * cov(resids) + shrink * diag(diag(cov(resids)))
   #Sigma_t <- 0.5 * cov(t(resids)) + 0.5 * diag(diag(cov(t(resids))))
   Sigma_t <- eye(n)
   list(pre_moments = NULL, filt = filt, B = B, 
        Sigma_e = Sigma_e, Sigma_t = Sigma_t, Sigma_b = diag(s0s), lambdas = lambdas)
 }
-
-params_CV1f <- function(X, Y, ...) {
-  n <- dim(X)[1]
-  pX <- dim(X)[2]
-  pY <- dim(Y)[2]
-  B <- matrix(0, pX, pY) # placeholder for estimate
-  resids <- matrix(0, n, pY)
-  lambdas <- numeric(pY) # lambda for each column of B
-  for (i in 1:pY) {
-    res <- cv.glmnet(X, Y[, i], alpha = 0, intercept = FALSE, standardize = FALSE,
-                     grouped = FALSE)
-    pre <- predict(res, newx = X, s = res$lambda.min)
-    resids[, i] <- pre - Y[, i]
-    B[, i] <- coef(res, newx = X, s = res$lambda.min)[-1]
-    lambdas[i] <- (Norm(B[, i])^2/pX)  
-  }
-  filt <- (lambdas > 1e-5)
-  lambdas <- lambdas[filt]
-  B <- B[, filt, drop = FALSE]
-  resids <- resids[, filt, drop = FALSE]
-  Sigma_e <- 0.5 * cov(resids) + 0.5 * diag(diag(cov(resids)))
-  list(pre_moments = NULL, filt = filt, B = B, Sigma_e = Sigma_e, Sigma_b = diag(lambdas))
-}
-
 
 pre_mle <- function(X_te, B, Sigma_e, filt, ...) {
   L <- dim(X_te)[1]
