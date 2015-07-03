@@ -208,7 +208,7 @@ samp_predictive <- function(X, Y, X_te, Sigma_e, lambdas, Sigma_t = eye(dim(X)[1
     for (ii in 1:pY) {
       temp[ii, ] <- t(x_star) %*% BCov[(ii - 1)*pX + (1:pX), ]
     }
-    Cov <- temp %*% (eye(pY) %x% t(t(x_star)))
+    Cov <- temp %*% (eye(pY) %x% t(t(x_star))) + Sigma_e
     list(Mu = Mu, Cov = Cov)
   }
   if (mc.cores == 0) {

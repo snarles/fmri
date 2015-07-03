@@ -7,7 +7,7 @@ library(MASS)
 library(glmnet)
 source('eb_ident/eigenprism.R')
 
-n <- 50
+n <- 30
 p <- 200
 sigma_beta <- 10
 sigma_y <- 20
@@ -35,11 +35,12 @@ yh_bayes <- X_te %*% beta_bayes
 (rmse_bayes <- Norm(yh_bayes - mu_te))
 
 ## CV-glmnet
-res <- cv.glmnet(X, y, intercept = FALSE)
-(lambda_cv <- 2 * res$lambda.1se * n)
-#beta_cv <- coef.cv.glmnet(res, s = "lambda.1se", alpha = 0)
+res <- cv.glmnet(X, y, intercept = FALSE, standardize = FALSE, alpha = 0)
+beta_cv <- coef.cv.glmnet(res, s = "lambda.min", alpha = 0)[-1]
 #yh_cv <- predict(res, X_te)
-beta_cv <- solve(t(X) %*% X + diag(rep(lambda_cv, p)), t(X) %*% y)
+lambda_cv <- res$lambda.min * n /sd(y)
+beta_cv2 <- solve(t(X) %*% X + diag(rep(lambda_cv, p)), t(X) %*% y)
+f2(beta_cv2 - beta_cv)
 yh_cv <- X_te %*% beta_cv
 (rmse_cv <- Norm(yh_cv - mu_te))
 

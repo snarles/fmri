@@ -72,7 +72,7 @@ predictive_Bayes <- function(X, Y, X_te, Sigma_e, Sigma_t, Sigma_b, mc.cores = 0
 
 predictive_samp <- function(X, Y, X_te, Sigma_e, Sigma_t, lambdas, mc.cores = 0,...) {
   pX <- dim(X)[2]; pY <- dim(Y)[2]
-  B <- samp_moments(X, Y, Sigma_e, Sigma_b, Sigma_t, computeCov = FALSE)
+  B <- samp_moments(X, Y, Sigma_e, lambdas, Sigma_t, computeCov = FALSE)
   res <- samp_predictive(X, Y, X_te, Sigma_e, lambdas, Sigma_t, mc.cores = mc.cores)
   list(pre_moments = res, filt = rep(TRUE, pY), B = B, Sigma_e = Sigma_e)
 }
@@ -123,10 +123,10 @@ params_CV1 <- function(X, Y, filtr = TRUE,
   stuff <- function(i) {
     res <- cv.glmnet(X, Y[, i], alpha = 0, intercept = FALSE, standardize = FALSE,
                      grouped = FALSE)
-    lambda_cv <- 2 * res[[rule]] * n
+    lambda_cv <- res[[rule]] * n / sd(Y[, i])
     pre <- predict(res, newx = X, s = res[[rule]])
     resid <- pre - Y[, i]
-    b <- coef(res, newx = X, s = res$lambda.min)[-1]
+    b <- coef.cv.glmnet(res, s = res[[rule]])[-1]
     s0s <- (Norm(b)^2/pX)  
     list(b = b, s0s = s0s, lambda_cv = lambda_cv, resid = resid)
   }
@@ -137,7 +137,7 @@ params_CV1 <- function(X, Y, filtr = TRUE,
   resids <- do.call(cbind, ss$resid)
   
   if (filtr == TRUE) {
-    filt <- (lambdas > 1e-5)    
+    filt <- (lambdas > 1e5)    
   } else {
     filt <- rep(TRUE, pY)    
   }

@@ -33,12 +33,12 @@ pre_MLEb <- do.call(pre_mle, c(obs, pre_Bayes))
 MLEb_cl <- do.call(post_probs, c(obs, pre_MLEb))$cl
 (MLEb_err <- sum(MLEb_cl != truth$i_chosen))
 
-p_CV <- do.call2(params_CV1, obs, mc.cores = mcc)
+p_CV <- do.call2(params_CV1, obs, filtr = FALSE, mc.cores = mcc, rule = "lambda.min")
 pre_CV <- do.call(pre_mle, c(obs, p_CV))
 CV_cl <- do.call(post_probs, c(obs, pre_CV))$cl
 (CV_err <- sum(CV_cl != truth$i_chosen))
 
-p_CV0 <- do.call2(params_CV1, obs, filtr = FALSE, mc.cores = mcc)
+p_CV0 <- do.call2(params_CV1, obs, filtr = FALSE, mc.cores = mcc, rule = "lambda.min")
 pre_EB <- do.call2(predictive_EP, c(obs, p_CV0), mc.cores = mcc)
 EB_cl <- do.call(post_probs, c(obs, pre_EB))$cl
 (EB_err <- sum(EB_cl != truth$i_chosen))
@@ -49,7 +49,10 @@ oEB_cl <- do.call(post_probs, c(obs, pre_oEB))$cl
 (oEB_err <- sum(oEB_cl != truth$i_chosen))
 
 ## Sampling dist
-pre_samp <- do.call2(predictive_samp, truth, lambdas = p_CV0$lambdas, mc.cores = mcc)
+pre_samp <- do.call2(predictive_samp, c(obs, p_CV0), mc.cores = mcc)
 samp_cl <- do.call(post_probs, c(obs, pre_samp))$cl
 (samp_err <- sum(samp_cl != truth$i_chosen))
 
+pre_MLEs <- do.call(pre_mle, c(obs, pre_samp))
+MLEs_cl <- do.call(post_probs, c(obs, pre_MLEs))$cl
+(MLEs_err <- sum(MLEs_cl != truth$i_chosen))
