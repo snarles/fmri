@@ -69,7 +69,7 @@ roi3 <- sapply(roi2, function(v) {
 
 
 
-X <- feature_train[converted_indices, ]
+Xall <- feature_train[converted_indices, ]
 Yall <- train_resp_all[, filt1]
 Yv1 <- Yall[, roi3$v1]
 dim(Yv1) # 3500 1294
@@ -79,7 +79,28 @@ Yv3 <- Yall[, roi3$v3]
 dim(Yv3) # 3500 1790
 Yv4 <- Yall[, roi3$v4]
 dim(Yv4) # 3500 1535
+X <- Xall[, 1:5000]
+FF <- feature_train[, 1:5000]
 
+####
+## New functions
+####
+
+sscore <- function(ll, i_chosen) {
+  mat <- ll$pprobs
+  mat <- apply(mat, 1,  function(v) {
+    v <- v - max(v)
+    v <- exp(v)
+    v/sum(v)
+  })
+  sum(t(mat)[cbind(1:dim(mat)[1], i_chosen)])
+}
+topk <- function(ll, i_chosen, k = 10) {
+  mat <- ll$pprobs
+  mmat <- cbind(i_chosen, mat)
+  res <- apply(mmat, 1, function(v) v[1] %in% order(-v[-1])[1:k])
+  sum(res)
+}
 
 ####
 ## Training and test partitions preserve pairs
@@ -89,20 +110,29 @@ Y <- Yv1[, sample(1294, 500)]
 n_tr <- 200
 n_te <- 100
 s_ <- sample(1750, 1750)
-s_tr <- s_[1:n_tr]
-s_te <- s_[n_tr + (1:n_te)]
+s_tr <- sort(s_[1:n_tr])
+s_te <- sort(s_[n_tr + (1:n_te)])
 inds_tr <- which(converted_indices %in% s_tr)
 inds_te <- which(converted_indices %in% s_te)
 X_tr <- X[inds_tr, ]
-X_te <- X[inds_te, ]
+X_te <- FF[s_te, ]
 Y_tr <- Y[inds_tr, ]
 Y_te <- Y[inds_te, ]
+i_chosen <- match(converted_indices[inds_te], s_te)
 
-mcc <- 3
-obs <- list(X = X_tr, Y = Y_tr, X_te = X_te)
+mcc <- 39
+obs <- list(X = X_tr, Y = Y_tr, X_te = X_te, y_star = Y_te)
+t1 <- proc.time()
 p_CV <- do.call2(params_CV1, obs, filtr = FALSE, mc.cores = mcc, rule = "lambda.min")
+proc.time() - t1
+t1 <- proc.time()
 pre_CV <- do.call(pre_mle, c(obs, p_CV))
-CV_cl <- do.call(post_probs, c(obs, pre_CV))$cl
-(CV_err <- sum(CV_cl != truth$i_chosen))
+proc.time() - t1
+t1 <- proc.time()
+CV_cl <- do.call(post_probs, c(obs, pre_CV))
+proc.time() - t1
+(CV_good <- sscore(CV_cl, i_chosen))
+(CV_crr <- sum(CV_cl$cl == i_chosen))
+(CV_crr <- topk(CV_cl, i_chosen, 10))
 
 
