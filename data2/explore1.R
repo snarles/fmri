@@ -85,7 +85,7 @@ dim(Yv4) # 3500 1535
 ## Training and test partitions preserve pairs
 ####
 
-Y <- Yv1
+Y <- Yv1[, sample(1294, 500)]
 n_tr <- 200
 n_te <- 100
 s_ <- sample(1750, 1750)
