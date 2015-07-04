@@ -9,8 +9,8 @@ source('eb_ident/bayes_reg.R')
 source('eb_ident/source.R')
 
 #set.seed(1)
-mcc <- 3
-hyperpars <- list(n=30, pY= 30, pX=80 , W_X= 2, s_e= 1, s_b = 0.01, 
+mcc <- 7
+hyperpars <- list(n=30, pY= 80, pX=80 , W_X= 2, s_e= 1, s_b = 0.001, 
                   W_e= 2, rho_t = 0.9, L= 100, n_te= 100)
 pars <- do.call(gen_params, hyperpars)
 truth <- do.call(gen_data, pars)
