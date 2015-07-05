@@ -106,7 +106,8 @@ topk <- function(ll, i_chosen, k = 10) {
 ## Training and test partitions preserve pairs
 ####
 
-Y <- Yv1[, sample(1294, 500)]
+inds_Y <- sample(1294, 500)
+Y <- Yv1[, inds_Y]
 n_tr <- 200
 n_te <- 100
 s_ <- sample(1750, 1750)
@@ -119,11 +120,14 @@ X_te <- FF[s_te, ]
 Y_tr <- Y[inds_tr, ]
 Y_te <- Y[inds_te, ]
 i_chosen <- match(converted_indices[inds_te], s_te)
+pX <- dim(X)[2]
 
 mcc <- 39
 obs <- list(X = X_tr, Y = Y_tr, X_te = X_te, y_star = Y_te)
 t1 <- proc.time()
-p_CV <- do.call2(params_CV1, obs, filtr = FALSE, mc.cores = mcc, rule = "lambda.min")
+p_CV <- do.call2(params_CV1, obs, 
+                 filtr = FALSE, mc.cores = mcc, 
+                 rule = "lambda.1se")
 proc.time() - t1
 t1 <- proc.time()
 pre_CV <- do.call(pre_mle, c(obs, p_CV))
@@ -133,6 +137,17 @@ CV_cl <- do.call(post_probs, c(obs, pre_CV))
 proc.time() - t1
 (CV_good <- sscore(CV_cl, i_chosen))
 (CV_crr <- sum(CV_cl$cl == i_chosen))
-(CV_crr <- topk(CV_cl, i_chosen, 10))
+(CV_crr10 <- topk(CV_cl, i_chosen, 10))
 
+B <- p_CV$B
+T2 <- colSums(B^2) - 1e-5
+t1 <- proc.time()
+pre_EB <- do.call2(predictive_EB, c(obs, p_CV), T2 = T2, mc.cores = mcc)
+proc.time() - t1
+t1 <- proc.time()
+EB_cl <- do.call(post_probs, c(obs, pre_EB))
+proc.time() - t1
 
+(EB_good <- sscore(EB_cl, i_chosen))
+(EB_crr <- sum(EB_cl$cl == i_chosen))
+(EB_crr10 <- topk(EB_cl, i_chosen, 10))

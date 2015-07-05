@@ -92,6 +92,20 @@ predictive_EP <- function(X, Y, X_te, Sigma_e, Sigma_t, mc.cores = 0, ...) {
 }
 
 
+predictive_EB <- function(X, Y, X_te, Sigma_e, Sigma_t, T2, mc.cores = 0, ...) {
+  pX <- dim(X)[2]; pY <- dim(Y)[2]
+  filt_EP <- (T2 > 0)
+  lambdas_EP <-  T2[filt_EP]/pX
+  Sigma_b <- diag(lambdas_EP)
+  Yf <- Y[, filt_EP]
+  Sigma_e <- Sigma_e[filt_EP, filt_EP]
+  B <- post_moments(X, Yf, Sigma_e, Sigma_b, Sigma_t, computeCov = FALSE)
+  res <- post_predictive(X, Yf, X_te, Sigma_e, Sigma_b, Sigma_t, mc.cores = mc.cores)
+  list(pre_moments = res, filt = filt_EP, B = B, Sigma_e = Sigma_e, Sigma_b = Sigma_b)
+}
+
+
+
 post_probs <- function(X_te, y_star, pre_moments, filt, ...) {
   y_filt <- y_star[, filt]
   L <- dim(X_te)[1]
