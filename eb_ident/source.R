@@ -37,7 +37,7 @@ gen_params <- function(n=30, pY= 60, pX= 70,
   } else {
     Sigma_t <-  exp(log(rho_t) * abs(row(eye(n)) - col(eye(n))))
   }
-  s0s <- s_b^2 * 1* rnorm(pY)^2 + 1
+  s0s <- s_b^2 * (1* rnorm(pY)^2 + 1)
   Sigma_b <- diag(s0s)
   dSigma_B <- rep(s0s, each = pX)
   Bvec <- sqrt(dSigma_B) * rnorm(pY * pX)
@@ -126,7 +126,8 @@ post_probs <- function(X_te, y_star, pre_moments, filt, ...) {
 }
 
 params_CV1 <- function(X, Y, filtr = TRUE, 
-                       shrink = 0.5, rule = "lambda.1se", mc.cores = 1, ...) {
+                       shrink = 0.5, rule = "lambda.1se", mc.cores = 1, 
+                       est.t = FALSE, ...) {
   n <- dim(X)[1]
   pX <- dim(X)[2]
   pY <- dim(Y)[2]
@@ -159,8 +160,11 @@ params_CV1 <- function(X, Y, filtr = TRUE,
   B <- B[, filt, drop = FALSE]
   resids <- resids[, filt, drop = FALSE]
   Sigma_e <- (1- shrink) * cov(resids) + shrink * diag(diag(cov(resids)))
-  #Sigma_t <- 0.5 * cov(t(resids)) + 0.5 * diag(diag(cov(t(resids))))
-  Sigma_t <- eye(n)
+  if (est.t) {
+    Sigma_t <- (1- shrink) * cor(t(resids)) + shrink * diag(diag(cor(t(resids))))    
+  } else {
+    Sigma_t <- eye(n)
+  }
   list(pre_moments = NULL, filt = filt, B = B, 
        Sigma_e = Sigma_e, Sigma_t = Sigma_t, Sigma_b = diag(s0s), lambdas = lambdas)
 }
