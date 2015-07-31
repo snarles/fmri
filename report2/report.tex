@@ -249,6 +249,238 @@ subsection.
 
 \subsection{Summarizing performance in random classification}
 
+Consider a large set of neurons, $r_1,\hdots, r_m$.  Each neuron
+$r_i(s)$ is the sum of a signal term $h_i(s)$ and a noise term,
+$\epsilon_i$.  Let us assume that for random stimuli $S$ drawn from
+distribution $S \sim \pi$, we have
+\[
+(h_1(S),\hdots, h_m(S)) \sim N(0, \Sigma_H)
+\]
+and
+\[
+(\epsilon_1,\hdots, \epsilon_m) \sim N(0, \Sigma_\epsilon).
+\]
+hence $\vec{r} \sim N(0, \Sigma_H + \Sigma_\epsilon).$
+
+GOAL: Find a summary statistic $I$ for the entire curve of
+classification error vs number of classes, with the additivity type
+property.
+
+\section{Estimating Encoding Parameters}
+
+\subsection{Previous Work}
+
+Consider a parametric model
+\[
+Y \sim F_\theta(X)
+\]
+Such a \emph{forward model} gives the distribution of the
+response conditional on the stimuli features.
+
+The \emph{maximum likelihood} (ML) principle can be invoked to
+identify the stimuli $i \in S$ ``most likely'' to have produced $y^*$.
+Let $x_i : i \in S$ denote features of the test stimuli, and
+identify $y^*$
+\[
+i^* = \text{argmax}_i \ell_\theta(y^*| x_i)
+\]
+
+\emph{Example.} We take the following as a representative approach, combining features of [1] and [2]:
+\begin{itemize}
+\item Assume the normal mutivariate linear model
+\[Y \sim N( XB , \Sigma_E), \text{ where }B \in \mathbb{R}^{q \times p}\]
+\item Estimate $B$ using elastic net [4]
+\item Estimate $\Sigma_E$ using off-diagonal shrinkage of sample covariance matrix of residuals
+\item The ML rule takes the form
+\begin{equation}\label{mlrule}
+i^* = \text{argmin}_{i} (x_i^T \hat{B} - y^*)^T \hat{\Sigma}_E^{-1} (x_i^T \hat{B} - y^*)
+\end{equation}
+\end{itemize}
+
+\subsection{Emprirical Bayes Approach}
+
+\begin{itemize}
+\item \emph{Idea}: Unlike ML, the Bayes rule surely optimizes the ``correct'' objective function.  Can we approximate the Bayes rule?
+\item \emph{Empirical Bayes}: use the data to estimate the covariances
+$\Sigma_B$ and $\Sigma_E$, then compute posterior distribution of $B$
+\item Assume coefficients of $B$ independent; diagonals of $\Sigma_B$ can be estimated using any estimate of signal strength, e.g. \emph{Eigenprism} [3].
+\item Decision rule similiar to \eqref{mlrule} but with ``added noise'' due to uncertainty of $B$.
+\[
+\text{min} (x_i^T B - y^*)^T (\text{Cov}(x_i^T B) + \hat{\Sigma}_E)^{-1} (x_i^T B - y^*)
+\]
+\item Analogous to LDA vs QDA
+\end{itemize}
+
+\subsection{Covariance Estimation}
+
+Both ML approach and EB approach depend on estimates of the covariance of $Y$.
+We might assume a ``Kronecker'' model where $\Cov(Y) = \Sigma_v \times \Sigma_t$
+where $\Sigma_v$ is the covariance of voxels (for a fixed time point)
+and $\Sigma_t$ is the autocovariance of a given voxel.
+
+New approaches to estimating covariance $\Sigma_v$ might incorporate
+spatial information about voxel location, or functional information.
+
+\subsection{Computation}
+
+Suppose we have a $n \times p_Y$ response matrix $Y$ and a $n \times p_X$ covariate matrix $X$.
+We have the model
+$$
+Y = XB + E
+$$
+where $B$ is a $p_X \times p_Y$ coefficient matrix and $E$ is a matrix of noise.
+Write $$
+E = \begin{pmatrix} e_1^T\\e_2^T\\ ... \\ e_n^T \end{pmatrix}
+$$
+Assume the rows of $E$ are independent, and each row is distributed
+$$
+e_i \sim N(0, \Sigma_e)
+$$
+
+Let us assume a prior distribution on the coefficients,
+$$
+B_{ij} \sim N(0, \sigma^2_{B, j})
+$$
+and where $B_{ij}$ are independent.
+Note that each column $j = 1,...,p_Y$ has a different prior coviarance $\sigma^2_{B, j}$.
+This reflects our prior knowledge that some column of $Y$ may have more signal than other columns.
+
+Bayes' rule gives us the posterior mean and covariance of the coefficients $B_{ij}$.
+First, we introduce the vectorized notation $\vec{B}$ to denote the $p_X p_Y \times 1$ vector obtained by 
+stacking the columns of $B$, and similarly $\vec{Y}$ to denote the $p_Y n \times 1$ vector obtained by stacking the columns of $Y$.  Also recall the definition of Kronecker product,
+
+$$
+A \otimes B = \begin{pmatrix}a_{11} B & a_{12} B & ...\\
+a_{21} B & a_{22} B & ...\\
+... & ... & ...\end{pmatrix}
+$$
+
+Also define
+$$
+\Omega_e = \Sigma_e^{-1}
+$$
+$$
+\Omega_b = \text{diag}\left(\frac{1}{\sigma^2_{b, 1}},..., \frac{1}{\sigma^2_{b, p_Y}}\right)
+$$
+
+The posterior mean and covariance are given as follows.
+
+$$
+\text{E}[\vec{B}|Y] = (\Omega_e \otimes X^T X + \Omega_b \otimes I_{p_X})^{-1} ((I\otimes X)^T (\Omega_e \otimes I) \vec{y})
+$$
+$$
+\text{Cov}(\vec{B}|Y) = = (\Omega_e \otimes X^T X + \Omega_b \otimes I_{p_X})^{-1}
+$$
+
+Given a new observation $y_* = B^T x_* + e_*$, where $y_*$ and $x_*$ are column vectors,
+the posterior predictive distribution is
+$$
+\text{E}[y_* | Y] = (I_{p_Y} \otimes x_*^T) \text{E}[\vec{B}|Y]
+$$
+$$
+\text{Cov}[y_* | Y] = (I_{p_Y} \otimes x_*^T) \text{Cov}(\vec{B}|Y) (I_{p_Y} \otimes x_*) + \Sigma_e
+$$
+
+
+In the following, we assume that $p_X > n$.
+
+Naively, computing the posterior covariance takes $O(p_X^3 p_Y^3)$ operations
+and computing the posterior mean takes $O(p_X^2 p_Y^2)$ operations.
+
+However, by diagonalizing the covariance matrix and taking advantage of the properties of Kronecker products, we can make the computation much more efficient.
+
+Using simultaneous diagonalization, find $V_e, D_e$ such that
+$$
+\Omega_e = V_e D_e V_e^T
+$$
+and
+$$
+\Omega_b = V_e V_e^T
+$$
+Note that $V_e$ is not orthogonal.
+The procedure for finding $V_e, D_e$ is well-known and also given in the code.
+
+Furthermore, define 
+$$\tilde{X} = \begin{pmatrix} X \\ 0\end{pmatrix}$$ so that $\tilde{X}$ is an $p_X \times p_X$ matrix.
+Then take the SVD
+$$
+\tilde{X} = U_X D_X V_X^T
+$$
+so that $D_X$ and $V_X$ are both  $p_X \times p_X$.
+We have
+$$
+V_X V_X^T = V_X V_X^T = I_{p_X}
+$$
+and
+$$
+V_X D_X^2 V_X^T = X^T X.
+$$
+
+Now we can rewrite the expression
+$$
+\text{Cov}(\vec{B}|Y) = = (\Omega_e \otimes X^T X + \Omega_b \otimes I_{p_X})^{-1}
+$$
+$$
+= ((V_e D_e V_e^T) \otimes (V_X D_X^2 V_X^T) + (V_e V_e^T) \otimes (V_X V_X^T))^{-1}
+$$
+$$
+= [(V_e \otimes V_X) (D_e \otimes D_X^2+ I_{p_X p_Y})(V_e^T \otimes V_X^T)]^{-1}
+$$
+$$
+= (V_e^{-1} \otimes V_X^{T})^T (D_e \otimes D_X^2+ I_{p_X p_Y})^{-1} (V_e^{-1} \otimes V_X^{T})
+$$
+
+In this form the expression is much each to compute since
+\begin{itemize}
+\item Only a diagonal matrix needs be inverted, and yields a diagonal matrix
+\item Multiplying the tranpose of a Kronecker product with a diagonal with itself is easy to compute.
+\end{itemize}
+To see the second point, consider computing the product
+
+$$
+C = (A \otimes B)^T D (A \otimes B)
+$$
+where $A$ is $a_1 \times a_2$, $B$ is $b_1 \times b_2$, and $D$ is diagonal with
+$$
+D = \begin{pmatrix} D_1 & 0 & 0 & 0 &... \\
+0 & D_2 & 0 & 0 & ...\\
+0 & 0 & D_3 & 0 & ...\\
+... & ...& ... & ... & ...
+\end{pmatrix}
+$$
+such that each $D_1,..., D_{a_1}$ is $b_1 \times b_1$.
+
+For $i, j = 1..., a_2$, let $C_{[ij]}$ denote $b_2 \times b_2$ blocks such that
+$$
+C = \begin{pmatrix} C_{[11]} & C_{[12]} & ...\\
+C_{[21]} & C_{[22]} & ... \\
+... & ... & ...\end{pmatrix}
+$$
+
+Now we can write
+$$
+C_{[ij]} = \sum_{k=1}^{a_1} a_{ki}a_{kj} B^T D_k B 
+= \left(\sum_{k=1}^{a_1} a_{ki} a_{kj} B^T D_k B \right)
+= B^T \left(\sum_{k=1}^{a_1} a_{ki} a_{kj} D_k \right) B.
+$$
+
+The second-to-last and last equality present two alternative methods to compute $C_{[ij]}$.
+
+\begin{itemize}
+\item Using the second-to-last equality, one precomputes each of the matrices $B^T D_i B$, which takes $O(b_2^2 b_1 a_1)$ operations.  To compute each block, it takes $O(b_2^2 a_1)$ operations.  Hence, to compute $C$ takes $O(a_1 a_2^2 b_2^2)$.
+\item Using the last equality, for each block one takes $O(a_1 b_1)$ operations to compute the weighted sum of $D_1,..., D_{a_1}$, and then $O(b_2^1 b_1)$ to multiply on the left with $B^T$ and on the right with $B$.
+\end{itemize}
+Therefore, we see that it takes $O(a_2^2 b_2^2 b_1)$ operations to compute $C$.
+
+Choosing the best of the two methods, the cost to compute $C$ is $O(a_2^2 b_2^2 \min(a_1, b_1))$.
+Applying to our problem, we see that the cost to evaluate the posterior covariance using this method is $O(p_Y^2 p_X^2 \min(p_X, p_Y))$, which is a saves a factor of $\max(p_Y, p_X)$ compared to the naive approach.
+
+
+\section{Inferring Information Content}
+
+\subsection{Finite Sample Effect}
+
+\subsection{Learning Curves}
 
 
 
