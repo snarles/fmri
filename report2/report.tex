@@ -24,6 +24,9 @@
 \newcommand{\diag}{\text{diag}}
 \newcommand{\argmax}{\text{argmax}}
 \newcommand{\Cov}{\text{Cov}}
+\newcommand{\argmin}{\text{argmin}}
+\newcommand{\Vol}{\text{Vol}}
+\newcommand{\comm}[1]{}
 
 \section{Introduction}
 
@@ -203,6 +206,12 @@ choosing discrimination tests.  To give some good and bad examples:
 \item (Random classification) Defining some probability distribution $\pi$ over stimuli, and then defining the information content in terms of \emph{average} classification performance on a set $s_1,\hdots, s_k$ drawn randomly from $\pi$.  Better: the main source of subjectivity is how to define $\pi$, but it might be acceptable to simply take some image database as representative of a ``natural'' distribution $\pi$.  Then there is also a choice of $k$: more on this later!
 \end{itemize}
 
+Another reason to motivate a notion of information based on
+classification is that researchers in multivoxel pattern analysis
+already intuitively interpret classification performance as a measure
+of information; formalizing this intuition would therefore open a new
+perspective on existing results.
+
 To narrow down what we might consider an ideal measure of information,
 we can turn to the properties of Shannon information as a guideline.
 Shannon information has nice properties for describing the information
@@ -262,9 +271,57 @@ and
 \]
 hence $\vec{r} \sim N(0, \Sigma_H + \Sigma_\epsilon).$
 
-GOAL: Find a summary statistic $I$ for the entire curve of
-classification error vs number of classes, with the additivity type
-property.
+Now consider a random classification problem, $s_1,\hdots, s_K$ drawn
+from $\pi$.  Let $\mu_i = h(s_i)$.
+
+Let $j^*$ be the random label drawn uniformly from $\{1,\hdots,
+N\}$. Then the classification rule is to estimate
+\[
+\hat{j} = \argmin_{j \in \{1, \hdots, K\}} ||\vec{r} - \mu_j||^2_{\Sigma_\epsilon}
+\]
+
+The classification is correct in the event that $||\vec{r}
+- \mu_j||_{\Sigma_\epsilon}^2 < ||\vec{r}
+- \mu_j||_{\Sigma_\epsilon}^2$ for all $j \neq j^*$.  The average
+misclassification is a function $\text{MC}(\Sigma_H, \Sigma_\epsilon,
+K)$.  By transformation of variables, we see that
+\[
+\text{MC}(\Sigma_H, \Sigma_\epsilon, K) = \text{MC}(\Sigma_\epsilon^{-1/2}\Sigma_H\Sigma_\epsilon^{-1/2}, I, K)
+\]
+so we might as well only consider $\Sigma_\epsilon = I$.
+
+Now our goal is to find a summary statistic
+$\mathcal{I}(\Sigma_\epsilon, \Sigma_H)$ for the misclassification
+curve $\text{MC}(\Sigma_\epsilon, \Sigma_H, \cdot)$ as $K$ varies.
+Ideally the curve $\text{MC}(\Sigma_H, I, K)$ versus $K$ only depends
+on a one-dimensional function of $\Sigma_H$, hence yielding a perfect
+summary.
+
+TODO: See if a good summary $\mathcal{I}$ can be found, or if more
+than one summary statistic is needed.
+
+Consider independent $\vec{r}^{(1)}$ and $\vec{r}^{(2)}$ with
+corresponding signal covariances $\Sigma_H^{(1)}$ and
+$\Sigma_H^{(2)}$, and error covariances $\Sigma_\epsilon^{(1)}$ and
+$\Sigma_\epsilon^{(2)}$.  By transforming both $\vec{r}^{(i)}$ it is
+clear that we can take $\Sigma_\epsilon = I$.
+
+TODO: See how the summary $\mathcal{I}$  behaves when combining independent vectors.
+
+\comm{
+The average correct classification rate is
+\begin{align*}
+\text{CC} &= \Pr[||\vec{r} - \mu_1||_{\Sigma_\epsilon}^2 < \min_{j > 1} ||\vec{r} - \mu_j||_{\Sigma_\epsilon}^2 | j^* = 1]
+\\&= \Pr[\forall j  > 1: \mu_j \notin B_{||\epsilon||_{\Sigma_\epsilon}}(\vec{r})]
+\\&= \Pr[\mu_2 \notin B_{||\epsilon||_{\Sigma_\epsilon}}(\vec{r})]^{K - 1}
+\\&= \int_{\mathbb{R}^d \times \mathbb{R}^d} \left[1 - \int_{B_{||\epsilon||_{\Sigma_\epsilon}}(r)} p(\mu) d\mu\right]^{K-1} dP(\epsilon, \vec{r})
+\end{align*}
+where $B_r(x)$ is the euclidean $\Sigma_\epsilon$-normed ball of radius $r$ centered at $x$ and
+\[
+p(\mu) = \frac{1}{(2\pi|\Sigma_\mu|)^{d/2}} \exp(-\frac{1}{2}\mu^T \Sigma_\mu^{-1} \mu)
+\]
+}
+
 
 \section{Estimating Encoding Parameters}
 
@@ -480,9 +537,33 @@ Applying to our problem, we see that the cost to evaluate the posterior covarian
 
 \subsection{Finite Sample Effect}
 
+Changing slightly the notation, let $\text{MC}(\vec{r}, K, n)$ denote
+the misclassification when classifying $K$ random classes, given a
+training set of size $n$.  Our definition of information is computed
+from $\text{MC}(\vec{r}, K, \infty)$: the misclassification curves
+assuming a \emph{known} encoding rule.  However, in practice, we only
+know $\text{MC}(\vec{r}, K, n)$ for finite $n$.
+
 \subsection{Learning Curves}
 
+The question is whether one can estimate $\text{MC}(\vec{r},
+K, \infty)$ based on knowing $\text{MC}(\vec{r}, K, n)$ for various
+$n \leq N$, where $N$ is the total number of observations available.
 
+Cortes et al propose the following method to model the training and
+test error as a function of $n$, the training set size:
+
+\[
+\text{Err}_{\text{train}} = a - \frac{b}{n^\beta}
+\]
+\[
+\text{Err}_{\text{test}} = a + \frac{c}{n^\alpha}
+\]
+where $a$, $b$, $c$, $\alpha$ and $\beta$ are to be determined
+empirically.
+
+GOAL: Extend this type of empirical model to also incoporate $K$, the
+number of test classes, and justify somehow.
 
 \end{document}
 
