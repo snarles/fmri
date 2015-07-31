@@ -300,6 +300,21 @@ summary.
 TODO: See if a good summary $\mathcal{I}$ can be found, or if more
 than one summary statistic is needed.
 
+\emph{Ideas.}
+Approximations for $\text{MC}$ can be found depending on $K$:
+\begin{itemize}
+\item $K$ small, ``stochastic'' regime.  Difficult to approximate because of variability in spacing.
+\item $K$ medium, ``boundary'' regime.  Concentration of measure: most centroids lie close to the level surface with Mahalanobis distance $m$.  Therefore it's basically a uniform distribution on an ellipsoid, and shouldn't depend too much on $\Sigma_h$ beyond the surface area of the ellipsoid.
+\item $K$ large, ``interior'' regime.  Most centroids are inside the convex hull, and hence have very high misclassification rates.  Most observations $\vec{r}$ are classified into the small minority of the centroids lying on the boundary.  The boundary itself itself is very well behaved: it is a level surface of mahalanobis distance $\log(2K)$.  
+\end{itemize}
+In the $K$ large regime misclassification rate is necessarily quite high, so arguably the case of most interest ($K$ medium) is also the most nicely behaved.  See figure 1:
+
+\begin{center}
+\includegraphics[scale = 0.5]{kgauss1.png}
+\end{center}
+
+
+\comm{
 Consider independent $\vec{r}^{(1)}$ and $\vec{r}^{(2)}$ with
 corresponding signal covariances $\Sigma_H^{(1)}$ and
 $\Sigma_H^{(2)}$, and error covariances $\Sigma_\epsilon^{(1)}$ and
@@ -308,7 +323,6 @@ clear that we can take $\Sigma_\epsilon = I$.
 
 TODO: See how the summary $\mathcal{I}$  behaves when combining independent vectors.
 
-\comm{
 The average correct classification rate is
 \begin{align*}
 \text{CC} &= \Pr[||\vec{r} - \mu_1||_{\Sigma_\epsilon}^2 < \min_{j > 1} ||\vec{r} - \mu_j||_{\Sigma_\epsilon}^2 | j^* = 1]
@@ -322,6 +336,15 @@ p(\mu) = \frac{1}{(2\pi|\Sigma_\mu|)^{d/2}} \exp(-\frac{1}{2}\mu^T \Sigma_\mu^{-
 \]
 }
 
+\subsection{Relation to information theory}
+
+Somehow the above can be related to mutual information 
+\[I(\vec{h}, \vec{r}) \propto \ln(\Sigma_H) - \ln(\Sigma_H(\Sigma_H + \Sigma_\epsilon)^{-1} \Sigma_H)\]
+
+\subsection{Robustness}
+
+We wish to apply the methods derived using the preceding Guassian
+theory to non-Gaussian case: how well does it generalize?
 
 \section{Estimating Encoding Parameters}
 
