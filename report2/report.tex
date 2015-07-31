@@ -1,0 +1,258 @@
+\title{Outline of Stimulus Identification Project}
+\author{Charles Zheng and Yuval Benjamini}
+\date{\today}
+
+\documentclass[12pt]{article} 
+
+% packages with special commands
+\usepackage{amssymb, amsmath}
+\usepackage{epsfig}
+\usepackage{array}
+\usepackage{ifthen}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{csquotes}
+\definecolor{grey}{rgb}{0.5,0.5,0.5}
+
+\begin{document}
+\maketitle
+
+\newcommand{\tr}{\text{tr}}
+\newcommand{\E}{\textbf{E}}
+\newcommand{\diag}{\text{diag}}
+\newcommand{\argmax}{\text{argmax}}
+\newcommand{\Cov}{\text{Cov}}
+
+\section{Introduction}
+
+Neuroscientists have developed an extensive theory of how simple
+phenomena (e.g. wind direction, arm reaching angle) are encoded by
+single neurons, and presumably decoded by higher cognitive functions.
+However, much remains to be understood about how complex phenomena
+(e.g. visual stimuli) are encoded or decoded.
+
+In particular, how much information about the stimulus is captured by
+the various subsystems of the brain, or discarded?  Taking vision as
+an example, we know that information from the retina is passed up
+successive layers of visual subsystems (V1, V2, ...), and presumably
+information is lost as each layer successively filters the signal
+recieved from the previous layer.
+
+One might also ask about the redundancy of the information encoded by
+different neurons.  Presumably each and every neuron is not unique,
+but can be grouped with similar, nearby neurons, so that the entire
+group can be understood as a homogenous population of neurons.  In
+that case, one would expect that the information contained by a
+subsample of neurons tends to plateau as one includes more and more
+'redundant' neurons in the subsample.
+
+These two questions can both be posed in the framework of information
+theory.  In principle, we have the tools to answer these kinds of
+questions.  We can infer the connective structure of neural circuits
+in living brains, and infer their patterns of neuron activation using
+a variety of imaging modalities, including EEG, MEG, fMRI, and calcium
+imaging.
+
+However, even after the data has been collected, there exists an
+inferential barrier between the data and the information theoretic
+conclusions we might wish to make.  First of all, in order to quantify
+the information content of a neural system, we would ideally know the
+encoding scheme.  However, usually the encoding scheme has to be
+hypothesized, and then fit to the data.  And even if we had the
+correct encoding scheme, we still can only estimate the information
+content due randomness inherent in our experimental design,
+measurement devices, and the neuronal dynamics themselves.
+
+This inferential barrier has classically been ignored in classical
+studies of encoding and decoding, for good reason.  When the stimulus
+is relatively simple, such as wind direction, we can often discover
+the correct model based on intuition, and estimate its parameters in
+data to a high reliability.  Therefore our error in estimating the
+information in a population of neurons might be fairly accurate.
+
+However, the limitations of this naive approach have been recognized
+for more complex, multivariate phenomena.  As noted by Quiroga and
+Panzeri, 
+\begin{displayquote}
+... decoding algorithms may fail to decode stimuli owing to a
+high-dimensional response space... In such circumstances it may
+therefore be dangerous to rule out a candidate neuronal code only
+because it gives a near-chance performance with a given decoding
+algorithm.
+\end{displayquote}
+
+To give a concrete example of why it might be difficult to estimate an
+encoding scheme from data, we introduce our motivating example of
+natural image identification (Kay 2008).  Here the stimulus $s$ is a
+grayscale image with $128 \times 128$ pixels. Suppose for the sake of
+illustration that one was able to measure neural activations directly.
+Then, one might suppose that the firing rate of the $i$th neuron as a
+function of the stimulus is some linear function of the pixels,
+\[
+r_i(s) = \langle a_i,  s \rangle
+\]
+One might further assume that $a_i$ belongs to a family of Gabor
+filters, parameterized by a location $x_i$, orientation $\theta_i$,
+frequency $f_i$, and scale $\tau_i$.  Given that each neuron only has
+five parameters, this might be realtively easy.  However, in fact we
+do not have the means to measure individual neurons, but rather voxels
+$v_i$ which are some time-and-space average version of the neural
+activity.  Hence we might model each voxel as
+\[
+v_i(s) = \langle b_i,  s \rangle
+\]
+where now $b_i$ is a mixture of many Gabor filters.  The complexity of
+each voxel limits the accuracy to which we can recover its encoding
+parameters, even supposing we have an accurate model of encoding.
+
+As statisticians, we can develop methodology which account for the
+uncertainty in estimation.  Such methodology can be used for the
+purpose of evaluating candidate encoding schemes, and inferring the
+information content of neuronal populations.  Depending on the quality
+of the measurements and the sample size, the uncertainty may be too
+great to draw any conclusions.  In that case, statistics is at the
+very least informative of the difficulty of the problem, or the need
+to acquire more data or use different modalities.
+
+In the next sections, we narrow our scope to a specific hypothetical
+model of stimulus encoding, which motivates our statistical approach
+for inferring the information content of a population of neurons.
+Section 2 introduces the measure of information we employ, Section 3
+discusses methods to estimate the encoding and decoding schemes, and
+Section 4 proposes methodology for inferring information content given
+a candidate encoding scheme, which accounts for statistical uncertainty.
+
+\section{Quantifying Information}
+
+\subsection{Parameterization Issues}
+
+The information content of a neural system has traditionally been
+understood as the mutual information between the population of neural
+responses, $X$, and the stimulus, $S$: that is, the information encoded by $X$ is
+\[
+I(S; X) = H(S) - H(S|X)
+\]
+where $H$ is entropy.
+
+A signficant source of difficulty in developing a theory for encoding
+complex phenomena (such as visual stimuli) is that unlike in the case
+of simple stimuli, an obvious parameterization of the stimuli in
+Euclidean space may not exist.  It is clear how to encode arm
+direction in three-dimensional space; on the other hand, it is not
+clear if it even makes sense to ask what is the ``dimensionality'' of
+a natural scene.  One might restrict the scope to pixelized images,
+but this is a rather artificial and unsatisfactory solution.  Without
+such an \emph{a priori} parameterization, the most suitable
+mathemtical framework for a given stimulus space $\mathcal{S}$ is to
+posit distinct stimuli $s$ as elements of a $\sigma$-algebra.
+
+Since the dimensionality of $\mathcal{S}$ is ill-defined, the entropy
+$H(S)$ is undefined so the classical concepts of information theory
+cannot be directly applied.
+
+An obvious idea might be to replace the external stimulus $s$ with the
+most low-level neuronal representation available: e.g., in the case of
+vision, to replace $s$ with the vector of firing rates of the retinal
+neurons, $\vec{r}^{(0)}$.  While $\vec{r}^{(0)}$ can indeed be finitely
+parameterized, and may even have a nice mapping from the source space,
+there are two serious drawbacks to this approach.  Firstly, the
+low-level mapping differs between subjects; whereas we think of the
+stimulus $s$ as external to the subjects and common between
+experiments. Secondly, the entropy of $\vec{r}^{(0)}$ would include both
+signal specific to $s$ and noise terms.  In order to distinguish
+between signal and noise, we have to incorporate the stimulus $s$
+after all.
+
+A next approach might be to think of $\mathcal{S}$ as a function space
+with some smoothness conditions, and to represent $\mathcal{S}$ in
+some suitable basis.  An infinite basis would be needed, but the
+coefficients for any particular stimulus would decay in the higher
+dimensions, so there is some hope of being able to measure the
+information of the stimulus distribution.  This is not an unreasonable
+approach, but requires many technicalities which are more or less
+tangential to the scientific problem.
+
+An intuitively simpler (if mathematically less elegant) approach is to
+base the measure of information on \emph{the ability to discriminate
+between distinct stimuli}.  That is, in order to measure the
+information content of some neuronal system $\vec{r}$, we need to
+specify some \emph{discrimination test}, and supply
+a \emph{discriminator} which uses information in $\vec{r}$ to answer
+the discrimination test.  Examples of discrimination tests are:
+\begin{itemize}
+\item I obtain $\vec{r}_1$ from $s_1$ and $\vec{r}_2$ from $s_2$.  Are $s_1$ and $s_2$ the same stimulus? \emph{(Hypothesis testing)}
+\item I obtain $\vec{r}$ from one of $\{s_1,\hdots, s_k\}$.  Which stimulus did I chose? \emph{(Classification)}
+\end{itemize}
+An individual discrimination test provides little information about
+the information capacity of a system $\vec{r}$. However, a large
+collection of such tests might be more informative; and, indeed, in
+the discrete setting an exact correspondence can be made between the
+mutual information of $\vec{r}$ and some measure of its average
+performance over a collection of tests.
+
+In general, though, there are infinitely many possible measures of
+information based on different kinds of discrimination tests.  As a
+start, we might look for a measure of information which does not
+involve a procedure that is too complicated or arbitrary, in terms of
+choosing discrimination tests.  To give some good and bad examples:
+\begin{itemize}
+\item Fixing some \emph{particular} stimuli $s_1,\hdots ,s_K$ and defining the information content in terms of classification performance on that set.  Too arbitrary: why did you choose those stimuli in particular?
+\item (Packing) Choosing a probability $\epsilon$, and declaring a set $s_1,\hdots, s_k$ as \emph{separable} if given any $s_i$, $s_j$ in the set, one can distinguish between $s_i$ and $s_j$ with probability $1-\epsilon$ or better.  Then defining the information content as the log of the largest $k$ for which there exists a separable set of that size.  Too complicated: given that the actual value of $K$ might be millions or billions, there is no way to actually validate this measure experiementally.
+\item (Random classification) Defining some probability distribution $\pi$ over stimuli, and then defining the information content in terms of \emph{average} classification performance on a set $s_1,\hdots, s_k$ drawn randomly from $\pi$.  Better: the main source of subjectivity is how to define $\pi$, but it might be acceptable to simply take some image database as representative of a ``natural'' distribution $\pi$.  Then there is also a choice of $k$: more on this later!
+\end{itemize}
+
+To narrow down what we might consider an ideal measure of information,
+we can turn to the properties of Shannon information as a guideline.
+Shannon information has nice properties for describing the information
+content of a combined system in terms of the information of its
+subsystems.  Given that many of our motivating scientific questions
+involve understanding the redundancy of neuronal subsystems, these are
+highly desirable properties for our application.  These properties
+are:
+\begin{enumerate}
+\item Given a random vector $\vec{r}^{(1)}$ and an independent random vector $\vec{r}^{(2)}$, the joint entropy is the sum of the individual entropies,
+\[
+H(r^{(1)}, r^{(2)}) = H(r^{(1)}) + H(r^{(2)})
+\]
+\item Given non-independent random vectors, the joint entropy is the sum of individual entropies minus the mutual information,
+\[
+H(r^{(1)}, r^{(2)}) = H(r^{(1)}) + H(r^{(2)}) - I(r^{(1)}, r^{(2)})
+\]
+\end{enumerate}
+The measure of information, $H$, has a desirable additive property,
+while the mutual information $I$ provides a measure of redundancy.
+
+In fact, the \emph{packing} definition of information comes close to satisfying property 1, other than the fact that the probability threshold $\epsilon$ has to be adjusted.  That is,
+\[
+P_{\epsilon'}(r^{(1)}, r^{(2)}) = P_\epsilon(r^{(1)}) + P_\epsilon(r^{(2)})
+\]
+where $\epsilon'$ might be different from $\epsilon$.  To intuitively
+see why this is, the packing number $P$ is the log number of balls
+which can be `packed' into the response space $R$.  If $e^{P_1}$
+response balls can be packed in $R_1$, and $e^{P_2}$ balls can be
+packed into $R_2$, then by taking products of balls in $R_1$ and
+$R_2$, $e^{P_1 + P_2}$ balls can be packed into $R_1 \times R_2$.
+This is exact if we happened to be talking about lattices of
+hypercubes, but it is approximately correct for general metrics.
+
+Since the packing definition of information is impractical to measure,
+requiring some estimate of all $k$ choose 2 discrimination tests, we
+might hope that this nice property of packing could be obtained by
+using random classification.  In fact, we can recover this property if
+we consider a range of test sizes $k$, which is quite feasible to do
+in practice.  But if we are willing to make some distributional
+assumptions on $\vec{r}$, we can go even further and eliminate the
+arbitrary choice of $\epsilon$.  This is the subject of the next
+subsection.
+
+\subsection{Summarizing performance in random classification}
+
+
+
+
+\end{document}
+
+
+
