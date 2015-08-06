@@ -143,6 +143,7 @@ obs <- list(X = X_tr, Y = Y_tr, X_te = X_te, y_star = Y_te)
 X <- X_tr
 Y <- Y_tr
 lambda <- 1
+shrink <- 0.5
 
 split_vec <- function(v, n.splits) {
   ans <- list()
@@ -165,26 +166,30 @@ paramultiply <- function(A, B, mc.cores = 3) {
 
 params_ker <- function(X, Y, shrink = 0.5, lambda = 1, mcc = 3) {
   n <- dim(X)[1]; p <- dim(X)[2]
-  iperm <- sample(n, n)
-  trinds <- iperm[1:(n * 4/5)]
-  teinds <- iperm[-(1:(n * 4/5))]
-  Xtr <- X[trinds, ]
-  Ytr <- Y[trinds, ]
-  Xte <- X[teinds, ]
-  Yte <- Y[teinds, ]
-  #gm <- Xtr %*% t(Xtr) + lambda * eye(n * 4/5)
-  gm <- paramultiply(Xtr, t(Xtr), mcc) + lambda * eye(n * 4/5)
-  B <- paramultiply(t(Xtr), solve(gm, Ytr), mcc)
-  
+  gm <- paramultiply(X, t(X), mcc) + lambda * eye(n)
+  B <- paramultiply(t(X), solve(gm, Y), mcc)
+  s0s <- apply(B, 2, function(v) Norm(v)^2/p)
+  Yh <- t(paramultiply(t(B), t(X)))
+  eps <- Y - Yh
+  cr <- cov(eps)
+  Sigma_e <- (1 - shrink) * cr + shrink * diag(diag(cr))
+  Sigma_t <- eye(n)
+  filt <- rep(TRUE, dim(Y)[2])
+  list(pre_moments = NULL, filt = filt, B = B,
+       Sigma_e = Sigma_e, Sigma_t = Sigma_t, Sigma_b = diag(s0s),
+       lambda_cv = lambda, resid = eps)
 }
 
 
 
 
 t1 <- proc.time()
-p_CV <- do.call2(params_CV1, obs, 
+#p_CV <- do.call2(params_CV1, obs, 
+#                 filtr = FALSE, mc.cores = mcc, 
+#                 rule = "lambda.1se")
+p_CV <- do.call2(params_ker, obs, 
                  filtr = FALSE, mc.cores = mcc, 
-                 rule = "lambda.1se")
+                 lambda = 1)
 proc.time() - t1
 t1 <- proc.time()
 pre_CV <- do.call(pre_mle, c(obs, p_CV))
