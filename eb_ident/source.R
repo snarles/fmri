@@ -177,5 +177,79 @@ pre_mle <- function(X_te, B, Sigma_e, filt, ...) {
   list(pre_moments = ans, filt = filt, B = B, Sigma_e = Sigma_e)
 }
 
+####
+## New functions
+####
 
+sscore <- function(ll, i_chosen) {
+  mat <- ll$pprobs
+  mat <- apply(mat, 1,  function(v) {
+    v <- v - max(v)
+    v <- exp(v)
+    v/sum(v)
+  })
+  sum(t(mat)[cbind(1:dim(mat)[1], i_chosen)])
+}
+topk <- function(ll, i_chosen, k = 10) {
+  mat <- ll$pprobs
+  mmat <- cbind(i_chosen, mat)
+  res <- apply(mmat, 1, function(v) v[1] %in% order(-v[-1])[1:k])
+  sum(res)
+}
+
+split_vec <- function(v, n.splits) {
+  ans <- list()
+  n <- length(v)
+  for (i in 1:n.splits) {
+    li <- floor((i-1)/n.splits * n) + 1
+    ui <- floor(i/n.splits * n)
+    ans[[i]] <- v[li:ui]
+  }
+  ans
+}
+
+paramultiply <- function(A, B, mc.cores = 3) {
+  rowpartition <- split_vec(1:dim(B)[2], mc.cores)
+  res <- mclapply(rowpartition, function(i) {
+    A %*% B[, i]
+  }, mc.cores = mc.cores)
+  do.call(cbind, res)
+}
+
+params_ker <- function(X, Y, shrink = 0.5, lambda = 1, mcc = 3, ...) {
+  n <- dim(X)[1]; p <- dim(X)[2]
+  gm <- paramultiply(X, t(X), mcc) + lambda * eye(n)
+  B <- paramultiply(t(X), solve(gm, Y), mcc)
+  s0s <- apply(B, 2, function(v) Norm(v)^2/p)
+  Yh <- t(paramultiply(t(B), t(X)))
+  eps <- Y - Yh
+  cr <- cov(eps)
+  Sigma_e <- (1 - shrink) * cr + shrink * diag(diag(cr))
+  Sigma_t <- eye(n)
+  filt <- rep(TRUE, dim(Y)[2])
+  list(pre_moments = NULL, filt = filt, B = B,
+       Sigma_e = Sigma_e, Sigma_t = Sigma_t, Sigma_b = diag(s0s),
+       lambda_cv = lambda, resid = eps)
+}
+
+
+par_post_probs <- function(X_te, y_star, pre_moments, filt, mc.cores, ...) {
+  y_filt <- y_star[, filt]
+  L <- dim(X_te)[1]
+  n_te <- dim(y_filt)[1]
+  pY <- dim(y_filt)[2]
+  colf <- function(i) {
+    Mu <- pre_moments[[i]]$Mu
+    Cov <- pre_moments[[i]]$Cov
+    ld <- log(det(Cov))
+    resid <- t(t(y_filt) - Mu)
+    ss <- solve(Cov, t(resid))
+    ips <- rowSums(resid * t(ss))
+    -ld - ips
+  }
+  res <- mclapply(1:L, colf, mc.cores = mc.cores)
+  pprobs <- do.call(cbind, res)
+  cl <- apply(pprobs, 1, function(v) order(-v)[1])
+  list(pprobs = pprobs, cl = cl)
+}
 

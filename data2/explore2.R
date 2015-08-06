@@ -16,25 +16,7 @@ source('eb_ident/bayes_reg.R')
 source('eb_ident/source.R')
 
 
-####
-## New functions
-####
 
-sscore <- function(ll, i_chosen) {
-  mat <- ll$pprobs
-  mat <- apply(mat, 1,  function(v) {
-    v <- v - max(v)
-    v <- exp(v)
-    v/sum(v)
-  })
-  sum(t(mat)[cbind(1:dim(mat)[1], i_chosen)])
-}
-topk <- function(ll, i_chosen, k = 10) {
-  mat <- ll$pprobs
-  mmat <- cbind(i_chosen, mat)
-  res <- apply(mmat, 1, function(v) v[1] %in% order(-v[-1])[1:k])
-  sum(res)
-}
 
 ddir <- '/home/snarles/stat312data/'
 ddir <- '/home/rstudio/stat312data/'
@@ -97,6 +79,10 @@ Ysigs <- Yvaris - Ydiffs
 
 ## decide not to scale
 
+####
+##  Data Subsetting
+####
+
 Xall <- feature_train[converted_indices, ]
 Yall <- train_resp_all[, filt1]
 Yv1 <- Yall[, roi3$v1]
@@ -118,7 +104,7 @@ FF <- feature_train[, 1:n_fe]
 ## Training and test partitions preserve pairs
 ####
 
-inds_Y <- sample(1294, 200)
+inds_Y <- sample(1294, 1294)
 Y <- Yv1[, inds_Y]
 n_tr <- 1500
 n_te <- 100
@@ -140,46 +126,10 @@ obs <- list(X = X_tr, Y = Y_tr, X_te = X_te, y_star = Y_te)
 
 ## Kernel method
 
-X <- X_tr
-Y <- Y_tr
-lambda <- 1
-shrink <- 0.5
-
-split_vec <- function(v, n.splits) {
-  ans <- list()
-  n <- length(v)
-  for (i in 1:n.splits) {
-    li <- floor((i-1)/n.splits * n) + 1
-    ui <- floor(i/n.splits * n)
-    ans[[i]] <- v[li:ui]
-  }
-  ans
-}
-
-paramultiply <- function(A, B, mc.cores = 3) {
-  rowpartition <- split_vec(1:dim(B)[2], mc.cores)
-  res <- mclapply(rowpartition, function(i) {
-    A %*% B[, i]
-  }, mc.cores = mc.cores)
-  do.call(cbind, res)
-}
-
-params_ker <- function(X, Y, shrink = 0.5, lambda = 1, mcc = 3) {
-  n <- dim(X)[1]; p <- dim(X)[2]
-  gm <- paramultiply(X, t(X), mcc) + lambda * eye(n)
-  B <- paramultiply(t(X), solve(gm, Y), mcc)
-  s0s <- apply(B, 2, function(v) Norm(v)^2/p)
-  Yh <- t(paramultiply(t(B), t(X)))
-  eps <- Y - Yh
-  cr <- cov(eps)
-  Sigma_e <- (1 - shrink) * cr + shrink * diag(diag(cr))
-  Sigma_t <- eye(n)
-  filt <- rep(TRUE, dim(Y)[2])
-  list(pre_moments = NULL, filt = filt, B = B,
-       Sigma_e = Sigma_e, Sigma_t = Sigma_t, Sigma_b = diag(s0s),
-       lambda_cv = lambda, resid = eps)
-}
-
+#X <- X_tr
+#Y <- Y_tr
+#lambda <- 1
+#shrink <- 0.5
 
 
 
@@ -188,14 +138,14 @@ t1 <- proc.time()
 #                 filtr = FALSE, mc.cores = mcc, 
 #                 rule = "lambda.1se")
 p_CV <- do.call2(params_ker, obs, 
-                 filtr = FALSE, mc.cores = mcc, 
-                 lambda = 1)
+                mc.cores = mcc, 
+                 lambda = 0.1)
 proc.time() - t1
 t1 <- proc.time()
 pre_CV <- do.call(pre_mle, c(obs, p_CV))
 proc.time() - t1
 t1 <- proc.time()
-CV_cl <- do.call(post_probs, c(obs, pre_CV))
+CV_cl <- do.call2(par_post_probs, c(obs, pre_CV), mc.cores = mcc)
 proc.time() - t1
 (CV_good <- sscore(CV_cl, i_chosen))
 (CV_crr <- sum(CV_cl$cl == i_chosen))
