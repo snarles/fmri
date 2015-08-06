@@ -1,0 +1,130 @@
+> X <- Xall[, 1:5000]
+> FF <- feature_train[, 1:5000]
+
+> inds_Y <- sample(1294, 500)
+> Y <- Yv1[, inds_Y]
+> n_tr <- 1500
+> n_te <- 100
+
+> p_CV <- do.call2(params_CV1, obs, 
++                  filtr = FALSE, mc.cores = mcc, 
++                  rule = "lambda.1se")
+
+> (CV_good <- sscore(CV_cl, i_chosen))
+[1] 9.209244
+> (CV_crr <- sum(CV_cl$cl == i_chosen))
+[1] 30
+> (CV_crr10 <- topk(CV_cl, i_chosen, 10))
+[1] 108
+> 
+> B <- p_CV$B
+> T2 <- colSums(B^2) - 1e-5
+> t1 <- proc.time()
+> pre_EB <- do.call2(predictive_EB, c(obs, p_CV), T2 = T2, mc.cores = mcc)
+
+> (EB_good <- sscore(EB_cl, i_chosen))
+[1] 2.124473
+> (EB_crr <- sum(EB_cl$cl == i_chosen))
+[1] 11
+> (EB_crr10 <- topk(EB_cl, i_chosen, 10))
+[1] 71
+> 
+
+
+
+
+
+> n_fe <- 500
+
+> (CV_good <- sscore(CV_cl, i_chosen))
+[1] 3.649144
+> (CV_crr <- sum(CV_cl$cl == i_chosen))
+[1] 10
+> (CV_crr10 <- topk(CV_cl, i_chosen, 10))
+[1] 65
+
+> (EB_good <- sscore(EB_cl, i_chosen))
+[1] 2.255819
+> (EB_crr <- sum(EB_cl$cl == i_chosen))
+[1] 11
+> (EB_crr10 <- topk(EB_cl, i_chosen, 10))
+[1] 55
+
+
+
+
+> inds_Y <- sample(1294, 300)
+
+> (CV_good <- sscore(CV_cl, i_chosen))
+[1] 3.556482
+> (CV_crr <- sum(CV_cl$cl == i_chosen))
+[1] 11
+> (CV_crr10 <- topk(CV_cl, i_chosen, 10))
+[1] 56
+> 
+
+> (EB_good <- sscore(EB_cl, i_chosen))
+[1] 2.242141
+> (EB_crr <- sum(EB_cl$cl == i_chosen))
+[1] 6
+> (EB_crr10 <- topk(EB_cl, i_chosen, 10))
+[1] 49
+> 
+
+
+
+
+n_fe <- 100
+inds_Y <- sample(1294, 1000)
+Y <- Yv1[, inds_Y]
+n_tr <- 1500
+n_te <- 100
+
+> (CV_good <- sscore(CV_cl, i_chosen))
+[1] 2.2878
+> (CV_crr <- sum(CV_cl$cl == i_chosen))
+[1] 6
+> (CV_crr10 <- topk(CV_cl, i_chosen, 10))
+[1] 43
+> 
+
+> (EB_good <- sscore(EB_cl, i_chosen))
+[1] 2.115461
+> (EB_crr <- sum(EB_cl$cl == i_chosen))
+[1] 5
+> (EB_crr10 <- topk(EB_cl, i_chosen, 10))
+[1] 33
+> 
+
+
+
+
+n_fe <- 1000
+inds_Y <- sample(1294, 100)
+
+> (CV_good <- sscore(CV_cl, i_chosen))
+[1] 3.181109
+> (CV_crr <- sum(CV_cl$cl == i_chosen))
+[1] 9
+> (CV_crr10 <- topk(CV_cl, i_chosen, 10))
+[1] 61
+> 
+> B <- p_CV$B
+> T2 <- colSums(B^2) - 1e-5
+> t1 <- proc.time()
+> pre_EB <- do.call2(predictive_EB, c(obs, p_CV), T2 = T2, mc.cores = mcc)
+> proc.time() - t1
+   user  system elapsed 
+324.779   5.834  14.529 
+> t1 <- proc.time()
+> EB_cl <- do.call(post_probs, c(obs, pre_EB))
+> proc.time() - t1
+   user  system elapsed 
+  0.042   0.008   0.049 
+> 
+> (EB_good <- sscore(EB_cl, i_chosen))
+[1] 2.276106
+> (EB_crr <- sum(EB_cl$cl == i_chosen))
+[1] 11
+> (EB_crr10 <- topk(EB_cl, i_chosen, 10))
+[1] 46

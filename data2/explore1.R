@@ -79,8 +79,9 @@ Yv3 <- Yall[, roi3$v3]
 dim(Yv3) # 3500 1790
 Yv4 <- Yall[, roi3$v4]
 dim(Yv4) # 3500 1535
-X <- Xall[, 1:5000]
-FF <- feature_train[, 1:5000]
+n_fe <- 1000
+X <- Xall[, 1:n_fe]
+FF <- feature_train[, 1:n_fe]
 
 ####
 ## New functions
@@ -106,9 +107,9 @@ topk <- function(ll, i_chosen, k = 10) {
 ## Training and test partitions preserve pairs
 ####
 
-inds_Y <- sample(1294, 500)
+inds_Y <- sample(1294, 200)
 Y <- Yv1[, inds_Y]
-n_tr <- 200
+n_tr <- 1500
 n_te <- 100
 s_ <- sample(1750, 1750)
 s_tr <- sort(s_[1:n_tr])
