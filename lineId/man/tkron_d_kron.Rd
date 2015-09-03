@@ -2,7 +2,7 @@
 % Please edit documentation in R/bayes.R
 \name{tkron_d_kron}
 \alias{tkron_d_kron}
-\title{Computes t(A %x% B) %*% diag(d) %*% (A %*% B)}
+\title{Computes \code{t(A \%x\% B) \%*\% diag(d) \%*\% (A \%*\% B)}}
 \usage{
 tkron_d_kron(A, B, d)
 }
@@ -17,6 +17,6 @@ tkron_d_kron(A, B, d)
 square matrix of size a * c
 }
 \description{
-Computes t(A %x% B) %*% diag(d) %*% (A %*% B)
+Computes \code{t(A \%x\% B) \%*\% diag(d) \%*\% (A \%*\% B)}
 }
 

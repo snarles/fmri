@@ -1,4 +1,4 @@
-#' Computes t(A %x% B) %*% diag(d) %*% (A %*% B)
+#' Computes \code{t(A \%x\% B) \%*\% diag(d) \%*\% (A \%*\% B)}
 #' 
 #' @import pracma
 #' @import MASS
@@ -7,6 +7,14 @@
 #' @param B matrix of size c x d
 #' @param d vector: represents diagonal matrix of size a * c
 #' @return square matrix of size a * c
+#' @example
+#' a1 <- 5; a2 <- 3; b1 <- 4; b2 <- 6
+#' A <- pracma::randn(a1, a2)
+#' B <- pracma::randn(b1, b2)
+#' cc <- rnorm(a1 * a2)
+#' ans <- tkron_d_kron(A, B, cc)
+#' ansn <- t(A %x% B) %*% diag(cc) %*% (A %x% B)
+#' f2(ans, ansn)
 #' @export
 tkron_d_kron <- function(A, B, d) {
   a1 <- dim(A)[1]; a2 <- dim(A)[2]; b1 <- dim(B)[1]; b2 <- dim(B)[2]
@@ -36,7 +44,7 @@ tkron_d_kron <- function(A, B, d) {
   C
 }
 
-#' Computes (A %x% B) %*% v
+#' Computes \code{(A \%x\% B) \%*\% v}
 #' 
 #' @param A matrix of size a x b
 #' @param B matrix of size c x d
@@ -51,8 +59,8 @@ kron_v <- function(A, B, cc) {
 #' Computes posterior moments for Bayesian multivariate regression
 #' 
 #' Posterior mean and covariance given a prior on Bvec
-#'  of the form Sigma_b %x% eye(pX)
-#'  and noise prior of form Sigma_e %x% Sigma_t
+#'  of the form \code{Sigma_b \%x\% eye(pX)}
+#'  and noise prior of form \code{Sigma_e \%x\% Sigma_t}
 #' @param X covariate matrix
 #' @param Y response matrix
 #' @param Sigma_e Covariance within given time (row) of Y
@@ -169,9 +177,9 @@ post_predictive <- function(X, Y, X_te, Sigma_e, Sigma_b, Sigma_t = eye(dim(X)[1
 
 #' Ridge regression subroutine
 #' 
-#' computes solve(xtx + lambda, t(X) %*% Y)
-#' as 1/lambda * t(X) %*% Y
-#' V_X, d_X are from svd of X
+#' computes \code{solve(xtx + lambda, t(X) \%*\% Y)}
+#' as \code{1/lambda * t(X) \%*\% Y}
+#' \code{V_X, d_X} are from svd of \code{X}
 #' @param X covariate/design matrix
 #' @param V_X from svd of X
 #' @param d_X from svd of X

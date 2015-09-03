@@ -30,5 +30,6 @@ sqrtm <- function(m) {
 #' 
 #' @param x
 #' @param y (optional)
+#' @export
 f2 <- function(x, y = 0) sum((x - y)^2)
 

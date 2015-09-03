@@ -23,8 +23,8 @@ fast_ridge(X, V_X, d_X, lambda, Y, naive = FALSE)
 a matrix B
 }
 \description{
-computes solve(xtx + lambda, t(X) %*% Y)
-as 1/lambda * t(X) %*% Y
-V_X, d_X are from svd of X
+computes \code{solve(xtx + lambda, t(X) \%*\% Y)}
+as \code{1/lambda * t(X) \%*\% Y}
+\code{V_X, d_X} are from svd of \code{X}
 }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/bayes.R
 \name{kron_v}
 \alias{kron_v}
-\title{Computes (A %x% B) %*% v}
+\title{Computes \code{(A \%x\% B) \%*\% v}}
 \usage{
 kron_v(A, B, cc)
 }
@@ -17,6 +17,6 @@ kron_v(A, B, cc)
 vector of size a * c
 }
 \description{
-Computes (A %x% B) %*% v
+Computes \code{(A \%x\% B) \%*\% v}
 }
 

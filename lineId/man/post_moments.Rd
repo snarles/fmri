@@ -30,7 +30,7 @@ or a list (if \code{computeCov = TRUE})
 }
 \description{
 Posterior mean and covariance given a prior on Bvec
- of the form Sigma_b %x% eye(pX)
- and noise prior of form Sigma_e %x% Sigma_t
+ of the form \code{Sigma_b \%x\% eye(pX)}
+ and noise prior of form \code{Sigma_e \%x\% Sigma_t}
 }
 
