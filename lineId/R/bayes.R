@@ -1,11 +1,8 @@
-#' Functions for Bayesian Multivariate Regression
+#' Computes t(A %x% B) %*% diag(d) %*% (A %*% B)
 #' 
 #' @import pracma
 #' @import MASS
 #' @import parallel
-
-#' Computes t(A %x% B) %*% diag(d) %*% (A %*% B)
-#' 
 #' @param A matrix of size a x b
 #' @param B matrix of size c x d
 #' @param d vector: represents diagonal matrix of size a * c

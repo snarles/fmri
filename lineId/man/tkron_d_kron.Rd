@@ -2,7 +2,7 @@
 % Please edit documentation in R/bayes.R
 \name{tkron_d_kron}
 \alias{tkron_d_kron}
-\title{Functions for Bayesian Multivariate Regression}
+\title{Computes t(A %x% B) %*% diag(d) %*% (A %*% B)}
 \usage{
 tkron_d_kron(A, B, d)
 }
@@ -17,6 +17,6 @@ tkron_d_kron(A, B, d)
 square matrix of size a * c
 }
 \description{
-Functions for Bayesian Multivariate Regression
+Computes t(A %x% B) %*% diag(d) %*% (A %*% B)
 }
 
