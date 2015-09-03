@@ -1,0 +1,8 @@
+Package: lineId
+Title: Multivariate Forward Models and Backward Identification Models
+Version: 0.0.0.9000
+Authors@R: person("Charles", "Zheng", email = "snarles@stanford.edu", role = c("aut", "cre"))
+Description: Given multivariate response Y and predictors X, fit a multivariate linear model Y = XB.  Then, given a new response y and possible covariates x_i, identify the covariate.
+Depends: R (>= 3.1.2)
+License: GPL (>= 2)
+LazyData: true
