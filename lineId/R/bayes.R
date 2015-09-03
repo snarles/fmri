@@ -1,60 +1,4 @@
-#' Computes \code{t(A \%x\% B) \%*\% diag(d) \%*\% (A \%*\% B)}
-#' 
-#' @import pracma
-#' @import MASS
-#' @import parallel
-#' @param A matrix of size a x b
-#' @param B matrix of size c x d
-#' @param d vector: represents diagonal matrix of size a * c
-#' @return square matrix of size a * c
-#' @example
-#' a1 <- 5; a2 <- 3; b1 <- 4; b2 <- 6
-#' A <- pracma::randn(a1, a2)
-#' B <- pracma::randn(b1, b2)
-#' cc <- rnorm(a1 * a2)
-#' ans <- tkron_d_kron(A, B, cc)
-#' ansn <- t(A %x% B) %*% diag(cc) %*% (A %x% B)
-#' f2(ans, ansn)
-#' @export
-tkron_d_kron <- function(A, B, d) {
-  a1 <- dim(A)[1]; a2 <- dim(A)[2]; b1 <- dim(B)[1]; b2 <- dim(B)[2]
-  dmat <- matrix(d, b1, a1)
-  # columns of dmat are diag(D1), diag(D2), ...
-  C <- zeros(a2 * b2)
-  if (a1 < b1) {
-    bdbmat <- zeros(b2^2, a1)
-    for (i in 1:a1) bdbmat[, i] <- as.numeric(t(B) %*% (dmat[, i] * B))
-    for (i in 1:a2) {
-      for (j in i:a2) {
-        Cij <- matrix(bdbmat %*% (A[, i] * A[, j]), b2, b2)
-        C[(i-1) * b2 + (1:b2), (j-1) * b2 + (1:b2)] <- Cij
-        C[(j-1) * b2 + (1:b2), (i-1) * b2 + (1:b2)] <- t(Cij)
-      }
-    }
-  } else {
-    for (i in 1:a2) {
-      for (j in i:a2) {
-        dtemp <- as.numeric(dmat %*% (A[, i] * A[, j]))
-        Cij <- t(B) %*% (dtemp * B)
-        C[(i-1) * b2 + (1:b2), (j-1) * b2 + (1:b2)] <- Cij
-        C[(j-1) * b2 + (1:b2), (i-1) * b2 + (1:b2)] <- t(Cij)
-      }
-    }  
-  }
-  C
-}
 
-#' Computes \code{(A \%x\% B) \%*\% v}
-#' 
-#' @param A matrix of size a x b
-#' @param B matrix of size c x d
-#' @param cc vector of length b * d
-#' @return vector of size a * c
-#' @export
-kron_v <- function(A, B, cc) {
-  a1 <- dim(A)[1]; a2 <- dim(A)[2]; b1 <- dim(B)[1]; b2 <- dim(B)[2]
-  as.numeric(B %*% matrix(cc, b2, a2) %*% t(A))
-}
 
 #' Computes posterior moments for Bayesian multivariate regression
 #' 
@@ -72,6 +16,18 @@ kron_v <- function(A, B, cc) {
 #' @return a matrix/vector (if \code{computeCov = FALSE})
 #' or a list (if \code{computeCov = TRUE})
 #' @export
+#' @examples
+#' n <- 100; pX <- 20; pY <- 30
+#' X <- randn(n, pX)
+#' B <- randn(pX, pY)
+#' Sigma_b <- eye(pY)
+#' Sigma_e <- cor(randn(3 * pY, pY))
+#' Sigma_t <- cor(randn(3 * n, n))
+#' E <- sqrtm(Sigma_t) %*% randn(n, pY) %*% sqrtm(Sigma_e)
+#' Y <- X %*% B + E
+#' res <- post_moments(X, Y, Sigma_e, Sigma_b, Sigma_t, TRUE, TRUE)
+#' f2(solve(t(X) %*% X, t(X) %*% Y), B)
+#' f2(res$Mu, B)
 post_moments <- function(X, Y, Sigma_e, Sigma_b, Sigma_t = eye(dim(X)[1]), 
                          computeCov = TRUE, naive = FALSE, matrix = TRUE, ...) {
   n <- dim(X)[1]; pX <- dim(X)[2]; pY <- dim(Y)[2]
@@ -125,6 +81,23 @@ post_moments <- function(X, Y, Sigma_e, Sigma_b, Sigma_t = eye(dim(X)[1]),
 #' @return a list of list, one sublist per row of X_te,
 #' containing posterior mean and covariance
 #' @export
+#' @examples
+#' n <- 100; pX <- 20; pY <- 30; L <- 10
+#' X <- randn(n, pX)
+#' X_te <- randn(L, pX)
+#' B <- randn(pX, pY)
+#' Sigma_b <- eye(pY)
+#' Sigma_e <- cor(randn(3 * pY, pY))
+#' Sigma_t <- cor(randn(3 * n, n))
+#' E <- sqrtm(Sigma_t) %*% randn(n, pY) %*% sqrtm(Sigma_e)
+#' Y <- X %*% B + E
+#' E2 <- randn(L, pY) %*% sqrtm(Sigma_e)
+#' Y_te <- X_te %*% B + E2
+#' res <- post_predictive(X, Y, X_te, Sigma_e, Sigma_b, Sigma_t)
+#' Bols <- solve(t(X) %*% X, t(X) %*% Y)
+#' Yh <- do.call(rbind, listcomb(res)$Mu)
+#' f2(X_te %*% Bols, Y_te)
+#' f2(Yh, Y_te)
 post_predictive <- function(X, Y, X_te, Sigma_e, Sigma_b, Sigma_t = eye(dim(X)[1]), 
                             naive = FALSE, mc.cores = 0, ...) {
   n <- dim(X)[1]; pX <- dim(X)[2]; pY <- dim(Y)[2]

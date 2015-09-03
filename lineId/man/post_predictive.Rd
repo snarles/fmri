@@ -31,4 +31,22 @@ containing posterior mean and covariance
 \description{
 Returns a list with entry for every row of Xte, which is a list with mu, cov
 }
+\examples{
+n <- 100; pX <- 20; pY <- 30; L <- 10
+X <- randn(n, pX)
+X_te <- randn(L, pX)
+B <- randn(pX, pY)
+Sigma_b <- eye(pY)
+Sigma_e <- cor(randn(3 * pY, pY))
+Sigma_t <- cor(randn(3 * n, n))
+E <- sqrtm(Sigma_t) \%*\% randn(n, pY) \%*\% sqrtm(Sigma_e)
+Y <- X \%*\% B + E
+E2 <- randn(L, pY) \%*\% sqrtm(Sigma_e)
+Y_te <- X_te \%*\% B + E2
+res <- post_predictive(X, Y, X_te, Sigma_e, Sigma_b, Sigma_t)
+Bols <- solve(t(X) \%*\% X, t(X) \%*\% Y)
+Yh <- do.call(rbind, listcomb(res)$Mu)
+f2(X_te \%*\% Bols, Y_te)
+f2(Yh, Y_te)
+}
 
