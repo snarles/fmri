@@ -44,12 +44,6 @@ f2(solve(t(X) %*% X, t(X) %*% Y), B)
 ##  Testing Bayesian methods
 ####
 
-#' Tests Bayesian method
-#'
-#' Let (B, Y) have a joint distribution, where Y is observed
-#' Then for any functions f(B), g(Y) we have
-#' E[f(B)g(Y)] = E[h(Y)g(Y)]
-#' where h(Y) = E[f(B)|Y]
 
 ntrial <- 1000
 

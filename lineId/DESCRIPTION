@@ -7,3 +7,4 @@ Depends: R (>= 3.1.2)
 Imports: pracma, parallel, MASS
 License: GPL (>= 2)
 LazyData: true
+Suggests: testthat
