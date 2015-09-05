@@ -18,4 +18,7 @@ eigenprisms(X, Y, alpha = 0.05, sigma2 = FALSE)
 \description{
 Confidence intervals for ||beta||^2 or sigma2 (see Janson 2015)
 }
+\references{
+Janson 2015
+}
 

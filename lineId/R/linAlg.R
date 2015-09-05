@@ -98,3 +98,46 @@ kron_v <- function(A, B, cc) {
   a1 <- dim(A)[1]; a2 <- dim(A)[2]; b1 <- dim(B)[1]; b2 <- dim(B)[2]
   as.numeric(B %*% matrix(cc, b2, a2) %*% t(A))
 }
+
+#' Splits a vector into approximately equally-sized parts
+#' 
+#' @param v Vector to be split
+#' @param n.splits Number of splits
+#' @return A list of vectors
+#' @export
+#' @examples
+#' split_vec(1:100, 6)
+split_vec <- function(v, n.splits) {
+  ans <- list()
+  n <- length(v)
+  for (i in 1:n.splits) {
+    li <- floor((i-1)/n.splits * n) + 1
+    ui <- floor(i/n.splits * n)
+    ans[[i]] <- v[li:ui]
+  }
+  ans
+}
+
+#' Multiple core matrix multiplication
+#' 
+#' Given A and B, computes AB by splitting columns of B
+#' @param A matrix
+#' @param B matrix with many columns
+#' @return The product
+#' @import parallel
+#' @export
+#' @examples
+#' A <- randn(100, 100)
+#' B <- randn(100, 1000)
+#' C <- paramultiply(A, B, mc.cores = 3)
+paramultiply <- function(A, B, mc.cores = 3) {
+  rowpartition <- split_vec(1:dim(B)[2], mc.cores)
+  res <- mclapply(rowpartition, function(i) {
+    A %*% B[, i]
+  }, mc.cores = mc.cores)
+  do.call(cbind, res)
+}
+
+
+
+

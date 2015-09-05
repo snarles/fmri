@@ -1,9 +1,10 @@
-#' Determines eigenprism weights (see Janson 2015)
+#' Determines eigenprism weights
 #' 
 #' @param l Eigenvalues of X'X
 #' @param tol Tolerance
 #' @param sigma2 Compute weights for estimating sigma2 (TRUE) or signal strength (FALSE)?
 #' @export
+#' @references Janson 2015
 eigenprism_w <- function(l, tol = 1e-4, sigma2 = FALSE) {
   n <- length(l)
   f <- function(w) max(sum(w^2), sum((w * l)^2))
@@ -52,6 +53,7 @@ eigenprism_w <- function(l, tol = 1e-4, sigma2 = FALSE) {
 #' @param alpha 1-coverage of confidence interval
 #' @param sigma2 Compute weights for estimating sigma2 (TRUE) or signal strength (FALSE)?
 #' @export
+#' @references Janson 2015
 eigenprism <- function(X, y, alpha = 0.05, sigma2 = FALSE) {
   n <- length(y)
   res <- svd(X)
@@ -75,6 +77,7 @@ eigenprism <- function(X, y, alpha = 0.05, sigma2 = FALSE) {
 #' @param alpha 1-coverage of confidence interval
 #' @param sigma2 Compute weights for estimating sigma2 (TRUE) or signal strength (FALSE)?
 #' @export
+#' @references Janson 2015
 eigenprisms <- function(X, Y, alpha = 0.05, sigma2 = FALSE) {
   n <- dim(X)[1]
   p <- dim(X)[2]

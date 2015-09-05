@@ -122,3 +122,5 @@ test_that("Predictive distribution is correct", {
   c(mean(fBgYs), mean(hYs * gYs), fBgYs0)
   expect_less_than(cf2(mean(hYs * gYs), fBgYs0), 1e-2)
 })
+
+## TODO: test sampling distributions

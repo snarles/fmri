@@ -2,7 +2,7 @@
 % Please edit documentation in R/eigenprism.R
 \name{eigenprism_w}
 \alias{eigenprism_w}
-\title{Determines eigenprism weights (see Janson 2015)}
+\title{Determines eigenprism weights}
 \usage{
 eigenprism_w(l, tol = 1e-04, sigma2 = FALSE)
 }
@@ -14,6 +14,9 @@ eigenprism_w(l, tol = 1e-04, sigma2 = FALSE)
 \item{sigma2}{Compute weights for estimating sigma2 (TRUE) or signal strength (FALSE)?}
 }
 \description{
-Determines eigenprism weights (see Janson 2015)
+Determines eigenprism weights
+}
+\references{
+Janson 2015
 }
 
