@@ -9,6 +9,40 @@ build('lineId')
 install('lineId')
 library(lineId)
 
+help(obs_data_filter)
+
+pars <- gen_params()
+dat <- do.call(gen_data, pars)
+obs <- do.call(obs_data_filter, dat)
+obsp <- modifyList(obs, list(i_chosen = dat$i_chosen))
+
+filter_method = no_filter
+filter_params = list()
+forward_method = fit_ridge_kernel
+forward_params = list()
+Sigma_e_method = residual_offdiag
+Sigma_e_params = list()
+Sigma_t_method = assume_iid
+Sigma_t_params = list()
+backward_method = pre_mle
+backward_params = list()
+scoring_method = topk_score
+scoring_params = list()
+
+mc.cores = 3
+res <- list(X = X, Y = Y, X_te = X_te, y_star = y_star,
+            i_chosen = i_chosen, mc.cores = mc.cores)
+res$filt <- do.call(filter_method, modifyList(res, filter_params))
+res$B <- do.call(forward_method, modifyList(res, forward_params))
+res$Sigma_e <- do.call(Sigma_e_method, modifyList(res, Sigma_e_params))
+res$Sigma_t <- do.call(Sigma_t_method, modifyList(res, Sigma_t_params))
+res$pre_moments <- do.call(backward_method, modifyList(res, backward_params))
+res$plikes <- do.call(post_likes, res)
+res$score <- do.call(scoring_method, modifyList(res, scoring_params))
+res
+
+res <- do.call(identification_pipeline1, obsp)
+
 help(tkron_d_kron)
 
 

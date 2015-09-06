@@ -4,12 +4,15 @@
 \alias{fit_elnet_CV}
 \title{Multivariate elastic net regression}
 \usage{
-fit_elnet_CV(X, Y, alpha = 0, rule = "lambda.1se", mc.cores = 1)
+fit_elnet_CV(X, Y, filt = rep(TRUE, dim(Y)[2]), alpha = 0,
+  rule = "lambda.1se", mc.cores = 1, ...)
 }
 \arguments{
 \item{X}{design matrix}
 
 \item{Y}{response matrix}
+
+\item{filt}{Logical vector: which responses to use}
 
 \item{alpha}{Ridge (0) or Lasso (1)}
 
@@ -21,6 +24,7 @@ fit_elnet_CV(X, Y, alpha = 0, rule = "lambda.1se", mc.cores = 1)
 B coefficient matrix
 }
 \description{
+A \code{forward_method}.
 Fits elastic net ridge separately to each column
 }
 

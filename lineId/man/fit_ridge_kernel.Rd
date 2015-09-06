@@ -4,12 +4,15 @@
 \alias{fit_ridge_kernel}
 \title{Multivariate ridge regression}
 \usage{
-fit_ridge_kernel(X, Y, lambda = 1, mc.cores = 3, ...)
+fit_ridge_kernel(X, Y, filt = rep(TRUE, dim(Y)[2]), lambda = 1,
+  mc.cores = 3, ...)
 }
 \arguments{
 \item{X}{design matrix}
 
 \item{Y}{response matrix}
+
+\item{filt}{Logical vector: which responses to use}
 
 \item{lambda}{L2 regularization}
 
@@ -19,6 +22,7 @@ fit_ridge_kernel(X, Y, lambda = 1, mc.cores = 3, ...)
 B coefficient matrix
 }
 \description{
+A \code{forward_method}.
 Fits multivariate ridge with the same lambda for all columns
 Computes \code{B = solve(t(X)\%*\% X + lambda * eye(p), t(X) \%*\% Y)}.
 Uses kernel trick and parallelization.
