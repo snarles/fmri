@@ -22,4 +22,15 @@ A list with moments
 A \code{backward_method}.
 MLE rule is equivalent to using the same covariance for each response
 }
+\examples{
+pars <- gen_params(n = 50, pY = 20, pX = 30, n_te = 100)
+dat <- do.call(gen_data, pars)
+zattach(dat)
+res <- identification_pipeline1(X, Y, X_te, y_star, i_chosen,
+  filter_method = no_filter, forward_method = fit_elnet_CV,
+  Sigma_e_method = residual_offdiag, Sigma_t_method = assume_iid,
+  backward_method = pre_mle, scoring_method = topk_score,
+  mc.cores = 3)
+res$score
+}
 

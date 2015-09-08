@@ -10,7 +10,7 @@ eigenprism_w <- function(l, tol = 1e-4, sigma2 = FALSE) {
   f <- function(w) max(sum(w^2), sum((w * l)^2))
   # null space directions
   res <- svd(cbind(1, l))
-  P <- -(res$u %>% {(.) %*% t(.)})
+  P <- -(res$u %*% t(res$u))
   diag(P) <- diag(P) + 1
   A <- P[, -c(1, 2)]
   # Newton operators

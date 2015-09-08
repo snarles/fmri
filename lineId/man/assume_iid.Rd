@@ -4,20 +4,10 @@
 \alias{assume_iid}
 \title{Produces an identity matrix}
 \usage{
-assume_iid(X, Y, B, filt = rep(TRUE, dim(Y)[2]), ...)
+assume_iid(X, ...)
 }
 \arguments{
 \item{X}{design matrix}
-
-\item{Y}{response matrix}
-
-\item{B}{fitted coefficient matrix}
-
-\item{filt}{Logical vector: which responses to use}
-
-\item{shrink}{shrinkage factor}
-
-\item{mc.cores}{parallelization}
 }
 \value{
 Estimate for covariance matrix

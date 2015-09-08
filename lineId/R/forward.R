@@ -48,3 +48,26 @@ fit_elnet_CV <- function(X, Y, filt = rep(TRUE, dim(Y)[2]), alpha = 0,
   B
 }
 
+#' Optimal Bayes estimate given true Sigma_b
+#' 
+#' A \code{forward_method}.
+#' NOTE: When used in pipeline, make sure to include
+#' \code{forward_params = list(Sigma_b = Sigma_b, Sigma_e = Sigma_e, Sigma_t = Sigma_t)}
+#' @param X design matrix
+#' @param Y response matrix
+#' @param X_te Test class covariates
+#' @param Sigma_e Response covariance
+#' @param Sigma_t Autocorrelation over time
+#' @param Sigma_b Prior covariance of each row of B (rows assumed independent).
+#' Constrained to be diagonal!
+#' @param filt Logical vector: which responses to use
+#' @return Coef matrix B
+#' @export
+fit_Bayes <- function(X, Y, X_te, Sigma_e, Sigma_t, Sigma_b, filt, mc.cores = 0,...) {
+  Y <- Y[, filt]
+  pX <- dim(X)[2]; pY <- dim(Y)[2]
+  B <- post_moments(X, Y, Sigma_e, Sigma_b, Sigma_t, computeCov = FALSE)
+  B
+}
+
+
