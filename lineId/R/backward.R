@@ -7,7 +7,6 @@
 #' @param filt Logical vector: which responses to use
 #' @param mc.cores Number of parallel cores
 #' @return Matrix of log-likelihoods, rows = responses, columns = classes
-#' @import parallel
 #' @export
 post_likes <- function(X_te, y_star, pre_moments,
                        filt = rep(TRUE, length(y_star)),
@@ -23,7 +22,7 @@ post_likes <- function(X_te, y_star, pre_moments,
     ips <- rowSums(resid * t(ss))
     -ld - ips
   }
-  res <- mclapply(1:L, colf, mc.cores = mc.cores)
+  res <- mclapply0(1:L, colf, mc.cores = mc.cores)
   plikes <- do.call(cbind, res)
   plikes
 }

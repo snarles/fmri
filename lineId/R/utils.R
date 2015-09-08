@@ -43,10 +43,34 @@ listcomb <- function(dots) {
 
 #' Calls mclapply and combines the end result using listcomb
 #' 
+#' @param x List of arguments
+#' @param f Single-argument function
+#' @param mc.cores Number of cores: 0 means use lapply
 #' @import parallel
 #' @export
 #' @examples
 #' lclapply(1:10, function(i) list(a = i, b = i^2), mc.cores = 1)
-lclapply <- function(...) {
-  listcomb(mclapply(...))
+lclapply <- function(x, f, mc.cores = 0) {
+  if (mc.cores == 0) {
+    return(listcomb(lapply(x, f)))
+  } else {
+    return(listcomb(mclapply(x, f, mc.cores = mc.cores)))    
+  }
+}
+
+#' Either uses lapply or mclapply
+#' 
+#' @param x List of arguments
+#' @param f Single-argument function
+#' @param mc.cores Number of cores: 0 means use lapply
+#' @import parallel
+#' @export
+#' @examples
+#' lclapply(1:10, function(i) list(a = i, b = i^2), mc.cores = 1)
+mclapply0 <- function(x, f, mc.cores = 0) {
+  if (mc.cores == 0) {
+    return(lapply(x, f))
+  } else {
+    return(mclapply(x, f, mc.cores = mc.cores))    
+  }
 }

@@ -57,4 +57,15 @@ Pipeline 1 involves a single variable-selection (filter) pass over the data
 and a single forward model fitting step, covariance fitting step,
 and backwards modeling step.
 }
+\examples{
+pars <- gen_params(n = 50, pY = 20, pX = 30, n_te = 100)
+dat <- do.call(gen_data, pars)
+zattach(dat)
+res <- identification_pipeline1(X, Y, X_te, y_star, i_chosen,
+  filter_method = no_filter, forward_method = fit_elnet_CV,
+  Sigma_e_method = residual_offdiag, Sigma_t_method = assume_iid,
+  backward_method = pre_mle, scoring_method = topk_score,
+  mc.cores = 3)
+res$score
+}
 

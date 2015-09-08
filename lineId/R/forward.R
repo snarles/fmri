@@ -4,7 +4,6 @@
 #' Fits multivariate ridge with the same lambda for all columns
 #' Computes \code{B = solve(t(X)\%*\% X + lambda * eye(p), t(X) \%*\% Y)}.
 #' Uses kernel trick and parallelization.
-#' @import parallel
 #' @param X design matrix
 #' @param Y response matrix
 #' @param filt Logical vector: which responses to use
@@ -25,7 +24,6 @@ fit_ridge_kernel <- function(X, Y, filt = rep(TRUE, dim(Y)[2]),
 #' 
 #' A \code{forward_method}.
 #' Fits elastic net ridge separately to each column
-#' @import parallel
 #' @import glmnet
 #' @param X design matrix
 #' @param Y response matrix
@@ -45,7 +43,7 @@ fit_elnet_CV <- function(X, Y, filt = rep(TRUE, dim(Y)[2]), alpha = 0,
                      grouped = FALSE)
     coef.cv.glmnet(res, s = res[[rule]])[-1]
   }
-  ss <- mclapply(1:pY, stuff, mc.cores = mc.cores)
+  ss <- mclapply0(1:pY, stuff, mc.cores = mc.cores)
   B <- do.call(cbind, ss)
   B
 }

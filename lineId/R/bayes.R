@@ -137,11 +137,7 @@ post_predictive <- function(X, Y, X_te, Sigma_e, Sigma_b, Sigma_t = eye(dim(X)[1
       Cov <- tkron_d_kron(iV_e, t(V_x) %*% x_star, d) + Sigma_e
       list(Mu = Mu, Cov = Cov)
     }
-    if (mc.cores == 0) {
-      ans <- lapply(1:L, pre_moments)
-    } else {
-      ans <- mclapply(1:L, pre_moments, mc.cores = mc.cores)
-    }
+    ans <- mclapply0(1:L, pre_moments, mc.cores = mc.cores)
   }
   ans
 }
@@ -249,10 +245,6 @@ samp_predictive <- function(X, Y, X_te, Sigma_e, lambdas, Sigma_t = eye(dim(X)[1
     Cov <- temp %*% (eye(pY) %x% t(t(x_star))) + Sigma_e
     list(Mu = Mu, Cov = Cov)
   }
-  if (mc.cores == 0) {
-    ans <- lapply(1:L, pre_moments)
-  } else {
-    ans <- mclapply(1:L, pre_moments, mc.cores = mc.cores)
-  }
+  ans <- mclapply0(1:L, pre_moments, mc.cores = mc.cores)
   ans
 }

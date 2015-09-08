@@ -23,6 +23,16 @@
 #' @param mc.cores Number of parallel cores to use
 #' @return A list containing model fits and classification results
 #' @export
+#' @examples
+#' pars <- gen_params(n = 50, pY = 20, pX = 30, n_te = 100)
+#' dat <- do.call(gen_data, pars)
+#' zattach(dat)
+#' res <- identification_pipeline1(X, Y, X_te, y_star, i_chosen,
+#'   filter_method = no_filter, forward_method = fit_elnet_CV,
+#'   Sigma_e_method = residual_offdiag, Sigma_t_method = assume_iid,
+#'   backward_method = pre_mle, scoring_method = topk_score,
+#'   mc.cores = 3)
+#' res$score
 identification_pipeline1 <- function(X, Y, X_te, y_star, i_chosen,
                                     filter_method = no_filter,
                                     filter_params = list(),

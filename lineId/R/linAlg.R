@@ -108,6 +108,7 @@ kron_v <- function(A, B, cc) {
 #' @examples
 #' split_vec(1:100, 6)
 split_vec <- function(v, n.splits) {
+  if (n.splits == 0) n.splits <- 1
   ans <- list()
   n <- length(v)
   for (i in 1:n.splits) {
@@ -124,7 +125,6 @@ split_vec <- function(v, n.splits) {
 #' @param A matrix
 #' @param B matrix with many columns
 #' @return The product
-#' @import parallel
 #' @export
 #' @examples
 #' A <- randn(100, 100)
@@ -132,7 +132,7 @@ split_vec <- function(v, n.splits) {
 #' C <- paramultiply(A, B, mc.cores = 3)
 paramultiply <- function(A, B, mc.cores = 3) {
   rowpartition <- split_vec(1:dim(B)[2], mc.cores)
-  res <- mclapply(rowpartition, function(i) {
+  res <- mclapply0(rowpartition, function(i) {
     A %*% B[, i]
   }, mc.cores = mc.cores)
   do.call(cbind, res)
