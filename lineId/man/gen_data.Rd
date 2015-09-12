@@ -4,7 +4,7 @@
 \alias{gen_data}
 \title{Generates data for a Bayesian multivariate regression model}
 \usage{
-gen_data(X, X_te, B, Sigma_b, Sigma_e, Sigma_t, n_te, ...)
+gen_data(X, X_te, B, Sigma_b = NULL, Sigma_e, Sigma_t, n_te, ...)
 }
 \arguments{
 \item{X}{Design matrix for training set}

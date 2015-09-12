@@ -9,8 +9,8 @@
 #' @return Matrix of log-likelihoods, rows = responses, columns = classes
 #' @export
 post_likes <- function(X_te, y_star, pre_moments,
-                       filt = rep(TRUE, length(y_star)),
-                       mc.cores, ...) {
+                       filt = rep(TRUE, dim(y_star)[2]),
+                       mc.cores = 0, ...) {
   y_filt <- y_star[, filt]
   L <- dim(X_te)[1]; n_te <- dim(y_filt)[1]; pY <- dim(y_filt)[2]
   colf <- function(i) {

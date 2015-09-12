@@ -3,11 +3,15 @@
 
 library(devtools)
 library(roxygen2)
+setwd('~/github/fmri/')
 roxygenize('lineId')
 load_all('lineId')
 build('lineId')
 install('lineId')
 library(lineId)
+
+setwd('lineId/vignettes/')
+knitr::knit2html('identification.Rmd')
 
 help(obs_data_filter)
 

@@ -7,4 +7,6 @@ Depends: R (>= 3.1.2)
 Imports: pracma, parallel, MASS, glmnet
 License: GPL (>= 2)
 LazyData: true
-Suggests: testthat
+Suggests: testthat,
+    knitr
+VignetteBuilder: knitr

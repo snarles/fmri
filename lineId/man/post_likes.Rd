@@ -4,8 +4,8 @@
 \alias{post_likes}
 \title{Computing posterior likelihoods from predictive moments}
 \usage{
-post_likes(X_te, y_star, pre_moments, filt = rep(TRUE, length(y_star)),
-  mc.cores, ...)
+post_likes(X_te, y_star, pre_moments, filt = rep(TRUE, dim(y_star)[2]),
+  mc.cores = 0, ...)
 }
 \arguments{
 \item{X_te}{Test class covariates}

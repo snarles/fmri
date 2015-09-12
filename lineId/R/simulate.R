@@ -46,7 +46,11 @@ gen_params <- function(n=30, pY= 60, pX= 70,
                        W_X= 2, s_e= 10, s_b = 1, df_b = 2,
                        W_e= 2, rho_t = 0,
                        L= 100, n_te= 10, ...) {
-  Sigma_X <- cov(randn(W_X * pX, pX))
+  if (W_X == Inf) {
+    Sigma_X <- eye(pX)
+  } else {
+    Sigma_X <- cov(randn(W_X * pX, pX))    
+  }
   if (W_e == Inf) {
     Sigma_e <- s_e * eye(pY)
   } else {
@@ -57,7 +61,11 @@ gen_params <- function(n=30, pY= 60, pX= 70,
   } else {
     Sigma_t <-  exp(log(rho_t) * abs(row(eye(n)) - col(eye(n))))
   }
-  s0s <- s_b^2 * rchisq(pY, df_b)/df_b
+  if (df_b < Inf) {
+    s0s <- s_b^2 * rchisq(pY, df_b)/df_b    
+  } else {
+    s0s <- s_b^2 * rep(1, pY)
+  }
   Sigma_b <- diag(s0s)
   dSigma_B <- rep(s0s, each = pX)
   Bvec <- sqrt(dSigma_B) * rnorm(pY * pX)
@@ -83,7 +91,7 @@ gen_params <- function(n=30, pY= 60, pX= 70,
 #' while \code{i_chosen} are the indices corresponding rows of \code{X_te}.
 #' @import MASS
 #' @export
-gen_data <- function(X, X_te, B, Sigma_b,
+gen_data <- function(X, X_te, B, Sigma_b = NULL,
                      Sigma_e, Sigma_t, n_te, ...) {
   n <- dim(X)[1]
   L <- dim(X_te)[1]
