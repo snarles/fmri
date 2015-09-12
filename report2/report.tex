@@ -129,7 +129,7 @@ a candidate encoding scheme, which accounts for statistical uncertainty.
 
 \section{Quantifying Information}
 
-\subsection{Parameterization Issues}
+\subsection{Mutual Information and Fisher Information}
 
 The information content of a neural system has traditionally been
 understood as the mutual information between the population of neural
@@ -139,49 +139,118 @@ I(S; X) = H(S) - H(S|X)
 \]
 where $H$ is entropy.
 
-A signficant source of difficulty in developing a theory for encoding
-complex phenomena (such as visual stimuli) is that unlike in the case
-of simple stimuli, an obvious parameterization of the stimuli in
-Euclidean space may not exist.  It is clear how to encode arm
-direction in three-dimensional space; on the other hand, it is not
-clear if it even makes sense to ask what is the ``dimensionality'' of
-a natural scene.  One might restrict the scope to pixelized images,
-but this is a rather artificial and unsatisfactory solution.  Without
-such an \emph{a priori} parameterization, the most suitable
-mathemtical framework for a given stimulus space $\mathcal{S}$ is to
-posit distinct stimuli $s$ as elements of a $\sigma$-algebra.
+Gatspar et al. (2010) give a good overview of the main applications of
+MI (mutual information) in neuroscience.  First, MI is used to compare
+different models of encoding.  An encoding model decomposes the relationship
+between $S$ and $X$ by
+\[
+X = f(S) + E
+\]
+where $f$ is an encoding map, and $E$ is noise which is totally
+uninformative of the stimulus (for example, variation in spike counts
+due to the variance of the Poisson distribution).  In that case, $I(S;
+X) = I(f(S); X)$.  Now, given two or more encoding models given by
+candidate encoding maps $f_1$, $f_2$, etc, one can estimate a mutual
+information score for each model given by $MI_i = I(f_i(S); X)$. A
+high value of $MI_i$ is interpreted as evidence of the accuracy of
+$f_i$ as a model of the neural system, and therefore be used to argue
+that the neural system is sensitive to certain stimulus features
+(e.g. Gabor filters for images.)
 
-Since the dimensionality of $\mathcal{S}$ is ill-defined, the entropy
-$H(S)$ is undefined so the classical concepts of information theory
-cannot be directly applied.
+One can just as well test the validity of decoding maps $g(X)$ by
+postulating that $MI(S; X) = MI(S; g(X))$, where $g$ maps responses
+$X$ to stimulus features $S$.  This approach is used to study the
+nature of the neural code $X$, i.e., to determine whether information
+about $S$ is contained in spike timings, or the correlations between
+neurons.  As before, a high MI for a candidate decoding map $g$ is
+interpreted as evidence of the accuracy of $g$, and can be used to argue
+of the significance (or lack thereof) of spike timings and correlations.
 
-An obvious idea might be to replace the external stimulus $s$ with the
-most low-level neuronal representation available: e.g., in the case of
-vision, to replace $s$ with the vector of firing rates of the retinal
-neurons, $\vec{r}^{(0)}$.  While $\vec{r}^{(0)}$ can indeed be finitely
-parameterized, and may even have a nice mapping from the source space,
-there are two serious drawbacks to this approach.  Firstly, the
-low-level mapping differs between subjects; whereas we think of the
-stimulus $s$ as external to the subjects and common between
-experiments. Secondly, the entropy of $\vec{r}^{(0)}$ would include both
-signal specific to $s$ and noise terms.  In order to distinguish
-between signal and noise, we have to incorporate the stimulus $s$
-after all.
+Thirdly, MI can be used to study the distributed nature of the neural
+code.  It is well-known that many stimuli are encoded in a population
+fashion: neurons have non-identical response patterns to stimuli,
+hence the population of neurons collectively encode more information
+than any single neuron.  A more detailed understanding of the diversity
+of response patterns, or the redundancy of the population, can be gained
+by comparing the MI of subsystems of various sizes and spatial structures
+with the entire system.
 
-A next approach might be to think of $\mathcal{S}$ as a function space
-with some smoothness conditions, and to represent $\mathcal{S}$ in
-some suitable basis.  An infinite basis would be needed, but the
-coefficients for any particular stimulus would decay in the higher
-dimensions, so there is some hope of being able to measure the
-information of the stimulus distribution.  This is not an unreasonable
-approach, but requires many technicalities which are more or less
-tangential to the scientific problem.
+We now mention yet another potential application of MI: validation of
+the scope and resolution of various imaging modalities.  An ideal
+imaging modality would capture the activity of every single neuron in
+the population of encoding neurons.  However, avaliable technology and
+ethical considerations limit the scope and resolution of the
+measurements we can make of the population in question.  Most
+modalities involve averaging over populations of neurons (EEG, fMRI).
+Functional MRI measures hemodynamic activity as a proxy for neural
+activation, hence yielding at best a temporal and spatial average of
+neural activity.  Calcium imaging can potentially capture the activity
+of individual neurons, but may not be able to measure the entire
+population of interest.  For any given modality, details in the
+measurement process and data processing further impact the quality of
+the measurements.
 
-An intuitively simpler (if mathematically less elegant) approach is to
-base the measure of information on \emph{the ability to discriminate
-between distinct stimuli}.  That is, in order to measure the
-information content of some neuronal system $\vec{r}$, we need to
-specify some \emph{discrimination test}, and supply
+Supposing that $X$ denotes the neural activity in question, while $Y$
+denotes the measurements actually obtained (hence we never observe $X$
+directly), one can use MI to measure the quality of the measurements
+$Y$, via $I(S; Y)$.  Due to the data-processing inequality (and the
+natural assumption that $Y$ is conditionally independent of $S$ given
+$X$), we have $I(S; Y) \leq I(S; X)$, with $I(S; Y)$ approaching $I(S;
+X)$ as the scope and resolution of the measurements $Y$ improve.  One
+interesting question, for example, is if $Y_1$ denotes calcium imaging
+measurements and $Y_2$ fMRI measurements of the same brain volume
+(e.g. the visual system), how much do $I(S; Y_1)$ and $I(S; Y_2)$
+differ.  If $I(S; Y_1)$ is much greater, this lends support to the
+value of the increased resolution of calcium imaging.
+
+In any of the above applications, it becomes necessary
+to \emph{estimate} quantities of the form $I(S; X)$ (where now we take
+$S$ and $X$ to more generally denote functions or measurements of the
+stimulus and responses, respectively) from empirical data.  Empirical
+estimation of mutual information is a challenging theoretical problem,
+and much work remains to be done to develop the relevant theory.
+
+Mutual information is most commonly used when the stimulus and
+response are both low-dimensional.  When the response is
+high-dimensional, Fisher information becomes more commonly used
+(Yarrow et al. 2012).  The reason for this is that mutual information
+become difficult to estimate for a high-dimensional response.
+
+What is the both the response and the stimulus are high-dimensional:
+for example, when the stimulus consists of natural images and
+the response consists of visual system populations?
+Here, estimation becomes problematic, but we also point out another issue:
+\emph{ill-conditioning}.
+Let us consider a toy model where stimulus and response are multivariate gaussian,
+and related by
+\[
+X = SB + E
+\]
+where $B$ is a coefficient matrix and $E$ is multivariate gaussian
+noise.  Given such a model, the information (either MI or FI) between
+$S$ and $X$ is a function of $B$ and $\Sigma_E$.  We claim that the
+Fisher information and Mutual information are both ill-conditioned in
+the sense that small perturbations to $B$ and $\Sigma_E$ result in
+huge difference in the resulting measure of information.  This does
+not match our scientific intuition, in that an approximate
+understanding of $B$ and $\Sigma_E$ should suffice.
+
+\subsection{An alternative approach}
+
+The shortcomings of mutual information and Fisher information in
+high-dimensional stimulus and response spaces make it appealing to
+look for yet another measure of information.  The measure of
+information should be intuitively interpretable: it should be useful
+for the four goals of testing encoding models, testing decoding
+models, measuring the efficiency or redundancy of the neural code, and
+quantifying the quality of mesurements obtained from various
+modalities.  At the same time, it should be feasible to reliably
+estimate the quantity from empirical data.
+
+We propose basing the measure of information on \emph{the
+ability to discriminate between distinct stimuli}.  That is, in order
+to measure the information content of some neuronal system $\vec{r}$,
+we need to specify some \emph{discrimination test}, and supply
 a \emph{discriminator} which uses information in $\vec{r}$ to answer
 the discrimination test.  Examples of discrimination tests are:
 \begin{itemize}
