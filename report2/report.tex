@@ -272,7 +272,7 @@ choosing discrimination tests.  To give some good and bad examples:
 \begin{itemize}
 \item Fixing some \emph{particular} stimuli $s_1,\hdots ,s_K$ and defining the information content in terms of classification performance on that set.  Too arbitrary: why did you choose those stimuli in particular?
 \item (Packing) Choosing a probability $\epsilon$, and declaring a set $s_1,\hdots, s_k$ as \emph{separable} if given any $s_i$, $s_j$ in the set, one can distinguish between $s_i$ and $s_j$ with probability $1-\epsilon$ or better.  Then defining the information content as the log of the largest $k$ for which there exists a separable set of that size.  Too complicated: given that the actual value of $K$ might be millions or billions, there is no way to actually validate this measure experiementally.
-\item (Random classification) Defining some probability distribution $\pi$ over stimuli, and then defining the information content in terms of \emph{average} classification performance on a set $s_1,\hdots, s_k$ drawn randomly from $\pi$.  Better: the main source of subjectivity is how to define $\pi$, but it might be acceptable to simply take some image database as representative of a ``natural'' distribution $\pi$.  Then there is also a choice of $k$: more on this later!
+\item (Random classification) Defining some probability distribution $\pi$ over stimuli, and then defining the information content in terms of \emph{average} classification performance on a set $s_1,\hdots, s_k$ drawn randomly from $\pi$.  
 \end{itemize}
 
 Another reason to motivate a notion of information based on
