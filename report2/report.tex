@@ -415,6 +415,30 @@ Somehow the above can be related to mutual information
 We wish to apply the methods derived using the preceding Guassian
 theory to non-Gaussian case: how well does it generalize?
 
+\subsection{Instability}
+
+Due to natural selection, the brain is optimized to selectively
+process the information from the outside world.  Compared to the
+totality of information captured by the senses, only a small fraction
+may be relevant to survival.  In more quantitative terms, sensory
+information may be extremely high-dimensional, but the useful portion
+of that information takes the form of a lower-dimensional summary.
+
+Hence, if $S$ is high-dimensional, but the relevant information takes
+the form of a low-dimensional summary $L = h(S)$, then we have $I(S;
+X) = I(L; X)$.  Such a dimension-reduction assumption may be crucial
+to obtaining tractable estimates of $I(S; X)$.
+
+We argue, however, that instability issues limit the possibility of
+using MI or FI in this fashion.  For the sake of illustration, suppose
+we consider linear summaries $L = SA$, where $A$ is a coefficient
+matrix.  For instance, $L$ may be the first $k$ principal components
+of $S$.  However, now note that estimation of the principal components
+(or even the number of components) is highly noisy.  Hence... [argue
+that if $L$ is estimated as first principal components, $I(L; X)$ will
+be highly variable for MI or FI.]
+
+
 \section{Estimating Encoding Parameters}
 
 \subsection{Previous Work}
