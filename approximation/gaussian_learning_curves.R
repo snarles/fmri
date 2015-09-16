@@ -57,22 +57,33 @@ mi <- function(Sigma) {
 
 Kmax <- 20
 N <- 200
-mc.reps <- 5000
+mc.reps <- 1000
+.5/sqrt(mc.reps)
 
 expment1 <- function(seed) {
   set.seed(seed)
-  p <- 5
-  Sigma <- cov(randn(2*p, p))
+  Sigma <- rchisq(1, 5) * cov(randn(8, 5))
   curve <- mcK(Sigma, Kmax, N, mc.reps)
   mutual <- mi(Sigma)
   list(curve = curve, mutual = mutual, Sigma = Sigma)
 }
 
+expment2 <- function(seed) {
+  set.seed(seed)
+  Sigma <- scalings[seed] * Sigma0
+  curve <- mcK(Sigma, Kmax, N, mc.reps)
+  mutual <- mi(Sigma)
+  list(curve = curve, mutual = mutual, Sigma = Sigma)
+}
+
+Sigma0 <- cov(randn(8, 5))
+scalings <- (5:15)/10
+
 library(lineId)
-res <- lclapply(1:20, expment1, mc.cores = 7)
-curves <- do.call(cbind, curve)
-plot(res$curve[[1]])
+res <- lclapply(1:100, expment1, mc.cores = 7)
+#res <- lclapply(1:length(scalings), expment2, mc.cores = 7)
 zattach(res)
+curves <- do.call(cbind, curve)
 mutual <- unlist(mutual)
 cols <- rainbow(length(mutual))[order(mutual)]
 par(bg = "grey")
@@ -82,8 +93,18 @@ for (ii in 1:length(Sigma)) {
 }
 
 
-plot(mutual, curves[10, ])
-plot(curves[5, ], curves[10, ])
+trs <- sapply(Sigma, function(s) sum(diag(s)))
+tr2s <- sapply(Sigma, function(s) sum(diag(s^2)))
+res <- lm(log(curves[2, ]) ~ trs + tr2s + trs^2 + tr2s^2)
+plot(log(curves[2, ]), res$fitted.values)
+
+plot(trs, log(curves[2, ]))
+plot(tr2s, log(curves[2, ]))
+
+plot(mutual, log(curves[2, ]))
+plot(curves[2, ], curves[10, ])
+plot(curves[2, ], curves[20, ])
+plot(curves[10, ], curves[20, ])
 
 
 par(bg = "white")

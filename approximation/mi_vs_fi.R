@@ -31,8 +31,10 @@ mi0 <- (1/2) * (log(det(SigmaX)) + log(det(SigmaY)) - log(det(Sigma)))
 ## New formula
 s <- svd(Rmat)$d
 mi1 <- -1/2 * sum(log(1-s^2))
+mi2 <- -1/2 * log(det(eye(pX) - isqrtm(SigmaX) %*% SigmaXY %*%
+                      solve(SigmaY, t(SigmaXY)) %*% isqrtm(SigmaX)))
 ## Comparison
-print(c(mi0, mi1))
+print(c(mi0, mi1, mi2))
 
 ####
 ## FISHER INFORMATION
@@ -55,6 +57,8 @@ Xhat <- Y %*% B
 
 ## TODO: Confirm that they are unbiased for X, etc.
 
+
+## following claim is incorrect!
 ####
 ##  FISHER INFORMATION AND MUTUAL INFORMATION
 ##  Claim: 1/2 log det(I - J) and MI converge if SigmaYcX converges to SigmaY
