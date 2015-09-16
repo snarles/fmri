@@ -55,55 +55,38 @@ mi <- function(Sigma) {
 }
 
 
-expment <- function(seed) {
+Kmax <- 20
+N <- 200
+mc.reps <- 5000
+
+expment1 <- function(seed) {
   set.seed(seed)
   p <- 5
   Sigma <- cov(randn(2*p, p))
-  curve <- mcK(Sigma, 20, 100, 1000)
+  curve <- mcK(Sigma, Kmax, N, mc.reps)
   mutual <- mi(Sigma)
   list(curve = curve, mutual = mutual, Sigma = Sigma)
 }
 
-
-N <- 1e4
-Sigma <- cov(randn(5, 10))
-mc(Sigma, 10, 1e5)
-.5/sqrt(1e5)
-mcK(Sigma, 20, 1e4, 2)[10]
-
-## timing experiments
-
-Sigma <- cov(randn(10, 10))
-
-
-#Nlvs <- rep(c(1e2, 1e3, 1e4), each = 3)
-Nlvs <- c(100, 200, 500, 1000, 1100, 1200, 1300, 1400)
-times <- Nlvs * 0
-Kmax <- 20
-datas <- matrix(0, length(Nlvs), Kmax)
-mc.reps <- 1
-for (ii in 1:length(Nlvs)) {
-  t1 <- proc.time()
-  datas[ii, ] <- mcK(Sigma, Kmax, Nlvs[ii], 100)
-  t2 <- proc.time() - t1
-  times[ii] <- t2[3]
+library(lineId)
+res <- lclapply(1:20, expment1, mc.cores = 7)
+curves <- do.call(cbind, curve)
+plot(res$curve[[1]])
+zattach(res)
+mutual <- unlist(mutual)
+cols <- rainbow(length(mutual))[order(mutual)]
+par(bg = "grey")
+plot(1:Kmax, 1:Kmax/Kmax, pch = ".", col = "grey")
+for (ii in 1:length(Sigma)) {
+  lines(1:Kmax, curve[[ii]], col = cols[[ii]])
 }
 
-gt <- colMeans(datas[-(1:2), ])
-gt[20]
-plot(Nlvs, (datas[, 10] - gt[10])^2)
-1/(datas[, 10] - gt[10])^2
-times
-plot(times, 1/(datas[, 10] - gt[10])^2, ylim = c(0, 2e7), xlim = c(0, 10))
-plot(times, Nlvs)
-## conclusion: choose N = 200
+
+plot(mutual, curves[10, ])
+plot(curves[5, ], curves[10, ])
 
 
-
-
-
-
-
+par(bg = "white")
 
 
 
