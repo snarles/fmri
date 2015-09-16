@@ -410,6 +410,36 @@ p(\mu) = \frac{1}{(2\pi|\Sigma_\mu|)^{d/2}} \exp(-\frac{1}{2}\mu^T \Sigma_\mu^{-
 Somehow the above can be related to mutual information 
 \[I(\vec{h}, \vec{r}) \propto \ln(\Sigma_H) - \ln(\Sigma_H(\Sigma_H + \Sigma_\epsilon)^{-1} \Sigma_H)\]
 
+\subsection{Information theory facts}
+
+Suppose
+\[
+\begin{pmatrix}
+X \\ Y
+\end{pmatrix}
+\sim \mathcal{N}\left(
+0, \begin{pmatrix}
+\Sigma_X & \Sigma_{XY} \\
+\Sigma_{YX} & \Sigma_Y
+\end{pmatrix}
+\right)
+\]
+
+Then, the mutual information between $X$ and $Y$ is
+\[
+I(X; Y) = -\frac{1}{2}\log \det[\Sigma_X^{-1}(\Sigma_{XY}\Sigma_Y^{-1}\Sigma_{YX})\Sigma_X^{-1}]
+\]
+while the Fisher information, treating $X$ as the parameter and $Y$ as the data, is
+\[
+J = \Sigma_X^{-1}(\Sigma_{XY}\Sigma_{Y|X}^{-1}\Sigma_{YX})\Sigma_X^{-1}
+\]
+where
+\[
+\Sigma_{Y|X} = \Cov(Y|X) = \Sigma_Y - \Sigma_{YX}\Sigma_X^{-1}\Sigma_{XY}
+\]
+
+Notice the similarity between $J$ and the argument of $\det$ in the mutual information.
+
 \subsection{Robustness}
 
 We wish to apply the methods derived using the preceding Guassian

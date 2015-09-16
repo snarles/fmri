@@ -35,8 +35,12 @@ mcK <- function(Sigma, Kmax, N = 1000, mc.reps = 1000) {
     nbads <- sapply(1:N, function(i) sum(dm[i,] < dm[i,i]))
     Km <- repmat(1:Kmax, N, 1)
     Bm <- repmat(t(t(nbads)), 1, Kmax)
+    temp <- N - Bm - Km + 1
+    temp2 <- temp
+    temp2[temp < 1] <- 1
     miscs <- 1 - exp(lgamma(N - Bm) + lgamma(N - Km + 1) -
-                       lgamma(N) - lgamma(N - Bm - Km + 1))
+                       lgamma(N) - lgamma(temp2))
+    miscs[temp < 1] <- 1
     return(colMeans(miscs))
   }
   else {
@@ -45,19 +49,62 @@ mcK <- function(Sigma, Kmax, N = 1000, mc.reps = 1000) {
   }
 }
 
+mi <- function(Sigma) {
+  SigmaY <- Sigma + eye(dim(Sigma)[1])
+  -1/2 * (log(det(Sigma)) - log(det(SigmaY)))
+}
+
+
 expment <- function(seed) {
   set.seed(seed)
-  Sigma <- cov(randn(5, 10))
-  mcK(Sigma, 20, 1e4, 1)  
+  p <- 5
+  Sigma <- cov(randn(2*p, p))
+  curve <- mcK(Sigma, 20, 100, 1000)
+  mutual <- mi(Sigma)
+  list(curve = curve, mutual = mutual, Sigma = Sigma)
 }
 
 
 N <- 1e4
-Kmax <- 20
 Sigma <- cov(randn(5, 10))
 mc(Sigma, 10, 1e5)
 .5/sqrt(1e5)
 mcK(Sigma, 20, 1e4, 2)[10]
+
+## timing experiments
+
+Sigma <- cov(randn(10, 10))
+
+
+#Nlvs <- rep(c(1e2, 1e3, 1e4), each = 3)
+Nlvs <- c(100, 200, 500, 1000, 1100, 1200, 1300, 1400)
+times <- Nlvs * 0
+Kmax <- 20
+datas <- matrix(0, length(Nlvs), Kmax)
+mc.reps <- 1
+for (ii in 1:length(Nlvs)) {
+  t1 <- proc.time()
+  datas[ii, ] <- mcK(Sigma, Kmax, Nlvs[ii], 100)
+  t2 <- proc.time() - t1
+  times[ii] <- t2[3]
+}
+
+gt <- colMeans(datas[-(1:2), ])
+gt[20]
+plot(Nlvs, (datas[, 10] - gt[10])^2)
+1/(datas[, 10] - gt[10])^2
+times
+plot(times, 1/(datas[, 10] - gt[10])^2, ylim = c(0, 2e7), xlim = c(0, 10))
+plot(times, Nlvs)
+## conclusion: choose N = 200
+
+
+
+
+
+
+
+
 
 
 
