@@ -711,6 +711,34 @@ empirically.
 GOAL: Extend this type of empirical model to also incoporate $K$, the
 number of test classes, and justify somehow.
 
+\subsection{Two-class problem}
+
+Suppose $\mu_1, \mu_2 \sim N(0, \Sigma)$, and $Y_i \sim N(\mu_i, I)$.
+What is the misclassification rate, i.e.
+\[
+MC(\Sigma) = \Pr[||Y_1 - \mu_1||^2 > ||Y_1 - \mu_2||^2]
+\]
+Without loss of generality, assume $\Sigma = \diag(\lambda_1,\hdots, \lambda_d)$.
+Let $X = Y_1 - \mu_1$ and $D = \mu_1 - \mu_2$.
+Then $X \sim N(0, I)$ and $D \sim N(0, 2\Sigma)$, where $X$ and $D$ are independent, and we have
+\begin{align*}
+MC(\Sigma) &= \Pr[||X||^2 > ||X + D||^2]
+\\&= \Pr\left[\sum_{i=1}^d X_i^2 > \sum_{i=1} (X_i + D_i)^2]\right]
+\\&= \Pr\left[-2 \sum_{i=1}^d D_i X_i > \sum_{i=1} D_i^2]\right]
+\\&= \E\left[\Pr\left[-2 \sum_{i=1}^d D_i X_i > \sum_{i=1} D_i^2]\right]|D\right]
+\end{align*}
+where we have conditioned on $D$.  Let $S = \sum_{i=1} D_i^2$.
+Then conditional on $D$, we have $\sum_{i=1}^d D_i X_i \sim N(0, S)$, meaning that
+\[
+\Pr\left[-2 \sum_{i=1}^d D_i X_i > \sum_{i=1} D_i^2]|D\right] = \Pr[N(0, 4S) > S|D] = 1-\Phi(\sqrt{S/4})
+\]
+hence
+\[
+MC(\Sigma) = 1 - \E \Phi(\sqrt{S}/2)
+\]
+
+
+
 \end{document}
 
 
