@@ -57,6 +57,9 @@ mc2c_3 <- function(Sigma, mc.reps = 1e4) {
   1 - mean(pnorm(sqrt(samp)/2))
 }
 
+## 1 - E[Phi(sqrt(S)/2)], where S = sum 4lambda_i^2 Z_i^2
+## Uses Taylor expansion
+
 ## compares sum a_i Z_i^2 with satter approx
 satter_test <- function(as, mc.reps = 1e4) {
   p <- length(as)
@@ -68,9 +71,8 @@ satter_test <- function(as, mc.reps = 1e4) {
   ss2 <- mu/df * rchisq(mc.reps, df = df)
   plot(sort(ss), sort(ss2));abline(a = 0, b=1, col = 'red')
 }
-satter_test(as, 1e5)
 
-Sigma <- 0.1 * rchisq(1, 5) * cov(randn(40, 10))
+Sigma <- 0.05 * rchisq(1, 5) * cov(randn(40, 10))
 mc2c(Sigma, 1e4)
 mc2c_1(Sigma, 1e4)
 mc2c_2(Sigma, 1e4)
