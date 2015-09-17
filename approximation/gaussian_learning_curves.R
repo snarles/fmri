@@ -7,6 +7,7 @@ library(MASS)
 library(class)
 library(parallel)
 library(reginference) ## see github.com/snarles/misc
+library(lineId) ## use devtools::install('lineId')
 
 ## "Ideally the curve mc(Sigma, K) only depends on a one-dimensional
 ##  function of Sigma, i.e. mc(Sigma, K) = g(f(Sigma), K)
@@ -26,7 +27,7 @@ mc <- function(Sigma, K, mc.reps = 1000) {
 }
 
 ## gets entire curve of mc, using hypergeometric resampling
-mcK <- function(Sigma, Kmax, N = 1000, mc.reps = 1000) {
+mcK <- function(Sigma, Kmax, N = 200, mc.reps = 1000) {
   if (mc.reps == 1) {
     p <- dim(Sigma)[1]
     mus <- mvrnorm(n = N, mu = rep(0, p), Sigma = Sigma)
@@ -55,6 +56,11 @@ mi <- function(Sigma) {
 }
 
 
+####
+##  Some initial experiments
+##  to see how well MI correlates with classification (not well)
+####
+
 Kmax <- 20
 N <- 200
 mc.reps <- 1000
@@ -79,7 +85,7 @@ expment2 <- function(seed) {
 Sigma0 <- cov(randn(8, 5))
 scalings <- (5:15)/10
 
-library(lineId)
+
 res <- lclapply(1:100, expment1, mc.cores = 7)
 #res <- lclapply(1:length(scalings), expment2, mc.cores = 7)
 zattach(res)
@@ -110,6 +116,21 @@ plot(curves[10, ], curves[20, ])
 par(bg = "white")
 
 
+####
+##  Experiments to see how well
+##  two-class performance is correlated to K-class performance
+####
 
+## scalings chosen to have mc(., 2) = 1/4
+scalings <- c(2, 0.666015625, 0.3896484375, 0.2744140625, 0.21142578125, 
+              0.171630859375, 0.14453125, 0.124755859375, 0.1097412109375, 
+              0.097900390625, 0.08837890625, 0.08056640625, 0.0740966796875, 
+              0.0684814453125, 0.063720703125, 0.0595703125, 0.055908203125, 
+              0.0526123046875, 0.0498046875, 0.04718017578125)
+res <- mclapply(1:20, function(s) mcK(scalings[s] * eye(s), 40), mc.cores = 3)
+mat <- do.call(cbind, res)
+par(bg = "grey")
+matplot(mat, type = "l", col = rainbow(20), lty = 1, lwd = 1)
 
+plot(mat[20, ])
 

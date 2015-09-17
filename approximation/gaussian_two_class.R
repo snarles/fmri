@@ -86,4 +86,44 @@ ss <- colSums(as * (zs^2))
 c(mean(ss), sum(as))
 c(var(ss), 2 * sum(as^2))
 
+## Calibration
 
+build_mc2c_table <- function(Sigma, goal, mc.reps = 1e4,
+                             func = mc2c_3, tab = NULL, tol = 1e-4,
+                             returnAll = FALSE) {
+  stopifnot(goal < 1/2)
+  if (is.null(tab)) {
+    tab <- data.frame(scales = c(0, 1), mcs = c(1/2, func(Sigma, mc.reps)))
+  }
+  flag <- TRUE
+  while(flag) {
+    if (min(tab$mcs) > goal) {
+      nextval <- 2 * max(tab$scales)
+    } else {
+      lb <- max(tab$scales[tab$mcs > goal])
+      ub <- min(tab$scales[tab$mcs < goal])
+      nextval <- (lb + ub)/2
+    }
+    tab[dim(tab)[1] + 1, ] <- c(nextval, func(nextval * Sigma, mc.reps))
+    if (min(abs(tab$mcs - goal)) < tol) flag <- FALSE
+  }
+  if (returnAll) {
+    return(tab)
+  }
+  tab$scales[order(abs(tab$mcs - goal))[1]]
+}
+
+build_mc2c_table(eye(2), 1/4, returnAll = TRUE)
+
+### Calibration record
+## 
+## build_mc2c_table(eye(2), 1/4) == 0.6660156
+## build_mc2c_table(eye(3), 1/4) == 0.3896484
+## build_mc2c_table(eye(4), 1/4) == 0.2744141
+## build_mc2c_table(eye(5), 1/4) == 0.2114258
+
+
+
+scalings <- unlist(mclapply(1:20, function(k) build_mc2c_table(eye(k), 1/4), mc.cores = 3))
+v2copypasta <- function(v) cat(paste0("c(", paste(v, collapse = ", "), ")"))
+v2copypasta(scalings)
