@@ -76,15 +76,14 @@ par(bg = "white")
 ####
 
 ## scalings chosen to have mc(., 2) = 1/4
-scalings <- c(2, 0.666015625, 0.3896484375, 0.2744140625, 0.21142578125, 
-              0.171630859375, 0.14453125, 0.124755859375, 0.1097412109375, 
-              0.097900390625, 0.08837890625, 0.08056640625, 0.0740966796875, 
-              0.0684814453125, 0.063720703125, 0.0595703125, 0.055908203125, 
-              0.0526123046875, 0.0498046875, 0.04718017578125)
+scalings <- unlist(mclapply(1:20,
+                            function(k) build_mc2c_table(eye(k), 1/4), mc.cores = mcc))
+plot(scalings * 1:20)
 res <- mclapply(1:20, function(s) mcK(scalings[s] * eye(s), 40), mc.cores = 3)
 mat <- do.call(cbind, res)
 par(bg = "grey")
-matplot(mat, type = "l", col = rainbow(20), lty = 1, lwd = 1)
+matplot(1:40, mat, type = "l", col = rainbow(20), lty = 1, lwd = 1)
+lines(1:40, 1 - 1/(1:40), lwd = 2)
 
 plot(mat[20, ])
 
