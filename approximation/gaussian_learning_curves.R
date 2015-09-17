@@ -2,59 +2,9 @@
 ##  Learning curves for multi-class gaussian classification
 ####
 
-library(pracma)
-library(MASS)
-library(class)
-library(parallel)
-library(reginference) ## see github.com/snarles/misc
-library(lineId) ## use devtools::install('lineId')
-
-## "Ideally the curve mc(Sigma, K) only depends on a one-dimensional
-##  function of Sigma, i.e. mc(Sigma, K) = g(f(Sigma), K)
-##  where f(Sigma) is real-valued."
-
-## most naive implementation of mc()
-mc <- function(Sigma, K, mc.reps = 1000) {
-  p <- dim(Sigma)[1]
-  mcs <- sapply(1:mc.reps,
-                function(i) {
-                  mus <- mvrnorm(n = K, mu = rep(0, p), Sigma = Sigma)
-                  ys <- mus + randn(K, p)
-                  lbls <- knn(mus, ys, cl=1:K)
-                  sum(lbls != 1:K)/K
-                })
-  mean(mcs)
-}
-
-## gets entire curve of mc, using hypergeometric resampling
-mcK <- function(Sigma, Kmax, N = 200, mc.reps = 1000) {
-  if (mc.reps == 1) {
-    p <- dim(Sigma)[1]
-    mus <- mvrnorm(n = N, mu = rep(0, p), Sigma = Sigma)
-    ys <- mus + randn(N, p)
-    dm <- fastPdist2(ys, mus)
-    nbads <- sapply(1:N, function(i) sum(dm[i,] < dm[i,i]))
-    Km <- repmat(1:Kmax, N, 1)
-    Bm <- repmat(t(t(nbads)), 1, Kmax)
-    temp <- N - Bm - Km + 1
-    temp2 <- temp
-    temp2[temp < 1] <- 1
-    miscs <- 1 - exp(lgamma(N - Bm) + lgamma(N - Km + 1) -
-                       lgamma(N) - lgamma(temp2))
-    miscs[temp < 1] <- 1
-    return(colMeans(miscs))
-  }
-  else {
-    lala <- sapply(1:mc.reps, function(i) mcK(Sigma, Kmax, N, 1))
-    return(rowMeans(lala))
-  }
-}
-
-mi <- function(Sigma) {
-  SigmaY <- Sigma + eye(dim(Sigma)[1])
-  -1/2 * (log(det(Sigma)) - log(det(SigmaY)))
-}
-
+source('approximation//gaussian_lc_source.R')
+source('approximation//gaussian_2c_source.R')
+mcc <- 7 ## number of mc.cores
 
 ####
 ##  Some initial experiments
@@ -121,6 +71,10 @@ par(bg = "white")
 ##  two-class performance is correlated to K-class performance
 ####
 
+####
+##  Part 1: Effect of dimensionality
+####
+
 ## scalings chosen to have mc(., 2) = 1/4
 scalings <- c(2, 0.666015625, 0.3896484375, 0.2744140625, 0.21142578125, 
               0.171630859375, 0.14453125, 0.124755859375, 0.1097412109375, 
@@ -134,3 +88,23 @@ matplot(mat, type = "l", col = rainbow(20), lty = 1, lwd = 1)
 
 plot(mat[20, ])
 
+#### 
+##  Part II: Interpolating between dimensionality
+####
+
+
+fracs <- c(0, 1e-4, 5e-4, 1e-3, 5e-3, 1e-2, 5e-2, 1e-1, .5)
+fracs <- c(fracs, 1 - rev(fracs)[-1])
+#fracs <- 0:20/20
+Sigma0s <- lapply(fracs, function(x) x * matA + (1-x) * matB)
+scalings <- unlist(mclapply(Sigma0s,
+                            function(s) build_mc2c_table(s, 1/4),
+                            mc.cores = mcc))
+Sigmas <- lapply(1:length(Sigma0s), function(i) scalings[i] * Sigma0s[[i]])
+res <- mclapply(Sigmas, function(s) mcK(s, 40), mc.cores = mcc)
+mat <- do.call(cbind, res)
+par(bg = "grey")
+matplot(mat, type = "l", col = rainbow(length(fracs)), lty = 1, lwd = 1)
+plot(fracs, mat[40, ])
+fracs
+lapply(Sigmas, diag)
