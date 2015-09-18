@@ -716,13 +716,13 @@ number of test classes, and justify somehow.
 Suppose $\mu_1, \mu_2 \sim N(0, \Sigma)$, and $Y_i \sim N(\mu_i, I)$.
 What is the misclassification rate, i.e.
 \[
-MC(\Sigma) = \Pr[||Y_1 - \mu_1||^2 > ||Y_1 - \mu_2||^2]
+MC(\Sigma, 2) = \Pr[||Y_1 - \mu_1||^2 > ||Y_1 - \mu_2||^2]
 \]
 Without loss of generality, assume $\Sigma = \diag(\lambda_1,\hdots, \lambda_d)$.
 Let $X = Y_1 - \mu_1$ and $D = \mu_1 - \mu_2$.
 Then $X \sim N(0, I)$ and $D \sim N(0, 2\Sigma)$, where $X$ and $D$ are independent, and we have
 \begin{align*}
-MC(\Sigma) &= \Pr[||X||^2 > ||X + D||^2]
+MC(\Sigma, 2) &= \Pr[||X||^2 > ||X + D||^2]
 \\&= \Pr\left[\sum_{i=1}^d X_i^2 > \sum_{i=1} (X_i + D_i)^2]\right]
 \\&= \Pr\left[-2 \sum_{i=1}^d D_i X_i > \sum_{i=1} D_i^2]\right]
 \\&= \E\left[\Pr\left[-2 \sum_{i=1}^d D_i X_i > \sum_{i=1} D_i^2]\right]|D\right]
@@ -734,10 +734,70 @@ Then conditional on $D$, we have $\sum_{i=1}^d D_i X_i \sim N(0, S)$, meaning th
 \]
 hence
 \[
-MC(\Sigma) = 1 - \E \Phi(\sqrt{S}/2)
+MC(\Sigma, 2) = 1 - \E \Phi(\sqrt{S}/2)
 \]
 
+\subsection{High-dimensional asymptotics}
 
+Here we consider asymptotics of $MC(\Sigma, k)$, for the special case
+$\Sigma = \frac{c}{d}I_d$ for some $c > 0$, as the dimension
+$d \to \infty$.
+
+\textbf{Theorem.}
+There exists a function $m(c, k)$ for $c > 0$, and $k \in \{1, 2, \hdots\}$, such that
+\[
+\lim_{d \to \infty} MC(\frac{c}{d}I_d, k) = m(c, k)
+\]
+
+\emph{Proof.}
+Given fixed $k$, for arbitrary $\epsilon > 0$, we can find $d$ sufficiently large such that with probability greater than $1-\epsilon$,
+\[
+\max_{1 \leq i \leq j \leq k} \langle \mu_i, \mu_j \rangle < \epsilon
+\]
+and
+\[
+\max_{1 \leq i \leq k} |||\mu_i||^2 - c| < \epsilon
+\]
+
+Hence given an appropriate random basis $e_1,\hdots, e_k$, we can write
+\[
+\mu_i = \sqrt{c} e_i + O(\epsilon)
+\]
+with high probability.  Here the $O(\epsilon)$ is understood to mean a
+quantity bounded in magnitude by a universal constant (depending only on $c$) times
+$\epsilon$.
+
+Similar to before, we have
+\[
+MC(\frac{c}{d}I_d, k) = \Pr[||\mu_1 - Y_1||^2 > \min_i ||\mu_i - Y_1||^2]
+\]
+where $Y_1 \sim N(\mu_1, I)$.
+
+We can write
+\[
+Y_1 - \mu_1 = \begin{pmatrix}Z_1\\\vdots\\Z_d\end{pmatrix} = Z
+\]
+On a high-probability set, we have
+\[
+Y_1 - \mu_i = Z + ce_1 - ce_i + O(\epsilon)
+\]
+
+It follows that with probability greater than $1-\epsilon$, we have
+\begin{align*}
+MC(\frac{c}{d}I_d, k) &= \Pr[||\mu_1 - Y_1||^2 > \min_i ||\mu_i - Y_1||^2]
+\\&= \Pr[2\sqrt{c}Z_1 > \min_i 2\sqrt{c}Z_i + 2c + O(\epsilon)]
+\\&= \Pr[\min_i (Z_i + O(\epsilon)) < Z_1 - \sqrt{c}]
+\intertext{noting that the function $\Pr[\min_i (Z_i + \xi_i) < Z_1 - \sqrt{c}]$ is continuous and jointly differentiable with respect to $\xi_i$
+ at $\xi = 0$,}
+&= \Pr[\min_i Z_i < Z_1 - \sqrt{c}] + O(\epsilon)
+\\&=  1 - \int_{\mathbb{R}} \Phi(\sqrt{c} - z)^{k-1} d\Phi(z) + O(\epsilon)
+\end{align*}
+
+
+Hence in the limit,
+\[
+\lim_{d \to \infty} MC(\frac{c}{d}I_d, k) = 1 - \int_{\mathbb{R}} \Phi(\sqrt{c} - z)^{k-1} d\Phi(z)
+\]
 
 \end{document}
 
