@@ -758,14 +758,15 @@ and
 \[
 \max_{1 \leq i \leq k} |||\mu_i||^2 - c| < \epsilon
 \]
+Let $A$ denote the event in which the above two sets of inequality hold.
 
-Hence given an appropriate random basis $e_1,\hdots, e_k$, we can write
+In the event $A$, 
 \[
 \mu_i = \sqrt{c} e_i + O(\epsilon)
 \]
-with high probability.  Here the $O(\epsilon)$ is understood to mean a
-quantity bounded in magnitude by a universal constant (depending only on $c$) times
-$\epsilon$.
+given an appropriate orthonormal basis $e_1,\hdots, e_k$.  Here the $O(\epsilon)$
+is understood to mean a quantity bounded in magnitude by a universal
+constant (depending only on $c$) times $\epsilon$.
 
 Similar to before, we have
 \[
@@ -773,24 +774,26 @@ MC(\frac{c}{d}I_d, k) = \Pr[||\mu_1 - Y_1||^2 > \min_i ||\mu_i - Y_1||^2]
 \]
 where $Y_1 \sim N(\mu_1, I)$.
 
-We can write
+Let us write
 \[
-Y_1 - \mu_1 = \begin{pmatrix}Z_1\\\vdots\\Z_d\end{pmatrix} = Z
+Y_1 - \mu_1 = \sum_i Z_i e_i,
 \]
-On a high-probability set, we have
+and in the event $A$, we have
 \[
-Y_1 - \mu_i = Z + ce_1 - ce_i + O(\epsilon)
+Y_1 - \mu_i = \sum_i Z_i e_i + \sqrt{c}e_1 - \sqrt{c}e_i + O(\epsilon)
 \]
 
-It follows that with probability greater than $1-\epsilon$, we have
+It follows that
 \begin{align*}
-MC(\frac{c}{d}I_d, k) &= \Pr[||\mu_1 - Y_1||^2 > \min_i ||\mu_i - Y_1||^2]
-\\&= \Pr[2\sqrt{c}Z_1 > \min_i 2\sqrt{c}Z_i + 2c + O(\epsilon)]
-\\&= \Pr[\min_i (Z_i + O(\epsilon)) < Z_1 - \sqrt{c}]
+MC(\frac{c}{d}I_d, k) =& \Pr[||\mu_1 - Y_1||^2 > \min_i ||\mu_i - Y_1||^2]
+\\=& \Pr[A]\Pr[||\mu_1 - Y_1||^2 > \min_i ||\mu_i - Y_1||^2|A] \\&+ \Pr[A^c]\Pr[||\mu_1 - Y_1||^2 > \min_i ||\mu_i - Y_1||^2|A^c]
+\\=& \Pr[||\mu_1 - Y_1||^2 > \min_i ||\mu_i - Y_1||^2|A] + O(\epsilon)
+\\=& \Pr[2\sqrt{c}Z_1 > \min_i 2\sqrt{c}Z_i + 2c + O(\epsilon)] + O(\epsilon)
+\\=& \Pr[\min_i (Z_i + O(\epsilon)) < Z_1 - \sqrt{c}] + O(\epsilon)
 \intertext{noting that the function $\Pr[\min_i (Z_i + \xi_i) < Z_1 - \sqrt{c}]$ is continuous and jointly differentiable with respect to $\xi_i$
  at $\xi = 0$,}
-&= \Pr[\min_i Z_i < Z_1 - \sqrt{c}] + O(\epsilon)
-\\&=  1 - \int_{\mathbb{R}} \Phi(\sqrt{c} - z)^{k-1} d\Phi(z) + O(\epsilon)
+=& \Pr[\min_i Z_i < Z_1 - \sqrt{c}] + O(\epsilon)
+\\=&  1 - \int_{\mathbb{R}} \Phi(\sqrt{c} - z)^{k-1} d\Phi(z) + O(\epsilon)
 \end{align*}
 
 
