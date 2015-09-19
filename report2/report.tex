@@ -24,6 +24,7 @@
 \newcommand{\diag}{\text{diag}}
 \newcommand{\argmax}{\text{argmax}}
 \newcommand{\Cov}{\text{Cov}}
+\newcommand{\Var}{\text{Var}}
 \newcommand{\argmin}{\text{argmin}}
 \newcommand{\Vol}{\text{Vol}}
 \newcommand{\comm}[1]{}
@@ -739,18 +740,30 @@ MC(\Sigma, 2) = 1 - \E \Phi(\sqrt{S}/2)
 
 \subsection{High-dimensional asymptotics}
 
-Here we consider asymptotics of $MC(\Sigma, k)$, for the special case
-$\Sigma = \frac{c}{d}I_d$ for some $c > 0$, as the dimension
-$d \to \infty$.
+Here we consider the limit $MC(\Sigma_d, k)$, for a sequence $\Sigma_d$ with
+the appropriate limit properties.
 
 \textbf{Theorem.}
 There exists a function $m(c, k)$ for $c > 0$, and $k \in \{1, 2, \hdots\}$, such that
 \[
-\lim_{d \to \infty} MC(\frac{c}{d}I_d, k) = m(c, k)
+m(c, k) = \lim_{d \to \infty} MC(\Sigma_d, k)
 \]
+for all sequences of covariance matrices such that 
+$$\lim_{d \to \infty} \tr \Sigma_d = c$$
+and also 
+$$\lim_{d \to \infty} \tr \Sigma_d^2 = 0$$
 
 \emph{Proof.}
-Given fixed $k$, for arbitrary $\epsilon > 0$, we can find $d$ sufficiently large such that with probability greater than $1-\epsilon$,
+Note that for $\mu \sim N(0, \Sigma)$, we have
+\[
+\E ||\mu||^2 = \tr \Sigma
+\]
+and
+\[
+\Var ||\mu||^2 = 2 \tr\Sigma^2
+\]
+Hence, the fact that $\tr \Sigma_d \to c$ and $\tr \Sigma_d^2 \to 0$ imply that
+for arbitrary $\epsilon > 0$, we can find $d$ sufficiently large such that with probability greater than $1-\epsilon$,
 \[
 \max_{1 \leq i \leq j \leq k} \langle \mu_i, \mu_j \rangle < \epsilon
 \]
@@ -758,19 +771,18 @@ and
 \[
 \max_{1 \leq i \leq k} |||\mu_i||^2 - c| < \epsilon
 \]
-Let $A$ denote the event in which the above two sets of inequality hold.
+for $\mu_1,\hdots, \mu_k \sim N(0, \Sigma_d)$.
+Let $A$ denote the event in which both inequalities hold.
 
 In the event $A$, 
 \[
 \mu_i = \sqrt{c} e_i + O(\epsilon)
 \]
-given an appropriate orthonormal basis $e_1,\hdots, e_k$.  Here the $O(\epsilon)$
-is understood to mean a quantity bounded in magnitude by a universal
-constant (depending only on $c$) times $\epsilon$.
+given an appropriate orthonormal basis $e_1,\hdots, e_k$.
 
 Similar to before, we have
 \[
-MC(\frac{c}{d}I_d, k) = \Pr[||\mu_1 - Y_1||^2 > \min_i ||\mu_i - Y_1||^2]
+MC(\Sigma_d, k) = \Pr[||\mu_1 - Y_1||^2 > \min_i ||\mu_i - Y_1||^2]
 \]
 where $Y_1 \sim N(\mu_1, I)$.
 
@@ -785,7 +797,7 @@ Y_1 - \mu_i = \sum_i Z_i e_i + \sqrt{c}e_1 - \sqrt{c}e_i + O(\epsilon)
 
 It follows that
 \begin{align*}
-MC(\frac{c}{d}I_d, k) =& \Pr[||\mu_1 - Y_1||^2 > \min_i ||\mu_i - Y_1||^2]
+MC(\Sigma_d, k) =& \Pr[||\mu_1 - Y_1||^2 > \min_i ||\mu_i - Y_1||^2]
 \\=& \Pr[A]\Pr[||\mu_1 - Y_1||^2 > \min_i ||\mu_i - Y_1||^2|A] \\&+ \Pr[A^c]\Pr[||\mu_1 - Y_1||^2 > \min_i ||\mu_i - Y_1||^2|A^c]
 \\=& \Pr[||\mu_1 - Y_1||^2 > \min_i ||\mu_i - Y_1||^2|A] + O(\epsilon)
 \\=& \Pr[2\sqrt{c}Z_1 > \min_i 2\sqrt{c}Z_i + 2c + O(\epsilon)] + O(\epsilon)
@@ -799,7 +811,7 @@ MC(\frac{c}{d}I_d, k) =& \Pr[||\mu_1 - Y_1||^2 > \min_i ||\mu_i - Y_1||^2]
 
 Hence in the limit,
 \[
-\lim_{d \to \infty} MC(\frac{c}{d}I_d, k) = 1 - \int_{\mathbb{R}} \Phi(\sqrt{c} - z)^{k-1} d\Phi(z)
+\lim_{d \to \infty} MC(\Sigma_d, k) = 1 - \int_{\mathbb{R}} \Phi(\sqrt{c} - z)^{k-1} d\Phi(z)
 \]
 
 \end{document}
