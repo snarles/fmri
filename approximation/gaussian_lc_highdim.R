@@ -22,7 +22,12 @@ mcK_I <- function(cc, maxK, mc.reps = 1e4) {
 }
 
 sdS <- function(cc, d) sqrt(2) * cc/sqrt(d)
-SigHd <- function(cc, d) cc/d * eye(d)
+#SigHd <- function(cc, d) cc/d * eye(d)
+SigHd <- function(cc, d) {
+  Sigma <- cov(randn(2*d, d))
+  cc/sum(diag(Sigma)) * Sigma
+}
+
 
 d <- 100
 cc <- 0.1
@@ -33,7 +38,7 @@ mcK(cc/d * eye(d), 5)
 mc2c_3(cc/d * eye(d))
 Sigma <- SigHd(cc, d)
 
-maxK <- 5
+maxK <- 20
 scalings <- floor((1:20)^1.5)
 Sigmas <- lapply(scalings, function(s) SigHd(cc, s))
 res <- mclapply(Sigmas, function(s) mcK(s, maxK), mc.cores = mcc)
