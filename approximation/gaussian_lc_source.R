@@ -50,3 +50,18 @@ mi <- function(Sigma) {
   SigmaY <- Sigma + eye(dim(Sigma)[1])
   -1/2 * (log(det(Sigma)) - log(det(SigmaY)))
 }
+
+
+# mean of exp(v)
+meanexp <- function(v) {
+  vm <- max(v)
+  mean(exp(v - vm)) * exp(vm)
+}
+
+## High-dimensional asymptotic misclassification curve for Sigma = cc/sqrt(d) * eye(d)
+mcK_I <- function(cc, maxK, mc.reps = 1e4) {
+  samp <- qnorm(((1:mc.reps) - 0.5)/mc.reps)
+  temp <- log(1 - pnorm(samp - sqrt(cc)))
+  tmat <- ((1:maxK) - 1) * repmat(temp, maxK, 1)
+  1 - apply(tmat, 1, meanexp)
+}
