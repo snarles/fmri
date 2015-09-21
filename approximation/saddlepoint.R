@@ -7,25 +7,60 @@ ss_samp <- function(betas, n) {
   colSums(betas * randn(p, n)^2)
 }
 
-kfunc0 <- function(betas, a) -1/(2 * length(betas)) * sum(1 - 2*a*betas)
-kfunc1 <- function(betas, a) 1/(2 * length(betas)) * sum(1/(a - (1/(2 * betas))))
-kfunc2 <- function(betas, a) -1/(2 * length(betas)) * sum((1/(a - (1/(2 * betas))))^2)
+kfunc0 <- function(betas, a) {
+  p <- length(betas)
+  amat <- repmat(t(t(a)), 1, p)
+  bmat <- repmat(betas, length(a), 1)
+  -1/(2 * length(betas)) * rowSums(log(1 - 2*amat*bmat))
+}
+  
+kfunc1 <- function(betas, a) {
+  p <- length(betas)
+  amat <- repmat(t(t(a)), 1, p)
+  bmat <- repmat(betas, length(a), 1)
+  1/(2 * p) * rowSums(1/(amat - (1/(2 * bmat))))
+}
 
-betas <- c(2, 1, 1)
-ys <- ss_samp(betas, 1e5)
-mean(ys)
-var(ys)
-2 * sum(betas^2)
+kfunc2 <- function(betas, a) {
+  p <- length(betas)
+  amat <- repmat(t(t(a)), 1, p)
+  bmat <- repmat(betas, length(a), 1)
+  -1/(2 * length(betas)) * rowSums((1/(amat - (1/(2 * bmat))))^2)  
+}
 
-a0 <- 0.1
-delta <- -1e-4
-kfunc0(betas, a0)
-kfunc0(betas, a0 + delta)
-kfunc0(betas, a0) + delta * kfunc1(betas, a0)
-kfunc0(betas, a0) + delta * kfunc1(betas, a0) + (delta^2/2) * kfunc2(betas, a0)
+build_a_table <- function(betas, lb = 1e-3, ub = 4*sum(betas), gap = 1e-2) {
+  mb <- min(1/(2 * betas))
+  la <- 1 + mb; ua <- 2 + mb
+  while(kfunc1(betas, ua) > lb) ua <- 2 * ua
+  while(kfunc1(betas, la) < ub) la <- (la - mb)/2 + mb
+  as <- seq(la, ub, length.out = 100)
+  tab <- data.frame(as = as, ts = kfunc1(betas, as))
+  flag <- TRUE
+  while (flag) {
+    temp <- tab$ts[-length(tab$ts)] - tab$ts[-1]
+    inds <- which(temp > gap)
+    if (length(inds) == 0) {
+      flag <- FALSE
+      return(tab)
+    }
+    as <- (tab$as[inds] + tab$as[inds + 1])/2
+    ntab <- data.frame(as = as, ts = kfunc1(betas, as))
+    tab <- rbind(tab, ntab)
+    tab <- tab[order(tab$as), ]
+  }
+  tab
+}
 
-kfunc1(betas, a0)
-kfunc1(betas, a0 + delta)
-kfunc1(betas, a0) + delta * kfunc2(betas, a0)
+saddleprox <- function(betas, lb = 1e-3, ub = 4*sum(betas), gap = 1e-2) {
+  p <- length(betas)
+  tab <- build_a_table(betas, lb, ub, gap)
+  as <- tab$as; ts <- tab$ts
+  tab$gt <- sqrt(p/(2 * pi * kfunc2(betas, as))) * exp(p * (kfunc0(betas, as) - as * ts))
+  tab
+}
 
+betas <- c(2,1,1)
+tab <- saddleprox(betas)
 
+View(tab)
+kfunc2(betas, 3)
