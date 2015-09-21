@@ -24,11 +24,21 @@ finv <- function(betas, xs, ts = seq(-10, 10, length.out = 1e4)) {
   as.numeric(Re(dt/(2 * pi) * fmat %*% cf))
 }
 
+ts <- seq(-10, 10, length.out = 1e4)
+
 dx <- 0.1
-xs <- seq(0, 20, by = dx)
+xs <- seq(0, 40, by = dx)
 betas <- c(2, 1, 1)
 samp <- ss_samp(betas)
+mean(samp < 40)
+
 fx <- finv(betas, xs)
 sum(fx) * dx
-mean(samp < 20)
 
+mean(pnorm(sqrt(samp)/2))
+sum(fx * dx * pnorm(sqrt(xs)/2))
+plot(xs, fx, type = "l")
+
+plot(ts, Re(chif(betas, ts)), type = 'l')
+plot(ts, Im(chif(betas, ts)), type = 'l')
+plot(ts, abs(chif(betas, ts)), type = 'l')
