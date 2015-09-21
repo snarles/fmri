@@ -73,18 +73,19 @@ exval <- function(tab, ff) {
   sum(tab$gt * delts * ff(tab$ts))  
 }
 
-betas <- c(5,2,1)
+betas <- sort(abs(rnorm(10)))
 tab <- saddleprox(betas)
 
-kfunc2(betas, 3)
-
-ys <- ss_samp(betas)
+ys <- 1/length(betas) * ss_samp(betas)
 mean(pnorm(sqrt(ys)/2))
-mean(pnorm(.5 * sqrt(ys)/2))
-mean((ys < 2))
-mean(ys)
-
 exval(tab, function(x) {pnorm(sqrt(x)/2)})
+
+mean(pnorm(.5 * sqrt(ys)/2))
 exval(tab, function(x) {pnorm(.5 * sqrt(x)/2)})
-exval(tab, function(x) {x < 2})
+
+mean((ys < 1))
+exval(tab, function(x) {x < 1})
+
+mean(ys)
 exval(tab, function(x) x)
+
