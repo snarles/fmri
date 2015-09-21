@@ -17,15 +17,19 @@ Sigma0 <- c0 * Sigma0
 mc2c_3(Sigma0)
 mcK(Sigma0, 10)
 
-c1s <- sapply(Sigma1s, function(s) build_mc2c_table(s, goal=1/4))
+c1s <- sapply(Sigma1s, function(s)
+  build_mc2c_table(s, goal=1/4, func = mc2c_2, mc.reps = 1e5))
 Sigma1s <- lapply(1:length(Sigma1s), function(i) c1s[i] * Sigma1s[[i]])
-sapply(Sigma1s, mc2c_3)
+sapply(Sigma1s, mc2c_2)
+mc2c_2(Sigma1s[[5]], mc.reps = 1e5)
 mcK(Sigma1s[[1]], 10)
 
 maxK <- 10
-res <- mclapply(Sigma1s, function(s) mcK(s, maxK, N = 200, mc.reps=1000), mc.cores = mcc)
+res <- mclapply0(Sigma1s, function(s) mcK(s, maxK, N = 200, mc.reps=1000), mc.cores = mcc)
 mat <- do.call(cbind, res)
-matplot(mat, type = "l", col = rainbow(length(Sigmas)), lty = 1, lwd = 1)
-lines(1:maxK, mcK(Sigma0, maxK, N = 200, mc.reps = 1000), lwd = 2)
+matplot(mat, type = "l", col = rainbow(length(Sigma1s)), lty = 1, lwd = 1)
+res0 <-mcK(Sigma0, maxK, N = 200, mc.reps = 1000)
+lines(1:maxK, res0, lwd = 2)
 
-## need better approximation of mc2c!
+matplot(mat - res0, type = "l", col = rainbow(length(Sigma1s)), lty = 1, lwd = 1)
+abline(0, 0)
