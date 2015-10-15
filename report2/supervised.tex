@@ -77,40 +77,30 @@ different theoretical approaches and procedures.  While
 $\text{risk}_{pred}$ is one of the simpler cases, it already lends
 itself to sophisticated approaches involving simultaneous estimation
 of $B$ and $\Sigma$: see, for instance Witten and Tibshirani (2008).
-Presumably, minimizing $\text{risk}_{KL}$ would have to involve even
-more complicated procedures, if the problem is even tractable at the
-moment.  Yet, researchers are often interested in knowing more than
-the conditional mean: hence it would be interesting to look at risk
-functions which are somewhat more involved than $\text{risk}_{pred}$,
-but which may be easier from both a theoretical and practical
-perspective than $\text{risk}_{KL}$.  Note that both
+Are there other interesting risk functions?  Note that both
 $\text{risk}_{pred}$ and $\text{risk}_{KL}$ have the property that
 they are minimized by the true value $F_x$:
 \[
 \min \text{risk}(\hat{F}_x) = \text{risk}(F_x)
 \]
 We might call a risk function ``unbiased'' if it has this property:
-not to be confused with the unbiasedness of the estimators!  A
-unbiased risk function might still be minimized by a biased estimator.
-On the other hand, it is hard to imagine why one would ever want to study a
-biased risk function.
+not to be confused with the unbiasedness of estimators!  Biased
+estimators are quite useful, but it is hard to see why one would ever
+study a biased risk function.
 
-Stopping short of estimating the conditional distribution, one might
-evaluate the first two moments of $\hat{F}_x$, by using
+The \emph{covariance risk} which we are about to define is a familiar
+expression, but perhaps not outside of a Gaussian context:
 \[
 \text{risk}_{\Sigma} = \E[(Y - \hat{Y})^T \hat{\Sigma}^{-1} (Y - \hat{Y})] + \log \det \hat{\Sigma}
 \]
 where $\hat{Y}$ is the mean of $\hat{F}_x$ and $\hat{\Sigma}$ is the
-covariance of $\hat{F}_x$. It is easy to show that
+covariance of $\hat{F}_x$. It is easy to show that \emph{covariance risk}
 $\text{risk}_{\Sigma}$ is unbiased: first note that fixing
 $\hat{\Sigma}$, the risk is minimized by $\hat{Y} = \E[Y|x]$; using
 this choice of $\hat{Y}$, the risk simplifies to
 $\E\tr(\Sigma\hat{\Sigma}^{-1}) + \log\det\hat{\Sigma}$, which is
 stationary at $\hat{\Sigma} = \Sigma$.
 
-Hence, we have thus far listed three ways to evaluate the quality of
-map $\hat{F}$ based on observed $Y$: prediction risk, KL risk, and 
-covariance risk.
 It is worth noting that prediction risk and covariance risk are
 equivalent to $\text{risk}_{KL}$ for the gaussian model with identity
 covariance and unknown covariance, respectively.
@@ -171,20 +161,44 @@ Finally, we have an expanded list of evaluation criteria:
 How does the choice of risk function affect the difficulty of the
 resulting supervised learning task?  Can the same approaches be used
 for multiple problems in the list, or does each choice of risk
-function demand a particular set of approaches?
+function demand a particular set of approaches?  In any case, a first
+practical step would be to look at these problems in the Gaussian
+linear model.
 
-In the case of prediction risk, one need only estimate the
-conditional mean function $\E[Y|x]$; for covariance risk, one needs to
-estimate the conditional mean and covariance; for reconstruction and
-identification, one might achieve best results by modelling the
-conditional distribution $F_x$, but it may also be adequate to simply
-use a Gaussian model for $F_x$ in which case only a conditional mean
-and covariance need to be estimated.  For KL risk, a Gaussian model
-might be extremely suboptimal under misspecification, and full
-density-estimation approach may be warranted.
+Under the Gaussian linear model, there appears to a connection between
+prediction under the covariance risk and the goal of constructing
+Frequentist prediction sets. Under the gaussian model, the prediction
+set takes the form of an ellipse $C$ of the form
+\[
+C = \{y: (y-\mu)^T \Sigma^{-1} (y - \mu) < t\}
+\]
+for some threshold $t$. Obtaining \emph{minimal volume} prediction set
+with a given coverage amounts to choosing $(\mu, \Sigma)$ so that the
+large deviations of $(y- \mu)^T \Sigma^{-1} (y - \mu)$ are controlled
+while the log volume, $\log \det \Sigma$ is not too large--notice how
+both terms appear in $\text{risk}_\Sigma$.
 
-In any case, a first practical step would be to look at these problems
-in the Gaussian linear model.
+Based on this connection noted between prediction under covariance
+risk and construction of prediction sets, we speculate that for
+optimal prediction under covariance risk, the conditional covariance
+$\hat{\Sigma}|x$ should vary depending on $x$, as it does when
+constructing prediction sets.
+
+We also speculate on a connection between prediction under
+covariance risk and prediction under identification risk.  Due to gaussianity, the
+identification risk depends solely on the estimated conditional mean
+and covariance: one chooses $X^*$ from $x_1,...,x_\ell$ by
+\[
+\argmin_{x_i}  (y - x^T \hat{B})^T \hat{\Sigma}_{x}^{-1} (y - x^T \hat{B}) + \log \det \hat{\Sigma}_{x}
+\]
+which is exactly the covariance risk, but replacing $X^*$ with $x$.
+The point is that one makes a mistake if the above expression is too
+large for $x = X^*$, hence one might expect to minimize mistakes by
+minimizing the covariance risk.  Our claim is that any method of
+estimating $\mu|x$ and $\Sigma|x$ which is ``approximately optimal''
+for prediction under covariance risk should also be ``approximately
+optimal'' optimal for identification (where ``approximately optimal''
+remains to be defined!)
 
 \end{document}
 
