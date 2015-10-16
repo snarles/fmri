@@ -77,22 +77,14 @@ mc_ident3(20, 1, 100, 1e4)
 ##  Do some computations to understand stuff
 ####
 
-p <- 200; sigma2 <- 1; K <- 100
-y2 <- (1 + sigma2) * p
-mc.reps <- 1e4
-lalas <- sapply(1:mc.reps, function(i) min(rchisq(K - 1, df = p, ncp = y2)))
+moments_min_chisq <- function(p, K, mc.reps = 1e4) {
+  y2 <- p
+  lalas <- sapply(1:mc.reps, function(i) min(rchisq(K - 1, df = p, ncp = y2)))
+  list(mu = mean(lalas), sd = sd(lalas), mu_the = 2 * p - sqrt(12 * p * log(K)))
+}
 
-mu <- p + y2
-vv <- 2 * p + 4 * y2
+moments_min_chisq(20, 100)
+moments_min_chisq(20, 1000)
 
-mu
-mean(lalas)
-sd(lalas)
-sqrt(vv) ## min of chisq has lower sd than individual
-hist(lalas)
-library(e1071)
 
-kurtosis(lalas)
-kurtosis(100 * rnorm(1000))
-skewness(lalas)
-skewness(100 * rnorm(1000))
+
