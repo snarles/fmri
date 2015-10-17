@@ -8,6 +8,7 @@ log_1_plus <- function(x) {
   sum(-1 * (-x)^(1:20)/(1:20))
 }
 
+## med_loc breaks down at k > 20
 med_loc <- function(k, z, L) qchisq(1 - (.5)^(1/L), k, k + z * sqrt(k))
 
 get_L <- function(x, k, z) {
@@ -22,6 +23,7 @@ minpdf <- function(x, k, z, L) {
 }
 
 get_L(1, 100, -2.5)
+
 
 
 L <- get_L(1, 10, 0)
@@ -49,9 +51,13 @@ minpdf(5, 100, Ls[100, 5])
 
 ## what happens with differnt y^2?
 
-Ls <- matrix(0, 91, 10)
+
+med_loc(100, 0, Ls[100, 5])
+
+x_med <- 5
+Xs <- matrix(0, 91, 10)
 lalas <- -5:4/2
 for (k in 1:10) {
-  Ls[, k] <- sapply(10:100, function(i) get_L(5, i, lalas[k]))  
+  Xs[, k] <- sapply(10:100, function(i) med_loc(i, lalas[k], Ls[i, x_med]))  
 }
-matplot(10:100, log(Ls), type = "l")
+matplot(10:100, Xs, type = "l")
