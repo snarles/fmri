@@ -38,43 +38,43 @@ minpdf <- function(x, k, z, L) {
   L * exp(L * log_1_plus(-pp))/(1 - pp)
 }
 
-get_L(1, 100, -2.5)
-
-
-
-k <- 30
-L <- get_L(1, k, 0)
-med_loc(k, 0, L)
-med_loc2(k, 0, L)
-
-
-Ls <- matrix(0, 100, 10)
-for (k in 1:10) {
-  Ls[, k] <- sapply(1:100, function(i) get_L(k, i, 0))  
-}
-matplot(log(Ls), type = "l")
-
-
-
-
-
-
-
-mincdf(4, 100, Ls[100, 5])
-mincdf(5, 100, Ls[100, 5])
-mincdf(6, 100, Ls[100, 5])
-
-minpdf(5, 80, Ls[80, 5])
-minpdf(5, 100, Ls[100, 5])
-
-
-## what happens with differnt y^2?
-
-
-x_med <- 5
-Xs <- matrix(0, 91, 10)
-lalas <- -5:4/2
-for (k in 1:10) {
-  Xs[, k] <- sapply(10:100, function(i) med_loc2(i, lalas[k], Ls[i, x_med]))  
-}
-matplot(10:100, Xs, type = "l")
+# get_L(1, 100, -2.5)
+# 
+# 
+# 
+# k <- 30
+# L <- get_L(1, k, 0)
+# med_loc(k, 0, L)
+# med_loc2(k, 0, L)
+# 
+# 
+# Ls <- matrix(0, 100, 10)
+# for (k in 1:10) {
+#   Ls[, k] <- sapply(1:100, function(i) get_L(k, i, 0))  
+# }
+# matplot(log(Ls), type = "l")
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# mincdf(4, 100, Ls[100, 5])
+# mincdf(5, 100, Ls[100, 5])
+# mincdf(6, 100, Ls[100, 5])
+# 
+# minpdf(5, 80, Ls[80, 5])
+# minpdf(5, 100, Ls[100, 5])
+# 
+# 
+# ## what happens with differnt y^2?
+# 
+# 
+# x_med <- 5
+# Xs <- matrix(0, 91, 10)
+# lalas <- -5:4/2
+# for (k in 1:10) {
+#   Xs[, k] <- sapply(10:100, function(i) med_loc2(i, lalas[k], Ls[i, x_med]))  
+# }
+# matplot(10:100, Xs, type = "l")

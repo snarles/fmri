@@ -4,7 +4,7 @@ library(class)
 library(parallel)
 library(reginference) ## see github.com/snarles/misc
 library(lineId) ## use devtools::install('lineId')
-
+source("approximation/extreme_value.R")
 
 ## mu ~ N(0, I)
 ## y ~ N(mu*, sigma^2 I)
@@ -34,6 +34,8 @@ mc_ident2 <- function(p, sigma2, K, mc.reps = 1000) {
   mean(mcs)
 }
 
+
+
 ## actually generates a gaussian instead of a chi-squared
 rchisq_g <- function(n, df, ncp = 0) {
   mu <- df + ncp
@@ -58,6 +60,28 @@ mc_ident3 <- function(p, sigma2, K, mc.reps = 1000) {
   mean(mcs)
 }
 
+min_chisq_approx <- function(K, df, ncp, naive = FALSE) {
+  if (naive) {
+    print(min(rchisq(K, df, ncp)))
+  }
+  z <- (ncp - df)/sqrt(df)
+  med_loc2(df, z, K)
+}
+
+## computes theoretical median of min
+mc_ident4 <- function(p, sigma2, K, mc.reps = 1000) {
+  alpha <- sigma2/(1 + sigma2)
+  mcs <- sapply(1:mc.reps,
+                function(i) {
+                  y2 <- (1 + sigma2) * rchisq(1, df = p)
+                  d1 <- alpha * rchisq(1, df = p, ncp = alpha * y2)
+                  ds <- min_chisq_approx(K - 1, p, y2)
+                  (ds < d1)
+                })
+  mean(mcs)
+}
+
+
 mean(rchisq(1e3, 3, 2.2))
 mean(rchisq_g(1e3, 3, 2.2))
 var(rchisq(1e3, 3, 2.2))
@@ -67,24 +91,38 @@ var(rchisq_g(1e3, 3, 2.2))
 
 mc_ident(10, 3, 10, 1e4)
 mc_ident2(10, 3, 10, 1e4)
-mc_ident3(10, 3, 10, 1e4)
+mc_ident4(10, 3, 10, 1e4)
 
-mc_ident(20, 1, 100, 1e4)
-mc_ident2(20, 1, 100, 1e4)
-mc_ident3(20, 1, 100, 1e4)
+mc_ident( 20, 1, 1e3, 1e3)
+mc_ident2(20, 1, 1e3, 1e3)
+mc_ident4(20, 1, 1e3, 1e3)
 
-####
-##  Do some computations to understand stuff
-####
 
-moments_min_chisq <- function(p, K, mc.reps = 1e4) {
-  y2 <- p
-  lalas <- sapply(1:mc.reps, function(i) min(rchisq(K - 1, df = p, ncp = y2)))
-  list(mu = mean(lalas), sd = sd(lalas), mu_the = 2 * p - sqrt(12 * p * log(K)))
-}
+df <- 40; sigma2 <- 2; L <- 1e5; nits <- 100
 
-moments_min_chisq(20, 100)
-moments_min_chisq(20, 1000)
+tims <- list(); res <- numeric()
+t1 <- proc.time()
+(res[1] <- mc_ident( df, sigma2, L, 1))
+(tims[[1]] <- proc.time() - t1)
 
+t1 <- proc.time()
+(res[2] <- mc_ident2(df, sigma2, L, nits))
+(tims[[2]] <- proc.time() - t1)
+
+t1 <- proc.time()
+(res[3] <- mc_ident4(df, sigma2, L, nits))
+(tims[[3]] <- proc.time() - t1)
+
+res
+tims
+
+
+## push the dimensionality and # of classes
+
+min_chisq_approx(1e5, 20, 20, TRUE)
+min_chisq_approx(1e6, 30, 30, TRUE)
+t1 <- proc.time()
+min_chisq_approx(1e8, 40, 40, TRUE); gc()
+proc.time() - t1
 
 
