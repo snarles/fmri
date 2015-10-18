@@ -35,6 +35,14 @@ prox_ans2 <- function(d, theta, r) {
 }
 deriv_log_dchi <- function(x, d) (d - 1)/x - x
 deriv2_log_dchi <- function(x, d) -(d - 1)/x^2 - 1
+deriv_q_x <- function(theta, r, x) {
+  1*x^3 + -3*x^2*r + 2*r^2*x + 3*x^2*theta + 
+    -6*theta*r*x + 2*r^2*theta + 4*theta^2*x +
+    -4*theta^2*r + 2*theta^3
+}
+deriv2_q_x <- function(theta, r, x) {
+  3*x^2 + -6*r*x + 2*r^2 + 6*theta*x + -6*theta*r + 4*theta^2
+}
 
 ####
 ##  Check overall approximation
@@ -173,6 +181,58 @@ lines(xs, q_x(theta, r, x) + (xs - x) * deriv_q_x(theta, r, x), col = "red")
 lines(xs, q_x(theta, r, x) + (xs - x) * deriv_q_x(theta, r, x) +
         (xs - x)^2/2 * deriv2_q_x(theta, r, x), col = "blue")
 
+#deriv_q_x(theta, r, x)
+#numDeriv::grad(function(x) q_x(theta, r, x), x)
+#deriv2_q_x(theta, r, x)
+#numDeriv::hessian(function(x) q_x(theta, r, x), x)
 
+####
+##  Derivatives of ip(x)
+####
 
+deriv_sqrt_q <- function(theta, r, x)
+  deriv_q_x(theta, r, x)/(2 * sqrt(q_x(theta, r, x)))
+deriv2_sqrt_q <- function(theta, r, x) {
+  qq <- q_x(theta, r, x)
+  -1/4 * deriv_q_x(theta, r, x)^2 * qq^(-3/2) + 
+    1/(2 * sqrt(qq)) * deriv2_q_x(theta, r, x)  
+}
+
+#deriv_sqrt_q(theta, r, x)
+#numDeriv::grad(function(x) sqrt(q_x(theta, r, x)), x)
+#deriv2_sqrt_q(theta, r, x)
+#numDeriv::hessian(function(x) sqrt(q_x(theta, r, x)), x)
+
+deriv_ip_x <- function(theta, r, x) {
+  ip <- ip_x(theta, r, x)
+  qq <- q_x(theta, r, x)
+  1/theta * (-sqrt(qq)/(theta-r+x)^2 + 
+    deriv_sqrt_q(theta, r, x)/(theta-r+x))
+}
+deriv2_ip_x <- function(theta, r, x) {
+  a <- theta - r + x
+  1/theta *
+    (2 * sqrt(q_x(theta, r, x))/a^3 - 
+       2 * deriv_sqrt_q(theta, r, x)/a^2 + 
+       deriv2_sqrt_q(theta, r, x)/a)
+}
+
+## check it out
+theta <- 10 * runif(1); r <- theta * runif(1); xs <- seq(0, r, by = 1e-2)
+x <- r * runif(1)
+plot(xs, sqrt(q_x(theta, r, xs)), type = "l", main = "sqrt(q(x))")
+lines(xs, sqrt(q_x(theta, r, x)) +
+        (xs - x)*deriv_sqrt_q(theta, r, x), col = "red")
+lines(xs, sqrt(q_x(theta, r, x)) +
+        (xs - x)*deriv_sqrt_q(theta, r, x) +
+        (xs - x)^2/2*deriv2_sqrt_q(theta, r, x), col = "blue")
+
+theta <- 10 * runif(1); r <- theta * runif(1); xs <- seq(0, r, by = 1e-2)
+x <- r * runif(1)
+plot(xs, ip_x(theta, r, xs), type = "l", main = "ip(x)")
+lines(xs, ip_x(theta, r, x) +
+       (xs - x)*deriv_ip_x(theta, r, x), col = "red")
+lines(xs, ip_x(theta, r, x) +
+        (xs - x)*deriv_ip_x(theta, r, x) + 
+        (xs - x)^2/2 * deriv2_ip_x(theta, r, x), col = "blue")
 
