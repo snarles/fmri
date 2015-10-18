@@ -83,10 +83,15 @@ noise_const <- .0355
 L <- 1e7; mc.reps <- 1e2
 mcK_I(cc=1/noise_const, Ks=L, mc.reps=1e4)
 
+p <- 1e2; mc_ident5(p, noise_const * p, L, mc.reps)
 p <- 1e3; mc_ident5(p, noise_const * p, L, mc.reps)
 p <- 2e3; mc_ident5(p, noise_const * p, L, mc.reps)
 
-
+noise_const <- .02
+L <- 1e12; mc.reps <- 1e3
+mcK_I(cc=1/noise_const, Ks=L, mc.reps=1e4)
+p <- 1e3; mc_ident5(p, noise_const * p, L, mc.reps)
+p <- 2e3; mc_ident5(p, noise_const * p, L, mc.reps)
 
 # Dbugging
 sigma2 <- noise_const * p
