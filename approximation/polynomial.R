@@ -39,3 +39,31 @@ form_poly_matrix <- function(X, deg) {
   colnames(res) <- nms
   res
 }
+
+write_poly_formula <- function(X, coef) {
+  p <- dim(X)[2]
+  degs <- AlgDesign::gen.factorial(p + 1, deg)
+  degs <- (degs - min(degs))/2
+  tots <- t(apply(degs, 1, function(v) sapply(1:p, function(i) sum(v==i))))
+  temp <- apply(tots, 1, function(v) paste(v, collapse = ","))
+  filt <- match(sort(unique(temp)), temp)
+  tots <- tots[filt, ]
+  inds <- which(coef != 0)
+  str <- character(length(inds))
+  for (i in 1:length(inds)) {
+    v <- coef[inds[i]]
+    tt <- tots[inds[i], ]
+    if (sum(tt) == 0) {
+      str[i] <- paste(v)
+    } else {
+      polystrs <- colnames(X)[order(-tt)]
+      pows <- tt[order(-tt)]
+      polystrs <- polystrs[pows > 0]
+      pows <- pows[pows > 0]
+      polystrs[pows > 1] <- paste0(polystrs[pows > 1], "^", pows[pows > 1])
+      str[i] <- paste(c(paste(v), polystrs), collapse = "*")
+    }
+  }
+  paste0(str, collapse = " + ")  
+}
+

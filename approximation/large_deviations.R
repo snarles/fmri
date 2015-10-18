@@ -85,7 +85,7 @@ lines(xs, log(dchi(x, d)) + (xs - x) *
         (xs - x)^2/2 * deriv2_log_dchi(x, d), col = "blue")
 
 ####
-##  Check derivatives of ip_x
+##  Check derivatives of q_x
 ####
 
 q_x <- function(theta, r, x) theta^2 * (theta - r + x)^2 -
@@ -112,6 +112,16 @@ display_div(res$coefficients, 4)
 # "4/4"       "-16/4"        "16/4"        "16/4"       "-48/4"        "32/4" 
 # vvPtheta2x2 vvPtheta2r1x1   vvPtheta2r2   vvPtheta3x1   vvPtheta3r1     vvPtheta4 
 # "32/4"       "-64/4"        "16/4"        "32/4"       "-32/4"        "16/4" 
+write_poly_formula(vv, round(res$coefficients * 4))
+## simplified form
+q_x_old <- q_x
+q_x <- function(theta, r, x) {
+  1/4 * (
+  1*x^4 + -4*x^3*r + 4*r^2*x^2 + 4*x^3*theta +
+    -12*x^2*theta*r + 8*r^2*theta*x + 8*theta^2*x^2 +
+    -16*theta^2*r*x + 4*theta^2*r^2 + 8*theta^3*x +
+    -8*theta^3*r + 4*theta^4)
+}
 
 ## Simplify deriv_q_x
 vv <- AlgDesign::gen.factorial(5, 3)
@@ -128,11 +138,11 @@ display_div(res$coefficients, 1)
 # Vtheta2r1     Vtheta3 
 # "-4/1"       "2/1" 
 deriv_q_x_coefs <- round(res$coefficients)
-
+write_poly_formula(vv, deriv_q_x_coefs)
 deriv_q_x <- function(theta, r, x) {
-  mat <- cbind(theta = theta, r = r, x = x)
-  expand <- form_poly_matrix(mat, 4)
-  as.numeric(expand %*% deriv_q_x_coefs)
+  1*x^3 + -3*x^2*r + 2*r^2*x + 3*x^2*theta + 
+    -6*theta*r*x + 2*r^2*theta + 4*theta^2*x +
+    -4*theta^2*r + 2*theta^3
 }
 
 
@@ -149,10 +159,9 @@ display_div(res$coefficients, 1)
 # Vx2     Vr1x1       Vr2 Vtheta1x1 Vtheta1r1   Vtheta2 
 # "3/1"    "-6/1"     "2/1"     "6/1"    "-6/1"     "4/1" 
 deriv2_q_x_coefs <- round(res$coefficients)
+write_poly_formula(vv, deriv2_q_x_coefs)
 deriv2_q_x <- function(theta, r, x) {
-  mat <- cbind(theta = theta, r = r, x = x)
-  expand <- form_poly_matrix(mat, 4)
-  as.numeric(expand %*% deriv2_q_x_coefs)
+  3*x^2 + -6*r*x + 2*r^2 + 6*theta*x + -6*theta*r + 4*theta^2
 }
 
 ## check it out
@@ -163,4 +172,7 @@ plot(xs, q_x(theta, r, xs), type = 'l')
 lines(xs, q_x(theta, r, x) + (xs - x) * deriv_q_x(theta, r, x), col = "red")
 lines(xs, q_x(theta, r, x) + (xs - x) * deriv_q_x(theta, r, x) +
         (xs - x)^2/2 * deriv2_q_x(theta, r, x), col = "blue")
+
+
+
 
