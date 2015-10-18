@@ -6,6 +6,13 @@ library(reginference) ## see github.com/snarles/misc
 library(lineId) ## use devtools::install('lineId')
 #source("approximation/extreme_value.R")
 
+
+## log 1+x
+log_1_plus <- function(x) {
+  if (abs(x) > 1e-3) return(log(1 + x))
+  sum(-1 * (-x)^(1:20)/(1:20))
+}
+
 ## mu ~ N(0, I)
 ## y ~ N(mu*, sigma^2 I)
 

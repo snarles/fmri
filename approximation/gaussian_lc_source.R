@@ -59,9 +59,9 @@ meanexp <- function(v) {
 }
 
 ## High-dimensional asymptotic misclassification curve for Sigma = cc/sqrt(d) * eye(d)
-mcK_I <- function(cc, maxK, mc.reps = 1e4) {
+mcK_I <- function(cc, maxK=10, Ks = 1:maxK, mc.reps = 1e4) {
   samp <- qnorm(((1:mc.reps) - 0.5)/mc.reps)
   temp <- log(1 - pnorm(samp - sqrt(cc)))
-  tmat <- ((1:maxK) - 1) * repmat(temp, maxK, 1)
+  tmat <- (Ks - 1) * repmat(temp, length(Ks), 1)
   1 - apply(tmat, 1, meanexp)
 }

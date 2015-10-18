@@ -1,4 +1,5 @@
 source("approximation/gaussian_identity.R")
+source("approximation/gaussian_lc_source.R")
 
 #### 
 ##  Check fixed-L results
@@ -6,6 +7,8 @@ source("approximation/gaussian_identity.R")
 
 noise_const <- 2
 L <- 5
+mcK_I(cc=1/noise_const, Ks=L, mc.reps=1e4)
+
 p <- 10; mc_ident(p, noise_const * p, L, 1e4)
 p <- 20; mc_ident(p, noise_const * p, L, 1e4)
 p <- 30; mc_ident(p, noise_const * p, L, 1e4)
@@ -20,6 +23,8 @@ p <- 10; mc_ident5(p, noise_const * p, L, 1e2)
 
 noise_const <- .2
 L <- 1e3
+mcK_I(cc=1/noise_const, Ks=L, mc.reps=1e4)
+
 p <- 1e3; mc_ident2(p, noise_const * p, L, 1e4)
 mc_ident4(p, noise_const * p, L, 1e2)
 mc_ident5(p, noise_const * p, L, 1e2)
@@ -38,6 +43,8 @@ mc_ident5(p, noise_const * p, L, 1)
 
 noise_const <- .05
 L <- 1e4
+mcK_I(cc=1/noise_const, Ks=L, mc.reps=1e4)
+
 p <- 1e3; mc_ident2(p, noise_const * p, L, 1e3)
 mc_ident4(p, noise_const * p, L, 1e3)
 mc_ident5(p, noise_const * p, L, 1e3)
@@ -57,12 +64,16 @@ mc_ident5(p, noise_const * p, L, 1e2)
 
 noise_const <- .0525
 L <- 1e5; mc.reps <- 1e2
+mcK_I(cc=1/noise_const, Ks=L, mc.reps=1e4)
+
 p <- 1e3; mc_ident5(p, noise_const * p, L, mc.reps)
 p <- 2e3; mc_ident5(p, noise_const * p, L, mc.reps)
 p <- 4e3; mc_ident5(p, noise_const * p, L, mc.reps)
 
 noise_const <- .0425
 L <- 1e6; mc.reps <- 1e2
+mcK_I(cc=1/noise_const, Ks=L, mc.reps=1e4)
+
 p <- 1e3; mc_ident5(p, noise_const * p, L, mc.reps)
 p <- 2e3; mc_ident5(p, noise_const * p, L, mc.reps)
 p <- 4e3; mc_ident5(p, noise_const * p, L, mc.reps)
@@ -70,6 +81,8 @@ p <- 8e3; mc_ident5(p, noise_const * p, L, mc.reps)
 
 noise_const <- .0355
 L <- 1e7; mc.reps <- 1e2
+mcK_I(cc=1/noise_const, Ks=L, mc.reps=1e4)
+
 p <- 1e3; mc_ident5(p, noise_const * p, L, mc.reps)
 p <- 2e3; mc_ident5(p, noise_const * p, L, mc.reps)
 
