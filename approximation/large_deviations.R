@@ -2,6 +2,8 @@
 ##  Approximate pchisq(q = r^2, df = d, ncp = theta^2)
 ####
 
+source("approximation//polynomial.R")
+
 true_ans <- function(d, theta, r) pchisq(r^2, d, theta^2)
 len_x <- function(theta, r, x) {
   1/theta * sqrt(theta^2 * (theta - r + x)^2
@@ -29,7 +31,15 @@ prox_ans2 <- function(d, theta, r) {
   res <- optimise(objective_f, interval = c(0, r), maximum = TRUE)
   x_star <- res$maximum
   log_g_star <- res$objective
+  ## TO BE CONTD
 }
+deriv_log_dchi <- function(x, d) (d - 1)/x - x
+deriv2_log_dchi <- function(x, d) -(d - 1)/x^2 - 1
+
+####
+##  Check overall approximation
+####
+
 
 
 ## check len function
@@ -60,4 +70,97 @@ ds <- log_density_x(d, theta, r, xs)
 md <- max(ds)
 plot(xs[ds > md - 10], ds[ds > md - 10], type = "l")
 
+####
+##  Check derivatives of chi
+####
+
+d <- 20 * runif(1); xs <- seq(0, d, by = 0.1)
+x <- d * runif(1)
+
+plot(xs, log(dchi(xs, d)), type = "l", lwd = 2)
+lines(xs, log(dchi(x, d)) + (xs - x) *
+     deriv_log_dchi(x, d), col = "red")
+lines(xs, log(dchi(x, d)) + (xs - x) *
+        deriv_log_dchi(x, d) + 
+        (xs - x)^2/2 * deriv2_log_dchi(x, d), col = "blue")
+
+####
+##  Check derivatives of ip_x
+####
+
+q_x <- function(theta, r, x) theta^2 * (theta - r + x)^2 -
+  4 * (theta + x/2) * (theta + x/2 - r) * (r - x/2) * x/2
+# ip_x = ip_x_2
+#theta <- 10; r <- 1; xs <- seq(0, r, by = 1e-2)
+#cbind(ip_x(theta, r, xs), ip_x_2(theta, r, xs))
+ip_x_2 <- function(theta, r, x) sqrt(q_x(theta, r, x))/theta/(theta - r + x)
+# to be simplified
+deriv_q_x_raw <- function(theta, r, x)
+  1e10 * (q_x(theta, r, x+1e-10) - q_x(theta, r, x))
+
+
+## Simplify q_x
+vv <- AlgDesign::gen.factorial(7, 3)
+colnames(vv) <- c("theta", "r", "x")
+V <- form_poly_matrix(vv, 4)
+vals <- apply(vv, 1, function(v) q_x(v[1], v[2], v[3]))
+res <- lm(vals ~ 0+ V)
+summary(res)
+check_divis(res$coefficients, 4)
+display_div(res$coefficients, 4)
+# vvPx4       vvPr1x3       vvPr2x2   vvPtheta1x3 vvPtheta1r1x2 vvPtheta1r2x1 
+# "4/4"       "-16/4"        "16/4"        "16/4"       "-48/4"        "32/4" 
+# vvPtheta2x2 vvPtheta2r1x1   vvPtheta2r2   vvPtheta3x1   vvPtheta3r1     vvPtheta4 
+# "32/4"       "-64/4"        "16/4"        "32/4"       "-32/4"        "16/4" 
+
+## Simplify deriv_q_x
+vv <- AlgDesign::gen.factorial(5, 3)
+colnames(vv) <- c("theta", "r", "x")
+V <- form_poly_matrix(vv, 4)
+vals <- apply(vv, 1, function(v) deriv_q_x_raw(v[1], v[2], v[3]))
+check_divis(vals, 64)
+res <- lm(vals ~ 0+ V)
+summary(res)
+check_divis(res$coefficients, 1)
+display_div(res$coefficients, 1)
+# Vx3       Vr1x2       Vr2x1   Vtheta1x2 Vtheta1r1x1   Vtheta1r2   Vtheta2x1 
+# "1/1"      "-3/1"       "2/1"       "3/1"      "-6/1"       "2/1"       "4/1" 
+# Vtheta2r1     Vtheta3 
+# "-4/1"       "2/1" 
+deriv_q_x_coefs <- round(res$coefficients)
+
+deriv_q_x <- function(theta, r, x) {
+  mat <- cbind(theta = theta, r = r, x = x)
+  expand <- form_poly_matrix(mat, 4)
+  as.numeric(expand %*% deriv_q_x_coefs)
+}
+
+
+
+## find coefs of second deriv
+
+deriv2_q_x_raw <- function(theta, r, x)
+  1e10 * (deriv_q_x(theta, r, x+1e-10) - deriv_q_x(theta, r, x))
+vals <- apply(vv, 1, function(v) deriv2_q_x_raw(v[1], v[2], v[3]))
+res <- lm(vals ~ 0+ V)
+summary(res)
+check_divis(res$coefficients, 1)
+display_div(res$coefficients, 1)
+# Vx2     Vr1x1       Vr2 Vtheta1x1 Vtheta1r1   Vtheta2 
+# "3/1"    "-6/1"     "2/1"     "6/1"    "-6/1"     "4/1" 
+deriv2_q_x_coefs <- round(res$coefficients)
+deriv2_q_x <- function(theta, r, x) {
+  mat <- cbind(theta = theta, r = r, x = x)
+  expand <- form_poly_matrix(mat, 4)
+  as.numeric(expand %*% deriv2_q_x_coefs)
+}
+
+## check it out
+
+theta <- runif(1); r <- runif(1); xs <- seq(0, 1, by = 1e-2)
+x <- runif(1)
+plot(xs, q_x(theta, r, xs), type = 'l')
+lines(xs, q_x(theta, r, x) + (xs - x) * deriv_q_x(theta, r, x), col = "red")
+lines(xs, q_x(theta, r, x) + (xs - x) * deriv_q_x(theta, r, x) +
+        (xs - x)^2/2 * deriv2_q_x(theta, r, x), col = "blue")
 
