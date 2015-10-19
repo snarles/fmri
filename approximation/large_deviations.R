@@ -92,25 +92,26 @@ prox_ans2 <- function(d, theta, r) {
   log_g_star + 1/2 * (log(2 * pi) - log(omega))
 }
 
-####
-##  Check overall approximation
-####
+# ####
+# ##  Check overall approximation
+# ####
+# 
+# 
+# 
+# ## check len function
+# d <- 10; theta <- 5; r<- 1
+# x <- 0
+# (len <- len_x(theta, r, x))
+# ip_x(theta, r, x)
+# y <- sqrt((theta - r + x)^2 - len^2)
+# c(sqrt(r^2 - y^2) + len, theta)
+# 
+# ## approximation error
+# d <- 20; theta <- 40; r<- 10
+# log(true_ans(d, theta, r))
+# log(prox_ans(d, theta, r))
+# prox_ans2(d, theta, r)
 
-
-
-## check len function
-d <- 10; theta <- 5; r<- 1
-x <- 0
-(len <- len_x(theta, r, x))
-ip_x(theta, r, x)
-y <- sqrt((theta - r + x)^2 - len^2)
-c(sqrt(r^2 - y^2) + len, theta)
-
-## approximation error
-d <- 20; theta <- 40; r<- 10
-log(true_ans(d, theta, r))
-log(prox_ans(d, theta, r))
-prox_ans2(d, theta, r)
 # 
 # ## plot density x
 # delta <- 1e-2
