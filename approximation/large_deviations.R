@@ -236,3 +236,54 @@ lines(xs, ip_x(theta, r, x) +
         (xs - x)*deriv_ip_x(theta, r, x) + 
         (xs - x)^2/2 * deriv2_ip_x(theta, r, x), col = "blue")
 
+####
+##  derivatives of log F(...)
+####
+
+deriv_dbeta <- function(x, a, b) {
+  1/beta(a, b) * ((x^(a-2) * (1-x)^(b-1))*(a-1) - 
+                    (x^(a-1) * (1-x)^(b-2))*(b-1))
+}
+
+logFp <- function(d, theta, r, x) {
+  pbeta((1-ip_x(theta, r, x)) / 2, (d-1)/2, (d-1)/2, log.p=TRUE)
+}
+
+deriv_logFp <- function(f, theta, r, x) {
+  ff <- dbeta((1-ip_x(theta, r, x)) / 2, (d-1)/2, (d-1)/2)
+  FF <- pbeta((1-ip_x(theta, r, x)) / 2, (d-1)/2, (d-1)/2)
+  di <- deriv_ip_x(theta, r, x)
+  -1/2 * ff/FF *di
+}
+
+deriv2_logFp <- function(f, theta, r, x) {
+  ff <- dbeta((1-ip_x(theta, r, x)) / 2, (d-1)/2, (d-1)/2)
+  FF <- pbeta((1-ip_x(theta, r, x)) / 2, (d-1)/2, (d-1)/2)
+  fp <- deriv_dbeta((1-ip_x(theta, r, x)) / 2, (d-1)/2, (d-1)/2)
+  di <- deriv_ip_x(theta, r, x)
+  di2 <- deriv2_ip_x(theta, r, x)
+  -ff^2/FF^2 * di^2/4 + fp/FF * di^2/4 - ff/FF * di2/2
+}
+
+## deriv beta
+a <- rexp(1); b <- rexp(1)
+zs <- seq(0, 1, by = 1e-2); z <- runif(1)
+plot(zs, dbeta(zs, a, b), type ="l", main = "beta")
+lines(zs, dbeta(z, a, b) + (zs - z)*
+        deriv_dbeta(z, a, b), col = "red")
+
+d <- 30
+theta <- 10 * runif(1); r <- theta * runif(1); xs <- seq(0, r, by = 1e-2)
+x <- r * runif(1)
+plot(xs, logFp(d, theta, r, xs), type = "l", main = "log F(...)")
+lines(xs, logFp(d, theta, r, x) +
+        (xs - x)*deriv_logFp(d, theta, r, x), col = "red")
+lines(xs, logFp(d, theta, r, x) +
+        (xs - x)*deriv_logFp(d, theta, r, x) +
+        (xs-x)^2/2*deriv2_logFp(d,theta,r,x),
+      col = "blue")
+
+#numDeriv::grad(function(x) logFp(d, theta, r, x), x)
+#deriv_logFp(d, theta, r, x)
+#numDeriv::hessian(function(x) logFp(d, theta, r, x), x)
+#deriv2_logFp(d, theta, r, x)
