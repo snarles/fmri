@@ -287,3 +287,21 @@ lines(xs, logFp(d, theta, r, x) +
 #deriv_logFp(d, theta, r, x)
 #numDeriv::hessian(function(x) logFp(d, theta, r, x), x)
 #deriv2_logFp(d, theta, r, x)
+
+########
+########
+####
+#### Start looking at realistic params
+####
+########
+########
+
+####
+##  Look at total second deriv
+####
+
+sigma2 <- 1; d <- 1000
+theta <- sqrt((1+sigma2) * d); r <- sqrt(sigma2 * d)
+xs <- seq(0, r, length.out=100)
+d2 <- deriv2_logFp(d, theta, r, xs) + deriv_log_dchi(theta + r - xs, d)
+plot(xs, d2, type = "l")
