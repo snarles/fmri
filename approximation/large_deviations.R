@@ -40,3 +40,6 @@ matplot(ress, type = "l")
 plot(sigma2s, ress[dim(ress)[1], ], type = "l", ylim = c(0, 1))
 plot(sigma2s, 1/ress[dim(ress)[1], ], type = "l")
 plot(sigma2s, 1/ress[dim(ress)[1], ]^2, type = "l")
+
+summary(lm(1/ress[dim(ress)[1], ] ~ sqrt(sigma2s)))
+## conclusion: x* ~= 0.7 sqrt(d)
