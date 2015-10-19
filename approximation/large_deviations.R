@@ -13,26 +13,27 @@ for (i in 1:length(ds)) {
 
 View(cbind(ds, ress))
 
+####
+##  Relative location of the max
+####
 
 
+ratiodata <- function(sigma2, ds) {
+  rs <- ds * 0; xs <- ds * 0
+  for (i in 1:length(ds)) {
+    d <- ds[i]
+    theta <- sqrt((1 + sigma2) * d); r <- sqrt(sigma2 * d)
+    objective_f <- function(x) log_density_x(d, theta, r, x)
+    res <- optimise(objective_f, interval = c(0, r), maximum = TRUE)
+    x_star <- res$maximum
+    rs[i] <- r; xs[i] <- x_star
+  }
+  data.frame(ds, rs, xs, ratio = xs/rs)  
+}
 
-d=1200
-theta=48.98979
-r=34.64102
-x=20.28261
+sigma2 <- 1
+ds <- c(1:10, 100 * 1:20)
 
-deriv2_logFp(d, theta, r, x)
-
-
-ff <- dbeta((1-ip_x(theta, r, x)) / 2, (d-1)/2, (d-1)/2)
-FF <- pbeta((1-ip_x(theta, r, x)) / 2, (d-1)/2, (d-1)/2)
-fp <- deriv_dbeta((1-ip_x(theta, r, x)) / 2, (d-1)/2, (d-1)/2)
-di <- deriv_ip_x(theta, r, x)
-di2 <- deriv2_ip_x(theta, r, x)
-
-log(di)
-log(ff) -log(FF) + log(-di)
-
-x=0.1464467
-a=b=599.5
-deriv_dbeta(x, a, b)
+View(ratiodata(1, ds))
+View(ratiodata(2, ds))
+View(ratiodata(3, ds))
