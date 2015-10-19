@@ -2,9 +2,10 @@
 ##  Approximate pchisq(q = r^2, df = d, ncp = theta^2)
 ####
 
-source("approximation//polynomial.R")
+##source("approximation//polynomial.R")
 
 true_ans <- function(d, theta, r) pchisq(r^2, d, theta^2)
+log_true_ans <- function(d, theta, r) pchisq(r^2, d, theta^2, log.p=TRUE)
 len_x <- function(theta, r, x) {
   1/theta * sqrt(theta^2 * (theta - r + x)^2
                  - 4 * (theta + x/2) * (theta + x/2  - r) *
@@ -20,11 +21,33 @@ log_density_x <- function(d, theta, r, x) {
     (d-1) * log(theta - r + x) - (theta - r + x)^2/2 + 
     pbeta((1 - ip_x(theta, r, x))/2, (d-1)/2, (d-1)/2, log.p = TRUE)
 }
+logsumexp <- function(v) log(sum(exp(v - max(v)))) + max(v)
+logsumexp_sign <- function(ss, ls) {
+  m <- max(ls)
+  s0 <- sum(exp(ls - m) * ss)
+  c(s = sign(s0), l = log(abs(s0)))
+}
+logminusexp <- function(a, b) {
+  m <- max(c(a, b))
+  s <- sign(a - b)
+  ans <- log(abs(exp(a - m) - exp(b - m))) + m  
+  c(s = s, l = ans)
+}
+logmult <- function(v) {
+  s <- prod(sign(v))
+  c(s = s, l = sum(log(abs(v))))
+}
+
 ## numerical intergration
 prox_ans <- function(d, theta, r, delta = 1e-3) {
   xs <- seq(0, r, by = delta)
   sum(density_x(d, theta, r, xs)) * delta
 }
+log_prox_ans <- function(d, theta, r, delta = 1e-3) {
+  xs <- seq(0, r, by = delta)
+  logsumexp(log_density_x(d, theta, r, xs)) + log(delta)
+}
+
 
 deriv_log_dchi <- function(x, d) (d - 1)/x - x
 deriv2_log_dchi <- function(x, d) -(d - 1)/x^2 - 1
@@ -45,8 +68,18 @@ deriv2_sqrt_q <- function(theta, r, x) {
 }
 
 deriv_dbeta <- function(x, a, b) {
-  1/beta(a, b) * ((x^(a-2) * (1-x)^(b-1))*(a-1) - 
+  suppressWarnings(
+    ans <- 1/beta(a, b) * ((x^(a-2) * (1-x)^(b-1))*(a-1) - 
                     (x^(a-1) * (1-x)^(b-2))*(b-1))
+  )
+  if (sum(is.na(ans)) > 0) {
+    res <- logminusexp((a-2) * log(x) + (b-1)*log(1-x) + log(a-1),
+                       (a-1) * log(x) + (b-2)*log(1-x) + log(b-1))
+    sn <- res[1]
+    mag <- -lbeta(a, b) + res[2]
+    ans <- sn * exp(mag)
+  }
+  ans
 }
 deriv_ip_x <- function(theta, r, x) {
   ip <- ip_x(theta, r, x)
@@ -72,21 +105,31 @@ deriv_logFp <- function(d, theta, r, x) {
   -1/2 * ff/FF *di
 }
 
-deriv2_logFp <- function(d, theta, r, x) {
+deriv2_logFp <- function(d, theta, r, x, heavy = TRUE) {
   ff <- dbeta((1-ip_x(theta, r, x)) / 2, (d-1)/2, (d-1)/2)
   FF <- pbeta((1-ip_x(theta, r, x)) / 2, (d-1)/2, (d-1)/2)
   fp <- deriv_dbeta((1-ip_x(theta, r, x)) / 2, (d-1)/2, (d-1)/2)
   di <- deriv_ip_x(theta, r, x)
   di2 <- deriv2_ip_x(theta, r, x)
-  -ff^2/FF^2 * di^2/4 + fp/FF * di^2/4 - ff/FF * di2/2
+  if (!heavy)
+    return(-ff^2/FF^2 * di^2/4 + fp/FF * di^2/4 - ff/FF * di2/2)
+  res1 <- logmult(c(ff, 1/FF, di))
+  res1[1] <- 1
+  res1[2] <- res1[2]*2 - log(4)
+  res2 <- logmult(c(fp, 1/FF, di^2, 1/4))
+  res3 <- logmult(c(ff, 1/FF, di2, 1/2))
+  res <- logsumexp_sign(c(res1[1], res2[1], res3[1]),
+                        c(res1[2], res2[2], res3[2]))
+  res[1] * exp(res[2])
 }
 
 ## laplace approximation
-prox_ans2 <- function(d, theta, r) {
-  objective_f <- function(x) log(density_x(d, theta, r, x))
+log_prox_ans2 <- function(d, theta, r) {
+  objective_f <- function(x) log_density_x(d, theta, r, x)
   res <- optimise(objective_f, interval = c(0, r), maximum = TRUE)
   x_star <- res$maximum
   log_g_star <- res$objective
   omega <- -deriv2_logFp(d, theta, r, x_star) -
     deriv2_log_dchi(theta + r - x_star, d)
   log_g_star + 1/2 * (log(2 * pi) - log(omega))
+}
