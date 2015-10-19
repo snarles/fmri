@@ -18,22 +18,25 @@ View(cbind(ds, ress))
 ####
 
 
-ratiodata <- function(sigma2, ds) {
-  rs <- ds * 0; xs <- ds * 0
+ratiodata <- function(sigma2s, ds) {
+  ress <- matrix(0, length(ds), length(sigma2s))
   for (i in 1:length(ds)) {
-    d <- ds[i]
-    theta <- sqrt((1 + sigma2) * d); r <- sqrt(sigma2 * d)
-    objective_f <- function(x) log_density_x(d, theta, r, x)
-    res <- optimise(objective_f, interval = c(0, r), maximum = TRUE)
-    x_star <- res$maximum
-    rs[i] <- r; xs[i] <- x_star
+    for (j in 1:length(sigma2s)) {
+      d <- ds[i]; sigma2 <- sigma2s[j]
+      theta <- sqrt((1 + sigma2) * d); r <- sqrt(sigma2 * d)
+      objective_f <- function(x) log_density_x(d, theta, r, x)
+      res <- optimise(objective_f, interval = c(0, r), maximum = TRUE)
+      x_star <- res$maximum
+      ress[i, j] <- x_star/r
+    }
   }
-  data.frame(ds, rs, xs, ratio = xs/rs)  
+  ress
 }
 
-sigma2 <- 1
-ds <- c(1:10, 100 * 1:20)
-
-View(ratiodata(1, ds))
-View(ratiodata(2, ds))
-View(ratiodata(3, ds))
+ds <- 100 * 1:100
+sigma2s <- seq(0.1, 10, by = 0.1)^2
+ress <- ratiodata(sigma2s, ds)
+matplot(ress, type = "l")
+plot(sigma2s, ress[dim(ress)[1], ], type = "l", ylim = c(0, 1))
+plot(sigma2s, 1/ress[dim(ress)[1], ], type = "l")
+plot(sigma2s, 1/ress[dim(ress)[1], ]^2, type = "l")
