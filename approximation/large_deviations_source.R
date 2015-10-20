@@ -12,6 +12,8 @@ len_x <- function(theta, r, x) {
                    (r - x/2) * (x/2))
 }
 ip_x <- function(theta, r, x) len_x(theta, r, x)/(theta - r + x)
+q_x <- function(theta, r, x) theta^2 * (theta - r + x)^2 -
+  4 * (theta + x/2) * (theta + x/2 - r) * (r - x/2) * x/2
 dchi <- function(x, df) 2^(1 - (df/2)) * x^(df - 1) * exp(-x^2/2)/gamma(df/2)
 density_x <- function(d, theta, r, x) {
   dchi(theta - r + x, d) * pbeta((1 - ip_x(theta, r, x))/2, (d-1)/2, (d-1)/2)
@@ -132,4 +134,20 @@ log_prox_ans2 <- function(d, theta, r) {
   omega <- -deriv2_logFp(d, theta, r, x_star) -
     deriv2_log_dchi(theta + r - x_star, d)
   log_g_star + 1/2 * (log(2 * pi) - log(omega))
+}
+
+## laplace approximation : plug in the mysterious x* = sqrt(d)
+log_prox_ans3 <- function(d, theta, r) {
+  objective_f <- function(x) log_density_x(d, theta, r, x)
+  x_star <- sqrt(d)
+  log_g_star <- objective_f(x_star)
+  omega <- -deriv2_logFp(d, theta, r, x_star) -
+    deriv2_log_dchi(theta + r - x_star, d)
+  log_g_star + 1/2 * (log(2 * pi) - log(omega))
+}
+
+pchisq_laplace <- function(q, df, ncp) {
+  theta <- sqrt(ncp)
+  r <- sqrt(q)
+  exp(log_prox_ans3(df, theta, r))
 }

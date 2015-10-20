@@ -68,7 +68,8 @@ mc_ident3 <- function(p, sigma2, K, mc.reps = 1000) {
   mean(mcs)
 }
 
-min_chisq_approx <- function(K, df, ncp, naive = FALSE, nits = 20) {
+min_chisq_approx <- function(K, df, ncp, naive = FALSE, nits = 20,
+                             pchisq_f = pchisq) {
   if (naive) {
     print(min(rchisq(K, df, ncp)))
   }
@@ -78,7 +79,7 @@ min_chisq_approx <- function(K, df, ncp, naive = FALSE, nits = 20) {
   const <- -log(2)
   for (i in 1:nits) {
     xc <- (ux + lx)/2
-    val <- K * log_1_plus(-pchisq(xc, df, ncp))
+    val <- K * log_1_plus(-pchisq_f(xc, df, ncp))
     if (val > const) {
       lx <- xc
     } else {
@@ -104,17 +105,24 @@ mc_ident4 <- function(p, sigma2, K, mc.reps = 1000, nits = 20) {
 
 ## nonrandom -- computes theoretical median of min and uses cdf
 ## same Evalue as mc_ident4
-mc_ident5 <- function(p, sigma2, K, mc.reps = 1000, nits = 20) {
+mc_ident5 <- function(p, sigma2, K, mc.reps = 1000, nits = 20,
+                      pchisq_f = pchisq) {
   alpha <- sigma2/(1 + sigma2)
   quants <- (1:mc.reps - .5)/mc.reps
   y2s <- (1 + sigma2) * qchisq(quants, df = p)
   mcs <- sapply(y2s,
                 function(y2) {
-                  ds <- min_chisq_approx(K - 1, p, y2, nits = nits)
-                  1 - pchisq(ds/alpha, p, alpha * y2) 
+                  ds <- min_chisq_approx(K - 1, p, y2, nits = nits,
+                                         pchisq_f = pchisq_f)
+                  1 - pchisq_f(ds/alpha, p, alpha * y2) 
                 })
   mean(mcs)
 }
+
+####
+##  see large_deviations_source to use pchisq_laplace
+####
+
 
 
 

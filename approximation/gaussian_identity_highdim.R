@@ -1,5 +1,6 @@
 source("approximation/gaussian_identity.R")
 source("approximation/gaussian_lc_source.R")
+source("approximation/large_deviations_source.R")
 
 #### 
 ##  Check fixed-L results
@@ -19,6 +20,7 @@ p <- 30; mc_ident2(p, noise_const * p, L, 1e4)
 
 p <- 10; mc_ident4(p, noise_const * p, L, 1e4)
 p <- 10; mc_ident5(p, noise_const * p, L, 1e2)
+p <- 10; mc_ident5(p, noise_const * p, L, 1e2, pchisq = pchisq_laplace)
 
 
 noise_const <- .2
@@ -36,6 +38,7 @@ mc_ident5(p, noise_const * p, L, 1e2)
 p <- 3e3; mc_ident2(p, noise_const * p, L, 1e4)
 mc_ident4(p, noise_const * p, L, 1)
 mc_ident5(p, noise_const * p, L, 1)
+mc_ident5(p, noise_const * p, L, 1, pchisq = pchisq_laplace)
 
 
 
