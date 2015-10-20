@@ -35,25 +35,39 @@ ratiodata <- function(sigma2s, ds) {
   ress
 }
 
-ds <- 200 * 1:50
-sigma2s <- seq(0.1, 10, by = 0.1)^2
-ress <- ratiodata(sigma2s, ds)
-matplot(sqrt(ds), ress, type = "l", col = rainbow(length(sigma2s)))
-plot(sigma2s, ress[ds == 10000, ], type = "l")
-
-lr <- lapply(sigma2s, function(s) {
-  lm(ress[, sigma2s ==s] ~ sqrt(ds))
-})
-coeffs <- sapply(lr, function(r) r$coefficients[2])
-ints <- sapply(lr, function(r) r$coefficients[1])
-
-plot(sigma2s, coeffs, type = "l")
-
-plot(sigma2s, coeffs, type = "l")
-
-plot(sigma2s, ints, type = "l")
-names(coeffs) <- NULL
-coeffs
+## Code to obtain laplaceData.Rdata
+# ds <- 25 * 1:400
+# t1 <- proc.time()
+# sigma2s <- seq(0.001, 20, by = 0.001)^2
+# ress <- ratiodata(sigma2s, ds)
+# save(list=c("ress", "sigma2s", "ds"), file="approximation/ratiodata.Rdata")
+# proc.time() - t1
+# 
+# matplot(sqrt(ds), ress, type = "l", col = rainbow(length(sigma2s)))
+# plot(sigma2s, ress[ds == 10000, ], type = "l")
+# plot(sigma2s/(1 + sigma2s), ress[ds == 10000, ], type = "l")
+# 
+# lr <- lapply(sigma2s, function(s) {
+#   lm(ress[, sigma2s ==s] ~ sqrt(ds))
+# })
+# laplace_coeffs <- sapply(lr, function(r) r$coefficients[2])
+# laplace_ints <- sapply(lr, function(r) r$coefficients[1])
+# laplace_ratios <- sigma2s/(1 + sigma2s)
+# save(list = c("laplace_coeffs", "laplace_ints", "laplace_ratios"),
+#      file = "approximation/laplaceData.Rdata")
+# 
+# plot(sigma2s, coeffs, type = "l")
+# 
+# plot(sigma2s, coeffs, type = "l")
+# 
+# plot(sigma2s, ints, type = "l")
+# names(coeffs) <- NULL
+# coeffs
 
 
 ## conclusion: x* ~= func(sigma^2) * sqrt(d) + func(sigma^2)
+
+
+####
+##  Check values of 
+####
