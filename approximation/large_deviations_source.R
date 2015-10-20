@@ -161,4 +161,5 @@ pchisq_laplace <- function(q, df, ncp) {
   theta <- sqrt(ncp)
   r <- sqrt(q)
   ans <- min(c(1, exp(log_prox_ans3(df, theta, r))))
+  ans
 }

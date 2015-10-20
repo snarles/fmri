@@ -52,6 +52,7 @@ mcK_I(cc=1/noise_const, Ks=L, mc.reps=1e4)
 p <- 1e3; mc_ident2(p, noise_const * p, L, 1e3)
 mc_ident4(p, noise_const * p, L, 1e3)
 mc_ident5(p, noise_const * p, L, 1e3)
+mc_ident5(p, noise_const * p, L, 1, pchisq = pchisq_laplace)
 
 p <- 2e3; mc_ident2(p, noise_const * p, L, 1e4)
 mc_ident4(p, noise_const * p, L, 1e2)
@@ -71,31 +72,72 @@ L <- 1e5; mc.reps <- 1e2
 mcK_I(cc=1/noise_const, Ks=L, mc.reps=1e4)
 
 p <- 1e3; mc_ident5(p, noise_const * p, L, mc.reps)
+mc_ident5(p, noise_const * p, L, mc.reps, pchisq=pchisq_laplace)
 p <- 2e3; mc_ident5(p, noise_const * p, L, mc.reps)
+mc_ident5(p, noise_const * p, L, mc.reps, pchisq=pchisq_laplace)
 p <- 4e3; mc_ident5(p, noise_const * p, L, mc.reps)
+mc_ident5(p, noise_const * p, L, mc.reps, pchisq=pchisq_laplace)
 
 noise_const <- .0425
 L <- 1e6; mc.reps <- 1e2
 mcK_I(cc=1/noise_const, Ks=L, mc.reps=1e4)
 
 p <- 1e3; mc_ident5(p, noise_const * p, L, mc.reps)
+mc_ident5(p, noise_const * p, L, mc.reps, pchisq=pchisq_laplace)
 p <- 2e3; mc_ident5(p, noise_const * p, L, mc.reps)
+mc_ident5(p, noise_const * p, L, mc.reps, pchisq=pchisq_laplace)
 p <- 4e3; mc_ident5(p, noise_const * p, L, mc.reps)
+mc_ident5(p, noise_const * p, L, mc.reps, pchisq=pchisq_laplace)
 p <- 8e3; mc_ident5(p, noise_const * p, L, mc.reps)
+mc_ident5(p, noise_const * p, L, mc.reps, pchisq=pchisq_laplace)
 
 noise_const <- .0355
 L <- 1e7; mc.reps <- 1e2
 mcK_I(cc=1/noise_const, Ks=L, mc.reps=1e4)
 
 p <- 1e2; mc_ident5(p, noise_const * p, L, mc.reps)
+mc_ident5(p, noise_const * p, L, mc.reps, pchisq=pchisq_laplace)
 p <- 1e3; mc_ident5(p, noise_const * p, L, mc.reps)
+mc_ident5(p, noise_const * p, L, mc.reps, pchisq=pchisq_laplace)
 p <- 2e3; mc_ident5(p, noise_const * p, L, mc.reps)
+mc_ident5(p, noise_const * p, L, mc.reps, pchisq=pchisq_laplace)
 
 noise_const <- .02
 L <- 1e12; mc.reps <- 1e3
 mcK_I(cc=1/noise_const, Ks=L, mc.reps=1e4)
 p <- 1e3; mc_ident5(p, noise_const * p, L, mc.reps)
+mc_ident5(p, noise_const * p, L, mc.reps, pchisq=pchisq_laplace)
 p <- 2e3; mc_ident5(p, noise_const * p, L, mc.reps)
+mc_ident5(p, noise_const * p, L, mc.reps, pchisq=pchisq_laplace)
+
+
+## Fixed-sigma results: dimensionality-shortage effect?
+
+## Formula is accurate for large sigma2 relative to ... dimensionality?
+mc.reps <- 1e3
+sigma2 <- 100; lc <- 0.01
+p <- 1e2; 
+mc_ident2(p, sigma2, floor(exp(lc * p)), mc.reps)
+
+mc_ident5(p, sigma2, floor(exp(lc * p)), mc.reps)
+mcK_I(cc=p/sigma2, Ks=floor(exp(lc * p)), mc.reps=1e4)
+p <- 2e2; mc_ident5(p, sigma2, floor(exp(lc * p)), mc.reps)
+mcK_I(cc=p/sigma2, Ks=floor(exp(lc * p)), mc.reps=1e4)
+p <- 3e2; mc_ident5(p, sigma2, floor(exp(lc * p)), mc.reps)
+mcK_I(cc=p/sigma2, Ks=floor(exp(lc * p)), mc.reps=1e4)
+p <- 1e3; mc_ident5(p, sigma2, floor(exp(lc * p)), mc.reps)
+mcK_I(cc=p/sigma2, Ks=floor(exp(lc * p)), mc.reps=1e4)
+
+sigma2 <- 100; p <- 1e3; K<- 1e3
+mcK_I(cc=p/sigma2, Ks=K, mc.reps=1e4)
+mc_ident5(p, sigma2, K, mc.reps)
+
+#mc_ident5(p, sigma2, K, mc.reps, pchisq_f=pchisq_laplace)
+sigma2 <- 100; p <- 2e3; K<- 1e3
+mcK_I(cc=p/sigma2, Ks=K, mc.reps=1e4)
+mc_ident5(p, sigma2, K, mc.reps)
+
+
 
 # Dbugging
 sigma2 <- noise_const * p
