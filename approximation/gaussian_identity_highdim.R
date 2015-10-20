@@ -30,6 +30,7 @@ mcK_I(cc=1/noise_const, Ks=L, mc.reps=1e4)
 p <- 1e3; mc_ident2(p, noise_const * p, L, 1e4)
 mc_ident4(p, noise_const * p, L, 1e2)
 mc_ident5(p, noise_const * p, L, 1e2)
+mc_ident5(p, noise_const * p, L, 1e2, pchisq = pchisq_laplace)
 
 p <- 2e3; mc_ident2(p, noise_const * p, L, 1e4)
 mc_ident4(p, noise_const * p, L, 1e2)
@@ -123,5 +124,5 @@ for (i in 1:nits) {
 df <- 8000; ncp <- 2672870
 pchisq(df + ncp, df, ncp)
 pchisq(2010653, 8000, 2672870)
-
+pchisq_laplace(2010653, 8000, 2672870)
 

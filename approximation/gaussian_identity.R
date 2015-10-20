@@ -79,11 +79,17 @@ min_chisq_approx <- function(K, df, ncp, naive = FALSE, nits = 20,
   const <- -log(2)
   for (i in 1:nits) {
     xc <- (ux + lx)/2
-    val <- K * log_1_plus(-pchisq_f(xc, df, ncp))
-    if (val > const) {
-      lx <- xc
-    } else {
+    suppressWarnings(pp <- pchisq_f(xc, df, ncp))
+    if (is.na(pp)) {
       ux <- xc
+    } else {
+      val <- K * log_1_plus(-pchisq_f(xc, df, ncp))
+      if (is.na(val)) {print(paste("xc = ", xc, ";df=", df, ";ncp=", ncp))}
+      if (val > const) {
+        lx <- xc
+      } else {
+        ux <- xc
+      }     
     }
     #print(xc)
   }

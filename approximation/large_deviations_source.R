@@ -4,6 +4,8 @@
 
 ##source("approximation//polynomial.R")
 
+load("approximation/laplaceData.Rdata")
+
 true_ans <- function(d, theta, r) pchisq(r^2, d, theta^2)
 log_true_ans <- function(d, theta, r) pchisq(r^2, d, theta^2, log.p=TRUE)
 len_x <- function(theta, r, x) {
@@ -136,18 +138,27 @@ log_prox_ans2 <- function(d, theta, r) {
   log_g_star + 1/2 * (log(2 * pi) - log(omega))
 }
 
+laplace_x_star <- function(d, theta, r) {
+  ratio <- (r/theta)^2
+  ind <- order(abs(ratio - laplace_ratios))[1]
+  laplace_coeffs[ind] * sqrt(d) + laplace_ints[ind]
+}
+
 ## laplace approximation : plug in the mysterious x* = sqrt(d)
 log_prox_ans3 <- function(d, theta, r) {
-  objective_f <- function(x) log_density_x(d, theta, r, x)
-  x_star <- sqrt(d)
-  log_g_star <- objective_f(x_star)
+  x_star <- laplace_x_star(d, theta, r)
+  log_g_star <- log_density_x(d, theta, r, x_star)
   omega <- -deriv2_logFp(d, theta, r, x_star) -
     deriv2_log_dchi(theta + r - x_star, d)
+  if (is.na(omega)) omega <- 1 ## just ignore it
+    #print(paste("d=", d, ";theta=", theta, ";r=", r))
+  if (omega < 0) omega <- 1  ## just ignore it
+    #print(paste("d=", d, ";theta=", theta, ";r=", r))
   log_g_star + 1/2 * (log(2 * pi) - log(omega))
 }
 
 pchisq_laplace <- function(q, df, ncp) {
   theta <- sqrt(ncp)
   r <- sqrt(q)
-  exp(log_prox_ans3(df, theta, r))
+  ans <- min(c(1, exp(log_prox_ans3(df, theta, r))))
 }
