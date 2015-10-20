@@ -69,5 +69,21 @@ ratiodata <- function(sigma2s, ds) {
 
 
 ####
-##  Check values of 
+##  Size of second derivative can be ignored... true??
+##  Looks like size of log(second derivative) is constant in sigma2
 ####
+
+log_g_vs_omega <- function(d, sigma2) {
+  theta <- sqrt((1 + sigma2) * d); r <- sqrt(sigma2 * d)
+  x_star <- laplace_x_star(d, theta, r)
+  log_g_star <- log_density_x(d, theta, r, x_star)
+  omega <- -deriv2_logFp(d, theta, r, x_star) -
+    deriv2_log_dchi(theta + r - x_star, d)
+  c(log_g_star, log(omega))
+}
+
+log_g_vs_omega(100, 1)
+log_g_vs_omega(1000, 1)
+log_g_vs_omega(100, 100)
+log_g_vs_omega(1000, 100)
+log_g_vs_omega(10000, 100)
