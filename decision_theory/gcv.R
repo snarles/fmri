@@ -1,3 +1,9 @@
+library(MASS)
+library(pracma)
+library(parallel)
+
+f2 <- function(x, y=0) sum((x-y)^2)
+
 gcv_objective_ <- function(X, y) {
   res <- svd(X)
   U <- res$u
@@ -10,6 +16,25 @@ gcv_objective_ <- function(X, y) {
       ( n - sum(d^2/(d^2 + lambda)))
   }  
   ff
+}
+
+gcv_trial <- function(bt, X, mu = X %*% bt, bounds = c(1e-5, 1e5)) {
+  y <- mu + rnorm(dim(X)[1])
+  ff <- gcv_objective_(X, y)
+  res <- optimise(ff, bounds)
+  lambda <- res$minimum
+  bt_g <- solve(t(X) %*% X + lambda * eye(dim(X)[2]), t(X) %*% y)
+  c(lambda = lambda, error = f2(bt, bt_g))
+}
+
+gcv_trials <- function(bt, X, bounds = c(1e-5, 1e5),
+                       mc.reps = 100, mc.cores = 7) {
+  mu <- X %*% bt
+  res <- mclapply(1:mc.reps, function(i) {
+    set.seed(i)
+    gcv_trial(bt, X, mu, bounds)
+  }, mc.cores = mc.cores)
+  mean(unlist(res))
 }
 
 # library(pracma)
