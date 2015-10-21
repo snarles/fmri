@@ -4,9 +4,10 @@ gcv_objective_ <- function(X, y) {
   d <- res$d
   xi <- as.numeric(t(U) %*% y)  
   yn <- sum(y^2)
+  n <- dim(y)[1]
   ff <- function(lambda) {
     (yn + sum(xi^2 * ((d^2/(d^2 + lambda))^2 - 2 * (d^2/(d^2 + lambda)))))/
-      sum(d^2/(d^2 + lambda))
+      ( n - sum(d^2/(d^2 + lambda)))
   }  
   ff
 }

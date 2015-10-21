@@ -6,6 +6,7 @@ library(pracma)
 library(MASS)
 library(glmnet)
 source('eb_ident/eigenprism.R')
+source('decision_theory//gcv.R')
 library(parallel)
 
 expfunc <- function(i) {
@@ -63,10 +64,18 @@ expfunc <- function(i) {
   yh_ep <- X_te %*% beta_ep
   (rmse_ep <- Norm(yh_ep - mu_te))
   
+  ## GCV
+  ff <- gcv_objective_(X, y)
+  res <- optimise(ff, c(1e-5, 1e5))
+  lambda_gcv <- res$minimum
+  beta_gcv <- solve(t(X) %*% X + diag(rep(lambda_gcv, p)), t(X) %*% y)
+  yh_gcv <- X_te %*% beta_gcv
+  (rmse_gcv <- Norm(yh_gcv - mu_te))
+  
   "Lambdas"
-  c(Bayes = lambda_bayes, CV = lambda_cv, EP = lambda_ep)
+  #c(Bayes = lambda_bayes, CV = lambda_cv, EP = lambda_ep)
   "Norm(pred - truth)"
-  c(Bayes = rmse_bayes, CV = rmse_cv, EP = rmse_ep)
+  c(Bayes = rmse_bayes, CV = rmse_cv, EP = rmse_ep, GCV = rmse_gcv)
 }
 
 res <- mclapply(1:100, expfunc, mc.cores = 7)
