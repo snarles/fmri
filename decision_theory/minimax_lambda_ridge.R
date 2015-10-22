@@ -38,6 +38,10 @@ lazy_term <- function(alpha2, gamma, const) {
   sqrt(Q) - lambda * (1+lambda+gamma)/sqrt(Q)
 }
 
+lazy_ratio <- function(alpha2, gamma, const) 
+  risk(alpha2, gamma, const * (alpha2+1))/opt_risk(alpha2, gamma)
+
+# "lazy term -> (gamma + 1)"
 # 0.1 %>% {
 #   c(lazy_term(1, gamma, .),
 #   lazy_term(10, gamma, .),
@@ -46,6 +50,15 @@ lazy_term <- function(alpha2, gamma, const) {
 #   lazy_term(1e4, gamma, .))  
 # }
 
+# "lazy ratio -> (gamma)/(gamma - 1)"
+# gamma <- rexp(1)+1
+#  5.1 %>% {
+#    c(lazy_ratio(1, gamma, .),
+#    lazy_ratio(10, gamma, .),
+#   lazy_ratio(100, gamma, .),
+#   lazy_ratio(1000, gamma, .),
+#   lazy_ratio(1e4, gamma, .))  }
+# (gamma)/(gamma-1)
 
 risk_ <- function(alpha2, gamma) {
   ff <- function(lambda) risk(alpha2, gamma, lambda)
