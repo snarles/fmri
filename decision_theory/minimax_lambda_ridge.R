@@ -32,9 +32,15 @@ opt_risk <- function(alpha2, gamma, naive = FALSE) {
 }
 
 alpha2 <- rexp(1); gamma <- rexp(1)
+n <- 1e3; p <- floor(gamma * n)
 risk(alpha2, gamma, gamma/alpha2)
 avger(ridge_error_random_I, 100, 7, TRUE, alpha2, gamma, gamma/alpha2, naive = TRUE)
 ridge_error_random_I(alpha2, gamma, gamma/alpha2, naive = TRUE)
 risk(alpha2, gamma, 2 * gamma/alpha2)
-
+res <- risk_formula(1, 1, alpha2, gamma)
+ind <- which(res$lambdas > .5 & res$lambdas < 2)[1]
+(lambda <- res$lambdas[ind])
+res$risk[ind]
+risk(alpha2, gamma, lambda)
+avger(ridge_error_random_I, 20, 7, TRUE, alpha2, gamma, lambda, naive = TRUE)
 
