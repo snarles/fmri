@@ -16,7 +16,7 @@ mId(z, gamma)
 numDeriv::grad(function(z) mI(z, gamma), z)
 
 risk <- function(alpha2, gamma, lambda) {
-  1 + gamma * mI(-lambda, gamma) + lambda * (gamma - lambda * alpha2) * mId(-lambda, gamma)
+  1 + gamma * mI(-lambda, gamma) - lambda * (gamma - lambda * alpha2) * mId(-lambda, gamma)
 }
 risk_ <- function(alpha2, gamma) {
   ff <- function(lambda) risk(alpha2, gamma, lambda)
@@ -34,10 +34,24 @@ opt_risk <- function(alpha2, gamma, naive = FALSE) {
 alpha2 <- rexp(1); gamma <- rexp(1)
 n <- 1e3; p <- floor(gamma * n)
 risk(alpha2, gamma, gamma/alpha2)
-avger(ridge_error_random_I, 100, 7, TRUE, alpha2, gamma, gamma/alpha2, naive = TRUE)
-ridge_error_random_I(alpha2, gamma, gamma/alpha2, naive = TRUE)
+avger(ridge_error_random_I, 20, 7, TRUE, alpha2, gamma, n * gamma/alpha2, n = n, naive = TRUE)
+avger(ridge_error_random_I, 20, 7, TRUE, alpha2, gamma, n * gamma/alpha2, n = n)
+
 risk(alpha2, gamma, 2 * gamma/alpha2)
+avger(ridge_error_random_I, 20, 7, TRUE, alpha2, gamma, 2*n * gamma/alpha2, n = n, naive = TRUE)
+avger(ridge_error_random_I, 20, 7, TRUE, alpha2, gamma, 2*n * gamma/alpha2, n = n)
+
+
+risk(alpha2, gamma, 3 * gamma/alpha2)
+avger(ridge_error_random_I, 20, 7, TRUE, alpha2, gamma, 3*n * gamma/alpha2, n = n, naive = TRUE)
+avger(ridge_error_random_I, 20, 7, TRUE, alpha2, gamma, 3*n * gamma/alpha2, n = n)
+
+
+ridge_error_random_I(alpha2, gamma, gamma/alpha2, naive = TRUE)
+source("decision_theory//asymptotic_general.R")
 res <- risk_formula(1, 1, alpha2, gamma)
+plot(res$lambdas[res$lambdas > 0], res$risk[res$lambdas > 0], type ="l", xlim = c(0, 10))
+abline(v = gamma/alpha2)
 ind <- which(res$lambdas > .5 & res$lambdas < 2)[1]
 (lambda <- res$lambdas[ind])
 res$risk[ind]
