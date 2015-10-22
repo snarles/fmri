@@ -1,0 +1,126 @@
+\title{Risk Inflation relative to Bayes Oracle}
+\author{Charles Zheng and Yuval Benjamini}
+\date{\today}
+
+\documentclass[12pt]{article} 
+
+% packages with special commands
+\usepackage{amssymb, amsmath}
+\usepackage{epsfig}
+\usepackage{array}
+\usepackage{ifthen}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{csquotes}
+\definecolor{grey}{rgb}{0.5,0.5,0.5}
+
+\begin{document}
+\maketitle
+
+\newcommand{\tr}{\text{tr}}
+\newcommand{\E}{\textbf{E}}
+\newcommand{\diag}{\text{diag}}
+\newcommand{\argmax}{\text{argmax}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\argmin}{\text{argmin}}
+\newcommand{\Vol}{\text{Vol}}
+\newcommand{\comm}[1]{}
+
+These are preliminary notes.
+
+\section{Ridge regression}
+
+Conjecture: 
+\[
+\sup \frac{R_{\lambda^*}(H, \alpha^2, \gamma)}{R_0(H, \alpha^2, \gamma)} < \infty
+\]
+\emph{The risk inflation from not knowing $\lambda^*$ is bounded.}
+
+FALSE!! Unbounded...
+
+Identity case.
+
+\[
+m_I(-\lambda) = \frac{-(1 -\gamma + \lambda) + \sqrt{(1-\gamma + \lambda)^2 + 4\gamma \lambda}}{2\gamma \lambda}
+\]
+\begin{align*}
+m_I'(z) &= \frac{d}{dz} \frac{(1-\gamma-z) - \sqrt{(1-\gamma - z)^2 -4\gamma z}}{2 \gamma z}
+\\&= \frac{-1}{z}m_I(z) +
+\frac{1}{2\gamma z}\left[-1 - \frac{z-\gamma-1}{\sqrt{(z+\gamma - 1)^2 -4\gamma z}}
+\right]
+\end{align*}
+
+where 
+\[
+\lim_{z \to 0}-1 - \frac{z-\gamma-1}{\sqrt{(z+\gamma - 1)^2 -4\gamma z}} = \frac{2}{\gamma - 1}
+\]
+
+and
+
+\begin{align*}
+\lim_{z\to 0} m_I(z) &=
+-\lim_{z\to 0}
+\frac{(z+\gamma-1) + \sqrt{(z+\gamma - 1)^2 -4\gamma z}}{2\gamma z} 
+\\&= -\frac{2(\gamma - 1)}{\gamma}\frac{1}{z}
+\end{align*}
+
+
+
+Hence,
+\[
+\lim_{\lambda \to 0} (\gamma - \lambda\alpha^2)\lambda m'(-\lambda) = 
+\gamma \left[m(0) - \frac{1}{2\gamma}\frac{2}{\gamma-1}\right]
+\]
+
+\begin{align*}
+R_0 &= 1-\gamma m(0) + \gamma \lambda m'(0)
+\\&= 1 - \gamma m(0) + \gamma m(0) - \frac{1}{\gamma - 1}  = \frac{\gamma - 2}{\gamma - 1}
+\end{align*}
+
+
+
+\section{Covariance estimation}
+
+\[
+S \sim W_n(\frac{1}{n}\Sigma), D = \diag(S), \hat{R} = D^{-1/2}S D^{-1/2}
+\]
+\[
+S_\lambda = \lambda D + (1-\lambda)S
+\]
+
+Which $\lambda$ minimizes
+\[
+\E \tr[S_\lambda^{-1} \Sigma] + \log\det(S_\lambda)
+\]
+
+We have
+\[
+\log\det(\lambda D + (1-\lambda)S) = \log\det D + \log\det(\lambda I + (1-\lambda)\hat{R}) = \log\det D + \sum_{i=1}^p \log (\lambda + (1-\lambda) r_i)
+\]
+where $r_i$ are the eigenvalues of $\hat{R}$.
+
+Meanwhile
+\begin{align*}
+\E \tr[S_\lambda^{-1} \Sigma] &=
+\E \tr[(\lambda D + (1-\lambda)S)^{-1}\Sigma]
+\\&= 
+\frac{1}{1-\lambda} \E \tr[(\frac{\lambda}{1-\lambda}I +\hat{R})^{-1}D^{-1/2}\Sigma D^{-1/2}]
+\end{align*}
+
+Take $n, p \to \infty$.  Then $D^{-1/2}\Sigma D^{-1/2} \to R$, the true correlation.  From now we can just assume $\Sigma=R$, (ie unit marginal variances), it doesn't matter in the limit.  Then we get
+\[
+\E \tr[S_\lambda^{-1} \Sigma] = \frac{1}{1-\lambda} \E \tr[(\frac{\lambda}{1-\lambda}I + S)^{-1} \Sigma]
+\]
+
+We know how to evaluate the term inside, i.e. $\E \tr[(\frac{\lambda}{1-\lambda}I + S)^{-1} \Sigma]$ based on random matrix theory.
+
+
+
+
+\end{document}
+
+
+
