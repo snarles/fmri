@@ -1,4 +1,5 @@
-
+source("decision_theory//ridge_error.R")
+source("utils//avger.R")
 
 mI <- function(z, gamma) {
   -((z + gamma - 1) + sqrt((z + gamma-1)^2 - 4 * gamma * z))/
@@ -32,5 +33,8 @@ opt_risk <- function(alpha2, gamma, naive = FALSE) {
 
 alpha2 <- rexp(1); gamma <- rexp(1)
 risk(alpha2, gamma, gamma/alpha2)
+avger(ridge_error_random_I, 100, 7, TRUE, alpha2, gamma, gamma/alpha2, naive = TRUE)
+ridge_error_random_I(alpha2, gamma, gamma/alpha2, naive = TRUE)
 risk(alpha2, gamma, 2 * gamma/alpha2)
+
 

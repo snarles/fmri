@@ -53,6 +53,22 @@ ridge_oracle_error <- function(bt, X, bounds = c(1e-5, 1e5)) {
   res
 }
 
+ridge_error_random_I <- function(alpha2, gamma, lambda, n = 1e3, naive = FALSE) {
+  p <- floor(gamma * n)
+  bt <- rnorm(p)
+  bt <- sqrt(alpha2) * bt/sqrt(sum(bt^2))
+  X <- randn(n, p)
+  if (naive) {
+    y <- X %*% bt + rnorm(n)
+    bth <- solve(t(X) %*% X + lambda * eye(p), t(X) %*% y)
+    x_star <- rnorm(p)
+    y_star <- sum(x_star * bt) + rnorm(1)
+    return((y_star - sum(x_star * bth))^2)
+  } else {
+    return(1 + ridge_error_theory(bt, X, lambda))
+  }
+}
+
 # bt <- rnorm(10); X <-randn(5, 10); lambda <- 1 
 # ridge_error_trials(bt, X, lambda, mc.reps = 2000)
 # ridge_error_theory(bt, X, lambda)
