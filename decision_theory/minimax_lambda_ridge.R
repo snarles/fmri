@@ -58,3 +58,5 @@ res$risk[ind]
 risk(alpha2, gamma, lambda)
 avger(ridge_error_random_I, 20, 7, TRUE, alpha2, gamma, lambda, naive = TRUE)
 
+opt_risk(alpha2, gamma)
+opt_risk(alpha2, gamma, TRUE)
