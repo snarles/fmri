@@ -8,7 +8,11 @@ ridge_error_trial <- function(bt, X, lambda) {
   #p <- dim(Sigma)[1]
   #X <- mvrnorm(n, mu = rep(0, p), Sigma = Sigma)
   y <- X %*% bt + rnorm(dim(X)[1])
-  btr <- solve(t(X) %*% X + lambda * eye(dim(X)[2]), t(X) %*% y)
+  if (lambda == 0) {
+    btr <- ginv(X) %*% y
+  } else {
+    btr <- solve(t(X) %*% X + lambda * eye(dim(X)[2]), t(X) %*% y)    
+  }
   f2(bt, btr)
 }
 

@@ -3,6 +3,19 @@ library(MASS)
 source("decision_theory//gcv.R")
 source("decision_theory//ridge_error.R")
 
+opt_lambda_vs_zero <- function(p, n, alpha, vs_X, ws_X) {
+  U <- svd(randn(p, p))$u
+  d_X <- sample(vs_X, p, prob=ws_X, replace = TRUE)
+  Sigma_X <- t(U) %*% diag(d_X) %*% U
+  X <- mvrnorm(n, rep(0, p), Sigma_X)
+  bt <- rnorm(p) %>% {sqrt(alpha) * ./sqrt(f2(.))}  
+  zero_error <- ridge_error_theory(bt, X, 0)
+  oracle_res <- ridge_oracle_error(bt, X)
+  oracle_lambda <- oracle_res[[1]]
+  oracle_error <- oracle_res[[2]]
+  c(oracle_error, zero_error)/n
+}
+
 risk_ratio_exp <- function(p, n, alpha, vs_X, ws_X,
                            mc.reps = 1e4, mc.cores = 7) {
   U <- svd(randn(p, p))$u
@@ -45,6 +58,14 @@ res <- risk_ratio_exp(
   ws_X = c(1.0, 0.0),
   mc.reps = 1e1
 )
+
+opt_lambda_vs_zero(
+  p = 100,
+  n = 50,
+  alpha = 1,
+  vs_X = c(1.0, 0.0),
+  ws_X = c(1.0, 0.0))
+
 
 lineId::zattach(res)
 ff <- ridge_error_theory_(bt, X)
