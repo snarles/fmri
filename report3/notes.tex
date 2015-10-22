@@ -33,54 +33,58 @@ These are preliminary notes.
 
 \section{Ridge regression}
 
-Conjecture: 
+Suppose $\beta \sim N(0, \frac{\sigma^2\alpha^2}{p} I)$, $X \sim N^n(0, I_p)$ and $y \sim N(X\beta, \sigma^2 I_n)$.
+
+Define the risk of ridge regression as
 \[
-\sup \frac{R_{\lambda^*}(H, \alpha^2, \gamma)}{R_0(H, \alpha^2, \gamma)} < \infty
+R(\lambda) = \E ||y^* - (x^*)^T \hat{\beta}_\lambda||^2
 \]
-\emph{The risk inflation from not knowing $\lambda^*$ is bounded.}
-
-FALSE!! Unbounded...
-
-Identity case.
-
+where
 \[
-m_I(-\lambda) = \frac{-(1 -\gamma + \lambda) + \sqrt{(1-\gamma + \lambda)^2 + 4\gamma \lambda}}{2\gamma \lambda}
+\hat{\beta}_\lambda = (X^T X + n\lambda)^{-1} X^T y
 \]
-\begin{align*}
-m_I'(z) &= \frac{d}{dz} \frac{(1-\gamma-z) - \sqrt{(1-\gamma - z)^2 -4\gamma z}}{2 \gamma z}
-\\&= \frac{-1}{z}m_I(z) +
-\frac{1}{2\gamma z}\left[-1 - \frac{z-\gamma-1}{\sqrt{(z+\gamma - 1)^2 -4\gamma z}}
-\right]
-\end{align*}
+and where $x^* \sim N(0, I_p)$, $y^* \sim ((x^*)^T\beta, \sigma^2)$.
 
-where 
+Knowing $\alpha^2$, one should set $\lambda = \lambda^*$, by
 \[
-\lim_{z \to 0}-1 - \frac{z-\gamma-1}{\sqrt{(z+\gamma - 1)^2 -4\gamma z}} = \frac{2}{\gamma - 1}
+\lambda^* = \frac{\gamma}{\alpha^2} = \frac{(p/n)}{\alpha^2}.
 \]
-
-and
-
-\begin{align*}
-\lim_{z\to 0} m_I(z) &=
--\lim_{z\to 0}
-\frac{(z+\gamma-1) + \sqrt{(z+\gamma - 1)^2 -4\gamma z}}{2\gamma z} 
-\\&= -\frac{2(\gamma - 1)}{\gamma}\frac{1}{z}
-\end{align*}
-
-
-
-Hence,
+However, for $\alpha^2$ unknown, we propose the following.
+Choose a constant $c$, and set  $\lambda = \lambda_c$, where
 \[
-\lim_{\lambda \to 0} (\gamma - \lambda\alpha^2)\lambda m'(-\lambda) = 
-\gamma \left[m(0) - \frac{1}{2\gamma}\frac{2}{\gamma-1}\right]
+\lambda_c = c\frac{||y||^2}{n}
+\]
+Let $R^* = \E R(\lambda^*)$ and $R_c = \E R(\lambda_c) = \E R(c||y||^2/n)$.
+
+\textbf{Claim:} fixing $c$, 
+\[
+\sup_{\alpha^2 \geq 0} \frac{R_c}{R^*} < \infty
+\]
+where $\gamma = p/n$.
+
+Implication: simply setting $\lambda = c||y||^2/n$, one can achieve a risk that is at worst a bounded multiple of the risk of the optimal rule for choosing $\lambda$.
+
+For now we prove a weaker, asymptotic version of the claim where
+\[
+\max\{\lim_{\alpha^2 \to \infty} \frac{R_c}{R^*}, \frac{R_c}{R^*}\bigg|_{\alpha^2 = 0} \} < \infty
+\]
+in the limit where $\alpha^2$, $\sigma^2$ are fixed while $n \to \infty$, $p\to\infty$, and $p/n \to \gamma$.
+
+\subsection{Preliminaries}
+
+Define
+\[
+Q = (\gamma - \lambda - 1)^2 + 4\gamma \lambda
 \]
 
-\begin{align*}
-R_0 &= 1-\gamma m(0) + \gamma \lambda m'(0)
-\\&= 1 - \gamma m(0) + \gamma m(0) - \frac{1}{\gamma - 1}  = \frac{\gamma - 2}{\gamma - 1}
-\end{align*}
-
-
+In the limit, we have
+\[
+R(\lambda) = \frac{1}{2\gamma}\left[\alpha^2(\gamma - 1-\sqrt{Q} -\lambda\left(\frac{1 + \lambda + \gamma}{\sqrt{Q}}\right)) + \gamma\left(1 + \frac{1+\lambda+\gamma}{\sqrt{Q}}\right)\right]
+\]
+and in particular that
+\[
+R(\lambda^*) = R(\gamma\alpha^{-2}) = \frac{1}{2}\left[1 + \frac{\gamma-1}{\gamma}\alpha^2 + \sqrt{(1 + \frac{\gamma-1}{\gamma}\alpha^2)^2 + 4\alpha^2}\right]
+\]
 
 \section{Covariance estimation}
 
