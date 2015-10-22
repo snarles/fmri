@@ -13,7 +13,7 @@ opt_lambda_vs_zero <- function(p, n, alpha, vs_X, ws_X) {
   oracle_res <- ridge_oracle_error(bt, X)
   oracle_lambda <- oracle_res[[1]]
   oracle_error <- oracle_res[[2]]
-  c(oracle_error, zero_error)/n
+  list(oracle_lambda, c(oracle_error, zero_error)/n)
 }
 
 risk_ratio_exp <- function(p, n, alpha, vs_X, ws_X,
