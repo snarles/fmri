@@ -11,10 +11,11 @@ risk_ratio_exp <- function(p, n, alpha, vs_X, ws_X,
   X <- mvrnorm(n, rep(0, p), Sigma_X)
   bt <- rnorm(p) %>% {sqrt(alpha) * ./sqrt(f2(.))}
   
-  
+  ridge_error_theory(bt, X, 0)
   oracle_res <- ridge_oracle_error(bt, X)
   oracle_lambda <- oracle_res[[1]]
   oracle_error <- oracle_res[[2]]
+  
   gcv_res <- gcv_trials(bt, X, obj = gcv_objective_,
                         mc.reps = mc.reps, mc.cores = mc.cores)
   gcv_lambda <- median(gcv_res[, 1])

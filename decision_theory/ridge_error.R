@@ -28,9 +28,7 @@ ridge_error_theory <- function(bt, X, lambda) {
   diags <- (lambda/(d^2 + lambda)) - 1  
   diags2 <- (lambda/(d^2 + lambda))^2 - 1
   bias_term <- f2(bt) + sum(diags2 * vbt^2)
-  var_term <- 1/lambda * (p + sum(diags)) - 1/lambda * (p + sum(diags2))
-  temp <- solve(t(X) %*% X + lambda * eye(p), t(X))
-  var_term <- sum(diag(temp %*% t(temp)))
+  var_term <- sum(1/(d^2 + lambda) - lambda/(d^2 + lambda)^2) 
   bias_term + var_term
 }
 
@@ -39,10 +37,9 @@ ridge_error_theory_ <- function(bt, X) {
   vbt <- t(V) %*% bt
   fbt <- f2(bt)
   ff <- function(lambda) {
-    diags <- (lambda/(d^2 + lambda)) - 1  
     diags2 <- (lambda/(d^2 + lambda))^2 - 1
     f2(bt) + sum(diags2 * vbt^2) + 
-      1/lambda * (p + sum(diags)) - 1/lambda * (p + sum(diags2))
+      sum(1/(d^2 + lambda) - lambda/(d^2 + lambda)^2) 
   }
   ff
 }
