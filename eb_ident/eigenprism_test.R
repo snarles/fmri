@@ -13,7 +13,7 @@ expfunc <- function(i) {
   set.seed(i)
   n <- 30
   p <- 200
-  sigma_beta <- 10
+  sigma_beta <- 0.0001
   sigma_y <- 20
   sigma2_y <- sigma_y^2
   #W_X <- 2

@@ -28,7 +28,9 @@ ridge_error_theory <- function(bt, X, lambda) {
   diags <- (lambda/(d^2 + lambda)) - 1  
   diags2 <- (lambda/(d^2 + lambda))^2 - 1
   bias_term <- f2(bt) + sum(diags2 * vbt^2)
-  var_term <- 1/lambda^2 * (p + sum(diags)) - 1/lambda * (p + sum(diags2))
+  var_term <- 1/lambda * (p + sum(diags)) - 1/lambda * (p + sum(diags2))
+  temp <- solve(t(X) %*% X + lambda * eye(p), t(X))
+  var_term <- sum(diag(temp %*% t(temp)))
   bias_term + var_term
 }
 
@@ -40,11 +42,16 @@ ridge_error_theory_ <- function(bt, X) {
     diags <- (lambda/(d^2 + lambda)) - 1  
     diags2 <- (lambda/(d^2 + lambda))^2 - 1
     f2(bt) + sum(diags2 * vbt^2) + 
-      1/lambda^2 * (p + sum(diags)) - 1/lambda * (p + sum(diags2))
+      1/lambda * (p + sum(diags)) - 1/lambda * (p + sum(diags2))
   }
   ff
 }
 
+ridge_oracle_error <- function(bt, X, bounds = c(1e-5, 1e5)) {
+  ff <- ridge_error_theory_(bt, X)
+  res <- optimise(ff, bounds)
+  res
+}
 
 # bt <- rnorm(10); X <-randn(5, 10); lambda <- 1 
 # ridge_error_trials(bt, X, lambda, mc.reps = 2000)
