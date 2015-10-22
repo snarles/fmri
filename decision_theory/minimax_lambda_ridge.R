@@ -18,6 +18,35 @@ numDeriv::grad(function(z) mI(z, gamma), z)
 risk <- function(alpha2, gamma, lambda) {
   1 + gamma * mI(-lambda, gamma) - lambda * (gamma - lambda * alpha2) * mId(-lambda, gamma)
 }
+risk2 <- function(alpha2, gamma, lambda) {
+  Q <- (gamma - lambda - 1)^2 + 4 * gamma * lambda
+  1/2 + alpha2/2 - alpha2/(2 * gamma) + alpha2*sqrt(Q)/(2*gamma) + 
+    (gamma-lambda*alpha2)/(2 * gamma)*(1+lambda+gamma)/sqrt(Q)
+  1/(2 * gamma) * 
+    (alpha2 * (gamma - 1 + sqrt(Q) - 
+                 lambda * (1+lambda+gamma)/sqrt(Q)) + 
+       gamma * (1+(1+lambda+gamma)/sqrt(Q)))
+}
+
+alpha2=rexp(1);gamma=rexp(1);lambda=rexp(1)
+c(risk(alpha2,gamma,lambda),risk2(alpha2,gamma,lambda))
+
+## converges to 1 as alpha2 -> Inf
+lazy_term <- function(alpha2, gamma, const) {
+  lambda <- (alpha2 + 1)*const
+  Q <- (gamma - lambda - 1)^2 + 4 * gamma * lambda
+  sqrt(Q) - lambda * (1+lambda+gamma)/sqrt(Q)
+}
+
+# 0.1 %>% {
+#   c(lazy_term(1, gamma, .),
+#   lazy_term(10, gamma, .),
+#   lazy_term(100, gamma, .),
+#   lazy_term(1000, gamma, .),
+#   lazy_term(1e4, gamma, .))  
+# }
+
+
 risk_ <- function(alpha2, gamma) {
   ff <- function(lambda) risk(alpha2, gamma, lambda)
   ff
@@ -30,6 +59,11 @@ opt_risk <- function(alpha2, gamma, naive = FALSE) {
   }
   .5 * (1 + (gamma-1)/gamma * alpha2 + sqrt((1-(gamma-1)/gamma*alpha2)^2 + 4*alpha2))
 }
+
+# "Check lim{alpha2} risk*/alpha2"
+# library(magrittr)
+# gamma <- 10
+# alpha2 * 1000 %>% {c(opt_risk(., gamma)/., (gamma-1)/gamma)}
 
 alpha2 <- rexp(1); gamma <- rexp(1)
 n <- 1e3; p <- floor(gamma * n)
