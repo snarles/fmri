@@ -50,32 +50,27 @@ Knowing $\alpha^2$, one should set $\lambda = \lambda^*$, by
 \lambda^* = \frac{\gamma}{\alpha^2} = \frac{(p/n)}{\alpha^2}.
 \]
 However, for $\alpha^2$ unknown, we propose the following.
-Choose a constant $c$, and set  $\lambda = \lambda_c$, where
+Choose a $\lambda = g(X)$ for some function of $X$.  We will consider
 \[
-\lambda_c = c\frac{||y||^2}{n}
+g(X) = \text{const}
 \]
-Let $R^* = \E R(\lambda^*)$ and $R_c = \E R(\lambda_c) = \E R(c||y||^2/n)$.
+Let $R^* = \E R(\lambda^*)$ and $R_\lambda = \E R(\lambda)$.
 
-\textbf{Claim:} fixing $c$, 
+\textbf{Claim:} fixing $\lambda$, 
 \[
-\sup_{\alpha^2 \geq 0} \frac{R_c}{R^*} < \infty
+\sup_{\alpha^2 \geq 0} \frac{R_\lambda}{R^*} < \infty
 \]
 where $\gamma = p/n$.
 
-Implication: simply setting $\lambda = c||y||^2/n$, one can achieve a risk that is at worst a bounded multiple of the risk of the optimal rule for choosing $\lambda$.
+Implication: simply using a fixed choice of $\lambda$, one can achieve a risk that is at worst a bounded multiple of the risk of the optimal rule for choosing $\lambda$.
 
 For now we prove a weaker, asymptotic version of the claim where
 \[
-\max\{\lim_{\alpha^2 \to \infty} \frac{R_c}{R^*}, \frac{R_c}{R^*}\bigg|_{\alpha^2 = 0} \} < \infty
+\max\{\lim_{\alpha^2 \to \infty} \frac{R_\lambda}{R^*}, \frac{R_\lambda}{R^*}\bigg|_{\alpha^2 = 0} \} < \infty
 \]
 in the limit where $\alpha^2$, $\sigma^2$ are fixed while $n \to \infty$, $p\to\infty$, and $p/n \to \gamma$.
 
 \subsection{Preliminaries}
-
-Define
-\[
-Q = (\gamma - \lambda - 1)^2 + 4\gamma \lambda
-\]
 
 In the limit, we have
 \[
