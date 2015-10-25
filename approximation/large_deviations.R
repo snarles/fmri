@@ -1,6 +1,6 @@
 source("approximation/large_deviations_source.R")
 
-sigma2 <- 0.01
+sigma2 <- 0.1
 ds <- c(1:10, 100 * 1:30, 1e4 * 1:10)
 ress <- matrix(0, length(ds), 5)
 for (i in 1:length(ds)) {
