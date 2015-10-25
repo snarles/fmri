@@ -136,9 +136,53 @@ we have
 \tilde{L} = 
 1 - \Cor_{z \sim N(0, I)}(||Z||^2_\Gamma, ||Z||^2_{\hat{\Gamma}})
 \]
+In the appendix we show that
+\[
+\Cor(z^T A z, z^T B z) = \frac{\tr[AB]}{\sqrt{\tr[A]\tr[B]}}
+\]
+for any positive semidefinite symmetric $A, B$.
+Hence
+\[
+\tilde{L} = 1 - \frac{\tr[\Gamma\hat{\Gamma}]}{\sqrt{\tr[\Gamma]\tr[\hat{\Gamma}]}}.
+\]
 
+\section{Appendix}
 
+\subsection{Covariance formula} 
 
+\noindent\textbf{Lemma}. \emph{
+Let $Z \sim N(0, I)$.  Then for any PSD $A, B$ we have
+\[
+\Cov(Z^T A Z, Z^T B Z) = 2\tr[AB]
+\]
+and
+\[
+\Cor(Z^TA Z, Z^T B Z) = \frac{\tr[AB]}{\sqrt{\tr[A]\tr[B]}}
+\]
+}
+
+\textbf{Proof}.
+From Fujikoshi (2010) theorems 2.2.5. and 2.2.6. we have that if $X \sim W_p(n, \Sigma)$
+\[
+\E\tr[AW] = n \tr[A\Sigma]
+\]
+and
+\[
+\E\tr[AWBW] = n\tr[A\Sigma B^T \Sigma] + n\tr[A\Sigma]\tr[B\Sigma] + n^2\tr[A\Sigma B\Sigma]
+\]
+for any $p \times p$ matrices $A, B$.
+
+Now, since $ZZ^T \sim W_p(1, I_p)$, since $A$ and $B$ are symmetric, we have
+\begin{align*}
+\Cov(Z^T A Z, Z^T B Z) &= \E\tr[AZZ^T BZZ^T] - (\E\tr[AZZ^T])(\E\tr[BZZ^T])
+\\&= 2\tr[AB] + \tr[A]\tr[B] - \tr[A]\tr[B]= 2\tr[AB].
+\end{align*}
+
+Hence
+\[
+\Cor(Z^T A Z, Z^T B Z) = \frac{\Cov(Z^T A Z, Z^T B Z)}{\sqrt{\Cov(Z^T A Z) \Cov(Z^T B Z)}} = \frac{2\tr[AB]}{\sqrt{2\tr[A^2]2\tr[B^2]}},
+\]
+completing the proof.
 
 
 
