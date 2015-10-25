@@ -116,8 +116,69 @@ Take $n, p \to \infty$.  Then $D^{-1/2}\Sigma D^{-1/2} \to R$, the true correlat
 
 We know how to evaluate the term inside, i.e. $\E \tr[(\frac{\lambda}{1-\lambda}I + S)^{-1} \Sigma]$ based on random matrix theory.
 
+\section{Minimum of non-central chi-squared}
 
+Problem: investigate sequences $d \to \infty$, $L \to \infty$, and $\lambda \to \infty$ so that the distribution of
+\[
+M = \min_{i=1}^L ||Z_i||^2
+\]
+converges in probability to a constant,
+where $Z \sim N(\sqrt{\lambda}e_1, I_d)$.
 
+If $M$ does converge to to a constant, the $p$-th quantile of $M$
+should also converge to that constant, for any $p \in (0, 1)$.  But
+the $p$th quantile of $M$ is also the $1 - \sqrt[L]{(1-p)}$th quantile
+of $X = ||Z||^2$.  Hence we would like to compute
+
+\[
+q_p(d, \lambda, L) = \{x : \Pr[X < x] = 1-\sqrt[L]{1-p}\}
+\]
+
+First, we can approximate
+\[
+\Pr[X < x] \approx \text{Vol}(B_{\sqrt{x}}) \phi_d(\lambda e_1) = \frac{2^{1-(d/2)} x^{d/2}}{\Gamma(d/2) d} e^{-\lambda/2}
+\]
+where $\phi$ is the central multivariate normal density.
+
+\textbf{Lemma}.
+\emph{ For any $d, \lambda$ we have
+\[
+\lim_{x \to 0} \frac{\frac{2^{1-(d/2)} x^{d/2}}{\Gamma(d/2) d} e^{-\lambda/2}}{\Pr[||Z||^2 < x]} = 1
+\]
+}
+\textbf{Proof}.
+Write
+\[
+\Pr[||Z||^2 < x] = \int_{B_{\sqrt{x}}} (2\pi)^{-d/2} e^{-||z - \sqrt{\lambda} e_1||^2/2} dz
+\]
+We can approximate the integrand by $(2\pi)^{-d/2} e^{-\lambda/2}$, since
+\[
+\sup_{||z||^2 < x} \frac{|e^{-||z - \sqrt{\lambda} e_1||^2/2} - e^{-\lambda/2}|}{e^{-\lambda/2}} = |e^{\sqrt{x}/2} - 1| = O(\sqrt{x})
+\]
+Hence,
+\begin{align*}
+\Pr[||Z||^2 < x] &= \int_{B_{\sqrt{x}}} (2\pi)^{-d/2} e^{-||z - \sqrt{\lambda} e_1||^2/2} dz
+\\&= (1 + O(\sqrt{x})\int_{B_{\sqrt{x}}} (2\pi)^{-d/2} e^{-\lambda/2} dz = (1 + O(\sqrt{x})) \text{Vol}(B_{\sqrt{x}}) \phi_d(\lambda e_1)
+\end{align*}
+which completes the proof.
+
+Secondly, we can approximate
+\[
+1-\sqrt[L]{1-p} \approx -\frac{\log(1-p)}{L}
+\]
+
+Hence, the $p$th quantile of $M$ is $x$ which approximately satisfies
+\[
+-\frac{\log(1-p)}{L} = \frac{2^{1-(d/2)} x^{d/2}}{\Gamma(d/2) d} e^{-\lambda/2}
+\]
+Meaning
+\begin{align*}
+q_p(d, \lambda, L) &\approx \left(-\frac{\log(1-p)}{L} \frac{\Gamma(d/2) d}{2^{1-(d/2)}} e^{\lambda/2}\right)^{2/d}
+\\&\approx \left(-\frac{\log(1-p)}{L} \frac{\sqrt{\pi d} (d/(2e))^{d/2} d}{2^{1-(d/2)}} e^{\lambda/2}\right)^{2/d}
+\\&= \left(-\frac{\log(1-p)}{L}\right)^{2/d}
+\frac{d^{1 + (3/d)} \sqrt[d]{\pi}}{2^{2/d}}
+e^{(\lambda/d) - 1}
+\end{align*}
 
 \end{document}
 

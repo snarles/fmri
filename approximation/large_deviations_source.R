@@ -167,8 +167,8 @@ pchisq_laplace <- function(q, df, ncp) {
 ## just use volume approximation!! duh!!
 log_prox_ans4 <- function(d, theta, r) {
   ## log-volume of sphere
-  lv <- (d/2) * log(2 * pi) - lgamma(d/2) + log(r) - log(d)
+  lv <- (d/2) * log(2 * pi) - lgamma(d/2) + d * log(r) - log(d)
   ## log-density of gaussian
-  ld <- -d/2 * log(2 * pi) - (theta-r)/2
+  ld <- -d/2 * log(2 * pi) - (theta)/2
   lv + ld
 }
