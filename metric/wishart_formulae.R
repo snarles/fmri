@@ -17,7 +17,7 @@ eWAW <- function(n, Sigma, A = eye(dim(Sigma)[1]), empirical = 0) {
     res <- array(0, dim = c(p, p, empirical))
     xall <- mvrnorm(n=n * empirical, mu=rep(0, p), Sigma = Sigma)
     for (i in 1:empirical) {
-      xx <- xall[((i-1) * n) + (1:n), ]
+      xx <- xall[((i-1) * n) + (1:n), , drop = FALSE]
       WW <- t(xx) %*% xx
       res[, , i] <- WW %*% A %*% WW
     }
@@ -37,7 +37,7 @@ eTrAW <- function(n, Sigma, A, empirical = 0) {
   res <- numeric(empirical)
   xall <- mvrnorm(n=n * empirical, mu=rep(0, p), Sigma = Sigma)
   for (i in 1:empirical) {
-    xx <- xall[((i-1) * n) + (1:n), ]
+    xx <- xall[((i-1) * n) + (1:n), , drop = FALSE]
     WW <- t(xx) %*% xx
     res[i] <- TR(A %*% WW)
   }
@@ -56,7 +56,7 @@ eTrAW_TrBW <- function(n, Sigma, A, W, empirical = 0){
   res <- numeric(empirical)
   xall <- mvrnorm(n=n * empirical, mu=rep(0, p), Sigma = Sigma)
   for (i in 1:empirical) {
-    xx <- xall[((i-1) * n) + (1:n), ]
+    xx <- xall[((i-1) * n) + (1:n), , drop = FALSE]
     WW <- t(xx) %*% xx
     res[i] <- TR(A %*% WW) * TR(B %*% WW)
   }
@@ -75,7 +75,7 @@ eTrAWBW <- function(n, Sigma, A, W, empirical = 0){
   res <- numeric(empirical)
   xall <- mvrnorm(n=n * empirical, mu=rep(0, p), Sigma = Sigma)
   for (i in 1:empirical) {
-    xx <- xall[((i-1) * n) + (1:n), ]
+    xx <- xall[((i-1) * n) + (1:n), , drop = FALSE]
     WW <- t(xx) %*% xx
     res[i] <- TR(A %*% WW %*% B %*% WW)
   }
@@ -96,7 +96,7 @@ eWiAWi <- function(n, Sigma, A, empirical = 0) {
     res <- array(0, dim = c(p, p, empirical))
     xall <- mvrnorm(n=n * empirical, mu=rep(0, p), Sigma = Sigma)
     for (i in 1:empirical) {
-      xx <- xall[((i-1) * n) + (1:n), ]
+      xx <- xall[((i-1) * n) + (1:n), , drop = FALSE]
       WW <- t(xx) %*% xx
       res[, , i] <- solve(WW, A) %*% solve(WW)
     }
