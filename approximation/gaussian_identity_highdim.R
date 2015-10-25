@@ -18,7 +18,7 @@ p <- 10; mc_ident2(p, noise_const * p, L, 1e4)
 p <- 20; mc_ident2(p, noise_const * p, L, 1e4)
 p <- 30; mc_ident2(p, noise_const * p, L, 1e4)
 
-p <- 10; mc_ident4(p, noise_const * p, L, 1e4)
+p <- 10; mc_ident4(p, noise_const * p, L, 1e4, exact = TRUE)
 p <- 10; mc_ident5(p, noise_const * p, L, 1e2)
 p <- 10; mc_ident5(p, noise_const * p, L, 1e2, pchisq = pchisq_laplace)
 

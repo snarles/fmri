@@ -42,8 +42,6 @@ mc_ident2 <- function(p, sigma2, K, mc.reps = 1000) {
   mean(mcs)
 }
 
-
-
 ## actually generates a gaussian instead of a chi-squared
 rchisq_g <- function(n, df, ncp = 0) {
   mu <- df + ncp
@@ -51,7 +49,19 @@ rchisq_g <- function(n, df, ncp = 0) {
   sqrt(vv) * rnorm(n) + mu
 }
 
-## uses gaussian--approximate!!
+meanexp <- function(v) {
+  vm <- max(v)
+  mean(exp(v - vm)) * exp(vm)
+}
+
+## large-sigma approximation
+mc_indent3 <- function(p, sigma2, K, mc.reps = 1e4) {
+  cc <- p/sigma2
+  samp <- qnorm(((1:mc.reps) - 0.5)/mc.reps)  
+  1 - meanexp((K-1) * log(1 - pnorm(samp - sqrt(cc))))
+}
+
+## large-sigma2 approximation (if sigma2 > p)
 mc_ident3 <- function(p, sigma2, K, mc.reps = 1000) {
   alpha <- sigma2/(1 + sigma2)
   mcs <- sapply(1:mc.reps,
@@ -69,22 +79,23 @@ mc_ident3 <- function(p, sigma2, K, mc.reps = 1000) {
 }
 
 min_chisq_approx <- function(K, df, ncp, naive = FALSE, nits = 20,
-                             pchisq_f = pchisq) {
+                             pchisq_f = pchisq, prob = 1/2, verbose = TRUE) {
   if (naive) {
     print(min(rchisq(K, df, ncp)))
   }
   #z <- (ncp - df)/sqrt(df)
   #med_loc2(df, z, K, ux=df + ncp, nits=nits)
   ux <- df + ncp; lx <- 0
-  const <- -log(2)
+  const <- log(prob)
   for (i in 1:nits) {
     xc <- (ux + lx)/2
     suppressWarnings(pp <- pchisq_f(xc, df, ncp))
     if (is.na(pp)) {
+      if (verbose) {paste("pchisq(", xc, ",", df, ",", ncp, ") error")}
       ux <- xc
     } else {
       val <- K * log_1_plus(-pp)
-      if (is.na(val)) {
+      if (is.na(val) && verbose) {
         print(paste("xc = ", xc, ";df=", df, ";ncp=", ncp, ";pp=", pp, ";K=", K))
       }
       if (val > const) {
@@ -98,14 +109,23 @@ min_chisq_approx <- function(K, df, ncp, naive = FALSE, nits = 20,
   xc
 }
 
+## use exact = TRUE to sample from min dist
 ## computes theoretical median of min
-mc_ident4 <- function(p, sigma2, K, mc.reps = 1000, nits = 20) {
+mc_ident4 <- function(p, sigma2, K, mc.reps = 1000, nits = 20,
+                      exact = FALSE, use.qchisq = FALSE) {
   alpha <- sigma2/(1 + sigma2)
   mcs <- sapply(1:mc.reps,
                 function(i) {
                   y2 <- (1 + sigma2) * rchisq(1, df = p)
                   d1 <- alpha * rchisq(1, df = p, ncp = alpha * y2)
-                  ds <- min_chisq_approx(K - 1, p, y2, nits = nits)
+                  prob <- 1/2
+                  if (exact == TRUE) prob <- runif(1)
+                  if (use.qchisq) {
+                    prob2 <- 1-(1-prob)^(1/(K-1))
+                    ds <- qchisq(prob2, p, y2)
+                  } else {
+                    ds <- min_chisq_approx(K - 1, p, y2, nits = nits, prob = prob)                    
+                  }
                   (ds < d1)
                 })
   mean(mcs)

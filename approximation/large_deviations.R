@@ -1,15 +1,16 @@
 source("approximation/large_deviations_source.R")
 
-sigma2 <- 1
+sigma2 <- 0.01
 ds <- c(1:10, 100 * 1:30, 1e4 * 1:10)
-ress <- matrix(0, length(ds), 4)
+ress <- matrix(0, length(ds), 5)
 for (i in 1:length(ds)) {
   d <- ds[i]
   theta <- sqrt((1 + sigma2) * d); r <- sqrt(sigma2 * d)
   ress[i, ] <-   c(log_true_ans(d, theta, r),
   log_prox_ans(d, theta, r),
   log_prox_ans2(d, theta, r),
-  log_prox_ans3(d, theta, r))  
+  log_prox_ans3(d, theta, r),
+  log_prox_ans4(d, theta, r))  
 }
 
 View(cbind(ds, ress))
