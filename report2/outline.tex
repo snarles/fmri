@@ -892,22 +892,42 @@ MC(\Sigma, K) = \E_Y[\Pr[\min_{i=1}^k ||y + Z_i||^2_\Sigma < ||Ay + A^{1/2} Z^*|
 \]
 where $Z^*,Z_1,\hdots, Z_k$ are iid $N(0, I)$.
 
-Eventually, we will look for limiting sequences of $(y, \Sigma, K, a,
-b)$, where $a$ and $b$ are scaling constants, defining $M
-= \min_{i=1}^k ||y + Z_i||^2_\Sigma$ and $V = ||Ay + A^{1/2}
-Z^*||^2_\Sigma$, we have that $aM + b$ converges in probability to a
-constant while $aV + b$ converges to a Gaussian distribution.
-Hence under such a limit, $MC(\Sigma, K)$ converges to a constant.
+%Eventually, we will look for limiting sequences of $(y, \Sigma, K, a,
+%b)$, where $a$ and $b$ are scaling constants, defining $M
+%= \min_{i=1}^k ||y + Z_i||^2_\Sigma$ and $V = ||Ay + A^{1/2}
+%Z^*||^2_\Sigma$, we have that $aM + b$ converges in probability to a
+%constant while $aV + b$ converges to a Gaussian distribution.
+%Hence under such a limit, $MC(\Sigma, K)$ converges to a constant.
 
 To prepare for such a result, we approximate the distribution of $M$ when $\Sigma$ and $y$ are large.
 The $p$th quantile of $M$ is the $1-(1-p)^{1/k}$th quantile of $||y + Z_i||^2$.
 For large $\Sigma$, we can approximate
 \[
-\Pr[||y+ Z_i||^2_\Sigma < x] \approx \phi_d(y) \det(\Sigma)^{-1/2}\Vol(B_d(\sqrt{x}))
+\Pr[||y+ Z_i||^2_\Sigma < x] \approx \phi_d(y) \det(\Sigma)^{-1/2}\Vol(B_d(\sqrt{x})) = 
+\phi_d(y) \sqrt{\det(\Omega)} \frac{2(\pi x)^{d/2}}{d\Gamma(d/2)}
 \]
 where $B_d(r)$ is the euclidean ball with radius $r$ and $\phi_d(y) = (2\pi)^{-d/2} e^{-||y||^2/2}$.
 Hence, the $p$th quantile of $M$ is $x_p$ where
+\[
+x_p = \frac{1}{\pi}\left(
+\frac{d\Gamma(d/2)}{2} \frac{(-\log(1-p)/L)\sqrt{\det(\Sigma)}}{\phi_d(y)}
+\right)^{2/d}
+\]
+%In order for the variance of $M$ to vanish it must be the case that
+%$x_\epsilon$ and $x_{1-\epsilon}$ are close for some small $\epsilon$.
+%In order for this to be the case, we must have $L$ sufficiently large so that
+%\[
+%\left(\frac{-\log(\epsilon)}{L} \sqrt{\det{\Sigma}}\right)^{2/d} 
+%\]
+%is small.
 
+
+Let us now turn to the distribution of $V$.
+We have $A \to \Omega$ in the limit of large $\Sigma$.
+Then,
+\[
+||Ay + A^{1/2}Z||^2_\Sigma \approx ||\Omega y + \Omega^{1/2}Z||^2_\Sigma = ||\Omega^{1/2} y + Z||^2
+\]
 
 \end{document}
 
