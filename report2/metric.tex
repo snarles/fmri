@@ -113,10 +113,10 @@ where
 \[
 \hat{d}(x_1, x_2) =  (x_1-x_2)^T \hat{B} \hat{\Sigma}_\epsilon^{-1} \hat{B}^T (x_1 - x_2).
 \]
-The loss function $\tilde{L}$ looks complicated at first,
+The loss function $\tilde{\mathcal{L}}$ looks complicated at first,
 but perhaps we can find a simplified approximation.
 
-\subsection{Approximating $\tilde{L}$}
+\subsection{Approximating $\tilde{\mathcal{L}}$}
 
 Let $\delta$ be multivariate normal $N(0, \Sigma_X)$.
 Then $X = \Sigma^{-1/2}\delta$ has distribution $N(0, I_p)$
@@ -133,18 +133,83 @@ Defining the $p \times p$ matrices $\Gamma$ and $\hat{\Gamma}$ by
  = \Sigma_X^{1/2}\hat{B}\hat{\Sigma}_\epsilon^{-1}\hat{B}^T \Sigma_X^{1/2},\]
 we have
 \[
-\tilde{L} = 
+\tilde{\mathcal{L}} = 
 1 - \Cor_{z \sim N(0, I)}(||Z||^2_\Gamma, ||Z||^2_{\hat{\Gamma}})
 \]
 In the appendix we show that
 \[
-\Cor(z^T A z, z^T B z) = \frac{\tr[AB]}{\sqrt{\tr[A]\tr[B]}}
+\Cor(z^T A z, z^T B z) = \frac{\tr[AB]}{\sqrt{\tr[A^2]\tr[B^2]}}
 \]
 for any positive semidefinite symmetric $A, B$.
 Hence
 \[
-\tilde{L} = 1 - \frac{\tr[\Gamma\hat{\Gamma}]}{\sqrt{\tr[\Gamma]\tr[\hat{\Gamma}]}}.
+\tilde{\mathcal{L}} = 1 - \frac{\tr[\Gamma\hat{\Gamma}]}{\sqrt{\tr[\Gamma^2]\tr[\hat{\Gamma}^2]}}.
 \]
+
+\section{Connection to Frobenius norm estimation}
+
+Now we claim that under the condition that $||\Gamma||_F$ is large,
+the problem of estimation under the loss $\tilde{L}$ reduces to the
+problem of entrywise mean-squared estimation of $\Gamma$, with loss
+\[
+||\Gamma - \hat{\Gamma}||^2_F.
+\]
+
+Suppose that we have an estimator $\hat{\Gamma}$ with
+\[
+\E ||\Gamma - \hat{\Gamma}||^2_F < r.
+\]
+Then it follows (from Cauchy-Schwarz) that
+\[
+r > \E ||\Gamma - \hat{\Gamma}||^2_F \geq \E(||\Gamma||_F - ||\Gamma||_F)^2,
+\]
+therefore,
+\[
+||\Gamma||_F - \sqrt{r} < ||\hat{\Gamma}||_F < ||\Gamma||_F + \sqrt{r}.
+\]
+Now,
+\begin{align*}
+\E\tilde{\mathcal{L}} &=
+\E\left[1 - \frac{\tr[\Gamma \hat{\Gamma}]}{\sqrt{\tr[\Gamma^2]\tr[\hat{\Gamma}^2]}}\right]
+\\&=
+\E\left[1 - \frac{\tr[\Gamma \hat{\Gamma}]}{||\Gamma||_F||\hat{\Gamma}||_F}\right]
+\\&= \frac{1}{2}\E\left\|\frac{\Gamma}{||\Gamma||_F} - \frac{\hat{\Gamma}}{||\hat{\Gamma}||_F}\right\|^2_F
+\\&= \frac{1}{2}\E\left\|
+\frac{\Gamma - \hat{\Gamma}}{||\Gamma||_F} + (||\Gamma|| - ||\hat{\Gamma}||)\frac{\hat{\Gamma}}{||\hat{\Gamma}||_F}
+\right\|^2_F
+\\&\leq\frac{1}{2}\left[\E\left[
+\frac{\|\Gamma - \hat{\Gamma}\|^2_F}{||\Gamma||_F^2}\right]
+ + \E\left[(||\Gamma||_F - ||\hat{\Gamma}||_F)^2\right]
+ + 2 
+\sqrt{\E\left[
+\left\|\frac{\Gamma - \hat{\Gamma}}{||\Gamma||_F}\right\|^2\right]
+\E\left[
+\left\|\frac{(||\Gamma|| - ||\hat{\Gamma}||)\hat{\Gamma}}{||\hat{\Gamma}||_F}\right\|^2
+\right]}
+\right]
+\\&\leq \frac{1}{2}\left[
+\frac{r}{||\Gamma||_F^2} + r + \frac{2}{||\Gamma||_F}r\right]
+\\&=
+\left(\frac{||\Gamma||_F^{-2} + 2||\Gamma||_F^{-1} + 1}{2}\right)r
+\end{align*}
+i.e. $\mathcal{L}$ is bounded by $\E||\Gamma - \hat{\Gamma}||^2_F$, times a decreasing function of $||\Gamma||_F$.
+
+Meanwhile, root-mean-squared estimation of $\Gamma = \Sigma_X^{1/2}
+B \Sigma_\epsilon^{-1} B^T \Sigma_X^{1/2}$ can be reduced to
+estimating $B$ and $\Sigma_\epsilon^{-1}$ separately, with respect to
+root-mean-squared error.
+
+For simplicity let us first assume $\Sigma_X = 1$.  Note the following lemma:
+
+\noindent\textbf{Lemma.}
+\emph{For constant matrices $A, B$ and random matrices $\hat{A}, \hat{B}$,}
+\[
+\E||AB - \hat{A}\hat{B}||_F \leq
+||A||_F\E[||B-\hat{B}||_F] + 
+||B||_F\E[||A - \hat{A}||_F] + 
+\E[||B-\hat{B}||_F||A - \hat{A}||_F]
+\]
+
 
 \section{Appendix}
 
@@ -157,7 +222,7 @@ Let $Z \sim N(0, I)$.  Then for any PSD $A, B$ we have
 \]
 and
 \[
-\Cor(Z^TA Z, Z^T B Z) = \frac{\tr[AB]}{\sqrt{\tr[A]\tr[B]}}
+\Cor(Z^TA Z, Z^T B Z) = \frac{\tr[AB]}{\sqrt{\tr[A^2]\tr[B^2]}}
 \]
 }
 
