@@ -1,4 +1,5 @@
 source("approximation/large_deviations_source.R")
+library(magrittr)
 
 sigma2 <- 0.1
 ds <- c(1:10, 100 * 1:30, 1e4 * 1:10)
@@ -14,6 +15,14 @@ for (i in 1:length(ds)) {
 }
 
 View(cbind(ds, ress))
+
+rs <- 1.1^(-(1:100))
+d <- 20; theta <- 10
+
+View(cbind(rs, 
+           sapply(rs, function(r) log_true_ans(d, theta, r)),
+           sapply(rs, function(r) log_prox_ans4(d, theta, r))))
+
 
 ####
 ##  Relative location of the max
@@ -88,3 +97,29 @@ log_g_vs_omega(1000, 1)
 log_g_vs_omega(100, 100)
 log_g_vs_omega(1000, 100)
 log_g_vs_omega(10000, 100)
+
+
+
+####
+##  Quantile of non-central chi^2
+####
+pp <- .5
+100 %>% {c(1 - (1-pp)^(1/.), -log(1-pp)/.)}
+
+stgamma <- function(n) sqrt(2 * pi * n) * (n/exp(1))^n
+qfunc <- function(d, lambda, L, pp) {
+  (-log(1-pp)/L * gamma(d/2)*d/(2^(1-(d/2))) * exp(lambda/2))^(2/d)
+  #(-log(1-pp)/L * stgamma(d/2)*d/(2^(1-(d/2))) * exp(lambda/2))^(2/d)
+  #(-log(1-pp)/L)^(2/d) * d^(1 + (3/d)) * pi^(1/d) / 2^(2/d) *
+  #  exp((lambda/d) - 1)
+}
+qfunc0 <- function(d, lambda, L, pp) qchisq(-log(1-pp)/L, d, lambda)
+pp <- runif(1); d <- 10; lambda <- 50; L <- 1e5
+x <- qfunc(d, lambda, L, pp)
+xtrue <- qfunc0(d, lambda, L, pp)
+c(-log(1-pp)/L, 2^(1-(d/2)) * x^(d/2)/gamma(d/2)/d*exp(-lambda/2))
+c(x, xtrue, min(rchisq(L, d, lambda)))
+c(qfunc(d, lambda, L, .3), qfunc(d, lambda, L, .7))
+c(qfunc0(d, lambda, L, .3), qfunc0(d, lambda, L, .7))
+
+

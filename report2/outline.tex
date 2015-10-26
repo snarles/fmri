@@ -903,9 +903,10 @@ To prepare for such a result, we approximate the distribution of $M$ when $\Sigm
 The $p$th quantile of $M$ is the $1-(1-p)^{1/k}$th quantile of $||y + Z_i||^2$.
 For large $\Sigma$, we can approximate
 \[
-\Pr[||y+ Z_i||^2_\Sigma < x^2] \approx \phi_d(y) \det(\Sigma)^{-1/2}\Vol(B_d(x))
+\Pr[||y+ Z_i||^2_\Sigma < x] \approx \phi_d(y) \det(\Sigma)^{-1/2}\Vol(B_d(\sqrt{x}))
 \]
-where $B_d(x)$ is the euclidean ball with radius $x$ and $\phi_d(y) = (2\pi)^{-d/2} e^{-||y||^2/2}$.
+where $B_d(r)$ is the euclidean ball with radius $r$ and $\phi_d(y) = (2\pi)^{-d/2} e^{-||y||^2/2}$.
+Hence, the $p$th quantile of $M$ is $x_p$ where
 
 
 \end{document}
