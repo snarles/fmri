@@ -814,6 +814,100 @@ Hence in the limit,
 \lim_{d \to \infty} MC(\Sigma_d, k) = 1 - \int_{\mathbb{R}} \Phi(\sqrt{c} - z)^{k-1} d\Phi(z)
 \]
 
+\subsection{High-SNR limit}
+
+Rather than fixing the number of classes $K$ and increasing the
+dimension, we could also derive a limit by fixing the dimensionality
+and increasing both the signal covariance $\Sigma$ and the number of
+classes $K$.  The difference between the high-SNR limit and the
+high-dimensional limit is that the dimensionality of the space will
+influence the asymptotics.
+
+Recall that we define $MC(\Sigma, k)$ by the misclassification given
+that that joint distribution of a class center $\mu$ and a member of the class $Y$ is
+\[
+\begin{pmatrix}
+\mu \\
+Y
+\end{pmatrix}\sim N\left(0, \begin{pmatrix}
+\Sigma & \Sigma\\
+\Sigma & \Sigma + I
+\end{pmatrix}\right)
+\]
+
+In the high-SNR limit, it is notationally more convenient to consider an different parameterization.
+Defining $\Omega=\Sigma^{-1}$, one can compute $MC(\Sigma, K)$ as the misclassification rate
+of the model where
+\[
+\begin{pmatrix}
+\mu \\
+Y
+\end{pmatrix}\sim N\left(0, \begin{pmatrix}
+I & I\\
+I & I + \Omega
+\end{pmatrix}\right)
+\]
+
+Let $k = K-1$.  To compute the misclassification rate, we draw from
+the joint distribution of $(\mu^*, Y, \mu_1,\hdots, \mu_k)$ where
+$\mu^*,\mu_1,\hdots, \mu_k \sim N(0, I)$ and $Y \sim N(\mu^*, \Omega)$,
+and then compute
+\[
+MC(\Sigma, K) = \Pr[\min_{i=1}^k ||Y - \mu_i||^2_\Sigma < ||Y - \mu^*||^2_\Sigma]
+\]
+under the specified joint distribution, where
+\[
+||x||_\Sigma^2 = x^T \Sigma x = x^T\Omega^{-1}x.
+\]
+We sample in the following way.  First, draw $Y \sim N(0, I
++ \Omega)$.  Then draw $\mu^* \sim N((I+\Omega)^{-1}Y,
+I-(I+\Omega)^{-1})$ and $\mu_1,\hdots, \mu_k \sim N(0, I)$.
+Conditioning on $Y = y$, $Y - \mu^*$ is independent of $Y - \mu_1,\hdots, Y - \mu_n$:
+defining $A = I-(I + \Omega)^{-1}$, we have
+\[
+\begin{pmatrix}
+y - \mu^*\\
+y - \mu_1\\
+\vdots\\
+y - \mu_k
+\end{pmatrix} \sim N\left(
+\begin{pmatrix}
+Ay\\
+y\\
+\hdots\\
+y
+\end{pmatrix},
+\begin{pmatrix}
+A & 0 & \cdots &0\\
+0 & I & \cdots &0\\
+0 & \vdots & \cdots & 0\\
+0 & 0 & \cdots &I
+\end{pmatrix}
+\right)
+\]
+
+Thus, we are computing
+\[
+MC(\Sigma, K) = \E_Y[\Pr[\min_{i=1}^k ||y + Z_i||^2_\Sigma < ||Ay + A^{1/2} Z^*||^2_\Sigma]|Y=y]
+\]
+where $Z^*,Z_1,\hdots, Z_k$ are iid $N(0, I)$.
+
+Eventually, we will look for limiting sequences of $(y, \Sigma, K, a,
+b)$, where $a$ and $b$ are scaling constants, defining $M
+= \min_{i=1}^k ||y + Z_i||^2_\Sigma$ and $V = ||Ay + A^{1/2}
+Z^*||^2_\Sigma$, we have that $aM + b$ converges in probability to a
+constant while $aV + b$ converges to a Gaussian distribution.
+Hence under such a limit, $MC(\Sigma, K)$ converges to a constant.
+
+To prepare for such a result, we approximate the distribution of $M$ when $\Sigma$ and $y$ are large.
+The $p$th quantile of $M$ is the $1-(1-p)^{1/k}$th quantile of $||y + Z_i||^2$.
+For large $\Sigma$, we can approximate
+\[
+\Pr[||y+ Z_i||^2_\Sigma < x^2] \approx \phi_d(y) \det(\Sigma)^{-1/2}\Vol(B_d(x))
+\]
+where $B_d(x)$ is the euclidean ball with radius $x$ and $\phi_d(y) = (2\pi)^{-d/2} e^{-||y||^2/2}$.
+
+
 \end{document}
 
 
