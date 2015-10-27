@@ -37,3 +37,10 @@ mc_ident(p, sigma2, L, mc.reps)
 mc_ident2(p, sigma2, L, mc.reps)
 mc_ident3(p, sigma2, L, mc.reps)
 mc_ident4(p, sigma2, L, mc.reps, exact = TRUE)
+
+
+####
+##  Does L = 1/sigma2 ^(d/2) preserve rate??
+####
+p <- 5; L0 <- 10; sigma20 <- 0.1;
+1 %>% {mc_ident3(p, sigma20/., floor(L0 * .^(d/2)) )}
