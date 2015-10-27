@@ -936,23 +936,17 @@ Then,
 
 For $x > 0$ we have
 \[
-K(\Sigma)x^{d/2}\phi_d(\underline{y})< \Pr[||y+Z_i||^2_\Sigma < x] < K(\Sigma)x^{d/2}\phi_d(\overline{y})
-\]
-and
-\[
-\left(\frac{1-\sqrt[L]{1-p}}{K(\Sigma)\phi_d(\overline{y})}\right)^{2/d}
-< x_p < 
-\left(\frac{1-\sqrt[L]{1-p}}{K(\Sigma)\phi_d(\underline{y})}\right)^{2/d}
+K(\Sigma)x^{d/2}\phi_d(\underline{y}_x)< \Pr[||y+Z_i||^2_\Sigma < x] < K(\Sigma)x^{d/2}\phi_d(\overline{y}_x)
 \]
 where
 \[
 K(\Sigma) = \sqrt{\det(\Omega)} \frac{2\pi^{d/2}}{d\Gamma(d/2)}
 \]
-and $\overline{y}, \underline{y}$ are to be derived as follows.
+and $\overline{y}_x, \underline{y}_x$ are to be derived as follows.
 
 Consider the optimization problems
 \[
-\text{minimize or maximize} ||z-y||^2 \text{subject to}||z||_\Sigma^2 \leq \epsilon
+\text{minimize or maximize} ||z-y||^2 \text{subject to}||z||_\Sigma^2 \leq x
 \]
 We assume $\epsilon$ sufficiently small such that the the solutions
 satisfy the hard constraint $||z||_\Sigma^2 = \epsilon$.  Both the
@@ -967,15 +961,29 @@ and setting the derivative equal to zero:
 \]
 yielding
 \[
-z = (I- \lambda \Sigma)^{-1}y.
+z = (I+ \lambda \Sigma)^{-1}y.
 \]
 The constrained extrema are obtained by solving for $\lambda$ in the constraint:
 \[
-\epsilon = y^T(I-\lambda\Sigma)^{-1}\Sigma(I-\lambda\Sigma)^{-1}y
+x = y^T(I+\lambda\Sigma)^{-1}\Sigma(I+\lambda\Sigma)^{-1}y
 \]
-Letting $\lambda_1,\lambda_2$ be the two roots, we have 
-\[\{\overline{y}, \underline{y}\} = \{y - (I- \lambda_1 \Sigma)^{-1}y, y - (I- \lambda_1 \Sigma)^{-1}y\}\]
-which can be disambiguated by the fact that $||\overline{y}|| < ||\underline{y}||$.
+Letting $\lambda_1 > 0 > \lambda_2$ be the two roots, we have 
+\[\{\overline{y}_x, \underline{y}_x\} = \{y - (I+ \lambda_1 \Sigma)^{-1}y, y - (I+ \lambda_1 \Sigma)^{-1}y\}\]
+which can be disambiguated by the fact that $||\overline{y}_x|| < ||\underline{y}_x||$.
+
+Hence, define
+\[
+\overline{x}_p= x\text{ such that } K(\Sigma)\phi_d(\underline{y}_x) = 1-\sqrt[L]{1-p}\}
+\]
+\[
+\underline{x}_p= x\text{ such that } K(\Sigma)\phi_d(\overline{y}_x) = 1-\sqrt[L]{1-p}\},
+\]
+then
+\[
+\underline{x}_p < x_p < \overline{x}_p.
+\]
+
+
 
 
 \end{document}
