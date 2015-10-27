@@ -20,7 +20,7 @@ guess_q <- function(Sigma, y, pp, L) {
 }
 
 ## finds upper and lower bounds for x_pp
-find_x_bar <- function(Sigma, y, pp, L, res = reso, fudge = 10) {
+find_x_bar <- function(Sigma, y, pp, L, reso = 1e5, fudge = 10) {
   Ks <- Kfunc(Sigma)
   lprob <- -log(1-pp)/L
   p <- dim(Sigma)[1]
@@ -28,28 +28,31 @@ find_x_bar <- function(Sigma, y, pp, L, res = reso, fudge = 10) {
   xi <- t(res$vectors) %*% y
   gs <- res$values
   yn <- sqrt(sum(y^2))
-  ## initial guess
+  ## UPPER BOUND
+  ## decide search range for ls
   gqs <- guess_q(Sigma, y, pp, L)
   lprox <- sqrt(sum(xi^2/gs)/min(gqs)/fudge) + 1/min(gs)
-  ls <- seq(-2 * lprox, 2 * lprox, length.out = reso)
+  ls <- seq(0, 2 * lprox, length.out = reso)
   lmat <- repmat(ls, p, 1)
   gmat <- repmat(t(t(gs)), 1, length(ls))
   ximat <- repmat(xi, 1, length(ls))
   xs <- colSums(ximat^2 * gmat/(lmat * gmat + 1)^2)
+  stopifnot(sum(is.na(xs))==0)
   yns <- sqrt(colSums(ximat^2 * (1 - (1/(1 + lmat * gmat)))^2))
-  10 %>% {plot(xs[xs < .], yns[xs < .])}
-  #plot(ls, xs, ylim = c(0, 2*max(gqs)), type = "l")
-  diff <- xs[-1]-xs[-length(xs)]
-  cut1 <- ls[min(which(diff < 0))]
-  cut2 <- ls[max(which(diff > 0))]
-  xs1 <- xs[ls < cut1]
-  yns1 <- yns[ls < cut1]
-  xs2 <- xs[ls > cut2]
-  yns2 <- yns[ls > cut2]
-  plot(xs1, yns1, type = "o")
-  plot(xs2, yns2, type = "o")
-  
-  plot(ls, xs * ((1:length(xs) < cut1) + (1:length(xs) > cut2)), type = "l")
-  
+  pbs <- Ks * xs^(d/2) * (2 * pi)^(-d/2) * exp(-yns^2/2)
+  #plot(ls, xs)
+  #plot(xs, yns)
+  #plot(xs, log(pbs))
+  xs_aug <- c(xs, rep(NA, length(lprob)))
+  pbs_aug <- c(pbs, lprob)
+  xso <- xs_aug[order(pbs_aug)]
+  pbso <- pbs_aug[order(pbs_aug)]
+  na.inds <- which(is.na(xso))
+  xso[na.inds] <- (xso[na.inds - 1] + xso[na.inds + 1])/2
+  stopifnot(sum(is.na(xso)) == 0)
+  temp <- xso[na.inds]
+  temp2 <- pbso[na.inds]
+  xdown <- temp[match(lprob, temp2)]
+  list(xdown = xdown)
 }
 

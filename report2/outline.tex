@@ -934,28 +934,28 @@ Then,
 
 \subsection{Approximation bounds for high-SNR limit}
 
+\subsubsection{Upper bound}
 For $x > 0$ we have
 \[
-K(\Sigma)x^{d/2}\phi_d(\underline{y}_x)< \Pr[||y+Z_i||^2_\Sigma < x] < K(\Sigma)x^{d/2}\phi_d(\overline{y}_x)
+\Pr[||y+Z_i||^2_\Sigma < x] < K(\Sigma)x^{d/2}\phi_d(\overline{y}_x)
 \]
 where
 \[
 K(\Sigma) = \sqrt{\det(\Omega)} \frac{2\pi^{d/2}}{d\Gamma(d/2)}
 \]
-and $\overline{y}_x, \underline{y}_x$ are to be derived as follows.
+and $\overline{y}_x$ is defined as follows.
 
-Consider the optimization problems
+Consider the optimization problem
 \[
-\text{minimize or maximize} ||z-y||^2 \text{subject to}||z||_\Sigma^2 \leq x
+\text{minimize} ||z-y||^2 \text{subject to}||z||_\Sigma^2 \leq x
 \]
-We assume $\epsilon$ sufficiently small such that the the solutions
-satisfy the hard constraint $||z||_\Sigma^2 = \epsilon$.  Both the
-minimization and maximization problems are solved by taking the
+We assume $\epsilon$ sufficiently small such that the the solution
+satisfies the hard constraint $||z||_\Sigma^2 = \epsilon$.  Take the
 Lagrangian
 \[
 ||z-y||^2 + \lambda z^T \Sigma z
 \]
-and setting the derivative equal to zero:
+with $\lambda > 0$, and set the derivative equal to zero:
 \[
 0 = 2z - 2y + 2\lambda\Sigma z
 \]
@@ -963,30 +963,52 @@ yielding
 \[
 z = (I+ \lambda \Sigma)^{-1}y.
 \]
-The constrained extrema are obtained by solving for $\lambda$ in the constraint:
+Let $\lambda^* > 0$ be the solution to
 \[
 x = y^T(I+\lambda\Sigma)^{-1}\Sigma(I+\lambda\Sigma)^{-1}y
 \]
-Letting $\lambda_1 > 0 > \lambda_2$ be the two roots, we have 
-\[\{\overline{y}_x, \underline{y}_x\} = \{y - (I+ \lambda_1 \Sigma)^{-1}y, y - (I+ \lambda_1 \Sigma)^{-1}y\}\]
-which can be disambiguated by the fact that $||\overline{y}_x|| < ||\underline{y}_x||$.
-
-Hence, define
+and define
 \[
-\overline{x}_p= x\text{ such that } K(\Sigma)\phi_d(\underline{y}_x) = 1-\sqrt[L]{1-p}\}
+\overline{y}_x = y - (I+ \lambda^* \Sigma)^{-1}y.
 \]
+
+It follows that defining
 \[
 \underline{x}_p= x\text{ such that } K(\Sigma)\phi_d(\overline{y}_x) = 1-\sqrt[L]{1-p}\},
 \]
-then
+we have
 \[
-\underline{x}_p < x_p < \overline{x}_p.
+\underline{x}_p < x_p.
 \]
+
+\subsubsection{Lower bound}
+We have the following lower bound:
+
+\noindent\textbf{Lemma.}
+\emph{For any $r \leq \sqrt{\gamma/x}$, where $\gamma$ is the largest eigenvalue of $\Sigma$, we have}
+\[
+\Pr[||y+Z_i||^2_\Sigma < x] < \text{Vol}(B_r) \phi_d(||y||+r)
+\]
+\emph{where $\phi_d(y) = (2\pi)^{-d/2}\exp(-y^2/2)$}.
+
+The lemma follows from the fact that $z \in B_r$ implies
+$||z||_\Sigma^2 < x$ and $\phi_d(y-z) \geq \phi_d(||y||+r)$.
+Let $r^*$ be defined by
+\[
+r^* = \text{argmax}_r \text{Vol}(B_r) \phi_d(||y||+r)
+\]
+The lower bound then comes from choosing $r = \min(r^*, \gamma/x)$.
+
+\[
+\Pr[||y+Z_i||^2_\Sigma < x] > \text{Vol}(B_r) \phi_d(||y||+\min(r^*, \gamma/x))
+\]
+
 
 
 
 
 \end{document}
+
 
 
 
