@@ -5,6 +5,8 @@ library(parallel)
 library(reginference) ## see github.com/snarles/misc
 library(lineId) ## use devtools::install('lineId')
 
+TR <- function(a) sum(diag(a))
+
 ## most naive implementation of mc()
 mc <- function(Sigma, K, mc.reps = 1000) {
   p <- dim(Sigma)[1]
@@ -81,6 +83,30 @@ mc3b <- function(Sigma, K, mc.reps = 1000) {
   mean(mcs)  
 }
 
+## APPROXIMATE uses approximation for n0
+mc3c <- function(Sigma, K, mc.reps = 1000) {
+  p <- dim(Sigma)[1]
+  Omega <- solve(Sigma)
+  Amat <- eye(p) - solve(eye(p) + Omega)
+  Ha_Y <- lineId::sqrtm(eye(p) + Omega)
+  Ha_mu <- lineId::sqrtm(Amat)
+  nmS <- function(v) t(v) %*% Sigma %*% v
+  mcs <- sapply(1:mc.reps,
+                function(i) {
+                  y <- as.numeric(Ha_Y %*% rnorm(p))
+                  y_mus <- randn(p, K-1) + y
+                  nms <- apply(y_mus, 2, nmS)
+                  en0 <- as.numeric(t(y)%*%Amat%*%Sigma%*%Amat%*%y + TR(Amat%*%Sigma))
+                  vn0 <- as.numeric((4*t(y)%*%Amat%*%Sigma%*%Amat%*%Sigma%*%Amat%*%y+
+                                       2 * TR(Amat%*%Sigma%%Amat%*%Sigma)))
+                  (ss <- (-(2 * en0/d) + sqrt((2*en0/d)^2 + 2 * vn0/d))/2)
+                  (ll <- en0/ss - d)
+                  if (ll < 0) {print(paste("ll=", ll)); y_err <<- y}
+                  n0 <- ss * rchisq(1, d, ll)
+                  min(nms) < n0
+                })
+  mean(mcs)  
+}
 
 ## Tried to make faster version??
 # mc2 <- function(Sigma, K, mc.reps = 1000) {
