@@ -132,9 +132,11 @@ SaY <- n2A(Y, avgm)
 SaR <- n2A(resid, avgm)
 SbY <- n2A(Y, Xi)
 SbR <- n2A(resid, Xi)
+So <- n2A(E, avgm)
 
 cor_dist_ofs(Sigma_e, SaY, 0:10/10) %>% round(digits = 3)
 cor_dist_ofs(Sigma_e, SaR, 0:10/10) %>% round(digits = 3)
 cor_dist_ofs(Sigma_e, SbY, 0:10/10) %>% round(digits = 3)
 cor_dist_ofs(Sigma_e, SbR, 0:10/10) %>% round(digits = 3)
+cor_dist_ofs(Sigma_e, So, 0:10/10) %>% round(digits = 3)
 
