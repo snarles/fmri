@@ -29,50 +29,162 @@
 \newcommand{\Vol}{\text{Vol}}
 \newcommand{\comm}[1]{}
 
-\section{Intro}
+\begin{abstract}
+Consider the problem of estimating the covariance of the errors,
+$\Sigma$, in a multivariate linear regression model.  In the classical
+low-dimensional setting, one can estimate $\Sigma$ using the empirical
+covariance of the ordinary-least squares residuals.  In high
+dimensions, one can either estimate $\Sigma$ by the empirical
+covariance of the response, or through the residuals obtained from
+regularized regression, but either approach introduces bias into the
+estimator.  At the same time, even if an unbiased estimator were
+available, the dimensionality of the problem makes it desirable to
+apply shrinkage to the unbiased estimator.  We study the problem of
+estimating $\Sigma$ in the high-dimensional case, and note that one
+can form \emph{debiased} estimators of $\Sigma$ by estimators of the
+form $(y-X\hat{B})^T \Xi (y-X\hat{B})$, where $\Xi$ is an $n \times n$
+debiasing matrix.  Furthermore, we consider optimal shrinkage of these
+debiased estimators (TODO!) Simulation results demonstrate the
+superiority of our approach under a variety of loss functions,
+especially when the covariate vectors in $X$ exhibit clustering or
+contain repeats.
+\end{abstract}
 
-Let
+\section{Introduction}
+
+High-dimensional covariance estimation is the problem of estimating
+the covariance matrix $\Sigma$ of a $q$-dimensional random vector
+$\epsilon$, from independent observations
+$\epsilon_1,\hdots,\epsilon_n$, when $n$ is comparable or smaller than
+$q$.  In such a regime, the MLE
+\[
+S = \epsilon^T (I/n) \epsilon
+\]
+performs very poorly under a variety of loss functions.  Since the
+seminal work by Stein, numerous researchers have developed methods for
+optimally estimating $\Sigma$ from the data, under various modelling
+assumptions.  When no assumptions are made on the eigenvectors of
+$\Sigma$, it is natural to consider \emph{shrinkage} procedures, which
+construct the estimator $\hat{\Sigma}$ by keeping the eigenvectors of
+$S$ and transforming the eigenvalues; these procedures are therefore
+equivariant to orthogonal transformations.  But in network inference
+applications, it is also common to assume \emph{sparsity} of the
+precision matrix, leading to the \emph{graphical lasso} class of
+procedures.
+
+The problem of covariance estimation becomes even more challenging if
+$E$ is not directly observed.  In this paper we consider estimation of
+$\Sigma$ in the context of the multivariate linear model
 \[Y = XB + E\]
-where $E \sim N(0, \Sigma)$.
-$Y$ and $E$ are $n \times q$ matrices, $X$ is $n \times p$.
+where $Y$ and $E$ are $n \times q$ matrices, $X$ is $n \times p$
+matrix, and where
+\[E = \begin{pmatrix}\epsilon_1^T \\ \vdots \\ \epsilon_n^T \end{pmatrix}\]
+for $\epsilon_1,\hdots, \epsilon_n$ identically and independently
+distributed $N(0, \Sigma)$.  The usual problem of covariance
+estimation, where $E$ is directly observed, is therefore a special
+case of the model when $XB = 0$.
 
-How can we estimate $\Sigma$?
+There is an extensive literature on the multivariate linear model, but
+most of the focus is on the problem of estimating the coefficient
+matrix $B$, which for our purposes is just a nuisance parameter!  Of
+course, knowledge of $\Sigma$ helps obtain a better estimate of $B$,
+hence many works have considered estimating $\Sigma$ in the
+multivariate linear model for this purpose.  Notably, Witten et
+al. consider simultaneous estimation of $B$ and $\Sigma$, under
+assumption of L1-sparsity for $B$ and also L1-sparsity of
+$\Sigma^{-1}$.  However, in many problems, the ``graphical lasso''
+assumption of L1-sparsity of $\Sigma^{-1}$ is not appropriate; hence
+estimation of $\Sigma$ in the multivariate linear model for general
+$\Sigma$ remains an important open problem.  Therefore our focus in
+this work is estimation in the general case.
 
-If $n \leq p$, we can use
+In the classical low-dimensional setting where $n \leq p$, we can use
 \[
 \hat{\Sigma} = (Y-X\hat{B})^T(I/n)(Y-\hat{B})
 \]
-where $\hat{B}$ is the OLS estimator.
-
-However, in high-dimensional settings, $\hat{B}$ will not be unbiased.
-Hence
+where $\hat{B}$ is the OLS estimator. However, in high-dimensional
+settings, one cannot obtain an unbiased estimate of $B$.  Instead, one
+could take use shrinkage estimator for $\hat{B}$, and estimate
+$\Sigma$ using the residuals of the model, as before.  However, due to
+the bias in $\hat{B}$, the empirical covariance of the residuals
+becomes biased as well, since
 \[
 \E[(Y-X\hat{B})^T(I/n)(Y-\hat{B})] = \Sigma + \delta^T X^T X \delta
 \]
-where $\delta = B-\hat{B}$.
-Hence we have a lot of extra bias if we use the residual covariance.
+where $\delta = B-\hat{B}$.  The bias term $\delta^T X^T X \delta$ can
+be substantial, especially if the true signal $XB$ is large.
+
+Yet even if $n$ is much smaller than $p$, there are situations where
+it possible to construct an unbiased estimator of $\hat{\Sigma}$.
+
+\emph{Example 1.} Suppose the design matrix takes the form
+\begin{equation}\label{example1}
+X = \begin{pmatrix} 0 \\ \tilde{X} \end{pmatrix}
+\end{equation}
+for some $(n-n_h) \times p$ matrix $\tilde{X}$.  Then it is clear that
+the first $n_h$ rows of $Y$ are equal to
+$\epsilon_1,\hdots,\epsilon_n$, and hence the empirical covariance of
+the first $n_h$ rows of $Y$ provides an unbiased estimator.
+In other words, we can form an unbiased estimator
+\[
+\hat{\Sigma} = Y^T \begin{pmatrix}\frac{1}{n_h}I_{n_h} & 0 \\ 0 & 0\end{pmatrix} Y
+\]
+
+\emph{Example 2.} Suppose the design matrix takes the form
+\[
+X = \begin{pmatrix} \tilde{X} \\ \tilde{X}\end{pmatrix}
+\]
+i.e. that $x_i = x_{n/2 + i}$ for $i = 1,\hdots, n/2$.
+It then follows that
+\begin{equation}\label{example2}
+y_i - y_{i + n/2} = B^Tx_i  + \epsilon_i - B^Tx_{i+n/2} - \epsilon_{i + n/2}=\epsilon_i - \epsilon_{i+n/2},
+\end{equation}
+where the difference $\epsilon_i - \epsilon_{i + n/2}$ is distributed $N(0, 2\Sigma)$.
+Therefore, we can form an unbiased estimator as
+\[
+\hat{\Sigma} = Y^T \begin{pmatrix} \frac{1}{n}I_{n/2} & \frac{-1}{n}I_{n/2} \\ \frac{-1}{n}I_{n/2} & \frac{1}{n}I_{n/2}\end{pmatrix}.
+\]
+
+Motivated by the preceding examples, we now consider the problem of finding \emph{debiased} estimators for general $X$.
 
 \section{Debiased estimator}
 
-Rather than the sample covariance of the residuals, we propose computing
+In this section we consider two classes of covariance estimators.
+The first class takes the form
 \[
-\hat{\Sigma}_0 = (Y-X\hat{B})^T\Xi (Y-\hat{B})
+\hat{\Sigma} = Y^T \Xi Y,
 \]
-where $\Xi$ is some $n \times n$ contrast matrix.  $\hat{\Sigma}_0$ is
-a ``debiased'' estimator, where the matrix $\Xi$ is chosen to minimize
-the effect of the bias from the error coming from the signal $X(B
-- \hat{B})$.
-Our final estimator may take the form
+where $\Xi$ is some $n \times n$ matrix, which can be dependent on the
+design matrix $X$.
+The second class takes the form
 \[
-\hat{\Sigma} = \gamma((1-\alpha) \hat{\Sigma}_0 + \alpha \diag(\hat{\Sigma}_0))
+\hat{\Sigma} = (Y - X\hat{B})^T \Xi (Y - X\hat{B}),
 \]
-where $\alpha$ controls the shrinkage of off-diagonals and $\gamma$
-controls overall shrinkage.
+where $\hat{B}$ can be an arbitrary estimator of $B$.
 
-For now let us outline some heuristics for choosing $\Xi$.
-We have
+\subsection{First class: $Y^T \Xi Y$}
+
+It it clear that \eqref{example1} and \eqref{example2}, the two
+examples of unbiased estimation introduced in the previous section, fall into the first class of estimators.
+It is also worth noting that in the low-dimensional case, the classical estimator
 \[
-\E[\hat{\Sigma}_0] = \E[E^T \Xi E] + \E[\delta^T X^T \Xi X \delta]
+\hat{\Sigma}_{OLS} = \frac{1}{n}(Y - X\hat{B}_{OLS})^T (Y - X\hat{B}_{OLS})
+\]
+falls into the first class as well.
+Observe that $Y - X\hat{B}_{OLS} = (I - X(X^T X)^{-1}X^T) Y$,
+hence $\hat{\Sigma}_{OLS} = Y^T \Xi Y$ for
+\[
+\Xi = \frac{1}{n} (I - X(X^T X)^{-1}X^T).
+\]
+
+In general, for $n << p$, it is not possible to construct an unbiased
+estimator for $\Sigma$.  Hence we consider \emph{debiased} estimators
+which minimize some combination of bias and variance.  By studying the
+bias and variance of the random matrix $S_\Xi = Y^T \Xi Y$,
+we arrive at a heuristic for constructing $\Xi$ based on the design
+matrix $X$.  We have
+\[
+\E[S_\Xi] = \E[Y^T \Xi Y] = \E[E^T \Xi E] + \E[B^T X^T \Xi X B]
 \]
 since the cross-term has zero expectation.
 Let us deal with the first term.
@@ -90,19 +202,19 @@ where $Z_i$ is the $i$th column of $Z$.  Since $\tr[\Lambda] = \tr[\Xi]$ we ther
 \E[E^T \Xi E] = \tr[\Xi]\Sigma
 \]
 Hence it makes sense to require $\tr[\Xi]=1$ so that $\E[E^T\Xi E]
-= \Sigma$ andtherefore $\hat{\Sigma}_0$ is unbiased in a limiting case
-where we can estimate $B$ perfectly.
+= \Sigma$ and therefore $S_\Xi$ is unbiased in the case where $B=0$.
 
 Meanwhile, let us evaluate the trace of the bias term
 \[
-\text{bias} = \tr\E[\delta^TX^T \Xi X \delta] = \tr[\Xi XX^T \E[\delta \delta^T]]
+\text{bias} = \tr\E[B^TX^T \Xi X B] = \tr[\Xi XX^T \E[B B^T]]
 \]
-If we make the assumption that $\E[\delta \delta^T]$ is some multiple of the identity, then we get
+If we are willing to assume a generative model for $B$ where $\E[B
+B^T]$ is some multiple of the identity, then we get
 \[
-\text{bias} = \tr[\Xi XX^T]
+\text{bias} \propto \tr[\Xi XX^T]
 \]
 
-Finally, let us consider the variance of $\hat{\Sigma}_0$.
+Finally, let us consider the variance of $S_\Xi$.
 The full expression of the variance is quite complex.
 Hence, we instead look only at the variance
 \[
@@ -113,19 +225,20 @@ This is still difficult to analyze, so we neglect the $\Sigma^{1/2}$ terms and c
 \tr\Var[Z^T \Lambda Z] = 2\tr[\Lambda^2] = 2\tr[\Xi^2].
 \]
 
-Now we propose the method for choosing $\Xi$.  We would like to
-require $\tr[\Xi] = 1$, so that $\hat{\Sigma}$ is unbiased in the case
-of perfect signal estimation, and we would like to minimize some
+Now we propose the method for choosing $\Xi$.  As noted previously, we would like to
+require $\tr[\Xi] = 1$, so that $S_\Xi$ is unbiased in the case
+of perfect signal estimation, and on top of that we would like to minimize some
 combination of the bias and variance.  This leads to the convex program
 \[
-\text{minimize} \tr[\Xi XX^T] + \eta \tr[\Xi^2]\text{ subject to }\tr[\Xi]=1.
+\text{minimize } \tr[\Xi XX^T] + \frac{\eta}{2} \tr[\Xi^2]\text{ subject to }\tr[\Xi]=1.
 \]
-Let $XX^T = \Gamma W\Gamma^T$ where $W$ is diagonal.  We claim that
-the minimizing $\Xi$ also takes the form of $\Gamma D \Gamma^T$ for
-some diagonal $D$.  If we accept the claim, then the above program is
-rewritten as
+where $\eta$ is a tuning parameter which controls the bias-variance
+tradeoff of $\hat{\Sigma}_\Xi$.  Let $XX^T = \Gamma W\Gamma^T$ where
+$W$ is diagonal.  We claim that the minimizing $\Xi$ also takes the
+form of $\Gamma D \Gamma^T$ for some diagonal $D$.  If we accept the
+claim, then the above program is rewritten as
 \[
-\text{minimize} \sum_{i=1}^n d_i \lambda_i + \eta \sum_{i=1}^n \lambda_i^2 \text{ subject to }\sum_{i=1}^n \lambda_i=1.
+\text{minimize } \sum_{i=1}^n d_i \lambda_i + \frac{\eta}{2} \sum_{i=1}^n \lambda_i^2 \text{ subject to }\sum_{i=1}^n \lambda_i=1.
 \]
 We can solve it by forming the Lagrangian
 \[
@@ -150,12 +263,45 @@ We therefore form
 \Xi(\eta) = V \diag\left(\left[\frac{\gamma - d_i }{\eta}\right]_+\right)V^T
 \]
 
+The above derivation does not shed light on how to choose the
+parameter $\eta$ which controls the bias-variance tradeoff.  In later
+sections we will outline a cross-validation approach for choosing
+$\eta$.
+
+\section{Shrinkage}
+
+Due to high dimensionality, it is not optimal to use an estimator
+$S_\Xi$ even if it is unbiased or nearly unbiased.
+Building on the covariance estimation literature, we consider
+shrinkage estimators of the form
+\[
+\hat{\Sigma} = V^T \diag(f_i(\Lambda)) V
+\]
+where $f_i$ is some function of $\Lambda = (\lambda_1,\hdots, \lambda_q)$, and
+where $V^T \Lambda V$ is the eigendecomposition of $S_\Xi$.
+
+TO BE CONTD!
 
 
+\section{Results}
 
-
+I have nice simulation results; will include later.
 
 \end{document}
 
 
+Rather than the sample covariance of the residuals, we propose computing
+\[
+\hat{\Sigma}_0 = (Y-X\hat{B})^T\Xi (Y-\hat{B})
+\]
+where $\Xi$ is some $n \times n$ contrast matrix.  $\hat{\Sigma}_0$ is
+a ``debiased'' estimator, where the matrix $\Xi$ is chosen to minimize
+the effect of the bias from the error coming from the signal $X(B
+- \hat{B})$.
+Our final estimator may take the form
+\[
+\hat{\Sigma} = \gamma((1-\alpha) \hat{\Sigma}_0 + \alpha \diag(\hat{\Sigma}_0))
+\]
+where $\alpha$ controls the shrinkage of off-diagonals and $\gamma$
+controls overall shrinkage.
 
