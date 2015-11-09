@@ -40,11 +40,11 @@ jmle_sub_1 <- function(H, C, n) {
 
 objf <- function(O) TR(O%*%t(O)%*%H) - 2*n*log(abs(det(O))) - 2*TR(C %*% O)
 O1 <- O
-ss <- 1e-4
+ss <- 1e-5
 objf(O1)
 
 for (i in 1:100) {
-  GO <- 2 * H %*% O1 + sign(det(O1)) * 2 *n * t(solve(O1)) -2*t(C)
+  GO <- 2 * H %*% O1 - 2 *n * t(solve(O1)) -2*t(C)
   objf(O1) - objf(O1 - ss * GO)
   O1 <- O1 - ss * GO
   print(objf(O1))  
@@ -60,7 +60,7 @@ for (i in 1:100) {
 # numDeriv::grad(function(o) {
 #   O <- matrix(o, p, p);  -2*n*log(abs(det(O)))
 # }, as.numeric(O1))
-# as.numeric( sign(det(O1)) * 2 *n * t(solve(O1)))
+# as.numeric( -2 *n * t(solve(O1)))
 # 
 # numDeriv::grad(function(o) {
 #   O <- matrix(o, p, p);  - 2*TR(C %*% O)
@@ -87,21 +87,27 @@ jmle <- function(X, Y, W, n.its = 20) {
 #       2*TR(G %*% t(G) %*% t(X) %*% X) +
 #       n* log(det(t(A) %*% A)) + n * log(det(t(B) %*% B))
   }
+
   for (it in 1:n.its) {
     objf(G, A, B)
-    ## Optimize A
-    H <- t(Y) %*% Y; C <- t(t(Y) %*% X %*% G); O <- solve(A)
-    A <- solve(jmle_sub_1(H, C, n))
-    objf(G, A, B)
-    ## Optimize B
-    H <- t(W) %*% W; C <- t(t(W) %*% X %*% G)
-    B <- solve(jmle_sub_1(H, C, n))
-    objf(G, A, B)
+#     ## Optimize A
+#     H <- t(Y) %*% Y; C <- t(t(Y) %*% X %*% G); O <- solve(A)
+#     A <- solve(jmle_sub_1(H, C, n))
+#     objf(G, A, B)
+#     ## Optimize B
+#     H <- t(W) %*% W; C <- t(t(W) %*% X %*% G)
+#     B <- solve(jmle_sub_1(H, C, n))
+#     objf(G, A, B)
     ## Optimize G
     Z <- t(X) %*% X
     C <- t(X) %*% t(solve(t(A), t(Y)) + solve(t(B), t(W)))/2
     G <- solve(Z, C)
     objf(G, A, B)
+#     PX <- X %*% solve(t(X) %*% X, t(X))
+#     TR(solve(t(A) %*% A, t(Y) %*%Y) + solve(t(B) %*%B, t(W) %*% W)) -
+#       .5 * TR(PX %*% (Y %*% solve(A) + W %*% solve(B)) %*% 
+#                 t(Y %*% solve(A) + W %*% solve(B))) + 
+#       n*log(det(t(A) %*% A)) + n*log(det(t(B) %*% B))
   }
   list(G = G, A = A, B= B)
 }
