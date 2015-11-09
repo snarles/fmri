@@ -1,125 +1,90 @@
-library(Matrix)
 library(pracma)
 library(lineId)
 library(magrittr)
 
 TR <- function(x) sum(diag(x))
 
-## finds a matrix X such that X'=AX+B
-transpose_solve = function(A, B) {
-  p <- dim(A)[1]
-  bv <- -as(t(t(as.numeric(B))), "dgCMatrix")
-  AM <- as(eye(p) %x% A, "dgCMatrix")
-  inds <- (rep(1:p, p)-1)*p + (rep(1:p, each = p) - 1) + 1
-  TM <- sparseMatrix(1:p^2, inds, x=rep(1, p^2))
-  M <- AM - TM
-  xv <- solve(M, bv)
-  X <- matrix(xv, p, p)
-  stopifnot
-    (
-      max(abs(t(X) - A %*% X - B)) < 1e-8
-    )
-  X
-}
-
-# B <- randn(5)
-# A <- randn(5)
-# X <- transpose_solve(A, B)
-# t(X)
-# A %*% X + B
-
-## minimizes O
-##  tr(OO'H)-2nlogdet(O)-2tr(CO)
-jmle_sub_1 <- function(H, C, n) {
-  objf <- function(O) TR(O%*%t(O)%*%H) - 2*n*log(abs(det(O))) - 2*TR(C %*% O)
-  O1 <- transpose_solve(H/n, -t(C)/n)
-  O2 <- transpose_solve(-H/n, t(C)/n)
-  scores <- c(objf(O1), objf(O2))
-  O <- list(O1, O2)[[order(scores)[1]]]
-}
-
-objf <- function(O) TR(O%*%t(O)%*%H) - 2*n*log(abs(det(O))) - 2*TR(C %*% O)
-O1 <- O
-ss <- 1e-5
-objf(O1)
-
-for (i in 1:100) {
-  GO <- 2 * H %*% O1 - 2 *n * t(solve(O1)) -2*t(C)
-  objf(O1) - objf(O1 - ss * GO)
-  O1 <- O1 - ss * GO
-  print(objf(O1))  
-}
-
-
-# 
-# numDeriv::grad(function(o) {
-#   O <- matrix(o, p, p); TR(O %*% t(O) %*%H)
-# }, as.numeric(O1))
-# as.numeric(2 * H %*% O1)
-# 
-# numDeriv::grad(function(o) {
-#   O <- matrix(o, p, p);  -2*n*log(abs(det(O)))
-# }, as.numeric(O1))
-# as.numeric( -2 *n * t(solve(O1)))
-# 
-# numDeriv::grad(function(o) {
-#   O <- matrix(o, p, p);  - 2*TR(C %*% O)
-# }, as.numeric(O1))
-# as.numeric(- sign(det(O1)) * 2 *n * t(solve(O1)))
-
-
-## minimizes G, A, B subject to G'G = I:
-##  tr((Y - XGA)(A'A-)(Y - XGA)')
-##   + tr((W - XGB)(B'B-)(W - XGB)')
-##   + logdet(A'A) + logdet(B'B)
-jmle <- function(X, Y, W, n.its = 20) {
+init_est <- function(X, Y, W) {
   q <- dim(Y)[2]; p <- dim(X)[2]; n <- dim(X)[1]
-  G <- randn(p, q);
-  A <- randn(q); B <- randn(q)
-  objf <- function(G, A, B) {
-    Yh <- X %*% G %*% A; Wh <- X %*% G %*% B
-    s1 <- (Y-Yh) %*% solve(t(A) %*% A, t(Y-Yh))
-    s2 <- (W-Wh) %*% solve(t(B) %*% B, t(W-Wh))
-    TR(s1) + TR(s2) + n*log(det(t(A) %*% A)) + n*log(det(t(B) %*% B))
-#     TR(solve(t(A) %*% A, t(Y) %*% Y)) +
-#       TR(solve(t(B) %*% B, t(W) %*% W)) -
-#       2*TR(G %*% solve(t(A), t(Y)) %*% X + G%*% solve(t(B), t(W)) %*%X) +
-#       2*TR(G %*% t(G) %*% t(X) %*% X) +
-#       n* log(det(t(A) %*% A)) + n * log(det(t(B) %*% B))
-  }
-
-  for (it in 1:n.its) {
-    objf(G, A, B)
-#     ## Optimize A
-#     H <- t(Y) %*% Y; C <- t(t(Y) %*% X %*% G); O <- solve(A)
-#     A <- solve(jmle_sub_1(H, C, n))
-#     objf(G, A, B)
-#     ## Optimize B
-#     H <- t(W) %*% W; C <- t(t(W) %*% X %*% G)
-#     B <- solve(jmle_sub_1(H, C, n))
-#     objf(G, A, B)
-    ## Optimize G
-    Z <- t(X) %*% X
-    C <- t(X) %*% t(solve(t(A), t(Y)) + solve(t(B), t(W)))/2
-    G <- solve(Z, C)
-    objf(G, A, B)
-#     PX <- X %*% solve(t(X) %*% X, t(X))
-#     TR(solve(t(A) %*% A, t(Y) %*%Y) + solve(t(B) %*%B, t(W) %*% W)) -
-#       .5 * TR(PX %*% (Y %*% solve(A) + W %*% solve(B)) %*% 
-#                 t(Y %*% solve(A) + W %*% solve(B))) + 
-#       n*log(det(t(A) %*% A)) + n*log(det(t(B) %*% B))
-  }
-  list(G = G, A = A, B= B)
+  #A <- randn(q); B <- randn(q);
+  PX <- X %*% solve(t(X) %*% X, t(X))
+  cX <- solve(t(X) %*% X, t(X))
+  B_Y <- cX %*% Y; Yh <- PX %*% Y
+  B_W <- cX %*% W; Wh <- PX %*% W
+  SigmaY <- cov(Y - Yh)
+  SigmaW <- cov(W - Wh)
+  A <- sqrtm(SigmaY); B <- sqrtm(SigmaW)
+  list(A=A, B=B) 
 }
+
+sep_mle_of <- function(X, Y, W) {
+  q <- dim(Y)[2]; p <- dim(X)[2]; n <- dim(X)[1]
+  #A <- randn(q); B <- randn(q);
+  PX <- X %*% solve(t(X) %*% X, t(X))
+  cX <- solve(t(X) %*% X, t(X))
+  B_Y <- cX %*% Y; Yh <- PX %*% Y
+  B_W <- cX %*% W; Wh <- PX %*% W
+  SigmaY <- cov(Y - Yh)
+  SigmaW <- cov(W - Wh)
+  TR((Y-Yh) %*% solve(SigmaY, t(Y-Yh))) + 
+    TR((W-Wh) %*% solve(SigmaW, t(W-Wh))) +
+    n*log(det(SigmaY)) + n*log(det(SigmaW))
+}
+
+jmle <- function(X, Y, W, n.its = 200, ss = 1, ssm = 0.5,
+                 init = init_est(X, Y, W)) {
+  q <- dim(Y)[2]; p <- dim(X)[2]; n <- dim(X)[1]
+  #A <- randn(q); B <- randn(q);
+  PX <- X %*% solve(t(X) %*% X, t(X))
+  A <- init$A; B <- init$B
+  Ai <- solve(A); Bi <- solve(B)
+  YtY <- t(Y) %*% Y
+  WtW <- t(W) %*% W
+  YxY <- t(Y) %*% PX %*% Y
+  WxW <- t(W) %*% PX %*% W
+  YxW <- t(Y) %*% PX %*% W
+  objf <- function(A, B) {
+    TR(solve(t(A) %*% A, t(Y) %*%Y) + solve(t(B) %*%B, t(W) %*% W)) -
+            .5 * TR(PX %*% (Y %*% solve(A) + W %*% solve(B)) %*% 
+                      t(Y %*% solve(A) + W %*% solve(B))) + 
+            n*log(det(t(A) %*% A)) + n*log(det(t(B) %*% B))
+  }
+  objf_i <- function(Ai, Bi) objf(solve(Ai), solve(Bi))
+  gradAi <- function(Ai, Bi)
+    2 * YtY %*% Ai - YxY %*% Ai - YxW %*% Bi - 2 * n*t(solve(Ai))
+  gradBi <- function(Ai, Bi)
+    2 * WtW %*% Bi - WxW %*% Bi - t(YxW) %*% Ai - 2 * n*t(solve(Bi))
+
+  for (i in 1:n.its) {
+    old_obj <- objf_i(Ai, Bi)
+    gAi <- gradAi(Ai, Bi)
+    gBi <- gradBi(Ai, Bi)
+    new_obj <- objf_i(Ai-ss*gAi, Bi-ss*gBi)
+    if (new_obj > old_obj) {
+      ss <- ss * ssm
+    } else {
+      Ai <- Ai-ss*gAi; Bi <- Bi-ss*gBi      
+      print(list(new_obj, ss))
+    }
+  }
+  
+  A <- solve(Ai); B <- solve(Bi)
+  G <- 1/2 * solve(t(X) %*%X, t(X)) %*% 
+    (Y %*% solve(A) + W %*% solve(B))
+  list(G = G, A = A, B= B, objf = objf)
+}
+
 
 
 ## TEST
 
-n <- 1000; p <- 2; q <- 2
+n <- 1000; p <- 30; q <- 20
 X <- randn(n, p)
 G0 <- randn(p, q)
 A0 <- randn(q, q); B0 <- randn(q, q)
 sigma <- 1
+truth <- list(G=G0, A=A0, B=B0)
+
 # MA0 <- G0 %*% A0 %*% solve(t(A0) %*% A0, t(G0 %*% A0))
 # MB0 <- G0 %*% B0 %*% solve(t(B0) %*% B0, t(G0 %*% B0))
 # f2(MA0, MB0)
@@ -127,8 +92,12 @@ sigma <- 1
 
 Y <- (X %*% G0  + sigma * randn(n, q)) %*% A0
 W <- (X %*% G0  + sigma * randn(n, q)) %*% B0
-sol <- jmle(X, Y, W, 20)
-f2(G0 %*% t(G0), sol$G %*% t(sol$G)) # not identifiable!
+sol <- jmle(X, Y, W, 1000)
+sol0 <- jmle(X, Y, W, 1000, init=truth)
+sep <- sep_mle_of(X, Y, W)
+
+#f2(G0 %*% t(G0), sol0$G %*% t(sol0$G))
+f2(G0 %*% t(G0), sol$G %*% t(sol$G))
 #f2(G0 %*% t(G0))
 f2(G0 %*% A0, sol$G %*% sol$A)
 #f2(G0 %*% A0)
@@ -139,15 +108,17 @@ f2(A0)
 f2(sol$A)
 
 
-objf <- function(G, A, B) {
+objf0 <- function(G, A, B) {
   Yh <- X %*% G %*% A; Wh <- X %*% G %*% B
   s1 <- (Y-Yh) %*% solve(t(A) %*% A, t(Y-Yh))
   s2 <- (W-Wh) %*% solve(t(B) %*% B, t(W-Wh))
   TR(s1) + TR(s2) + n*log(det(t(A) %*% A)) + n*log(det(t(B) %*% B))
 }
 
-truth <- list(G=G0, A=A0, B=B0)
-objf(G0, A0, B0)
-sol %$% objf(G, A, B)
+truth %$% objf0(G, A, B)
+jof <- sol %$% objf0(G, A, B)
+(lr <- 1/2*(jof - sep))
+sol0 %$% objf0(G, A, B)
+
 sol %$% log(det(t(A) %*% A))
 truth %$% log(det(t(A) %*% A))
