@@ -40,17 +40,33 @@ jmle_sub_1 <- function(H, C, n) {
 
 objf <- function(O) TR(O%*%t(O)%*%H) - 2*n*log(abs(det(O))) - 2*TR(C %*% O)
 O1 <- O
-ss <- 1e-6
+ss <- 1e-4
 objf(O1)
 
 for (i in 1:100) {
-  GOa <- 2 * H %*% O1 - 2 *n * t(O1) -2*t(C)
-  GOb <- 2 * H %*% O1 + 2 *n * t(O1) -2*t(C)
-  s1 <- objf(O1 - ss * GOa)
-  s2 <- objf(O1 - ss * GOb)
-  O1 <- O1 - ss * list(GOa,GOb)[[order(c(s1,s2))[1]]]
+  GO <- 2 * H %*% O1 + sign(det(O1)) * 2 *n * t(solve(O1)) -2*t(C)
+  objf(O1) - objf(O1 - ss * GO)
+  O1 <- O1 - ss * GO
   print(objf(O1))  
 }
+
+
+# 
+# numDeriv::grad(function(o) {
+#   O <- matrix(o, p, p); TR(O %*% t(O) %*%H)
+# }, as.numeric(O1))
+# as.numeric(2 * H %*% O1)
+# 
+# numDeriv::grad(function(o) {
+#   O <- matrix(o, p, p);  -2*n*log(abs(det(O)))
+# }, as.numeric(O1))
+# as.numeric( sign(det(O1)) * 2 *n * t(solve(O1)))
+# 
+# numDeriv::grad(function(o) {
+#   O <- matrix(o, p, p);  - 2*TR(C %*% O)
+# }, as.numeric(O1))
+# as.numeric(- sign(det(O1)) * 2 *n * t(solve(O1)))
+
 
 ## minimizes G, A, B subject to G'G = I:
 ##  tr((Y - XGA)(A'A-)(Y - XGA)')
