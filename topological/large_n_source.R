@@ -17,7 +17,9 @@ init_est <- function(X, Y, W) {
   A <- sqrtm(SigmaY)
   gg <- rotmin(B_Y%*%isqrtm(SigmaY), B_W%*%isqrtm(SigmaW))
   B <- gg %*% sqrtm(SigmaW)
-  list(A=A, B=B) 
+  M_Y <- B_Y %*% solve(SigmaY, t(B_Y))
+  M_W <- B_W %*% solve(SigmaW, t(B_W))
+  list(A=A, B=B, M_Y = M_Y, M_W = M_W) 
 }
 
 sep_mle_of <- function(X, Y, W) {
