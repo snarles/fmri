@@ -1,6 +1,7 @@
 library(pracma)
 library(lineId)
 library(magrittr)
+source("topological//rotmax.R")
 
 TR <- function(x) sum(diag(x))
 
@@ -13,7 +14,9 @@ init_est <- function(X, Y, W) {
   B_W <- cX %*% W; Wh <- PX %*% W
   SigmaY <- cov(Y - Yh)
   SigmaW <- cov(W - Wh)
-  A <- sqrtm(SigmaY); B <- sqrtm(SigmaW)
+  A <- sqrtm(SigmaY)
+  gg <- rotmin(B_Y%*%isqrtm(SigmaY), B_W%*%isqrtm(SigmaW))
+  B <- gg %*% sqrtm(SigmaW)
   list(A=A, B=B) 
 }
 
@@ -64,7 +67,7 @@ jmle <- function(X, Y, W, n.its = 200, ss = 1, ssm = 0.5,
       ss <- ss * ssm
     } else {
       Ai <- Ai-ss*gAi; Bi <- Bi-ss*gBi      
-      print(list(new_obj, ss))
+      if (i %% 10==0) print(new_obj)
     }
   }
   
@@ -92,8 +95,8 @@ truth <- list(G=G0, A=A0, B=B0)
 
 Y <- (X %*% G0  + sigma * randn(n, q)) %*% A0
 W <- (X %*% G0  + sigma * randn(n, q)) %*% B0
-sol <- jmle(X, Y, W, 1000)
-sol0 <- jmle(X, Y, W, 1000, init=truth)
+sol <- jmle(X, Y, W, 100)
+sol0 <- jmle(X, Y, W, 100, init=truth)
 sep <- sep_mle_of(X, Y, W)
 
 #f2(G0 %*% t(G0), sol0$G %*% t(sol0$G))
@@ -116,9 +119,10 @@ objf0 <- function(G, A, B) {
 }
 
 truth %$% objf0(G, A, B)
-jof <- sol %$% objf0(G, A, B)
-(lr <- 1/2*(jof - sep))
+(jof <- sol %$% objf0(G, A, B))
 sol0 %$% objf0(G, A, B)
+
+(lr <- 1/2*(jof - sep))
 
 sol %$% log(det(t(A) %*% A))
 truth %$% log(det(t(A) %*% A))
