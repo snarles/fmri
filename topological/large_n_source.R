@@ -67,7 +67,7 @@ jmle <- function(X, Y, W, n.its = 200, ss = 1, ssm = 0.5,
       ss <- ss * ssm
     } else {
       Ai <- Ai-ss*gAi; Bi <- Bi-ss*gBi      
-      if (i %% 10==0) print(new_obj)
+      #if (i %% 10==0) print(new_obj)
     }
   }
   
@@ -78,3 +78,9 @@ jmle <- function(X, Y, W, n.its = 200, ss = 1, ssm = 0.5,
 }
 
 
+objf0 <- function(G, A, B) {
+  Yh <- X %*% G %*% A; Wh <- X %*% G %*% B
+  s1 <- (Y-Yh) %*% solve(t(A) %*% A, t(Y-Yh))
+  s2 <- (W-Wh) %*% solve(t(B) %*% B, t(W-Wh))
+  TR(s1) + TR(s2) + n*log(det(t(A) %*% A)) + n*log(det(t(B) %*% B))
+}

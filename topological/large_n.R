@@ -1,7 +1,9 @@
-source("topological/large_n.R")
+source("topological/large_n_source.R")
+library(ade4)
 
-
-## TEST
+####
+## NUMERICAL CONVERGENCE TEST
+####
 
 n <- 1000; p <- 30; q <- 20
 X <- randn(n, p)
@@ -32,14 +34,6 @@ f2(G0 %*% B0, sol$G %*% sol$B)
 f2(A0)
 f2(sol$A)
 
-
-objf0 <- function(G, A, B) {
-  Yh <- X %*% G %*% A; Wh <- X %*% G %*% B
-  s1 <- (Y-Yh) %*% solve(t(A) %*% A, t(Y-Yh))
-  s2 <- (W-Wh) %*% solve(t(B) %*% B, t(W-Wh))
-  TR(s1) + TR(s2) + n*log(det(t(A) %*% A)) + n*log(det(t(B) %*% B))
-}
-
 truth %$% objf0(G, A, B)
 (jof <- sol %$% objf0(G, A, B))
 sol0 %$% objf0(G, A, B)
@@ -48,3 +42,56 @@ sol0 %$% objf0(G, A, B)
 
 sol %$% log(det(t(A) %*% A))
 truth %$% log(det(t(A) %*% A))
+
+####
+##  FUNCTIONS FOR COMPARISON TO MANTEL
+####
+
+
+simulate_mantel_jmle <- function(X, G0a, G0b = G0a) {
+  n <- dim(X)[1]; p <- dim(X)[2]; q <- dim(G0a)[2]
+  A0 <- randn(q, q); B0 <- randn(q, q)
+  sigma <- 1
+  Y <- (X %*% G0a  + sigma * randn(n, q)) %*% A0
+  W <- (X %*% G0b  + sigma * randn(n, q)) %*% B0
+  dY <- dist(Y)
+  dW <- dist(W)
+  res <- mantel.randtest(dY, dW, 1e4)
+  mantel_pv <- res$pvalue
+  sol <- jmle(X, Y, W, 100)
+  (jof <- sol %$% objf0(G, A, B))
+  sep <- sep_mle_of(X, Y, W)
+  (lr <- 1/2*(jof - sep))
+  c(mantel_pv, lr)
+}
+
+
+####
+##  Comparison with varying correlations
+####
+
+library(parallel)
+
+## Fix X and G0a
+n <- 1000; p <- 30; q <- 20
+X <- randn(n, p)
+G0a <- randn(p, q)
+GE <- randn(p, q)
+mc.its <- 7
+mcc <- 7
+
+## Independent case
+G0b <- GE
+res_ind <- do.call(rbind, mclapply(1:mc.its, 
+              function(i) simulate_mantel_jmle(X, G0a, G0b), mc.cores = mcc))
+
+## Identical case
+G0b <- G0a
+res_null <- do.call(rbind, mclapply(1:mc.its, 
+              function(i) simulate_mantel_jmle(X, G0a, G0b), mc.cores = mcc))
+
+## Correlated case
+G0b <- sqrt(0.5) * G0a + sqrt(0.5) * GE
+res_corr <- do.call(rbind, mclapply(1:mc.its, 
+              function(i) simulate_mantel_jmle(X, G0a, G0b), mc.cores = mcc))
+
