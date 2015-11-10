@@ -1,6 +1,15 @@
 library(lineId)
 library(magrittr)
 
+grf_zs <- function(lambda = 2, k.basis = 5) {
+  kseq <- (-k.basis):k.basis
+  kgrid <- cbind(rep(kseq, each=(2*k.basis + 1)), rep(kseq, (2*k.basis + 1)))
+  klen <- dim(kgrid)[1]
+  zs <- rnorm(klen) + 1i * rnorm(klen)
+  zs <- zs * exp(-lambda/4 * rowSums(kgrid^2))
+  zs  
+}
+
 ## grf on points with coordinates x, cov = exp(-lambda d(x_i, x_j)^2/2)
 grf_grid <- function(xs, lambda = 2, k.basis = 5) {
   kseq <- (-k.basis):k.basis
