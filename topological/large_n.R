@@ -99,6 +99,6 @@ res_corr <- do.call(rbind, mclapply(1:mc.its,
 boxplot.matrix(log(cbind(res_ind[, 1], res_corr[, 1], res_null[, 1])))
 
 # JMLE
-boxplot.matrix(log(cbind(res_ind[, 2], res_corr[, 2], res_null[, 2])))
+boxplot.matrix(log(cbind(ind=res_ind[, 2], corr=res_corr[, 2], null=res_null[, 2])))
 
 
