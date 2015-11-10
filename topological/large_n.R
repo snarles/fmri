@@ -59,6 +59,7 @@ simulate_mantel_jmle <- function(X, G0a, G0b = G0a) {
   res <- mantel.randtest(dY, dW, 1e3)
   mantel_pv <- res$pvalue
   est <- init_est(X, Y, W)
+  #plot(as.numeric(est$M_Y), as.numeric(est$M_W))
   diff <- f2(est$M_Y, est$M_W)
   diff2 <- cor(as.numeric(est$M_Y), as.numeric(est$M_W))
   sol <- jmle(X, Y, W, 100)
@@ -76,12 +77,18 @@ simulate_mantel_jmle <- function(X, G0a, G0b = G0a) {
 library(parallel)
 
 ## Fix X and G0a
-n <- 1000; p <- 30; q <- 20
+n <- 1000; p <- 40; q <- 20
 X <- randn(n, p)
 G0a <- randn(p, q)
 GE <- randn(p, q)
-mc.its <- 7
+G0d <- G0a; G0d[, 1:q] <- 0
+G0e <- GE; G0d[, -(1:q)] <- 0
+mc.its <- 21
 mcc <- 7
+
+## Disjoint case
+res_dis <- do.call(rbind, mclapply(1:mc.its, 
+              function(i) simulate_mantel_jmle(X, G0d, G0e), mc.cores = mcc))
 
 ## Independent case
 G0b <- GE
@@ -99,16 +106,24 @@ res_corr <- do.call(rbind, mclapply(1:mc.its,
               function(i) simulate_mantel_jmle(X, G0a, G0b), mc.cores = mcc))
 
 # MANTEL
-boxplot.matrix(log(cbind(res_ind[, 1], res_corr[, 1], res_null[, 1])))
+boxplot.matrix(log(cbind(
+  dis=res_dis[,1], ind=res_ind[, 1], corr=res_corr[, 1], null=res_null[, 1])),
+  main = "Mantel")
 
-# JMLE
-boxplot.matrix(log(cbind(ind=res_ind[, 2], corr=res_corr[, 2], null=res_null[, 2])))
+# LRT
+boxplot.matrix(log(cbind(
+  dis=res_dis[,2], ind=res_ind[, 2], corr=res_corr[, 2], null=res_null[, 2])),
+  main = "LRT")
 
 ## diff
-boxplot.matrix(log(cbind(ind=res_ind[, 3], corr=res_corr[, 3], null=res_null[, 3])))
+boxplot.matrix(log(cbind(
+  dis=res_dis[,3], ind=res_ind[, 3], corr=res_corr[, 3], null=res_null[, 3])),
+  main = "F2")
 
 ## diff2
-boxplot.matrix(log(cbind(ind=res_ind[, 4], corr=res_corr[, 4], null=res_null[, 4])))
+boxplot.matrix(cbind(
+  dis=res_dis[,4], ind=res_ind[, 4], corr=res_corr[, 4], null=res_null[, 4]),
+  main = "cor")
 
 
 
