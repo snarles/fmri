@@ -95,3 +95,10 @@ G0b <- sqrt(0.5) * G0a + sqrt(0.5) * GE
 res_corr <- do.call(rbind, mclapply(1:mc.its, 
               function(i) simulate_mantel_jmle(X, G0a, G0b), mc.cores = mcc))
 
+# MANTEL
+boxplot.matrix(log(cbind(res_ind[, 1], res_corr[, 1], res_null[, 1])))
+
+# JMLE
+boxplot.matrix(log(cbind(res_ind[, 2], res_corr[, 2], res_null[, 2])))
+
+
