@@ -13,6 +13,7 @@ simulate_mantel_jmle <- function(X, G0a, G0b = G0a,
   n <- dim(X)[1]; p <- dim(X)[2]; q <- dim(G0a)[2]
   A0 <- randn(q, q); temp <- randn(q, q)
   Btemp <- pinv(G0b) %*% G0a %*% A0
+  f2(G0a %*% A0, G0b %*% Btemp)
   B0 <- sqrt(Bsim) * Btemp + sqrt(1-Bsim) * temp
   Y <- (X %*% G0a  + sigma * randn(n, q)) %*% A0
   W <- (X %*% G0b  + sigma * randn(n, q)) %*% B0
@@ -45,8 +46,8 @@ G0d <- G0a; G0d[, 1:q] <- 0
 G0e <- GE; G0d[, -(1:q)] <- 0
 mc.its <- 21
 mcc <- 7
-
 lambda <- 0.1; alpha <- 0.5
+
 ## Disjoint case
 res_dis <- do.call(rbind, mclapply(1:mc.its, 
               function(i) 
@@ -88,5 +89,62 @@ boxplot.matrix(log(cbind(
 ## diff2
 boxplot.matrix(cbind(
   dis=res_dis[,3], ind=res_ind[, 3], corr=res_corr[, 3], null=res_null[, 3]),
+  main = "cor")
+
+
+
+
+
+####
+##  Rescale case
+####
+
+## Fix X and G0a
+n <- 200; p <- 500; q <- 200
+sigma <- 1
+Bsim <- 0.99
+X <- randn(n, p)
+G0a <- randn(p, q)
+dd <- diag(runif(q))
+GE <- randn(p, q)
+mc.its <- 21
+mcc <- 7
+lambda <- 0.1; alpha <- 0.5
+## Identical case
+res_null <- do.call(
+  rbind, 
+  mclapply(1:mc.its, 
+           function(i) 
+             simulate_mantel_jmle(X, G0a, G0a,
+                                  sigma, lambda, alpha, Bsim),
+           mc.cores = mcc))
+## RESCALE case
+G0b <- G0a %*% dd
+res_d <- do.call(
+  rbind, 
+  mclapply(1:mc.its, 
+           function(i) 
+             simulate_mantel_jmle(X, G0a, G0a %*% dd,
+                                  sigma, lambda, alpha, Bsim),
+           mc.cores = mcc))
+## Independent case
+G0b <- GE
+res_ind <- do.call(
+  rbind, 
+  mclapply(1:mc.its, 
+           function(i)
+             simulate_mantel_jmle(
+               X, G0a, GE,
+               sigma, lambda, alpha, Bsim), mc.cores = mcc))
+
+
+# MANTEL
+boxplot.matrix(log(cbind(
+  dis=res_dis[,1], ind=res_ind[, 1], corr=res_d[, 1], null=res_null[, 1])),
+  main = "Mantel")
+
+## diff2
+boxplot.matrix(cbind(
+  dis=res_dis[,3], ind=res_ind[, 3], corr=res_d[, 3], null=res_null[, 3]),
   main = "cor")
 
