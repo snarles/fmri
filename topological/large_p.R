@@ -7,10 +7,13 @@ library(ade4)
 ####
 
 
-simulate_mantel_jmle <- function(X, G0a, G0b = G0a, lambda, alpha) {
+simulate_mantel_jmle <- function(X, G0a, G0b = G0a,
+                                 sigma=1, lambda=1, alpha=0.5,
+                                 Bsim = 0) {
   n <- dim(X)[1]; p <- dim(X)[2]; q <- dim(G0a)[2]
-  A0 <- randn(q, q); B0 <- randn(q, q)
-  sigma <- 1
+  A0 <- randn(q, q); temp <- randn(q, q)
+  Btemp <- pinv(G0b) %*% G0a %*% A0
+  B0 <- sqrt(Bsim) * Btemp + sqrt(1-Bsim) * temp
   Y <- (X %*% G0a  + sigma * randn(n, q)) %*% A0
   W <- (X %*% G0b  + sigma * randn(n, q)) %*% B0
   dY <- dist(Y)
@@ -33,10 +36,11 @@ library(parallel)
 
 ## Fix X and G0a
 n <- 200; p <- 500; q <- 200
+sigma <- 0.01
+Bsim <- 0.99
 X <- randn(n, p)
-snr <- 0.01
-G0a <- snr * randn(p, q)
-GE <- snr * randn(p, q)
+G0a <- randn(p, q)
+GE <- randn(p, q)
 G0d <- G0a; G0d[, 1:q] <- 0
 G0e <- GE; G0d[, -(1:q)] <- 0
 mc.its <- 21
@@ -45,26 +49,30 @@ mcc <- 7
 lambda <- 0.1; alpha <- 0.5
 ## Disjoint case
 res_dis <- do.call(rbind, mclapply(1:mc.its, 
-              function(i) simulate_mantel_jmle(X, G0d, G0e,
-                                               lambda, alpha), mc.cores = mcc))
+              function(i) 
+                simulate_mantel_jmle(X, G0d, G0e,
+                                    sigma, lambda, alpha, Bsim), mc.cores = mcc))
 
 ## Independent case
 G0b <- GE
 res_ind <- do.call(rbind, mclapply(1:mc.its, 
-              function(i) simulate_mantel_jmle(X, G0a, G0b,
-                                               lambda, alpha), mc.cores = mcc))
+              function(i)
+                simulate_mantel_jmle(X, G0a, G0b,
+                                    sigma, lambda, alpha, Bsim), mc.cores = mcc))
 
 ## Identical case
 G0b <- G0a
 res_null <- do.call(rbind, mclapply(1:mc.its, 
-              function(i) simulate_mantel_jmle(X, G0a, G0b,
-                                               lambda, alpha), mc.cores = mcc))
+              function(i) 
+                simulate_mantel_jmle(X, G0a, G0b,
+                                     sigma, lambda, alpha, Bsim), mc.cores = mcc))
 
 ## Correlated case
 G0b <- sqrt(0.5) * G0a + sqrt(0.5) * GE
 res_corr <- do.call(rbind, mclapply(1:mc.its, 
-              function(i) simulate_mantel_jmle(X, G0a, G0b,
-                                               lambda, alpha), mc.cores = mcc))
+              function(i) 
+                simulate_mantel_jmle(X, G0a, G0b,
+                                    sigma, lambda, alpha, Bsim), mc.cores = mcc))
 
 par(bg = "white")
 # MANTEL
