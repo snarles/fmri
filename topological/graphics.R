@@ -61,11 +61,12 @@ for (i in 1:nits) {
   plot_polys(polys, col = rainbow(nits)[i])  
 }
 
-def_plot <- function() {
+def_plot <- function(bgc = "white", circ = "black", fc = "grey") {
   ts <- seq(0, 1, by = 0.001) * 2 * pi
   circ0 <- cbind(cos(ts), sin(ts))
-  par(bg = "white")
-  plot(circ0, xlim = c(-1,1), ylim = c(-1, 1), type = "l", lwd = 3)  
+  par(bg = bgc)
+  plot(circ0, xlim = c(-1,1), ylim = c(-1, 1), type = "l", lwd = 3, col = circ)
+  polygon(circ0, col=fc)
 }
 
 ## Poly circle, two shade
@@ -80,6 +81,7 @@ for (i in 1:2) {
   polys1 <- deform_map(polys1, zs, eps, nits, mp)
   polys2 <- deform_map(polys2, zs, eps, nits, mp)  
 }
-def_plot()
-plot_polys(polys1, col = gray(0.8), border = NA)
-plot_polys(polys2, col = gray(0.6), border = NA)
+def_plot(bgc = "black", circ = "blue", fc = gray(0.1))
+plot_polys(polys1, col = gray(0.2), border = NA)
+plot_polys(polys2, col = gray(0.4), border = NA)
+

@@ -22,6 +22,23 @@ init_est <- function(X, Y, W) {
   list(A=A, B=B, M_Y = M_Y, M_W = M_W) 
 }
 
+init_est_reg <- function(X, Y, W, lambda, alpha) {
+  q <- dim(Y)[2]; p <- dim(X)[2]; n <- dim(X)[1]
+  #A <- randn(q); B <- randn(q);
+  #PX <- X %*% solve(t(X) %*% X, t(X))
+  #cX <- solve(t(X) %*% X, t(X))
+  B_Y <- fit_ridge_kernel(X, Y, lambda=lambda)
+  B_W <- fit_ridge_kernel(X, W, lambda=lambda)
+  SigmaY <- residual_offdiag(X, Y, B_Y, shrink = alpha)
+  SigmaW <- residual_offdiag(X, W, B_W, shrink = alpha)
+  A <- sqrtm(SigmaY)
+  gg <- rotmin(B_Y%*%isqrtm(SigmaY), B_W%*%isqrtm(SigmaW))
+  B <- gg %*% sqrtm(SigmaW)
+  M_Y <- B_Y %*% solve(SigmaY, t(B_Y))
+  M_W <- B_W %*% solve(SigmaW, t(B_W))
+  list(A=A, B=B, M_Y = M_Y, M_W = M_W) 
+}
+
 sep_mle_of <- function(X, Y, W) {
   q <- dim(Y)[2]; p <- dim(X)[2]; n <- dim(X)[1]
   #A <- randn(q); B <- randn(q);
