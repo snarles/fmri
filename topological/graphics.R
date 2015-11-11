@@ -1,73 +1,4 @@
-library(lineId)
-library(magrittr)
-
-grf_zs <- function(lambda = 2, k.basis = 5) {
-  kseq <- (-k.basis):k.basis
-  kgrid <- cbind(rep(kseq, each=(2*k.basis + 1)), rep(kseq, (2*k.basis + 1)))
-  klen <- dim(kgrid)[1]
-  zs <- rnorm(klen) + 1i * rnorm(klen)
-  zs <- zs * exp(-lambda/4 * rowSums(kgrid^2))
-  zs  
-}
-
-## grf on points with coordinates x, cov = exp(-lambda d(x_i, x_j)^2/2)
-grf_grid <- function(xs, lambda = 2, k.basis = 5) {
-  kseq <- (-k.basis):k.basis
-  kgrid <- cbind(rep(kseq, each=(2*k.basis + 1)), rep(kseq, (2*k.basis + 1)))
-  klen <- dim(kgrid)[1]
-  zs <- rnorm(klen) + 1i * rnorm(klen)
-  zs <- zs * exp(-lambda/4 * rowSums(kgrid^2))
-  mat <- apply(kgrid, 1, function(kk) {
-    exp(1i * pi * colSums(kk * t(xs)))
-  })
-  dmat1 <- t(t(mat) * kgrid[, 1] * 1i * pi)
-  dmat2 <- t(t(mat) * kgrid[, 2] * 1i * pi)
-  vals <- (mat %*% zs)[, 1]
-  d1 <- (dmat1 %*% zs)[, 1]
-  d2 <- (dmat2 %*% zs)[, 1]
-  list(vals = vals, d1 = d1, d2 = d2, zs = zs)
-}
-
-circ_confine <- function(xs, vals, d1, d2, pow = 1) {
-  xtx <- rowSums(xs^2)
-  gfunc <- (xtx^pow - 1)^2
-  g1 <- 4 *(xtx - 1) * pow * xtx^(pow-1) * xs[, 1]
-  g2 <- 4 *(xtx - 1) * pow * xtx^(pow-1) * xs[, 2]
-  gfunc[xtx > 1] <- 0;
-  g1[xtx > 1] <- 0; g2[xtx > 1] <- 0  
-  new_vals <- vals * gfunc
-  new_d1 <- vals * g1 + gfunc * d1
-  new_d2 <- vals * g2 + gfunc * d2
-  list(vals = new_vals, d1 = new_d1, d2 = new_d2)
-}
-
-ctp <- function(vals, d1, d2) {
-  contour(xseq, xseq, matrix(Re(vals), nrow=length(xseq) ), lwd = 2)
-  contour(xseq, xseq, matrix(Re(d1), nrow=length(xseq)) , add=TRUE, col="red")
-  contour(xseq, xseq, matrix(Re(d2), nrow=length(xseq) ), add=TRUE, col="blue")  
-}
-
-cc_query_ <- function(zs, k.basis, pow) {
-  kseq <- (-k.basis):k.basis
-  kgrid <- cbind(rep(kseq, each=(2*k.basis + 1)), rep(kseq, (2*k.basis + 1)))
-  ansf <- function(x) {
-    ## rf vals and ds
-    ef_vals <- exp(1i * pi * kgrid %*% x)[, 1]
-    rf_val <- sum(zs * ef_vals)
-    rf_d1 <- sum(1i*pi*kgrid[,1] * zs * ef_vals)
-    rf_d2 <- sum(1i*pi*kgrid[,2] * zs * ef_vals)
-    ## confine vals and ds
-    xtx <- sum(x^2)
-    gfunc <- (xtx^pow - 1)^2
-    g1 <- 4 *(xtx - 1) * pow * xtx^(pow-1) * x[1]
-    g2 <- 4 *(xtx - 1) * pow * xtx^(pow-1) * x[2]
-    val <- gfunc * rf_val
-    d1 <- gfunc * rf_d1 + g1 * rf_val
-    d2 <- gfunc * rf_d2 + g2 * rf_val
-    c(val = val, d1 = d1, d2 = d2)
-  }
-  ansf
-}
+source("topological//graphics_source.R")
 
 ## GENERATE X GRID
 xseq <- seq(-1, 1, by = 0.01)
@@ -117,3 +48,38 @@ for (i in 1:nits) {
   pts <- pts + eps * Re(cbind(ds[,2], ds[, 3]))
   if (i %% 10==0) lines(pts, col = rainbow(nits)[i], lwd = 2)
 }
+
+
+## Poly circle deformations
+
+polys <- polycirc(10, radmax = 0.3, innmax = 0.7)[[1]]
+par(bg = "grey");plot(NA, xlim = c(-1,1), ylim = c(-1, 1))
+plot_polys(polys, col = "black")
+nits <- 10
+for (i in 1:nits) {  
+  polys <- rand_deform(polys, lambda, k.basis, eps=0.01)
+  plot_polys(polys, col = rainbow(nits)[i])  
+}
+
+def_plot <- function() {
+  ts <- seq(0, 1, by = 0.001) * 2 * pi
+  circ0 <- cbind(cos(ts), sin(ts))
+  par(bg = "white")
+  plot(circ0, xlim = c(-1,1), ylim = c(-1, 1), type = "l", lwd = 3)  
+}
+
+## Poly circle, two shade
+res <- polycirc(20, radmax = 0.4, innmax = 0.8, rad_dec=0.2,
+                ina = 3, inb = 1)
+polys1 <- res[[1]]; polys2 <- res[[2]]
+eps <- 0.01; nits <- 10; mp <- TRUE
+lambda <- 8; k.basis <- 8
+
+for (i in 1:2) {
+  zs <- grf_zs(lambda, k.basis)
+  polys1 <- deform_map(polys1, zs, eps, nits, mp)
+  polys2 <- deform_map(polys2, zs, eps, nits, mp)  
+}
+def_plot()
+plot_polys(polys1, col = gray(0.8), border = NA)
+plot_polys(polys2, col = gray(0.6), border = NA)
