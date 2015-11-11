@@ -34,8 +34,9 @@ library(parallel)
 ## Fix X and G0a
 n <- 200; p <- 500; q <- 200
 X <- randn(n, p)
-G0a <- randn(p, q)
-GE <- randn(p, q)
+snr <- 0.01
+G0a <- snr * randn(p, q)
+GE <- snr * randn(p, q)
 G0d <- G0a; G0d[, 1:q] <- 0
 G0e <- GE; G0d[, -(1:q)] <- 0
 mc.its <- 21
