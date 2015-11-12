@@ -1,0 +1,74 @@
+\title{Upper and lower bounds on cdf of generalized non-central chi-squared}
+\author{Charles Zheng and Yuval Benjamini}
+\date{\today}
+
+\documentclass[12pt]{article} 
+
+% packages with special commands
+\usepackage{amssymb, amsmath}
+\usepackage{epsfig}
+\usepackage{array}
+\usepackage{ifthen}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{csquotes}
+\definecolor{grey}{rgb}{0.5,0.5,0.5}
+
+\begin{document}
+\maketitle
+
+\newcommand{\tr}{\text{tr}}
+\newcommand{\E}{\textbf{E}}
+\newcommand{\diag}{\text{diag}}
+\newcommand{\argmax}{\text{argmax}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\argmin}{\text{argmin}}
+\newcommand{\Vol}{\text{Vol}}
+\newcommand{\comm}[1]{}
+
+\section{Introduction}
+
+Let $Z \sim N(0, I_p)$, and let $\mu \in \mathbb{R}^p$ and $\Sigma$ a
+positive semidefinite matrix.  Define the generalized noncentral
+chi-squared distribution with noncentrality $\mu$ and shape $\Sigma$
+as the distribution of
+\[
+Y = (Z + \mu)^T \Sigma (Z + \mu)
+\]
+
+Let $V\Lambda V^T = \Sigma$ be the eigendecomposition of $\Sigma$,
+and let $\eta = V^T \Sigma$.
+Then
+\[
+Y \stackrel{d}{=} (Z + \eta)^T \Lambda (Z+\eta) = \sim_{i=1}^p \lambda_i W_i
+\]
+where $W_i \sim \chi^2_1(\eta_i^2)$.
+Recall that the mgf of the noncentral chi-sqaured with one df is given by
+\[
+\E[e^{tW_i}] = \frac{\exp[\frac{\eta_i^2 t}{1-2t}]}{\sqrt{1-2t}}
+\]
+It follows that the moment-generating function of $Y$ is given by
+\[
+\E[e^{tY}] = \prod_{i=1}^p \E[e^{\lambda_i t W_i}] = \prod_{i=1}^p \frac{\exp[\frac{\eta_i^2 \lambda_i t}{1-2t \lambda_i}]}{\sqrt{1-2t \lambda_i}}
+\]
+
+\section{Bound}
+
+We wish to bound the probability $\Pr[Y < x]$.
+We have
+\begin{align*}
+\log \Pr[Y < x] &= \log \Pr[e^{tY} > e^{tx}]\text{ for }t < 0
+\\&\leq \log\left(\frac{\E[e^{tY}]}{e^{tx}}\right)
+\\&= \log(\E[e^{tY}]) - tx
+\\&= \left(\frac{-1}{2} \sum_{i=1}^p \log(1 - 2t\lambda_i)\right) + \left(\sum_{i=1}^p \frac{\eta_i^2 \lambda_i t}{1 - 2t\lambda_i }\right) - tx
+\end{align*}
+
+Now consider minimizing the bound over $t$.
+
+\end{document}
+
+
+
