@@ -81,36 +81,41 @@ lmb_gchisq <- function(x, Sigma, mu) {
       (1 - sum(nu^2*ls/(1 + ls*p/x))/x)
 }
 
+qlmb_gchisq <- function(lprob, Sigma, mu, intv = c(1e-10, 1e3)) {
+  ff <- function(x) (lmb_gchisq(x, Sigma, mu) - lprob)^2
+  res <- optimise(ff, interval=intv)
+  res$minimum
+}
 
 
 ####
 ##  Tests
 ####
 
-mu <- rnorm(5)
-Sigma <- cov(randn(10, 5))
-#s1 <- rgchisq0(1e6, Sigma, mu)
-#s2 <- rgchisq(1e6, Sigma, mu)
-#cdf0 <- function(x) mean(s1 < x)
-#plot(sort(s1), sort(s2), type = 'l')
-#abline(0, 1, col = "red")
-#.2 %>%{c(mean(exp(.*s1)),mean(exp(.* s2)),mgf_gchisq(.,Sigma,mu))}
-fs <- seq(-3, 3, by = 0.002) * 1i
-cs <- mgf_gchisq(fs, Sigma, mu)
-#plot(Im(fs), Re(cs), type = "l")
-#plot(Im(fs), Im(cs), type = "l")
-xs <- seq(0, 1, length.out = 1e3)
-ps <- finv(fs, cs, xs)
-#10 %>% {c(sum(ps[xs < .])/sum(ps), mean(s1 < .))}
-cdf <- function(x) sum(ps[xs < x]) * (xs[2]-xs[1])
-x <- .5
-tt <- -seq(0,4/x,length.out=100); pus <- mb_gchisq(tt, x, Sigma, mu)
-plot(tt, log(pus), type = "l", ylim = c(log(cdf(x)) - 1, 0))
-abline(log(cdf(x)), 0)
-c(lmb_gchisq(x,Sigma,mu), log(min(pus)), log(cdf(x)))
-
-## test derivatives of log expo bound
-x <- 0.1
-tt0 <- -5
-numDeriv::grad(function(tt) mgf_gchisq(tt, Sigma, mu, TRUE) - tt*x, tt0)
-prox_dleb(tt0, x, Sigma, mu)
+# mu <- rnorm(5)
+# Sigma <- cov(randn(10, 5))
+# #s1 <- rgchisq0(1e6, Sigma, mu)
+# #s2 <- rgchisq(1e6, Sigma, mu)
+# #cdf0 <- function(x) mean(s1 < x)
+# #plot(sort(s1), sort(s2), type = 'l')
+# #abline(0, 1, col = "red")
+# #.2 %>%{c(mean(exp(.*s1)),mean(exp(.* s2)),mgf_gchisq(.,Sigma,mu))}
+# fs <- seq(-3, 3, by = 0.002) * 1i
+# cs <- mgf_gchisq(fs, Sigma, mu)
+# #plot(Im(fs), Re(cs), type = "l")
+# #plot(Im(fs), Im(cs), type = "l")
+# xs <- seq(0, 1, length.out = 1e3)
+# ps <- finv(fs, cs, xs)
+# #10 %>% {c(sum(ps[xs < .])/sum(ps), mean(s1 < .))}
+# cdf <- function(x) sum(ps[xs < x]) * (xs[2]-xs[1])
+# x <- .5
+# tt <- -seq(0,4/x,length.out=100); pus <- mb_gchisq(tt, x, Sigma, mu)
+# plot(tt, log(pus), type = "l", ylim = c(log(cdf(x)) - 1, 0))
+# abline(log(cdf(x)), 0)
+# c(lmb_gchisq(x,Sigma,mu), log(min(pus)), log(cdf(x)))
+# 
+# ## test derivatives of log expo bound
+# x <- 0.1
+# tt0 <- -5
+# numDeriv::grad(function(tt) mgf_gchisq(tt, Sigma, mu, TRUE) - tt*x, tt0)
+# prox_dleb(tt0, x, Sigma, mu)
