@@ -94,12 +94,12 @@ qlmb_gchisq <- function(lprob, Sigma, mu, intv = c(1e-10, 1e3)) {
 
 # mu <- rnorm(5)
 # Sigma <- cov(randn(10, 5))
-# s1 <- rgchisq0(1e4, Sigma, mu)
-# t1 <- proc.time()
-# s3 <- sapply((1:1e4 - .5)/1e4, function(pp) qlmb_gchisq(log(pp), Sigma, mu))
-# proc.time() - t1
-# plot(sort(s1), sort(s3)); abline(0, 1)
-# plot(sort(s1)[1:100], sort(s3)[1:100]); abline(0, 1)
+# s1 <- rgchisq0(1e6, Sigma, mu)
+# s1 <- rgchisq(1e6, Sigma, mu)
+# cdf <- function(x) sum(s1 < x)/length(s1)
+# 0.2 %>% {c(lmb_gchisq(., Sigma, mu), log(cdf(.)))}
+# 0.1 %>% {c(lmb_gchisq(., Sigma, mu), log(cdf(.)))}
+# 0.05 %>% {c(lmb_gchisq(., Sigma, mu), log(cdf(.)))}
 
 # #s2 <- rgchisq(1e6, Sigma, mu)
 # #cdf0 <- function(x) mean(s1 < x)

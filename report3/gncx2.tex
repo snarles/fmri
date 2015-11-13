@@ -67,6 +67,24 @@ We have
 \end{align*}
 
 Now consider minimizing the bound over $t$.
+The derivative of the bound wrt $t$ is
+\[
+-x + \sum_{i=1}^p \frac{\lambda_i (1 + \eta_i)^2}{1-2\lambda_i t} + \frac{2\eta_i^2 \lambda_i^2 t}{(1-2\lambda_i t)^2}
+\]
+which, to a first-order approximation in $1/t$, is
+\[
+-\frac{p}{2t} - x
+\]
+Hence this implies that for small $x$, the optimal value of $t$ is approximately
+\[
+t^* \approx -\frac{p}{2x}.
+\]
+
+Plugging in this value of $t$ yields the bound
+\[
+\log \Pr[Y < x] < -\frac{1}{2}\left(\sum_{i=1}^p \log\left(1 + \frac{\lambda_i p}{x}\right)\right) + 
+\frac{p}{2} \left(1 - \frac{1}{x}\sum_{i=1}^p \frac{\eta_i^2 \lambda_i}{1 + \frac{\lambda_i p}{x}}\right)
+\]
 
 \end{document}
 
