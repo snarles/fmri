@@ -129,26 +129,22 @@ x^{p/2}\Vol(B_1)/\sqrt{|\Lambda|}\Pr[\text{Beta}((p-1)/2, (p-1)/2) < u]
 Let us proceed to lower bound the density in $\mathcal{C}_u$.
 This amounts to upper bounding the distance
 \[
-\max_{z \in \mathcal{C}_u} ||z - \eta||.
+\max_{z \in \mathcal{C}_u} ||z - \eta||^2.
 \]
 
 Let us define
 \[
-m(0) = ||\eta - z^*||
-\]
-and
-\[
-m(u) = m(0) + \frac{\sqrt{x}}{\sqrt{\lambda_{min}}} \sqrt{1-(1-u)^2} + 2uh
+m(u) = (||\eta|| - h(1-2u))^2 + \left(||\eta/||\eta|| - z^*|| + \sqrt{\frac{x}{\lambda_{min}} (1-(1-u)^2)}\right)
 \]
 where $\lambda_{min} = \min_{i=1}^p \lambda_i$.
 We claim that
 \[
-\max_{z \in \mathcal{C}_u} ||z - \eta|| \leq m(u).
+\max_{z \in \mathcal{C}_u} ||z - \eta||^2 \leq m(u).
 \]
 
 Hence,
 \[
-\log\Pr[Y < x] \leq \log(\phi(m(u))) + \log\text{Vol}(B_{\sqrt{x}}) - \frac{1}{2}\log|\lambda|
+\log\Pr[Y < x] \leq \log(\phi(\sqrt{m(u)})) + \log\text{Vol}(B_{\sqrt{x}}) - \frac{1}{2}\log|\lambda|
 + \log \Pr[\text{Beta}((p-1)/2, (p-1)/2) < u]
 \]
 
