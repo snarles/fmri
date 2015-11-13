@@ -131,7 +131,7 @@ cap_lb_ <- function(x, Sigma, mu) {
 
 p <- 3
 mu <- rnorm(p)
-Sigma <- cov(randn(3*p, p)) + 10 * eye(p)
+Sigma <- 0*cov(randn(3*p, p)) + eye(p)
 s1 <- rgchisq(1e6, Sigma, mu)
 x <- s1[100]
 res <- eigen(Sigma); ls <- res$values
@@ -142,31 +142,36 @@ mc.s <- 1e5
 cube_l <- 1.1 * cube_l_min
 cube_vol <- cube_l^p
 pts <- cube_l * matrix(runif(mc.s * p) - .5, mc.s, p)
-## check boundary inclusion
-flag <- TRUE
-minx <- Inf
-for (j in 1:p) {
-  for (ss in c(-1, 1)) {
-    pts2 <- pts; pts2[, j] <- cube_l * ss
-    nms <- apply(pts2, 1, function(v) t(v) %*% Sigma %*% v)
-    minx <- pmin(minx, min(nms))
-    if (min(nms) < x) flag <- FALSE
-  }
-}
-list(flag, minx, minx/x)
-
 
 ## check volume
 mc.s <- 1e7
 pts <- cube_l * matrix(runif(mc.s * p) - .5, mc.s, p)
 #nms <- apply(pts, 1, function(v) t(v) %*% Sigma %*% v)
 nms <- rowSums((pts %*% sqrtm(Sigma))^2)
-  # empirical volume
+#  # empirical volume
 mean(nms < x) * cube_vol
-  # computed volume
-exp(log_vsph(p) - .5 * sum(log(ls)) + (p/2) * log(x))
+#  # computed volume
+(vol_e <- exp(log_vsph(p) - .5 * sum(log(ls)) + (p/2) * log(x)))
+ee <- pts[nms < x, ]
 
+## Check cap height
+nun <- nu/sqrt(f2(nu))
+nSn <- sum(nun^2/ls)
+zh <- sqrt(x/nSn) * (nun/ls)
+h <- sqrt(x * nSn)
+mun <- mu/sqrt(f2(mu))
+hs <- ee %*% mun
+c(max(hs), h)
 
+## Check cap vol
+u <- 0.1
+#  #  empirical volume
+hist((hs + h)/2)
+plot(dbeta(1:100/100, (p-1)/2, (p-1)/2))
+mean(nms < x & hs > (1-2*u)*h) * cube_vol
+#  #  computed volume
+exp(log_vsph(p) - .5 * sum(log(ls)) + (p/2) * log(x)  +
+      pbeta(u, (p-1)/2, (p-1)/2, log.p=TRUE))
 
 
 ####
