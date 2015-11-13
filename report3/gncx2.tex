@@ -55,7 +55,7 @@ It follows that the moment-generating function of $Y$ is given by
 \E[e^{tY}] = \prod_{i=1}^p \E[e^{\lambda_i t W_i}] = \prod_{i=1}^p \frac{\exp[\frac{\eta_i^2 \lambda_i t}{1-2t \lambda_i}]}{\sqrt{1-2t \lambda_i}}
 \]
 
-\section{Bound}
+\section{Upper bound}
 
 We wish to bound the probability $\Pr[Y < x]$.
 We have
@@ -85,6 +85,73 @@ Plugging in this value of $t$ yields the bound
 \log \Pr[Y < x] < -\frac{1}{2}\left(\sum_{i=1}^p \log\left(1 + \frac{\lambda_i p}{x}\right)\right) + 
 \frac{p}{2} \left(1 - \frac{1}{x}\sum_{i=1}^p \frac{\eta_i^2 \lambda_i}{1 + \frac{\lambda_i p}{x}}\right)
 \]
+
+\section{Lower bound}
+
+From the previous notation, the probability is written as an integral over an ellipse $\mathcal{E}$:
+\[
+\Pr[Y < x] = \int_{\mathcal{E}} \phi(\nu - z) dz
+\]
+where
+\[
+\phi(\nu - z) = \left(\frac{1}{2\pi}\right)^{p/2} \exp^{-||\nu - z||^2/2}
+\]
+and
+\[
+\mathcal{E} = \{z \in \mathbb{R}^p: z^T \Lambda z < x\}.
+\]
+
+Define the height of the ellipse as
+\[
+h = \max_{z \in \mathcal{E}} \left(\frac{\eta}{||\eta||}\right)^T z = \sqrt{x \rho},
+\]
+where
+\[
+\rho = \frac{\eta^T \Sigma^{-1}\eta}{||\eta||^2},
+\]
+and let $z^*$ be the point in $\mathcal{E}$ which attains $z^T\eta = h||\eta||$,
+whence
+\[
+z^* = \sqrt{\frac{x}{\rho}} \Sigma^{-1} \frac{\eta}{||\eta||}.
+\]
+
+
+Define the fractional cap with fraction $u$ by
+\[
+\mathcal{C}_u = \{z \in \mathcal{E}: \eta^T z < uh||\eta|| \}.
+\]
+Intuitively, this cap contains points $z \in \mathcal{E}$ with a large density $\phi(z - \nu)$.
+The volume of the cap is given by
+\[
+x^{p/2}\Vol(B_1)/\sqrt{|\Lambda|}\Pr[\text{Beta}((p-1)/2, (p-1)/2) < u]
+\]
+
+Let us proceed to lower bound the density in $\mathcal{C}_u$.
+This amounts to upper bounding the distance
+\[
+\max_{z \in \mathcal{C}_u} ||z - \eta||.
+\]
+
+Let us define
+\[
+m(0) = ||\eta - z^*||
+\]
+and
+\[
+m(u) = m(0) + \frac{\sqrt{x}}{\sqrt{\lambda_{min}}} \sqrt{1-(1-u)^2} + 2uh
+\]
+where $\lambda_{min} = \min_{i=1}^p \lambda_i$.
+We claim that
+\[
+\max_{z \in \mathcal{C}_u} ||z - \eta|| \leq m(u).
+\]
+
+Hence,
+\[
+\log\Pr[Y < x] \leq \log(\phi(m(u))) + \log\text{Vol}(B_{\sqrt{x}}) - \frac{1}{2}\log|\lambda|
++ \log \Pr[\text{Beta}((p-1)/2, (p-1)/2) < u]
+\]
+
 
 \end{document}
 

@@ -48,6 +48,10 @@ finv <- function(fs, cs, x) {
   Re(rowSums(vals2 * diffs))/(2 * pi)
 }
 
+####
+##  Upper bound using Markov
+####
+
 ## exponential bound on Pr[<x]
 mb_gchisq <- function(tt, x, Sigma, mu) {
   ms <- exp(mgf_gchisq(tt, Sigma, mu, TRUE))
@@ -87,19 +91,58 @@ qlmb_gchisq <- function(lprob, Sigma, mu, intv = c(1e-10, 1e3)) {
   res$minimum
 }
 
+####
+##  Lower bound using cap
+####
+
+log_vsph <- function(d, r=1)
+  log(2/d) + (d/2)*log(pi) - lgamma(d/2) + d*log(r)
+#c(exp(log_vsph(3)), 4/3 * pi)
+
+## bound on log Pr[<x], creates function handle
+cap_lb_ <- function(x, Sigma, mu) {
+  p <- dim(Sigma)[1]
+  res <- eigen(Sigma); ls <- res$values
+  nu <- as.numeric(t(res$vectors) %*% mu)
+  ## Compute height constants, etc
+  nun <- nu/sqrt(f2(nu))
+  nSn <- sum(nun^2/ls)
+  #c(nSn, t(mu) %*% solve(Sigma, mu)/f2(mu))
+  zh <- sqrt(x/nSn) * (nun/ls)
+  h <- sqrt(x * nSn)
+  m0 <- sqrt(f2(nu, zh))
+  ## Volume of ellipse
+  vc <- log_vsph(p) + (p/2)*log(x) - (1/2)*sum(log(ls))
+  #c(h, sum(zh * nun))
+  ## Function handle
+  ff <- function(u) {
+    ## volume of cap
+    cv <- vc + pbeta(u, (p-1)/2, (p-1)/2, log.p=TRUE)
+    ml <- m0 + sqrt(x)/sqrt(min(ls)) * sqrt(1-(1-u)^2) + 2*u*h
+    dens <- -(p/2) * log(2*pi) - (ml^2)/2
+    dens + cv
+  }
+  ff
+}
+
+
 
 ####
 ##  Tests
 ####
 
-# mu <- rnorm(5)
-# Sigma <- cov(randn(10, 5))
-# s1 <- rgchisq0(1e6, Sigma, mu)
+# p <- 2;
+# mu <- rnorm(p)
+# Sigma <- cov(randn(2*p, p))
+# #s1 <- rgchisq0(1e6, Sigma, mu)
 # s1 <- rgchisq(1e6, Sigma, mu)
 # cdf <- function(x) sum(s1 < x)/length(s1)
-# 0.2 %>% {c(lmb_gchisq(., Sigma, mu), log(cdf(.)))}
-# 0.1 %>% {c(lmb_gchisq(., Sigma, mu), log(cdf(.)))}
-# 0.05 %>% {c(lmb_gchisq(., Sigma, mu), log(cdf(.)))}
+# cap_par <- 0.02
+# s1[50] %>% {c(cap_lb_(., Sigma, mu)(cap_par), log(cdf(.)), lmb_gchisq(., Sigma, mu))}
+# 
+# x <- s1[50]
+# ff <- cap_lb_(x, Sigma, mu)
+# (1:100/1000) %>% plot(., sapply(., ff), type = "l")
 
 # #s2 <- rgchisq(1e6, Sigma, mu)
 # #cdf0 <- function(x) mean(s1 < x)
