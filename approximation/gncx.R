@@ -2,12 +2,11 @@
 ##  General non-central chi squared
 ####
 
-library(pracma); library(magrittr); library(hypergeo)
+library(pracma); library(magrittr)
 
 ## probability that x in S^(p-1) has x[1] > 1-2*u
-cap_prob <- function(p, u) {
-  ff <- function(x) x * hypergeo(1/2, (1-p)/2, 3/2, x^2)
-  Re((ff(1) - ff(1-2*u))/(2*ff(1)))
+lcap_prob <- function(p, u) {
+  log(1/2) + pbeta((1 - 2*u)^2, 1/2, (p+1)/2, lower.tail=FALSE, log.p = TRUE)
 }
 
 rgchisq0 <- function(n, Sigma, mu) {
@@ -123,7 +122,7 @@ cap_lb_ <- function(x, Sigma, mu) {
   ## Function handle
   ff <- function(u) {
     ## volume of cap
-    cv <- vc + log(cap_prob(p, u))
+    cv <- vc + lcap_prob(p, u)
     ml <- (sqrt(f2(nu)) + h*(1-2*u))^2 +
       (d0 + sqrt(x/min(ls))*sqrt(1-(1-2*u)^2))^2
     dens <- -(p/2) * log(2*pi) - (ml^2)/2
@@ -176,7 +175,7 @@ u <- runif(1)/3
 #  #  empirical volume
 mean(hs > (1-2*u)*h) * vol_e
 #  #  computed volume
-exp(log_vsph(p) - .5 * sum(log(ls)) + (p/2) * log(x)) * cap_prob(p, u)
+exp(log_vsph(p) - .5 * sum(log(ls)) + (p/2) * log(x) + lcap_prob(p, u))
 
 ## Check cap distance
 diffs <- t(-t(ee) + mu)
@@ -192,15 +191,15 @@ c(max(orth_dists[hs > (1-2*u)*h]), (d0 + sqrt(x/min(ls))*sqrt(1-(1-2*u)^2))^2)
 ##  Tests
 ####
 
-p <- 3;
-mu <- rnorm(p)
-Sigma <- cov(randn(2*p, p))
-#s1 <- rgchisq0(1e6, Sigma, mu)
-s1 <- rgchisq(1e6, Sigma, mu)
-cdf <- function(x) sum(s1 < x)/length(s1)
-cap_par <- 0.01
-s1[50] %>% {c(cap_lb_(., Sigma, mu)(cap_par), log(cdf(.)), lmb_gchisq(., Sigma, mu))}
-
-x <- s1[50]
-ff <- cap_lb_(x, Sigma, mu)
-(1:1e3/1e7) %>% plot(., sapply(., ff), type = "l")
+# p <- 3;
+# mu <- rnorm(p)
+# Sigma <- cov(randn(2*p, p))
+# #s1 <- rgchisq0(1e6, Sigma, mu)
+# s1 <- rgchisq(1e6, Sigma, mu)
+# cdf <- function(x) sum(s1 < x)/length(s1)
+# cap_par <- 0.01
+# s1[50] %>% {c(cap_lb_(., Sigma, mu)(cap_par), log(cdf(.)), lmb_gchisq(., Sigma, mu))}
+# 
+# x <- s1[50]
+# ff <- cap_lb_(x, Sigma, mu)
+# (1:1e3/1e7) %>% plot(., sapply(., ff), type = "l")

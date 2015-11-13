@@ -28,8 +28,14 @@ theory_prob <- function(u) {
   ff <- function(x) x * hypergeo(1/2, (1-p)/2, 3/2, x^2)
   Re((ff(1) - ff(1-2*u))/(2*ff(1)))
 }
+beta_prob <- function(u) {
+  1/2 * pbeta((1 - 2*u)^2, 1/2, (p+1)/2, lower.tail=FALSE)
+}
+
 
 c(0.5, emp_prob(0.5), integral_prob(0.5), theory_prob(0.5))
 
-runif(1) %>% {c(emp_prob(.), integral_prob(.), theory_prob(.))}
+(runif(1)/2) %>% {c(emp_prob(.), integral_prob(.), theory_prob(.), beta_prob(.))}
+
+
 

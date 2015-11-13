@@ -123,7 +123,12 @@ Define the fractional cap with fraction $u$ by
 Intuitively, this cap contains points $z \in \mathcal{E}$ with a large density $\phi(z - \nu)$.
 The volume of the cap is given by
 \[
-x^{p/2}\Vol(B_1)/\sqrt{|\Lambda|}\Pr[\text{Beta}((p-1)/2, (p-1)/2) < u]
+x^{p/2}\Vol(B_1)/\sqrt{|\Lambda|} J(u)
+\]
+where
+\[
+J_p(u) = \frac{\int_{1-2u}^1 (1-x^2)^{\frac{p-1}{2}} dx}{\int_{-1}^1 (1-x^2)^{\frac{p-1}{2}} dx} = 
+\frac{\Pr[\text{Beta}(\frac{1}{2}, \frac{p+1}{2}) > (1-2u)^2]}{2}\text{ for }u < \frac{1}{2}.
 \]
 
 Let us proceed to lower bound the density in $\mathcal{C}_u$.
@@ -134,7 +139,7 @@ This amounts to upper bounding the distance
 
 Let us define
 \[
-m(u) = (||\eta|| - h(1-2u))^2 + \left(||\eta/||\eta|| - z^*|| + \sqrt{\frac{x}{\lambda_{min}} (1-(1-u)^2)}\right)
+m(u) = (||\eta|| - h(1-2u))^2 + \left(||\eta/||\eta|| - z^*|| + \sqrt{\frac{x}{\lambda_{min}} (1-(1-2u)^2)}\right)
 \]
 where $\lambda_{min} = \min_{i=1}^p \lambda_i$.
 We claim that
@@ -142,10 +147,29 @@ We claim that
 \max_{z \in \mathcal{C}_u} ||z - \eta||^2 \leq m(u).
 \]
 
+To prove the claim, for any $z \in \mathcal{C}_u$, decompose the difference into parallel and orthogonal components,
+\[
+\eta - z = \alpha \frac{\eta}{||\eta||} + \beta \eta^\perp
+\]
+where $\eta^\perp$ is orthogonal to $\eta$.
+Hence
+\[
+||\eta - z||^2 = \alpha^2 + \beta^2.
+\]
+It suffices to show that
+\[
+\alpha \leq ||\eta|| - h(1-2u)
+\]
+and
+\[
+\beta \leq ||\eta/||\eta|| - z^*|| + \sqrt{\frac{x}{\lambda_{min}} (1-(1-2u)^2)}
+\]
+for every $z \in \mathcal{C}_u$.
+
 Hence,
 \[
 \log\Pr[Y < x] \leq \log(\phi(\sqrt{m(u)})) + \log\text{Vol}(B_{\sqrt{x}}) - \frac{1}{2}\log|\lambda|
-+ \log \Pr[\text{Beta}((p-1)/2, (p-1)/2) < u]
++ \log J_p(u)
 \]
 
 
