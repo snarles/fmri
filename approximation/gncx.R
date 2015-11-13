@@ -2,7 +2,13 @@
 ##  General non-central chi squared
 ####
 
-library(pracma); library(magrittr)
+library(pracma); library(magrittr); library(hypergeo)
+
+## probability that x in S^(p-1) has x[1] > 1-2*u
+cap_prob <- function(p, u) {
+  ff <- function(x) x * hypergeo(1/2, (1-p)/2, 3/2, x^2)
+  Re((ff(1) - ff(1-2*u))/(2*ff(1)))
+}
 
 rgchisq0 <- function(n, Sigma, mu) {
   p <- dim(Sigma)[1]
@@ -117,8 +123,9 @@ cap_lb_ <- function(x, Sigma, mu) {
   ## Function handle
   ff <- function(u) {
     ## volume of cap
-    cv <- vc + pbeta(u, (p-1)/2, (p-1)/2, log.p=TRUE)
-    ml <- (sqrt(f2(nu)) + h*(1-2*u))^2 +  (d0 + sqrt(x/min(ls))*sqrt(1-(1-u)^2))^2
+    cv <- vc + log(cap_prob(p, u))
+    ml <- (sqrt(f2(nu)) + h*(1-2*u))^2 +
+      (d0 + sqrt(x/min(ls))*sqrt(1-(1-2*u)^2))^2
     dens <- -(p/2) * log(2*pi) - (ml^2)/2
     dens + cv
   }
@@ -130,7 +137,7 @@ cap_lb_ <- function(x, Sigma, mu) {
 ####
 
 p <- 3
-mu <- rnorm(p)
+mu <- 2 * rnorm(p)
 Sigma <- 0*cov(randn(3*p, p)) + eye(p)
 s1 <- rgchisq(1e6, Sigma, mu)
 x <- s1[100]
@@ -162,17 +169,24 @@ h <- sqrt(x * nSn)
 mun <- mu/sqrt(f2(mu))
 hs <- ee %*% mun
 c(max(hs), h)
+d0 <- sqrt(f2(h * nun, zh))
 
 ## Check cap vol
-u <- 0.1
+u <- runif(1)/3
 #  #  empirical volume
-hist((hs + h)/2)
-plot(dbeta(1:100/100, (p-1)/2, (p-1)/2))
-mean(nms < x & hs > (1-2*u)*h) * cube_vol
+mean(hs > (1-2*u)*h) * vol_e
 #  #  computed volume
-exp(log_vsph(p) - .5 * sum(log(ls)) + (p/2) * log(x)  +
-      pbeta(u, (p-1)/2, (p-1)/2, log.p=TRUE))
+exp(log_vsph(p) - .5 * sum(log(ls)) + (p/2) * log(x)) * cap_prob(p, u)
 
+## Check cap distance
+diffs <- t(-t(ee) + mu)
+par_dists <- (diffs %*% mun)^2
+dists <- rowSums(t(t(ee) - mu)^2)
+orth_dists <- dists - par_dists
+(maxdist <- max(dists[hs > (1-2*u)*h]))
+(sqrt(f2(nu)) - h*(1-2*u))^2 +  (d0 + sqrt(x/min(ls))*sqrt(1-(1-2*u)^2))^2
+c(max(par_dists[hs > (1-2*u)*h]), (sqrt(f2(nu)) - h*(1-2*u))^2)
+c(max(orth_dists[hs > (1-2*u)*h]), (d0 + sqrt(x/min(ls))*sqrt(1-(1-2*u)^2))^2)
 
 ####
 ##  Tests
