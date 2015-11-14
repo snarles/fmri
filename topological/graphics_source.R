@@ -98,7 +98,7 @@ polycirc <- function(ncirc, tres = 100, radmax = 0.5,
   list(polys1, polys2)
 }
 
-deform_map <- function(polys, zs, eps=0.01, nits=10, mp = TRUE) {
+deform_map <- function(polys, query, eps=0.01, nits=10, mp = TRUE) {
   for (i in 1:nits) {
     for (i in 1:length(polys)) {
       pts <- polys[[i]]
@@ -117,7 +117,8 @@ deform_map <- function(polys, zs, eps=0.01, nits=10, mp = TRUE) {
 rand_deform <- function(polys, lambda = 8, k.basis = 8,
                         eps=0.01, nits=10, mp = TRUE) {
   zs <- grf_zs(lambda, k.basis)
-  deform_map(polys, zs, eps, nits, mp)
+  query <- cc_query_(zs, k.basis, pow)
+  deform_map(polys, query, eps, nits, mp)
 }
 
 plot_polys <- function(polys, ...) {

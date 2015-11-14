@@ -1,4 +1,5 @@
 source("topological//graphics_source.R")
+library(akima)
 
 ## GENERATE X GRID
 xseq <- seq(-1, 1, by = 0.01)
@@ -61,11 +62,11 @@ for (i in 1:nits) {
   plot_polys(polys, col = rainbow(nits)[i])  
 }
 
-def_plot <- function(bgc = "white", circ = "black", fc = "grey") {
+def_plot <- function(bgc = "white", circ = "black", fc = "grey", ...) {
   ts <- seq(0, 1, by = 0.001) * 2 * pi
   circ0 <- cbind(cos(ts), sin(ts))
   par(bg = bgc)
-  plot(circ0, xlim = c(-1,1), ylim = c(-1, 1), type = "l", lwd = 3, col = circ)
+  plot(circ0, xlim = c(-1,1), ylim = c(-1, 1), type = "l", lwd = 3, col = circ, ...)
   polygon(circ0, col=fc)
 }
 
@@ -78,10 +79,55 @@ lambda <- 8; k.basis <- 8
 
 for (i in 1:2) {
   zs <- grf_zs(lambda, k.basis)
-  polys1 <- deform_map(polys1, zs, eps, nits, mp)
-  polys2 <- deform_map(polys2, zs, eps, nits, mp)  
+  query <- cc_query_(zs, k.basis, pow)
+  polys1 <- deform_map(polys1, query, eps, nits, mp)
+  polys2 <- deform_map(polys2, query, eps, nits, mp)  
 }
 def_plot(bgc = "black", circ = "blue", fc = gray(0.1))
 plot_polys(polys1, col = gray(0.2), border = NA)
 plot_polys(polys2, col = gray(0.4), border = NA)
+
+## plot GRF, distorted
+
+xseq <- seq(-1, 1, by = 0.01)
+xs <- cbind(rep(xseq, length(xseq)), rep(xseq, each = length(xseq)))
+lambda <- 8
+k.basis <- 8
+res_grf <- grf_grid(xs, lambda, k.basis)
+pow <- 5
+res_c <- res_grf %$% circ_confine(xs, vals, d1, d2, pow)
+
+xs1 <- list(xs)
+for (i in 1:2) {
+  zs <- grf_zs(lambda, k.basis)
+  query <- cc_query_(zs, k.basis, pow)
+  xs1 <- deform_map(xs1, query, eps, nits, mp)
+}
+xs1 <- xs1[[1]]
+
+is.lim <- function(a) sum(is.na(a))==0 & (sum(a^2) < 1)
+inds <- apply(xs1, 1, is.lim)
+fld <- interp(x = xs1[inds, 1], y = xs1[inds, 2], z = Re(res_c$vals)[inds])
+fld$z[is.na(fld$z)] <- 0
+
+par(bg = "black")
+def_plot(bgc="black", axes = FALSE)
+.filled.contour(x = fld$x,
+                y = fld$y,
+                z = fld$z,
+                levels = seq(min(fld$z), max(fld$z), length.out = 20),
+                col = gray(0:19/20)
+)
+
+
+
+##
+
+pts <- xs1[inds, ][1:10, ]
+pp <- list(pts)
+zs <- grf_zs(lambda, k.basis)
+zs[1:10]
+deform_map(pp, zs, eps, 10 * nits, mp)
+
+##
 
