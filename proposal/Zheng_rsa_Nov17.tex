@@ -112,21 +112,21 @@
 
 \begin{frame}
 \frametitle{Overview}
-\noindent\emph{fMRI Background}
+\noindent\emph{fMRI Background:}
 \begin{itemize}
-\item Nonparametric approaches: RSA
-\item Parametric approach: Multivariate linear model
+\item Nonparametric approaches: RSA.
+\item Parametric approach: Multivariate linear model.
 \end{itemize}
-\noindent\emph{Questions}
+\noindent\emph{Questions:}
 \begin{itemize}
-\item Defining the RSA null and alternative hypotheses
-\item Scientific interpretation of RSA results
-\item Sensitivity to preprocessing choices
+\item Defining the RSA null and alternative hypotheses.
+\item Scientific interpretation of RSA results.
+\item Sensitivity to preprocessing choices.
 \end{itemize}
-\noindent\emph{Proposed Projects}
+\noindent\emph{Proposed Projects:}
 \begin{itemize}
-\item Distribution-induced distance
-\item Parametric RSA
+\item Distribution-induced distance.
+\item Parametric RSA.
 \end{itemize}
 \end{frame}
 
@@ -134,8 +134,8 @@
 \frametitle{Representation similarity analysis (RSA)}
 \begin{itemize}
 \item Framework for studying how mental objects are represented in the brain,
-via brain activity (measured by fMRI, EEG) or behavior
-\item Compare different brain regions or imaging modalities within a single subject, or compare multiple subjects
+via brain activity (measured by fMRI, EEG) or behavior.
+\item Compare different brain regions or imaging modalities within a single subject, or compare multiple subjects.
 \end{itemize}
 \begin{center}
 \includegraphics[scale = 0.3]{k08_b.png}
@@ -148,18 +148,18 @@ An experiment which demonstrates which regions of the brain differentiate betwee
 \begin{center}
 \includegraphics[scale = 0.3]{k08_step1.png}
 \end{center}
-Step 1: Present the subject with visual stimuli: pictures of faces and houses.
+Step 1: Present the subject with visual stimuli, pictures of faces and houses.
 Record the subject's brain activity in the fMRI scanner.
 \end{frame}
 
 \begin{frame}
 \frametitle{A typical RSA experiment}
 Step 2a: Process the data, and represent the brain activity of the subject for the $i$th stimulus as a real vector $y_i$.
-Form matrix of distances between $y_i$ and $y_j$, the \emph{representation distance matrix} (RDM)
+Form matrix of distances between $y_i$ and $y_j$, the \emph{representation distance matrix} (RDM).
 \begin{center}
 \includegraphics[scale = 0.3]{k08_step2.png}
 \end{center}
-Step 2b: Assess statistical significance of distances to form similarity graph
+Step 2b: Assess statistical significance of distances to form similarity graph.
 \end{frame}
 
 \begin{frame}
@@ -174,31 +174,31 @@ Step 4: Draw scientific conclusions.  (Step 5: Profit!!..?)
 \begin{frame}
 \frametitle{Details of RSA}
 \begin{itemize}
-\item Core methodology presented by Kriegeskort et al (2008) and extended by others
+\item Core methodology presented by Kriegeskort et al (2008) and extended by others.
 \item Suppose each of the stimuli have $r$ repeats, the responses for stimulus $i$ are $y_i^1,\hdots, y_i^r$,
-and the average over the repeats as $\bar{y}_i$
+and the average over the repeats as $\bar{y}_i$.
 \item The representation distance matrix is computed as
 \[
 D_{ij} = d(\bar{y}_i, \bar{y}_k)
 \] 
-where $d$ may be Euclidean distance or correlation distance
+where $d$ may be Euclidean distance or correlation distance.
 \end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{Details of RSA}
 \begin{itemize}
-\item Now let $D^A$, $D^B$ be \emph{two} such distance matrices, e.g. two regions from same subject, or same region in two subjects
+\item Now let $D^A$, $D^B$ be \emph{two} such distance matrices, e.g. two regions from same subject, or same region in two subjects.
 \item \emph{Estimation.} One can define a distance metric  $\mathfrak{d}$ \emph{between} distance matrices, e.g. the Spearman correlation between the entries of $D^A$ and $D^B$,
 and estimate
 \[
-\mathfrak{d}(D^A, D^B)
+\mathfrak{d}(D^A, D^B).
 \]
 \item \emph{Testing.}  One can test:
 \begin{itemize}
-\item \emph{Independence} of $D^A, D^B$
-\item \emph{Equality} $D^A = D^B$
-\item Which of $D^A, D^B$ is closer to a reference distance matrix $D^0$
+\item \emph{Independence} of $D^A, D^B$.
+\item \emph{Equality} $D^A = D^B$.
+\item Which of $D^A, D^B$ is closer to a reference distance matrix $D^0$.
 \end{itemize}
 \end{itemize}
 \end{frame}
@@ -207,9 +207,9 @@ and estimate
 \begin{frame}
 \frametitle{Comparison to parametric approach}
 \begin{itemize}
-\item RSA is a ``nonparametric'' approach, because stimuli are treated as discrete classes
-\item In contrast, one could consider presenting stimuli which are parameterized
-\item Example: present the subject with gratings of varying orientation.  Orientation $x$ is parameter
+\item RSA is a ``nonparametric'' approach, because stimuli are treated as discrete classes.
+\item In contrast, one could consider presenting stimuli which are parameterized.
+\item Example: present the subject with gratings of varying orientation.  Orientation $x$ is parameter.
 \end{itemize}
 \begin{center}
 \includegraphics[scale = 0.2]{grating_angle.png}
@@ -222,14 +222,14 @@ and estimate
 \includegraphics[scale = 0.2]{kay_stage1.png}
 \end{center}
 \begin{itemize}
-\item Kay et al (2008) parameterize natural images using \emph{Gabor filters}
+\item Kay et al (2008) parameterize natural images using \emph{Gabor filters}.
 \item Let $x_i$ be the vector of 10000 Gabor filter coefficients for a natural image.
 Let $y_i$ be the vector of 20000 individual voxel responses.
 \item Kay fits a model of the form
 \[
 y_i = B^T x_i + \epsilon_i
 \]
-where $B$ is a 10000 x 20000 coefficient matrix, and $\epsilon_i$ is vector-valued noise with covariance $\Sigma$
+where $B$ is a 10000 x 20000 coefficient matrix, and $\epsilon_i$ is vector-valued noise with covariance $\Sigma$.
 \end{itemize}
 \end{frame}
 
@@ -263,7 +263,7 @@ See also Kriegeskorte and Bandettini (2007) ``Analyzing for information...''
 \begin{itemize}
 \item Consider the problem of testing \emph{equality} $D^A = D^B$.
 \item Obviously, the matrices $\hat{D}^A$ and $\hat{D}^B$ computed from data will \emph{not} be equal!
-\item We need to define the \emph{population} parameters $D^A$, $D^B$ in order to have a well-defined test
+\item We need to define the \emph{population} parameters $D^A$, $D^B$ in order to have a well-defined test.
 \end{itemize}
 \end{frame}
 
@@ -280,6 +280,7 @@ This option \emph{ignores noise}
 D_{ij} = \E[d(y_i^1, y_j^1)]
 \]
 where the average is over a single repetition.  This option \emph{includes the effect of noise} in the population parameter.
+Also, $\hat{D}_{ij}$ is an unbiased estimator of $D_{ij}$ if only one repeat per stimulus is used.
 \end{itemize}
 \end{frame}
 
@@ -287,12 +288,12 @@ where the average is over a single repetition.  This option \emph{includes the e
 \frametitle{Defining the RSA null}
 \begin{itemize}
 \item The most commonly used test in RSA is a test of \emph{independence} $D^A$ of $D^B$.
-\item This approach was suggested by Kriegeskorte (2008) and is well-established in ecological data analysis
-\item Implemented via Mantel and partial Mantel tests (which use permutation)
+\item This approach was suggested by Kriegeskorte (2008) and is well-established in ecological data analysis.
+\item Implemented via Mantel and partial Mantel tests (which use permutation).
 \item However, how can we define the null hypothesis of
   ``independence''??  No matter how the \emph{population} matrices
   $D^A$ and $D^B$ are defined, they are \emph{deterministic} and hence
-  it does not make sense to consider them \emph{dependent}
+  it does not make sense to consider them \emph{dependent}.
 \item Perhaps you could test if the entry-wise correlation is zero??
 \end{itemize}
 \end{frame}
@@ -311,28 +312,30 @@ Rejection is taken to mean that the region $A$ have differential activation depe
 \begin{frame}
 \frametitle{Scientific interpretation of RSA results}
 
-What does it mean if $D^A = D^B$? We can conclude that the means $\mu_i^A$ are related to the means $\mu_i^B$
+What does it mean to reject $D^A = D^B$?
+We can conclude that the means $\mu_i^A$ are \emph{not} related to the means $\mu_i^B$
 by a scaling factor and orthogonal rotation:
 \[
-\mu_i^A = k H \mu_i^B
+\mu_i^A \neq k H \mu_i^B
 \]
 where $H^T H = I$.
 
-However, this lacks a natural scientific interpretation.
+But we have not ruled out the possibility that $\mu_i = \psi(\mu_j)$ for some bijection.
+Hence we can only draw a very weak conclusion about the difference between $D^A$ and $D^B$.
 \end{frame}
 
 \begin{frame}
 \frametitle{Sensitivity to preprocessing choices}
-Even given the same raw data, there are a variety of choices for representing the response vectors $y_i$
+Even given the same raw data, there are a variety of choices for representing the response vectors $y_i$:
 \begin{itemize}
-\item Volumetric (voxels) vs surface-based coordinates
-\item Voxel size and centering
-\item Smoothing
-\item Image registration
-\item Representation of data via function basis
+\item Volumetric (voxels) vs surface-based coordinates;
+\item Voxel size and centering;
+\item Smoothing;
+\item Image registration;
+\item Representation of data via function basis.
 \end{itemize}
 
-The resulting distance matrix $D_{ij}$ depends on the above choices
+The resulting distance matrix $D_{ij}$ depends on the above choices.
 \end{frame}
 
 \section{Proposed Projects}
@@ -341,16 +344,16 @@ The resulting distance matrix $D_{ij}$ depends on the above choices
 \frametitle{Distribution-induced distance}
 A new definition for the \emph{representation dissimilarity matrix} which:
 \begin{itemize}
-\item Allows more natural interpretation of the null $D^A = D^B$
-\item Is nearly invariant to smoothing, registration, use of function bases
-\item Downside: may be harder to estimate
+\item Allows more natural interpretation of the null $D^A = D^B$;
+\item Is nearly invariant to smoothing, registration, use of function bases;
+\item Downside: may be harder to estimate.
 \end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{Distribution-induced distance: motivation}
 Consider two stimuli $x_1$ and $x_2$ to be \emph{distant} if the \emph{response distributions} are statistically distant,
-or \emph{close} if their response distributions overlap
+or \emph{close} if their response distributions overlap.
 \begin{center}
 \includegraphics[scale = 0.3]{similarity.png}
 \end{center}
@@ -360,7 +363,7 @@ Note that the definition not only depends on the difference in \emph{means} but 
 \begin{frame}
 \frametitle{Distribution-induced distance: definition}
 \begin{itemize}
-\item Let $\mathcal{F}_x$ denote the distribution of the reponse $y$ conditional on the stimulus $x$
+\item Let $\mathcal{F}_x$ denote the distribution of the reponse $y$ conditional on the stimulus $x$.
 \item Define the dissimilarity matrix
 \[
 D_{ij} = \mathbb{D}(\mathcal{F}_{x_i}; \mathcal{F}_{x_j})
@@ -370,19 +373,28 @@ where $\mathbb{D}$ is a measure of distance or divergence between probability me
 \[
 D_{ij} = \frac{1}{2}(\E[y|x_i] - \E[y|x_j])^T \Sigma^{-1} (\E[y|x_i] - \E[y|x_j])
 \]
-for either $\mathbb{D}=$ KL divergence or Hellinger distance
+for either $\mathbb{D}=$ KL divergence or Hellinger distance.
 \end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{Distribution-induced distance: properties}
 \begin{itemize}
-\item Invariance under bijections:  Let $\tilde{y} = \psi(y)$ for some bijection $\psi$.  Then if $\mathcal{F}_x^{\tilde{y}}$ denotes the conditional distribution of $\tilde{y}$ given $x$, we have
+\item Invariance under bijections: Let $\tilde{y} = \psi(y)$ for some
+  bijection $\psi$.  Then if $\mathcal{F}_x^{\tilde{y}}$ denotes the
+  conditional distribution of $\tilde{y}$ given $x$, we have
 \[
 \mathbb{D}(\mathcal{F}_x^y, \mathcal{F}_{x'}^y) = \mathbb{D}(\mathcal{F}_x^{\tilde{y}}, \mathcal{F}_{x'}^{\tilde{y}})
 \]
 for any $f$-divergence $\mathbb{D}$.
-\item Near-invariance under sampling.  Suppose the `true' brain activity is represented by a random process $f$, and let $\mathcal{F}_x$ denote its conditional distribution given $x$.  Define the vector $y$ as the values of linear functionals $\Lambda_1,\hdots, \Lambda_q$ evaluated on $f$.  This corresponds to taking $y$ based on binning the signal $f$ or taking coefficients of $f$ from a function basis.  Then, supposing $\Lambda_1,\hdots$ is `dense'
+\item Near-invariance under sampling.  Suppose the `true' brain
+  activity is represented by a random process $f$, and let
+  $\mathcal{F}_x$ denote its conditional distribution given $x$.
+  Define the vector $y$ as the values of linear functionals
+  $\Lambda_1,\hdots, \Lambda_q$ evaluated on $f$.  This corresponds to
+  taking $y$ based on binning the signal $f$ or taking coefficients of
+  $f$ from a function basis.  Then, supposing $\Lambda_1,\hdots$ is
+  `dense'
 \[
 \lim_{q \to \infty} \mathbb{D}(\mathcal{F}_x^y, \mathcal{F}_{x'}^y) = \mathbb{D}(\mathcal{F}_x^f, \mathcal{F}_{x'}^f).
 \]
@@ -391,18 +403,21 @@ for any $f$-divergence $\mathbb{D}$.
 
 \begin{frame}
 \frametitle{Distribution-induced distance: consequences}
-\emph{[Not yet proved!  A conjecture..]}
+What does it mean to reject $D^A = D^B$?
 
-Invariance under bijections means that if we conclude $D^A = D^B$, then we have
-$y^A$ and $y^B$ ``almost isomorphic'' in the sense that we can find maps $\psi^{A\to B}$ and $\psi^{B \to A}$ such that
+Invariance under bijections means that $y^A$ and $y^B$ are different
+in a stronger sense: not only is it the case that $y^A$ and $y^B$ have
+different distributions, but we can also rule out the possibility that
+$y^A$ and $y^B$ are related by maps $\psi^{A\to B}$ and $\psi^{B \to
+  A}$ where
 \[
 y^A|x \stackrel{D}{=} \psi^{A\to B}(y^B)|x
 \]
 \[
-y^B|x \stackrel{D}{=} \psi^{B\to A}(y^B)|x
+y^B|x \stackrel{D}{=} \psi^{B\to A}(y^B)|x.
 \]
 
-This is a much more general condition than equivalence up to rotation, and can possibly be related to scientific mechanisms
+Hence the conditional distributions of $y^A$ and $y^B$ \emph{carry different information.}
 \end{frame}
 
 \begin{frame}
@@ -430,14 +445,14 @@ where $\{\phi_1,\hdots, \phi_q\}$ is the function basis.
 \begin{frame}
 \frametitle{Parametric RSA}
 \begin{itemize}
-\item Combine the parametric approach of multivariate regression with RSA
+\item Combine the parametric approach of multivariate regression with RSA.
 \item Model:
 \[
-y \sim N(B^T x, \Sigma)
+y \sim N(B^T x, \Sigma).
 \]
 \item The distribution-induced metric is therefore
 \[
-D(x_i, x_j) = (x_i - x_j)^T B \Sigma^{-1} B^T (x_i - x_j)
+D(x_i, x_j) = (x_i - x_j)^T B \Sigma^{-1} B^T (x_i - x_j).
 \]
 \end{itemize}
 \end{frame}
@@ -457,7 +472,7 @@ D^A = D^B
 \]
 we can test
 \[
-M^A = M^B
+M^A = M^B.
 \]
 \item We can compare two datasets with non-overlapping stimuli
 \item The approach is scalable in the number of distinct stimuli,
