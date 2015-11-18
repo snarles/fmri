@@ -130,25 +130,57 @@ It is sufficient if
 \[y^T \Sigma_Y^{-1} y \to \E[y^T \Sigma_Y^{-1} y]\]
 \[(x,y)^T \Sigma^{-1} (x, y) \to \E[(x,y)^T \Sigma^{-1} (x, y)]\]
 
-\section{Fano's inequality}
+\section{Classification capacity}
 
 Suppose we draw $\mu_1,\hdots,\mu_K \sim N(0, I)$, and then
 for $i^* \sim Unif\{1,\hdots, K\}$ we draw $y^* \sim N(\mu_{i^*}, \Omega)$.
-We predict $\hat{i}$ using the Bayes' rule.  Letting $p = \Pr[\hat{i} \neq i]$, then by Fano's inequality,
+We predict $\hat{i}$ using the Bayes' rule.  Let $p = \Pr[\hat{i} \neq i]$,
+and let $\Sigma = \Omega^{-1}$.
+
+\subsection{Fano's inequality}
+In finite samples,
 \[
-\ln K \leq \frac{H(p) + \frac{1}{2}\log |I + \Sigma|}{1-p}.
+\ln K \leq \frac{H(p) + \frac{1}{2}\log |I + (1+\varepsilon)\Sigma|}{1-p}.
 \]
-where $\Sigma = \Omega^{-1}$, and
+where
 \[
-H(p) = -p\ln p - (1-p) \ln (1-p) \leq - \ln 2
+H(p) = -p\ln p - (1-p) \ln (1-p) \leq - \ln 2,
+\]
+and
+\[
+1 + \varepsilon = \frac{\sum_{i=1}^K ||\mu_i||^2}{kp}
 \]
 
 Note that $\frac{1}{2}\ln|I + \Sigma| = I(\mu; Y)$ for $\mu \sim N(0, I)$ and $Y \sim N(\mu, \Omega)$.
 
 In particular, for $p=1/2$,
 \[
-\ln K \leq -2\ln 2 + \ln |I + \Sigma|
+\ln K \leq -2\ln 2 + \ln |I + (1+\varepsilon)\Sigma|
 \]
+
+\subsection{Fixed $K$ formula}
+
+We make use of the error rate formula for the orthogonal constellation (Wozencraft and Jacobs, 1965.)
+
+\noindent\textbf{Lemma.} \emph{
+(Error rate for orthogonal constellation.)
+Suppose $\mu_1, \hdots, \mu_K$ satisfy $\mu_i^T\mu_j = c\delta_{ij}$.
+Drawing $i^* \sim Unif\{1,\hdots, K\}$, let $y^* \sim N(\mu_{i^*}, \Omega)$.
+We predict $\hat{i}$ using the Bayes' rule.  Then 
+\[
+\Pr[\hat{i} \neq i] = g_O(c, K) = 1 - \int_{\mathbb{R}} \Phi(\sqrt{c} - z)^{K-1} d\Phi(z).
+\]
+}
+
+Hence, for all sequences of covariance matrices $\Sigma_d$ such that 
+$$\lim_{d \to \infty} \tr( \Sigma_d )= c$$
+and also 
+$$\lim_{d \to \infty} \tr( \Sigma_d^2 )= 0,$$
+we have
+\[
+\lim_{d \to \infty} \Pr[\hat{i} \neq i] = g_0(c, K)
+\]
+due to the error rate lemma and concentration of measure.
 
 
 
