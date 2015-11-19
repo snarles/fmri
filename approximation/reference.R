@@ -37,12 +37,13 @@ dchi(x, df)
 qnorm2 <- function(p) {
   eta <- -log(2*sqrt(pi)*(1-p))
   true <- qnorm(p)
-  order0 <- eta - log(eta)/2 
-  order1 <- order0 + (.25 * log(eta) - .5)/eta
+  order0 <- eta
+  order0.5 <- order0 - log(eta)/2 
+  order1 <- order0.5 + (.25 * log(eta) - .5)/eta
   order2 <- order1 + (log(eta)^2/16 - 3/8 * log(eta) + 7/8)/(eta^2)
   order3 <- order2 + (log(eta)^3/48 - 7/32 * log(eta)^2 + 
                         (17/16) * log(eta) - 107/48)/(eta^3)
-  list(true = true, o0 = sqrt(2 * order0),
+  list(true = true, o0 = sqrt(2 * order0), o0.5 = sqrt(2 * order0.5),
        o1 = sqrt(2 * order1), o2 = sqrt(2 * order2), 
        o3 = sqrt(2 * order3), eps = 1/eta)
 }
@@ -52,6 +53,7 @@ qnorm2(0.99)
 qnorm2(0.999)
 qnorm2(0.9999)
 qnorm2(0.99999)
-
+qnorm2(0.999999)
+qnorm2(0.9999999)
 
 
