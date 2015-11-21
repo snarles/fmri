@@ -126,8 +126,11 @@ qlmb_gchisq <- function(lprob, Sigma, mu, intv = c(1e-10, 1e3)) {
 ##  Exponential tilting
 ####
 
-quadfmla <- function(a, b, c, s = c(-1, 1))
-  (-b + s*sqrt(b^2 - 4*a*c))/(2 * a)
+quadfmla <- function(a, b, c, s = c(-1, 1), pos = FALSE) {
+  disc <- b^2 - 4*a*c
+  if (pos) { disc <- pmax(0, disc) }
+  (-b + s*sqrt(disc))/(2 * a)  
+}
 lse <- function(x) max(x) + log(sum(exp(x - max(x))))
 
 reso <- 1000
@@ -137,17 +140,28 @@ l_gchisq_tilt_ <- function(Sigma, mu, reso = 1e4, lb = -1e4) {
   p <- dim(Sigma)[1]
   fms <- log_mgf_gchisq_(Sigma, mu)
   ##exp(fms$psi(tt)) * dlta * sum(exp(-tt * xs) * sig * dchisq(xs * sig, df, ncp))
-  function(x) {
+  lgchisq <- function(x) {
     tt <- fms$dpsi_inv(x, interval = c(lb, 0))
     mm <- fms$dpsi(tt); vv <- fms$d2psi(tt)
     (df <- min(p, 2*mm^2/(vv)))
-    (sig <- quadfmla(-2*df, 4 * mm, -vv, 1))
-    (ncp <- mm/sig - df)
+    (sig <- quadfmla(-2*df, 4 * mm, -vv, 1, TRUE))
+    (ncp <- pmax(0, mm/sig - df))
     xs <- x * (1:reso)/reso
     dlta <- xs[2] - xs[1]
+    ds <- dchisq(xs / sig, df, ncp, TRUE)
+    if (sum(is.na(ds)) > 0) {
+      print(list(df = df, sig = sig, ncp = ncp, x = x))
+      ds_e <<- ds
+    }
     fms$psi(tt) + log(dlta) +
-      lse(-tt * xs - log(sig) + dchisq(xs / sig, df, ncp, TRUE))    
+      lse(-tt * xs - log(sig) + ds)    
   }
+  qgchisq <- function(lprob, lb=-4) {
+    ff <- function(x) (lgchisq(exp(x)) - lprob)^2
+    res <- optimise(ff, interval=c(lb, log(fms$dpsi(0) * 10)))
+    exp(res$minimum)
+  }
+  list(lgchisq = lgchisq, qgchisq = qgchisq)
 }
 
 ####
@@ -245,7 +259,7 @@ cap_lb_ <- function(x, Sigma, mu) {
 ##  Tests
 ####
 
-p <- 3;
+p <- 10
 mu <- rnorm(p)
 Sigma <- cov(randn(2*p, p))
 #Sigma <- eye(p)
@@ -253,9 +267,12 @@ Sigma <- cov(randn(2*p, p))
 s1 <- sort(rgchisq(1e6, Sigma, mu))
 cdf <- function(x) sum(s1 < x)/length(s1)
 cap_par <- 0.01
+lf <- l_gchisq_tilt_(Sigma, mu)$lgchisq
+qf <- l_gchisq_tilt_(Sigma, mu)$qgchisq
+lf(qf(-200, -40))
 s1[50] %>% {c(cap_lb_(., Sigma, mu)(cap_par), log(cdf(.)), lmb_gchisq(., Sigma, mu))}
-lf <- l_gchisq_tilt_(Sigma, mu)
 s1[50] %>% {c(log(cdf(.)), lmb_gchisq(., Sigma, mu), lf(.))}
+
 #pchisq(s1[50], p, f2(mu), log.p=TRUE) ## if Sigma==eye(p)
 
 x <- s1[50]
