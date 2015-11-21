@@ -4,6 +4,8 @@
 
 library(pracma); library(magrittr)
 
+f2 <- function(x, y=0) sum((x-y)^2)
+
 ## probability that x in S^(p-1) has x[1] > 1-2*u
 lcap_prob <- function(p, u) {
   log(1/2) + pbeta((1 - 2*u)^2, 1/2, (p+1)/2, lower.tail=FALSE, log.p = TRUE)
@@ -40,6 +42,30 @@ mgf_gchisq <- function(tt, Sigma, mu, log = FALSE) {
     return(apply(temp, 1, prod))
   }
 }
+
+## gives function handles for psi = log mgf, (d/dt) psi, (d2/dt^2) psi, (d psi)^{-1}
+log_mgf_gchisq_ <- function(Sigma, mu) {
+  p <- dim(Sigma)[1]
+  res <- eigen(Sigma); ls <- res$values
+  nu <- as.numeric(t(res$vectors) %*% mu)
+  psi <- function(tt)
+    sum(-1/2 * log(1 - 2*tt*ls) + (nu^2*ls*tt/(1 - 2*tt*ls)))
+  dpsi <- function(tt) {
+    ##numDeriv::grad(psi, tt)
+    sum(ls*(1 + nu^2)/(1-2*ls*tt)) + sum(2*nu^2*ls^2*tt/(1 - 2*ls*tt)^2)
+  }
+  d2psi <- function(tt) {
+    ##numDeriv::hessian(psi, tt)[1]
+    sum(2*ls^2*(1+2*nu^2)/(1-2*ls*tt)^2 + 8*ls^3*nu^2*tt/(1-2*ls*tt)^3)
+  }
+  dpsi_inv <- function(x, ...) {
+    ff <- function(tt) (dpsi(tt) - x)^2
+    res <- optimize(ff, ...)
+    res$minimum
+  }
+  list(psi = psi, dpsi = dpsi, d2psi = d2psi, dpsi_inv = dpsi_inv)
+}
+
 
 ## fourier inversion
 finv <- function(fs, cs, x) {
@@ -97,6 +123,53 @@ qlmb_gchisq <- function(lprob, Sigma, mu, intv = c(1e-10, 1e3)) {
 }
 
 ####
+##  Exponential tilting
+####
+
+## investigations using chi-squared
+
+xs <- 0:100/10000
+
+quadfmla <- function(a, b, c, s = c(-1, 1))
+  (-b + s*sqrt(b^2 - 4*a*c))/(2 * a)
+
+ncp <- 2*rexp(1)
+df <- 5
+psi <- function(tt) ncp * tt/(1 - 2*tt) - (df/2) * log(1-2*tt)
+dpsi <- function(tt) (ncp + df)/(1 - 2*tt) + 2 * ncp * tt/(1-2*tt)^2
+d2psi <- function(tt) 4*ncp/(1-2*tt)^2 + 8*ncp*tt/(1-2*tt)^3 + 2*df/(1-2*tt)^2
+dpsi_inv <- function(x) quadfmla(4*x, -4*x+2*df, x - ncp - df, -1)
+
+c(dpsi(0), ncp+df)
+c(d2psi(0), 2*(df + 2*ncp))
+
+
+-rexp(1) %>% {c(numDeriv::grad(psi, .), dpsi(.))}
+-rexp(1) %>% {c(numDeriv::hessian(psi, .), d2psi(.))}
+runif(1) %>% {c(., dpsi(dpsi_inv(.)))}
+
+
+(mu <- dpsi(0))
+(x <- .01 * runif(1) * mu)
+xs <- x * (1:200)/100
+tt <- dpsi_inv(x)
+
+
+d2psi(tt)
+
+dpsi(0)/sqrt(d2psi(0))
+dpsi(tt)/sqrt(d2psi(tt))
+
+
+(sig <- d2psi(tt)/(2 * dpsi(tt)))
+(kk <- dpsi(tt)/sig)
+
+plot(xs, dchisq(xs, df, ncp), type = "l")
+plot(xs, exp(tt * xs) * dchisq(xs, df, ncp), type = "l")
+plot(xs, dchisq(xs * dpsi(0)/x, df, ncp), type = "l")
+
+
+####
 ##  Lower bound using cap
 ####
 
@@ -131,75 +204,75 @@ cap_lb_ <- function(x, Sigma, mu) {
   ff
 }
 
-####
-##  Check cap volume and density
-####
-
-p <- 3
-mu <- 2 * rnorm(p)
-Sigma <- 0*cov(randn(3*p, p)) + eye(p)
-s1 <- rgchisq(1e6, Sigma, mu)
-x <- s1[100]
-res <- eigen(Sigma); ls <- res$values
-nu <- as.numeric(t(res$vectors) %*% mu)
-cube_l_min <- 2 * sqrt(x/min(ls))
-
-mc.s <- 1e5
-cube_l <- 1.1 * cube_l_min
-cube_vol <- cube_l^p
-pts <- cube_l * matrix(runif(mc.s * p) - .5, mc.s, p)
-
-## check volume
-mc.s <- 1e7
-pts <- cube_l * matrix(runif(mc.s * p) - .5, mc.s, p)
-#nms <- apply(pts, 1, function(v) t(v) %*% Sigma %*% v)
-nms <- rowSums((pts %*% sqrtm(Sigma))^2)
-#  # empirical volume
-mean(nms < x) * cube_vol
-#  # computed volume
-(vol_e <- exp(log_vsph(p) - .5 * sum(log(ls)) + (p/2) * log(x)))
-ee <- pts[nms < x, ]
-
-## Check cap height
-nun <- nu/sqrt(f2(nu))
-nSn <- sum(nun^2/ls)
-zh <- sqrt(x/nSn) * (nun/ls)
-h <- sqrt(x * nSn)
-mun <- mu/sqrt(f2(mu))
-hs <- ee %*% mun
-c(max(hs), h)
-d0 <- sqrt(f2(h * nun, zh))
-
-## Check cap vol
-u <- runif(1)/3
-#  #  empirical volume
-mean(hs > (1-2*u)*h) * vol_e
-#  #  computed volume
-exp(log_vsph(p) - .5 * sum(log(ls)) + (p/2) * log(x) + lcap_prob(p, u))
-
-## Check cap distance
-diffs <- t(-t(ee) + mu)
-par_dists <- (diffs %*% mun)^2
-dists <- rowSums(t(t(ee) - mu)^2)
-orth_dists <- dists - par_dists
-(maxdist <- max(dists[hs > (1-2*u)*h]))
-(sqrt(f2(nu)) - h*(1-2*u))^2 +  (d0 + sqrt(x/min(ls))*sqrt(1-(1-2*u)^2))^2
-c(max(par_dists[hs > (1-2*u)*h]), (sqrt(f2(nu)) - h*(1-2*u))^2)
-c(max(orth_dists[hs > (1-2*u)*h]), (d0 + sqrt(x/min(ls))*sqrt(1-(1-2*u)^2))^2)
+# ####
+# ##  Check cap volume and density
+# ####
+# 
+# p <- 3
+# mu <- 2 * rnorm(p)
+# Sigma <- 0*cov(randn(3*p, p)) + eye(p)
+# s1 <- rgchisq(1e6, Sigma, mu)
+# x <- s1[100]
+# res <- eigen(Sigma); ls <- res$values
+# nu <- as.numeric(t(res$vectors) %*% mu)
+# cube_l_min <- 2 * sqrt(x/min(ls))
+# 
+# mc.s <- 1e5
+# cube_l <- 1.1 * cube_l_min
+# cube_vol <- cube_l^p
+# pts <- cube_l * matrix(runif(mc.s * p) - .5, mc.s, p)
+# 
+# ## check volume
+# mc.s <- 1e7
+# pts <- cube_l * matrix(runif(mc.s * p) - .5, mc.s, p)
+# #nms <- apply(pts, 1, function(v) t(v) %*% Sigma %*% v)
+# nms <- rowSums((pts %*% sqrtm(Sigma))^2)
+# #  # empirical volume
+# mean(nms < x) * cube_vol
+# #  # computed volume
+# (vol_e <- exp(log_vsph(p) - .5 * sum(log(ls)) + (p/2) * log(x)))
+# ee <- pts[nms < x, ]
+# 
+# ## Check cap height
+# nun <- nu/sqrt(f2(nu))
+# nSn <- sum(nun^2/ls)
+# zh <- sqrt(x/nSn) * (nun/ls)
+# h <- sqrt(x * nSn)
+# mun <- mu/sqrt(f2(mu))
+# hs <- ee %*% mun
+# c(max(hs), h)
+# d0 <- sqrt(f2(h * nun, zh))
+# 
+# ## Check cap vol
+# u <- runif(1)/3
+# #  #  empirical volume
+# mean(hs > (1-2*u)*h) * vol_e
+# #  #  computed volume
+# exp(log_vsph(p) - .5 * sum(log(ls)) + (p/2) * log(x) + lcap_prob(p, u))
+# 
+# ## Check cap distance
+# diffs <- t(-t(ee) + mu)
+# par_dists <- (diffs %*% mun)^2
+# dists <- rowSums(t(t(ee) - mu)^2)
+# orth_dists <- dists - par_dists
+# (maxdist <- max(dists[hs > (1-2*u)*h]))
+# (sqrt(f2(nu)) - h*(1-2*u))^2 +  (d0 + sqrt(x/min(ls))*sqrt(1-(1-2*u)^2))^2
+# c(max(par_dists[hs > (1-2*u)*h]), (sqrt(f2(nu)) - h*(1-2*u))^2)
+# c(max(orth_dists[hs > (1-2*u)*h]), (d0 + sqrt(x/min(ls))*sqrt(1-(1-2*u)^2))^2)
 
 ####
 ##  Tests
 ####
 
-# p <- 3;
-# mu <- rnorm(p)
-# Sigma <- cov(randn(2*p, p))
-# #s1 <- rgchisq0(1e6, Sigma, mu)
-# s1 <- rgchisq(1e6, Sigma, mu)
-# cdf <- function(x) sum(s1 < x)/length(s1)
-# cap_par <- 0.01
-# s1[50] %>% {c(cap_lb_(., Sigma, mu)(cap_par), log(cdf(.)), lmb_gchisq(., Sigma, mu))}
-# 
-# x <- s1[50]
-# ff <- cap_lb_(x, Sigma, mu)
-# (1:1e3/1e7) %>% plot(., sapply(., ff), type = "l")
+p <- 3;
+mu <- rnorm(p)
+Sigma <- cov(randn(2*p, p))
+#s1 <- rgchisq0(1e6, Sigma, mu)
+s1 <- sort(rgchisq(1e6, Sigma, mu))
+cdf <- function(x) sum(s1 < x)/length(s1)
+cap_par <- 0.01
+s1[50] %>% {c(cap_lb_(., Sigma, mu)(cap_par), log(cdf(.)), lmb_gchisq(., Sigma, mu))}
+
+x <- s1[50]
+ff <- cap_lb_(x, Sigma, mu)
+(1:1e3/1e7) %>% plot(., sapply(., ff), type = "l")
