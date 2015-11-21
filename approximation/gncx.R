@@ -126,48 +126,11 @@ qlmb_gchisq <- function(lprob, Sigma, mu, intv = c(1e-10, 1e3)) {
 ##  Exponential tilting
 ####
 
-## investigations using chi-squared
-
-xs <- 0:100/10000
-
-quadfmla <- function(a, b, c, s = c(-1, 1))
-  (-b + s*sqrt(b^2 - 4*a*c))/(2 * a)
-
-ncp <- 2*rexp(1)
-df <- 5
 psi <- function(tt) ncp * tt/(1 - 2*tt) - (df/2) * log(1-2*tt)
-dpsi <- function(tt) (ncp + df)/(1 - 2*tt) + 2 * ncp * tt/(1-2*tt)^2
-d2psi <- function(tt) 4*ncp/(1-2*tt)^2 + 8*ncp*tt/(1-2*tt)^3 + 2*df/(1-2*tt)^2
-dpsi_inv <- function(x) quadfmla(4*x, -4*x+2*df, x - ncp - df, -1)
-
-c(dpsi(0), ncp+df)
-c(d2psi(0), 2*(df + 2*ncp))
-
-
--rexp(1) %>% {c(numDeriv::grad(psi, .), dpsi(.))}
--rexp(1) %>% {c(numDeriv::hessian(psi, .), d2psi(.))}
-runif(1) %>% {c(., dpsi(dpsi_inv(.)))}
-
-
-(mu <- dpsi(0))
-(x <- .01 * runif(1) * mu)
-xs <- x * (1:200)/100
-tt <- dpsi_inv(x)
-
-
-d2psi(tt)
-
-dpsi(0)/sqrt(d2psi(0))
-dpsi(tt)/sqrt(d2psi(tt))
-
-
-(sig <- d2psi(tt)/(2 * dpsi(tt)))
-(kk <- dpsi(tt)/sig)
-
-plot(xs, dchisq(xs, df, ncp), type = "l")
-plot(xs, exp(tt * xs) * dchisq(xs, df, ncp), type = "l")
-plot(xs, dchisq(xs * dpsi(0)/x, df, ncp), type = "l")
-
+ncp <- rexp(1); df <- rexp(1); xs <- 1:5/10
+tt <- -rexp(1)
+exp(tt * xs - psi(tt)) * dchisq(xs, df, ncp)
+(1-2*tt) * dchisq(xs * (1-2*tt), df, ncp/(1-2*tt))
 
 ####
 ##  Lower bound using cap
