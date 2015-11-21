@@ -123,6 +123,34 @@ qlmb_gchisq <- function(lprob, Sigma, mu, intv = c(1e-10, 1e3)) {
 }
 
 ####
+##  Exponential tilting
+####
+
+quadfmla <- function(a, b, c, s = c(-1, 1))
+  (-b + s*sqrt(b^2 - 4*a*c))/(2 * a)
+lse <- function(x) max(x) + log(sum(exp(x - max(x))))
+
+reso <- 1000
+x <- fms$dpsi(0) * .01
+
+l_gchisq_tilt_ <- function(Sigma, mu, reso = 1e4, lb = -1e4) {
+  p <- dim(Sigma)[1]
+  fms <- log_mgf_gchisq_(Sigma, mu)
+  ##exp(fms$psi(tt)) * dlta * sum(exp(-tt * xs) * sig * dchisq(xs * sig, df, ncp))
+  function(x) {
+    tt <- fms$dpsi_inv(x, interval = c(lb, 0))
+    mm <- fms$dpsi(tt); vv <- fms$d2psi(tt)
+    (df <- min(p, 2*mm^2/(vv)))
+    (sig <- quadfmla(-2*df, 4 * mm, -vv, 1))
+    (ncp <- mm/sig - df)
+    xs <- x * (1:reso)/reso
+    dlta <- xs[2] - xs[1]
+    fms$psi(tt) + log(dlta) +
+      lse(-tt * xs - log(sig) + dchisq(xs / sig, df, ncp, TRUE))    
+  }
+}
+
+####
 ##  Lower bound using cap
 ####
 
@@ -220,11 +248,15 @@ cap_lb_ <- function(x, Sigma, mu) {
 p <- 3;
 mu <- rnorm(p)
 Sigma <- cov(randn(2*p, p))
+#Sigma <- eye(p)
 #s1 <- rgchisq0(1e6, Sigma, mu)
 s1 <- sort(rgchisq(1e6, Sigma, mu))
 cdf <- function(x) sum(s1 < x)/length(s1)
 cap_par <- 0.01
 s1[50] %>% {c(cap_lb_(., Sigma, mu)(cap_par), log(cdf(.)), lmb_gchisq(., Sigma, mu))}
+lf <- l_gchisq_tilt_(Sigma, mu)
+s1[50] %>% {c(log(cdf(.)), lmb_gchisq(., Sigma, mu), lf(.))}
+#pchisq(s1[50], p, f2(mu), log.p=TRUE) ## if Sigma==eye(p)
 
 x <- s1[50]
 ff <- cap_lb_(x, Sigma, mu)

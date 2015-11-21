@@ -61,14 +61,32 @@ qnorm2(0.9999999)
 ##  Exponential tilting for noncentral chi-squared
 ####
 
+ncp <- rexp(1); df <- 10 * rexp(1); xs <- 1:5/10
+tt <- -rexp(1)
+
 quadfmla <- function(a, b, c, s = c(-1, 1))
   (-b + s*sqrt(b^2 - 4*a*c))/(2 * a)
+psi <- function(tt) ncp * tt/(1 - 2*tt) - (df/2) * log(1-2*tt)
 dpsi <- function(tt) (ncp + df)/(1 - 2*tt) + 2 * ncp * tt/(1-2*tt)^2
 d2psi <- function(tt) 4*ncp/(1-2*tt)^2 + 8*ncp*tt/(1-2*tt)^3 + 2*df/(1-2*tt)^2
 dpsi_inv <- function(x) quadfmla(4*x, -4*x+2*df, x - ncp - df, -1)
 
-psi <- function(tt) ncp * tt/(1 - 2*tt) - (df/2) * log(1-2*tt)
-ncp <- rexp(1); df <- rexp(1); xs <- 1:5/10
-tt <- -rexp(1)
 exp(tt * xs - psi(tt)) * dchisq(xs, df, ncp)
 (1-2*tt) * dchisq(xs * (1-2*tt), df, ncp/(1-2*tt))
+
+x <- dpsi(0) * 0.1
+tt <- dpsi_inv(x)
+
+pchisq(x, df, ncp)
+
+reso = 1e4
+sig <- 1/(1-2*tt)
+ncp2 <- ncp*sig
+
+xs <- x * (1:reso)/reso
+dlta <- xs[2] - xs[1]
+exp(psi(tt)) * dlta * 
+  sum(exp(-tt * xs) * (1/sig) * dchisq(xs/sig, df, ncp2))
+
+plot(xs, exp(-tt * xs) * (1/sig) * dchisq(xs/sig, df, ncp2), type = "l")
+plot(xs, dchisq(xs/sig, df, ncp2), type = "l")
