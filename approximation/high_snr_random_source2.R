@@ -78,6 +78,25 @@ mc3 <- function(Sigma, K, mc.reps = 1000) {
   mean(mcs)  
 }
 
+## use saddlepoint approximation
+mc4 <- function(Sigma, K, mc.reps = 1000, lb = -40) {
+  p <- dim(Sigma)[1]
+  Omega <- solve(Sigma)
+  Amat <- eye(p) - solve(eye(p) + Omega)
+  Ha_Y <- lineId::sqrtm(eye(p) + Omega)
+  Ha_mu <- lineId::sqrtm(Amat)
+  nmS <- function(v) t(v) %*% Sigma %*% v
+  mcs <- sapply(1:mc.reps,
+                function(i) {
+                  y <- as.numeric(Ha_Y %*% rnorm(p))
+                  y_mu <- as.numeric(Ha_mu %*% rnorm(p) + Amat %*% y)
+                  qf <- l_gchisq_tilt_(Sigma, y)$qgchisq
+                  mnms <- qf(log(-log(1-runif(1))/(K-1)), lb)
+                  mnms < t(y_mu) %*% Sigma %*% y_mu
+                })
+  mean(mcs)  
+}
+
 ####
 ##  TESTS
 ####
@@ -90,12 +109,15 @@ mc(Sigma, K, mc.reps)
 mc2(Sigma, K, mc.reps)
 mc2a(Sigma, K, mc.reps)
 mc3(Sigma, K, 1000)
+mc4(Sigma, K, 1000)
+
 
 p <- 10
-Sigma <- 5 * rexp(1) * cov(randn(2*p, p))
+Sigma <- 7 * rexp(1) * cov(randn(2*p, p))
 K <- 1e4
 mc.reps <- 1e2
 mc2(Sigma, K, mc.reps)
 mc2a(Sigma, K, mc.reps)
 mc3(Sigma, K, mc.reps)
+mc4(Sigma, K, mc.reps)
 

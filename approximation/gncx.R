@@ -255,26 +255,26 @@ cap_lb_ <- function(x, Sigma, mu) {
 # c(max(par_dists[hs > (1-2*u)*h]), (sqrt(f2(nu)) - h*(1-2*u))^2)
 # c(max(orth_dists[hs > (1-2*u)*h]), (d0 + sqrt(x/min(ls))*sqrt(1-(1-2*u)^2))^2)
 
-####
-##  Tests
-####
-
-p <- 10
-mu <- rnorm(p)
-Sigma <- cov(randn(2*p, p))
-#Sigma <- eye(p)
-#s1 <- rgchisq0(1e6, Sigma, mu)
-s1 <- sort(rgchisq(1e6, Sigma, mu))
-cdf <- function(x) sum(s1 < x)/length(s1)
-cap_par <- 0.01
-lf <- l_gchisq_tilt_(Sigma, mu)$lgchisq
-qf <- l_gchisq_tilt_(Sigma, mu)$qgchisq
-lf(qf(-200, -40))
-s1[50] %>% {c(cap_lb_(., Sigma, mu)(cap_par), log(cdf(.)), lmb_gchisq(., Sigma, mu))}
-s1[50] %>% {c(log(cdf(.)), lmb_gchisq(., Sigma, mu), lf(.))}
-
-#pchisq(s1[50], p, f2(mu), log.p=TRUE) ## if Sigma==eye(p)
-
-x <- s1[50]
-ff <- cap_lb_(x, Sigma, mu)
-(1:1e3/1e7) %>% plot(., sapply(., ff), type = "l")
+# ####
+# ##  Tests
+# ####
+# 
+# p <- 10
+# mu <- rnorm(p)
+# Sigma <- cov(randn(2*p, p))
+# #Sigma <- eye(p)
+# #s1 <- rgchisq0(1e6, Sigma, mu)
+# s1 <- sort(rgchisq(1e6, Sigma, mu))
+# cdf <- function(x) sum(s1 < x)/length(s1)
+# cap_par <- 0.01
+# lf <- l_gchisq_tilt_(Sigma, mu)$lgchisq
+# qf <- l_gchisq_tilt_(Sigma, mu)$qgchisq
+# lf(qf(-200, -40))
+# s1[50] %>% {c(cap_lb_(., Sigma, mu)(cap_par), log(cdf(.)), lmb_gchisq(., Sigma, mu))}
+# s1[50] %>% {c(log(cdf(.)), lmb_gchisq(., Sigma, mu), lf(.))}
+# 
+# #pchisq(s1[50], p, f2(mu), log.p=TRUE) ## if Sigma==eye(p)
+# 
+# x <- s1[50]
+# ff <- cap_lb_(x, Sigma, mu)
+# (1:1e3/1e7) %>% plot(., sapply(., ff), type = "l")
