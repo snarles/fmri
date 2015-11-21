@@ -123,16 +123,6 @@ qlmb_gchisq <- function(lprob, Sigma, mu, intv = c(1e-10, 1e3)) {
 }
 
 ####
-##  Exponential tilting
-####
-
-psi <- function(tt) ncp * tt/(1 - 2*tt) - (df/2) * log(1-2*tt)
-ncp <- rexp(1); df <- rexp(1); xs <- 1:5/10
-tt <- -rexp(1)
-exp(tt * xs - psi(tt)) * dchisq(xs, df, ncp)
-(1-2*tt) * dchisq(xs * (1-2*tt), df, ncp/(1-2*tt))
-
-####
 ##  Lower bound using cap
 ####
 
