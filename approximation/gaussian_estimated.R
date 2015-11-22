@@ -28,11 +28,42 @@ mc <- function(Sigma, K, mc.reps = 1000) {
 }
 
 ## most naive implementation of mc()
-mce <- function(Omega, Xi = Omega, 
-                A = solve(Id(Omega) + Omega - solve(Id(Omega) + Xi)),
-                B = solve(Id(Omega) + Xi),
-                K, mc.reps = 100) {
+mce <- function
+(Sigma, Omega = Id(Sigma), Xi = Omega,
+ SigmaH = Sigma, OmegaH = Omega, XiH = Xi,
+ K, mc.reps = 100) {
+  p <- dim(Sigma)[1]
+  A <- solve(SigmaH + OmegaH - SigmaH %*% solve(SigmaH + XiH) %*% SigmaH)
+  B <- SigmaH %*% solve(SigmaH + XiH)
+  Ah <- sqrtm(A)
+  mcs <- sapply(1:mc.reps,
+                function(i) {
+                  mus <- mvrnorm(K, mu = rep(0, p), Sigma = Sigma)
+                  mu_hs <- mus + mvrnorm(K, mu = rep(0, p), Sigma = Xi)
+                  ys <- mus + mvrnorm(K, mu = rep(0, p), Sigma = Omega)
+                  lbls <- knn(mu_hs %*% t(B) %*% Ah, ys %*% Ah, cl=1:K)
+                  sum(lbls != 1:K)/K
+                })
+  mean(mcs)
+}
+
+## Converts to Sigma = I
+mce1 <- function
+(Sigma, Omega = Id(Sigma), Xi = Omega,
+ SigmaH = Sigma, OmegaH = Omega, XiH = Xi,
+ K, mc.reps = 100) {
   p <- dim(Omega)[1]
+  ## convert everything if needed
+  if (f2(Sigma, eye(p)) > 1e-8) {
+    si <- isqrtm(Sigma)
+    Omega <- si %*% Omega %*% si
+    Xi <- si %*% Xi %*% si
+    SigmaH <- si %*% SigmaH %*% si
+    XiH <- si %*% Xi %*% si    
+  }
+  ## algo with Sigma = I
+  A <- solve(SigmaH + OmegaH - SigmaH %*% solve(SigmaH + XiH) %*% SigmaH)
+  B <- SigmaH %*% solve(SigmaH + XiH)
   Ah <- sqrtm(A)
   mcs <- sapply(1:mc.reps,
                 function(i) {
@@ -46,11 +77,22 @@ mce <- function(Omega, Xi = Omega,
 }
 
 ## uses conditioning on Y
-mce2 <- function(Omega, Xi = Omega, 
-                A = solve(Id(Omega) + Omega - solve(Id(Omega) + Xi)),
-                B = solve(Id(Omega) + Xi),
-                K, mc.reps = 100) {
+mce2 <- function
+(Sigma, Omega = Id(Sigma), Xi = Omega,
+ SigmaH = Sigma, OmegaH = Omega, XiH = Xi,
+ K, mc.reps = 100) {
   p <- dim(Omega)[1]
+  ## convert everything if needed
+  if (f2(Sigma, eye(p)) > 1e-8) {
+    si <- isqrtm(Sigma)
+    Omega <- si %*% Omega %*% si
+    Xi <- si %*% Xi %*% si
+    SigmaH <- si %*% SigmaH %*% si
+    XiH <- si %*% Xi %*% si    
+  }
+  ## algo with Sigma = I
+  A <- solve(SigmaH + OmegaH - SigmaH %*% solve(SigmaH + XiH) %*% SigmaH)
+  B <- SigmaH %*% solve(SigmaH + XiH)
   Ah <- sqrtm(A)
   mcs <- sapply(1:mc.reps,
                 function(i) {
@@ -65,20 +107,36 @@ mce2 <- function(Omega, Xi = Omega,
   mean(mcs)
 }
 
+####
+##  Basic tests
+####
+
 p <- 10
-Omega <- 0.5 * cov(randn(2*p, p))
-Xi <- 0.05 * cov(randn(2*p, p))
-#A <- solve(Omega) + 0 * cov(randn(p, p))
-A <- eye(p)
-OmegaH <- cov(mvrnorm(100, mu = rep(0, p), Sigma = Omega))
-XiH <- cov(mvrnorm(100, mu = rep(0, p), Sigma = Xi))
-A <- solve(Id(Omega) + OmegaH - solve(Id(Omega) + XiH))
-B <- solve(Id(Omega) + XiH)
+Sigma0 <- cov(randn(5 *p, p))
+Omega0 <- 0.5 * cov(randn(2*p, p))
+Xi0 <- 0.05 * cov(randn(2*p, p))
+
+Sigma <- eye(p); Omega <- Omega0; Xi <- 0 * Omega
+SigmaH <- Sigma; OmegaH <- Omega; XiH <- Xi
+
+## check equivalences between mc and mce
+K <- 200
+c(mc(solve(Omega0), K),
+  mce(eye(p), Omega0, Xi=0 * Omega0, K=K), 
+  mce(solve(Omega0), eye(p), Xi=0 * Omega0, K=K),
+  mce1(eye(p), Omega0, Xi=0 * Omega0, K=K), 
+  mce1(solve(Omega0), eye(p), Xi=0 * Omega0, K=K))
+
+## check mce, mce1, mce2
+nest <- 20
+SigmaH <- cov(mvrnorm(nest, mu = rep(0, p), Sigma = Sigma))
+OmegaH <- cov(mvrnorm(nest, mu = rep(0, p), Sigma = Omega))
+XiH <- cov(mvrnorm(nest, mu = rep(0, p), Sigma = Xi))
 K <- 100
 mc.reps <- 1e4
 1/2/sqrt(mc.reps)
-mce(Omega, Xi, A, B, K, mc.reps=mc.reps)
-mce2(Omega, Xi, A, B, K, mc.reps=mc.reps)
+mce(Sigma, Omega, Xi, SigmaH, OmegaH, XiH, K, mc.reps=mc.reps)
+mce1(Sigma, Omega, Xi, SigmaH, OmegaH, XiH, K, mc.reps=mc.reps)
+mce2(Sigma, Omega, Xi, SigmaH, OmegaH, XiH, K, mc.reps=mc.reps)
 
-c(mce(Omega, Xi=0 * Omega, K=K), mc(solve(Omega), K))
 
