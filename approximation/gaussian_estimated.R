@@ -9,7 +9,7 @@ library(parallel)
 library(reginference) ## see github.com/snarles/misc
 library(lineId) ## use devtools::install('lineId')
 source("approximation/gncx.R")
-
+source("approximation/dgncx.R")
 
 TR <- function(a) sum(diag(a))
 Id <- function(a) eye(dim(a)[1])
@@ -107,6 +107,37 @@ mce2 <- function
   mean(mcs)
 }
 
+## uses conditioning on Y, draws random
+mce2a <- function
+(Sigma, Omega = Id(Sigma), Xi = Omega,
+ SigmaH = Sigma, OmegaH = Omega, XiH = Xi,
+ K, mc.reps = 100) {
+  p <- dim(Omega)[1]
+  ## convert everything if needed
+  if (f2(Sigma, eye(p)) > 1e-8) {
+    si <- isqrtm(Sigma)
+    Omega <- si %*% Omega %*% si
+    Xi <- si %*% Xi %*% si
+    SigmaH <- si %*% SigmaH %*% si
+    XiH <- si %*% Xi %*% si    
+  }
+  ## algo with Sigma = I
+  A <- solve(SigmaH + OmegaH - SigmaH %*% solve(SigmaH + XiH) %*% SigmaH)
+  B <- SigmaH %*% solve(SigmaH + XiH)
+  Ah <- sqrtm(A)
+  cov_star <- B %*% (eye(p) + Xi - solve(eye(p) + Omega)) %*% t(B)
+  cov_i <- B %*% (eye(p) + Xi) %*% t(B)
+  mcs <- sapply(1:mc.reps,
+                function(i) {
+                  y <- mvrnorm(1, rep(0, p), Sigma = eye(p) + Omega)
+                  mu_star <- ((eye(p) - B %*% solve(eye(p) + Omega)) %*% y)[,1]
+                  nm_star <- rdgchisq0(1, cov_star, mu_star, A)
+                  nms <- rdgchisq0(K-1, cov_i, y, A)
+                  min(nms) < nm_star
+                })
+  mean(mcs)
+}
+
 ####
 ##  Basic tests
 ####
@@ -138,5 +169,6 @@ mc.reps <- 1e4
 mce(Sigma, Omega, Xi, SigmaH, OmegaH, XiH, K, mc.reps=mc.reps)
 mce1(Sigma, Omega, Xi, SigmaH, OmegaH, XiH, K, mc.reps=mc.reps)
 mce2(Sigma, Omega, Xi, SigmaH, OmegaH, XiH, K, mc.reps=mc.reps)
+mce2a(Sigma, Omega, Xi, SigmaH, OmegaH, XiH, K, mc.reps=mc.reps)
 
 

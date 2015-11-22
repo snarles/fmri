@@ -38,11 +38,11 @@ rdgchisq0 <- function(n, Sigma, mu, Omega) {
 ##  Tests
 ####
 
-p <- 10; n<- 1e6
-Sigma <- cov(randn(2 * p, p))
-Omega <- cov(randn(2 * p, p))
-mu <- rnorm(p)
-s1 <- rdgchisq(n, Sigma, mu, Omega)
-s2 <- rdgchisq0(n, Sigma, mu, Omega)
-plot(sort(s1), sort(s2), type = "l")
-abline(0, 1, col ="red")
+# p <- 10; n<- 1e6
+# Sigma <- cov(randn(2 * p, p))
+# Omega <- cov(randn(2 * p, p))
+# mu <- rnorm(p)
+# s1 <- rdgchisq(n, Sigma, mu, Omega)
+# s2 <- rdgchisq0(n, Sigma, mu, Omega)
+# plot(sort(s1), sort(s2), type = "l")
+# abline(0, 1, col ="red")
