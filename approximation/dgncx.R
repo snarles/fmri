@@ -43,7 +43,7 @@ moments_dgchisq <- function(Sigma, mu, Omega) {
     2 * TR(Omega %*% Sigma %*% Omega %*% Sigma) + 
     (TR(Omega %*% Sigma))^2 + 
     2 * (t(mu) %*% Omega %*% mu) * TR(Omega * Sigma)
-  v <- m2 - m^2
+  v <- 2 * TR(Omega %*% Sigma %*% Omega %*% (Sigma + 2 * mu2))
   list(m = m, m2 = m2[1], v = v[1])
 }
 
