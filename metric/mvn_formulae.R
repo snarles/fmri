@@ -12,16 +12,15 @@ inner_product_moments <- function(Sigma, mu = rep(0, dim(Sigma)[1]), naive = FAL
       list(m = mean(prods), m2 = mean(prods^2), v = var(prods))
       )
   }
+  ## mu = 0 moments
   S_X <- Sigma[1:p.5, 1:p.5]
   S_XY <- Sigma[1:p.5, -(1:p.5)]; S_YX <- t(S_XY)
   S_Y <- Sigma[-(1:p.5), -(1:p.5)]
   Si_X <- solve(S_X)
   S_Y_X <- S_Y - S_YX %*% solve(S_X, S_XY)
   m <- TR(S_XY)
-  m2 <- TR(S_XY %*% S_XY) + TR(S_XY)^2 + 
-    TR(S_YX %*% Si_X %*% S_XY %*% S_X) +
-    TR(S_X %*% S_Y_X)
-  v <- m2 - m^2
+  m2 <- TR(S_XY %*% S_XY) + TR(S_XY)^2 + TR(S_X %*% S_Y)
+  v <- TR(S_XY %*% S_XY) + TR(S_X %*% S_Y)
   list(m = m, m2 = m2, v = v)
 }
 
