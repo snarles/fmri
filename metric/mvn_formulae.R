@@ -52,9 +52,9 @@ more_inner_product_moments <- function(Sigma, A = eye(dim(Sigma)[1]), naive = FA
   B_YX <- S_YX %*% solve(S_X)
   xty_xtAx <- TR(S_YX %*% (A + t(A)) %*% S_X) +
     TR(S_XY) * TR(A %*% S_X)
-  xty_xtAy <- TR(A %*% S_YX %*% (B_YX + t(B_YX)) %*% S_X) +
-    TR(S_YX) * TR(A %*% S_YX) +
-    TR(S_X %*% S_Y_X %*% t(A))
+  xty_xtAy <- TR(S_YX) * TR(A %*% S_YX) +
+    TR(A %*% S_YX %*% S_YX) +
+    TR(A %*% S_Y %*% S_X)
   list(xty_xtAy = xty_xtAy, xty_xtAx = xty_xtAx)
 }
 
