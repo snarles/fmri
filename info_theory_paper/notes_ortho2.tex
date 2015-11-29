@@ -115,6 +115,50 @@ Therefore
 \end{cases}.
 \]
 
+\section{Appendix}
+
+\subsection{Gaussian min probs}
+
+Define
+\[
+F(\alpha,\beta, K) = \Pr[\alpha Z_* + \beta < \min_{i=1}^{K-1} Z_i]
+\]
+for $Z_*, Z_1,\hdots, Z_{K-1}$ i.i.d normal,
+hence
+\[
+F(\alpha, \beta, K) = \int_{\mathbb{R}} (1 - \Phi(\alpha z + \beta))^{K-1} d\Phi(z).
+\]
+
+Suppose
+\[
+\begin{bmatrix}
+y_* \\
+y_1 \\
+\vdots \\
+y_{K-1}
+\end{bmatrix}
+\sim
+N\left(
+\begin{bmatrix}
+0\\
+0\\
+\vdots \\
+0
+\end{bmatrix},
+\begin{bmatrix}
+b & c & \hdots & c\\
+c & d & \hdots & e\\
+\cdots & \cdots & \ddots & \vdots\\
+c & e & \hdots & d
+\end{bmatrix}
+\right).
+\]
+where $d > e > \frac{c^2}{b}$.
+
+Then
+\[
+\Pr[y_* + a < \min_{i=1}^{K-1} y_i] = F\left(\sqrt{\frac{b + e - 2c^2/b - 2c}{d-e}}, \frac{a}{\sqrt{d-e}}, K\right).
+\]
 
 \end{document}
 
