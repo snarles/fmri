@@ -1,0 +1,118 @@
+\title{Information Theory Notes}
+\author{Charles Zheng and Yuval Benjamini}
+\date{\today}
+
+\documentclass[12pt]{article} 
+
+% packages with special commands
+\usepackage{amssymb, amsmath}
+\usepackage{epsfig}
+\usepackage{array}
+\usepackage{ifthen}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{csquotes}
+\definecolor{grey}{rgb}{0.5,0.5,0.5}
+
+\begin{document}
+\maketitle
+
+\newcommand{\tr}{\text{tr}}
+\newcommand{\E}{\textbf{E}}
+\newcommand{\diag}{\text{diag}}
+\newcommand{\argmax}{\text{argmax}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\argmin}{\text{argmin}}
+\newcommand{\Vol}{\text{Vol}}
+\newcommand{\comm}[1]{}
+
+These are preliminary notes.
+
+\section{Classification in high-dimension, fixed SNR regime}
+
+We observe a data point $y_*$ which belongs to one of $K$ classes.
+The distribution in the $i$th class is $N(\mu_i, \Omega)$.  We have
+another dataset with $r$ repeats per class, which we use to estimate
+the centroids $\mu_i$: we obtain estimates $\hat{\mu}_i \sim N(\mu_i,
+r^{-1} \Omega)$.  The class centroids were originally drawn
+i.i.d. from a multivariate normal $N(0, I)$.  Furthermore $\Omega$ is
+unknown and have to be estimated as well: assume we have obtained
+estimate $\hat{\Omega}$ via some method.  Without loss of generality,
+take the $K$th class to be the true class of $y_*$.  Write
+$\hat{\mu}_* = \hat{\mu}_K$.
+
+The classification rule is given by
+\[
+\text{Estimated class} = \argmin_{i}\ (y_* - B\hat{\mu}_i)^T A (y_* - B\hat{\mu}_i)
+\]
+where $A$ and $B$ are matrices based on $\hat{\Omega}$.
+The Bayes rule is given by
+\[
+A_{Bayes} = (I + \Omega - (I + r^{-1}\Omega)^{-1})^{-1}
+\]
+\[
+B_{Bayes} = (I + r^{-1} \Omega)^{-1}.
+\]
+The ``plug-in'' estimates of $A$ and $B$ are
+\[
+A = (I + \hat{\Omega} + (I + r^{-1}\hat{\Omega})^{-1})^{-1}
+\]
+\[
+B = (I + r^{-1} \hat{\Omega})^{-1}.
+\]
+
+Note that
+\[
+(y_* - B\hat{\mu}_i)^T A (y^* - B\hat{\mu}_i) =
+||A^{1/2} y_* - A^{1/2} B\hat{\mu}_i||^2.
+\]
+Therefore the classification rule is equivalent to 
+\[
+\text{Estimated class} = \argmin_{i}\ Z_i,
+\]
+where
+\[
+Z_i = ||A^{1/2} y_* - A^{1/2} B\hat{\mu}_i||^2 - ||A^{1/2} y_*||^2.
+\]
+
+We have
+\[
+\begin{bmatrix}
+A^{1/2} y \\
+A^{1/2} B \hat{\mu}_*\\
+A^{1/2} B \hat{\mu}_i
+\end{bmatrix}
+\sim
+N\left(
+\begin{bmatrix}
+0\\0\\0
+\end{bmatrix},
+\begin{bmatrix}
+A^{1/2}(I + \Omega) A^{1/2} & A^{1/2}B A^{1/2} & 0\\
+ & A^{1/2}B(I + \frac{\Omega}{r})BA^{1/2} & 0\\
+ & & A^{1/2}B(I + \frac{\Omega}{r})BA^{1/2}
+\end{bmatrix}
+\right)
+\]
+
+Therefore
+\[
+\E Z_i = \tr[A (I + \Omega + B(I + r^{-1}\Omega) B)] - 2I(i = K)\tr(AB),
+\]
+\[
+\Cov(Z_i, Z_j) = 
+\begin{cases}
+0 & \text{ for }i \neq j\\
+\tr[A (I + \Omega + B(I + r^{-1}\Omega) B)]^2 - \tr[A(I + \Omega)]^2 & \text{ for }i =j \neq K\\
+\tr[A (I + \Omega + B(I + r^{-1}\Omega) B - 2B)]^2 - \tr[A(I + \Omega)]^2 & \text{ for }i=j=K
+\end{cases}.
+\]
+
+
+\end{document}
+
+
+
