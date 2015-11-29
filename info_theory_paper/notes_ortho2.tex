@@ -69,13 +69,13 @@ Note that
 (y_* - B\hat{\mu}_i)^T A (y^* - B\hat{\mu}_i) =
 ||A^{1/2} y_* - A^{1/2} B\hat{\mu}_i||^2.
 \]
-Therefore the classification rule is equivalent to 
+Therefore the classification rule is
 \[
 \text{Estimated class} = \argmin_{i}\ Z_i,
 \]
 where
 \[
-Z_i = ||A^{1/2} y_* - A^{1/2} B\hat{\mu}_i||^2 - ||A^{1/2} y_*||^2.
+Z_i = ||A^{1/2} y_* - A^{1/2} B\hat{\mu}_i||^2.
 \]
 
 We have
@@ -100,14 +100,18 @@ A^{1/2}(I + \Omega) A^{1/2} & A^{1/2}B A^{1/2} & 0\\
 
 Therefore
 \[
-\E Z_i = \tr[A (I + \Omega + B(I + r^{-1}\Omega) B)] - 2I(i = K)\tr(AB),
+\E Z_i = \begin{cases}
+\tr[A (I + \Omega + (B(I + r^{-1}\Omega) B))] & \text{ for }i \neq K\\
+\tr[A (I + \Omega + (B(I + r^{-1}\Omega) B) - 2B)] & \text{ for }i = K
+\end{cases},
 \]
 \[
 \Cov(Z_i, Z_j) = 
 \begin{cases}
-0 & \text{ for }i \neq j\\
-\tr[A (I + \Omega + B(I + r^{-1}\Omega) B)]^2 - \tr[A(I + \Omega)]^2 & \text{ for }i =j \neq K\\
-\tr[A (I + \Omega + B(I + r^{-1}\Omega) B - 2B)]^2 - \tr[A(I + \Omega)]^2 & \text{ for }i=j=K
+\tr[A (I + \Omega)]^2 & \text{ for }i \neq j \neq K\\
+\tr[A (I + \Omega - B)]^2 & \text{ for }i =K, j \neq K\\
+\tr[A (I + \Omega + B(I + r^{-1}\Omega) B)]^2 & \text{ for }i=j \neq K\\
+\tr[A (I + \Omega + B(I + r^{-1}\Omega) B - 2B)]^2 & \text{ for }i=j=K
 \end{cases}.
 \]
 
