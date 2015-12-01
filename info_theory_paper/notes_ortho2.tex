@@ -121,13 +121,9 @@ Therefore
 
 Define
 \[
-F(\alpha,\beta, K) = \Pr[\alpha Z_* + \beta < \min_{i=1}^{K-1} Z_i]
+f_{ng}(\mu,\sigma^2, K) = \Pr[\sigma Z_* + \mu < \max_{i=1}^K Z_i]
 \]
-for $Z_*, Z_1,\hdots, Z_{K-1}$ i.i.d normal,
-hence
-\[
-F(\alpha, \beta, K) = \int_{\mathbb{R}} (1 - \Phi(\alpha z + \beta))^{K-1} d\Phi(z).
-\]
+for $Z_*, Z_1,\hdots, Z_K$ i.i.d normal.
 
 Suppose
 \[
@@ -140,7 +136,7 @@ y_{K-1}
 \sim
 N\left(
 \begin{bmatrix}
-0\\
+a\\
 0\\
 \vdots \\
 0
@@ -157,7 +153,7 @@ where $d > e > \frac{c^2}{b}$.
 
 Then
 \[
-\Pr[y_* + a < \min_{i=1}^{K-1} y_i] = F\left(\sqrt{\frac{b + e - 2c^2/b - 2c}{d-e}}, \frac{a}{\sqrt{d-e}}, K\right).
+\Pr[y_* < \min_{i=1}^{K-1} y_i] = 1- f_{ng}\left(\frac{b + e- 2c}{d-e}, -\frac{a}{\sqrt{d-e}}, K_1\right).
 \]
 
 \end{document}

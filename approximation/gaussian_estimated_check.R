@@ -9,16 +9,18 @@ library(parallel)
 library(reginference) ## see github.com/snarles/misc
 library(lineId) ## use devtools::install('lineId')
 source("approximation/gncx.R")
+source("approximation/pnorm_qnorm.R")
 
 TR <- function(a) sum(diag(a))
 TR2 <- function(a) sum(diag(a %*% a))
 
-mc.reps <- 1e4
+mc.reps <- 1e3
 
-cc <- 10
+cc <- 1
 p <- 10; r <- 100; K <- 3
-Omega <- 0.5 * cov(randn(20*p, p)) + 1000 * eye(p)
+Omega <- 0.5 * cov(randn(10*p, p)) + 1 * eye(p)
 Omega <- Omega * TR(solve(Omega))/cc
+#Omega <- eye(p) * p/cc
 c(TR(solve(Omega)), TR2(solve(Omega)))
 Xi <- Omega/r
 OmegaH <- cov(mvrnorm(K * r, rep(0, p), Omega)) 
@@ -45,7 +47,6 @@ for (i in 1:mc.reps) {
   delts <- t(t(Bmu_hs) - y)
   dA <- delts %*% Ah
   scores <- rowSums((delts %*% Ah)^2)
-  scores2 <- scores - f2(Ah %*% y)
   # record results
   nms_s[i, ] <- scores
   y_s[i, ] <- y
@@ -53,16 +54,31 @@ for (i in 1:mc.reps) {
   Bmu2_s[i, ] <- Bmu_hs[2, ]
 }
 
+####
+##  CHECK MEAN AND VARIANCE FOR SCORES Z_*, Z_1..., Z_{K-1}
+####
+
+aa <- -2 * TR(A %*% B)
+bb <- 2 * TR2(A %*% (eye(p) + Omega + B %*% (eye(p) + Omega/r) %*% B - 2 * B))
+cc <- 2 * TR2(A %*% (eye(p) + Omega - B))
+dd <- 2 * TR2(A %*% (eye(p) + Omega + B %*% (eye(p) + Omega/r) %*% B))
+ee <- 2 * TR2(A %*% (eye(p) + Omega))
+
 m_emp <- colMeans(nms_s)
 m_the <- rep(TR(A %*% (eye(p) + Omega + B %*% (eye(p) + Omega/r) %*% B)), K)
-m_the[1] <- m_the[1] - 2 * TR(A %*% B)
+m_the[1] <- m_the[1] + aa
 
 v_emp <- cov(nms_s)
-c(v_emp[1,1],
-  2 * TR2(A %*% (eye(p) + Omega + B %*% (eye(p) + Omega/r) %*% B - 2 * B)))
-c(v_emp[1,2],
-  2 * TR2(A %*% (eye(p) + Omega - B)))
-c(v_emp[2,2],
-  2 * TR2(A %*% (eye(p) + Omega + B %*% (eye(p) + Omega/r) %*% B)))
-c(v_emp[2,3],
-  2 * TR2(A %*% (eye(p) + Omega)))
+c(v_emp[1,1], bb)
+c(v_emp[1,2], cc)
+c(v_emp[2,2], dd)
+c(v_emp[2,3], ee)
+
+####
+##  COMPARE ACTUAL MISCLASSIFICATION PROBS TO GAUSSIAN MISC PROBS
+####
+
+pmins <- do.call(pmin, data.frame(nms_s))
+(mc_emp <- mean(nms_s[, 1] > pmins))
+(mc_the <- 1 - pnormal_abcde(aa, bb, cc, dd, ee, K))
+(mc_gauss <- 1 - pnormal_1min(m_emp, v_emp))

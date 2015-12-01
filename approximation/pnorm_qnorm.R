@@ -43,14 +43,20 @@ pnormal_abcde <- function(aa, bb, cc, dd, ee, K, naive = TRUE) {
   1 - normal_gumbel_formula(m, v, K - 1)
 }
 
-####
-##  TESTS
-####
+pnormal_1min <- function(mu, Sigma, nreps = 1e6) {
+  vals <- mvrnorm(1e6, mu, Sigma)
+  pmins <- do.call(pmin, data.frame(vals))
+  return(mean(vals[, 1] == pmins))  
+}
 
-mu <- rnorm(1); sigma2 <- rexp(1); k <- 10
-normal_gumbel_formula(mu, sigma2, k, naive = TRUE)
-normal_gumbel_formula(mu, sigma2, k, naive = FALSE)
-
-aa <- -3; bb <- 1.5; cc <- 2; dd <- 6; ee <- 3; K <- 5
-pnormal_abcde(aa, bb, cc, dd, ee, K, TRUE)
-pnormal_abcde(aa, bb, cc, dd, ee, K)
+# ####
+# ##  TESTS
+# ####
+# 
+# mu <- rnorm(1); sigma2 <- rexp(1); k <- 10
+# normal_gumbel_formula(mu, sigma2, k, naive = TRUE)
+# normal_gumbel_formula(mu, sigma2, k, naive = FALSE)
+# 
+# aa <- -3; bb <- 1.5; cc <- 2; dd <- 6; ee <- 3; K <- 5
+# pnormal_abcde(aa, bb, cc, dd, ee, K, TRUE)
+# pnormal_abcde(aa, bb, cc, dd, ee, K)
