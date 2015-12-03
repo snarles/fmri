@@ -11,27 +11,29 @@ library(parallel)
 boot_stat <- function(XA, YA, XB, YB) {
   BA <- solve(t(XA) %*% XA, t(XA) %*% YA)
   BB <- solve(t(XB) %*% XB, t(XB) %*% YB)
-  f2(BA %*% t(BA) - BB %*% t(BB))
+  as.numeric(BA %*% t(BA) - BB %*% t(BB))
 }
 
 inner_boot <- function(boot_stat, XA, YA, XB, YB, rep.in = 1000) {
-  vals <- numeric(rep.in)
+  vals <- numeric()
   st <- boot_stat(XA, YA, XB, YB)
   for (i in 1:rep.in) {
     indA <- sample(nA, nA, replace = TRUE)
     indB <- sample(nB, nB, replace = TRUE)
-    vals[i] <- boot_stat(XA[indA, ], YA[indA, ], XB[indB, ], YB[indB, ])
+    vals <- rbind(vals, boot_stat(XA[indA, ], YA[indA, ], XB[indB, ], YB[indB, ]))
   }
-  st/sd(vals)
+  sds <- apply(vals, 2, sd)
+  st/sds
 }
 
 double_boot <- function(boot_stat, XA, YA, XB, YB, rep.out = 1000, rep.in = rep.out) {
   nA <- dim(YA)[1]; nB <- dim(YB)[1]
-  outer.vals <- numeric(rep.out)
+  outer.vals <- numeric()
   for (i in 1:rep.out) {
     indA <- sample(nA, nA, replace = TRUE)
     indB <- sample(nB, nB, replace = TRUE)
-    outer.vals[i] <- inner_boot(boot_stat, XA[indA, ], YA[indA, ], XB[indB, ], YB[indB, ], rep.in)
+    outer.vals <- rbind(outer.vals,
+                        inner_boot(boot_stat, XA[indA, ], YA[indA, ], XB[indB, ], YB[indB, ], rep.in))
   }
   outer.vals
 }
@@ -46,9 +48,9 @@ XB <- randn(nB, p)
 G0 <- randn(p, q); G1 <- randn(p, q)
 GA <- svd(randn(q, q))$u
 GB <- svd(randn(q, q))$u
-# non-null case
-BA0 <- G0 %*% GA; BB0 <- G0 %*% GB
 # null case
+BA0 <- G0 %*% GA; BB0 <- G0 %*% GB
+# non-null case
 BA0 <- G0 %*% GA; BB0 <- G1 %*% GB
 
 SigmaA <- cov(randn(2 * q, q))
@@ -63,4 +65,9 @@ boot_stat(XA, YA, XB, YB)
 
 inner_boot(boot_stat, XA, YA, XB, YB)
 vals <- double_boot(boot_stat, XA, YA, XB, YB, rep.out = 100)
-hist(vals)
+layout(matrix(1:4, 2, 2))
+hist(vals[, 1])
+hist(vals[, 2])
+hist(vals[, 3])
+hist(vals[, 4])
+
