@@ -272,16 +272,14 @@ as Bayes misclassification rates, the estimated mutual information
 would the true mutual information of $\tilde{\Omega}$, given by
 \[
 \hat{\text{MI}} = 
-\int 1/(eta^2/\kappa + \eta) H(d\eta).\]
+\int 1/(\eta^2/\kappa + \eta) H(d\eta).\]
 The asymptotic difference between the true mutual information and the naive estimate is
-\[
-\text{MI} - \hat{\text{MI}} = \int \frac{1}{\eta} - \frac{1}{\eta^2/\kappa + \eta}H(d\eta)
-\]
-which, for large $\kappa$,
-\[
-\text{MI} - \hat{\text{MI}} \approx \frac{1}{\kappa}.
-\]
-
+\begin{align*}
+\text{MI} - \hat{\text{MI}} &= \int \frac{1}{\eta} - \frac{1}{\eta^2/\kappa + \eta}H(d\eta) 
+\\&= \int \frac{\eta^2/\kappa}{\eta^2 + \eta^3/\kappa} H(d\eta)
+\\&= \int \kappa^{-1} \frac{1}{1 + \eta/\kappa} H(d\eta)
+\\&\leq \int \kappa^{-1} H(d\eta) =  \kappa^{-1}.
+\end{align*}
 Hence we have a lower bound for the error of MI estimation.
 
 \textbf{Theorem. }
