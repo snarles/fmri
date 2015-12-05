@@ -115,7 +115,7 @@ Therefore
 \end{cases}.
 \]
 
-\subsection{$\Omega$ known}
+\subsection{$\Omega$ known, fixed $r$}
 
 Suppose
 \[
@@ -142,9 +142,9 @@ and
 \]
 Let $\gamma_i(r)$ denote the eigenvalues of $AB$: we have
 \[
-\gamma_i(r) = \frac{1}{(\lambda_i^2 + \lambda_i)/r + \lambda_i}
+\gamma_i(r) = \frac{1}{(\omega_i^2 + \omega_i)/r + \omega_i}
 \]
-where $\lambda_i$ are the eigenvalues of $\Omega$.
+where $\omega_i$ are the eigenvalues of $\Omega$.
 
 The misclassification probability is
 \[
@@ -170,6 +170,71 @@ we have
 \[
 \sigma^2(r) \to 1.
 \]
+
+\subsection{Known $\Omega$, growing $r$}
+
+Assume that $\Omega/p$ has a limiting spectrum, i.e.
+defining
+\[
+H^{(p)} = \sum_{i=1}^p \frac{1}{p}\delta_{\omega_i/p}
+\]
+we have
+\[
+H^{(p)} \to H
+\]
+for some probability measure $H$ on $\mathbb{R}^+$.
+
+Also, suppose that $\frac{r}{p} \to \kappa$.
+Then, define
+
+\begin{align*}
+\mu^*(\kappa) = \lim_{p \to \infty} \mu(r) &= \lim_{p \to \infty} \frac{2\sum_{i=1}^p \gamma_i}{\sqrt{\sum_{i=1}^p 6\gamma_i^2 + 4 \gamma_i}},
+\\&= \lim_{p \to \infty} \frac{2p \int \frac{1}{\frac{p^2 \nu^2 + p\nu}{r} + p\nu}dH(\nu)}{
+\sqrt{
+p\int 6\left(\frac{1}{\frac{p^2 \nu^2 + p\nu}{r} + p\nu}\right)^2 + 4 \left(\frac{1}{\frac{p^2 \nu^2 + p\nu}{r} + p\nu}\right)dH(\nu)
+}
+}
+\\&= \lim_{p \to \infty} \sqrt{p \int \frac{1}{\frac{p^2 \nu^2 + p\nu}{r} + p\nu}dH(\nu)}
+\\&= \lim_{p \to \infty} \sqrt{\int \frac{1}{\frac{p \nu^2}{r} + (1 + 1/r)\nu}dH(\nu)}
+\\&= \sqrt{\int \lim_{p \to \infty} \frac{1}{\frac{p \nu^2}{r} + (1 + 1/r)\nu}dH(\nu)}
+\\&= \sqrt{\int \frac{1}{\frac{\nu^2}{\kappa} + \nu} dH(\nu)},
+\end{align*}
+while for similar reasons
+\[
+\lim_{p \to \infty} \sigma^2(r) = 1.
+\]
+
+Thus, we have $\mu^*(\kappa)$ increasing in $\kappa$, and tending to
+\[
+\mu^*(\infty) = \int \nu^{-1} H(d\nu)
+\]
+as $\kappa \to \infty$.
+
+Therefore, we get the following result.
+
+\textbf{Theorem. }\emph{
+Let $H$ be a positive measure.
+For $\Omega$ known, if $p\Omega$ has limiting spectrum $H$, and $\lim r/p = \kappa$, then
+the asymptotic misclassification rate $\text{MC}^* = \lim_{p\ to \infty} \text{MC }$ is a function only of $\kappa$,
+is increasing in $\kappa$,
+and is bounded between
+\[
+\text{MC}^*(0) = 1 - \Pr[N(0, 1) < M_{K-1}] < 1
+\]
+and
+\[
+\text{MC}^*(\infty) = 1-\Pr[N(\mu^*(\infty), 1) < M_{K-1}] > 0,
+\]
+where
+\[
+\mu^*(\infty) = \int \nu^{-1} H(d\nu).
+\]
+}
+
+To summarize, the misclassification rate with a fixed number of repeats $r$ converges to a constant, $\text{MC}^*(0) < 1$,
+while the Bayes misclassification rate is given by $\text{MC}^*(\infty) > 0$.
+To get a asymptotically constant misclassification rate between $\text{MC}^*(0)$ and $\text{MC}^*(\infty)$, one needs
+a number of repeats $r$ which is of order $O(p)$.
 
 \section{Appendix}
 
