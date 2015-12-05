@@ -108,11 +108,67 @@ Therefore
 \[
 \Cov(Z_i, Z_j) = 
 \begin{cases}
-\tr[A (I + \Omega)]^2 & \text{ for }i \neq j \neq K\\
-\tr[A (I + \Omega - B)]^2 & \text{ for }i =K, j \neq K\\
-\tr[A (I + \Omega + B(I + r^{-1}\Omega) B)]^2 & \text{ for }i=j \neq K\\
-\tr[A (I + \Omega + B(I + r^{-1}\Omega) B - 2B)]^2 & \text{ for }i=j=K
+2\tr[A (I + \Omega)]^2 & \text{ for }i \neq j \neq K\\
+2\tr[A (I + \Omega - B)]^2 & \text{ for }i =K, j \neq K\\
+2\tr[A (I + \Omega + B(I + r^{-1}\Omega) B)]^2 & \text{ for }i=j \neq K\\
+2\tr[A (I + \Omega + B(I + r^{-1}\Omega) B - 2B)]^2 & \text{ for }i=j=K
 \end{cases}.
+\]
+
+\subsection{$\Omega$ known}
+
+Suppose
+\[
+\hat{\Omega} = \Omega.
+\]
+
+Then,
+
+\[
+\E Z_i = \begin{cases}
+p + 2\tr[AB] & \text{ for }i \neq K\\
+p & \text{ for }i = K
+\end{cases},
+\]
+and
+\[
+\Cov(Z_i, Z_j) = 
+\begin{cases}
+2\tr[I + AB]^2 & \text{ for }i \neq j \neq K\\
+2p & \text{ for }i =K, j \neq K\\
+\tr[I + 2AB]^2 & \text{ for }i=j \neq K\\
+2p & \text{ for }i=j=K
+\end{cases}.
+\]
+Let $\gamma_i(r)$ denote the eigenvalues of $AB$: we have
+\[
+\gamma_i(r) = \frac{1}{(\lambda_i^2 + \lambda_i)/r + \lambda_i}
+\]
+where $\lambda_i$ are the eigenvalues of $\Omega$.
+
+The misclassification probability is
+\[
+\text{MC} = 1 - \Pr[N(\mu(r), \sigma^2(r)) < M_{K-1}]
+\]
+where $M_{K-1}$ is the maximum of $K-1$ independent standard normal variates,
+and
+\[
+\mu(r) = \frac{2\sum_{i=1}^p \gamma_i}{\sqrt{\sum_{i=1}^p 6\gamma_i^2 + 4 \gamma_i}},
+\]
+\[
+\sigma^2(r) = \frac{\sum_{i=1}^p \gamma_i ^2 + 2\gamma_i}{\sum_{i=1}^p 3\gamma_i^2 + 2\gamma_i}.
+\]
+
+Under the condition that
+\[
+\tr[\Omega^{-1}] \to \text{const., }\tr[\Omega^{-2}] \to 0
+\]
+we have
+\[
+\mu(r) \to \sqrt{\sum_{i=1}^p \gamma_i(r)},
+\]
+\[
+\sigma^2(r) \to 1.
 \]
 
 \section{Appendix}
@@ -153,7 +209,7 @@ where $d > e > \frac{c^2}{b}$.
 
 Then
 \[
-\Pr[y_* < \min_{i=1}^{K-1} y_i] = 1- f_{ng}\left(\frac{b + e- 2c}{d-e}, -\frac{a}{\sqrt{d-e}}, K_1\right).
+\Pr[y_* < \min_{i=1}^{K-1} y_i] = 1- f_{ng}\left(-\frac{a}{\sqrt{d-e}}, \frac{b + e- 2c}{d-e},K-1\right).
 \]
 
 \end{document}

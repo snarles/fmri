@@ -14,11 +14,11 @@ source("approximation/pnorm_qnorm.R")
 TR <- function(a) sum(diag(a))
 TR2 <- function(a) sum(diag(a %*% a))
 
-mc.reps <- 1e3
+mc.reps <- 1e2
 
 cc <- 1
-p <- 10; r <- 100; K <- 3
-Omega <- 0.5 * cov(randn(10*p, p)) + 1 * eye(p)
+p <- 20; r <- 100; K <- 3
+Omega <- 0.5 * cov(randn(10*p, p)) +  p * eye(p)
 Omega <- Omega * TR(solve(Omega))/cc
 #Omega <- eye(p) * p/cc
 c(TR(solve(Omega)), TR2(solve(Omega)))
@@ -64,7 +64,11 @@ bb <- 2 * TR2(A %*% (eye(p) + Omega + B %*% (eye(p) + Omega/r) %*% B - 2 * B))
 cc <- 2 * TR2(A %*% (eye(p) + Omega - B))
 dd <- 2 * TR2(A %*% (eye(p) + Omega + B %*% (eye(p) + Omega/r) %*% B))
 ee <- 2 * TR2(A %*% (eye(p) + Omega))
+m <- -aa/sqrt(dd- ee)
+v <- (bb + ee - 2 * cc)/(dd - ee)
 
+gm <- eigen(A %*% B)$values
+max(gm)
 ls <- eigen(OmegaH)$values
 c(aa, -2 * sum(1/(ls^2/r + (1 + 1/r) * ls)))
 if (f2(Omega, OmegaH) == 0) {
@@ -73,7 +77,13 @@ if (f2(Omega, OmegaH) == 0) {
   c(ee, 2 * sum(((1 + ls) * (1 + ls/r)/((1 + ls)*(1 + ls/r) - 1))^2))
   c(dd, 2 * sum(( ( (1 + ls)*(1 + ls/r)+ 1 )/( (1 + ls)*(1+ls/r)- 1 )  )^2))
   c(ee, 2 * TR2(eye(p) + A %*% B))
-  c(dd, 2 * TR2(eye(p) + 2*A %*% B))  
+  c(dd, 2 * TR2(eye(p) + 2*A %*% B))
+  c(dd, 2 * sum((1 + 2 * gm)^2))
+  c(m, 2*sum(gm)/sqrt(sum(4 * gm + 6 * gm^2)))
+  c(v, 2 * sum(gm^2 + 2 * gm)/sum(6 * gm^2 + 4 * gm))
+  # as gm -> 0
+  c(m, sqrt(sum(gm)))
+  c(v, 1)
 }
 
 m_emp <- colMeans(nms_s)
