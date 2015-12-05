@@ -23,8 +23,9 @@ Omega <- Omega * TR(solve(Omega))/cc
 #Omega <- eye(p) * p/cc
 c(TR(solve(Omega)), TR2(solve(Omega)))
 Xi <- Omega/r
-OmegaH <- cov(mvrnorm(K * r, rep(0, p), Omega)) 
-XiH <- Omega/r
+#OmegaH <- cov(mvrnorm(K * r, rep(0, p), Omega)) 
+OmegaH <- Omega
+XiH <- OmegaH/r
 f2(Omega, OmegaH)
 
 A <- solve(eye(p) + OmegaH - solve(eye(p) + XiH))
@@ -63,6 +64,17 @@ bb <- 2 * TR2(A %*% (eye(p) + Omega + B %*% (eye(p) + Omega/r) %*% B - 2 * B))
 cc <- 2 * TR2(A %*% (eye(p) + Omega - B))
 dd <- 2 * TR2(A %*% (eye(p) + Omega + B %*% (eye(p) + Omega/r) %*% B))
 ee <- 2 * TR2(A %*% (eye(p) + Omega))
+
+ls <- eigen(OmegaH)$values
+c(aa, -2 * sum(1/(ls^2/r + (1 + 1/r) * ls)))
+if (f2(Omega, OmegaH) == 0) {
+  f2(A %*% (eye(p) + Omega), eye(p) + A %*% B)
+  c(cc, bb,2 * p)
+  c(ee, 2 * sum(((1 + ls) * (1 + ls/r)/((1 + ls)*(1 + ls/r) - 1))^2))
+  c(dd, 2 * sum(( ( (1 + ls)*(1 + ls/r)+ 1 )/( (1 + ls)*(1+ls/r)- 1 )  )^2))
+  c(ee, 2 * TR2(eye(p) + A %*% B))
+  c(dd, 2 * TR2(eye(p) + 2*A %*% B))  
+}
 
 m_emp <- colMeans(nms_s)
 m_the <- rep(TR(A %*% (eye(p) + Omega + B %*% (eye(p) + Omega/r) %*% B)), K)
