@@ -115,6 +115,23 @@ Therefore
 \end{cases}.
 \]
 
+\subsection{Equivalence of limiting MI and multivariate SNR}
+
+The mutual information between $\mu$ and $y$ is given by
+\[
+\text{MI} = -\log\det(I - (I+ \Omega)^{-1}).
+\]
+We will show that if $\tr[\Omega^{-1}] \to c$, and
+$\tr[\Omega^{-2}] \to 0$, then 
+\begin{align*}
+\lim_{p \to \infty} \text{MI} &= \lim_{p \to \infty} -\log\det(I - (I+ \Omega)^{-1})
+\\&= \lim_{p \to \infty} -\log\det(I - \Omega^{-1/2} (\Omega^{-1}+ I)^{-1} \Omega^{-1/2})
+\\&= \lim_{p \to \infty} -\log\det(I - \Omega^{-1} + \Omega^{-2})
+\\&= \lim_{p \to \infty} -\log\det(I - \Omega^{-1})
+\\&= \lim_{p \to \infty} \log\det(I + \Omega^{-1})
+\\&= \lim_{p \to \infty} \tr[\Omega^{-1}] = c
+\end{align*}
+
 \subsection{$\Omega$ known, fixed $r$}
 
 Suppose
@@ -123,6 +140,7 @@ Suppose
 \]
 
 Then,
+
 
 \[
 \E Z_i = \begin{cases}
@@ -183,6 +201,10 @@ we have
 H^{(p)} \to H
 \]
 for some probability measure $H$ on $\mathbb{R}^+$.
+Note then that
+\[
+\text{MI} = \lim_{p\to\infty} \tr[\Omega^{-1}] = \int \nu^{-1} dH(\nu).
+\]
 
 Also, suppose that $\frac{r}{p} \to \kappa$.
 Then, define
@@ -209,6 +231,7 @@ Thus, we have $\mu^*(\kappa)$ increasing in $\kappa$, and tending to
 \mu^*(\infty) = \int \nu^{-1} H(d\nu)
 \]
 as $\kappa \to \infty$.
+But, note that $\mu^*(\infty)$ is also the limiting mutual information.
 
 Therefore, we get the following result.
 
@@ -227,14 +250,47 @@ and
 \]
 where
 \[
-\mu^*(\infty) = \int \nu^{-1} H(d\nu).
+\mu^*(\infty) = \int \nu^{-1} H(d\nu) = \lim_{p\to \infty} \text{MI}.
 \]
 }
 
-To summarize, the misclassification rate with a fixed number of repeats $r$ converges to a constant, $\text{MC}^*(0) < 1$,
-while the Bayes misclassification rate is given by $\text{MC}^*(\infty) > 0$.
-To get a asymptotically constant misclassification rate between $\text{MC}^*(0)$ and $\text{MC}^*(\infty)$, one needs
-a number of repeats $r$ which is of order $O(p)$.
+To summarize, the misclassification rate with a fixed number of
+repeats $r$ converges to a constant, $\text{MC}^*(0) < 1$, while the
+Bayes misclassification rate is given by $\text{MC}^*(\infty) > 0$.
+To get a asymptotically constant misclassification rate between
+$\text{MC}^*(0)$ and $\text{MC}^*(\infty)$, one needs a number of
+repeats $r$ which is of order $O(p)$.
+
+In the case that one uses $r = \kappa p$ repeats, the asymptotic
+misclassification rate as a function of $K$ matches the \emph{Bayes}
+rate of a classification problem with covariance $\tilde{\Omega}$,
+where the eigenvalues of $\tilde{\Omega}$ are given by $\omega_i
++ \frac{\omega_i^2}{p\kappa}$; i.e. the eigenvalues of
+$\tilde{\Omega}$ are inflated compared to $\Omega$.  This means that
+if we were to naively interpret the obtained misclassification rates
+as Bayes misclassification rates, the estimated mutual information
+would the true mutual information of $\tilde{\Omega}$, given by
+\[
+\hat{\text{MI}} = 
+\int 1/(eta^2/\kappa + \eta) H(d\eta).\]
+The asymptotic difference between the true mutual information and the naive estimate is
+\[
+\text{MI} - \hat{\text{MI}} = \int \frac{1}{\eta} - \frac{1}{\eta^2/\kappa + \eta}H(d\eta)
+\]
+which, for large $\kappa$,
+\[
+\text{MI} - \hat{\text{MI}} \approx \frac{1}{\kappa}.
+\]
+
+Hence we have a lower bound for the error of MI estimation.
+
+\textbf{Theorem. }
+\emph{
+For $\Omega$ known, if $p\Omega$ has limiting spectrum $H$, and $\lim r/p = \kappa$, then
+the asympotic minimax risk of estimating $\text{MI}$ based on the misclassification curve is upper bounded by}
+\[
+\lim_{p \to \infty} \inf_{\hat{\text{MI}}}\ \E[|\text{MI} - \hat{\text{MI}}|] \leq \frac{1}{\kappa}.
+\]
 
 \section{Appendix}
 
