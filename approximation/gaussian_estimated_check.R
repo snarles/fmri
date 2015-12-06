@@ -23,8 +23,8 @@ Omega <- Omega * TR(solve(Omega))/cc
 #Omega <- eye(p) * p/cc
 c(TR(solve(Omega)), TR2(solve(Omega)))
 Xi <- Omega/r
-#OmegaH <- cov(mvrnorm(K * r, rep(0, p), Omega)) 
-OmegaH <- Omega
+OmegaH <- cov(mvrnorm(K * r, rep(0, p), Omega)) 
+#OmegaH <- Omega
 XiH <- OmegaH/r
 f2(Omega, OmegaH)
 
@@ -71,6 +71,14 @@ gm <- eigen(A %*% B)$values
 max(gm)
 ls <- eigen(OmegaH)$values
 c(aa, -2 * sum(1/(ls^2/r + (1 + 1/r) * ls)))
+E <- Omega - OmegaH
+c(bb, 2 * TR2(eye(p) + A %*% (E + B %*% E %*% B/r)))
+c(cc, 2 * TR2(eye(p) + A %*% E))
+c(dd, 2 * TR2(eye(p) + A %*% (E + 2 * B + B%*%E%*%B/r) ))
+c(ee, 2 * TR2(eye(p) + A %*% (E + B) ))
+
+
+
 if (f2(Omega, OmegaH) == 0) {
   f2(A %*% (eye(p) + Omega), eye(p) + A %*% B)
   c(cc, bb,2 * p)
