@@ -76,7 +76,7 @@ c(bb, 2 * TR2(eye(p) + A %*% (E + B %*% E %*% B/r)))
 c(cc, 2 * TR2(eye(p) + A %*% E))
 c(dd, 2 * TR2(eye(p) + A %*% (E + 2 * B + B%*%E%*%B/r) ))
 c(ee, 2 * TR2(eye(p) + A %*% (E + B) ))
-
+c((bb + ee - 2 * cc)-(dd - ee), -4 * TR2(A %*% B) - 8/r*TR(A%*%B%*%A%*%B%*%E%*%B))
 
 
 if (f2(Omega, OmegaH) == 0) {
