@@ -166,7 +166,7 @@ where $\omega_i$ are the eigenvalues of $\Omega$.
 
 The misclassification probability is
 \[
-\text{MC} = 1 - \Pr[N(\mu(r), \sigma^2(r)) < M_{K-1}]
+\text{MC} = \Pr[N(\mu(r), \sigma^2(r)) < M_{K-1}]
 \]
 where $M_{K-1}$ is the maximum of $K-1$ independent standard normal variates,
 and
@@ -242,11 +242,11 @@ the asymptotic misclassification rate $\text{MC}^* = \lim_{p\ to \infty} \text{M
 is increasing in $\kappa$,
 and is bounded between
 \[
-\text{MC}^*(0) = 1 - \Pr[N(0, 1) < M_{K-1}] < 1
+\text{MC}^*(0) = \Pr[N(0, 1) < M_{K-1}] < 1
 \]
 and
 \[
-\text{MC}^*(\infty) = 1-\Pr[N(\mu^*(\infty), 1) < M_{K-1}] > 0,
+\text{MC}^*(\infty) = \Pr[N(\mu^*(\infty), 1) < M_{K-1}] > 0,
 \]
 where
 \[
