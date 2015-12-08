@@ -295,10 +295,12 @@ asymptotic framework.
 In order to establish asympotic normality, we consider a limiting
 sequence of problems of increasing dimensionality $d$.  Let $(X^{[d]},
 Y^{[d]})$ denote the joint distributions in the sequence, for
-$d \in \{1, 2, \hdots\}.$ 
+$d \in \{1, 2, \hdots\}.$ As $d$ increases, the ratio of the
+information $I(X^{[d]}; Y^{[d]})$ and the joint entropy $H(X^{[d]},
+Y^{[d]})$ decreases.
 
-The prototypical example of our setup is the \emph{hierarchical normal mixture model.}
-Let
+Before giving a general result, we illustrate this aymptotic regime by
+the following gaussian example.  Let
 \[
 \begin{bmatrix}
 X^{[d]}\\Y^{[d]}
@@ -311,20 +313,61 @@ I & \frac{1}{\sqrt{1 + d\sigma^2}}I \\
 \right)
 \]
 
-We have $I(X;Y) = ?$.
-
-Then
+For fixed $d$, we have $(X_i^{[d]}, Y_i^{[d]})$ drawn i.i.d. from a
+bivariate normal $N(0, \begin{bmatrix}1 & \rho\\\rho &
+1\end{bmatrix})$ where $\rho = (1 + d\sigma^2)^{-1}$.  Recalling that
+the mutual information of the components of such a bivariate normal is
+$-\log(1 - \rho^2)/2$, we easily calculate:
 \[
-Z_i = \text{blah blah blah}
+I(X^{[d]}, Y{[d]}) = \sum_{i=1}^d I(X_i^{[d]}, Y_i^{[d]}) = -\frac{d}{2}\log(1 - \frac{1}{1+d\sigma^2}).
 \]
-and it follows that $Z_i$ are asymptotically normal, with
+Hence
+\begin{align*}
+\lim_{d \to \infty} I(X^{[d]}, Y^{[d]}) &=
+\lim_{d \to \infty} -\frac{d}{2}\log(1 - \frac{1}{1+d\sigma^2}) 
+\\&= \lim_{d \to \infty}\frac{d}{2}\frac{1}{1+d\sigma^2} = \frac{1}{2\sigma^2}.
+\end{align*}
+Meanwhile, $H(X^{[d]}) = H(Y^{[d]}) = \frac{d}{2}\log(2\pi)$, so it is clear that $H(X^{[d]}, Y^{[d]}) >> I(X^{[d]}; Y^{[d]})$.
+
+A simple calculation shows that
+\[
+Z_i = \log p(Y^*|X^{(i)}) = -\frac{1}{2(1-\rho^2)}||Y^* -\rho X^{(i)} ||^2 + \text{ const.}
+\]
+where the first term is a scaled chi-squared distribution with $d$
+degrees of freedom: the scale is -1/2 for $i = 1,\hdots, K-1$ and
+$-(1-\rho^2)/2$ for $i = 0$.  Since we can separate $Z_i$ into
+independent, componentwise sums,
+\[
+Z_i = \text{const. } -\frac{1}{2(1-\rho^2)} \sum_{j=1}^d (Y^*_j - \rho X^{(i)}_j)^2,
+\]
+it follows from the multivariate central limit theorem that $Z_i$ are asymptotically jointly normal.
+
+A straightforward computation using multivariate normal moments (c.f. Muirhead) yields the limiting moments:
+\[
+\E[Z_*] = -\frac{d}{2} + \text{const., }\ \E[Z_i] = -\frac{d}{2}\frac{1 + \rho^2}{1-\rho^2} + \text{const.}
+\]
+\[
+\Var[Z_*] = \frac{d(1-\rho^2)^2}{2},\ \Var[Z_*, Z_i] = 
+\]
+Taking limits, the moments simplify to yield
 \[
 \begin{bmatrix}
 Z_*\\
 Z_1\\
 \vdots\\
 Z_{K-1}
-\end{bmatrix} \sim ?
+\end{bmatrix} \sim N\left(
+\begin{bmatrix}
+-\frac{d}{2}\\
+-\frac{d}{2} + \frac{1}{\sigma^2}\\
+\vdots\\
+-\frac{d}{2} + \frac{1}{\sigma^2}
+\end{bmatrix},
+\begin{bmatrix}
+d/2 & d/2 & \cdots & d(1-\rho^2)^2/2\\
+d/2 & & \cdots & 
+\end{bmatrix}
+\right).
 \]
 The misclassification probability is
 \[
@@ -353,7 +396,7 @@ Let $X^{[d]}, Y^{[d]}$ be a sequence of distributions satisfying:
 \begin{itemize}
 \item For each $d = 1,2,\hdots$ has an associated bivariate distribution $b_d(x,
 y)$ and the components $(X_i^{[d]}, Y_i^{[d]})$ are drawn iid from
-$b(x, y)$ for $i = 1,\hdots, d$.
+$b_d(x, y)$ for $i = 1,\hdots, d$, where the distributions $b_d$ have uniformly bounded third moments.
 \item $I(X^{[d]}, Y^{[d]}) = c$ is constant
 \item $H(X_i^{[d]})$ and $H(Y_i^{[d]})$ are constant.
 \end{itemize}
@@ -393,7 +436,62 @@ It follows that
 0 = \E[u(X, Y)|X] = \E[u(X, Y)|Y].
 \]
 
-Meanwhile, 
+Meanwhile, observe that
+\begin{align*}
+-H(X_1, Y_1) &= \int \log(b(x, y)) b(x,y) dx dy
+\\=& \int \log (b(x)b(y)(1 + u(x, y)) b(x) b(y) (1 + u(x, y)) dx dy
+\\=& \int \log(b(x)) b(x) \left[\int b(y) (1 + u(x, y)) dy\right]dx 
+\\&+ \int \log(b(y)) b(y) \left[\int b(x) (1 + u(x, y)) dx\right]dx 
+\\&+ \int \log(1 + u(x, y)) (1 + u(x, y)) b(x) b(y) dx dy
+\\=& \int \log(b(x)) b(x) \E[1 + u(X, Y)|X = x] dx 
+\\&+ \int \log(b(y)) b(y) \E[1 + u(X, Y)|X = y] dx 
+\\&+ \E[\log(1 + u(X_1, Y_*))(1 + u(X_1, Y_1^*))]
+\\&= -H(X_1) - H(Y_1) + \E[\log(1 + u(X_1, Y_1^*))(1 + u(X_1, Y_1^*))]
+\end{align*}
+where here $X_1, Y_1^*$ are drawn from the product marginal $b(x)b(y)$.
+Hence
+\[
+I(X_1; Y_1) = \E[\log(1 + u(X_1, Y_1^*))(1 + u(X_1, Y_1^*))].
+\]
+But, since $I(X_1; Y_1) = O(1/d)$, it follows that $u(X_1, Y_1)$ is
+also of order $O(1/d)$ in probability.
+This allows us to use the approximatation
+\[
+\log(1 + u(x, y)) = u(x, y) - \frac{1}{2}u(x,y)^2 + O(d^{-3}).
+\]
+Hence,
+\[
+I(X_1; Y_1) = \E[u(X_1, Y_1^*) + u(X_1, Y_1^*)^2/2] + O(d^{-3}) = \frac{1}{2}\Var[u(X_1,Y_1^*)].
+\]
+
+Due to componentwise independence, the scores $Z_i = \log p(Y^*|X^{(i)}$ converge in distribution to a multivariate normal.
+Now let us compute the moments of $Z_i$:
+\begin{align*}
+\E[Z_1] &= d\E[\log b(X_1, Y_1^*) - \log b(X_1)]
+\\&= d \E[\log b(Y_1^*) + u(X_1,Y_1^*) - u(X_1, Y_1^*)^2/2]
+\\&= -H(Y) - I(X; Y)
+\end{align*}
+Meanwhile, we know that
+\[
+\E[Z_*] = \E[\log p(Y^*|X^*)] = H(X) - H(X, Y),
+\]
+hence
+\[
+\E[Z_* - Z_i] = 2 I(X; Y).
+\]
+
+\end{document}
+
+Continuing, let $\alpha = \Var(\log b(Y_1))$ and $\beta = \Cov(\log b(Y_1^*), u(X_1, Y_1^*) - u(X, Y_1)^*)^2/2)$.
+Then
+\begin{align*}
+\Cov(Z_1, Z_2) &= \E[\Cov(Z_1, Z_2|Y^*)] + \Var\E(Z_1|Y^*)
+\\&= \Var\E(Z_1|Y^*) = \frac{d}{4} \Var(\E[u(X_1, Y_1^*)^2|Y_1^*])
+\end{align*}
+
+
+since $Z_1$ and $Z_2$ are conditionally independent given $Y^*$.
+
 
 \end{document}
 
