@@ -416,8 +416,30 @@ we can say that $u_d(x, y) \to 0$ as $d \to \infty$.
 
 It turns out that in such a limit, the moments of $u_d(X_i^{(j)},
 Y_i^{(k)})$ determines many of the information theoretic-quantities of
-interest.  From the definition, we have $\E[u_d(X_i^{(j)}, Y_i^{(k)})]
-= 0$.  Under appropriate conditions, we have
+interest.  From the definition, we have 
+\[
+0 = \E[u(X_i, Y_i)|X_i] = \E[u(X_i, Y_i)|Y_i] = \E[u(X_i^{(j)}, Y_i^{(k)})]
+\]
+for $j, k \in \{1,\hdots, K\}$.
+Then observe that
+\begin{align*}
+-H(X_1, Y_1) &= \int \log(b(x, y)) b(x,y) dx dy
+\\=& \int \log (b(x)b(y)(1 + u(x, y)) b(x) b(y) (1 + u(x, y)) dx dy
+\\=& \int \log(b(x)) b(x) \left[\int b(y) (1 + u(x, y)) dy\right]dx 
+\\&+ \int \log(b(y)) b(y) \left[\int b(x) (1 + u(x, y)) dx\right]dx 
+\\&+ \int \log(1 + u(x, y)) (1 + u(x, y)) b(x) b(y) dx dy
+\\=& \int \log(b(x)) b(x) \E[1 + u(X, Y)|X = x] dx 
+\\&+ \int \log(b(y)) b(y) \E[1 + u(X, Y)|X = y] dx 
+\\&+ \E[\log(1 + u(X_1, Y_*))(1 + u(X_1, Y_1^*))]
+\\&= -H(X_1) - H(Y_1) + \E[\log(1 + u(X_1, Y_1^*))(1 + u(X_1, Y_1^*))]
+\end{align*}
+where here $X_1, Y_1^*$ are drawn from the product marginal $b(x)b(y)$.
+Hence
+\[
+I(X_1; Y_1) = \E[\log(1 + u(X_1, Y_1^*))(1 + u(X_1, Y_1^*))].
+\]
+
+Under appropriate conditions, we have
 \[
 I(X_i^{[d]}, Y_i^{[d]}) = \frac{d}{2}\Var(u_d(X_i^{(1)}, Y_i^{(2)})^2)
 \]
@@ -427,15 +449,17 @@ use $(X_i, Y_i^*)$ to denote components of $X$ and $Y$ from different
 classes.
 
 Supposing that $\Var(u_d(X_i, Y_i^*))$ is $O(1/d)$, one might hope
-that $\E[u_d(X_i, Y_i^*)^k]$ are of even smaller order in $d$.  This
+that $\E[|u_d(X_i, Y_i^*)^3|]$ are of even smaller order in $d$.  This
 turns out to be the property that we need to establish the asymptotic
 result rigorously.  However, in order to conclude such a result, it is
 necessary to assume a few regularity conditions.  For instance, it suffices to assume that
 \[
 \lim_{d \to \infty} \sup_{x, x'} D(b_d(y|x)|| b_d(y|x')) \to 0.
 \]
-where $D$ is the Kullback-Liebler divergence.  Yet, this condition even
-excludes the Gaussian example!
+where $D$ is the Kullback-Liebler divergence.  We are forced to admit
+that this condition even excludes the Gaussian example!  All the same,
+we will take for granted that under some reasonable conditions, the
+desired property of $u_d$ holds.
 
 Collected together, we will assume the following:
 \begin{itemize}
@@ -483,32 +507,8 @@ hence
 I(X_1,Y_1) = c/d.
 \]
 
-Now define $u(x, y)$ by
-\[
-b(x, y) = b(x)b(y)(1 + u(x,y)).
-\]
-It follows that
-\[
-0 = \E[u(X, Y)|X] = \E[u(X, Y)|Y].
-\]
 
-Meanwhile, observe that
-\begin{align*}
--H(X_1, Y_1) &= \int \log(b(x, y)) b(x,y) dx dy
-\\=& \int \log (b(x)b(y)(1 + u(x, y)) b(x) b(y) (1 + u(x, y)) dx dy
-\\=& \int \log(b(x)) b(x) \left[\int b(y) (1 + u(x, y)) dy\right]dx 
-\\&+ \int \log(b(y)) b(y) \left[\int b(x) (1 + u(x, y)) dx\right]dx 
-\\&+ \int \log(1 + u(x, y)) (1 + u(x, y)) b(x) b(y) dx dy
-\\=& \int \log(b(x)) b(x) \E[1 + u(X, Y)|X = x] dx 
-\\&+ \int \log(b(y)) b(y) \E[1 + u(X, Y)|X = y] dx 
-\\&+ \E[\log(1 + u(X_1, Y_*))(1 + u(X_1, Y_1^*))]
-\\&= -H(X_1) - H(Y_1) + \E[\log(1 + u(X_1, Y_1^*))(1 + u(X_1, Y_1^*))]
-\end{align*}
-where here $X_1, Y_1^*$ are drawn from the product marginal $b(x)b(y)$.
-Hence
-\[
-I(X_1; Y_1) = \E[\log(1 + u(X_1, Y_1^*))(1 + u(X_1, Y_1^*))].
-\]
+
 But, since $I(X_1; Y_1) = O(1/d)$, it follows that $u(X_1, Y_1)$ is
 also of order $O(1/d)$ in probability.
 This allows us to use the approximatation
