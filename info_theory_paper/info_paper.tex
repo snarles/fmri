@@ -1,0 +1,284 @@
+\title{Estimating Mutual Information from Misclassification Rates}
+\author{Charles Zheng and Yuval Benjamini}
+\date{\today}
+
+\documentclass[12pt]{article} 
+
+% packages with special commands
+\usepackage{amssymb, amsmath}
+\usepackage{epsfig}
+\usepackage{array}
+\usepackage{ifthen}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{csquotes}
+\definecolor{grey}{rgb}{0.5,0.5,0.5}
+
+\begin{document}
+\maketitle
+
+\newcommand{\tr}{\text{tr}}
+\newcommand{\E}{\textbf{E}}
+\newcommand{\diag}{\text{diag}}
+\newcommand{\argmax}{\text{argmax}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\argmin}{\text{argmin}}
+\newcommand{\Vol}{\text{Vol}}
+\newcommand{\comm}[1]{}
+
+\begin{abstract}
+Mutual information is a useful measure of dependence between the input
+of a neural subsystem, $X$, and its output, or measured output, $Y$,
+due to its flexibility for capturing nonlinear associations, and its
+rich information-theoretic context.  However, since existing
+nonparametric methods for estimating mutual information scale so
+poorly for high-dimensional stimulus and response spaces, researchers
+often rely on supervised learning techniques to characterize nonlinear
+dependence in such settings.  We exploit the relationship between
+mutual information and Bayes error to obtain an estimate of mutual
+information from misclassification rate: such a procedure can be
+viewed as an indirect way of leveraging prior information about the
+dependence structure of $X$ and $Y$ to obtain a better estimate of
+mutual information.  However, the quality of the resulting estimate of
+mutual information depends on the accuracy of the predictive model, as
+well as the availability of data which which to train and test the
+predictive model.  Under a particular high-dimensional, low-SNR
+regime, we obtain an upper bound on the estimation error $|\hat{I}(X;
+Y) - I(X;Y)|$ of order $O(d/n)$, where $d$ is the dimensionality of
+the model and $n$ is the number of observations.  In simulated data,
+we compare our proposed approach to existing nonparametric methods for
+estimating $I(X; Y)$, both when the model is correct, and when the
+model is mildly misspecified.
+\end{abstract}
+
+
+\section{Introduction}
+
+In neuroscience, one is often interested in measuring depending
+between the input of a neural subsystem, $X$, and its output, or
+measured output, $Y$.  A variety of measures of dependence--including
+as correlation, mutual information, and prediction error, tend to be
+used in different settings because of their respective tradeoffs
+between interpretability, flexibility, and high-dimensional
+scalability.  Correlation is highly interpretable and scalable, but is
+inflexible: it fails to capture many forms of nonlinear dependence.
+Mutual information is interpretable and flexible, but it is generally
+difficult to estimate in high-dimensional settings.  Hence, in such
+settings, when a nonlinear measure of dependence is desired, a
+powerful approach is to apply supervised learning methods to either
+predict $X$ based on $Y$ (decoding), or $Y$ based on $X$ (encoding).
+Of course, predictive models are extremely interesting beyond the
+measure of prediction error: one commonly examines the fitted model to
+find clues to the underlying dynamics of the system.  However, one is
+still often interested in a one-dimensional summary of the dependence
+structure: in that regard, while prediction error and mutual
+information are both interpretable, mutual information has the added
+advantage of its rich context in information theory, while prediction
+error has the disadvantage of the arbitrariness of the loss function.
+Even when considering misclassification error, one often faces the
+problem of how to partition a high-dimensional space into discrete
+classes.  Furthermore, the ideal definition of prediction error is
+the \emph{Bayes error}: the prediction error of the optimal rule, but
+obtaining the Bayes error depends on being able to learn the correct
+model, as well as having infinite data to fit the model.  That said,
+in many problems it may be more feasible to estimate the Bayes error
+than to obtain a fully nonparametric estimate of the mutual
+information, since we can easily exploit prior knowledge about the
+dependence structure between $x$ and $Y$ (for instance, a generalized
+linear model) to train the predictive model, while nonparametric
+estimators of mutual information fail to exploit this prior knowledge.
+
+In fact, one could exploit the strong relationship between mutual
+information and the prediction error to obtain an estimate of the
+mutual information from the observed classification rate.  For
+example, using generalizations of Fano's inequality, one can obtain a
+lower bound on mutual information in relation to the optimal
+prediction error, or Bayes error.  Such a technique for obtaining
+estimates of mutual information from classification rates can be
+understood as a way to leverage the prior information about $X$ and
+$Y$ implied by the prediction model in order to obtain
+a \emph{model-based} estimate of mutual information, $\hat{I}(X; Y)$.
+However, a prominent challenge to such an approach is the \emph{finite
+sample bias} resulting from having a limited number of observations
+$N$ for training and testing the prediction rule.
+
+However, in low-SNR settings, which are commonly encountered in
+applications, we find that the connection between mutual information
+and prediction error in the form of misclassification rate, can be
+made even stronger than the lower bound implied by Fano's inequality.
+In a particular low-SNR regime, we find an exact asymptotic
+relationship between the Bayes misclassification probability and the
+mutual information.  Furthermore, our framework allows us to
+characterize the discrepancy between the observed misclassification
+rate, and the Bayes error, which allows us to derive that the sample
+complexity of estimating the mutual information: $|\hat{I}(X,Y)-
+I(X;Y)|$ is of the order $O(1/N)$ in the number of combined training
+and testing observations.  Our approach depends on an assumption of
+restricted dependence between components $(X_i, Y_i)$ and $(X_j,
+Y_j)$, but the assumption holds in many cases of practical interest.
+
+\subsection{Motivation}
+
+The specific setup we consider was motivated by a number of studies
+\begin{itemize}
+\item Face recognition in monkeys
+\item Identification of natural images
+\end{itemize}
+
+\subsection{Setup}
+
+Assume $X$ and $Y$ are real random vectors with the same
+dimensionality, $d$.  Our results are derived under a model where $X$
+has a continuous density $p(x)$, but in which the experimenter
+observes multiple repeats of $Y$ conditional on a common $X$.  The
+data therefore consists of tuples $(x^{(i)}, y^{(i, 1)}, \hdots,
+y_i^{(i, r)})$, where $x^{(i)}$ is the $i$th unique stimulus, and
+$y^{(i, 1)},\hdots, y^{(i, r)}$ are the repeats of $Y$ given $X =
+x^{(i)}$, which are assumed to be conditionally independent given $X$.
+
+Let $K$ denote the number of unique stimuli.  The data therefore
+consists of $n = Kr$ observations.  When $r$ is large, the data can be
+nearly considered as i.i.d. observations from the joint distribution
+of $(\tilde{X}, \tilde{Y})$, where $\tilde{X}$ has a distribution
+$\tilde{p}$ consisting of a mixture of point masses at $x^{(i)}$:
+\[
+\tilde{p} = \frac{1}{K}\sum_{i=1}^K \delta_{x^{(i)}},
+\]
+and $\tilde{Y}|\tilde{X} = x^{(i)}$ has the same distribution as $Y|X
+= x^{(i)}$.
+
+Yet, although our data was collected from the distribution
+$(\tilde{X}, \tilde{Y})$, our goal is to estimate $I(X; Y)$ rather
+than $I(\tilde{X}; \tilde{Y})$.  In order for the two quantities to
+have any connection, the selected stimuli $x^{(i)}$ must be
+`representative' of the continuous distribution $X$.  When the
+stimulus $X$ is very high-dimensional, it becomes quite reasonable to
+draw $x^{(i)}$ i.i.d. from the marginal distribution $p(x).$ This
+ensures that $I(\tilde{X}; \tilde{Y})$ converges to $I(X; Y)$ as
+$K \to \infty$.  Though, as noted by Gastpar et. al., for finite $K$,
+$I(\tilde{X}; \tilde{Y})$ tends to result in an underestimate of $I(X;
+Y)$. This motivates their antropic correction method for estimating
+$I(X;Y)$, which can be applied directly in this setting supposing that
+one has a method for estimating the conditional entropies $h(Y|X =
+x^{(i)})$.
+
+In contrast, we will consider the misclassification errror as a means to
+estimate the mutual information.  Letting $p(x,y)$ denote the density of $(X,Y)$,
+the Bayes rule for predicting $\tilde{X}$ from $\tilde{Y} = y^*$ is given by
+\[
+\hat{X}_{Bayes} = = \argmax_{x = x^{(1)}, \hdots, x^{(k)}} \log p(y|x)
+\]
+where $p(y|x) = p(x,y)/p(x)$.  The Bayes error is
+\[
+\Pr[\tilde{X} \neq \hat{X}_{Bayes}],
+\]
+where the probability is taken over the joint distribution of
+$(\tilde{X}, \tilde{Y})$.  Since the Bayes error depends on the
+sample of representative stimuli $\{x^{(i)}\}$,
+we find it more useful to consider the average Bayes error:
+\[
+\text{MC} = \E[\Pr[\tilde{X} \neq \hat{X}_{Bayes}]],
+\]
+where the outer expectation is over the distribution of $x^{(i)} \sim p(x)$.
+The following sections explore the relationship between $\text{MC}$
+and $I(X;Y)$.
+
+As a means to estimate the average Bayes error $\text{MC}$, we fit a
+predictive model for $\tilde{X}$ given $\tilde{Y}$.  This results in a
+$K$-class classification problem.  While in practice, a variety of
+multi-class classification methods can be employed, our theory depends
+on having a known, semiparametric generative model for the conditional
+distribution of $Y$: we study the misclassification rate obtained by
+using the maximum-likelihood plugin estimate of the Bayes rule.
+
+Hence, when deriving sample complexity results, we make the further assumptions
+that
+\[
+p(x, y) = p(x) q(y|\mu(x))
+\]
+where $\mu$ is an unknown bijection from
+$\mathbb{R}^p \to \mathbb{R}^p$, and $q(y|\mu)$ is a known parametric family of density
+functions which are jointly differentiable in $y$ and $\mu$.  The
+model is semiparametric since we do not make any constraints on the
+function $\mu$, other than invertibility.  In fact, $X$ can be removed
+from the picture since $I(X; Y)= I(\mu; Y)$, where $\mu = \mu(X)$.
+This reflects practice in many neuroimaging studies where the actual
+pixel values of the stimuli are not incorporated in the model at all;
+rather, one simply models the joint distribution of the class of the
+stimulus and the response.  On the other hand, it is worth noting
+that the model-based approach demonstrated in Kay et al., and others,
+do model the mapping $\mu$.
+
+In order to get an estimate of the misclassification rate, one
+has to \emph{hold out} a number $r_{test}$ of the repeats from each class.
+The classification rule is based on estimates of $\mu^{(i)}
+= \mu(x^{(i)})$, given by the MLE estimator on the training set,
+\[
+\hat{\mu}^{(i)} = \argmax_\mu \sum_{j=1}^{r_{train}} \log q(y^{(i, j)}|\mu).
+\]
+The MLE classification rule is therefore defined as
+\[
+\hat{X}_{MLE} = x^{(i)} \text{ where }i = \argmax_i  \log q(y^*|\mu).
+\]
+The sample test error is therefore
+\[
+\frac{1}{K r_{test}} \sum_{i=1}^K \sum_{j=r_{train}+1}^r I(\hat{x}_{MLE}^{(i,j)} \neq x^{(i)}).
+\] 
+As an estimate of $\text{MC}$, the sample test error has variability
+both from the randomness in $\tilde{Y}$ conditional on the sampled
+stimuli $x^{(i)}$, and from the randomness in the sampled stimuli
+drawn from $p(x)$.  Therefore, it makes sense to repeat the procedure
+for $m$ independent \emph{samples} of $(x^{(1)},\hdots, x^{(K)})$, and
+then averaging the resulting test errors.  Let the resulting average
+misclassification rate be denoted $\hat{\text{MC}}$.  In later
+sections we will study the discrepancy between $\hat{\text{MC}}$ and
+$\text{MC}$, and how to optimally choose the experimental parameters
+$K$ and $r$ given a total budget of $N = Kmr$ observations.
+
+
+
+\section{Theory}
+
+\subsection{Application of classical results}
+
+\begin{itemize}
+\item Using Fano's inequality
+\item Limitations
+\item Define $\tilde{X}$ to be the discretization of $X$
+\item Define $I(F)$ to be the mutual information $I(X;Y)$ when $(X, Y) \sim F$.
+\end{itemize}
+
+\subsection{Low-SNR model}
+
+We have seen in the previous section that the lower bound implied by
+Fano's inequality is quite inaccurate when (...).  Certainly, an exact
+relationship between $I(X;Y)$ and the Bayes error cannot hold since
+given two different joint distibutions $F$, $G$ with $I(F) = I(G)$,
+
+
+Assume that $X$ and $Y$ 
+
+\end{document}
+
+
+
+Since its beginnings, information theory has been primarily motivated by questions of \emph{engineering}
+
+Since the nervous system is a naturally ocurring information
+processing system, it should not be surprising that the concepts of
+information theory, such as entropy and mutual information, have been
+widely used to characterize properties of its subsystems.  Hence, it
+is frequently of interest to estimate the mutual information between
+the input and output of a neural subsystem, where the input could
+either be an external stimulus, or the output of another neural
+subsystem.  However, it is extremely nontrivial to estimate the mutual
+information between two high-dimensional random variables based on
+observed realizations.
+
+Experimental design can help with 
+
+
+
