@@ -310,15 +310,15 @@ I & \frac{1}{\sqrt{1 + d\sigma^2}}I \\
 
 For fixed $d$, we have $(X_i^{[d]}, Y_i^{[d]})$ drawn i.i.d. from a
 bivariate normal $N(0, \begin{bmatrix}1 & \rho\\\rho &
-1\end{bmatrix})$ where $\rho = (1 + d\sigma^2)^{-1}$.  Recalling that
+1\end{bmatrix})$ where $\rho = (1 + d\sigma^2)^{-\frac{1}{2}}$.  Recalling that
 the mutual information of the components of such a bivariate normal is
 $-\log(1 - \rho^2)/2$, we easily calculate:
 \[
 I(X^{[d]}, Y{[d]}) = \sum_{i=1}^d I(X_i^{[d]}, Y_i^{[d]}) = -\frac{d}{2}\log(1 - \frac{1}{1+d\sigma^2}).
 \]
-Hence
+Let $\iota$ denote the limit of the mutual information as $d \to \infty$: we have
 \begin{align*}
-\lim_{d \to \infty} I(X^{[d]}, Y^{[d]}) &=
+\iota &= \lim_{d \to \infty} I(X^{[d]}, Y^{[d]}) =
 \lim_{d \to \infty} -\frac{d}{2}\log(1 - \frac{1}{1+d\sigma^2}) 
 \\&= \lim_{d \to \infty}\frac{d}{2}\frac{1}{1+d\sigma^2} = \frac{1}{2\sigma^2}.
 \end{align*}
@@ -326,24 +326,31 @@ Meanwhile, $H(X^{[d]}) = H(Y^{[d]}) = \frac{d}{2}\log(2\pi)$, so it is clear tha
 
 A simple calculation shows that
 \[
-Z_i = \log p(Y^*|X^{(i)}) = -\frac{1}{2(1-\rho^2)}||Y^* -\rho X^{(i)} ||^2 + \text{ const.}
+Z_i = \log p(Y^*|X^{(i)}) = -\frac{1}{2(1-\rho^2)}||Y^* -\rho X^{(i)} ||^2 + C_\rho
 \]
 where the first term is a scaled chi-squared distribution with $d$
-degrees of freedom: the scale is -1/2 for $i = 1,\hdots, K-1$ and
-$-(1-\rho^2)/2$ for $i = 0$.  Since we can separate $Z_i$ into
+degrees of freedom: the scale is $-\frac{1}{2}\frac{1 + \rho^2}{1-\rho^2}$ for $i = 1,\hdots, K-1$ and
+$-1/2$ for $i = 0$.  
+The omitted constant is
+\[
+C_\rho = -\frac{1}{2}\log(2\pi(1-\rho)^2)
+\]
+Since we can separate $Z_i$ into
 independent, componentwise sums,
 \[
-Z_i = \text{const. } -\frac{1}{2(1-\rho^2)} \sum_{j=1}^d (Y^*_j - \rho X^{(i)}_j)^2,
+Z_i = C_\rho -\frac{1}{2(1-\rho^2)} \sum_{j=1}^d (Y^*_j - \rho X^{(i)}_j)^2,
 \]
 it follows from the multivariate central limit theorem that $Z_i$ are asymptotically jointly normal.
 
 A straightforward computation using multivariate normal moments (c.f. Muirhead) yields the limiting moments:
-\[
-\E[Z_*] = -\frac{d}{2} + \text{const., }\ \E[Z_i] = -\frac{d}{2}\frac{1 + \rho^2}{1-\rho^2} + \text{const.}
-\]
-\[
-\Var[Z_*] = \frac{d(1-\rho^2)^2}{2},\ \Var[Z_*, Z_i] = 
-\]
+\begin{align*}
+\E[Z_*] &= -\frac{d}{2} + C_\rho\\
+\E[Z_i] &= -\frac{d}{2}\frac{1 + \rho^2}{1-\rho^2} + C_\rho\\
+\Var[Z_*] &= \Cov(Z_*, Z_i) = \frac{d}{2}\\
+\Var[Z_i] &= \frac{d}{2}\frac{(1 + \rho^2)^2}{(1-\rho^2)^2}\\
+\Cov[Z_i, Z_j] &= \frac{d}{2}\frac{1}{(1-\rho^2)^2}
+\end{align*}
+for $i \neq j \neq 0$.
 Taking limits, the moments simplify to yield
 \[
 \begin{bmatrix}
@@ -351,39 +358,84 @@ Z_*\\
 Z_1\\
 \vdots\\
 Z_{K-1}
-\end{bmatrix} \sim N\left(
+\end{bmatrix} \stackrel{d}{\to} N\left(
 \begin{bmatrix}
--\frac{d}{2}\\
--\frac{d}{2} + \frac{1}{\sigma^2}\\
+C_0-\frac{d}{2}\\
+C_0-\frac{d}{2} - \frac{1}{\sigma^2}\\
 \vdots\\
--\frac{d}{2} + \frac{1}{\sigma^2}
+C_0-\frac{d}{2} - \frac{1}{\sigma^2}
 \end{bmatrix},
 \begin{bmatrix}
-d/2 & d/2 & \cdots & d(1-\rho^2)^2/2\\
-d/2 & & \cdots & 
+\frac{d}{2} & \frac{d}{2} & \cdots & \frac{d}{2}\\
+\frac{d}{2} & \frac{d}{2} + \frac{2}{\sigma^2} & \cdots & \frac{d}{2} + \frac{1}{\sigma^2}\\
+\vdots & \vdots & \ddots & \vdots\\
+\frac{d}{2} & \frac{d}{2} + \frac{1}{\sigma^2} & \cdots & \frac{d}{2} + \frac{2}{\sigma^2}
 \end{bmatrix}
-\right).
+\right),
 \]
-The misclassification probability is
+where $C_0 = -\log(2\pi)/2$.
+By the central limit theorem, the misclassification probability is
 \[
-\text{MC} = \Pr[Z_* > \min_{i=1}^{K-1} Z_i] = \Pr[N(\mu, \sigma^2) < M_{K-1}]
+\text{MC} = \Pr[Z_* < \max_{i=1}^{K-1} Z_i]
 \]
-where $\mu = ?$ and $\sigma^2 = ?$, and $M_{K-1}$ is the maximum of $K-1$ independent standard normal variates.
-Note that our setup automatically gives the averaged Bayes error rate!
-Taking the limit, we get $\mu = ? = \sqrt{I(X; Y)}$ and $\sigma^2 = 1$.
-Therefore, by inverting the function
-\[
-f_K(j) = \Pr[N(\sqrt{j}, 1) < M_{K-1}]
-\]
-we get
-\[
-I(X; Y) = f^{-1}_K(\text{MC}).
-\]
+for a random multivariate normal vector $(Z_*, Z_1, \hdots, Z_{K-1})$
+with the given mean and covariance matrix.  It is worth noting that
+the probability $\Pr[Z_* < \max_{i=1}^{K-1} Z_i]$ directly gives
+the \emph{averaged} Bayes error: indeed, in high dimensions it is not
+trivial to compute the Bayes error for fixed configuration.
+To obtain a simplified expression of this multivariate normal
+probability, we employ the following lemma.
 
-This very result holds under much more general conditions.  Our
-following proof only relaxes the condition that $X$ and $Y$ are
-jointly normal, still retaining the coordinatewise independence, and
-assuming some additional conditions for notational convenience.
+\textbf{Lemma. }
+\emph{
+Suppose $(Z_*, Z_1, \hdots, Z_{K-1})$ are jointly multivariate normal, with 
+$\E[Z_* - Z_1]= \alpha$, 
+$\Var(Z_*) = \beta$, 
+$\Cov(Z_*, Z_i) = \gamma$, 
+$\Var(Z_i)= \delta$, and $\Cov(Z_i, Z_j) = \epsilon$ for all $i, j = 1, \hdots,
+K-1$.  Then, letting
+\[
+\mu = \frac{\E[Z_* - Z_i]]}{\sqrt{\frac{1}{2}\Var(Z_i - Z_j)}} = \frac{\alpha}{\sqrt{\delta - \epsilon}},
+\]
+\[
+\nu^2 = \frac{\Cov(Z_* -Z_i, Z_* - Z_j)}{\frac{1}{2}\Var(Z_i - Z_j)} = \frac{\beta + \epsilon - 2\gamma}{\delta - \epsilon},
+\]
+we have
+\begin{align*}
+\Pr[Z_* < \max_{i=1}^{K-1}] &= \Pr[W < M_{K-1}]
+\\&= 1 - \int -\frac{1}{\sqrt{2\pi\nu^2}} e^{-\frac{(w-\mu)^2}{2\nu^2}} (1-\Phi(w))^{K-1} dw,
+\end{align*}
+where $W \sim N(\mu, \nu^2)$ and $M_{K-1}$ is the maximum of $K-1$
+independent standard normal variates, which are independent of $W$.
+}
+
+(See appendix for proof.)
+
+Applying the lemma, we compute
+\[
+\mu = \frac{\sigma^{-2}}{\sqrt{\sigma^{-2}}} = \frac{1}{\sigma},
+\]
+\[
+\nu^2 = \frac{\sigma^{-2}}{\sigma^{-2}} = 1,
+\]
+hence
+\[
+\text{MC} = \Pr[N(\frac{1}{\sigma}, 1) < M_{K-1}].
+\]
+Defining the function $f_K(\mu) = \Pr[N(\mu, 1) < M_{K-1}]$,
+we therefore get
+\[
+\text{MC} = f_K\left(\frac{1}{\sigma}\right) = f_K(\sqrt{2 \iota}),
+\]
+recalling that $\iota$ is the limiting value of the mutual information.
+
+Hence we obtain a fairly explicit relationship between average Bayes
+error $\text{MC}$ and limiting mutual information in the gaussian
+case.  In the following section, we see that the formula
+\[
+\text{MC} = f_K(\sqrt{2\iota})
+\]
+applies more generally!
 
 \subsubsection{Generalization}
 
@@ -431,39 +483,47 @@ Then observe that
 \\=& \int \log(b(x)) b(x) \E[1 + u(X, Y)|X = x] dx 
 \\&+ \int \log(b(y)) b(y) \E[1 + u(X, Y)|X = y] dx 
 \\&+ \E[\log(1 + u(X_1, Y_*))(1 + u(X_1, Y_1^*))]
-\\&= -H(X_1) - H(Y_1) + \E[\log(1 + u(X_1, Y_1^*))(1 + u(X_1, Y_1^*))]
+\\=& -H(X_1) - H(Y_1) + \E[\log(1 + u(X_1, Y_1^*))(1 + u(X_1, Y_1^*))]
 \end{align*}
 where here $X_1, Y_1^*$ are drawn from the product marginal $b(x)b(y)$.
 Hence
 \[
 I(X_1; Y_1) = \E[\log(1 + u(X_1, Y_1^*))(1 + u(X_1, Y_1^*))].
 \]
-
-Under appropriate conditions, we have
+Since $I(X_1; Y_1)$ is `small'--order $O(1/d)$, the function $u(x,y)$
+must become `small' in some sense as well, as $d$ grows.  Assume for
+the moment that we can justifiably replace $\log(1 + u(x,y))$ with its
+second-order Taylor expansion,
 \[
-I(X_i^{[d]}, Y_i^{[d]}) = \frac{d}{2}\Var(u_d(X_i^{(1)}, Y_i^{(2)})^2)
+\log(1 + u_d(x,y)) \approx u_d(x,y) - \frac{1}{2}u_d(x, y)^2.
 \]
-Note that $X_i^{(1)}$ and $Y_i^{(2)}$ are independent variables in the
-above variance, since they belong to different classes.  We will also
-use $(X_i, Y_i^*)$ to denote components of $X$ and $Y$ from different
-classes.
-
-Supposing that $\Var(u_d(X_i, Y_i^*))$ is $O(1/d)$, one might hope
-that $\E[|u_d(X_i, Y_i^*)^3|]$ are of even smaller order in $d$.  This
-turns out to be the property that we need to establish the asymptotic
-result rigorously.  However, in order to conclude such a result, it is
-necessary to assume a few regularity conditions.  For instance, it suffices to assume that
+Then we get
+\[
+I(X_1; Y_1) \approx \E\left[u_d(X_1,Y_1^*) + \frac{1}{2}u_d(X_1,Y_1)^2 - \frac{1}{2}u_d(X_1,Y_1^*)^3\right],
+\]
+which, since $\E[u_d(X_1,Y_1^*)] = 0$, and since we have been neglecting third-order terms,
+gives
+\[
+I(X_1;Y_1) \approx \frac{1}{2}\E[u_d(X_1,Y_1^*)^2] = \frac{1}{2}\Var[u_d(X_1,Y_1^*)].
+\]
+Many other similar identities occur in the following proof--all of
+which depend on neglecting higher-order terms of $u_d$.  But when can
+we justifiably ignore terms of the form $u_d(X_i, Y_i^*)^k$?  Ideally,
+we need $\E[|u_d(X_i, Y_i^*)|^k]$ uniformly bounded by $O(d^{-1
++ \epsilon})$ for $k \geq 3$.  However, in
+order to conclude such a result, it is necessary to assume a few
+regularity conditions.  For instance, it suffices to assume that
 \[
 \lim_{d \to \infty} \sup_{x, x'} D(b_d(y|x)|| b_d(y|x')) \to 0.
 \]
-where $D$ is the Kullback-Liebler divergence.  We are forced to admit
-that this condition even excludes the Gaussian example!  All the same,
-we will take for granted that under some reasonable conditions, the
-desired property of $u_d$ holds.
+where $D$ is the Kullback-Liebler divergence.  This condition is
+strong enough to even exclude the Gaussian example,
+but we mention it to give a concrete example of a sufficient condition
+for being able to neglect higher moments of $u_d(X_i, Y_i^*)$.
 
 Collected together, we will assume the following:
 \begin{itemize}
-\item[A1. ] For all $d$, $I(X^{[d]}, Y^{[d]}) = c$.
+\item[A1. ] For all $d$, $I(X^{[d]}, Y^{[d]}) = \iota$.
 \item[A2. ] For all $d, d'$ and $i \leq d$, $j \leq d'$, we have $X_i^{[d]}$ is equal to $X_j^{[d']}$ in distribution,
 $Y_i^{[d]}$ is equal to $Y_j^{[d']}$ in distribution.  Let $b(x)$
 denote the marginal distribution of $X_j$ and $b(y)$ denote the
@@ -472,7 +532,7 @@ marginal distribution of $Y_j$.
 \item[A4. ] For each $d = 1,2,\hdots$, the components $(X_i^{[d]}, Y_i^{[d]})$ are drawn i.i.d. from a bivariate density
 $b_d(x, y)$ for $i = 1,\hdots, d$.
 \item[A6. ] Defining $u_d(x, y) = \frac{b_d(x, y)}{b(x)b(y)}$,
-we have $\E[|u_d(X_i, Y_i^*)^3|] = O(d^{-1 + \epsilon})$, where
+we have $\E[|u_d(X_i, Y_i^*)^3|] = O(d^{-1 - \epsilon})$, where
 $\epsilon > 0$.
 \end{itemize}
 
@@ -482,50 +542,69 @@ Let $X^{[d]}, Y^{[d]}$ be a sequence of distributions satisfying
 assumptions A1-A6.  Then, as $d \to \infty$, the misclassification
 probability
 \[
-\text{MC} = \Pr[Z_* > ...]
+\text{MC} = \Pr[Z_* < \max_{i=1}^{K-1} Z_i]
 \]
 satisfies
 \[
-\lim_{d \to \infty} \text{MC} = f_K(I) = \Pr[N(\sqrt{I}, 1) > M_{K-1}].
+\lim_{d \to \infty} \text{MC} = f_K(\sqrt{2\iota}),
 \]
+where $f_K$ is defined in Lemma.
 }
 
-\emph{Remark.}
-It follows from the assumptions that $H(X^{[d]}, Y^{[d]}) = O(d)$ while $I(X^{[d]};
-Y^{[d]})$ is fixed.  These assumptions are sufficient for asymptotic
-normality of $Z_i$, but asymptotic normality also follows from much
-more general conditions, as we will discuss.
-
 \textbf{Proof. }
-Let $b(x)$ and $b(y)$ denote the marginal distributions of the bivariate density $b(x, y)$.
-Note that due to the componentwise i.i.d. assumptions,
+As mentioned in the preceding discussion, assumption A6 allows us to
+find some $\epsilon > 0$, allowing us to write
 \[
-I(X^{[d]}, Y^{[d]}) = \sum_{i=1}^d I(X_i, Y_i) = d I(X_1,Y_1)
+I(X_1; Y_1) = \frac{1}{2}\Var[u(X_1,Y_1^*)] + O(d^{-1 - \epsilon}).
 \]
+Furthermore, we conclude that
+\[
+\Cov(u_d(X_i^{(j)}, Y_i^*)^2, u_d(X_i^{(k)}, Y_i^*)) = O(d^{-1-\epsilon})
+\]
+\[
+\Cov(u_d(X_i^{(j)}, Y_i^*), u_d(X_i^{(k)}, Y_i^*)) = O(d^{-1-\epsilon})
+\]
+for all $j, k = 0,\hdots, K-1$.
+And for $i \neq j \neq 0$, we have
+\begin{align*}
+\Cov(u_d(X_1^{(i)}, Y_1^*), u_d(X_1^{(j)}, Y_1^*)) 
+=& \Cov(\E[u_d(X_1^{(i)}, Y_1^*)|Y_1^*], \E[u_d(X_1^{(j)}, Y_1^*)|Y_1^*]) 
+\\&+ \E[\Cov(u_d(X_1^{(i)}, Y_1^*), u_d(X_1^{(j)}, Y_1^*))|Y_1^*]
+\\&= \Cov(0, 0) + \E[0] = 0
+\end{align*}
+due to the identity $\E[u_d(X_1,y)|y] = 0$, and conditional independence, respectively.
+By a similar argument,
+\[
+\Cov(u_d(X_1^{(i)}, Y_1^*), u_d(X_1^*, Y_1^*))  = 0.
+\]
+Noting that $\E[u_d(X_1,Y_1^*)^2] = 2\iota/d$,
+we can compute
+\begin{align*}
+\E[u_d(X_1^*, Y_1^*)] &= \int u_d(x, y)b(x,y) dx dy
+\\&= \int u_d(x, y)(1 + u_d(x, y))b(x)b(y) dx dy
+\\&= \E[u_d(X_1, Y_1^*)] + \E[u_d(X_1, Y_1^*)^2]
+\\&= 0 + 2\iota/d = 2\iota/d
+\end{align*}
+and
+\begin{align*}
+\E[u_d(X_1^*, Y_1^*)^2] &= \int u_d(x, y)^2(1 + u_d(x, y))b(x)b(y) dx dy
+\\&= \E[u_d(X_1, Y_1^*)^2] + \E[u_d(X_1, Y_1^*)^3]
+\\&= 2\iota/d + O(d^{-1-\epsilon}),
+\end{align*}
 hence
 \[
-I(X_1,Y_1) = c/d.
+\Var(u_d(X_1^*, Y_1^*)) = \frac{2\iota}{d} - \frac{4\iota^2}{d^2} + O(d^{-1-\epsilon}) = 
+\frac{2\iota}{d}+ O(d^{-1-\epsilon})
 \]
 
 
-
-But, since $I(X_1; Y_1) = O(1/d)$, it follows that $u(X_1, Y_1)$ is
-also of order $O(1/d)$ in probability.
-This allows us to use the approximatation
-\[
-\log(1 + u(x, y)) = u(x, y) - \frac{1}{2}u(x,y)^2 + O(d^{-3}).
-\]
-Hence,
-\[
-I(X_1; Y_1) = \E[u(X_1, Y_1^*) + u(X_1, Y_1^*)^2/2] + O(d^{-3}) = \frac{1}{2}\Var[u(X_1,Y_1^*)].
-\]
-
-Due to componentwise independence, the scores $Z_i = \log p(Y^*|X^{(i)}$ converge in distribution to a multivariate normal.
-Now let us compute the moments of $Z_i$:
+Due to componentwise independence, the scores $Z_i = \log
+p(Y^*|X^{(i)}$ converge in distribution to a multivariate normal.  Now
+let us compute the moments of $Z_i$:
 \begin{align*}
 \E[Z_1] &= d\E[\log b(X_1, Y_1^*) - \log b(X_1)]
-\\&= d \E[\log b(Y_1^*) + u(X_1,Y_1^*) - u(X_1, Y_1^*)^2/2]
-\\&= -H(Y) - I(X; Y)
+\\&= d \E[\log b(Y_1^*) + u(X_1,Y_1^*) - u(X_1, Y_1^*)^2/2] + O(d^{-\epsilon})
+\\&= -H(Y) - I(X; Y) + O(d^{-\epsilon}).
 \end{align*}
 Meanwhile, we know that
 \[
@@ -533,40 +612,40 @@ Meanwhile, we know that
 \]
 hence
 \[
-\E[Z_* - Z_i] = 2 I(X; Y).
+\E[Z_* - Z_i] = 2 I(X; Y) + O(d^{-\epsilon}) = 2\iota + O(d^{-\epsilon}).
 \]
-
-\end{document}
-
-Continuing, let $\alpha = \Var(\log b(Y_1))$ and $\beta = \Cov(\log b(Y_1^*), u(X_1, Y_1^*) - u(X, Y_1)^*)^2/2)$.
-Then
+We get
 \begin{align*}
-\Cov(Z_1, Z_2) &= \E[\Cov(Z_1, Z_2|Y^*)] + \Var\E(Z_1|Y^*)
-\\&= \Var\E(Z_1|Y^*) = \frac{d}{4} \Var(\E[u(X_1, Y_1^*)^2|Y_1^*])
+\Var(Z_i - Z_j) &= d\Var(\log(b_d(Y_1^*|X_1^{(i)})) - \log(b_d(Y_1^*|X_1^{(j)})))
+\\&= d\Var(\log(b_d(X_1^{(i)}, Y_1^*)) - \log(b_d(X_1^{(j)}, Y_1^*) - \log b(X_1^{(i)}) + \log b(X_1^{(j)})))
+\\&= d\Var(u_d(X_1^{(i)}, Y_1^*) - u_d(X_1^{(j)}, Y_1^*) - u_d(X_1^{(i)}, Y_1^*)^2/2 + u_d(X_1^{(j)}, Y_1^*)^2/2)
+\\&= d\Var(u_d(X_1^{(i)}, Y_1^*) - u_d(X_1^{(j)}, Y_1^*)) + O(d^{-\epsilon})
+\\&= 2d\Var(u_d(X_1^{(i)}, Y_1^*)) + O(d^{-\epsilon}) = 4\iota+ O(d^{-\epsilon}).
 \end{align*}
 
+Looking ahead to the application of the Lemma, we can already compute
+\[
+\mu = \lim_{d \to \infty} \frac{\E[Z_* - Z_i]}{\sqrt{\frac{1}{2} \Var(Z_i - Z_j)}} = \sqrt{2\iota}.
+\]
 
-since $Z_1$ and $Z_2$ are conditionally independent given $Y^*$.
+It remains to compute
+\begin{align*}
+\Cov(Z_* - Z_i, Z_* - Z_j) &= d\Cov(u_d(X_1^*, Y_1^*) - u_d(X_1^{(i)}, Y_1^*), 
+u_d(X_1^*, Y_1^*) - u_d(X_1^{(j)}, Y_1^*)) + O(d^{-\epsilon})
+\\&= d\Var(u_d(X_1^*, Y_1^*)) = 2\iota + O(d^{-1-\epsilon})
+\end{align*}
 
+We conclude that
+\[
+\nu^2 = \lim_{d \to \infty} \frac{\Cov(Z_* - Z_i, Z_* - Z_j)}{\frac{1}{2}\Var(Z-i - Z_j)} = \frac{2\iota}{2\iota} = 1.
+\]
+
+Hence, the desired result follows from the asymptotic normality of
+$(Z_*, Z_1,\hdots, Z_{K-1})$ and Lemma. $\Box$
 
 \end{document}
 
 
-
-Since its beginnings, information theory has been primarily motivated by questions of \emph{engineering}
-
-Since the nervous system is a naturally ocurring information
-processing system, it should not be surprising that the concepts of
-information theory, such as entropy and mutual information, have been
-widely used to characterize properties of its subsystems.  Hence, it
-is frequently of interest to estimate the mutual information between
-the input and output of a neural subsystem, where the input could
-either be an external stimulus, or the output of another neural
-subsystem.  However, it is extremely nontrivial to estimate the mutual
-information between two high-dimensional random variables based on
-observed realizations.
-
-Experimental design can help with 
 
 
 
