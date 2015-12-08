@@ -257,9 +257,143 @@ We have seen in the previous section that the lower bound implied by
 Fano's inequality is quite inaccurate when (...).  Certainly, an exact
 relationship between $I(X;Y)$ and the Bayes error cannot hold since
 given two different joint distibutions $F$, $G$ with $I(F) = I(G)$,
+the $K$-class misclassification rate $\text{MC}$ may be quite
+different between $F$ and $G$.  Yet, we observe that under the two
+conditions that (i) the dimensionality of $(X,Y)$ is high, and (ii)
+the signal-to-noise ratio is low, in the sense that $H(X, Y) >>
+I(X;Y)$, the relationship between information and misclassification
+rate begins to cohere.
 
+\begin{itemize}
+\item Given a counterexample (gaussian)
+\item Plot of $\text{MC}$ depending on $K$.
+\item Examples of low SNR regime.  Varying $I(X;Y)$ and also dimensionality 
+\item In all plots, compare with Fano inequality
+\item As we can see, low SNR regime gets more accurate than Fano
+\end{itemize}
 
-Assume that $X$ and $Y$ 
+Assume that $X$ and $Y$ have joint density $p(x, y)$ with respect to
+Lesbegue measure on $\mathbb{R}^{2d}$.  Draw i.i.d. $(X^{(i)},
+Y^{(i)})$ from the joint distribution, for $i = 0,\hdots, K-1$, and let
+$(X^*, Y^*)$ denote $(X^{(0)}, Y^{(0)})$.  Define
+\[
+Z_i = \log p(Y^*|X_i) = \log p(Y^*, X_i) - \log p(X_i).
+\]
+The Bayes rule is therefore
+\[
+\hat{X} = x^{(i)} \text{ where }i = \argmax_i Z_i
+\]
+
+It turns out the reason why the dimensionality and signal-to-noise
+ratio play a role is because those conditions ensure that the vector
+$Z = (Z_*, Z_1,\hdots, Z_{K-1})$ has an approximately normal
+distribution.  However, to formally prove this fact, we require an
+asymptotic framework.
+
+\subsubsection{Asymptotics}
+
+In order to establish asympotic normality, we consider a limiting
+sequence of problems of increasing dimensionality $d$.  Let $(X^{[d]},
+Y^{[d]})$ denote the joint distributions in the sequence, for
+$d \in \{1, 2, \hdots\}.$ 
+
+The prototypical example of our setup is the \emph{hierarchical normal mixture model.}
+Let
+\[
+\begin{bmatrix}
+X^{[d]}\\Y^{[d]}
+\end{bmatrix} \sim 
+N\left(
+0, \begin{bmatrix}
+I & \frac{1}{\sqrt{1 + d\sigma^2}}I \\
+\frac{1}{\sqrt{1 + d\sigma^2}} I & I
+\end{bmatrix}.
+\right)
+\]
+
+We have $I(X;Y) = ?$.
+
+Then
+\[
+Z_i = \text{blah blah blah}
+\]
+and it follows that $Z_i$ are asymptotically normal, with
+\[
+\begin{bmatrix}
+Z_*\\
+Z_1\\
+\vdots\\
+Z_{K-1}
+\end{bmatrix} \sim ?
+\]
+The misclassification probability is
+\[
+\text{MC} = \Pr[Z_* > \min_{i=1}^{K-1} Z_i] = \Pr[N(\mu, \sigma^2) < M_{K-1}]
+\]
+where $\mu = ?$ and $\sigma^2 = ?$, and $M_{K-1}$ is the maximum of $K-1$ independent standard normal variates.
+Note that our setup automatically gives the averaged Bayes error rate!
+Taking the limit, we get $\mu = ? = \sqrt{I(X; Y)}$ and $\sigma^2 = 1$.
+Therefore, by inverting the function
+\[
+f_K(j) = \Pr[N(\sqrt{j}, 1) < M_{K-1}]
+\]
+we get
+\[
+I(X; Y) = f^{-1}_K(\text{MC}).
+\]
+
+This very result holds under much more general conditions.  Our
+following proof only relaxes the condition that $X$ and $Y$ are
+jointly normal, still retaining the coordinatewise independence, and
+assuming some additional conditions for notational convenience.
+
+\textbf{Theorem. }  
+\emph{
+Let $X^{[d]}, Y^{[d]}$ be a sequence of distributions satisfying:
+\begin{itemize}
+\item For each $d = 1,2,\hdots$ has an associated bivariate distribution $b_d(x,
+y)$ and the components $(X_i^{[d]}, Y_i^{[d]})$ are drawn iid from
+$b(x, y)$ for $i = 1,\hdots, d$.
+\item $I(X^{[d]}, Y^{[d]}) = c$ is constant
+\item $H(X_i^{[d]})$ and $H(Y_i^{[d]})$ are constant.
+\end{itemize}
+Then, as $d \to \infty$, the misclassification probability
+\[
+\text{MC} = \Pr[Z_* > ...]
+\]
+satisfies
+\[
+\lim_{d \to \infty} \text{MC} = f_K(I) = \Pr[N(\sqrt{I}, 1) > M_{K-1}].
+\]
+}
+
+\emph{Remark.}
+It follows from the assumptions that $H(X^{[d]}, Y^{[d]}) = O(d)$ while $I(X^{[d]};
+Y^{[d]})$ is fixed.  These assumptions are sufficient for asymptotic
+normality of $Z_i$, but asymptotic normality also follows from much
+more general conditions, as we will discuss.
+
+\textbf{Proof. }
+Let $b(x)$ and $b(y)$ denote the marginal distributions of the bivariate density $b(x, y)$.
+Note that due to the componentwise i.i.d. assumptions,
+\[
+I(X^{[d]}, Y^{[d]}) = \sum_{i=1}^d I(X_i, Y_i) = d I(X_1,Y_1)
+\]
+hence
+\[
+I(X_1,Y_1) = c/d.
+\]
+
+Now define $u(x, y)$ by
+\[
+b(x, y) = b(x)b(y)(1 + u(x,y)).
+\]
+It follows that
+\[
+0 = \E[u(X, Y)|X] = \E[u(X, Y)|Y].
+\]
+
+Meanwhile, 
 
 \end{document}
 
