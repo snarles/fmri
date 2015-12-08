@@ -57,11 +57,11 @@ model is mildly misspecified.
 
 \section{Introduction}
 
-In neuroscience, one is often interested in measuring depending
+In neuroscience, one is often interested in measuring dependence
 between the input of a neural subsystem, $X$, and its output, or
-measured output, $Y$.  A variety of measures of dependence--including
+measured output, $Y$.  A variety of measures of dependence--such
 as correlation, mutual information, and prediction error, tend to be
-used in different settings because of their respective tradeoffs
+used in different settings due to differing tradeoffs
 between interpretability, flexibility, and high-dimensional
 scalability.  Correlation is highly interpretable and scalable, but is
 inflexible: it fails to capture many forms of nonlinear dependence.
@@ -81,8 +81,8 @@ error has the disadvantage of the arbitrariness of the loss function.
 Even when considering misclassification error, one often faces the
 problem of how to partition a high-dimensional space into discrete
 classes.  Furthermore, the ideal definition of prediction error is
-the \emph{Bayes error}: the prediction error of the optimal rule, but
-obtaining the Bayes error depends on being able to learn the correct
+the \emph{Bayes error}, the prediction error of the optimal rule, but
+obtaining the Bayes error depends on having the correct
 model, as well as having infinite data to fit the model.  That said,
 in many problems it may be more feasible to estimate the Bayes error
 than to obtain a fully nonparametric estimate of the mutual
@@ -114,11 +114,7 @@ relationship between the Bayes misclassification probability and the
 mutual information.  Furthermore, our framework allows us to
 characterize the discrepancy between the observed misclassification
 rate, and the Bayes error, which allows us to derive that the sample
-complexity of estimating the mutual information: $|\hat{I}(X,Y)-
-I(X;Y)|$ is of the order $O(1/N)$ in the number of combined training
-and testing observations.  Our approach depends on an assumption of
-restricted dependence between components $(X_i, Y_i)$ and $(X_j,
-Y_j)$, but the assumption holds in many cases of practical interest.
+complexity of estimating the mutual information.
 
 \subsection{Motivation}
 
@@ -162,14 +158,14 @@ $K \to \infty$.  Though, as noted by Gastpar et. al., for finite $K$,
 $I(\tilde{X}; \tilde{Y})$ tends to result in an underestimate of $I(X;
 Y)$. This motivates their antropic correction method for estimating
 $I(X;Y)$, which can be applied directly in this setting supposing that
-one has a method for estimating the conditional entropies $h(Y|X =
+one has a method for estimating the conditional entropies $H(Y|X =
 x^{(i)})$.
 
 In contrast, we will consider the misclassification errror as a means to
 estimate the mutual information.  Letting $p(x,y)$ denote the density of $(X,Y)$,
 the Bayes rule for predicting $\tilde{X}$ from $\tilde{Y} = y^*$ is given by
 \[
-\hat{X}_{Bayes} = = \argmax_{x = x^{(1)}, \hdots, x^{(k)}} \log p(y|x)
+\hat{X}_{Bayes} = \argmax_{x = x^{(1)}, \hdots, x^{(k)}} \log p(y^*|x)
 \]
 where $p(y|x) = p(x,y)/p(x)$.  The Bayes error is
 \[
@@ -221,7 +217,7 @@ The classification rule is based on estimates of $\mu^{(i)}
 \]
 The MLE classification rule is therefore defined as
 \[
-\hat{X}_{MLE} = x^{(i)} \text{ where }i = \argmax_i  \log q(y^*|\mu).
+\hat{X}_{MLE} = x^{(i)} \text{ where }i = \argmax_i  \log q(y^*|\hat{\mu}^{(i)}).
 \]
 The sample test error is therefore
 \[
@@ -265,7 +261,7 @@ I(X;Y)$, the relationship between information and misclassification
 rate begins to cohere.
 
 \begin{itemize}
-\item Given a counterexample (gaussian)
+\item Give a counterexample (gaussian)
 \item Plot of $\text{MC}$ depending on $K$.
 \item Examples of low SNR regime.  Varying $I(X;Y)$ and also dimensionality 
 \item In all plots, compare with Fano inequality
@@ -290,14 +286,13 @@ $Z = (Z_*, Z_1,\hdots, Z_{K-1})$ has an approximately normal
 distribution.  However, to formally prove this fact, we require an
 asymptotic framework.
 
-\subsubsection{Asymptotics}
+We consider a limiting sequence of problems of increasing
+dimensionality $d$.  Let $(X^{[d]}, Y^{[d]})$ denote the joint
+distributions in the sequence, for $d \in \{1, 2, \hdots\}.$ As $d$
+increases, the ratio of the information $I(X^{[d]}; Y^{[d]})$ and the
+joint entropy $H(X^{[d]}, Y^{[d]})$ decreases.
 
-In order to establish asympotic normality, we consider a limiting
-sequence of problems of increasing dimensionality $d$.  Let $(X^{[d]},
-Y^{[d]})$ denote the joint distributions in the sequence, for
-$d \in \{1, 2, \hdots\}.$ As $d$ increases, the ratio of the
-information $I(X^{[d]}; Y^{[d]})$ and the joint entropy $H(X^{[d]},
-Y^{[d]})$ decreases.
+\subsubsection{Gaussian Example}
 
 Before giving a general result, we illustrate this aymptotic regime by
 the following gaussian example.  Let
@@ -390,17 +385,78 @@ following proof only relaxes the condition that $X$ and $Y$ are
 jointly normal, still retaining the coordinatewise independence, and
 assuming some additional conditions for notational convenience.
 
+\subsubsection{Generalization}
+
+How far can we generalize the previous example?  For starters, we can
+allow $(X_i^{[d]}, Y_i^{[d]})$ to have a non-Gaussian bivariate
+distribution, with a density with respect to Lesbegue measure.
+However, we still require that $(X_i^{[d]}, Y_i^{[d]})$ are i.i.d. for
+$i = 1,\hdots, d$.  We let $b_d(x, y)$ denote the bivariate joint
+density of $(X_i^{[d]}, Y_i^{[d]})$, and $b(x)$ and $b(y)$ to denote
+the marginal distributions of $b_d(x, y)$, which are also assumed to
+be fixed.  The independence allows us to decompose the mutual
+information
+\[
+I(X^{[d]}, Y^{[d]}) = \sum_{i=1}^d I(X_i^{[d]}, Y_i^{[d]}) = d I(X_i^{[d]}. Y_i^{[d]}).
+\]
+Given some additional conditions on the marginal bivariate
+distributions $b_d(x, y)$, we can conclude joint asymptotic normality
+of all of the quantities $\log p(X^{(i)}, Y^{(j)}$ for $i, j =
+1,\hdots, K$.
+
+Now consider what happens if the total mutual information stays fixed,
+$I(X^{[d]}. Y^{[d]}) = c$, while the dimensionality increases.  Since
+$I(X_i^{[d]}. Y_i^{[d]}) = c/d$, and since the marginals are fixed,
+we conclude that the density functions $b_d(x, y)$ are converging
+to the product $b(x) b(y)$.  Now if we define
+\[
+u_d(x, y) = \frac{b_d(x, y)}{b(x) b(y)} - 1,
+\]
+we can say that $u_d(x, y) \to 0$ as $d \to \infty$.
+
+It turns out that in such a limit, the moments of $u_d(X_i^{(j)},
+Y_i^{(k)})$ determines many of the information theoretic-quantities of
+interest.  From the definition, we have $\E[u_d(X_i^{(j)}, Y_i^{(k)})]
+= 0$.  Under appropriate conditions, we have
+\[
+I(X_i^{[d]}, Y_i^{[d]}) = \frac{d}{2}\Var(u_d(X_i^{(1)}, Y_i^{(2)})^2)
+\]
+Note that $X_i^{(1)}$ and $Y_i^{(2)}$ are independent variables in the
+above variance, since they belong to different classes.  We will also
+use $(X_i, Y_i^*)$ to denote components of $X$ and $Y$ from different
+classes.
+
+Supposing that $\Var(u_d(X_i, Y_i^*))$ is $O(1/d)$, one might hope
+that $\E[u_d(X_i, Y_i^*)^k]$ are of even smaller order in $d$.  This
+turns out to be the property that we need to establish the asymptotic
+result rigorously.  However, in order to conclude such a result, it is
+necessary to assume a few regularity conditions.  For instance, it suffices to assume that
+\[
+\lim_{d \to \infty} \sup_{x, x'} D(b_d(y|x)|| b_d(y|x')) \to 0.
+\]
+where $D$ is the Kullback-Liebler divergence.  Yet, this condition even
+excludes the Gaussian example!
+
+Collected together, we will assume the following:
+\begin{itemize}
+\item[A1. ] For all $d$, $I(X^{[d]}, Y^{[d]}) = c$.
+\item[A2. ] For all $d, d'$ and $i \leq d$, $j \leq d'$, we have $X_i^{[d]}$ is equal to $X_j^{[d']}$ in distribution,
+$Y_i^{[d]}$ is equal to $Y_j^{[d']}$ in distribution.  Let $b(x)$
+denote the marginal distribution of $X_j$ and $b(y)$ denote the
+marginal distribution of $Y_j$.
+\item[A3. ] Assume $X_j$ and $Y_j$ have finite third moments.
+\item[A4. ] For each $d = 1,2,\hdots$, the components $(X_i^{[d]}, Y_i^{[d]})$ are drawn i.i.d. from a bivariate density
+$b_d(x, y)$ for $i = 1,\hdots, d$.
+\item[A6. ] Defining $u_d(x, y) = \frac{b_d(x, y)}{b(x)b(y)}$,
+we have $\E[|u_d(X_i, Y_i^*)^3|] = O(d^{-1 + \epsilon})$, where
+$\epsilon > 0$.
+\end{itemize}
+
 \textbf{Theorem. }  
 \emph{
-Let $X^{[d]}, Y^{[d]}$ be a sequence of distributions satisfying:
-\begin{itemize}
-\item For each $d = 1,2,\hdots$ has an associated bivariate distribution $b_d(x,
-y)$ and the components $(X_i^{[d]}, Y_i^{[d]})$ are drawn iid from
-$b_d(x, y)$ for $i = 1,\hdots, d$, where the distributions $b_d$ have uniformly bounded third moments.
-\item $I(X^{[d]}, Y^{[d]}) = c$ is constant
-\item $H(X_i^{[d]})$ and $H(Y_i^{[d]})$ are constant.
-\end{itemize}
-Then, as $d \to \infty$, the misclassification probability
+Let $X^{[d]}, Y^{[d]}$ be a sequence of distributions satisfying
+assumptions A1-A6.  Then, as $d \to \infty$, the misclassification
+probability
 \[
 \text{MC} = \Pr[Z_* > ...]
 \]
