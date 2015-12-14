@@ -81,6 +81,9 @@
 \usepackage{multirow}
 \usepackage{adjustbox}
 \usepackage{array}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows, positioning, fit}
+\usepackage[latin1]{inputenc}
 \newcommand{\xmark}{\textcolor{red}{\text{\sffamily X}}}
 \newcommand{\cmark}{\textcolor{green}{\checkmark}}
 \newcommand{\tr}{\text{tr}}
@@ -90,6 +93,13 @@
 \newcommand{\argmin}{\text{argmin}}
 \newcommand{\Cov}{\text{Cov}}
 \newcommand{\Vol}{\text{Vol}}
+\newcommand{\bx}{\boldsymbol{x}}
+\newcommand{\by}{\boldsymbol{y}}
+\newcommand{\bX}{\boldsymbol{X}}
+\newcommand{\bY}{\boldsymbol{Y}}
+
+%tikz stufff
+
 
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
@@ -114,19 +124,18 @@
 \frametitle{Overview}
 \noindent\emph{Background and motivation}
 \begin{itemize}
-\item Information theory and network information theory
-\item Entropy, conditional entropy, and mutual information
-\item Studying the neural code
-\item Functional fMRI study of face recognition
+\item Review of information theory
+\item Study of face recognition
 \end{itemize}
-\noindent\emph{Questions}
+\noindent\emph{Problems}
 \begin{itemize}
-\item Can random stimuli samples be used to estimate mutual information?
-\item Can we obtain mutual information from the Bayes error?
-\item Can we obtain mutual information from observed classification rates?
+\item Estimating mutual information between stimulus and response.
+\item Can we use machine learning methods to estimate MI?
 \end{itemize}
 \noindent\emph{Methods}
 \begin{itemize}
+\item Setup
+\item Gaussian example
 \item Using Fano's inequality
 \item Using low-SNR universality
 \end{itemize}
@@ -139,13 +148,16 @@
 \begin{frame}
 \frametitle{Information theory} 
 The complexity of modern communications system is made possible by Shannon's theory of information.
+\vspace{0.4in}
 \begin{center}
 \begin{tabular}{cc}
 \includegraphics[scale =0.3]{communication-entry.png} &
 \includegraphics[scale =  0.2]{relay_channel.jpg}
 \end{tabular}
 \end{center}
-A information-processing network can be analyzed in terms of interactions between its components (which are viewed as random variables.)
+\vspace{0.4in}
+A information-processing network can be analyzed in terms of interactions between its components (which are viewed as random variables.
+\tiny{Image credit CartouCHe, Aziz et al. 2011}
 \note{ Modern communication systems depend
   on a vast network of signal transmitters and receivers.  All of this
   sophisticated engineering is made possible by information theory, a
@@ -159,20 +171,18 @@ A information-processing network can be analyzed in terms of interactions betwee
   how much information is contained in each component, and how the
   information is transmitted or lost as it passes through the network.
 }
-\tiny{Image credit CartouCHe, Aziz et al. 2011}
 \end{frame}
 
 \begin{frame}
 \frametitle{Entropy and mutual information}
-Let $X$ and $Y$ be real-valued random variables with a joint density $p(x, y)$ with respect to a measure $\mu$, and marginals $p_X(x)$ wrt $\mu_X$ and $p_Y(y)$ wrt $\mu_Y$.
-The entropy, conditional entropy, and mutual information are nonlinear measures of spread, conditional spread, and dependence.
+$X$ and $Y$ have joint density $p(x, y)$ with respect to $\mu$.
 
 \vspace{0.5in}
 
 \begin{tabular}{c|c|c}
 \hline
 Quantity & Definition & Linear analogue\\\hline
-Entropy & $H(X) = - \int \log p(x) p(x) \mu_X(dx)$ & $\text{Var}(X)$\\
+Entropy & $H(X) = - \int (\log p(x)) p(x) \mu_X(dx)$ & $\text{Var}(X)$\\
 Conditional entropy & $H(X|Y) = \E[H(X|Y)]$ & $\E[\text{Var}(X|Y)]$\\
 Mutual information & $I(X;Y) = H(X) - H(X|Y)$ & $\text{Cor}(X, Y)$\\\hline
 \end{tabular}
@@ -212,7 +222,7 @@ The brain is the \emph{most complex} information processing system we know!
 \begin{tabular}{cc}
 \includegraphics[scale = 0.3, clip =true, trim=0 0 0 2.5in]{Brain_network.png} &
 \includegraphics[scale = 0.1]{maxresdefault.jpg}\\
-\small{Neural network inferred from data} & \small{Human retinal cells}\\
+\small{Neural network inferred from data} & \small{Organization of human retina}\\
 \small{(Hong et al.)} & 
 \end{tabular}
 \end{center}
@@ -222,6 +232,58 @@ How do neurons encode, process, and decode sensory information?
 \tiny{Image credit: Hong et al., Interactive Biology}
 \end{frame}
 
+
+\begin{frame}
+\frametitle{Studying the neural code: data}
+\begin{center}
+\includegraphics[scale = 0.2]{quiroga.png}
+\end{center}
+\begin{itemize}
+\item  Let $\mathcal{X}$ define a class of stimuli (faces, objects, sounds.)
+\item Stimulus $\bX = (X_1,\hdots, X_p)$, where $X_i$ are features (e.g. pixels.)
+\item Present $\bX$ to the subject, record the subject's brain activity using EEG, MEG, fMRI, or calcium imaging.
+\item Recorded response $\bY = (Y_1,\hdots, Y_q)$, where $Y_i$ are single-cell responses, or recorded activities in different brain region. 
+\end{itemize}
+\tiny{Image credits: Quiroga et al. (2009)}
+\end{frame}
+
+\begin{frame}
+\frametitle{Experimental setup}
+\begin{itemize}
+\item How to make inferences about the population of stimuli in
+  $\mathcal{X}$ using finitely many examples?
+\item \emph{Randomization.}  Select $\bX^{(1)},\hdots,
+  \bX^{(K)}$ randomly from some distribution $p(\bx)$ (e.g. an image
+  database).  Record $r$ responses from each stimulus.
+\end{itemize}
+\begin{center}
+\begin{tikzpicture}[node distance = 2mm and 20mm]
+\tikzstyle{main} = [circle, minimum size = 12mm, thick, draw = black!80]
+\tikzstyle{main0} = [circle, minimum size = 2mm, thick, draw = white!100]
+\tikzstyle{param} = [rectangle, minimum size = 13mm, thick, draw = black!80]
+\tikzstyle{connect} = [-latex, thick]
+\tikzstyle{box} = [rectangle, draw = black!100]
+  \node[param, fill = black!50] (px) {$p(\bx)$};
+  \node[main, right=of px] (x2) {\small{$\bX^{(2)}$}};
+  \node[main, above=of x2] (x1) {\small{$\bX^{(1)}$}};
+  \node[main0, below=of x2] (xdots) {$\vdots$};
+  \node[main, below=of xdots] (x3) {\small{$\bX^{(K)}$}};
+  \node[main, right=of x1] (y11) {\small{$\bY^{(1,1)}$}};
+  \node[main, right=of x2] (y21) {\small{$\bY^{(2,j)}$}};
+  \node[main, right=of x3] (y31) {\small{$\bY^{(K,j)}$}};
+\begin{scope}[node distance = 3mm and 2mm]
+  \node[main0, right=of y11] (y12) {$\cdots$};
+  \node[main0, right=of y21] (y22) {$\cdots$};
+  \node[main0, right=of y31] (y32) {$\cdots$};
+  \node[main, right=of y12] (y13) {\small{$\bY^{(1,r)}$}};
+  \node[main, right=of y22] (y23) {\small{$\bY^{(2,r)}$}};
+  \node[main, right=of y32] (y33) {\small{$\bY^{(K,r)}$}};
+\end{scope}
+\path (px) edge [connect] (x1) (px) edge [connect] (x2) (px) edge [connect] (x3)
+      (x1) edge [connect] (y11) (x2) edge [connect] (y21) (x3) edge [connect] (y31);
+\end{tikzpicture}
+\end{center}
+\end{frame}
 
 \begin{frame}
 \frametitle{References}
@@ -237,6 +299,14 @@ How do neurons encode, process, and decode sensory information?
 
 
 
+\begin{itemize}
+\item 
+\item Define a distribution $p(\bx)$ supported on $\mathcal{X}$.  \emph{In practice, $p(\bx)$ may be represented as a large image database.}
+\item Sample stimuli $\bX^{(1)}, \hdots, \bX^{(K)}$ from $p(x)$. \emph{I.e., draw $K$ images from the image database.}
+\item For $i = 1,\hdots, K$, present the subject with stimulus
+  $\bX^{(1)}$, record the neural response $\bY^{(i, j)}$.  For each
+  stimulus, obtain repeats $j = 1,\hdots, r$.
+\end{itemize}
 
 
 
