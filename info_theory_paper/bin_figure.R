@@ -34,19 +34,19 @@ plot(YX, xlim = c(-3, 3), ylim = c(-2, 2), ann = FALSE,
      axes = FALSE, cex.lab = 3, col = rgb(0,0,0, 0.1))
 title(xlab = "Y", mgp = c(2, 1, 0.1), cex.lab = 3)
 title(ylab = "X", mgp = c(0.5, 1, 0.1), cex.lab = 3)
-axis(1, at = c(-3, 3), labels = FALSE)
-axis(2, at = c(-3, 3), labels = FALSE)
-for (i in 2:K) abline(breaks[i], 0)
+axis(1, at = c(-3, 3), labels = FALSE, lwd = 2)
+axis(2, at = c(-3, 3), labels = FALSE, lwd = 2)
+for (i in 2:K) abline(breaks[i], 0, lwd = 2)
 
 plot(NA, NA, xlim = c(-3, 3), ylim = c(-2, 2), ann = FALSE,
      axes = FALSE, cex.lab = 3, col = rgb(0,0,0, 0.1))
 title(xlab = "Y", mgp = c(2, 1, 0.1), cex.lab = 3)
 title(ylab = "X", mgp = c(0.5, 1, 0.1), cex.lab = 3)
-axis(1, at = c(-3, 3), labels = FALSE)
-axis(2, at = c(-3, 3), labels = FALSE)
+axis(1, at = c(-3, 3), labels = FALSE, lwd = 2)
+axis(2, at = c(-3, 3), labels = FALSE, lwd = 2)
 for (i in 1:K) {
-  polygon(ds[[i]]$x, 0.3 * ds[[i]]$y + breaks[i], col = rgb(0, 0, 0, 0.5))
+  polygon(ds[[i]]$x, 0.3 * ds[[i]]$y + breaks[i], col = rgb(0, 0, 0, 0.5), lwd = 2)
 }
-for (i in 1:K) abline(breaks[i], 0)
+for (i in 1:K) abline(breaks[i], 0, lwd = 2)
 
 -1/2 * log(1 - rho^2)

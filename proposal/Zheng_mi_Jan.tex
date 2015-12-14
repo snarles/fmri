@@ -117,15 +117,15 @@
 
 \begin{frame}
 \titlepage % Print the title page as the first slide
-(Joint work with Yuval Benjamini)
+(Joint work with Yuval Benjamini.)
 \end{frame}
 
 \begin{frame}
 \frametitle{Overview}
 \noindent\emph{Introduction}
 \begin{itemize}
-\item Review of information theory
-\item Study of neural coding
+\item Review of information theory.
+\item Study of neural coding.
 \end{itemize}
 \noindent\emph{Related work}
 \begin{itemize}
@@ -134,10 +134,9 @@
 \end{itemize}
 \noindent\emph{Methods}
 \begin{itemize}
-\item Setup
-\item Gaussian example
-\item Using Fano's inequality
-\item Using low-SNR universality
+\item Gaussian example.
+\item Using Fano's inequality.
+\item Using low-SNR universality.
 \end{itemize}
 \noindent\emph{Results}
 \end{frame}
@@ -157,7 +156,7 @@ The high performance and reliability of modern communications system is made pos
 \vspace{0.4in}
 A information-processing network can be analyzed in terms of interactions between its components (which are viewed as random variables.)
 
-\tiny{Image credit CartouCHe, Aziz et al. 2011}
+\tiny{Image credit CartouCHe, Aziz et al. 2011.}
 \note{ Modern communication systems depend
   on a vast network of signal transmitters and receivers.  All of this
   sophisticated engineering is made possible by information theory, a
@@ -200,18 +199,18 @@ Information theorists tend to use log base 2, we will use natural logs in this t
 \end{center}
 \begin{itemize}
 \item $I(X;Y) \in [0,\infty]$.  (0 if $X \perp Y$, $\infty$ if $X=Y$ and $X$ continuous.)
-\item Symmetric: $I(X;Y) = I(Y; X)$
+\item Symmetry: $I(X;Y) = I(Y; X)$.
 \item Bijection-invariant: $I(\phi(X); \psi(Y)) = I(\psi(Y);\phi(X)$.
 \item Additivity.  If $(X_1,Y_1) \perp (X_2, Y_2)$, then
 \[
-I((X_1, X_2); (Y_1, Y2)) = I(X_1; Y_1) + I(X_2; Y_2)
+I((X_1, X_2); (Y_1, Y2)) = I(X_1; Y_1) + I(X_2; Y_2).
 \]
-\item Relation to KL divergence $\mathbb{D}$.
+\item Relation to KL divergence:
 \[
-\mathbb{D}(p(x, y)||p(x)p(y)) = I(X; Y)
+\mathbb{D}(p(x, y)||p(x)p(y)) = I(X; Y).
 \]
 \end{itemize}
-\tiny{Image credit Kinney et al. 2014}
+\tiny{Image credit Kinney et al. 2014.}
 \end{frame}
 
 \begin{frame}
@@ -220,40 +219,46 @@ I((X_1, X_2); (Y_1, Y2)) = I(X_1; Y_1) + I(X_2; Y_2)
 \item Suppose $X$ and $Y$ are discrete random variables, and $X$ is uniformly distributed over its support.
 \item Classify $X$ given $Y$.  The optimal rule is to guess
 \[
-\hat{X} = \argmax_x\ p(Y|X=x)
+\hat{X} = \argmax_x\ p(Y|X=x).
 \]
 \item Bayes error:
 \[
-p_e = \Pr[X \neq \hat{X}]
+p_e = \Pr[X \neq \hat{X}].
 \]
 \item Fano's inequality:
 \[
-I(X; Y) \geq (1-p_e) \ln K - p_e \ln(p_e) - (1-p_e)\ln(1-p_e)
+I(X; Y) \geq (1-p_e) \ln K - \text{const.}
 \]
 where $K$ is the size of the support of $X$.
 \end{itemize}
 \end{frame}
 
 \begin{frame}
-\frametitle{Relationship between mutual information and classification}
-A nice interpretation of $I(X; Y)$ for \emph{continuous} random variables:
+\frametitle{Nice interpretation of $I(X; Y)$ for continuous rvs}
 \begin{itemize}
-\item Bin the continuous $X$ into $K$ equal-probability bins.
-\item $I(X;Y)$ approx. measures how finely we can bin $X$ so that $Y$ can still distinguish the bins with high probability!
+\item If we bin the continuous $X$ into $K \approx e^{I(X; Y)}$ equal-probability bins,
+we can reliably guess the bin given $Y$.
+\item Heuristic is more accurate if $I(X; Y)$ is large, due to Shannon's noisy channel theorem.
 \end{itemize}
-
-This is another way of seeing why $I(X;Y)$ is bijection-invariant!
+\begin{center}
+\begin{tabular}{ccc}
+\includegraphics[scale = 0.23]{../info_theory_paper/bin_figure1.png} & &
+\includegraphics[scale = 0.23]{../info_theory_paper/bin_figure1a.png}\\
+$I(X; Y) = 2.3038$ & & $\ln 10 = 2.3025$
+\end{tabular}
+\end{center}
+\note{This is another way of seeing that $I(X;Y)$ is bijection invariant.}
 \end{frame}
 
 \begin{frame}
-\frametitle{Studying the neural code}
+\frametitle{Motivation: the neural code}
 The brain is the \emph{most complex} information processing system we know!
 \vspace{0.3in}
 \begin{center}
 \begin{tabular}{cc}
 \includegraphics[scale = 0.3, clip =true, trim=0 0 0 2.5in]{Brain_network.png} &
 \includegraphics[scale = 0.1]{maxresdefault.jpg}\\
-\small{Neural network inferred from data} & \small{Organization of human retina}\\
+\small{Neural network inferred from data.} & \small{Organization of human retina}\\
 \small{(Hong et al.)} & 
 \end{tabular}
 \end{center}
@@ -275,7 +280,7 @@ How do neurons encode, process, and decode sensory information?
 \item Present $\bX$ to the subject, record the subject's brain activity using EEG, MEG, fMRI, or calcium imaging.
 \item Recorded response $\bY = (Y_1,\hdots, Y_q)$, where $Y_i$ are single-cell responses, or recorded activities in different brain region. 
 \end{itemize}
-\tiny{Image credits: Quiroga et al. (2009)}
+\tiny{Image credits: Quiroga et al. (2009).}
 \end{frame}
 
 
@@ -288,18 +293,18 @@ Given stimulus-reponse data $(\bX, \bY)$, can we estimate the mutual information
 \vspace{0.5in}
 \emph{Why do we care?}
 \begin{itemize}
-\item Selecting the correct model for neural encoding
-\item Assessing the \emph{efficiency} of the neural code
+\item Selecting the correct model for neural encoding.
+\item Assessing the \emph{efficiency} of the neural code.
 \item Measuring the \emph{redundancy} of a population of neurons
 \[
-r' = \frac{\sum_{i=1}^q I(\bX; Y_i) - I(\bX; \bY)}{\sum_{i=1}^q I(\bX; Y_i)}
+r' = \frac{\sum_{i=1}^q I(\bX; Y_i) - I(\bX; \bY)}{\sum_{i=1}^q I(\bX; Y_i)}.
 \]
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}
-\frametitle{Experimental setup}
+\frametitle{Experimental design}
 \begin{itemize}
 \item How to make inferences about the population of stimuli in
   $\mathcal{X}$ using finitely many examples?
@@ -342,19 +347,106 @@ r' = \frac{\sum_{i=1}^q I(\bX; Y_i) - I(\bX; \bY)}{\sum_{i=1}^q I(\bX; Y_i)}
 \frametitle{Can we learn $I(\bX; \bY)$ from such data?}
 Answer: yes.
 \begin{itemize}
-\item Let $p^*(\bx)$ be the uniform distribution over $\bX^{(1)}, \hdots, \bX^{(K)}$, and let $\tilde{\bX}$ be a random vector with this distribution.
-\item Let $\tilde{\bY}$ have the distribution
+\item We have $I(\bX; \bY) = H(\bY) - H(\bY|\bX)$.
+\item We can estimate $H(\bY)$ from the data
+\item We can estimate $H(\bY| \bx^{(i)})$ from the data, and define
 \[
-p^*(\tilde{\by}) = \frac{1}{K} \sum_{i=1}^K p(\by|\bx^{(i)})
-\] 
-\item Then, as $K \to \infty$,  $I(\tilde{\bX}; \tilde{\bY})  \stackrel{p}{\to} I(\bX; \bY)$, where
-\[
-I(\tilde{\bX}; \tilde{\bY}) = H(\tilde{\bY}) - \frac{1}{K}\sum_{i=1}^K H(\bY| \bX^{(i)})
+\hat{H}(\bY|\bX) = \frac{1}{K}\sum_{i=1}^K \hat{H}(\bY| \bX^{(i)})
 \]
-\item We can apply nonparametric methods to estimate
-  $H(\bY|\bX^{(i)})$ for $i = 1,\hdots, K$, and
-  $H(\tilde{\bY})$. Plugging those estimates into the above formula
-  gives a \emph{nonparametric} estimate of $I(\bX; \bY)$.
+\item As $K$ and $r$ both tend to infinity, 
+\[
+\hat{I}(\bX; \bY) = \hat{H}(\bY) - \hat{H}(\bY|\bX)
+\]
+is consistent for $I(\bX; \bY)$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Limitations with the `naive' approach}
+Naive estimator:
+\[
+\hat{I}(\bX; \bY) = \hat{H}(\bY) - \frac{1}{K}\sum_{i=1}^K \hat{H}(\bY| \bX^{(i)})
+\]
+\begin{itemize}
+\item If $K$ is small, the naive estimator may be quite biased, even for low-dimensional problems.
+Gastpar et al. (2010) introduced an \emph{antropic correction} to deal with the small-$K$ bias.
+\item Difficult to estimate differential entropies $H(\bY),\
+  H(\bY|\bx^{(i)})$ in high dimensions.  Best rates are
+  $O(1/\sqrt{n})$ for $d \leq 3$ dimensions.  Convergence rates for $d > 3$
+  unknown!
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Can we use machine learning to deal with dimensionality?}
+\begin{itemize}
+\item Supervised learning becomes an extremely common approach for dealing with high-dimensional data, for numerous reasons!
+\item Perhaps we can use supervised learning to estimate $I(\bX; \bY)$ as well.
+\end{itemize}
+\emph{Procedure.}
+\begin{itemize}
+\item Fix $r_{train} < r$.  Let $r_{test} = r - r_{train}$.
+\item Use $\{(\bx^{(i)}, \by^{(i, j)}): i = 1,\hdots, K, j = 1,\hdots, r_{train}\}$ as training data to learn a classifier $\hat{\bx}$.
+\item Compute the confusion matrix, normalized so that each row adds to $1/K$:
+\[
+C(i, j) = \frac{1}{K^2 r_{test}} \sum_{i=1}^K \sum_{j=1}^K  \sum_{\ell=r_{train} + 1}^r I(\hat{\bx}(\by^{(i,\ell)}) = \bx^{(j)}).
+\]
+\end{itemize}
+Normalized this way, $C(i, j)$ gives the empirical joint distribution
+\[
+C(i, j) = \hat{\Pr}[\bX = \bx^{(i)}, \hat{\bX} = \bx^{(j)}].
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Can we use machine learning to deal with dimensionality?}
+\begin{itemize}
+\item Treves et al. (1997) suggest computing the mutual information from the confusion matrix,
+i.e.
+\[
+\hat{I}(\bX; \bY) \approx \sum_{i=1}^K \sum_{j = 1}^K C(i, j) \ln\left(\frac{C(i, j)}{\left(\sum_{\ell=1}^K C(i, \ell)\right) \left(\sum_{\ell=1}^k C(j, \ell) \right)}\right)
+\]
+\item Quiroga (2009) review the applications of this approach, and note sources of bias or ``information loss.''
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Why use supervised learning to estimate $I(\bX; \bY)$?}
+
+\begin{itemize}
+\item Successful supervised learning exploits structure in the data, which \emph{nonparametric methods ignore.}
+\item Using supervised learning to estimate mutual information can be viewed as \emph{using prior information} to improve the estimate of $I(\bX; \bY)$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Interesting connection to machine learning literature}
+
+While we are considering
+\[
+\text{supervised learning} \to \text{estimate mutual information},
+\]
+a vast literature exists on applications of mutual information (as the `infomax criterion`) for feature selection, training objectives, i.e.
+\[
+\text{estimate mutual information} \to \text{supervised learning}.
+\]
+\end{frame}
+
+\section{Methods}
+
+\begin{frame}
+\frametitle{Questions}
+\begin{itemize}
+\item How much could we potentially gain in estimating $I(\bX; \bY)$ by using supervised learning, compared to nonparametric approaches?
+\item Is the Bayes confusion matrix sufficient for consistently estimating $I(\bX; \bY)$?
+\item Is the Bayes error sufficient for consistently estimating $I(\bX; \bY)$?
+\item In practice, we cannot obtain the Bayes error due to:
+\begin{itemize}
+\item Model mispecification.
+\item Finite training data to fit the model (even if correctly specified).
+\item Finite test data to estimate the generalization error.
+\end{itemize}
+How sensitive is our estimator to these issues?
 \end{itemize}
 \end{frame}
 
