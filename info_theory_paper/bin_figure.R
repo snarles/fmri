@@ -16,7 +16,7 @@ o <- order(YX[, 2])
 YX <- YX[o, ]
 ts <- (1:n)/n
 
-K <- 5
+K <- 10
 #breaks <- min(YX[, 1])
 breaks <- -1.5
 ds <- list()
@@ -45,6 +45,8 @@ title(ylab = "X", mgp = c(0.5, 1, 0.1), cex.lab = 3)
 axis(1, at = c(-3, 3), labels = FALSE)
 axis(2, at = c(-3, 3), labels = FALSE)
 for (i in 1:K) {
-  polygon(ds[[i]]$x, 0.5 * ds[[i]]$y + breaks[i], col = rgb(0, 0, 0, 0.5))
+  polygon(ds[[i]]$x, 0.3 * ds[[i]]$y + breaks[i], col = rgb(0, 0, 0, 0.5))
 }
 for (i in 1:K) abline(breaks[i], 0)
+
+-1/2 * log(1 - rho^2)
