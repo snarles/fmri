@@ -416,6 +416,8 @@ i.e.
 \begin{itemize}
 \item Successful supervised learning exploits structure in the data, which \emph{nonparametric methods ignore.}
 \item Using supervised learning to estimate mutual information can be viewed as \emph{using prior information} to improve the estimate of $I(\bX; \bY)$.
+\item So while the general problem of information estimation is nearly impossible in high dimensions,
+the problem might become tractable if we can exploit known structure in the problem!
 \end{itemize}
 \end{frame}
 
@@ -449,6 +451,25 @@ a vast literature exists on applications of mutual information (as the `infomax 
 How sensitive is our estimator to these issues?
 \end{itemize}
 \end{frame}
+
+\begin{frame}
+\frametitle{Gaussian example}
+To help think about these problems, consider a concrete example:
+\begin{itemize}
+\item Let $\bX \sim N(0, I_p)$ and 
+$\bY|\bX \sim N(\bX,\sigma^2 I_p)$.
+\item We draw stimuli $\bx^{(1)}, \hdots, \bx^{(K)} \sim N(0, I_p)$ i.i.d.
+\item For each stimulus $\bx^{(i)}$, we draw observations $\by^{(i, j)} = \bx^{(i)} + \epsilon^{(i, j)}$, where $\epsilon^{(i, j)} \sim N(0, \sigma^2 I_p)$.
+\end{itemize}
+\begin{center}
+\begin{tabular}{ccc}
+\includegraphics[scale = 0.2, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1a.png} &
+\includegraphics[scale = 0.2, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1b.png} &
+\includegraphics[scale = 0.2, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1c.png}
+\end{tabular}
+\end{center}
+\end{frame}
+
 
 \begin{frame}
 \frametitle{References}
