@@ -92,6 +92,7 @@
 \newcommand{\argmax}{\text{argmax}}
 \newcommand{\argmin}{\text{argmin}}
 \newcommand{\Cov}{\text{Cov}}
+\newcommand{\Var}{\text{Var}}
 \newcommand{\Vol}{\text{Vol}}
 \newcommand{\bx}{\boldsymbol{x}}
 \newcommand{\by}{\boldsymbol{y}}
@@ -132,11 +133,10 @@
 \item Estimating mutual information between stimulus and response.
 \item Can we use machine learning methods to estimate MI?
 \end{itemize}
-\noindent\emph{Methods}
+\noindent\emph{Theory}
 \begin{itemize}
 \item Gaussian example.
-\item Using Fano's inequality.
-\item Using low-SNR universality.
+\item Low-SNR universality.
 \end{itemize}
 \noindent\emph{Results}
 \end{frame}
@@ -456,10 +456,10 @@ How sensitive is our estimator to these issues?
 \frametitle{Gaussian example}
 To help think about these problems, consider a concrete example:
 \begin{itemize}
-\item Let $\bX \sim N(0, I_p)$ and 
-$\bY|\bX \sim N(\bX,\sigma^2 I_p)$.
-\item We draw stimuli $\bx^{(1)}, \hdots, \bx^{(K)} \sim N(0, I_p)$ i.i.d.
-\item For each stimulus $\bx^{(i)}$, we draw observations $\by^{(i, j)} = \bx^{(i)} + \epsilon^{(i, j)}$, where $\epsilon^{(i, j)} \sim N(0, \sigma^2 I_p)$.
+\item Let $\bX \sim N(0, I_d)$ and 
+$\bY|\bX \sim N(\bX,\sigma^2 I_d)$.
+\item We draw stimuli $\bx^{(1)}, \hdots, \bx^{(K)} \sim N(0, I_d)$ i.i.d.
+\item For each stimulus $\bx^{(i)}$, we draw observations $\by^{(i, j)} = \bx^{(i)} + \epsilon^{(i, j)}$, where $\epsilon^{(i, j)} \sim N(0, \sigma^2 I_d)$.
 \end{itemize}
 \begin{center}
 \begin{tabular}{ccc}
@@ -470,6 +470,235 @@ $\bY|\bX \sim N(\bX,\sigma^2 I_p)$.
 \end{center}
 \end{frame}
 
+\begin{frame}
+\frametitle{Gaussian example}
+The mutual information is given by
+\[
+I(\bX;\bY) = \frac{d}{2}\log(1 + \frac{1}{\sigma^2}).
+\]
+
+The Bayes rule takes the form
+\[
+\hat{\bX}(\bY) = \argmax_{\bx^{i}} \underbrace{-\frac{1}{2\sigma^2} ||\bY - \bx||^2}_{Z_i}.
+\]
+
+\emph{Notation:}
+Without loss of generality, assume $\bY$ belongs to the centroid $\bx^{(K)}$.
+Then write $\bx^* = \bx^{(K)}$ and $Z_* = Z_K$.
+
+The average Bayes error can be written
+\[
+\text{ABE} = \Pr[Z_* < \max_{i=1}^{K-1} Z_k].
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Gaussian example: Average Bayes error}
+
+\begin{center}
+\includegraphics[scale = 0.3, clip = true, trim = 0.6in 3in 0.6in 1.5in]{../info_theory_paper/gaussian_figure1a.png}
+\end{center}
+
+\begin{itemize}
+\item Conditional on the centroid locations $\bx^{(1)},\hdots,
+  \bx^{(K)}$, the Bayes misclassification error can be computed by
+  integrating $p$-dimensional Gaussian density over Voronoi polytopes.
+\item This is pretty much intractable in high dimensions!
+\item The average Bayes error (ABE) is an average of
+  an intractable quantity.  Luckily, \emph{taking averages makes
+    the problem tractable}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Gaussian example: Average Bayes risk}
+\begin{itemize}
+\item To make the problem even easier, we use another time-honored technique: the central limit theorem.
+\item Letting $p \to \infty$, the scores
+\[
+Z_i = -\frac{1}{2\sigma^2} ||\bY - \bx||^2
+\]
+have a normal joint distribution in the limit:
+\end{itemize}
+\[
+\begin{bmatrix}
+Z_*\\
+Z_1\\
+\vdots\\
+Z_{K-1}
+\end{bmatrix} \stackrel{d}{\to} N\left(
+\begin{bmatrix}
+-\frac{d}{2}\\
+-\frac{d}{2} - \frac{1}{\sigma^2}\\
+\vdots\\
+-\frac{d}{2} - \frac{1}{\sigma^2}
+\end{bmatrix},
+\begin{bmatrix}
+\frac{d}{2} & \frac{d}{2} & \cdots & \frac{d}{2}\\
+\frac{d}{2} & \frac{d}{2} + \frac{2}{\sigma^2} & \cdots & \frac{d}{2} + \frac{1}{\sigma^2}\\
+\vdots & \vdots & \ddots & \vdots\\
+\frac{d}{2} & \frac{d}{2} + \frac{1}{\sigma^2} & \cdots & \frac{d}{2} + \frac{2}{\sigma^2}
+\end{bmatrix}
+\right).
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Gaussian example: Average Bayes risk}
+
+Assume $(Z_*, Z_1,\hdots, Z_{K-1})$ have a normal distribution with the given moments.
+
+We can compute
+\[
+\text{ABE} = \Pr[Z_* < \max_{i=1}^{K-1} Z_i]
+\]
+by writing
+\[
+Z_i = \frac{\Cov(Z_*, Z_i)}{\Var(Z_*)} (Z_* - \E Z_*) + \sqrt{\Var(Z_i) - \frac{\Cov(Z_*, Z_i)^2}{\Var(Z_*)}} W_i,
+\]
+where $W_i$ are i.i.d. standard normal.
+
+This yields
+\[
+\Pr[Z_* < \max_{i=1}^{K-1} Z_i] = \Pr[N(\mu, \nu^2) < \max_{i=1}^{K-1} W_i]
+\]
+where
+\[
+\mu = \frac{\E[Z_* - Z_i]}{\sqrt{\frac{1}{2}\Var(Z_i - Z_j)}},\ \nu^2 = \frac{\Cov(Z_* - Z_i, Z_* - Z_j)}{\frac{1}{2}\Var(Z_i - Z_j)}
+\]
+for $i \neq j \neq K$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Gaussian example: Average Bayes risk}
+Finally, we get
+\[
+\text{ABE} = \Pr[Z_* < \max_{i=1}^{K-1} Z_i] \to f_K\left(\frac{\sqrt{d}}{\sigma}\right)
+\]
+where
+\[
+f_K(\mu) =  1 - \int_{-\infty}^\infty \phi(z-\mu) (1-\Phi(z))^{K-1} dz.
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Gaussian example: Average Bayes risk}
+
+Recall that
+\[
+I(\bX; \bY) =  \frac{d}{2}\log(1 + \frac{1}{\sigma^2}),
+\]
+while
+\[
+\text{ABE} = f_K(\sqrt{d}/\sigma).
+\]
+
+Hence ABE is not a function of $I(\bX; \bY)$!
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Gaussian example: Low SNR limit}
+However, what if we consider a limit where the noise level $\sigma^2$ increases with $d$?
+
+Fix some $\sigma^2_1 > 0$, and let $\sigma^2_d  = d \sigma^2_1$.
+
+Then when $d$ is large,
+\[
+I(\bX; \bY) = \frac{d}{2}\log(1 + \frac{1}{d \sigma^2_1}) \approx \frac{d}{2}\frac{1}{d\sigma^1} = \frac{1}{2\sigma^2_1}.
+\]
+
+We get
+\[
+\text{ABE} = f_k(\sqrt{2 I(\bX; \bY)})
+\]
+in the limit!
+\end{frame}
+
+\begin{frame}
+\frametitle{Low SNR limit: generalization}
+
+In a sequence of gaussian models of increasing dimensionality with
+\[
+\lim_{d \to \infty} I(\bX; \bY) \to \iota < 0,
+\]
+we get an exact relationship between the limiting mutual information and the average Bayes error,
+\[
+\text{ABE} = f_K(\sqrt{2\iota}).
+\]
+
+\textbf{This limiting relationship holds more generally!}
+\end{frame}
+
+\begin{frame}
+\frametitle{Exponential family sequence model}
+
+The Gaussian sequence is a special case of the following class of models.
+
+Let $b_X(x)$ and $b_Y(y)$ be probability densities and $u(x, y)$ be an arbitrary smooth function.
+Let
+\[
+b_\theta(x, y) = \frac{b_X(x) b_Y(y) \exp[\theta u(x, y)]}{\int b_X(x) b_Y(y) \exp[\theta u(x, y)] dx dy}.
+\]
+
+A corresponding \emph{exponential family sequence model} is
+a sequence of joint probability distributions $p_d(\bx, \by)$ given by
+\[
+p_d(\bx, \by) = \prod_{i=1}^d b_{\theta_d}(x_i, y_i)
+\]
+such that
+\[
+\lim_{d \to \infty} d\theta_d = c < \infty.
+\]
+
+For instance, choosing $b_X(x) = b_Y(y) = \phi(x)$ and $u(x, y) = xy$
+yields the Gaussian sequence model (up to marginal scaling.)
+\end{frame}
+
+\begin{frame}
+\frametitle{Low SNR theorem}
+
+\textbf{Theorem. }\emph{
+Given an exponential family sequence model $p_d(\bx, \by)$,
+for random variates $(\bX^{[d]}, \bY^{[d]}) \sim p_d(\bX, \bY)$, we have
+\[
+\lim_{d \to \infty} I(\bX^{[d]}, \bY^{[d]})  = \iota < \infty
+\]
+for some constant $\iota < \infty$;
+and the limiting $K$-class average Bayes error is given by
+\[
+\lim_{d \to \infty} \text{ABE} = f_K(\sqrt{2\iota}).
+\]
+}
+
+\note{
+The proof is basically an application of first order Taylor expansion, using the fact that for small $\theta$,
+\[
+b_\theta(x, y) \approx b_X(x) b_Y(y) \exp[\theta u(x, y)] \approx b_X(x) b_Y(y) (1 + \theta u(x, y)),
+\]
+allowing us to relate moments of the joint distribution of $p(\bx,
+\by)$ (which give the mutual information) with moments of the
+product-marginal $p(\bx)p(\by)$ (which give the ABE).
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{The low-SNR estimator of $I(\bX;\bY)$}
+
+We are willing to bet that the relationship 
+\[\text{ABE} \approx f_K(\sqrt{2\iota})\]
+holds in much greater generality than we managed to prove--namely,
+whenever $I(\bX; \bY) \ll p$, and the scores $Z_i$ are approximately
+jointly multivariate normal.\newline
+
+Based on these assumptions, our proposed estimator for mutual information is
+\[
+\hat{I}_{ls}(\bX; \bY) = \frac{1}{2}f_K^{-1}(\widehat{\text{ABE}})^2
+\]
+where $\widehat{\text{ABE}}$ is the test error of the classifier.
+(The subscript $ls$ stands for low-SNR.)
+\end{frame}
 
 \begin{frame}
 \frametitle{References}
