@@ -34,5 +34,16 @@ mc_ident2 <- function(p, sigma2, K, mc.reps = 1000) {
   mean(mcs)
 }
 
-
+## confusion matrix
+mc_cm <- function(p, sigma2, K, mc.reps = 1000) {
+  mus <- randn(K, p)
+  zs <- rep(1:K, each = mc.reps)
+  n <- K * mc.reps
+  ys <- mus[zs] + sqrt(sigma2) * randn(n, p)
+  lbls <- knn(mus, ys, cl=1:K)
+  sum(lbls != zs)/n ## mc
+  rawmat <- table(zs, lbls)
+  stopifnot(all(dim(rawmat) == K))
+  rawmat/sum(rawmat)
+}
 

@@ -50,3 +50,16 @@ Ihat_LS <- function(p, K, upper = 10, res = 1e3) {
 Ihat_fano <- function(p, K) {
   log(K) - p*log(K-1) - p*log(p) - (1-p)*log(1-p)
 }
+
+####
+##  CM METHOD
+####
+
+cm_to_I <- function(cm) {
+  m1 <- rowSums(cm)
+  m2 <- colSums(cm)
+  pm <- m1 %*% t(m2)
+  temp <- 0*cm
+  temp[cm != 0] <- cm[cm != 0] * log(cm[cm != 0]/pm[cm != 0])
+  sum(temp)
+}
