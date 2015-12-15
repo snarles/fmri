@@ -488,7 +488,7 @@ Then write $\bx^* = \bx^{(K)}$ and $Z_* = Z_K$.
 
 The average Bayes error can be written
 \[
-\text{ABE} = \Pr[Z_* < \max_{i=1}^{K-1} Z_k].
+\text{ABE} = \Pr[Z_* < \max_{i=1}^{K-1} Z_i].
 \]
 \end{frame}
 
@@ -514,11 +514,11 @@ The average Bayes error can be written
 \frametitle{Gaussian example: Average Bayes risk}
 \begin{itemize}
 \item To make the problem even easier, we use another time-honored technique: the central limit theorem.
-\item Letting $p \to \infty$, the scores
+\item Letting $d \to \infty$, the scores
 \[
-Z_i = -\frac{1}{2\sigma^2} ||\bY - \bx||^2
+Z_i = -\frac{1}{2\sigma^2} ||\bY - \bx||^2 = -\frac{1}{2\sigma^2} \sum_{i=1}^d ||Y_i - x_i||^2
 \]
-have a normal joint distribution in the limit:
+have a jointly multivariate distribution in the limit:
 \end{itemize}
 \[
 \begin{bmatrix}
@@ -529,15 +529,15 @@ Z_{K-1}
 \end{bmatrix} \stackrel{d}{\to} N\left(
 \begin{bmatrix}
 -\frac{d}{2}\\
--\frac{d}{2} - \frac{1}{\sigma^2}\\
+-\frac{d}{2} - \frac{d}{\sigma^2}\\
 \vdots\\
--\frac{d}{2} - \frac{1}{\sigma^2}
+-\frac{d}{2} - \frac{d}{\sigma^2}
 \end{bmatrix},
 \begin{bmatrix}
 \frac{d}{2} & \frac{d}{2} & \cdots & \frac{d}{2}\\
-\frac{d}{2} & \frac{d}{2} + \frac{2}{\sigma^2} & \cdots & \frac{d}{2} + \frac{1}{\sigma^2}\\
+\frac{d}{2} & \frac{d}{2} + \frac{2d}{\sigma^2} & \cdots & \frac{d}{2} + \frac{d}{\sigma^2}\\
 \vdots & \vdots & \ddots & \vdots\\
-\frac{d}{2} & \frac{d}{2} + \frac{1}{\sigma^2} & \cdots & \frac{d}{2} + \frac{2}{\sigma^2}
+\frac{d}{2} & \frac{d}{2} + \frac{d}{\sigma^2} & \cdots & \frac{d}{2} + \frac{2d}{\sigma^2}
 \end{bmatrix}
 \right).
 \]
