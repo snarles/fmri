@@ -1,0 +1,99 @@
+---
+title: "Bootstrap testing of procrustes hypothesis"
+author: "Charles Zheng"
+date: "12/16/2015"
+output: html_document
+---
+
+Let $X$ and $Y$ be indepedent $p \times n$ random matrices, with distributions $F$ and $G$ respectively.
+Let $A = E[X]$ and $B = E[Y]$.
+The goal is to test the *Procrustes hypothesis*
+
+$$
+H_0: A^T A = B^T B
+$$
+
+or equivalently, that there exists $\Omega$ orthogonal such that $\Omega A = B$.
+The data consists of i.i.d. indpendent realizations $X^{(1)}, ..., X^{(n_x)}$ and $Y^{(1)},..., Y^{(n_y)}$.
+
+*Example:* 
+We are testing the congruence of two physical objects.  The $n$ columns of $A$ consist of the true positions of $n$ labelled landmarks on the first object, measured according to some orthogonal coordinate system.  The $n$ columns of $B$ give the positions of the corresponding landmarks of the second object, measured using a different orthogonal system compared to the first.  Both sets of positions are centered and standardized using an $(n + 1)$ th landmark which is used to define the origin.  $A$ and $B$ are not observed directly; instead, they must be inferred from unbiased, noisy measurements $X$ and $Y$ respectively.
+
+The situation is depicted in Figure 1.
+
+```{r, fig.height=4.4, fig.width=6.6}
+library(pracma)
+shape.inner <- matrix(c(0,0, 1,-2, -1,-2, 0,0), 2, 4)
+shape.outer <- matrix(c(0,4, 3,-2, 3,-4, -3,-4, -3,-2, 0,4), 2, 6)
+A <- cbind(shape.inner[, -4], shape.outer[, -1])
+theta <- pi/3; Omega0 <- matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)), 2, 2)
+B <- Omega0 %*% A
+par(mfrow=c(1,2),oma = c(0, 0, 2, 0))
+plot(NA, NA, xlim = c(-5, 5), ylim = c(-5, 5), ann = FALSE); title("A")
+for (i in 1:8) text(t(A[, i]), paste(i-1))
+polygon(t(shape.inner), lty = 2); polygon(t(shape.outer), lty = 2)
+plot(NA, NA, xlim = c(-5, 5), ylim = c(-5, 5), ann = FALSE); title("B")
+polygon(t(Omega0 %*% shape.inner), lty = 2); polygon(t(Omega0 %*% shape.outer), lty = 2)
+for (i in 1:8) text(t(B[, i]), paste(i-1))
+mtext("Figure 1", outer = TRUE, cex = 1.5)
+```
+
+# Procrustes analysis
+
+A natural analysis of this problem is as follows.
+Obtain $\hat{A} = \bar{X}$, and $\hat{B} = \bar{Y}$.
+Then look for a rotation matrix $R$ which minimizes
+
+$$
+||R\hat{A} - \hat{B}||_F^2.
+$$
+
+The solution to the above optimization problem was derived by Schonemann (1964).
+Having obtained the SVD decomposition
+$$
+\hat{B}\hat{A}^T = V D U^T,
+$$
+the optimal rotation is given by
+$$
+R = VU^T.
+$$
+
+Let us write $R(A, B)$ for the mapping $R(A, B) = VU^T$.
+
+
+# Bootstrap Test
+
+The above Procrustes analysis can be encapsulated in the form of a matrix-valued functional $T$.
+Let $T$ be a functional which maps a pair of $p \times n$ matrix distributions $(F, G)$ to a $p \times n$ real matrix.  $T$ is defined by
+$$
+T(F, G) = R(\mu[F], \mu[G]) \mu(F) - \mu(G)
+$$
+where $\mu$ is the first moment functional.
+
+The null hypothesis is
+$$
+H_0: T(F, G) = 0.
+$$
+It is an intersection of $np$ null hypotheses,
+$$
+H_{0, ij}: T_{ij}(F, G) = 0
+$$
+where $T_{ij}(F, G) = (T(F, G))_{ij}$.
+
+Alternatively, one could also state the null hypothesis in the "Frobenius norm" formulation.
+$$
+H_{0, F}: ||T(F, G)||_F^2 = \sum_{ij} T_{ij}(F, G)^2 = 0.
+$$
+
+This leads to two general approaches for hypothesis testing.
+
+ * A single hypothesis test, $||T||_F^2 = 0$.
+ * Multiple hypothesis tests, $T_{ij} = 0$.
+
+
+
+
+
+
+
+
