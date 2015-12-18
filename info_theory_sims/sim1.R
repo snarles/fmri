@@ -39,15 +39,15 @@ c(i_true = i_true, ihat_LS = ihat_LS, ihat_fano = ihat_fano, ihat_cm = ihat_cm)
 ####
 
 cf <- 1 ## correction factor
-p <- 20; 
+p <- 7; 
 
-# Sigma <- 10 * cov(randn(2 * p, p))
-# (i_true <- logist_mi(Sigma, mc.reps = 1e5))
+Sigma <- 10 * cov(randn(2 * p, p))
+(i_true <- logist_mi(Sigma, mc.reps = 1e5))
 
-sigma2 <- 1
-Sigma <- sigma2 * eye(p)
-(i_true_p2 <- logist_mi(sigma2*eye(2)))
-(i_true <- i_true_p2/2 * p)
+# sigma2 <- 1
+# Sigma <- sigma2 * eye(p)
+# (i_true_p2 <- logist_mi(sigma2*eye(2)))
+# (i_true <- i_true_p2/2 * p)
 
 K <- 6
 (abe <- logist_ident(Sigma, K, mc.reps = 1e4))
