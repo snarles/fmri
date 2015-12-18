@@ -38,7 +38,7 @@ c(i_true = i_true, ihat_LS = ihat_LS, ihat_fano = ihat_fano, ihat_cm = ihat_cm)
 ##  Logistic, identity cov
 ####
 
-cf <- 2 ## correction factor
+cf <- 1 ## correction factor
 p <- 20; 
 
 # Sigma <- 10 * cov(randn(2 * p, p))
@@ -54,4 +54,4 @@ K <- 6
 (ihat_LS <- Ihat_LS(abe, K))
 (ihat_fano <- Ihat_fano(abe, K))
 
-c(i_true = i_true, ihat_LS = ihat_LS, ihat_fano = ihat_fano, cf * ihat_LS)
+c(i_true = i_true, ihat_LS = ihat_LS, ihat_fano = ihat_fano)

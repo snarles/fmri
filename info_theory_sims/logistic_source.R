@@ -18,7 +18,8 @@ logist_ident <- function(Sigma, K, mc.reps = 1000) {
                   X <- mvrnorm(K, rep(0, p), Sigma)
                   ps <- 1/(1 + exp(-X))
                   Y <- (rand(K, p) < ps) + 0
-                  pr <- Y %*% t(X)
+                  nc <- rowSums(log(1 - ps))
+                  pr <- t(t(Y %*% t(X)) + nc)
                   (lbls <- apply(pr, 1, function(v) order(-v)[1]))
                   sum(lbls != 1:K)/K
                 })
