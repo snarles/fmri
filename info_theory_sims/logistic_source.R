@@ -27,6 +27,7 @@ logist_ident <- function(Sigma, K, mc.reps = 1000) {
 
 
 logist_mi <- function(Sigma, mc.reps = 1e5) {
+  p <- dim(Sigma)[1]
   X <- mvrnorm(mc.reps, rep(0, p), Sigma)
   ps <- 1/(1 + exp(-X))
   ces <- apply(ps, 1, function(v) {
