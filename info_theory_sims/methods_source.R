@@ -48,7 +48,7 @@ Ihat_LS <- function(p, K, upper = 10, res = 1e3) {
 ####
 
 Ihat_fano <- function(p, K) {
-  log(K) - p*log(K-1) - p*log(p) - (1-p)*log(1-p)
+  log(K) - p*log(K-1) + p*log(p) + (1-p)*log(1-p)
 }
 
 ####
