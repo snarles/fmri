@@ -38,15 +38,20 @@ c(i_true = i_true, ihat_LS = ihat_LS, ihat_fano = ihat_fano, ihat_cm = ihat_cm)
 ##  Logistic, identity cov
 ####
 
-p <- 100; K <- 3
-#Sigma <- 5 * cov(randn(2 * p, p))
-sigma2 <- 0.0001
+cf <- 2 ## correction factor
+p <- 20; 
+
+# Sigma <- 10 * cov(randn(2 * p, p))
+# (i_true <- logist_mi(Sigma, mc.reps = 1e5))
+
+sigma2 <- 1
 Sigma <- sigma2 * eye(p)
-#(i_true <- logist_mi(Sigma, mc.reps = 1e5))
-(i_true_p2 <- logist_mi(sigma2*eye(2), mc.reps = 1e6))
+(i_true_p2 <- logist_mi(sigma2*eye(2)))
 (i_true <- i_true_p2/2 * p)
-(abe <- logist_ident(Sigma, K, mc.reps = 1e5))
+
+K <- 6
+(abe <- logist_ident(Sigma, K, mc.reps = 1e4))
 (ihat_LS <- Ihat_LS(abe, K))
 (ihat_fano <- Ihat_fano(abe, K))
 
-c(i_true = i_true, ihat_LS = ihat_LS, ihat_fano = ihat_fano)
+c(i_true = i_true, ihat_LS = ihat_LS, ihat_fano = ihat_fano, cf * ihat_LS)
