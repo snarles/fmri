@@ -99,6 +99,8 @@ procrustes_data_model_ <- function(A, B, SigmaX, SigmaY) {
     dat <- rbind(cbind(0, rawX), cbind(1, rawY))
     list(p = p, q  = q, dat = dat)
   }
+  # force eval
+  lala <- sampler(10, 10)
   sampler
 }
 
@@ -295,7 +297,7 @@ sampler <- h0_small
 theta <- stat.S
 nX <- 20; nY <- 20
 ## non-corrected
-mc.reps <- 1e3
+mc.reps <- 1e2
 thetas <- sampling_dist(sampler, theta, nX, nY, mc.reps, samples = TRUE)
 hist(thetas[1, ], 
      breaks = seq(floor(min(thetas[1, ])), ceiling(max(thetas[1, ])), 0.5)
@@ -313,16 +315,124 @@ stat.T.bs(res)
 mtext("Figure 2", outer = TRUE, cex = 1.5)
 ```
 
+## Bootstrap distribution
+
+In order to bootstrap the null, define
+
+$$C = \frac{VU^T \hat{A} + \hat{B}}{2}$$
+
+The null hypothesis is that
+
+$$H_0: E[X] = UV^T C,\ E[Y] = C.$$
+
+Therefore, compute residuals
+
+$$E^{(X, i)} = X^{(i)} - \hat{A}$$
+
+$$E^{(Y, i)} = Y^{(i)} - \hat{B}$$
+
+and resample from
+
+$$
+X^* = UV^T C + E^{(X, i^*)}
+$$
+$$
+Y^* = C + E^{(Y, i^*)}
+$$
+
+The bootstrap resampler is implemented in `boot_sampler`.  The option `h0 = TRUE` resamples from the fitted null.
+
+```{r}
+boot_sampler <- function(res, h0 = FALSE) {
+  p <- res$p; q <- res$q; dat <- res$dat; dat0 <- dat
+  nX <- sum(dat[, 1] == 0); nY <- sum(dat[, 1] == 1);
+  nX0 <- nX; nY0 <- nY
+  rawX <- dat[dat[, 1]==0, -1]
+  rawY <- dat[dat[, 1]==1, -1]
+  residX <-t(t(rawX - colMeans(rawX)))
+  residY <-t(t(rawY - colMeans(rawY)))  
+  mus <- sample_moments(res)
+  ress <- svd(mus$Ahat %*% t(mus$Bhat))
+  R <- ress$v %*% t(ress$u)
+  C <- (R %*% mus$Ahat + mus$Bhat)/2
+  AC <- t(R) %*% C
+  vecC <- as.numeric(C)
+  vecAC <- as.numeric(AC)
+  if (h0) {
+    sampler <- function(nX = nX0, nY = nY0) {
+      if (nX == 0 & nY == 0) {
+        return(list(p = p, q = q, dat = dat0))
+      }
+      newX <- residX[sample(nX, nX, TRUE), , drop = FALSE]
+      newY <- residY[sample(nY, nY, TRUE), , drop = FALSE]
+      newX <- t(t(newX) + vecAC)
+      newY <- t(t(newY) + vecC)
+      dat <- rbind(cbind(0, newX), cbind(1, newY))
+      list(p = p, q = q, dat = dat)    
+    }
+  } else {
+    sampler <- function(nX = nX0, nY = nY0) {
+      if (nX == 0 & nY == 0) {
+        return(list(p = p, q = q, dat = dat0))
+      }
+      newX <- rawX[sample(nX, nX, TRUE), , drop = FALSE]
+      newY <- rawY[sample(nY, nY, TRUE), , drop = FALSE]
+      dat <- rbind(cbind(0, newX), cbind(1, newY))
+      list(p = p, q = q, dat = dat)
+    }
+  }
+  sampler
+}
+```
+
+The sampling distribution of the bootstrap should resemble the original sampling distribution.
+
+Figure 3: Example wth true null.
+
+```{r fig.height=4.4, fig.width=6.6}
+par(mfrow=c(1, 3),oma = c(0, 0, 2, 0))
+theta <- stat.T.nm
+nX  <- 50; nY <- 50
+mc.reps <- 100
+samples_true <- sampling_dist(h0_small, theta, nX, nY, mc.reps, TRUE)
+hist(samples_true)
+res <- h0_small(nX, nY)
+boot_s1 <- boot_sampler(res, h0 = FALSE)
+samples_boot1 <- sampling_dist(boot_s1, theta, nX, nY, mc.reps, TRUE)
+hist(samples_boot1)
+boot_s0 <- boot_sampler(res, h0 = TRUE)
+samples_boot0 <- sampling_dist(boot_s0, theta, nX, nY, mc.reps, TRUE)
+hist(samples_boot0)
+mtext("Figure 3", outer = TRUE, cex = 1.5)
+```
+
+Figure 4: Example wth true alernative.
+
+```{r fig.height=4.4, fig.width=6.6}
+par(mfrow=c(1, 3),oma = c(0, 0, 2, 0))
+theta <- stat.T.nm
+nX  <- 50; nY <- 50
+mc.reps <- 100
+samples_true <- sampling_dist(h1_small, theta, nX, nY, mc.reps, TRUE)
+hist(samples_true)
+res <- h1_small(nX, nY)
+boot_s1 <- boot_sampler(res, h0 = FALSE)
+samples_boot1 <- sampling_dist(boot_s1, theta, nX, nY, mc.reps, TRUE)
+hist(samples_boot1)
+boot_s0 <- boot_sampler(res, h0 = TRUE)
+samples_boot0 <- sampling_dist(boot_s0, theta, nX, nY, mc.reps, TRUE)
+hist(samples_boot0)
+mtext("Figure 4", outer = TRUE, cex = 1.5)
+```
+
+
 # Bootstrap tests
 
+For either the $T$ or $S$ statistic, we can test the global either by testing the norm, or doing multiple testing:
 
  * A single hypothesis test, $||T||_F^2 = 0$.
  * Multiple hypothesis tests, $T_{ij} = 0$.
 
-
-
-
-
-
+To get p-values using bootstrap, one can either invert the confidence interval, or bootstrap the null.
 
 
