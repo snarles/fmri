@@ -73,14 +73,15 @@ The data model is given in code as follows.
  * A covariance matrix $\Sigma_X$ for the noise in each column of $X$.
  * A covariance matrix $\Sigma_Y$
 
-The output is a function `sampler(nX, nY)`, which produces $n_X$ observations of $X$ and $n_Y$ observations of $Y$ (vectorized);  `sampler(0,0)` produces noiseless observations.  The dimensions $p$ and $q$ are stored as global variables.
+The output is a function `sampler(nX, nY)`, which produces $n_X$ observations of $X$ and $n_Y$ observations of $Y$ (vectorized) plus metadata;  `sampler(0,0)` produces noiseless observations.
 
 ```{r}
 library(MASS)
 
 f2 <- function(x, y = 0) sum((x-y)^2)
 
-procrustes_data_model_ <- function(A, B, SigmaX = eye(p), SigmaY = eye(p)) {
+procrustes_data_model_ <- function(A, B, SigmaX, SigmaY) {
+  p <- dim(A)[1]; q <- dim(A)[2]
   vecA <- as.numeric(A)
   vecB <- as.numeric(B)
   sampler <- function(nX, nY) {
@@ -95,14 +96,15 @@ procrustes_data_model_ <- function(A, B, SigmaX = eye(p), SigmaY = eye(p)) {
     rawY <- repmat(vecB, nY, 1)
     temp <- noise_mult * t(mvrnorm(nY * q, rep(0, p), SigmaY))
     rawY <- t(t(rawY) + as.numeric(temp))
-    ans <- rbind(cbind(0, rawX), cbind(1, rawY))
-    ans
+    dat <- rbind(cbind(0, rawX), cbind(1, rawY))
+    list(p = p, q  = q, dat = dat)
   }
   sampler
 }
 
 ## computes Ahat and Bhat
-sample_moments <- function(dat) {
+sample_moments <- function(res) {
+  p <- res$p; q <- res$q; dat <- res$dat
   rawX <- dat[dat[,1] == 0, -1, drop = FALSE]
   rawY <- dat[dat[,1] == 1, -1, drop = FALSE]  
   Ahat <- matrix(colMeans(rawX), p, q)
@@ -111,7 +113,7 @@ sample_moments <- function(dat) {
 }
 ```
 
-To test the code, we define a null (h0) model and a non-null (h1) model.
+To test the code, we define null (h0) models and a non-null (h1) model, for a variety of dimensionalities.
 
 ``` {r}
 p <- 5
@@ -119,18 +121,39 @@ q <- 2
 SigmaX <- cov(randn(2*p, p)); SigmaY <- cov(randn(2 * p, p))
 
 A_0 <- randn(p, q); B_0 <- svd(randn(p, p))$u %*% A_0
-h0_model <- procrustes_data_model_(A_0, B_0, SigmaX, SigmaY)
+h0_small <- procrustes_data_model_(A_0, B_0, SigmaX, SigmaY)
 
 A_1 <- randn(p, q); B_1 <- randn(p, q)
-h1_model <- procrustes_data_model_(A_1, B_1, SigmaX, SigmaY)
+h1_small <- procrustes_data_model_(A_1, B_1, SigmaX, SigmaY)
 
-dat <- h0_model(100, 200)
+dat <- h0_small(100, 200)
 mus <- sample_moments(dat)
 c(f2(mus$Ahat, A_0), f2(mus$Bhat, B_0))
 
-dat <- h0_model(0, 0)
+dat <- h0_small(0, 0)
 mus <- sample_moments(dat)
 c(f2(mus$Ahat, A_0), f2(mus$Bhat, B_0))
+
+p <- 20; q <- 10
+SigmaX <- cov(randn(2*p, p)); SigmaY <- cov(randn(2 * p, p))
+A <- randn(p, q); B <- svd(randn(p, p))$u %*% A
+h0_med1 <- procrustes_data_model_(A, B, SigmaX, SigmaY)
+B <- randn(p, q)
+h1_med1 <- procrustes_data_model_(A, B, SigmaX, SigmaY)
+
+p <- 30; q <- 2
+SigmaX <- cov(randn(2*p, p)); SigmaY <- cov(randn(2 * p, p))
+A <- randn(p, q); B <- svd(randn(p, p))$u %*% A
+h0_med2 <- procrustes_data_model_(A, B, SigmaX, SigmaY)
+B <- randn(p, q)
+h1_med2 <- procrustes_data_model_(A, B, SigmaX, SigmaY)
+
+p <- 15; q <- 15
+SigmaX <- cov(randn(2*p, p)); SigmaY <- cov(randn(2 * p, p))
+A <- randn(p, q); B <- svd(randn(p, p))$u %*% A
+h0_med3 <- procrustes_data_model_(A, B, SigmaX, SigmaY)
+B <- randn(p, q)
+h1_med3 <- procrustes_data_model_(A, B, SigmaX, SigmaY)
 ```
 
 Define the following multivariate test statistics $T$ and $D$:
@@ -146,16 +169,16 @@ $$
 The test statistics are given in code as follows
 ```{r}
 
-stat.T <- function(dat) {
-  mus <- sample_moments(dat)
+stat.T <- function(res) {
+  mus <- sample_moments(res)
   res <- svd(mus$Ahat %*% t(mus$Bhat))
   R <- res$v %*% t(res$u)
   stat.T.raw <- R %*% mus$Ahat - mus$Bhat
   as.numeric(stat.T.raw)
 }
 
-stat.S <- function(dat) {
-  mus <- sample_moments(dat)
+stat.S <- function(res) {
+  mus <- sample_moments(res)
   stat.S.raw <- t(mus$Ahat) %*% mus$Ahat - t(mus$Bhat) %*% mus$Bhat
   as.numeric(stat.S.raw)
 }
@@ -165,7 +188,10 @@ stat.S.norm <- function(dat) f2(stat.S(dat))
 
 ```
 
-Bias and variance of test statistics.
+
+# Estimating bias and variance with jackknife
+
+True bias and variance of test statistics.
 
 ```{r}
 
@@ -179,12 +205,45 @@ sampling_dist <- function(sampler, theta, nX, nY, mc.reps = 1e3) {
   diffs <- thetas - theta0
   bias <- rowMeans(diffs)
   sdv <- apply(diffs, 1, sd)
-  list(bias = bias, sdv = sdv, thetas = thetas, theta0 = theta0, diffs = diffs)
+  list(bias = bias, sdv = sdv)
 }
 
 ```
 
-# Estimating bias and variance with jackknife
+Jackknife estimates of bias and variance.
+
+```{r}
+
+jackknife <- function(res, theta) {
+  theta0 <- theta(res)
+  n <- dim(res$dat)[1]
+  thetas <- list()
+  for (i in 1:n) {
+    dat2 <- res$dat[-i, , drop = FALSE]
+    thetas[[i]] <- theta(list(p = res$p, q = res$q, dat = dat2))
+  }
+  thetas <- do.call(cbind, thetas)
+  theta_bar <- rowMeans(thetas)
+  bias <- (n-1) * (theta_bar - theta0)
+  sdv <- sqrt((n-1) * rowMeans((thetas - theta_bar)^2))
+  list(bias = bias, sdv = sdv)
+}
+  
+```
+
+
+```{r}
+
+sampler <- h0_small
+theta <- stat.S
+nX <- 20; nY <- 20
+res.true <- sampling_dist(sampler, theta, nX, nY)
+res.true
+res <- sampler(nX, nY)
+res.j <- jackknife(res, theta)
+res.j
+
+```
 
 # Bootstrap tests
 
