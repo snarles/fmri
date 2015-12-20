@@ -58,7 +58,7 @@ $$
 R = VU^T.
 $$
 
-# Data model and test statistics
+# Data model
 
 The data is given in the form of two samples, $X^{(1)}, ..., X^{(n_x)}$ and $Y^{(1)},..., Y^{(n_y)}$.
 In order to conveniently apply resampling methods, let us adopt the following one-sample sampling model:
@@ -157,6 +157,8 @@ h0_med3 <- procrustes_data_model_(A, B, SigmaX, SigmaY)
 B <- randn(p, q)
 h1_med3 <- procrustes_data_model_(A, B, SigmaX, SigmaY)
 ```
+
+# Test statistics
 
 Define the following multivariate test statistics $T$ and $D$:
 
@@ -435,4 +437,69 @@ For either the $T$ or $S$ statistic, we can test the global either by testing th
 
 To get p-values using bootstrap, one can either invert the confidence interval, or bootstrap the null.
 
+```{r}
 
+inverse_ci_test <- function(res, theta, mc.reps = 1000) {
+  nX <- sum(res$dat[, 1] ==0); nY <- sum(res$dat[, 1]==1)
+  boot_s1 <- boot_sampler(res, FALSE)
+  thetas <- sampling_dist(boot_s1, theta, nX, nY, mc.reps, TRUE)
+  pvs <- apply(thetas, 1, function(v) {
+    p1 <- (sum(v > 0) + 1)/(mc.reps + 1)
+    p2 <- (sum(v < 0) + 1)/(mc.reps + 1)
+    2 * pmin(p1, p2)
+  })
+  min(pvs) * length(pvs)
+}
+
+boot_null_test <- function(res, theta, mc.reps = 1000) {
+  nX <- sum(res$dat[, 1] ==0); nY <- sum(res$dat[, 1]==1)
+  boot_s0 <- boot_sampler(res, FALSE)
+  theta0 <- theta(res)
+  thetas <- sampling_dist(boot_s0, theta, nX, nY, mc.reps, TRUE)  
+  pvs <- sapply(1:length(theta0), function(i) {
+    v <- thetas[i, ]; v0 <- theta0[i]
+    p1 <- (sum(v > v0) + 1)/(mc.reps + 1)
+    p2 <- (sum(v < v0) + 1)/(mc.reps + 1)
+    2 * pmin(p1, p2)
+  })
+  min(pvs) * length(pvs)
+}
+
+```
+
+## Example
+
+```{r}
+nX <- 100; nY <- 100; mc.reps = 100
+res0 <- h0_small(nX, nY)
+res1 <- h1_small(nX, nY)
+
+## stat T
+c(inverse_ci_test(res0, stat.T, mc.reps), inverse_ci_test(res1, stat.T, mc.reps))
+c(inverse_ci_test(res0, stat.T.s, mc.reps), inverse_ci_test(res1, stat.T.s, mc.reps))
+c(inverse_ci_test(res0, stat.T.bs, mc.reps), inverse_ci_test(res1, stat.T.bs, mc.reps))
+c(boot_null_test(res0, stat.T, mc.reps), boot_null_test(res1, stat.T, mc.reps))
+c(boot_null_test(res0, stat.T.s, mc.reps), boot_null_test(res1, stat.T.s, mc.reps))
+c(boot_null_test(res0, stat.T.bs, mc.reps), boot_null_test(res1, stat.T.bs, mc.reps))
+## stat T norm
+c(inverse_ci_test(res0, stat.T.nm, mc.reps), inverse_ci_test(res1, stat.T.nm, mc.reps))
+c(inverse_ci_test(res0, stat.T.ns, mc.reps), inverse_ci_test(res1, stat.T.ns, mc.reps))
+c(inverse_ci_test(res0, stat.T.nbs, mc.reps), inverse_ci_test(res1, stat.T.nbs, mc.reps))
+c(boot_null_test(res0, stat.T.nm, mc.reps), boot_null_test(res1, stat.T.nm, mc.reps))
+c(boot_null_test(res0, stat.T.ns, mc.reps), boot_null_test(res1, stat.T.ns, mc.reps))
+c(boot_null_test(res0, stat.T.nbs, mc.reps), boot_null_test(res1, stat.T.nbs, mc.reps))
+## stat S
+c(inverse_ci_test(res0, stat.S, mc.reps), inverse_ci_test(res1, stat.S, mc.reps))
+c(inverse_ci_test(res0, stat.S.s, mc.reps), inverse_ci_test(res1, stat.S.s, mc.reps))
+c(inverse_ci_test(res0, stat.S.bs, mc.reps), inverse_ci_test(res1, stat.S.bs, mc.reps))
+c(boot_null_test(res0, stat.S, mc.reps), boot_null_test(res1, stat.S, mc.reps))
+c(boot_null_test(res0, stat.S.s, mc.reps), boot_null_test(res1, stat.S.s, mc.reps))
+c(boot_null_test(res0, stat.S.bs, mc.reps), boot_null_test(res1, stat.S.bs, mc.reps))
+## stat S norm
+c(inverse_ci_test(res0, stat.S.nm, mc.reps), inverse_ci_test(res1, stat.S.nm, mc.reps))
+c(inverse_ci_test(res0, stat.S.ns, mc.reps), inverse_ci_test(res1, stat.S.ns, mc.reps))
+c(inverse_ci_test(res0, stat.S.nbs, mc.reps), inverse_ci_test(res1, stat.S.nbs, mc.reps))
+c(boot_null_test(res0, stat.S.nm, mc.reps), boot_null_test(res1, stat.S.nm, mc.reps))
+c(boot_null_test(res0, stat.S.ns, mc.reps), boot_null_test(res1, stat.S.ns, mc.reps))
+c(boot_null_test(res0, stat.S.nbs, mc.reps), boot_null_test(res1, stat.S.nbs, mc.reps))
+```
