@@ -118,7 +118,7 @@ To test the code, we define null (h0) models and a non-null (h1) model, for a va
 ``` {r}
 p <- 5
 q <- 2
-SigmaX <- cov(randn(2*p, p)); SigmaY <- cov(randn(2 * p, p))
+SigmaX <- 3 * cov(randn(2*p, p)); SigmaY <- 3 * cov(randn(2 * p, p))
 
 A_0 <- randn(p, q); B_0 <- svd(randn(p, p))$u %*% A_0
 h0_small <- procrustes_data_model_(A_0, B_0, SigmaX, SigmaY)
@@ -183,8 +183,15 @@ stat.S <- function(res) {
   as.numeric(stat.S.raw)
 }
 
-stat.T.norm <- function(dat) f2(stat.T(dat))
-stat.S.norm <- function(dat) f2(stat.S(dat))
+nm_ <- function(theta) {
+  newf <- function(res) {
+    f2(theta(res))
+  }
+  newf
+}
+
+stat.T.nm <- nm_(stat.T)
+stat.S.nm <- nm_(stat.S)
 
 ```
 
@@ -195,13 +202,16 @@ True bias and variance of test statistics.
 
 ```{r}
 
-sampling_dist <- function(sampler, theta, nX, nY, mc.reps = 1e3) {
+sampling_dist <- function(sampler, theta, nX, nY, mc.reps = 1e3, samples = FALSE) {
   # true params
   dat0 <- sampler(0, 0)
   theta0 <- theta(dat0)
   # get population
   thetas <- lapply(1:mc.reps, function(i) theta(sampler(nX, nY)))
   thetas <- do.call(cbind, thetas)
+  if (samples) {
+    return(thetas)
+  }
   diffs <- thetas - theta0
   bias <- rowMeans(diffs)
   sdv <- apply(diffs, 1, sd)
@@ -231,11 +241,12 @@ jackknife <- function(res, theta) {
   
 ```
 
+Compare jackknife estimates to truth
 
 ```{r}
 
 sampler <- h0_small
-theta <- stat.S
+theta <- stat.S.nm
 nX <- 20; nY <- 20
 res.true <- sampling_dist(sampler, theta, nX, nY)
 res.true
@@ -243,6 +254,63 @@ res <- sampler(nX, nY)
 res.j <- jackknife(res, theta)
 res.j
 
+```
+
+Define studentized and bias-corrected statistics
+
+```{r}
+## studentized
+s_ <- function(theta) {
+  newf <- function(res) {
+    jj <- jackknife(res, theta)
+    theta(res)/jj$sdv
+  }
+  newf
+}
+
+## bias-corrected and studentized
+bs_ <- function(theta) {
+  newf <- function(res) {
+    jj <- jackknife(res, theta)
+    (theta(res) - jj$bias)/jj$sdv
+  }
+  newf
+}
+
+stat.T.s <- s_(stat.T)
+stat.S.s <- s_(stat.S)
+stat.T.bs <- bs_(stat.T)
+stat.S.bs <- bs_(stat.S)
+stat.T.ns <- s_(stat.T.nm)
+stat.S.ns <- s_(stat.S.nm)
+stat.T.nbs <- bs_(stat.T.nm)
+stat.S.nbs <- bs_(stat.S.nm)
+```
+
+Figure 2: compare bias-corrected and studentized statistics to normal dist.
+
+```{r fig.height=4.4, fig.width=6.6}
+par(mfrow=c(1,2),oma = c(0, 0, 2, 0))
+sampler <- h0_small
+theta <- stat.S
+nX <- 20; nY <- 20
+## non-corrected
+mc.reps <- 1e3
+thetas <- sampling_dist(sampler, theta, nX, nY, mc.reps, samples = TRUE)
+hist(thetas[1, ], 
+     breaks = seq(floor(min(thetas[1, ])), ceiling(max(thetas[1, ])), 0.5)
+     )
+xs <- seq(-7, 7, 0.1)
+lines(xs, mc.reps/2 * dnorm(xs), col = "red")
+## studentidized and bc
+thetas <- sampling_dist(sampler, bs_(theta), nX, nY, mc.reps, samples = TRUE)
+hist(thetas[1, ], 
+     breaks = seq(floor(min(thetas[1, ])), ceiling(max(thetas[1, ])), 0.5)
+     )
+lines(xs, mc.reps/2 * dnorm(xs), col = "red")
+names(res)
+stat.T.bs(res)
+mtext("Figure 2", outer = TRUE, cex = 1.5)
 ```
 
 # Bootstrap tests
