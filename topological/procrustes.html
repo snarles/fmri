@@ -102,8 +102,8 @@ mtext(&quot;Figure 1&quot;, outer = TRUE, cex = 1.5)</code></pre>
 R = VU^T.
 \]</span></p>
 </div>
-<div id="bootstrap-test" class="section level1">
-<h1>Bootstrap Test</h1>
+<div id="data-model-and-test-statistics" class="section level1">
+<h1>Data model and test statistics</h1>
 <p>The data is given in the form of two samples, <span class="math">\(X^{(1)}, ..., X^{(n_x)}\)</span> and <span class="math">\(Y^{(1)},..., Y^{(n_y)}\)</span>. In order to conveniently apply resampling methods, let us adopt the following one-sample sampling model: the data is given in the form of ordered pairs <span class="math">\((0, X^{(1)}), ..., (0, X^{(n_x)}), (1, Y^{(1)}),..., (1, Y^{(n_y)})\)</span>. Then any one-sample resampling method can be applied to the data.</p>
 <p>The data model is given in code as follows.</p>
 <p><code>procrustes_data_model_</code> is a function which takes as inputs:</p>
@@ -112,12 +112,8 @@ R = VU^T.
 <li>A covariance matrix <span class="math">\(\Sigma_X\)</span> for the noise in each column of <span class="math">\(X\)</span>.</li>
 <li>A covariance matrix <span class="math">\(\Sigma_Y\)</span></li>
 </ul>
-<p>The output is a function <code>sampler(nX, nY)</code>, which produces <span class="math">\(n_X\)</span> observations of <span class="math">\(X\)</span> and <span class="math">\(n_Y\)</span> observations of <span class="math">\(Y\)</span> (vectorized). The dimensions <span class="math">\(p\)</span> and <span class="math">\(q\)</span> are stored as global variables.</p>
+<p>The output is a function <code>sampler(nX, nY)</code>, which produces <span class="math">\(n_X\)</span> observations of <span class="math">\(X\)</span> and <span class="math">\(n_Y\)</span> observations of <span class="math">\(Y\)</span> (vectorized); <code>sampler(0,0)</code> produces noiseless observations. The dimensions <span class="math">\(p\)</span> and <span class="math">\(q\)</span> are stored as global variables.</p>
 <pre class="r"><code>library(MASS)
-p &lt;- 3
-q &lt;- 10
-A &lt;- randn(p, q); B &lt;- randn(p, q)
-SigmaX &lt;- cov(randn(2*p, p)); SigmaY &lt;- cov(randn(2 * p, p))
 
 f2 &lt;- function(x, y = 0) sum((x-y)^2)
 
@@ -125,11 +121,16 @@ procrustes_data_model_ &lt;- function(A, B, SigmaX = eye(p), SigmaY = eye(p)) {
   vecA &lt;- as.numeric(A)
   vecB &lt;- as.numeric(B)
   sampler &lt;- function(nX, nY) {
+    noise_mult &lt;- 1
+    if (nX == 0 &amp;&amp; nY == 0) {
+      nX &lt;- 1; nY &lt;- 1
+      noise_mult &lt;- 0
+    }
     rawX &lt;- repmat(vecA, nX, 1)
-    temp &lt;- t(mvrnorm(nX * q, rep(0, p), SigmaX))
+    temp &lt;- noise_mult * t(mvrnorm(nX * q, rep(0, p), SigmaX))
     rawX &lt;- t(t(rawX) + as.numeric(temp))
     rawY &lt;- repmat(vecB, nY, 1)
-    temp &lt;- t(mvrnorm(nY * q, rep(0, p), SigmaY))
+    temp &lt;- noise_mult * t(mvrnorm(nY * q, rep(0, p), SigmaY))
     rawY &lt;- t(t(rawY) + as.numeric(temp))
     ans &lt;- rbind(cbind(0, rawX), cbind(1, rawY))
     ans
@@ -144,23 +145,69 @@ sample_moments &lt;- function(dat) {
   Ahat &lt;- matrix(colMeans(rawX), p, q)
   Bhat &lt;- matrix(colMeans(rawY), p, q)
   list(Ahat = Ahat, Bhat = Bhat)
-}
+}</code></pre>
+<p>To test the code, we define a null (h0) model and a non-null (h1) model.</p>
+<pre class="r"><code>p &lt;- 5
+q &lt;- 2
+SigmaX &lt;- cov(randn(2*p, p)); SigmaY &lt;- cov(randn(2 * p, p))
 
-sampler &lt;- procrustes_data_model_(A, B, SigmaX, SigmaY)
-dat &lt;- sampler(100, 200)
+A_0 &lt;- randn(p, q); B_0 &lt;- svd(randn(p, p))$u %*% A_0
+h0_model &lt;- procrustes_data_model_(A_0, B_0, SigmaX, SigmaY)
+
+A_1 &lt;- randn(p, q); B_1 &lt;- randn(p, q)
+h1_model &lt;- procrustes_data_model_(A_1, B_1, SigmaX, SigmaY)
+
+dat &lt;- h0_model(100, 200)
 mus &lt;- sample_moments(dat)
-f2(mus$Ahat, A)</code></pre>
-<pre><code>## [1] 0.4577179</code></pre>
-<pre class="r"><code>f2(mus$Bhat, B)</code></pre>
-<pre><code>## [1] 0.251744</code></pre>
+c(f2(mus$Ahat, A_0), f2(mus$Bhat, B_0))</code></pre>
+<pre><code>## [1] 0.05940235 0.03489023</code></pre>
+<pre class="r"><code>dat &lt;- h0_model(0, 0)
+mus &lt;- sample_moments(dat)
+c(f2(mus$Ahat, A_0), f2(mus$Bhat, B_0))</code></pre>
+<pre><code>## [1] 0 0</code></pre>
 <p>Define the following multivariate test statistics <span class="math">\(T\)</span> and <span class="math">\(D\)</span>:</p>
 <p><span class="math">\[
-T = \hat{A} - U V^T \hat{B}.
+T = VU^T \hat{A} - \hat{B}.
 \]</span></p>
 <p><span class="math">\[
-D = \hat{A}^T \hat{A} - \hat{B}^T\hat{B}.
+S = \hat{A}^T \hat{A} - \hat{B}^T\hat{B}.
 \]</span></p>
 <p>The test statistics are given in code as follows</p>
+<pre class="r"><code>stat.T &lt;- function(dat) {
+  mus &lt;- sample_moments(dat)
+  res &lt;- svd(mus$Ahat %*% t(mus$Bhat))
+  R &lt;- res$v %*% t(res$u)
+  stat.T.raw &lt;- R %*% mus$Ahat - mus$Bhat
+  as.numeric(stat.T.raw)
+}
+
+stat.S &lt;- function(dat) {
+  mus &lt;- sample_moments(dat)
+  stat.S.raw &lt;- t(mus$Ahat) %*% mus$Ahat - t(mus$Bhat) %*% mus$Bhat
+  as.numeric(stat.S.raw)
+}
+
+stat.T.norm &lt;- function(dat) f2(stat.T(dat))
+stat.S.norm &lt;- function(dat) f2(stat.S(dat))</code></pre>
+<p>Bias and variance of test statistics.</p>
+<pre class="r"><code>sampling_dist &lt;- function(sampler, theta, nX, nY, mc.reps = 1e3) {
+  # true params
+  dat0 &lt;- sampler(0, 0)
+  theta0 &lt;- theta(dat0)
+  # get population
+  thetas &lt;- lapply(1:mc.reps, function(i) theta(sampler(nX, nY)))
+  thetas &lt;- do.call(cbind, thetas)
+  diffs &lt;- thetas - theta0
+  bias &lt;- rowMeans(diffs)
+  sdv &lt;- apply(diffs, 1, sd)
+  list(bias = bias, sdv = sdv, thetas = thetas, theta0 = theta0, diffs = diffs)
+}</code></pre>
+</div>
+<div id="estimating-bias-and-variance-with-jackknife" class="section level1">
+<h1>Estimating bias and variance with jackknife</h1>
+</div>
+<div id="bootstrap-tests" class="section level1">
+<h1>Bootstrap tests</h1>
 <ul>
 <li>A single hypothesis test, <span class="math">\(||T||_F^2 = 0\)</span>.</li>
 <li>Multiple hypothesis tests, <span class="math">\(T_{ij} = 0\)</span>.</li>

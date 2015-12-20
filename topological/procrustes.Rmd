@@ -58,7 +58,7 @@ $$
 R = VU^T.
 $$
 
-# Bootstrap Test
+# Data model and test statistics
 
 The data is given in the form of two samples, $X^{(1)}, ..., X^{(n_x)}$ and $Y^{(1)},..., Y^{(n_y)}$.
 In order to conveniently apply resampling methods, let us adopt the following one-sample sampling model:
@@ -73,14 +73,10 @@ The data model is given in code as follows.
  * A covariance matrix $\Sigma_X$ for the noise in each column of $X$.
  * A covariance matrix $\Sigma_Y$
 
-The output is a function `sampler(nX, nY)`, which produces $n_X$ observations of $X$ and $n_Y$ observations of $Y$ (vectorized).  The dimensions $p$ and $q$ are stored as global variables.
+The output is a function `sampler(nX, nY)`, which produces $n_X$ observations of $X$ and $n_Y$ observations of $Y$ (vectorized);  `sampler(0,0)` produces noiseless observations.  The dimensions $p$ and $q$ are stored as global variables.
 
 ```{r}
 library(MASS)
-p <- 3
-q <- 10
-A <- randn(p, q); B <- randn(p, q)
-SigmaX <- cov(randn(2*p, p)); SigmaY <- cov(randn(2 * p, p))
 
 f2 <- function(x, y = 0) sum((x-y)^2)
 
@@ -88,11 +84,16 @@ procrustes_data_model_ <- function(A, B, SigmaX = eye(p), SigmaY = eye(p)) {
   vecA <- as.numeric(A)
   vecB <- as.numeric(B)
   sampler <- function(nX, nY) {
+    noise_mult <- 1
+    if (nX == 0 && nY == 0) {
+      nX <- 1; nY <- 1
+      noise_mult <- 0
+    }
     rawX <- repmat(vecA, nX, 1)
-    temp <- t(mvrnorm(nX * q, rep(0, p), SigmaX))
+    temp <- noise_mult * t(mvrnorm(nX * q, rep(0, p), SigmaX))
     rawX <- t(t(rawX) + as.numeric(temp))
     rawY <- repmat(vecB, nY, 1)
-    temp <- t(mvrnorm(nY * q, rep(0, p), SigmaY))
+    temp <- noise_mult * t(mvrnorm(nY * q, rep(0, p), SigmaY))
     rawY <- t(t(rawY) + as.numeric(temp))
     ans <- rbind(cbind(0, rawX), cbind(1, rawY))
     ans
@@ -108,28 +109,84 @@ sample_moments <- function(dat) {
   Bhat <- matrix(colMeans(rawY), p, q)
   list(Ahat = Ahat, Bhat = Bhat)
 }
-
-sampler <- procrustes_data_model_(A, B, SigmaX, SigmaY)
-dat <- sampler(100, 200)
-mus <- sample_moments(dat)
-f2(mus$Ahat, A)
-f2(mus$Bhat, B)
 ```
 
+To test the code, we define a null (h0) model and a non-null (h1) model.
+
+``` {r}
+p <- 5
+q <- 2
+SigmaX <- cov(randn(2*p, p)); SigmaY <- cov(randn(2 * p, p))
+
+A_0 <- randn(p, q); B_0 <- svd(randn(p, p))$u %*% A_0
+h0_model <- procrustes_data_model_(A_0, B_0, SigmaX, SigmaY)
+
+A_1 <- randn(p, q); B_1 <- randn(p, q)
+h1_model <- procrustes_data_model_(A_1, B_1, SigmaX, SigmaY)
+
+dat <- h0_model(100, 200)
+mus <- sample_moments(dat)
+c(f2(mus$Ahat, A_0), f2(mus$Bhat, B_0))
+
+dat <- h0_model(0, 0)
+mus <- sample_moments(dat)
+c(f2(mus$Ahat, A_0), f2(mus$Bhat, B_0))
+```
 
 Define the following multivariate test statistics $T$ and $D$:
 
 $$
-T = \hat{A} - U V^T \hat{B}.
+T = VU^T \hat{A} - \hat{B}.
 $$
 
 $$
-D = \hat{A}^T \hat{A} - \hat{B}^T\hat{B}.
+S = \hat{A}^T \hat{A} - \hat{B}^T\hat{B}.
 $$
 
 The test statistics are given in code as follows
 ```{r}
+
+stat.T <- function(dat) {
+  mus <- sample_moments(dat)
+  res <- svd(mus$Ahat %*% t(mus$Bhat))
+  R <- res$v %*% t(res$u)
+  stat.T.raw <- R %*% mus$Ahat - mus$Bhat
+  as.numeric(stat.T.raw)
+}
+
+stat.S <- function(dat) {
+  mus <- sample_moments(dat)
+  stat.S.raw <- t(mus$Ahat) %*% mus$Ahat - t(mus$Bhat) %*% mus$Bhat
+  as.numeric(stat.S.raw)
+}
+
+stat.T.norm <- function(dat) f2(stat.T(dat))
+stat.S.norm <- function(dat) f2(stat.S(dat))
+
 ```
+
+Bias and variance of test statistics.
+
+```{r}
+
+sampling_dist <- function(sampler, theta, nX, nY, mc.reps = 1e3) {
+  # true params
+  dat0 <- sampler(0, 0)
+  theta0 <- theta(dat0)
+  # get population
+  thetas <- lapply(1:mc.reps, function(i) theta(sampler(nX, nY)))
+  thetas <- do.call(cbind, thetas)
+  diffs <- thetas - theta0
+  bias <- rowMeans(diffs)
+  sdv <- apply(diffs, 1, sd)
+  list(bias = bias, sdv = sdv, thetas = thetas, theta0 = theta0, diffs = diffs)
+}
+
+```
+
+# Estimating bias and variance with jackknife
+
+# Bootstrap tests
 
 
  * A single hypothesis test, $||T||_F^2 = 0$.
