@@ -202,7 +202,7 @@ stat.S.nm <- nm_(stat.S)
 
 # Estimating bias and variance with jackknife
 
-True bias and variance of test statistics.
+True bias and variance, skewness of test statistics.
 
 ```{r}
 
@@ -219,7 +219,8 @@ sampling_dist <- function(sampler, theta, nX, nY, mc.reps = 1e3, samples = FALSE
   diffs <- thetas - theta0
   bias <- rowMeans(diffs)
   sdv <- apply(diffs, 1, sd)
-  list(bias = bias, sdv = sdv)
+  skew <- rowSums(diffs^3)/(rowSums(diffs^2))^(3/2)
+  list(bias = bias, sdv = sdv, skew = skew)
 }
 
 ```
@@ -238,9 +239,11 @@ jackknife <- function(res, theta) {
   }
   thetas <- do.call(cbind, thetas)
   theta_bar <- rowMeans(thetas)
+  diffs <- thetas - theta_bar
   bias <- (n-1) * (theta_bar - theta0)
   sdv <- sqrt((n-1) * rowMeans((thetas - theta_bar)^2))
-  list(bias = bias, sdv = sdv)
+  skew <- rowSums(diffs^3)/(rowSums(diffs^2))^(3/2)  
+  list(bias = bias, sdv = sdv, skew = skew)
 }
   
 ```
@@ -469,7 +472,7 @@ boot_null_test <- function(res, theta, mc.reps = 1000) {
 
 ## Example
 
-```{r}
+```{r, eval = FALSE}
 nX <- 100; nY <- 100; mc.reps = 100
 res0 <- h0_small(nX, nY)
 res1 <- h1_small(nX, nY)
@@ -503,3 +506,85 @@ c(boot_null_test(res0, stat.S.nm, mc.reps), boot_null_test(res1, stat.S.nm, mc.r
 c(boot_null_test(res0, stat.S.ns, mc.reps), boot_null_test(res1, stat.S.ns, mc.reps))
 c(boot_null_test(res0, stat.S.nbs, mc.reps), boot_null_test(res1, stat.S.nbs, mc.reps))
 ```
+
+# Better bootstrap intervals
+
+Using BCA and ABC method for inverse CI tests.
+
+The BCA alpha is given by
+
+$$
+\alpha_{BCA} = \Phi\left(z_0 + \frac{z_0 + z^{(\alpha)}}{1 - a (z_0 + z^{(\alpha)})}\right)
+$$
+
+Hence, to invert the BCA interval, use
+
+$$
+\alpha = \Phi\left(
+\frac{(1-az_0)(z^{BCA} - z_0) - z_0}{1 + a (z^{BCA} - z_0)}
+\right)
+$$
+
+```{r}
+alpha_bca <- function(alpha, z0, acc) {
+  za <- qnorm(alpha)
+  pnorm(
+    z0 + (z0 + za)/(1 - acc * (z0 + za))
+    )
+}
+
+inv_alpha_bca <- function(alpha_bca, z0, acc) {
+  if (alpha_bca == 1) {
+    return(1)
+  }
+  za <- qnorm(alpha_bca)
+  pnorm(
+    ((1 - acc * z0) * (za - z0) - z0)/
+      (1 + acc * (za - z0))
+    )
+}
+
+alpha_bca(0.1, 0.2, 0.01)
+inv_alpha_bca(0.19251559, 0.2, 0.01)
+```
+
+Code for BCA inverted p-values.
+
+```{r}
+theta <- stat.T
+
+inverse_bca_test <- function(res, theta, mc.reps = 1000) {
+  jj <- jackknife(res, theta)
+  acc <- jj$skew/6
+  boot_s1 <- boot_sampler(res, FALSE)
+  thetas <- sampling_dist(boot_s1, theta, nX, nY, mc.reps, TRUE)
+  theta0 <- theta(res)
+  z0s <- sapply(1:length(theta0), function(i) {
+    qnorm(sum(thetas[i, ] < theta0[i])/mc.reps)
+  })
+  pvs <- sapply(1:length(theta0), function(i) {
+    v <- thetas[i, ]
+    p1 <- (sum(v > 0) + 1)/(mc.reps + 1)
+    p2 <- (sum(v < 0) + 1)/(mc.reps + 1)
+    p1_mod <- inv_alpha_bca(p1, z0s[i], acc[i])
+    p2_mod <- inv_alpha_bca(p2, -z0s[i], acc[i])
+    2 * pmin(p1_mod, p2_mod)
+  })
+  min(pvs) * length(pvs)
+}
+```
+
+## Example
+
+
+```{r, eval = TRUE}
+nX <- 100; nY <- 100; mc.reps = 100
+res0 <- h0_small(nX, nY)
+res1 <- h1_small(nX, nY)
+
+c(inverse_bca_test(res0, stat.T, mc.reps), inverse_bca_test(res1, stat.T, mc.reps))
+c(inverse_bca_test(res0, stat.T.nm, mc.reps), inverse_bca_test(res1, stat.T.nm, mc.reps))
+c(inverse_bca_test(res0, stat.S, mc.reps), inverse_bca_test(res1, stat.S, mc.reps))
+c(inverse_bca_test(res0, stat.S.nm, mc.reps), inverse_bca_test(res1, stat.S.nm, mc.reps))
+```
+
