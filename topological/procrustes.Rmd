@@ -5,7 +5,7 @@ date: "12/16/2015"
 output: html_document
 ---
 
-Let $X$ and $Y$ be indepedent $p \times n$ random matrices, with distributions $F$ and $G$ respectively.
+Let $X$ and $Y$ be indepedent $p \times q$ random matrices, with distributions $F$ and $G$ respectively.
 Let $A = E[X]$ and $B = E[Y]$.
 The goal is to test the *Procrustes hypothesis*
 
@@ -17,7 +17,7 @@ or equivalently, that there exists $\Omega$ orthogonal such that $\Omega A = B$.
 The data consists of i.i.d. indpendent realizations $X^{(1)}, ..., X^{(n_x)}$ and $Y^{(1)},..., Y^{(n_y)}$.
 
 *Example:* 
-We are testing the congruence of two physical objects.  The $n$ columns of $A$ consist of the true positions of $n$ labelled landmarks on the first object, measured according to some orthogonal coordinate system.  The $n$ columns of $B$ give the positions of the corresponding landmarks of the second object, measured using a different orthogonal system compared to the first.  Both sets of positions are centered and standardized using an $(n + 1)$ th landmark which is used to define the origin.  $A$ and $B$ are not observed directly; instead, they must be inferred from unbiased, noisy measurements $X$ and $Y$ respectively.
+We are testing the congruence of two physical objects.  The $q$ columns of $A$ consist of the true positions of $q$ labelled landmarks on the first object, measured according to some orthogonal coordinate system.  The $q$ columns of $B$ give the positions of the corresponding landmarks of the second object, measured using a different orthogonal system compared to the first.  Both sets of positions are centered and standardized using an $(q + 1)$ th landmark which is used to define the origin.  $A$ and $B$ are not observed directly; instead, they must be inferred from unbiased, noisy measurements $X$ and $Y$ respectively.
 
 The situation is depicted in Figure 1.
 
@@ -58,34 +58,79 @@ $$
 R = VU^T.
 $$
 
-Let us write $R(A, B)$ for the mapping $R(A, B) = VU^T$.
-
-
 # Bootstrap Test
 
-The above Procrustes analysis can be encapsulated in the form of a matrix-valued functional $T$.
-Let $T$ be a functional which maps a pair of $p \times n$ matrix distributions $(F, G)$ to a $p \times n$ real matrix.  $T$ is defined by
-$$
-T(F, G) = R(\mu[F], \mu[G]) \mu(F) - \mu(G)
-$$
-where $\mu$ is the first moment functional.
+The data is given in the form of two samples, $X^{(1)}, ..., X^{(n_x)}$ and $Y^{(1)},..., Y^{(n_y)}$.
+In order to conveniently apply resampling methods, let us adopt the following one-sample sampling model:
+the data is given in the form of ordered pairs $(0, X^{(1)}), ..., (0, X^{(n_x)}), (1, Y^{(1)}),..., (1, Y^{(n_y)})$.  Then any one-sample resampling method can be applied to the data.
 
-The null hypothesis is
-$$
-H_0: T(F, G) = 0.
-$$
-It is an intersection of $np$ null hypotheses,
-$$
-H_{0, ij}: T_{ij}(F, G) = 0
-$$
-where $T_{ij}(F, G) = (T(F, G))_{ij}$.
+The data model is given in code as follows. 
 
-Alternatively, one could also state the null hypothesis in the "Frobenius norm" formulation.
+
+`procrustes_data_model_` is a function which takes as inputs:
+
+ * The true parameters $A$, $B$
+ * A covariance matrix $\Sigma_X$ for the noise in each column of $X$.
+ * A covariance matrix $\Sigma_Y$
+
+The output is a function `sampler(nX, nY)`, which produces $n_X$ observations of $X$ and $n_Y$ observations of $Y$ (vectorized).  The dimensions $p$ and $q$ are stored as global variables.
+
+```{r}
+library(MASS)
+p <- 3
+q <- 10
+A <- randn(p, q); B <- randn(p, q)
+SigmaX <- cov(randn(2*p, p)); SigmaY <- cov(randn(2 * p, p))
+
+f2 <- function(x, y = 0) sum((x-y)^2)
+
+procrustes_data_model_ <- function(A, B, SigmaX = eye(p), SigmaY = eye(p)) {
+  vecA <- as.numeric(A)
+  vecB <- as.numeric(B)
+  sampler <- function(nX, nY) {
+    rawX <- repmat(vecA, nX, 1)
+    temp <- t(mvrnorm(nX * q, rep(0, p), SigmaX))
+    rawX <- t(t(rawX) + as.numeric(temp))
+    rawY <- repmat(vecB, nY, 1)
+    temp <- t(mvrnorm(nY * q, rep(0, p), SigmaY))
+    rawY <- t(t(rawY) + as.numeric(temp))
+    ans <- rbind(cbind(0, rawX), cbind(1, rawY))
+    ans
+  }
+  sampler
+}
+
+## computes Ahat and Bhat
+sample_moments <- function(dat) {
+  rawX <- dat[dat[,1] == 0, -1, drop = FALSE]
+  rawY <- dat[dat[,1] == 1, -1, drop = FALSE]  
+  Ahat <- matrix(colMeans(rawX), p, q)
+  Bhat <- matrix(colMeans(rawY), p, q)
+  list(Ahat = Ahat, Bhat = Bhat)
+}
+
+sampler <- procrustes_data_model_(A, B, SigmaX, SigmaY)
+dat <- sampler(100, 200)
+mus <- sample_moments(dat)
+f2(mus$Ahat, A)
+f2(mus$Bhat, B)
+```
+
+
+Define the following multivariate test statistics $T$ and $D$:
+
 $$
-H_{0, F}: ||T(F, G)||_F^2 = \sum_{ij} T_{ij}(F, G)^2 = 0.
+T = \hat{A} - U V^T \hat{B}.
 $$
 
-This leads to two general approaches for hypothesis testing.
+$$
+D = \hat{A}^T \hat{A} - \hat{B}^T\hat{B}.
+$$
+
+The test statistics are given in code as follows
+```{r}
+```
+
 
  * A single hypothesis test, $||T||_F^2 = 0$.
  * Multiple hypothesis tests, $T_{ij} = 0$.

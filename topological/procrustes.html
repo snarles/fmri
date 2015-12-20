@@ -68,12 +68,12 @@ img {
 </div>
 
 
-<p>Let <span class="math">\(X\)</span> and <span class="math">\(Y\)</span> be indepedent <span class="math">\(p \times n\)</span> random matrices, with distributions <span class="math">\(F\)</span> and <span class="math">\(G\)</span> respectively. Let <span class="math">\(A = E[X]\)</span> and <span class="math">\(B = E[Y]\)</span>. The goal is to test the <em>Procrustes hypothesis</em></p>
+<p>Let <span class="math">\(X\)</span> and <span class="math">\(Y\)</span> be indepedent <span class="math">\(p \times q\)</span> random matrices, with distributions <span class="math">\(F\)</span> and <span class="math">\(G\)</span> respectively. Let <span class="math">\(A = E[X]\)</span> and <span class="math">\(B = E[Y]\)</span>. The goal is to test the <em>Procrustes hypothesis</em></p>
 <p><span class="math">\[
 H_0: A^T A = B^T B
 \]</span></p>
 <p>or equivalently, that there exists <span class="math">\(\Omega\)</span> orthogonal such that <span class="math">\(\Omega A = B\)</span>. The data consists of i.i.d. indpendent realizations <span class="math">\(X^{(1)}, ..., X^{(n_x)}\)</span> and <span class="math">\(Y^{(1)},..., Y^{(n_y)}\)</span>.</p>
-<p><em>Example:</em> We are testing the congruence of two physical objects. The <span class="math">\(n\)</span> columns of <span class="math">\(A\)</span> consist of the true positions of <span class="math">\(n\)</span> labelled landmarks on the first object, measured according to some orthogonal coordinate system. The <span class="math">\(n\)</span> columns of <span class="math">\(B\)</span> give the positions of the corresponding landmarks of the second object, measured using a different orthogonal system compared to the first. Both sets of positions are centered and standardized using an <span class="math">\((n + 1)\)</span> th landmark which is used to define the origin. <span class="math">\(A\)</span> and <span class="math">\(B\)</span> are not observed directly; instead, they must be inferred from unbiased, noisy measurements <span class="math">\(X\)</span> and <span class="math">\(Y\)</span> respectively.</p>
+<p><em>Example:</em> We are testing the congruence of two physical objects. The <span class="math">\(q\)</span> columns of <span class="math">\(A\)</span> consist of the true positions of <span class="math">\(q\)</span> labelled landmarks on the first object, measured according to some orthogonal coordinate system. The <span class="math">\(q\)</span> columns of <span class="math">\(B\)</span> give the positions of the corresponding landmarks of the second object, measured using a different orthogonal system compared to the first. Both sets of positions are centered and standardized using an <span class="math">\((q + 1)\)</span> th landmark which is used to define the origin. <span class="math">\(A\)</span> and <span class="math">\(B\)</span> are not observed directly; instead, they must be inferred from unbiased, noisy measurements <span class="math">\(X\)</span> and <span class="math">\(Y\)</span> respectively.</p>
 <p>The situation is depicted in Figure 1.</p>
 <pre class="r"><code>library(pracma)
 shape.inner &lt;- matrix(c(0,0, 1,-2, -1,-2, 0,0), 2, 4)
@@ -101,22 +101,66 @@ mtext(&quot;Figure 1&quot;, outer = TRUE, cex = 1.5)</code></pre>
 \]</span> the optimal rotation is given by <span class="math">\[
 R = VU^T.
 \]</span></p>
-<p>Let us write <span class="math">\(R(A, B)\)</span> for the mapping <span class="math">\(R(A, B) = VU^T\)</span>.</p>
 </div>
 <div id="bootstrap-test" class="section level1">
 <h1>Bootstrap Test</h1>
-<p>The above Procrustes analysis can be encapsulated in the form of a matrix-valued functional <span class="math">\(T\)</span>. Let <span class="math">\(T\)</span> be a functional which maps a pair of <span class="math">\(p \times n\)</span> matrix distributions <span class="math">\((F, G)\)</span> to a <span class="math">\(p \times n\)</span> real matrix. <span class="math">\(T\)</span> is defined by <span class="math">\[
-T(F, G) = R(\mu[F], \mu[G]) \mu(F) - \mu(G)
-\]</span> where <span class="math">\(\mu\)</span> is the first moment functional.</p>
-<p>The null hypothesis is <span class="math">\[
-H_0: T(F, G) = 0.
-\]</span> It is an intersection of <span class="math">\(np\)</span> null hypotheses, <span class="math">\[
-H_{0, ij}: T_{ij}(F, G) = 0
-\]</span> where <span class="math">\(T_{ij}(F, G) = (T(F, G))_{ij}\)</span>.</p>
-<p>Alternatively, one could also state the null hypothesis in the “Frobenius norm” formulation. <span class="math">\[
-H_{0, F}: ||T(F, G)||_F^2 = \sum_{ij} T_{ij}(F, G)^2 = 0.
+<p>The data is given in the form of two samples, <span class="math">\(X^{(1)}, ..., X^{(n_x)}\)</span> and <span class="math">\(Y^{(1)},..., Y^{(n_y)}\)</span>. In order to conveniently apply resampling methods, let us adopt the following one-sample sampling model: the data is given in the form of ordered pairs <span class="math">\((0, X^{(1)}), ..., (0, X^{(n_x)}), (1, Y^{(1)}),..., (1, Y^{(n_y)})\)</span>. Then any one-sample resampling method can be applied to the data.</p>
+<p>The data model is given in code as follows.</p>
+<p><code>procrustes_data_model_</code> is a function which takes as inputs:</p>
+<ul>
+<li>The true parameters <span class="math">\(A\)</span>, <span class="math">\(B\)</span></li>
+<li>A covariance matrix <span class="math">\(\Sigma_X\)</span> for the noise in each column of <span class="math">\(X\)</span>.</li>
+<li>A covariance matrix <span class="math">\(\Sigma_Y\)</span></li>
+</ul>
+<p>The output is a function <code>sampler(nX, nY)</code>, which produces <span class="math">\(n_X\)</span> observations of <span class="math">\(X\)</span> and <span class="math">\(n_Y\)</span> observations of <span class="math">\(Y\)</span> (vectorized). The dimensions <span class="math">\(p\)</span> and <span class="math">\(q\)</span> are stored as global variables.</p>
+<pre class="r"><code>library(MASS)
+p &lt;- 3
+q &lt;- 10
+A &lt;- randn(p, q); B &lt;- randn(p, q)
+SigmaX &lt;- cov(randn(2*p, p)); SigmaY &lt;- cov(randn(2 * p, p))
+
+f2 &lt;- function(x, y = 0) sum((x-y)^2)
+
+procrustes_data_model_ &lt;- function(A, B, SigmaX = eye(p), SigmaY = eye(p)) {
+  vecA &lt;- as.numeric(A)
+  vecB &lt;- as.numeric(B)
+  sampler &lt;- function(nX, nY) {
+    rawX &lt;- repmat(vecA, nX, 1)
+    temp &lt;- t(mvrnorm(nX * q, rep(0, p), SigmaX))
+    rawX &lt;- t(t(rawX) + as.numeric(temp))
+    rawY &lt;- repmat(vecB, nY, 1)
+    temp &lt;- t(mvrnorm(nY * q, rep(0, p), SigmaY))
+    rawY &lt;- t(t(rawY) + as.numeric(temp))
+    ans &lt;- rbind(cbind(0, rawX), cbind(1, rawY))
+    ans
+  }
+  sampler
+}
+
+## computes Ahat and Bhat
+sample_moments &lt;- function(dat) {
+  rawX &lt;- dat[dat[,1] == 0, -1, drop = FALSE]
+  rawY &lt;- dat[dat[,1] == 1, -1, drop = FALSE]  
+  Ahat &lt;- matrix(colMeans(rawX), p, q)
+  Bhat &lt;- matrix(colMeans(rawY), p, q)
+  list(Ahat = Ahat, Bhat = Bhat)
+}
+
+sampler &lt;- procrustes_data_model_(A, B, SigmaX, SigmaY)
+dat &lt;- sampler(100, 200)
+mus &lt;- sample_moments(dat)
+f2(mus$Ahat, A)</code></pre>
+<pre><code>## [1] 0.4577179</code></pre>
+<pre class="r"><code>f2(mus$Bhat, B)</code></pre>
+<pre><code>## [1] 0.251744</code></pre>
+<p>Define the following multivariate test statistics <span class="math">\(T\)</span> and <span class="math">\(D\)</span>:</p>
+<p><span class="math">\[
+T = \hat{A} - U V^T \hat{B}.
 \]</span></p>
-<p>This leads to two general approaches for hypothesis testing.</p>
+<p><span class="math">\[
+D = \hat{A}^T \hat{A} - \hat{B}^T\hat{B}.
+\]</span></p>
+<p>The test statistics are given in code as follows</p>
 <ul>
 <li>A single hypothesis test, <span class="math">\(||T||_F^2 = 0\)</span>.</li>
 <li>Multiple hypothesis tests, <span class="math">\(T_{ij} = 0\)</span>.</li>
