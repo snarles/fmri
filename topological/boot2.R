@@ -20,14 +20,14 @@ pplot <- function(pvs, ...) {
   plot(1:length(pvs)/length(pvs), sort(pvs), ylim = c(0, 1), type = "l", ...); abline(0, 1)  
 }
 
-p <- 20 # number of neurons
-q <- 2 # dimension of regressor
+p <- 5 # number of neurons
+q <- 5 # dimension of regressor
 nX <- 50
 nY <- 50
 boot.reps <- 1e3
 o.reps <- 5e2
 
-f2a <- 10
+f2a <- 20
 f2d <- 5
 A_0 <- randn(p, q)
 DD <- randn(p, q); DD <- sqrt(f2d) * DD/sqrt(f2(DD))
