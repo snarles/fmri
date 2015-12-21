@@ -4,6 +4,7 @@
 
 library(pracma)
 library(MASS)
+
 f2 <- function(x, y = 0) sum((x-y)^2)
 
 ## DATA MODEL
@@ -74,7 +75,7 @@ sampling_dist <- function(sampler, theta, nX, nY, mc.reps = 1e3, samples = FALSE
   dat0 <- sampler(0, 0)
   theta0 <- theta(dat0)
   # get population
-  thetas <- lapply(1:mc.reps, function(i) theta(sampler(nX, nY)))
+  thetas <- lapply(1:mc.reps, function(i) theta(sampler(nX, nY)))    
   thetas <- do.call(cbind, thetas)
   if (samples) {
     return(thetas)
