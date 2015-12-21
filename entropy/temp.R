@@ -3,6 +3,7 @@
 ####
 
 library(R.matlab)
+library(pracma)
 
 fingerprint <- function(samp) {
   tt <- table(table(samp))
@@ -86,11 +87,21 @@ g_coeff <- coeff
 # output = zeros(length(x), length(c_1));
 # [thres, x] = meshgrid(thres,x)   
 
+K <- length(g_coeff) - 1
+(thres = 4*c_1*log(n)/n)
+output = zeros(length(x), length(c_1));
+
 ## block 7
 # region_large = x>thres
 # region_nonlarge = ~region_large;
 # region_mid = x>thres/2 & region_nonlarge
 # output(region_large) = -x(region_large) .* log(x(region_large)) + 1/(2*n);   
+
+region_large = x>thres
+region_nonlarge = !region_large
+region_mid = x>thres/2 & region_nonlarge
+output[region_large] = -x[region_large] * log(x[region_large]) + 1/(2*n);   
+t(output)
 
 ## block 8
 # x1(:,1) = x(region_nonlarge)  
@@ -104,9 +115,28 @@ g_coeff <- coeff
 #         temp * g_coeff.'- x1.*log(thres1)
 # output(region_nonlarge) = cumprod([thres1, bsxfun(@minus, n*x1, q)./bsxfun(@times, thres1, n-q)],2)*g_coeff.'- x1.*log(thres1);
 
+x1 <- x[region_nonlarge]
+q = 0:(K-1)
+n * x1
+repmat(n * t(t(x1)), 1, K) - repmat(q, length(x1), 1)
+thres * repmat(n - q, length(x1), 1)
+temp0 <- cbind(thres, (repmat(n * t(t(x1)), 1, K) - repmat(q, length(x1), 1))/(thres * repmat(n - q, length(x1), 1)))
+temp <- t(apply(temp0, 1, cumprod))
+output[region_nonlarge] <- temp %*% t(g_coeff) - x1 * log(thres)
+
+
 ## block 9
 #     ratio = 2*x(region_mid)./thres(region_mid) - 1
 #     output(region_mid) = ratio.*(-x(region_mid) .* log(x(region_mid)) + 1/(2*n)) + (1-ratio).*output(region_mid); 
 #     output = max(output,0);
 
 
+ratio = 2*x[region_mid]/thres - 1
+output[region_mid] = ratio*(-x[region_mid] * log(x[region_mid]) + 1/(2*n)) + 
+  (1-ratio)*output[region_mid]
+
+t(output)
+
+## block 10
+
+(est = sum(ff*output)/log(2))
