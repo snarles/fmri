@@ -456,7 +456,7 @@ inverse_ci_test <- function(res, theta, mc.reps = 1000) {
 
 boot_null_test <- function(res, theta, mc.reps = 1000) {
   nX <- sum(res$dat[, 1] ==0); nY <- sum(res$dat[, 1]==1)
-  boot_s0 <- boot_sampler(res, FALSE)
+  boot_s0 <- boot_sampler(res, TRUE)
   theta0 <- theta(res)
   thetas <- sampling_dist(boot_s0, theta, nX, nY, mc.reps, TRUE)  
   pvs <- sapply(1:length(theta0), function(i) {
@@ -472,8 +472,8 @@ boot_null_test <- function(res, theta, mc.reps = 1000) {
 
 ## Example
 
-```{r, eval = FALSE}
-nX <- 100; nY <- 100; mc.reps = 100
+```{r, eval = TRUE}
+nX <- 100; nY <- 100; mc.reps = 1000
 res0 <- h0_small(nX, nY)
 res1 <- h1_small(nX, nY)
 
@@ -578,7 +578,7 @@ inverse_bca_test <- function(res, theta, mc.reps = 1000) {
 
 
 ```{r, eval = TRUE}
-nX <- 100; nY <- 100; mc.reps = 100
+nX <- 100; nY <- 100; mc.reps = 1000
 res0 <- h0_small(nX, nY)
 res1 <- h1_small(nX, nY)
 
