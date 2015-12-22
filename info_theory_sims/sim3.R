@@ -138,23 +138,25 @@ run_simulations <- function(Bmat, m.folds, k.each, r.each, r.train,
 allresults <- list()
 
 ## parallelization
-mc.reps <- 1e5
+mc.reps <- 1e6
 mc.abe <- 1e3
 mcc <- 39
 data.reps <- 39
-h_est <- h_jvhw
-#h_est <- h_mle
 
 ## problem params
-p <- 5; q <- 10
-Bmat <- 0.5 * randn(p, q)
-m.folds <- 3
+p <- 10; q <- 15
+Bmat <- randn(p, q)
+## true MI
+(mi_true <- compute_mi(Bmat, mc.reps, mcc, h_mle))
+(mi_true2 <- compute_mi(Bmat, mc.reps, mcc, h_jvhw))
+## bayes LS
 k.each <- 4
+(est_ls <- get_abe(Bmat, k.each, mc.abe, mcc))
+## data params
+m.folds <- 3
 r.each <- 40
 r.train <- floor(0.5 * r.each)
 (N = m.folds * k.each * r.each)
-(mi_true <- compute_mi(Bmat, mc.reps, mcc, h_est))
-(est_ls <- get_abe(Bmat, k.each, mc.abe, mcc))
 res <- run_simulations(Bmat, m.folds, k.each, r.each, r.train, mcc, data.reps)
 ## display results
 c(mi_true = mi_true, mi_ls = est_ls['mc_b_ls'], apply(res, 2, median), abe = est_ls['abe'])
@@ -163,7 +165,7 @@ colSums((res[, 1:6] - mi_true)^2)/data.reps
 ## save results
 packet <- list(Bmat = Bmat, m.folds = m.folds,
                k.each = k.each, r.each = r.each, r.train = r.train,
-               mi_true = mi_true, est_ls = est_ls, res = res,
+               mi_true = mi_true, mi_true2 = mi_true2, est_ls = est_ls, res = res,
                mc.reps = mc.reps, mc.abe = mc.abe)
 allresults <- c(allresults, list(packet))
 
