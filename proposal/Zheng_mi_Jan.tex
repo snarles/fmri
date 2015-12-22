@@ -200,15 +200,15 @@ Information theorists tend to use log base 2, we will use natural logs in this t
 \begin{itemize}
 \item $I(X;Y) \in [0,\infty]$.  (0 if $X \perp Y$, $\infty$ if $X=Y$ and $X$ continuous.)
 \item Symmetry: $I(X;Y) = I(Y; X)$.
-\item Bijection-invariant: $I(\phi(X); \psi(Y)) = I(\psi(Y);\phi(X)$.
+\item Data-processing inequality
+\[I(X; Y) \geq I(\phi(X); \psi(Y))\]
+equality for $\phi$, $\psi$ bijections
 \item Additivity.  If $(X_1,Y_1) \perp (X_2, Y_2)$, then
 \[
 I((X_1, X_2); (Y_1, Y2)) = I(X_1; Y_1) + I(X_2; Y_2).
 \]
-\item Relation to KL divergence:
-\[
-\mathbb{D}(p(x, y)||p(x)p(y)) = I(X; Y).
-\]
+%\item Relation to KL divergence
+%\[\mathbb{D}(p(x, y)||p(x)p(y)) = I(X; Y).\]
 \end{itemize}
 \tiny{Image credit Kinney et al. 2014.}
 \end{frame}
@@ -404,7 +404,9 @@ C(i, j) = \hat{\Pr}[\bX = \bx^{(i)}, \hat{\bX} = \bx^{(j)}].
 \item Treves et al. (1997) suggest computing the mutual information from the confusion matrix,
 i.e.
 \[
-\hat{I}(\bX; \bY) \approx \sum_{i=1}^K \sum_{j = 1}^K C(i, j) \ln\left(\frac{C(i, j)}{\left(\sum_{\ell=1}^K C(i, \ell)\right) \left(\sum_{\ell=1}^k C(j, \ell) \right)}\right)
+\hat{I}(\bX; \bY) \approx 
+\sum_{i=1}^K \sum_{j = 1}^K 
+C(i, j) \ln\left(\frac{C(i, j)}{\left(\sum_{\ell=1}^K C(i, \ell)\right) \left(\sum_{\ell=1}^k C(\ell, j) \right)}\right)
 \]
 \item Quiroga (2009) review the applications of this approach, and note sources of bias or ``information loss.''
 \end{itemize}
@@ -698,6 +700,33 @@ Based on these assumptions, our proposed estimator for mutual information is
 \]
 where $\widehat{\text{ABE}}$ is the test error of the classifier.
 (The subscript $ls$ stands for low-SNR.)
+\end{frame}
+
+\section{Results}
+
+\begin{frame}
+\frametitle{Simulation study}
+\emph{Models.}
+\begin{itemize}
+\item Multiple-response logistic regression model
+\[
+X \sim N(0, I_p)
+\]
+\[
+Y \in \{0,1\}^q
+\]
+\[
+Y_i|X = x \sim \text{Bernoulli}(x^T B_i)
+\]
+where $B$ is a $p \times q$ matrix.
+\end{itemize}
+
+\emph{Methods.}
+\begin{itemize}
+\item \text{Nonparametric}: $\hat{I}_0$ naive estimator, $\hat{I}_\alpha$ anthropic correction.
+\item \text{ML-based}: $\hat{I}_{CM}$ confusion matrix, $\hat{I}_F$ Fano, $\hat{I}_{LS}$ low-SNR method.
+\end{itemize}
+
 \end{frame}
 
 \begin{frame}

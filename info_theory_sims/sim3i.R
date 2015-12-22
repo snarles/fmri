@@ -14,12 +14,12 @@ mcc <- 3
 data.reps <- mcc
 
 ## problem params
-p <- 300
-mult <- 2.83/sqrt(p)
+p <- 50
+mult <- 4/sqrt(p)
 Bmat <- mult * eye(p)
 (mi_true <- mi_ident_case(p, mult, 1e5))
 ## bayes LS
-k.each <- 5
+k.each <- 10
 t1 <- proc.time()
 (est_ls <- get_abe(Bmat, k.each, abe.each, mc.abe, mcc))
 proc.time() - t1
