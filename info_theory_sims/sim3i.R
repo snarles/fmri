@@ -25,6 +25,14 @@ logit_class <- function(Y, ps) {
   lbls
 }
 
+mi_ident_case <- function(p, mult, mc.reps = 1e3) {
+  xs <- 3 * ((-mc.reps):mc.reps)/mc.reps * sqrt(2 * log(mc.reps))
+  delt <- xs[2] - xs[1]
+  ce <- delt * sum(dnorm(xs) * (log(1 + exp(-xs * mult))/(1 + exp(-xs * mult)) + 
+                 (log(1 + exp(xs * mult))/(1 + exp(xs * mult)))))
+  p * (log(2) - ce)
+}
+
 ####
 ##  Simulation code
 ####
@@ -137,18 +145,20 @@ run_simulations <- function(Bmat, m.folds, k.each, r.each, r.train,
 allresults <- list()
 
 ## parallelization
-mc.reps <- 1e5
+mc.reps <- 1e6
 mc.abe <- 1e4
 mcc <- 3
 data.reps <- mcc
 
 ## problem params
-p <- 10; q <- 15
-Bmat <- 0.5 * randn(p, q)
+p <- 5; q <- p
+mult <- 0.5
+Bmat <- mult * eye(p)
 ## true MI
-t1 <- proc.time()
-(mi_true <- compute_mi(Bmat, mc.reps, mcc))
-proc.time() - t1
+# t1 <- proc.time()
+# (mi_true <- compute_mi(Bmat, mc.reps, mcc))
+# proc.time() - t1
+(mi_true <- mi_ident_case(p, mult, 1e5))
 ## bayes LS
 k.each <- 3
 (est_ls <- get_abe(Bmat, k.each, mc.abe, mcc))
