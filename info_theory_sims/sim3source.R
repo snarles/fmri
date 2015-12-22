@@ -59,9 +59,7 @@ run_simulation <- function(Bmat, m.folds, k.each, r.each, r.train) {
     test_filt <- rep(c(rep(FALSE, r.train), rep(TRUE, r.test)), k.each)
     Y <- (rand(k.each * r.each, q) < ps[zs, ]) + 0
     mu.tr <- zeros(k.each, q)
-    for (ii in 1:k.each) {
-      mu.tr[ii, ] <- colMeans(Y[zs ==ii, ][1:r.train, ])
-    }
+    for (ii in 1:k.each) mu.tr[ii, ] <- colMeans(Y[zs ==ii, ][1:r.train, ])
     ## Bayes smoothing
     mu.tr <- mu.tr * (r.train)/(r.train + 1) + .5/(r.train+1)
     ## prediction
@@ -98,20 +96,21 @@ run_simulation <- function(Bmat, m.folds, k.each, r.each, r.train) {
     mi_0 = mi_0, mi_5 = mi_5, mi_9 = mi_9, mi_j = mi_j, abe0 = abe0, abe = abe)
 }
 
-get_abe <- function(Bmat, k.each, mc.reps=1e3, mcc=0) {
+get_abe <- function(Bmat, k.each, r.each = 1, mc.reps=1e3, mcc=0) {
   p <- dim(Bmat)[1]; q <- dim(Bmat)[2]
   mcs <- mclapply0(1:mc.reps, function(i) {
     X <- randn(k.each, p)
     ps <- 1/(1 + exp(-X %*% Bmat))
     ## generate data
-    Y <- (rand(k.each, q) < ps) + 0
+    zs <- rep(1:k.each, each = r.each)
+    Y <- (rand(k.each * r.each, q) < ps[zs, ]) + 0
     lbls <- logit_class(Y, ps)
-    sum(lbls != 1:k.each)/k.each
+    sum(lbls != zs)/length(zs)
   }, mc.cores = mcc)
   abe <- mean(unlist(mcs))
-  var_abe <- var(unlist(mcs))
+  sd_abe <- sd(unlist(mcs))
   mc_b_ls <- Ihat_LS(abe, k.each)
-  c(abe = abe, mc_b_ls = mc_b_ls, v_abe = var_abe)
+  c(abe = abe, mc_b_ls = mc_b_ls, sd_abe = sd_abe)
 }
 
 ## parallelize computing mi efficiently
