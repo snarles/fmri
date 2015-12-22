@@ -11,13 +11,15 @@ fingerprint <- function(freqs) {
 
 h_mle <- function(freqs) {
   ps <- freqs/sum(freqs)
-  -sum(ps * log(ps))
+  temp <- -ps * log(ps)
+  sum(temp[!is.na(temp)])
 }
 
 Vconst <- c(0.3303, -0.3295, 0.4679)
 poly_coeff_r <- readMat('entropy//poly_coeff_r.mat')
 
 h_jvhw <- function(freqs) {
+  freqs <- freqs[freqs > 0]
   n <- sum(freqs)
   order <- 4 + ceiling(1.2*log(n))
   coeff <- poly_coeff_r[[1]][order][[1]][[1]]
