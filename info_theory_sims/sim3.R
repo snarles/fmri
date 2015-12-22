@@ -136,5 +136,5 @@ r.train <- floor(0.8 * r.each)
 (N = m.folds * k.each * r.each)
 (mi_true <- compute_mi(Bmat, mc.reps, mcc, h_est))
 res <- run_simulations(Bmat, m.folds, k.each, r.each, r.train, mcc, data.reps)
-res
+c(mi_true = mi_true, apply(res, 2, median))
 
