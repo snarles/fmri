@@ -27,7 +27,7 @@ logist_ident <- function(Sigma, K, mc.reps = 1000) {
 }
 
 
-logist_mi <- function(Sigma, mc.reps = 1e5) {
+logist_mi <- function(Sigma, mc.reps = 1e5, h_est = h_jvhw) {
   p <- dim(Sigma)[1]
   X <- mvrnorm(mc.reps, rep(0, p), Sigma)
   ps <- 1/(1 + exp(-X))
@@ -39,9 +39,10 @@ logist_mi <- function(Sigma, mc.reps = 1e5) {
     paste(v, collapse = "")
   })
   tab <- table(ylabs)
-  print(table(tab))
-  tab <- tab/sum(tab)
-  hy <- sum(-tab * log(tab))
+  #print(table(tab))
+  #tab <- tab/sum(tab)
+  #hy <- sum(-tab * log(tab))
+  hy <- h_est(tab)
   hy - mean(ces)
 }
 
