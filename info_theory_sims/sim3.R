@@ -103,8 +103,8 @@ get_abe <- function(Bmat, k.each, mc.reps=1e3, mcc=0) {
 }
 
 ## parallelize computing mi efficiently
-compute_mi <- function(Bmat, mc.reps = 1e5, mcc = 0, h_est = h_jvhw) {
-
+compute_mi <- function(Bmat, mc.reps = 1e5, mcc = 0) {
+  
   ces <- unlist(mclapply0(1:mcc, function(i) {
     X <- randn(mc.reps, p)
     ps <- 1/(1 + exp(-X %*% Bmat))
@@ -119,8 +119,7 @@ compute_mi <- function(Bmat, mc.reps = 1e5, mcc = 0, h_est = h_jvhw) {
   }, mc.cores = mcc))
   
   tab <- table(ylabs)
-  hy <- h_est(tab)
-  hy - mean(ces)
+  c(mi_mle = h_mle(tab) - mean(ces), mi_jvhw = h_jvhw(tab) - mean(ces), ces = mean(ces))  
 }
 
 run_simulations <- function(Bmat, m.folds, k.each, r.each, r.train,
@@ -139,22 +138,21 @@ allresults <- list()
 
 ## parallelization
 mc.reps <- 1e6
-mc.abe <- 1e3
+mc.abe <- 1e5
 mcc <- 39
 data.reps <- 39
 
 ## problem params
-p <- 10; q <- 15
-Bmat <- randn(p, q)
+p <- 20; q <- 30
+Bmat <- 0.5 * randn(p, q)
 ## true MI
-(mi_true <- compute_mi(Bmat, mc.reps, mcc, h_mle))
-(mi_true2 <- compute_mi(Bmat, mc.reps, mcc, h_jvhw))
+(mi_true <- compute_mi(Bmat, mc.reps, mcc))
 ## bayes LS
-k.each <- 4
+k.each <- 3
 (est_ls <- get_abe(Bmat, k.each, mc.abe, mcc))
 ## data params
-m.folds <- 3
-r.each <- 40
+m.folds <- 1
+r.each <- 20
 r.train <- floor(0.5 * r.each)
 (N = m.folds * k.each * r.each)
 res <- run_simulations(Bmat, m.folds, k.each, r.each, r.train, mcc, data.reps)
@@ -165,7 +163,7 @@ colSums((res[, 1:6] - mi_true)^2)/data.reps
 ## save results
 packet <- list(Bmat = Bmat, m.folds = m.folds,
                k.each = k.each, r.each = r.each, r.train = r.train,
-               mi_true = mi_true, mi_true2 = mi_true2, est_ls = est_ls, res = res,
+               mi_true, est_ls = est_ls, res = res,
                mc.reps = mc.reps, mc.abe = mc.abe)
 allresults <- c(allresults, list(packet))
 
