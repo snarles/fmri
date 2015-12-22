@@ -29,6 +29,7 @@ fK <- function(mus, K, mc.reps = 1e4, naive = FALSE) {
 
 ## inverse fK
 inv_fK <- function(p, K, upper = 10, res = 1e3) {
+  if (p ==0) return(Inf)
   xs <- seq(0, upper, length.out = res + 1)
   ps <- fK(xs, K)
   xs[order(abs(ps- p))[1]]
