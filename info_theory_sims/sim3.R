@@ -6,7 +6,7 @@ library(pracma)
 library(MASS)
 library(class)
 library(parallel)
-library(reginference) ## see github.com/snarles/misc
+#library(reginference) ## see github.com/snarles/misc
 library(lineId) ## use devtools::install('lineId')
 source("info_theory_sims/methods_source.R")
 source("entropy/jvhw.R")
@@ -99,7 +99,7 @@ get_abe <- function(Bmat, k.each, mc.reps=1e3, mcc=0) {
   }, mc.cores = mcc)
   abe <- mean(unlist(mcs))
   mc_b_ls <- Ihat_LS(abe, k.each)
-  list(abe = abe, mc_b_ls = mc_b_ls)
+  c(abe = abe, mc_b_ls = mc_b_ls)
 }
 
 ## parallelize computing mi efficiently
@@ -135,13 +135,15 @@ run_simulations <- function(Bmat, m.folds, k.each, r.each, r.train,
 ##  DEMO
 ####
 
+allresults <- list()
+
 ## parallelization
 mc.reps <- 1e5
 mc.abe <- 1e3
-mcc <- 3
+mcc <- 39
 data.reps <- 15
-#h_est <- h_jvhw
-h_est <- h_mle
+h_est <- h_jvhw
+#h_est <- h_mle
 
 ## problem params
 p <- 5; q <- 10
@@ -155,4 +157,10 @@ r.train <- floor(0.8 * r.each)
 (est_ls <- get_abe(Bmat, k.each, mc.abe, mcc))
 res <- run_simulations(Bmat, m.folds, k.each, r.each, r.train, mcc, data.reps)
 c(mi_true = mi_true, apply(res, 2, median))
+packet <- list(Bmat = Bmat, m.folds = m.folds,
+               k.each = k.each, r.each = r.each, r.train = r.train,
+               mi_true = mi_true, est_ls = est_ls, res = res,
+               mc.reps = mc.reps, mc.abe = mc.abe)
+allresults <- c(allresults, list(packet))
 
+save(allresults, file = 'info_theory_sims/save.Rdata')
