@@ -70,7 +70,9 @@ run_simulation <- function(Bmat, m.folds, k.each, r.each, r.train) {
   }
   ## ML-based estimates
   (mi_cm <- mean(mi_cms))
-  abe <- mean(mcs)
+  abe0 <- mean(mcs)
+  n_te <- r.test * k.each * m.folds
+  abe <- n_te/(n_te+1) * abe0 + (1 - 1/k.each)/(n_te + 1) # bayes smoothing
   (mi_fano <- Ihat_fano(abe, k.each))
   (mi_ls <- Ihat_LS(abe, k.each))
   ## nonparametric estimate of MI
@@ -83,7 +85,21 @@ run_simulation <- function(Bmat, m.folds, k.each, r.each, r.train) {
   (mi_j <- mi_naive(ytab, h_jvhw))
   ## answer
   c(mi_cm = mi_cm, mi_fano = mi_fano, mi_ls = mi_ls,
-    mi_0 = mi_0, mi_5 = mi_5, mi_9 = mi_9, mi_j = mi_j, abe = abe)
+    mi_0 = mi_0, mi_5 = mi_5, mi_9 = mi_9, mi_j = mi_j, abe0 = abe0, abe = abe)
+}
+
+get_abe <- function(Bmat, k.each, mc.reps=1e3, mcc=0) {
+  mcs <- mclapply0(1:mc.reps, function(i) {
+    X <- randn(k.each, p)
+    ps <- 1/(1 + exp(-X %*% Bmat))
+    ## generate data
+    Y <- (rand(k.each, q) < ps) + 0
+    lbls <- logit_class(Y, ps)
+    sum(lbls != 1:k.each)/k.each
+  }, mc.cores = mcc)
+  abe <- mean(unlist(mcs))
+  mc_b_ls <- Ihat_LS(abe, k.each)
+  list(abe = abe, mc_b_ls = mc_b_ls)
 }
 
 ## parallelize computing mi efficiently
@@ -121,6 +137,7 @@ run_simulations <- function(Bmat, m.folds, k.each, r.each, r.train,
 
 ## parallelization
 mc.reps <- 1e5
+mc.abe <- 1e3
 mcc <- 3
 data.reps <- 15
 #h_est <- h_jvhw
@@ -128,13 +145,14 @@ h_est <- h_mle
 
 ## problem params
 p <- 5; q <- 10
-Bmat <- 3 * randn(p, q)
+Bmat <- 0.5 * randn(p, q)
 m.folds <- 3
 k.each <- 4
 r.each <- 20
 r.train <- floor(0.8 * r.each)
 (N = m.folds * k.each * r.each)
 (mi_true <- compute_mi(Bmat, mc.reps, mcc, h_est))
+(est_ls <- get_abe(Bmat, k.each, mc.abe, mcc))
 res <- run_simulations(Bmat, m.folds, k.each, r.each, r.train, mcc, data.reps)
 c(mi_true = mi_true, apply(res, 2, median))
 
