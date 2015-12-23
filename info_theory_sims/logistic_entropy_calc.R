@@ -30,7 +30,7 @@ pr_grid <- function(y, Bmat, reso = 5) {
   delta^p * (1/sqrt(2*pi))^p * dim(xs)[1] * meanexp(-nms)
 }
 
-pr_laplace <- function(y, Bmat) {
+pr_laplace <- function(y, Bmat, log.p = FALSE) {
   p <- dim(Bmat)[1]; q <- dim(Bmat)[2]
   Bt <- Bmat %*% diag(-y)
   x0 <- opt_nll(y, Bmat)
@@ -42,8 +42,10 @@ pr_laplace <- function(y, Bmat) {
 #   as.numeric((1/sqrt(2*pi))^p * 
 #                exp(-l0 + 1/2 * t(gd) %*% solve(hs, gd)) * 
 #                sqrt(det(2 * pi * solve(hs))))
+  if (log.p) return(-l0 - log(det(hs))/2)
   exp(-l0)/sqrt(det(hs))
 }
+
 
 nll <- function(y, x, Bmat) {
   sum(x^2)/2 + sum(eta(-y * (t(Bmat) %*% x)))
@@ -80,6 +82,11 @@ y <- 2 * str2vec(s) - 1
 (pr_emp <- tab[s])
 (pr_true <- pr_grid(y, Bmat, 300))
 (pr_the <- pr_laplace(y, Bmat))
+
+(h_emp <- sum(-tab * log(tab)))
+logps <- sapply(names(tab), function(s) pr_laplace(2 * str2vec(s) - 1, Bmat, TRUE))
+(h_the <- sum(-exp(logps) * logps))
+
 # 
 # x0 <- opt_nll(y, Bmat)
 # x <- x0 + rnorm(p)/10
