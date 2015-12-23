@@ -293,6 +293,7 @@ Given stimulus-reponse data $(\bX, \bY)$, can we estimate the mutual information
 \vspace{0.5in}
 \emph{Why do we care?}
 \begin{itemize}
+\item Assessing quality of \emph{pre-processing.}
 \item Selecting the correct model for neural encoding.
 \item Assessing the \emph{efficiency} of the neural code.
 \item Measuring the \emph{redundancy} of a population of neurons
@@ -362,13 +363,13 @@ is consistent for $I(\bX; \bY)$.
 \end{frame}
 
 \begin{frame}
-\frametitle{Limitations with the `naive' approach}
-Naive estimator:
+\frametitle{Limitations with the `na\"{i}ve' approach}
+Na\"{i}ve estimator:
 \[
 \hat{I}(\bX; \bY) = \hat{H}(\bY) - \frac{1}{K}\sum_{i=1}^K \hat{H}(\bY| \bX^{(i)})
 \]
 \begin{itemize}
-\item If $K$ is small, the naive estimator may be quite biased, even for low-dimensional problems.
+\item If $K$ is small, the na\"{i}ve estimator may be quite biased, even for low-dimensional problems.
 Gastpar et al. (2010) introduced an \emph{antropic correction} to deal with the small-$K$ bias.
 \item Difficult to estimate differential entropies $H(\bY),\
   H(\bY|\bx^{(i)})$ in high dimensions.  Best rates are
@@ -726,7 +727,14 @@ where $B$ is a $p \times q$ matrix.
 \item \text{Nonparametric}: $\hat{I}_0$ naive estimator, $\hat{I}_\alpha$ anthropic correction.
 \item \text{ML-based}: $\hat{I}_{CM}$ confusion matrix, $\hat{I}_F$ Fano, $\hat{I}_{LS}$ low-SNR method.
 \end{itemize}
+\end{frame}
 
+\begin{frame}
+\frametitle{Fig 1. Low-dimensional results}
+\begin{center}
+\includegraphics[scale = 0.6, clip = true, trim = 0 0.5in 0 0.5in]{../info_theory_sims/fig1.pdf}
+\end{center}
+Na\"{i}ve estimator performs best!  $\hat{I}_{LS}$ not effective.
 \end{frame}
 
 \begin{frame}
