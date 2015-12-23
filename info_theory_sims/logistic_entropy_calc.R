@@ -6,6 +6,15 @@ str2vec <- function(s) {
 }
 
 eta <- function(x) log(1 + exp(x))
+deta <- function(x) 1/(1 + exp(-x))
+d2eta <- function(x) exp(-x)/(1 + exp(-x))^2
+
+eta(1)
+numDeriv::grad(eta, 1)
+deta(1)
+numDeriv::hessian(eta, 1)
+d2eta(1)
+
 
 pr_grid <- function(y, Bmat, reso = 5) {
   Btilde <- Bmat %*% diag(-y)
@@ -14,6 +23,24 @@ pr_grid <- function(y, Bmat, reso = 5) {
   mus <- xs %*% Btilde
   nms <- rowSums(xs^2)/2+ rowSums(eta(mus))
   delta^p * (1/sqrt(2*pi))^p * dim(xs)[1] * meanexp(-nms)
+}
+
+nll <- function(y, x, Bmat) {
+  sum(x^2)/2 + sum(eta(-y * (t(Bmat) %*% x)))
+}
+
+opt_nll <- function(y, Bmat) {
+  p <- dim(Bmat)[1]
+  res <- optim(rep(0, p), function(x) nll(y, x, Bmat))
+  res$par
+}
+
+prox_nll <- function(y, x, Bmat, x0 = opt_nll(y, Bmat)) {
+  delta <- x - x0
+  mu <- as.numeric(-y * (t(Bmat) %*% x0))
+  dn <- deta(mu); d2n <- d2eta(mu)
+  nll(y, x0, Bmat) + sum(delta * x0) + sum(delta^2)/2 +
+    sum(dn * (-y * (t(Bmat) %*% delta))) + sum(d2n * (-y * (t(Bmat) %*% delta))^2)/2
 }
 
 p <- 2
@@ -32,3 +59,15 @@ tab <- tab/sum(tab)
 y <- 2 * str2vec(s) - 1
 (pr_emp <- tab[s])
 (pr_true <- pr_grid(y, Bmat, 300))
+
+x0 <- opt_nll(y, Bmat)
+x <- x0 + rnorm(p)/10
+nll(y, x, Bmat)
+prox_nll(y, x, Bmat, x0)
+
+x0
+ds <- seq(-1, 1, 0.1)
+tvs <- sapply(ds, function(dd) nll(y, x + c(dd, 0), Bmat))
+pvs <- sapply(ds, function(dd) prox_nll(y, x + c(dd, 0), Bmat, x0))
+plot(ds, tvs, type = "l")
+lines(ds, pvs, col = "red")
