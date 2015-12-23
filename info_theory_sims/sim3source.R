@@ -140,3 +140,47 @@ run_simulations <- function(Bmat, m.folds, k.each, r.each, r.train,
                    mc.cores = mcc)
   do.call(rbind, res)
 }
+
+
+
+
+
+run_instance <- function(X, Yall, zs, nsub, ntr) {
+  k.each <- dim(X)[1]
+  Y.tr <- Yall[1:ntr, ]
+  Y.te <- Yall[(ntr + 1):nsub, ]
+  Y <- Yall[1:nsub, ]
+  zs.sub <- zs[1:nsub]
+  zs.tr <- zs[1:ntr]
+  zs.te <- zs[(ntr + 1):nsub]
+  mu.tr <- zeros(k.each, q)
+  r.train <- ntr/k.each
+  for (ii in 1:k.each) mu.tr[ii, ] <- colMeans(Y.tr[zs.tr ==ii, , drop = FALSE])
+  ## Bayes smoothing
+  mu.tr <- mu.tr * (r.train)/(r.train + 1) + .5/(r.train+1)
+  ## prediction
+  lbls <- logit_class(Y.te, mu.tr)
+  (mc <- sum(lbls != zs.te)/length(zs.te))
+  cm <- table(zs.te, lbls); cm <- cm/sum(cm)
+  (mi_cm <- cm_to_I(cm))
+  abe0 <- mc
+  n_te <- nsub - ntr
+  abe <- n_te/(n_te+1) * abe0 + (1 - 1/k.each)/(n_te + 1) # bayes smoothing
+  (mi_fano <- Ihat_fano(abe, k.each))
+  (mi_ls <- Ihat_LS(abe, k.each))
+  ## nonparametric estimate of MI
+  ylabs <- apply(Y, 1, function(v) paste(v, collapse = ""))
+  yids <- as.numeric(as.factor(ylabs))
+  ytab <- list()
+  for (i in 1:k.each) ytab[[i]] <- yids[zs.sub == i]
+  ytab <- do.call(rbind, ytab)
+  (mi_0 <- mi_naive(ytab))
+  (mi_5 <- anthropic_correction(ytab, 0.5))
+  (mi_9 <- anthropic_correction(ytab, 0.9))
+  (mi_j <- mi_naive(ytab, h_jvhw))
+  ## answer
+  c(mi_cm = mi_cm, mi_fano = mi_fano, mi_ls = mi_ls,
+    mi_0 = mi_0, mi_5 = mi_5, mi_9 = mi_9, mi_j = mi_j, abe0 = abe0, abe = abe)
+}
+
+
