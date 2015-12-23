@@ -4,13 +4,11 @@ source("info_theory_sims/sim3source.R")
 ##  Identity case
 ####
 
-allresults <- list()
-
 ## parallelization
 mc.reps <- 1e4
 mc.abe <- 1e2
 abe.each <- 1e2
-mcc <- 3
+mcc <- 39
 data.reps <- mcc
 
 ## problem params
@@ -28,8 +26,9 @@ m.folds <- 1
 r.each <- 8000
 r.train <- floor(0.5 * r.each)
 (N = m.folds * k.each * r.each)
-t1 <- proc.time()
-run_simulation(Bmat, m.folds, k.each, r.each, r.train)
-proc.time() - t1
+# t1 <- proc.time()
+# run_simulation(Bmat, m.folds, k.each, r.each, r.train)
+# proc.time() - t1
 ## full-scale
 res <- run_simulations(Bmat, m.folds, k.each, r.each, r.train, mcc, data.reps)
+save(res, file = "info_theory_sims/fig2.Rdata")
