@@ -87,6 +87,9 @@ y <- 2 * str2vec(s) - 1
 logps <- sapply(names(tab), function(s) pr_laplace(2 * str2vec(s) - 1, Bmat, TRUE))
 (h_the <- sum(-exp(logps) * logps))
 
+logps <- sapply(ylabs[1:100], function(s) pr_laplace(2 * str2vec(s) - 1, Bmat, TRUE))
+mean(-logps)
+
 # 
 # x0 <- opt_nll(y, Bmat)
 # x <- x0 + rnorm(p)/10
