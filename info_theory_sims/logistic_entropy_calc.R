@@ -25,6 +25,20 @@ pr_grid <- function(y, Bmat, reso = 5) {
   delta^p * (1/sqrt(2*pi))^p * dim(xs)[1] * meanexp(-nms)
 }
 
+pr_laplace <- function(y, Bmat) {
+  p <- dim(Bmat)[1]; q <- dim(Bmat)[2]
+  Bt <- Bmat %*% diag(-y)
+  x0 <- opt_nll(y, Bmat)
+  mu <- as.numeric(t(Bt) %*% x0)
+  dn <- deta(mu); d2n <- d2eta(mu)
+  (l0 <- nll(y, x0, Bmat))
+  gd <- x0 + Bt %*% dn
+  hs <- eye(p) + Bt %*% diag(d2n) %*% t(Bt)
+  as.numeric((1/sqrt(2*pi))^p * 
+               exp(-l0 + 1/2 * t(gd) %*% solve(hs, gd)) * 
+               sqrt(det(2 * pi * solve(hs))))
+}
+
 nll <- function(y, x, Bmat) {
   sum(x^2)/2 + sum(eta(-y * (t(Bmat) %*% x)))
 }
@@ -59,15 +73,16 @@ tab <- tab/sum(tab)
 y <- 2 * str2vec(s) - 1
 (pr_emp <- tab[s])
 (pr_true <- pr_grid(y, Bmat, 300))
-
-x0 <- opt_nll(y, Bmat)
-x <- x0 + rnorm(p)/10
-nll(y, x, Bmat)
-prox_nll(y, x, Bmat, x0)
-
-x0
-ds <- seq(-1, 1, 0.1)
-tvs <- sapply(ds, function(dd) nll(y, x + c(dd, 0), Bmat))
-pvs <- sapply(ds, function(dd) prox_nll(y, x + c(dd, 0), Bmat, x0))
-plot(ds, tvs, type = "l")
-lines(ds, pvs, col = "red")
+(pr_the <- pr_laplace(y, Bmat))
+# 
+# x0 <- opt_nll(y, Bmat)
+# x <- x0 + rnorm(p)/10
+# nll(y, x, Bmat)
+# prox_nll(y, x, Bmat, x0)
+# 
+# x0
+# ds <- seq(-1, 1, 0.1)
+# tvs <- sapply(ds, function(dd) nll(y, x + c(dd, 0), Bmat))
+# pvs <- sapply(ds, function(dd) prox_nll(y, x + c(dd, 0), Bmat, x0))
+# plot(ds, tvs, type = "l")
+# lines(ds, pvs, col = "red")
