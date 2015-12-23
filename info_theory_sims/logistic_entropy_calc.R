@@ -32,11 +32,12 @@ pr_laplace <- function(y, Bmat) {
   mu <- as.numeric(t(Bt) %*% x0)
   dn <- deta(mu); d2n <- d2eta(mu)
   (l0 <- nll(y, x0, Bmat))
-  gd <- x0 + Bt %*% dn
+#   gd <- x0 + Bt %*% dn
   hs <- eye(p) + Bt %*% diag(d2n) %*% t(Bt)
-  as.numeric((1/sqrt(2*pi))^p * 
-               exp(-l0 + 1/2 * t(gd) %*% solve(hs, gd)) * 
-               sqrt(det(2 * pi * solve(hs))))
+#   as.numeric((1/sqrt(2*pi))^p * 
+#                exp(-l0 + 1/2 * t(gd) %*% solve(hs, gd)) * 
+#                sqrt(det(2 * pi * solve(hs))))
+  exp(-l0)/sqrt(det(hs))
 }
 
 nll <- function(y, x, Bmat) {
