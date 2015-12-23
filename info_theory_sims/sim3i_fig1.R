@@ -41,7 +41,7 @@ apply(res[, 1:6] - mi_true, 2, summary)
 mses <- colSums((res[, 1:7] - mi_true)^2)/data.reps
 
 ihat <- as.numeric(res[, 1:6])
-tab <- data.frame(I = ihat, method = rep(c("CM", "F", "LS", "0", "0.5", "0.9"), data.reps))
+tab <- data.frame(I = ihat, method = rep(c("CM", "F", "LS", "0", "0.5", "0.9"), each = data.reps))
 
 boxplot(I ~ method, data = tab, ylim = c(0, 1.5))
 

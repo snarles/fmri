@@ -32,3 +32,25 @@ r.train <- floor(0.5 * r.each)
 ## full-scale
 res <- run_simulations(Bmat, m.folds, k.each, r.each, r.train, mcc, data.reps)
 save(res, file = "info_theory_sims/fig2.Rdata")
+
+
+mses <- colSums((res[, 1:7] - mi_true)^2)/data.reps
+
+ihat <- as.numeric(res[, 1:6])
+tab <- data.frame(I = ihat, method = rep(c("CM", "F", "LS", "0", "0.5", "0.9"), each = data.reps))
+boxplot(I ~ method, data = tab)
+
+
+
+boxplot(I ~ method, data = tab, ylim = c(0, 6),
+        names = c(expression(hat(I)[0]), expression(hat(I)[0.5]), 
+                  expression(hat(I)[0.9]), expression(hat(I)[CM]), 
+                  expression(hat(I)[F]), expression(hat(I)[LS])),
+        cex.axis = 1)
+abline(mi_true, 0, lty = 2, col = "red", lwd = 3)
+text(1.3, 6, "RMSE x 100 = ", col = "red", cex = 0.8)
+reorder <- sqrt(c(mses[4:6], mses[1:3]))
+for (i in 1:6) {
+  text(i, 5.5, format(round(reorder[i] * 1e2, 1)),
+       col = "red", cex = 0.8)
+}
