@@ -1,6 +1,11 @@
 library(AlgDesign)
 source("info_theory_sims/sim3source.R")
 
+###
+##  doing laplace approximation involve regularized logistic regression!
+##  y ~ logistic(t(B) %*% x), st ||x||_2 small
+###
+
 str2vec <- function(s) {
   as.numeric(substring(s, seq(1,nchar(s),1), seq(1,nchar(s),1)))
 }
@@ -33,7 +38,7 @@ pr_laplace <- function(y, Bmat) {
   dn <- deta(mu); d2n <- d2eta(mu)
   (l0 <- nll(y, x0, Bmat))
 #   gd <- x0 + Bt %*% dn
-  hs <- eye(p) + Bt %*% diag(d2n) %*% t(Bt)
+  hs <- eye(p) + Bmat %*% diag(d2n) %*% t(Bmat)
 #   as.numeric((1/sqrt(2*pi))^p * 
 #                exp(-l0 + 1/2 * t(gd) %*% solve(hs, gd)) * 
 #                sqrt(det(2 * pi * solve(hs))))
