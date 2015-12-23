@@ -61,7 +61,8 @@ abline(mi_true, 0, lwd = 5)
 
 res2 <- cbind(nsubs, res)
 save(res2, file = "info_theory_sims/fig3data.RData")
-
+load("info_theory_sims/fig3data.RData")
+res <- res2[, -1]; nsubs <- res2[, 1]
 sqrt(max(10 * nsubs))
 
 plot(NA, NA, xlim = c(0, 290), ylim = c(0, 3), 

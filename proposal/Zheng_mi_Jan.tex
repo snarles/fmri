@@ -82,6 +82,7 @@
 \usepackage{adjustbox}
 \usepackage{array}
 \usepackage{tikz}
+\usepackage{soul}
 \usetikzlibrary{shapes.geometric, arrows, positioning, fit}
 \usepackage[latin1]{inputenc}
 \newcommand{\xmark}{\textcolor{red}{\text{\sffamily X}}}
@@ -98,6 +99,12 @@
 \newcommand{\by}{\boldsymbol{y}}
 \newcommand{\bX}{\boldsymbol{X}}
 \newcommand{\bY}{\boldsymbol{Y}}
+\sethlcolor{gray}
+\makeatletter
+\newcommand\SoulColor{%
+  \let\set@color\beamerorig@set@color
+  \let\reset@color\beamerorig@reset@color}
+\makeatother
 
 %tikz stufff
 
@@ -730,15 +737,43 @@ where $B$ is a $p \times q$ matrix.
 \end{frame}
 
 \begin{frame}
-\frametitle{Fig 1. Low-dimensional results}
+\frametitle{Fig 1. Low-dimensional results ($q = 3$)}
 Sampling distribution of $\hat{I}$ for \small{$\{p = 3$, $B = \frac{4}{\sqrt{3}} I_3$, $K = 20$, $r = 40\}$.}
 
 True parameter $I(X; Y) = 0.800$ \emph{(dotted line.)}
 \begin{center}
-\includegraphics[scale = 0.6, clip = true, trim = 0 0.5in 0 0.5in]{../info_theory_sims/fig1.pdf}
+\includegraphics[scale = 0.5, clip = true, trim = 0 0.5in 0 0.5in]{../info_theory_sims/fig1.pdf}
 \end{center}
 Na\"{i}ve estimator performs best!  $\hat{I}_{LS}$ not effective.
 \end{frame}
+
+\begin{frame}
+\frametitle{Fig 2. High-dimensional results ($q = 50$)}
+Sampling distribution of $\hat{I}$ for \small{$\{p = 50$, $B = \frac{4}{\sqrt{50}} I_{50}$, $K = 20$, $r = 8000\}$.}
+
+True parameter $I(X; Y) = 1.794$ \emph{(dotted line.)}
+\begin{center}
+\includegraphics[scale = 0.5, clip = true, trim = 0 0.5in 0 0.5in]{../info_theory_sims/fig2.pdf}
+\end{center}
+Non-parametric methods extremely biased.
+\end{frame}
+
+\begin{frame}
+\frametitle{Fig 3. Dependence on $n$}
+Estimation path of $\hat{I}_{LS}$ and $\hat{I}_\alpha$ as $n$ ranges from $10$ to $8000$.
+
+\small{$\{p = 10$, $B = \frac{4}{\sqrt{10}} I_{10}$, $K = 20\}$.
+True parameter $I(X; Y) = 1.322$ \emph{(dotted line.)}}
+
+\begin{center}
+\includegraphics[scale = 0.4]{../info_theory_sims/fig3.pdf}
+\end{center}
+
+Legend: \textbf{\textcolor{green}{\SoulColor\hl{ -- }}} = $\hat{I}_{LS}$, \textcolor{red}{\SoulColor\hl{ -- }} = $\hat{I}_0$, \textcolor{orange}{\SoulColor\hl{ -- }} = $\hat{I}_{0.5}$,
+\textbf{\textcolor{yellow}{\SoulColor\hl{ -- }}} = $\hat{I}_{0.9}$.
+
+\end{frame}
+
 
 \begin{frame}
 \frametitle{References}
