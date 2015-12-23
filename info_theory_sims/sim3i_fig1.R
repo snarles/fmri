@@ -10,8 +10,8 @@ allresults <- list()
 mc.reps <- 1e4
 mc.abe <- 1e2
 abe.each <- 1e2
-mcc <- 3
-data.reps <- 90
+mcc <- 39
+data.reps <- 2000
 
 ## problem params
 p <- 3
@@ -42,7 +42,6 @@ mses <- colSums((res[, 1:7] - mi_true)^2)/data.reps
 
 ihat <- as.numeric(res[, 1:6])
 tab <- data.frame(I = ihat, method = rep(c("CM", "F", "LS", "0", "0.5", "0.9"), data.reps))
-View(tab)
 
 boxplot(I ~ method, data = tab, ylim = c(0, 1.5))
 
@@ -58,3 +57,4 @@ for (i in 1:6) {
   text(i, 1.35, format(round(reorder[i] * 1e2, 1)),
        col = "red", cex = 0.8)
 }
+save(res, file = "info_theory_sims/fig1.Rdata")
