@@ -14,7 +14,7 @@ data.reps <- mcc
 
 ## problem params
 p <- 5; q <- 10
-Bmat <- 2.5 * randn(p, q)
+Bmat <- 0.2 * randn(p, q)
 ## true MI
 t1 <- proc.time()
 (mi_true <- compute_mi(Bmat, 1e6, mcc))
@@ -23,6 +23,7 @@ proc.time() - t1
 t1 <- proc.time()
 (mi_true2 <- compute_mi2(Bmat, 1e4, mcc))
 proc.time() - t1
+c(mi_true, mi_true2)
 ## bayes LS
 k.each <- 3
 (est_ls <- get_abe(Bmat, k.each, mc.abe, mcc))
