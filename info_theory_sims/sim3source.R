@@ -184,3 +184,50 @@ run_instance <- function(X, Yall, zs, nsub, ntr) {
 }
 
 
+####
+##  Logistic entropy calculation
+####
+
+eta <- function(x) log(1 + exp(x))
+deta <- function(x) 1/(1 + exp(-x))
+d2eta <- function(x) exp(-x)/(1 + exp(-x))^2
+
+nll <- function(y, x, Bmat) {
+  sum(x^2)/2 + sum(eta(-y * (t(Bmat) %*% x)))
+}
+
+opt_nll <- function(y, Bmat) {
+  p <- dim(Bmat)[1]
+  res <- optim(rep(0, p), function(x) nll(y, x, Bmat))
+  res$par
+}
+
+pr_laplace <- function(y, Bmat, log.p = FALSE) {
+  p <- dim(Bmat)[1]; q <- dim(Bmat)[2]
+  Bt <- Bmat %*% diag(-y)
+  x0 <- opt_nll(y, Bmat)
+  mu <- as.numeric(t(Bt) %*% x0)
+  dn <- deta(mu); d2n <- d2eta(mu)
+  (l0 <- nll(y, x0, Bmat))
+  #   gd <- x0 + Bt %*% dn
+  hs <- eye(p) + Bmat %*% diag(d2n) %*% t(Bmat)
+  #   as.numeric((1/sqrt(2*pi))^p * 
+  #                exp(-l0 + 1/2 * t(gd) %*% solve(hs, gd)) * 
+  #                sqrt(det(2 * pi * solve(hs))))
+  if (log.p) return(-l0 - log(det(hs))/2)
+  exp(-l0)/sqrt(det(hs))
+}
+
+compute_mi2 <- function(Bmat, mc.reps = 1e5, mcc = 0) {
+  
+  diffs <- unlist(mclapply0(1:mcc, function(i) {
+    X <- randn(mc.reps, p)
+    ps <- 1/(1 + exp(-X %*% Bmat))
+    ces <- apply(ps, 1, function(v) sum(hp(v)))
+    Y <- (rand(mc.reps, q) < ps) + 0
+    logps <- apply(2 * Y - 1, 1, function(v) pr_laplace(v, Bmat, TRUE))
+    -ces - logps
+  }, mc.cores = mcc))
+  
+  c(mu = mean(diffs), se = sd(diffs)/sqrt(length(diffs)))
+}
