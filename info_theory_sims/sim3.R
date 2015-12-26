@@ -13,8 +13,8 @@ mcc <- 3
 data.reps <- mcc
 
 ## problem params
-p <- 5; q <- 10
-Bmat <- 0.2 * randn(p, q)
+p <- 6; q <- 2 * p
+Bmat <- 0.3 * randn(p, q)
 ## true MI
 t1 <- proc.time()
 (mi_true <- compute_mi(Bmat, 1e6, mcc))

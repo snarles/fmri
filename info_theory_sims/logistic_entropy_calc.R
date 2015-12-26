@@ -67,38 +67,12 @@ prox_nll <- function(y, x, Bmat, x0 = opt_nll(y, Bmat)) {
 
 p <- 2
 q <- 3
-Bmat <- randn(p, q)
-mc.reps <- 1e6
+Bmat <- 10 * randn(p, q)
+mc.reps <- 1
 X <- randn(mc.reps, p)
 ps <- 1/(1 + exp(-X %*% Bmat))
 Y <- (rand(mc.reps, q) < ps) + 0
-ylabs <- apply(Y, 1, function(v) paste(v, collapse = ""))
-tab <- table(ylabs)
-tab <- tab/sum(tab)
-
-#(s <- "111")
-(s <- sample(ylabs, 1))
-y <- 2 * str2vec(s) - 1
-(pr_emp <- tab[s])
+y <- 2 * as.numeric(Y) - 1
 (pr_true <- pr_grid(y, Bmat, 300))
 (pr_the <- pr_laplace(y, Bmat))
 
-(h_emp <- sum(-tab * log(tab)))
-logps <- sapply(names(tab), function(s) pr_laplace(2 * str2vec(s) - 1, Bmat, TRUE))
-(h_the <- sum(-exp(logps) * logps))
-
-logps <- sapply(ylabs[1:100], function(s) pr_laplace(2 * str2vec(s) - 1, Bmat, TRUE))
-mean(-logps)
-
-# 
-# x0 <- opt_nll(y, Bmat)
-# x <- x0 + rnorm(p)/10
-# nll(y, x, Bmat)
-# prox_nll(y, x, Bmat, x0)
-# 
-# x0
-# ds <- seq(-1, 1, 0.1)
-# tvs <- sapply(ds, function(dd) nll(y, x + c(dd, 0), Bmat))
-# pvs <- sapply(ds, function(dd) prox_nll(y, x + c(dd, 0), Bmat, x0))
-# plot(ds, tvs, type = "l")
-# lines(ds, pvs, col = "red")
