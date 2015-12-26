@@ -46,6 +46,22 @@ pr_laplace <- function(y, Bmat, log.p = FALSE) {
   exp(-l0)/sqrt(det(hs))
 }
 
+## pr laplace with importance sampling correction
+pr_laplace2 <- function(y, Bmat, log.p = FALSE, in.reps = 1e2) {
+  p <- dim(Bmat)[1]; q <- dim(Bmat)[2]
+  Bt <- Bmat %*% diag(-y)
+  x0 <- opt_nll(y, Bmat)
+  mu <- as.numeric(t(Bt) %*% x0)
+  dn <- deta(mu); d2n <- d2eta(mu)
+  (l0 <- nll(y, x0, Bmat))
+  hs <- eye(p) + Bmat %*% diag(d2n) %*% t(Bmat)
+  ## compute correction factor
+  xsamp <- mvrnorm(in.reps, x0, solve(hs))
+  if (log.p) return(-l0 - log(det(hs))/2)
+  exp(-l0)/sqrt(det(hs))
+  
+}
+
 
 nll <- function(y, x, Bmat) {
   sum(x^2)/2 + sum(eta(-y * (t(Bmat) %*% x)))
@@ -67,13 +83,13 @@ prox_nll <- function(y, x, Bmat, x0 = opt_nll(y, Bmat)) {
 
 p <- 2
 q <- 3
-Bmat <- 200 * randn(p, q)
+Bmat <- 10 * randn(p, q)
 mc.reps <- 1
 X <- randn(mc.reps, p)
 ps <- 1/(1 + exp(-X %*% Bmat))
 Y <- (rand(mc.reps, q) < ps) + 0
 y <- 2 * as.numeric(Y) - 1
-pr_true <- pr_grid(y, Bmat, 300)
+(pr_true <- pr_grid(y, Bmat, 300))
 pr_true2 <- pr_grid(y, Bmat, 400)
 pr_the <- pr_laplace(y, Bmat)
 c(pr_true = pr_true, pr_true2 = pr_true2, pr_the = pr_the)
