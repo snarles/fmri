@@ -67,12 +67,13 @@ prox_nll <- function(y, x, Bmat, x0 = opt_nll(y, Bmat)) {
 
 p <- 2
 q <- 3
-Bmat <- 10 * randn(p, q)
+Bmat <- 200 * randn(p, q)
 mc.reps <- 1
 X <- randn(mc.reps, p)
 ps <- 1/(1 + exp(-X %*% Bmat))
 Y <- (rand(mc.reps, q) < ps) + 0
 y <- 2 * as.numeric(Y) - 1
-(pr_true <- pr_grid(y, Bmat, 300))
-(pr_the <- pr_laplace(y, Bmat))
-
+pr_true <- pr_grid(y, Bmat, 300)
+pr_true2 <- pr_grid(y, Bmat, 400)
+pr_the <- pr_laplace(y, Bmat)
+c(pr_true = pr_true, pr_true2 = pr_true2, pr_the = pr_the)
