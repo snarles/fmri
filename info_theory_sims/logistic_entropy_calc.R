@@ -57,9 +57,18 @@ pr_laplace2 <- function(y, Bmat, log.p = FALSE, in.reps = 1e2) {
   hs <- eye(p) + Bmat %*% diag(d2n) %*% t(Bmat)
   ## compute correction factor
   xsamp <- mvrnorm(in.reps, x0, solve(hs))
-  if (log.p) return(-l0 - log(det(hs))/2)
-  exp(-l0)/sqrt(det(hs))
-  
+  nlls <- apply(xsamp, 1, function(x) nll(y, x, Bmat))
+  prox_nlls <- apply(xsamp, 1, function(x) prox_nll(y, x, Bmat, x0))
+  log_diffs <- prox_nlls - nlls
+  (cf <- meanexp(log_diffs))
+  se <- sd(exp(log_diffs))/sqrt(in.reps)
+  if (log.p) {
+    return(
+      c(log.p = -l0 - log(det(hs))/2 + log(cf),
+        cf = cf, se = se))
+  }
+  pr <- exp(-l0)/sqrt(det(hs)) * cf
+  c(pr, se = se * pr)
 }
 
 
@@ -92,4 +101,5 @@ y <- 2 * as.numeric(Y) - 1
 (pr_true <- pr_grid(y, Bmat, 300))
 pr_true2 <- pr_grid(y, Bmat, 400)
 pr_the <- pr_laplace(y, Bmat)
-c(pr_true = pr_true, pr_true2 = pr_true2, pr_the = pr_the)
+(pr_the2 <- pr_laplace2(y, Bmat, in.reps = 1e5))
+c(pr_true = pr_true, pr_true2 = pr_true2, pr_the = pr_the, pr_the2 = pr_the2)
