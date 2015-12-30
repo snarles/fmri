@@ -22,6 +22,7 @@ d2eta(1)
 
 
 pr_grid <- function(y, Bmat, reso = 5) {
+  p <- dim(Bmat)[1]; q <- dim(Bmat)[2]
   Btilde <- Bmat %*% diag(-y)
   xs <- as.matrix(gen.factorial(rep(reso, p))/reso * 2 * sqrt(2 * log(reso)))
   delta <- xs[2, 1] - xs[1, 1]
@@ -57,8 +58,19 @@ pr_laplace2 <- function(y, Bmat, log.p = FALSE, in.reps = 1e2) {
   hs <- eye(p) + Bmat %*% diag(d2n) %*% t(Bmat)
   ## compute correction factor
   xsamp <- mvrnorm(in.reps, x0, solve(hs))
-  nlls <- apply(xsamp, 1, function(x) nll(y, x, Bmat))
-  prox_nlls <- apply(xsamp, 1, function(x) prox_nll(y, x, Bmat, x0))
+  #nlls <- apply(xsamp, 1, function(x) nll(y, x, Bmat))
+  bx <- xsamp %*% Bt
+  nlls <- rowSums(xsamp^2)/2 + rowSums(eta(bx))
+  #prox_nlls <- apply(xsamp, 1, function(x) prox_nll(y, x, Bmat, x0))
+  nll0 <- nll(y, x0, Bmat)
+  mu <- as.numeric(-y * (t(Bmat) %*% x0))
+  dn <- deta(mu); d2n <- d2eta(mu)
+  gterm <- x0 + Bt %*% dn
+  hterm <- eye(p) + Bt %*% diag(d2n) %*% t(Bt)
+  delts <- t(t(xsamp) - x0)
+  hdelts <- delts %*% hterm
+  prox_nlls <- nll0 + as.numeric(delts %*% gterm) + 
+    rowSums((delts %*% hterm) * delts)/2
   log_diffs <- prox_nlls - nlls
   (cf <- meanexp(log_diffs))
   se <- sd(exp(log_diffs))/sqrt(in.reps)
@@ -91,15 +103,15 @@ prox_nll <- function(y, x, Bmat, x0 = opt_nll(y, Bmat)) {
 }
 
 p <- 2
-q <- 3
-Bmat <- 10 * randn(p, q)
+q <- 4
+Bmat <- 2 * randn(p, q)
 mc.reps <- 1
 X <- randn(mc.reps, p)
 ps <- 1/(1 + exp(-X %*% Bmat))
 Y <- (rand(mc.reps, q) < ps) + 0
 y <- 2 * as.numeric(Y) - 1
-(pr_true <- pr_grid(y, Bmat, 300))
-pr_true2 <- pr_grid(y, Bmat, 400)
+(pr_true <- pr_grid(y, Bmat, 100))
+pr_true2 <- pr_grid(y, Bmat, 200)
 pr_the <- pr_laplace(y, Bmat)
 (pr_the2 <- pr_laplace2(y, Bmat, in.reps = 1e5))
 c(pr_true = pr_true, pr_true2 = pr_true2, pr_the = pr_the, pr_the2 = pr_the2)
