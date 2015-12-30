@@ -13,23 +13,21 @@ mcc <- 39
 data.reps <- mcc
 
 ## problem params
-p <- 6; q <- 2 * p
-Bmat <- 2.1 * randn(p, q)
+p <- 20; q <- 2 * p
+Bmat <- 1/sqrt(p) * randn(p, q)
 ## true MI
-t1 <- proc.time()
-(mi_true <- compute_mi(Bmat, 1e6, mcc))
-proc.time() - t1
+# t1 <- proc.time()
+# (mi_true <- compute_mi(Bmat, 1e6, mcc))
+# proc.time() - t1
+# 
+# t1 <- proc.time()
+# (mi_true2 <- compute_mi2(Bmat, 1e4, mcc))
+# proc.time() - t1
 
 t1 <- proc.time()
-(mi_true2 <- compute_mi2(Bmat, 1e4, mcc))
+(mi_true3 <- compute_mi3(Bmat, 1e3, mcc, 1e3))
 proc.time() - t1
-
-t1 <- proc.time()
-(mi_true3 <- compute_mi3(Bmat, 1e3, mcc, 1e5))
-proc.time() - t1
-
-
-c(mi_true, mi_true2, mi_true3)
+#c(mi_true, mi_true2, mi_true3)
 ## bayes LS
 k.each <- 3
 (est_ls <- get_abe(Bmat, k.each, mc.abe, mcc))
