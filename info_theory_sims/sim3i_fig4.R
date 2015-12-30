@@ -11,10 +11,10 @@ mc.reps <- 1e4
 mc.abe <- 1e2
 abe.each <- 1e2
 mcc <- 39
-data.reps <- 75
+data.reps <- 750
 
 ## problem params
-ss <- seq(0, 3, by = 0.5)
+ss <- sqrt(seq(0, 200, by = 5))
 ress <- array(0, dim = c(data.reps, 9, length(ss)))
 p <- 10
 mi_trues <- sapply(ss, function(s) mi_ident_case(p, s/sqrt(p), 1e5))
@@ -57,12 +57,12 @@ for (i in 1:4) {
   polygon(c(mi_trues, rev(mi_trues)), c(lowers[, i], rev(uppers[, i])), col = cols[i],
           border = cols[i])  
 }
+for (i in 1:4) {
+  polygon(c(mi_trues, rev(mi_trues)), c(lowers[, i], rev(uppers[, i])), col = NA,
+          border = cols[i], lwd = 3)  
+}
 abline(0, 1, lwd = 3, col = "black", lty = 2)
 
-## display results
-c(mi_true = mi_true, mi_ls = est_ls['mc_b_ls'], apply(res, 2, median), abe = est_ls['abe'])
-apply(res[, 1:6] - mi_true, 2, summary)
-colSums((res[, 1:6] - mi_true)^2)/data.reps
 ## save results
 packet <- list(ss=ss, m.folds = m.folds,
                k.each = k.each, r.each = r.each, r.train = r.train,
