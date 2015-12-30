@@ -231,3 +231,53 @@ compute_mi2 <- function(Bmat, mc.reps = 1e5, mcc = 0) {
   
   c(mu = mean(diffs), se = sd(diffs)/sqrt(length(diffs)))
 }
+
+## pr laplace with importance sampling correction
+pr_laplace2 <- function(y, Bmat, log.p = FALSE, in.reps = 1e2) {
+  p <- dim(Bmat)[1]; q <- dim(Bmat)[2]
+  Bt <- Bmat %*% diag(-y)
+  x0 <- opt_nll(y, Bmat)
+  mu <- as.numeric(t(Bt) %*% x0)
+  dn <- deta(mu); d2n <- d2eta(mu)
+  (l0 <- nll(y, x0, Bmat))
+  hs <- eye(p) + Bmat %*% diag(d2n) %*% t(Bmat)
+  ## compute correction factor
+  xsamp <- mvrnorm(in.reps, x0, solve(hs))
+  #nlls <- apply(xsamp, 1, function(x) nll(y, x, Bmat))
+  bx <- xsamp %*% Bt
+  nlls <- rowSums(xsamp^2)/2 + rowSums(eta(bx))
+  #prox_nlls <- apply(xsamp, 1, function(x) prox_nll(y, x, Bmat, x0))
+  nll0 <- nll(y, x0, Bmat)
+  mu <- as.numeric(-y * (t(Bmat) %*% x0))
+  dn <- deta(mu); d2n <- d2eta(mu)
+  gterm <- x0 + Bt %*% dn
+  hterm <- eye(p) + Bt %*% diag(d2n) %*% t(Bt)
+  delts <- t(t(xsamp) - x0)
+  hdelts <- delts %*% hterm
+  prox_nlls <- nll0 + as.numeric(delts %*% gterm) + 
+    rowSums((delts %*% hterm) * delts)/2
+  log_diffs <- prox_nlls - nlls
+  (cf <- meanexp(log_diffs))
+  se <- sd(exp(log_diffs))/sqrt(in.reps)
+  if (log.p) {
+    return(
+      c(log.p = -l0 - log(det(hs))/2 + log(cf),
+        cf = cf, se = se))
+  }
+  pr <- exp(-l0)/sqrt(det(hs)) * cf
+  c(pr, se = se * pr)
+}
+
+compute_mi3 <- function(Bmat, mc.reps = 1e5, mcc = 0, in.reps = 1e2) {
+  
+  diffs <- unlist(mclapply0(1:mcc, function(i) {
+    X <- randn(mc.reps, p)
+    ps <- 1/(1 + exp(-X %*% Bmat))
+    ces <- apply(ps, 1, function(v) sum(hp(v)))
+    Y <- (rand(mc.reps, q) < ps) + 0
+    logps <- apply(2 * Y - 1, 1, function(v) pr_laplace2(v, Bmat, TRUE, in.reps))
+    -ces - logps[1, ]
+  }, mc.cores = mcc))
+  
+  c(mu = mean(diffs), se = sd(diffs)/sqrt(length(diffs)))
+}
