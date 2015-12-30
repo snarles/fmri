@@ -49,4 +49,29 @@ packet <- list(Bmat = Bmat, m.folds = m.folds,
 allresults <- c(allresults, list(packet))
 
 
-save(allresults, file = 'info_theory_sims/save.Rdata')
+save(allresults, file = 'info_theory_sims/fig3.Rdata')
+
+####
+##  plots
+####
+mi_true <- mi_true3[1]
+mses <- colSums((res[, 1:7] - mi_true)^2)/data.reps
+
+ihat <- as.numeric(res[, 1:6])
+tab <- data.frame(I = ihat, method = rep(c("CM", "F", "LS", "0", "0.5", "0.9"), each = data.reps))
+
+boxplot(I ~ method, data = tab, ylim = c(0, 5))
+
+boxplot(I ~ method, data = tab, ylim = c(0, 5),
+        names = c(expression(hat(I)[0]), expression(hat(I)[0.5]), 
+                  expression(hat(I)[0.9]), expression(hat(I)[CM]), 
+                  expression(hat(I)[F]), expression(hat(I)[LS])),
+        cex.axis = 1)
+abline(mi_true, 0, lty = 2, col = "red", lwd = 3)
+text(1.3, 4.9, "RMSE x 100 = ", col = "red", cex = 0.8)
+reorder <- sqrt(c(mses[4:6], mses[1:3]))
+for (i in 1:6) {
+  text(i, 4.35, format(round(reorder[i] * 1e2, 1)),
+       col = "red", cex = 0.8)
+}
+
