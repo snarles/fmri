@@ -1,4 +1,4 @@
 install.packages("AlgDesign")
-install.package("devtools")
+install.packages("devtools")
 install.packages("R.matlab")
 devtools::install("lineId")
