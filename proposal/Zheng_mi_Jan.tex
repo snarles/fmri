@@ -588,11 +588,11 @@ for $i \neq j \neq K$.
 \frametitle{Gaussian example: Average Bayes risk}
 Finally, we get
 \[
-\text{ABE} = \Pr[Z_* < \max_{i=1}^{K-1} Z_i] \to f_K\left(\frac{\sqrt{d}}{\sigma}\right)
+\text{ABE} = \Pr[Z_* < \max_{i=1}^{K-1} Z_i] \to \pi_K\left(\frac{\sqrt{d}}{\sigma}\right)
 \]
 where
 \[
-f_K(\mu) =  1 - \int_{-\infty}^\infty \phi(z-\mu) (1-\Phi(z))^{K-1} dz.
+\pi_K(\mu) =  1 - \int_{-\infty}^\infty \phi(z-\mu) (1-\Phi(z))^{K-1} dz.
 \]
 \end{frame}
 
@@ -605,7 +605,7 @@ I(\bX; \bY) =  \frac{d}{2}\log(1 + \frac{1}{\sigma^2}),
 \]
 while
 \[
-\text{ABE} = f_K(\sqrt{d}/\sigma).
+\text{ABE} = \pi_K(\sqrt{d}/\sigma).
 \]
 
 Hence ABE is not a function of $I(\bX; \bY)$!
@@ -625,7 +625,7 @@ I(\bX; \bY) = \frac{d}{2}\log(1 + \frac{1}{d \sigma^2_1}) \approx \frac{d}{2}\fr
 
 We get
 \[
-\text{ABE} = f_k(\sqrt{2 I(\bX; \bY)})
+\text{ABE} = \pi_k(\sqrt{2 I(\bX; \bY)})
 \]
 in the limit!
 \end{frame}
@@ -639,7 +639,7 @@ In a sequence of gaussian models of increasing dimensionality with
 \]
 we get an exact relationship between the limiting mutual information and the average Bayes error,
 \[
-\text{ABE} = f_K(\sqrt{2\iota}).
+\text{ABE} = \pi_K(\sqrt{2\iota}).
 \]
 
 \textbf{This limiting relationship holds more generally!}
@@ -682,7 +682,7 @@ for random variates $(\bX^{[d]}, \bY^{[d]}) \sim p_d(\bX, \bY)$, we have
 for some constant $\iota < \infty$;
 and the limiting $K$-class average Bayes error is given by
 \[
-\lim_{d \to \infty} \text{ABE} = f_K(\sqrt{2\iota}).
+\lim_{d \to \infty} \text{ABE} = \pi_K(\sqrt{2\iota}).
 \]
 }
 
@@ -701,14 +701,14 @@ product-marginal $p(\bx)p(\by)$ (which give the ABE).
 \frametitle{The low-SNR estimator of $I(\bX;\bY)$}
 
 We are willing to bet that the relationship 
-\[\text{ABE} \approx f_K(\sqrt{2\iota})\]
+\[\text{ABE} \approx \pi_K(\sqrt{2\iota})\]
 holds in much greater generality than we managed to prove--namely,
 whenever $I(\bX; \bY) \ll p$, and the scores $Z_i$ are approximately
 jointly multivariate normal.\newline
 
 Based on these assumptions, our proposed estimator for mutual information is
 \[
-\hat{I}_{ls}(\bX; \bY) = \frac{1}{2}f_K^{-1}(\widehat{\text{ABE}})^2
+\hat{I}_{ls}(\bX; \bY) = \frac{1}{2}\pi_K^{-1}(\widehat{\text{ABE}})^2
 \]
 where $\widehat{\text{ABE}}$ is the test error of the classifier.
 (The subscript $ls$ stands for low-SNR.)
