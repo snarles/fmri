@@ -105,6 +105,10 @@
   \let\set@color\beamerorig@set@color
   \let\reset@color\beamerorig@reset@color}
 \makeatother
+\definecolor{color1}{RGB}{128,13,13}
+\definecolor{color2}{RGB}{70,128,13}
+\definecolor{color3}{RGB}{13,128,128}
+\definecolor{color4}{RGB}{70,13,128}
 
 %tikz stufff
 
@@ -751,7 +755,7 @@ Na\"{i}ve estimator performs best!  $\hat{I}_{LS}$ not effective.
 \frametitle{Fig 2. High-dimensional results ($q = 50$)}
 Sampling distribution of $\hat{I}$ for \small{$\{p = 50$, $B = \frac{4}{\sqrt{50}} I_{50}$, $K = 20$, $r = 8000\}$.}
 
-True parameter $I(X; Y) = 1.794$ \emph{(dotted line.)}
+True parameter $I(X; Y) = 1.794$ \emph{(dashed line.)}
 \begin{center}
 \includegraphics[scale = 0.5, clip = true, trim = 0 0.5in 0 0.5in]{../info_theory_sims/fig2.pdf}
 \end{center}
@@ -759,11 +763,11 @@ Non-parametric methods extremely biased.
 \end{frame}
 
 \begin{frame}
-\frametitle{Fig 3. Dependence on $n$}
+\frametitle{Fig 3. Dependence on $n$ ($q = 10$)}
 Estimation path of $\hat{I}_{LS}$ and $\hat{I}_\alpha$ as $n$ ranges from $10$ to $8000$.
 
 \small{$\{p = 10$, $B = \frac{4}{\sqrt{10}} I_{10}$, $K = 20\}$.
-True parameter $I(X; Y) = 1.322$ \emph{(dotted line.)}}
+True parameter $I(X; Y) = 1.322$ \emph{(dashed line.)}}
 
 \begin{center}
 \includegraphics[scale = 0.4]{../info_theory_sims/fig3.pdf}
@@ -774,6 +778,61 @@ Legend: \textbf{\textcolor{green}{\SoulColor\hl{ -- }}} = $\hat{I}_{LS}$, \textc
 
 \end{frame}
 
+\begin{frame}
+\frametitle{Fig 4. Dependence on true $I(X; Y)$ ($q = 10$)}
+
+\small{$\{p = 10$, $B = [0, 200]\times \frac{1}{\sqrt{10}}I_{10}$, $r = 1000$, $K = 20\}$.}
+
+\begin{center}
+\textbf{Estimated $\hat{I}$ vs true $I$.} 
+
+\includegraphics[scale = 0.5, clip=true, trim=0.4in 0.5in 0 0.5in]{../info_theory_sims/fig4.pdf}
+
+Bands depict 80\% central percentiles.
+
+Legend: 
+\sethlcolor{color3}
+\textbf{\textcolor{color3}{\SoulColor\hl{ -- }}} = $\hat{I}_{LS}$, 
+\sethlcolor{color4}
+\textcolor{color4}{\SoulColor\hl{ -- }} = $\hat{I}_0$,
+\sethlcolor{color1}
+\textcolor{color1}{\SoulColor\hl{ -- }} = $\hat{I}_{CM}$,
+\sethlcolor{color2}
+\textbf{\textcolor{color2}{\SoulColor\hl{ -- }}} = $\hat{I}_{F}$.
+
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Fig 5. Dependence on $K$ given fixed $N$ ($q = 10$)}
+Sampling distribution of $\hat{I}_{LS}$ for \small{$\{p = 10$, $B = \frac{4}{\sqrt{10}} I_{10}$, $N = 80000\}$,
+
+and $K = \{5, 10, 15, 20, \hdots, 80\}$, $r = N/k$.}
+
+True parameter $I(X; Y) = 1.322$ \emph{(dashed line.)}
+\begin{center}
+\includegraphics[scale = 0.6, clip = true, trim = 0 0.5in 0 0.5in]{../info_theory_sims/fig5a.pdf}
+\end{center}
+
+Decreasing variance as $K$ increases. Bias at large and small $K$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Fig 6. Non-identity $B$ ($q = 40$)}
+
+$p = 20$ and $q = 40$, entries of $B$ are iid $N(0, 0.025)$.
+
+$K=20$, $r = 8000$, true $I(X; Y) = 1.86$ \emph{(dashed line.)}
+
+\begin{center}
+\textbf{Sampling distribution of $\hat{I}$.}
+\includegraphics[scale = 0.6, clip = true, trim = 0 0.5in 0 0.5in]{../info_theory_sims/fig6.pdf}
+\end{center}
+
+
+\end{frame}
 
 \begin{frame}
 \frametitle{References}
