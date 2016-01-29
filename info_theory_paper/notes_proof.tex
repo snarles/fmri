@@ -1,0 +1,74 @@
+\title{Information Theory Notes}
+\author{Charles Zheng and Yuval Benjamini}
+\date{\today}
+
+\documentclass[12pt]{article} 
+
+% packages with special commands
+\usepackage{amssymb, amsmath}
+\usepackage{epsfig}
+\usepackage{array}
+\usepackage{ifthen}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{csquotes}
+\definecolor{grey}{rgb}{0.5,0.5,0.5}
+
+\begin{document}
+\maketitle
+
+\newcommand{\tr}{\text{tr}}
+\newcommand{\E}{\textbf{E}}
+\newcommand{\diag}{\text{diag}}
+\newcommand{\argmax}{\text{argmax}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\argmin}{\text{argmin}}
+\newcommand{\Vol}{\text{Vol}}
+\newcommand{\comm}[1]{}
+
+\newcommand{\bx}{\boldsymbol{x}}
+\newcommand{\by}{\boldsymbol{y}}
+\newcommand{\bX}{\boldsymbol{X}}
+\newcommand{\bY}{\boldsymbol{Y}}
+
+
+\section{Proof of Key Result}
+
+We give the proof with minimal context or motivation.  See the paper
+for more details.
+
+Fix integer $K \geq 2$.  Let $p^{[d]}(x,y)$ be a sequence of
+probability density functions, where $x$ is of dimension $p^{[d]}$ and
+$y$ is of dimension $q^{[d]}$.  Let $p^{[d]}(x)$ and $p^{[d]}(y)$
+denote the marginal densities, and let
+\[
+p^{[d]}(y|x) = p^{[d]}(x, y)/p^{[d]}(y).\]
+ Let $(X^{([d], i)}, Y^{([d], i)})$ be
+iid random variates from $p^{[d]}(x, y)$ for $i = 0, \hdots, K-1$; we will supress the
+superscripts $[d]$ and/or $(i)$ when convenient.  Recall the definitions of
+entropy,
+\[
+H(X) = -\int p(x) \log p(x) dx,
+\]
+and mutual information
+\[
+I(X; Y) = \int p(x, y) \log \frac{p(x, y)}{p(x)p(y)} dx dy.
+\]
+Furthermore, define the $K$-class average Bayes error as
+\[
+\text{ABE}_K \Pr[p(Y^{(0)}|X^{(0)}) < \max_{i = 1}^{K-1} p(Y^{(0)}|X^{(i)})].
+\]
+Define
+\[
+u^{[d]}(x, y) = \log p^{[d]}(x, y) - \log p^{[d]}(x) - \log p^{[d]}(y).
+\]
+
+
+
+\end{document}
+
+
+
