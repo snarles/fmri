@@ -142,8 +142,10 @@ Meanwhile, by applying assumption A2,
 \lim_{d \to \infty} I(X; Y) &= \lim_{d \to \infty} \int p(x, y) u(x, y) dx dy 
 = \lim_{d \to \infty} \int p(x) p(y) e^{u(x, y)} u(x, y) dx dy
 \\&= \lim_{d \to \infty}  \E[e^{u(X, Y')}u(X, Y')]
-= \int_{\mathbb{R}} e^z z \frac{1}{\sqrt{2\pi \sigma^2}} 
+\\&= \int_{\mathbb{R}} e^z z \frac{1}{\sqrt{2\pi \sigma^2}} 
 e^{-\frac{(z + \sigma^2/2)^2}{2\sigma^2}} \text{ (applying A2)}
+\\&= \int_{\mathbb{R}} z \frac{1}{\sqrt{2\pi \sigma^2}} 
+e^{-\frac{(z - \sigma^2/2)^2}{2\sigma^2}}
 \\&= \frac{1}{2}\sigma^2.
 \end{align*}
 Therefore,
@@ -161,6 +163,7 @@ Once again by applying A2, we get
 \\&= \lim_{d \to \infty} \int (u(x, y) - \iota)^2 e^{u(x, y)} p(x) p(y) dx dy
 \\&= \lim_{d \to \infty} \E[(u(X', Y) - \iota)^2 e^{u(X', Y)}] 
 \\&= \int (z - \iota)^2 e^z \frac{1}{\sqrt{4\pi\iota}} e^{-\frac{(z+\iota)^2}{4\iota}} dz \text{ (applying A2)}
+\\&= \int (z - \iota)^2 \frac{1}{\sqrt{4\pi\iota}} e^{-\frac{(z-\iota)^2}{4\iota}} dz
 \\&= 2\iota.
 \end{align*}
 
