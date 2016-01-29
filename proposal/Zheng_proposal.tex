@@ -63,7 +63,26 @@
 \section{Introduction}
 {
 \setbeamercolor{background canvas}{bg=}
-\includepdf[pages=1-4]{sketch.pdf}
+\includepdf[pages=1]{sketch.pdf}
+}
+
+\begin{frame}
+\frametitle{Levels of Model Building}
+\begin{center}
+\begin{tabular}{c|c|c}
+Level & Neuroscience & Statistics\\
+\hline
+Reductionist & Segmentation & Clustering\\
+Topological & Connectomics & Graphical Lasso\\
+Information Flow & RSA? & \textbf{this thesis!}\\
+Explicit Mechanisms & Encoding models & Regression
+\end{tabular}
+\end{center}
+\end{frame}
+
+{
+\setbeamercolor{background canvas}{bg=}
+\includepdf[pages=2-4]{sketch.pdf}
 }
 
 \begin{frame}
@@ -134,6 +153,7 @@ Redundancy of neural coding
 Can we extrapolate the classification curve?
 \end{frame}
 
+\section{Information theory}
 {
 \setbeamercolor{background canvas}{bg=}
 \includepdf[pages=1]{Zheng_mi_Jan.pdf}
@@ -331,11 +351,10 @@ to have a nondegenerate jointly multivariate normal limiting distribution (when 
 u(x, y) = \frac{p(x, y)}{p(x)p(y)} - 1.
 \]
 Draw $\bX \sim p(x)$ and $\bY^* \sim p(y)$ independently.
-We require $U(\bX, \bY^*)$ have a
-nondegenerate univariate normal limiting distribution (when scaled appropriately).
+We require $u(\bX, \bY^*)$ have a
+nondegenerate univariate normal limiting distribution (when scaled appropriately).  Also, $\Cov[u(\bX^{(i)}, \bY^{(j)}), u(\bX^{(k)}, \bY^{(j)})] \to 0.$
 \end{itemize}
-These conditions are satisfied quite generally, e.g. if $(\bX, \bY)$ are multivariate normal and their marginal covariance
-matrix has a limiting spectrum.
+These conditions are satisfied quite generally, e.g. if $(\bX, \bY)$ multivariate normal with limiting spectrum.
 \end{frame}
 
 \begin{frame}
@@ -360,7 +379,10 @@ This is the first version we tried.
 \setbeamercolor{background canvas}{bg=}
 \includepdf[pages=32-34]{Zheng_mi_Jan.pdf}
 \includepdf[pages=37]{Zheng_mi_Jan.pdf}
-\includepdf[pages=39]{Zheng_mi_Jan.pdf}
+\includepdf[pages=39]{Zheng_mi_Jan.pdf}}
+\section{RSA}
+{
+\setbeamercolor{background canvas}{bg=}
 \includepdf[pages=1]{Zheng_rsa_Nov17.pdf}
 \includepdf[pages=3-7]{Zheng_rsa_Nov17.pdf}
 \includepdf[pages=15]{Zheng_rsa_Nov17.pdf}
@@ -453,6 +475,24 @@ ABE_{10} \to I(X; Y) \to ABE_{10000}
 \end{frame}
 
 \begin{frame}
+\frametitle{Possible extensions of RSA work}
+Beyond testing $\Sigma^A = \Sigma^B$
+\begin{itemize}
+\item Inference on which components of $\Sigma^A$ differ from $\Sigma^B$.
+\item Multiple comparisons: comparing $\Sigma^A$ to $\Sigma^B$ to $\Sigma^C$
+\item Inferring latent features $X$ from data!  \emph{Multiple MDS}
+\[
+\min_{x, \Sigma^k} \sum_{i,j,k} w_{ijk} (D^k_{ij} - (x_i - x_j)^T \Sigma^k (x_i - x_j)).
+\]
+\end{itemize}
+\end{frame}
+
+{
+\setbeamercolor{background canvas}{bg=}
+\includepdf[pages=8]{sketch.pdf}
+}
+
+\begin{frame}
 \frametitle{References}
 \begin{itemize}
 \item Kay, KN., Naselaris, T., Prenger, R. J., and Gallant, J. L.
@@ -470,5 +510,28 @@ ABE_{10} \to I(X; Y) \to ABE_{10000}
     Behavior}. (2014)
 \end{itemize}
 \end{frame}
+
+\begin{frame}
+\frametitle{References}
+\begin{itemize}
+\item Cover and Thomas.  Elements of information theory.
+\item Gastpar., Gill., Huth., Theunnisen.  ``Anthropic Correction of Information Estimates and Its Application to Neural Coding.'' IEEE Trans I.T.
+\item Quiroga and Panzeri. ``Extracting information from neuronal populations: information theory and decoding approaches.''  Nature Rev. Neuro.
+\item Muirhead.  Aspects of multivariate statistical theory.
+\item van der Vaart.  Asymptotic statistics.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{References}
+\begin{itemize}
+\item Kriegeskorte, N. (2008). Representational similarity analysis – connecting the branches of systems neuroscience. Frontiers in Systems Neuroscience
+\item Kriegeskorte, N., \& Bandettini, P. (2007). Analyzing for information, not activation, to exploit high-resolution fMRI. NeuroImage, 38(4), 649–662. doi:10.1016/j.neuroimage.2007.02.022
+\item Kay, K. N., Naselaris, T., Prenger, R. J., \& Gallant, J. L. (2008). Identifying natural images from human brain activity. Nature, 452(March), 352–355. doi:10.1038/nature06713
+\item Guillot, G., \& Rousset, F. (2013). Dismantling the Mantel tests. Methods in Ecology and Evolution, 4(4), 336–344. doi:10.1111/2041-210x.12018
+\item Cole, M. W., Reynolds, J. R., Power, J. D., Repovs, G., Anticevic, A., \& Braver, T. S. (2013). Multi-task connectivity reveals flexible hubs for adaptive task control. Nature Neuroscience, 16(9), 1348–1355. doi:10.1038/nn.3470
+\end{itemize}
+\end{frame}
+
 
 \end{document}
