@@ -63,10 +63,156 @@ Furthermore, define the $K$-class average Bayes error as
 \]
 Define
 \[
-u^{[d]}(x, y) = \log p^{[d]}(x, y) - \log p^{[d]}(x) - \log p^{[d]}(y).
+u^{[d]}(x, y) = \log p^{[d]}(x, y) - \log p^{[d]}(x) - \log p^{[d]}(y),
+\]
+and define
+\[
+\ell_{ij}^{[d]} = \log p(y^{(i)}|x^{(j)})
 \]
 
 
+\textbf{Theorem.} Let $p^{[d]}(x, y)$ be a sequence of joint densities
+for $d = 1,2,\hdots$ as given above.  Further assume that
+\begin{itemize}
+\item[A1.] $\lim_{d \to \infty} I(X^{[d]}; Y^{[d]}) = \iota < \infty.$
+\item[A2.] There exists a sequence of scaling constants $a_{ij}^{[d]}$
+and $b_{ij}^{[d]}$ such that the random vector $(a_{ij}\ell_{ij}^{[d]} +
+b_{ij}^{[d]})_{i, j = 1,\hdots, K}$ converges in distribution to a
+multivariate normal distribution.
+\item[A3.] There exists a sequence of scaling constants $a^{[d]}$, $b^{[d]}$ such that
+\[
+a^{[d]}u(X^{(1)}, Y^{(2)}) + b^{[d]}
+\]
+converges in distribution to a univariate normal distribution.
+\item[A4.] For all $i \neq k$,
+\[\lim_{d \to \infty}\Cov(u(X^{(i)}, Y^{(j}), u(X^{(k)}), Y^{(j)}) = 0.\]
+\end{itemize}
+Then for $\text{ABE}_K$ as defined above, we have
+\[
+\lim_{d \to \infty} \text{ABE}_{K} = \pi_K(\iota)
+\]
+where
+\[
+\pi_K(\iota) = 1 - \int_{\mathbb{R}} \phi(z - \sqrt{2\iota}) (1 - \Phi(z))^{K-1} dz
+\]
+where $\phi$ and $\Phi$ are the standard normal density function and
+cumulative distribution function, respectively.
+
+\textbf{Proof.}
+
+For $i = 1,\hdots, K-1$, define
+\[
+Z_i = \log p(Y^{(0)}|X^{(i)}) - \log p(Y^{(0)}|X^{(0)}).
+\]
+Then, we claim that $\vec{Z} = (Z_1,\hdots, Z_{K-1})$ converges in distribution to
+\[
+\vec{Z} \sim N\left(-2\iota, 
+\begin{bmatrix}
+4\iota & 2\iota & \cdots & 2\iota\\
+2\iota & 4\iota & \cdots & 2\iota\\
+\vdots & \vdots & \ddots & \vdots\\
+2\iota & 2\iota & \cdots & 4\iota
+\end{bmatrix}
+\right).
+\]
+Applying the gaussian probability lemma in the following section,
+we obtain the desired result.
+
+To prove the claim, it suffices to derive the limiting moments
+\[\E[Z_i] \to -2\iota\]
+\[\Cov[Z_i] \to 4\iota\]
+\[\Cov[Z_i, Z_j] \to 2\iota,\]
+since then assumption A2 the existence of a multivariate normal
+limiting distribution with the given moments.
+
+Before deriving the limiting moments, note the following identities.
+Let $X' = X^{(1)}$ and $Y = Y^{(0)}$.
+\[
+\E[e^{u(X', Y)}] = \int p(x) p(y) e^{u(x, y)} dx dy = \int p(x, y) dxy = 1.
+\]
+Therefore, from assumption A3 and the formula for gaussian exponential
+moments, we have
+\[
+\lim_{d \to \infty} \E[u(X', Y)]-\frac{1}{2}\Var[u(X', Y)] = 0.
+\]
+Let $\sigma^2 = \lim_{d \to \infty} \Var[u(X', Y)]$.
+Meanwhile, by applying assumption A2,
+\begin{align*}
+\lim_{d \to \infty} I(X; Y) &= \lim_{d \to \infty} \int p(x, y) u(x, y) dx dy 
+= \lim_{d \to \infty} \int p(x) p(y) e^{u(x, y)} u(x, y) dx dy
+\\&= \lim_{d \to \infty}  \E[e^{u(X, Y')}u(X, Y')]
+= \int_{\mathbb{R}} e^z z \frac{1}{\sqrt{2\pi \sigma^2}} 
+e^{-\frac{(z + \sigma^2/2)^2}{2\sigma^2}} \text{ (applying A2)}
+\\&= \frac{1}{2}\sigma^2.
+\end{align*}
+Therefore,
+\[
+\sigma^2 = 2\iota,
+\]
+and
+\[
+\lim_{d \to \infty} \E[u(X', Y)] = -\iota.
+\]
+Once again by applying A2, we get
+\begin{align*}
+\lim_{d \to \infty} \Var[u(X, Y)] 
+&= \lim_{d \to \infty} \int (u(x, y) - \iota)^2 p(x, y) dx dy
+\\&= \lim_{d \to \infty} \int (u(x, y) - \iota)^2 e^{u(x, y)} p(x) p(y) dx dy
+\\&= \lim_{d \to \infty} \E[(u(X', Y) - \iota)^2 e^{u(X', Y)}] 
+\\&= \int (z - \iota)^2 e^z \frac{1}{\sqrt{4\pi\iota}} e^{-\frac{(z+\iota)^2}{4\iota}} dz \text{ (applying A2)}
+\\&= 2\iota.
+\end{align*}
+
+
+We now proceed to derive the limiting moments.
+We have
+\begin{align*}
+\lim_{d \to \infty} \E[Z] 
+&= \lim_{d \to \infty} \E[ \log p(Y|X') - \log p(Y|X)]
+\\&= \lim_{d \to \infty} \E[ u(X', Y) - u(X, Y) ] = -2\iota.
+\end{align*}
+Also,
+\begin{align*}
+\lim_{d \to \infty} \Var[Z]
+ &= \lim_{d \to \infty} \Var[ u(X', Y) - u(X, Y) ]
+\\&= \lim_{d \to \infty} \Var[ u(X', Y)] +\Var[ u(X, Y) ]\text{ (using assumption A4) }
+\\&= 4\iota,
+\end{align*}
+and similarly
+\begin{align*}
+\lim_{d \to \infty} \Cov[Z_i, Z_j]
+&= \lim_{d \to \infty} \Var[ u(X, Y)]\text{ (using assumption A4) }
+\\&= 2\iota.
+\end{align*}
+This concludes the proof. $\Box$.
+
+
+\section{Lemma}
+
+\textbf{Lemma. }
+\emph{
+Suppose $(Z_*, Z_1, \hdots, Z_{K-1})$ are jointly multivariate normal, with 
+$\E[Z_* - Z_1]= \alpha$, 
+$\Var(Z_*) = \beta$, 
+$\Cov(Z_*, Z_i) = \gamma$, 
+$\Var(Z_i)= \delta$, and $\Cov(Z_i, Z_j) = \epsilon$ for all $i, j = 1, \hdots,
+K-1$.  Then, letting
+\[
+\mu = \frac{\E[Z_* - Z_i]]}{\sqrt{\frac{1}{2}\Var(Z_i - Z_j)}} = \frac{\alpha}{\sqrt{\delta - \epsilon}},
+\]
+\[
+\nu^2 = \frac{\Cov(Z_* -Z_i, Z_* - Z_j)}{\frac{1}{2}\Var(Z_i - Z_j)} = \frac{\beta + \epsilon - 2\gamma}{\delta - \epsilon},
+\]
+we have
+\begin{align*}
+\Pr[Z_* < \max_{i=1}^{K-1}] &= \Pr[W < M_{K-1}]
+\\&= 1 - \int -\frac{1}{\sqrt{2\pi\nu^2}} e^{-\frac{(w-\mu)^2}{2\nu^2}} (1-\Phi(w))^{K-1} dw,
+\end{align*}
+where $W \sim N(\mu, \nu^2)$ and $M_{K-1}$ is the maximum of $K-1$
+independent standard normal variates, which are independent of $W$.
+}
+
+[ADD PROOF OF LEMMA HERE]
 
 \end{document}
 
