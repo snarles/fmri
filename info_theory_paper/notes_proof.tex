@@ -119,16 +119,17 @@ Combining the claim with the lemma in the following section yields the
 desired result.
 
 To prove the claim, it suffices to derive the limiting moments
-\[\E[Z_i] \to -2\iota\]
-\[\Cov[Z_i] \to 4\iota\]
+\[\E[Z_i] \to -2\iota,\]
+\[\Cov[Z_i] \to 4\iota,\]
 \[\Cov[Z_i, Z_j] \to 2\iota,\]
+for $i \neq j$,
 since then assumption A2 implies the existence of a multivariate normal
 limiting distribution with the given moments.
 
 Before deriving the limiting moments, note the following identities.
 Let $X' = X^{(1)}$ and $Y = Y^{(0)}$.
 \[
-\E[e^{u(X', Y)}] = \int p(x) p(y) e^{u(x, y)} dx dy = \int p(x, y) dxy = 1.
+\E[e^{u(X', Y)}] = \int p(x) p(y) e^{u(x, y)} dx dy = \int p(x, y) dx dy = 1.
 \]
 Therefore, from assumption A3 and the formula for gaussian exponential
 moments, we have
@@ -198,7 +199,7 @@ $\Cov(Z_*, Z_i) = \gamma$,
 $\Var(Z_i)= \delta$, and $\Cov(Z_i, Z_j) = \epsilon$ for all $i, j = 1, \hdots,
 K-1$.  Then, letting
 \[
-\mu = \frac{\E[Z_* - Z_i]]}{\sqrt{\frac{1}{2}\Var(Z_i - Z_j)}} = \frac{\alpha}{\sqrt{\delta - \epsilon}},
+\mu = \frac{\E[Z_* - Z_i]}{\sqrt{\frac{1}{2}\Var(Z_i - Z_j)}} = \frac{\alpha}{\sqrt{\delta - \epsilon}},
 \]
 \[
 \nu^2 = \frac{\Cov(Z_* -Z_i, Z_* - Z_j)}{\frac{1}{2}\Var(Z_i - Z_j)} = \frac{\beta + \epsilon - 2\gamma}{\delta - \epsilon},
