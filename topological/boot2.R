@@ -20,12 +20,12 @@ pplot <- function(pvs, ...) {
   plot(1:length(pvs)/length(pvs), sort(pvs), ylim = c(0, 1), type = "l", ...); abline(0, 1)  
 }
 
-p <- 5 # number of neurons
-q <- 5 # dimension of regressor
+p <- 60 # number of neurons
+q <- 2 # dimension of regressor
 nX <- 50
 nY <- 50
-boot.reps <- 1e3
-o.reps <- 5e2
+boot.reps <- 100
+o.reps <- 5e1
 
 f2a <- 20
 f2d <- 5
@@ -37,25 +37,33 @@ B_1 <- B_0 + DD
 
 ## Null case
 
+t1 <- proc.time()
 pvs <- p_value_dist(A_0, B_0, eye(q), eye(q), nX, nY, stat.T, boot.reps, o.reps)
 pplot(pvs, ann = FALSE)
 title(paste("h0 T, p=",p,"q=",q,"nX=",nX,"nY=",nY,"B=",boot.reps),
       sub = paste("f2a =", f2a))
+(t2a <- proc.time() - t1)
 
+t1 <- proc.time()
 pvs <- p_value_dist(A_0, B_0, eye(q), eye(q), nX, nY, stat.S, boot.reps, o.reps)
 pplot(pvs, ann = FALSE)
 title(paste("h0 S, p=",p,"q=",q,"nX=",nX,"nY=",nY,"B=",boot.reps),
       sub = paste("f2a =", f2a))
+(t2b <- proc.time() - t1)
 
 ## Alt case
 
+t1 <- proc.time()
 pvs <- p_value_dist(A_0, B_1, eye(q), eye(q), nX, nY, stat.T, boot.reps, o.reps)
 pplot(pvs, ann = FALSE)
 title(paste("h1 T, p=",p,"q=",q,"nX=",nX,"nY=",nY,"B=",boot.reps),
       sub = paste("f2a =", f2a, "f2d=", f2d))
+(t2c <- proc.time() - t1)
 
+t1 <- proc.time()
 pvs <- p_value_dist(A_0, B_1, eye(q), eye(q), nX, nY, stat.S, boot.reps, o.reps)
 pplot(pvs, ann = FALSE)
 title(paste("h1 S, p=",p,"q=",q,"nX=",nX,"nY=",nY,"B=",boot.reps),
       sub = paste("f2a =", f2a, "f2d=", f2d))
+(t2d <- proc.time() - t1)
 
