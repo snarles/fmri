@@ -9,7 +9,9 @@ f2 <- function(x, y = 0) sum((x-y)^2)
 
 ## DATA MODEL
 
-regression_data_model_ <- function(A, B, SigmaX, SigmaY) {
+regression_data_model_ <- function(A, B, SigmaX, SigmaY, 
+                                   SigmaE1 = eye(dim(A)[1]),
+                                   SigmaE2 = eye(dim(A)[2])) {
   p <- dim(A)[1]; q <- dim(A)[2]
   sampler <- function(nX, nY) {
     noise_mult <- 1
@@ -18,9 +20,9 @@ regression_data_model_ <- function(A, B, SigmaX, SigmaY) {
       noise_mult <- 0
     }
     rawXc <- mvrnorm(nX, rep(0, q), SigmaX)
-    rawXr <- rawXc %*% t(A) + randn(nX, p)
+    rawXr <- rawXc %*% t(A) + mvrnorm(nX, rep(0, p), SigmaE1)
     rawYc <- mvrnorm(nY, rep(0, q), SigmaY)
-    rawYr <- rawYc %*% t(B) + randn(nY, p)    
+    rawYr <- rawYc %*% t(B) + mvrnorm(nY, rep(0, p), SigmaE2)    
     dat <- rbind(cbind(0, rawXc, rawXr), cbind(1, rawYc, rawYr))
     list(p = p, q  = q, dat = dat)
   }

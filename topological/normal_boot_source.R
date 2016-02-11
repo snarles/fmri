@@ -3,7 +3,7 @@
 ##  Generates A, B matrices with general covariance patterns
 ####
 
-source("rsa_boot_source.R")
+source("topological/rsa_boot_source.R")
 ## DATA MODEL
 
 n_data_model_ <- function(A, B, SigmaX, SigmaY) {
@@ -55,14 +55,15 @@ n_stat.S <- function(res) {
 
 ## REGRESSION
 
-p <- 2
-q <- 5
+p <- 5
+q <- 2
 SigmaX <- 3 * cov(randn(2*q, q)); SigmaY <- 3 * cov(randn(2 * q, q))
+SigmaE1 <- 2 * cov(randn(5 * p, p)); SigmaE2 <- cov(randn(5 * p, p))
 A_0 <- randn(p, q); B_0 <- svd(randn(p, p))$u %*% A_0
-h0_small <- regression_data_model_(A_0, B_0, SigmaX, SigmaY)
+h0_small <- regression_data_model_(A_0, B_0, SigmaX, SigmaY, SigmaE1, SigmaE2)
 
 B_1 <- randn(p, q)
-h1_small <- regression_data_model_(A_0, B_1, SigmaX, SigmaY)
+h1_small <- regression_data_model_(A_0, B_1, SigmaX, SigmaY, SigmaE1, SigmaE2)
 
 dat <- h0_small(200, 200)
 mus <- sample_moments(dat)
@@ -77,27 +78,27 @@ c(inverse_bca_test(res0, stat.T, mc.reps), inverse_bca_test(res1, stat.T, mc.rep
 c(inverse_bca_test(res0, stat.S, mc.reps), inverse_bca_test(res1, stat.S, mc.reps))
 
 ## NORMAL
-
-p <- 2
-q <- 30
-SigmaX <- 3 * cov(randn(2*q, q)); SigmaY <- 3 * cov(randn(2 * q, q))
-SigmaE <- cov(randn(2 * p, p))
-SigmaA <- SigmaE %x% SigmaX
-SigmaB <- SigmaE %x% SigmaY
-A_0 <- randn(p, q); B_0 <- svd(randn(p, p))$u %*% A_0
-h0_small <- n_data_model_(A_0, B_0, SigmaA, SigmaB)
-
-B_1 <- randn(p, q)
-h1_small <- n_data_model_(A_0, B_1, SigmaA, SigmaB)
-
-dat <- h0_small(200, 200)
-mus <- n_sample_moments(dat)
-c(f2(mus$Ahat, A_0), f2(mus$Bhat, B_0))
-
-
-nX <- 100; nY <- 100; mc.reps = 1000
-res0 <- h0_small(nX, nY)
-res1 <- h1_small(nX, nY)
-
-c(inverse_bca_test(res0, n_stat.T, mc.reps), inverse_bca_test(res1, n_stat.T, mc.reps))
-c(inverse_bca_test(res0, n_stat.S, mc.reps), inverse_bca_test(res1, n_stat.S, mc.reps))
+# 
+# p <- 2
+# q <- 30
+# SigmaX <- 3 * cov(randn(2*q, q)); SigmaY <- 3 * cov(randn(2 * q, q))
+# SigmaE <- cov(randn(2 * p, p))
+# SigmaA <- SigmaE %x% SigmaX
+# SigmaB <- SigmaE %x% SigmaY
+# A_0 <- randn(p, q); B_0 <- svd(randn(p, p))$u %*% A_0
+# h0_small <- n_data_model_(A_0, B_0, SigmaA, SigmaB)
+# 
+# B_1 <- randn(p, q)
+# h1_small <- n_data_model_(A_0, B_1, SigmaA, SigmaB)
+# 
+# dat <- h0_small(200, 200)
+# mus <- n_sample_moments(dat)
+# c(f2(mus$Ahat, A_0), f2(mus$Bhat, B_0))
+# 
+# 
+# nX <- 100; nY <- 100; mc.reps = 1000
+# res0 <- h0_small(nX, nY)
+# res1 <- h1_small(nX, nY)
+# 
+# c(inverse_bca_test(res0, n_stat.T, mc.reps), inverse_bca_test(res1, n_stat.T, mc.reps))
+# c(inverse_bca_test(res0, n_stat.S, mc.reps), inverse_bca_test(res1, n_stat.S, mc.reps))
