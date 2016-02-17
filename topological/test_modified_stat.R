@@ -26,3 +26,9 @@ res1 <- h1_small(nX, nY)
 c(inverse_bca_test(res0, stat.T, mc.reps), inverse_bca_test(res1, stat.T, mc.reps))
 c(inverse_bca_test(res0, stat.S, mc.reps), inverse_bca_test(res1, stat.S, mc.reps))
 c(inverse_bca_test(res0, stat.Su, mc.reps), inverse_bca_test(res1, stat.Su, mc.reps))
+
+null_res <- bootstrap_sampling_dist(res0, stat.S, mc.reps)
+layout(matrix(1:4, 2, 2)); for (i in 1:4) hist(null_res[i, ])
+
+null_res <- bootstrap_sampling_dist(res0, stat.Su, mc.reps)
+layout(matrix(1:4, 2, 2)); for (i in 1:4) hist(null_res[i, ])

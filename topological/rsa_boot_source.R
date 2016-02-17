@@ -177,6 +177,12 @@ inverse_bca_test <- function(res, theta, mc.reps = 1000) {
   min(pvs) * length(pvs)
 }
 
+bootstrap_sampling_dist <- function(res, theta, mc.reps = 1000) {
+  boot_s1 <- boot_sampler(res)
+  thetas <- sampling_dist(boot_s1, theta, nX, nY, mc.reps, TRUE)
+  thetas  
+}
+
 ####
 ##  Demo
 ####
