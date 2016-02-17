@@ -20,7 +20,9 @@ stat.MA <- function(res) as.numeric(sample_moments(res)$M_A)
 #  Is M_A hat unbiased?
 ###
 
-ss <- sampling_dist(h0_small, stat.MA, 200, 200, mc.reps = 1000, samples = TRUE)
+nX <- 200; nY <- 200; mc.reps <- 1000
+
+ss <- sampling_dist(h0_small, stat.MA, nX, nY, mc.reps, TRUE)
 rowMeans(ss)
 as.numeric(MA_0)
 layout(matrix(1:4, 2, 2))
@@ -28,19 +30,21 @@ for (i in 1:4) {
   hist(ss[i, ] - MA_0[i])
 }
 
-ss <- sampling_dist(h0_small, stat.Su, 200, 200, mc.reps = 1000, samples = TRUE)
+## does Su center around 0?
+
+ss <- sampling_dist(h0_small, stat.Su, nX, nY, mc.reps, TRUE)
 rowMeans(ss)
 layout(matrix(1:4, 2, 2))
 for (i in 1:4) {
-  hist(ss[i, ] - MA_0[i])
+  hist(ss[i, ])
 }
 
 res <- h0_small(200, 200)
-ss <- sampling_dist(boot_sampler(res), stat.Su, 200, 200, mc.reps = 1000, samples = TRUE)
+ss <- sampling_dist(boot_sampler(res), stat.Su, nX, nY, mc.reps, TRUE)
 rowMeans(ss)
 layout(matrix(1:4, 2, 2))
 for (i in 1:4) {
-  hist(ss[i, ] - MA_0[i])
+  hist(ss[i, ])
 }
 
 
