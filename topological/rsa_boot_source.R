@@ -47,8 +47,8 @@ sample_moments <- function(res) {
   Yinv <- solve(t(Yc) %*% Yc)
   Xresid <- Xr - Xrhat
   Yresid <- Yr - Yrhat
-  XresD <- apply(Xresid, 1, var)
-  YresD <- apply(Yresid, 1, var)
+  XresD <- apply(Xresid, 2, var)
+  YresD <- apply(Yresid, 2, var)
   M_A <- t(Ahat) %*% Ahat - Xinv * sum(XresD)
   M_B <- t(Bhat) %*% Bhat - Yinv * sum(YresD)
   list(Ahat = Ahat, Bhat = Bhat, M_A = M_A, M_B = M_B)

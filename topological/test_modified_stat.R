@@ -11,6 +11,7 @@ SigmaE1 <- 10 * cov(randn(5 * p, p)); SigmaE2 <- cov(randn(5 * p, p))
 A_0 <- randn(p, q); B_0 <- svd(randn(p, p))$u %*% A_0
 MA_0 <- t(A_0) %*% A_0
 MB_0 <- t(B_0) %*% B_0
+MA_0 - MB_0
 h0_small <- regression_data_model_(A_0, B_0, SigmaX, SigmaY, SigmaE1, SigmaE2)
 
 stat.MA <- function(res) as.numeric(sample_moments(res)$M_A)
@@ -20,11 +21,19 @@ stat.MA <- function(res) as.numeric(sample_moments(res)$M_A)
 ###
 
 ss <- sampling_dist(h0_small, stat.MA, 200, 200, mc.reps = 1000, samples = TRUE)
-dim(ss)
 rowMeans(ss)
 as.numeric(MA_0)
-ss <- sampling_dist(h0_small, stat.MA, 0, 0, mc.reps = 1000, samples = TRUE)
+layout(matrix(1:4, 2, 2))
+for (i in 1:4) {
+  hist(ss[i, ] - MA_0[i])
+}
 
+ss <- sampling_dist(h0_small, stat.Su, 200, 200, mc.reps = 1000, samples = TRUE)
+rowMeans(ss)
+layout(matrix(1:4, 2, 2))
+for (i in 1:4) {
+  hist(ss[i, ] - MA_0[i])
+}
 
 ###
 #  Testing p-values
@@ -33,12 +42,7 @@ ss <- sampling_dist(h0_small, stat.MA, 0, 0, mc.reps = 1000, samples = TRUE)
 B_1 <- randn(p, q)
 h1_small <- regression_data_model_(A_0, B_1, SigmaX, SigmaY, SigmaE1, SigmaE2)
 
-dat <- h0_small(200, 200)
-mus <- sample_moments(dat)
-c(f2(mus$Ahat, A_0), f2(mus$Bhat, B_0))
-
-
-nX <- 100; nY <- 100; mc.reps = 1000
+nX <- 200; nY <- 200; mc.reps = 1000
 res0 <- h0_small(nX, nY)
 res1 <- h1_small(nX, nY)
 
