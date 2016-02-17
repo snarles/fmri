@@ -20,9 +20,9 @@ regression_data_model_ <- function(A, B, SigmaX, SigmaY,
       noise_mult <- 0
     }
     rawXc <- mvrnorm(nX, rep(0, q), SigmaX)
-    rawXr <- rawXc %*% t(A) + mvrnorm(nX, rep(0, p), SigmaE1)
+    rawXr <- rawXc %*% t(A) + noise_mult * mvrnorm(nX, rep(0, p), SigmaE1)
     rawYc <- mvrnorm(nY, rep(0, q), SigmaY)
-    rawYr <- rawYc %*% t(B) + mvrnorm(nY, rep(0, p), SigmaE2)    
+    rawYr <- rawYc %*% t(B) + noise_mult * mvrnorm(nY, rep(0, p), SigmaE2)    
     dat <- rbind(cbind(0, rawXc, rawXr), cbind(1, rawYc, rawYr))
     list(p = p, q  = q, dat = dat)
   }

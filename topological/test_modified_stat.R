@@ -23,6 +23,12 @@ ss <- sampling_dist(h0_small, stat.MA, 200, 200, mc.reps = 1000, samples = TRUE)
 dim(ss)
 rowMeans(ss)
 as.numeric(MA_0)
+ss <- sampling_dist(h0_small, stat.MA, 0, 0, mc.reps = 1000, samples = TRUE)
+
+
+###
+#  Testing p-values
+###
 
 B_1 <- randn(p, q)
 h1_small <- regression_data_model_(A_0, B_1, SigmaX, SigmaY, SigmaE1, SigmaE2)
