@@ -15,38 +15,32 @@ MA_0 - MB_0
 h0_small <- regression_data_model_(A_0, B_0, SigmaX, SigmaY, SigmaE1, SigmaE2)
 
 stat.MA <- function(res) as.numeric(sample_moments(res)$M_A)
+lyt4 <- function() layout(matrix(1:4, 2, 2))
 
 ###
 #  Is M_A hat unbiased?
 ###
 
-nX <- 200; nY <- 200; mc.reps <- 1000
+nX <- 200; nY <- nX; mc.reps <- 1000
 
 ss <- sampling_dist(h0_small, stat.MA, nX, nY, mc.reps, TRUE)
 rowMeans(ss)
 as.numeric(MA_0)
-layout(matrix(1:4, 2, 2))
-for (i in 1:4) {
-  hist(ss[i, ] - MA_0[i])
-}
+lyt4(); for (i in 1:4) hist(ss[i, ] - MA_0[i])
 
 ## does Su center around 0?
 
 ss <- sampling_dist(h0_small, stat.Su, nX, nY, mc.reps, TRUE)
-rowMeans(ss)
-layout(matrix(1:4, 2, 2))
-for (i in 1:4) {
-  hist(ss[i, ])
-}
+(means_Su <- rowMeans(ss))
+lyt4(); for (i in 1:4) hist(ss[i, ])
 
-res <- h0_small(200, 200)
+res <- h0_small(nX, nY)
 ss <- sampling_dist(boot_sampler(res), stat.Su, nX, nY, mc.reps, TRUE)
-rowMeans(ss)
-layout(matrix(1:4, 2, 2))
-for (i in 1:4) {
-  hist(ss[i, ])
-}
+(means_boot_Su <- rowMeans(ss))
+lyt4(); for (i in 1:4) hist(ss[i, ])
 
+
+rbind(means_Su, means_boot_Su, sample_stat = stat.Su(res))
 
 ###
 #  Testing p-values
