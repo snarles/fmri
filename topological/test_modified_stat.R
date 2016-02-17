@@ -9,7 +9,20 @@ q <- 2
 SigmaX <- 3 * cov(randn(2*q, q)); SigmaY <- 3 * cov(randn(2 * q, q))
 SigmaE1 <- 10 * cov(randn(5 * p, p)); SigmaE2 <- cov(randn(5 * p, p))
 A_0 <- randn(p, q); B_0 <- svd(randn(p, p))$u %*% A_0
+MA_0 <- t(A_0) %*% A_0
+MB_0 <- t(B_0) %*% B_0
 h0_small <- regression_data_model_(A_0, B_0, SigmaX, SigmaY, SigmaE1, SigmaE2)
+
+stat.MA <- function(res) as.numeric(sample_moments(res)$M_A)
+
+###
+#  Is M_A hat unbiased?
+###
+
+ss <- sampling_dist(h0_small, stat.MA, 200, 200, mc.reps = 1000, samples = TRUE)
+dim(ss)
+rowMeans(ss)
+as.numeric(MA_0)
 
 B_1 <- randn(p, q)
 h1_small <- regression_data_model_(A_0, B_1, SigmaX, SigmaY, SigmaE1, SigmaE2)
@@ -32,3 +45,5 @@ layout(matrix(1:4, 2, 2)); for (i in 1:4) hist(null_res[i, ])
 
 null_res <- bootstrap_sampling_dist(res0, stat.Su, mc.reps)
 layout(matrix(1:4, 2, 2)); for (i in 1:4) hist(null_res[i, ])
+
+

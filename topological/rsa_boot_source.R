@@ -16,7 +16,7 @@ regression_data_model_ <- function(A, B, SigmaX, SigmaY,
   sampler <- function(nX, nY) {
     noise_mult <- 1
     if (nX == 0 && nY == 0) {
-      nX <- 1; nY <- 1
+      nX <- (p + q); nY <- (p+q)
       noise_mult <- 0
     }
     rawXc <- mvrnorm(nX, rep(0, q), SigmaX)
@@ -49,8 +49,9 @@ sample_moments <- function(res) {
   Yresid <- Yr - Yrhat
   XresD <- apply(Xresid, 1, var)
   YresD <- apply(Yresid, 1, var)
-  list(Ahat = Ahat, Bhat = Bhat, 
-       Xinv = Xinv, Yinv = Yinv, XresD = XresD, YresD = YresD)
+  M_A <- t(Ahat) %*% Ahat - Xinv * sum(XresD)
+  M_B <- t(Bhat) %*% Bhat - Yinv * sum(YresD)
+  list(Ahat = Ahat, Bhat = Bhat, M_A = M_A, M_B = M_B)
 }
 
 ## TEST STATISTICS
@@ -72,9 +73,7 @@ stat.S <- function(res) {
 ## unbiased
 stat.Su <- function(res) {
   mus <- sample_moments(res)
-  M_A <- t(mus$Ahat) %*% mus$Ahat - mus$Xinv * sum(mus$XresD)
-  M_B <- t(mus$Bhat) %*% mus$Bhat - mus$Yinv * sum(mus$YresD)
-  stat.S.raw <- M_A - M_B
+  stat.S.raw <- mus$M_A - mus$M_B
   as.numeric(stat.S.raw)
 }
 
