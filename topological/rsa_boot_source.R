@@ -157,6 +157,7 @@ inv_alpha_bca <- function(alpha_bca, z0, acc) {
 }
 
 inverse_bca_test <- function(res, theta, mc.reps = 1000) {
+  nX <- sum(res$dat[, 1]==0); nY <- sum(res$dat[, 1]==1)
   jj <- jackknife(res, theta)
   acc <- jj$skew/6
   boot_s1 <- boot_sampler(res)

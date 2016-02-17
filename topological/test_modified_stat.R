@@ -29,11 +29,11 @@ as.numeric(MA_0)
 lyt4(); for (i in 1:4) hist(ss[i, ] - MA_0[i])
 
 ## does Su center around 0?
-nX <- 50; nY <- nX; mc.reps <- 1000
+# nX <- 50; nY <- nX; mc.reps <- 1000
 nX <- 200; nY <- nX; mc.reps <- 1000
-nX <- 400; nY <- nX; mc.reps <- 1000
-nX <- 1000; nY <- nX; mc.reps <- 1000
-nX <- 10000; nY <- nX; mc.reps <- 1000
+# nX <- 400; nY <- nX; mc.reps <- 1000
+# nX <- 1000; nY <- nX; mc.reps <- 1000
+# nX <- 10000; nY <- nX; mc.reps <- 1000
 
 ss <- sampling_dist(h0_small, stat.Su, nX, nY, mc.reps, TRUE)
 (means_Su <- rowMeans(ss))
