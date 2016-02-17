@@ -35,6 +35,15 @@ for (i in 1:4) {
   hist(ss[i, ] - MA_0[i])
 }
 
+res <- h0_small(200, 200)
+ss <- sampling_dist(boot_sampler(res), stat.Su, 200, 200, mc.reps = 1000, samples = TRUE)
+rowMeans(ss)
+layout(matrix(1:4, 2, 2))
+for (i in 1:4) {
+  hist(ss[i, ] - MA_0[i])
+}
+
+
 ###
 #  Testing p-values
 ###
