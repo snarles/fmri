@@ -185,21 +185,12 @@ c(inverse_bca_test(res0, stat.diff, mc.reps),
 
 mc.reps <- 1e4; n <- 20; mu <- 2; sigma2 <- 5
 stat.MA <- function(xs) mean(xs)^2 - var(xs)/length(xs)
-samp <- sapply(1:mc.reps, function(i) {
+samp <- do.call(rbind, lapply(1:mc.reps, function(i) {
   xs <- rnorm(n, mu, sqrt(sigma2))
-  var(xs)
-})
-c(var(samp), 2/(n-1) * sigma2^2)
+  c(var(xs), mean(xs)^2, stat.MA(xs))
+}))
+c(var(samp[, 1]), 2/(n-1) * sigma2^2)
+c(mean(samp[, 2]), mu^2 + sigma2/n)
+c(var(samp[, 2]), sigma2/n * (4 * mu^2 + 2 *sigma2/n))
+c(var(samp[, 3]), sigma2/n * (4 * mu^2 + 2 *sigma2/n) + 2/(n-1)/n^2 * sigma2^2)
 
-samp <- sapply(1:mc.reps, function(i) {
-  xs <- rnorm(n, mu, sqrt(sigma2))
-  mean(xs)^2
-})
-c(mean(samp), mu^2 + sigma2/n)
-c(var(samp), sigma2/n * (4 * mu^2 + 2 *sigma2/n))
-
-samp <- sapply(1:mc.reps, function(i) {
-  xs <- rnorm(n, mu, sqrt(sigma2))
-  stat.MA(xs)
-})
-c(var(samp), sigma2/n * (4 * mu^2 + 2 *sigma2/n) + 2/(n-1) * sigma2^2)
