@@ -1,0 +1,164 @@
+---
+title: "Identification"
+author: "Yuval Benjamini"
+date: "February 18, 2016"
+output: html_document
+---
+
+## Prepare data
+```{r}
+
+# Prepare features, voxel responses etc
+#setwd('Yuval')
+#save(file = 'v1_data.RData',fit_feat, val_feat, v1, SNRv1_corr)
+load('v1_data.RData')
+# fit_feat, val_feat   (features for training and validation data)
+# v1$resp, v1$val      (train, validation responses for v1 voxels )
+# SNRv1_corr           (Explainable variance for 1:1250 v1 voxels)
+```
+
+## Preproccess
+```{r}
+
+runPreprocess = TRUE
+if(runPreprocess){
+  # Remove features that have no variance
+  standards = apply(fit_feat,2,sd)
+  constF = which(standards==0)     
+
+  # Choose training set
+  load('fit_trainS.RData') # loading fit_trainS
+
+  trainF = fit_feat[fit_trainS,-constF]
+  trainY = v1$resp[fit_trainS,]
+  testF = fit_feat[-fit_trainS,-constF]
+  testY = v1$resp[-fit_trainS,]
+  validF = val_feat[,-constF]
+  validY = v1$val
+
+  c_trainF = scale(trainF,center = TRUE, scale = TRUE)
+  feat_mean_vec = attr(c_trainF,'scaled:center')
+  feat_scale_vec = attr(c_trainF,'scaled:center')
+  c_testF = scale(testF,center = feat_mean_vec, scale = feat_scale_vec)
+  c_validF = scale(validF,center = feat_mean_vec, scale = feat_scale_vec)
+  save(file = 'trainData.RData', c_trainF, trainY )
+
+} else {
+  load('trainData.RData')  
+}
+
+```
+
+## Fit linear models
+
+```{r, echo=FALSE}
+
+# run glmnet and crossvalidate to choose lambda
+run_glmnet = function(voxnum, alpha_val=0.8, nfolds = 6) {
+  require(glmnet)
+  res = cv.glmnet(c_trainF, trainY[,voxnum],nfolds = 6,alpha = alpha_val)  
+  best_lam = res$lambda.min
+  best_ind = which(res$lambda==best_lam)
+  pred_rule = res$glmnet.fit$beta[,best_ind]
+  pred_score = res$cvm[best_ind]
+  return(list(lambda = best_lam, alpha = alpha_val,beta_coef= pred_rule, score=pred_score))
+}
+
+
+formNewRules = FALSE
+ncores = 2
+if(formNewRules){
+  require('parallel')
+  vox_prediction_rules = mclapply(1:1250, run_glmnet, mc.cores = ncores) 
+  save(vox_prediction_rules,file = 'pred_rules_new.RData')
+}else{
+  load('pred_rules.RData')
+  # vox_prediction_rules (prediction rules 1:1250 v1 vox fit by glmnet)
+} 
+```
+
+## Make predictions for the test data sets
+
+```{r}
+
+getPreds = function(dataF,ind_struct=vox_prediction_rules,voxind=usevox){
+  preds = matrix(0,nc = length(voxind),nr = nrow(dataF))
+  for (i in 1:length(voxind)){
+    preds[,i] = dataF %*% ind_struct[[voxind[i]]]$beta_coef
+  }
+  return (preds)
+}
+
+# choose best nvox voxels
+nvox = 1250# up to 1250
+usevox = order(SNRv1_corr,decreasing = TRUE)[1:nvox]
+
+
+trainpred = getPreds(c_trainF,ind_struct=vox_prediction_rules,voxind=usevox)
+testpred = getPreds(c_testF,ind_struct=vox_prediction_rules,voxind=usevox)
+validpred = getPreds(c_validF,ind_struct=vox_prediction_rules,voxind=usevox)
+#imagepred = getPreds(c_aimagesF,ind_struct=voxel_predicts,voxind=usevox)
+
+genCondVar = function(featind,voxind,ind_struct=vox_prediction_rules){
+  nvox = length(voxind)
+  voxcov = (t(trainY[,voxind])%*%trainY[,voxind])/(nrow(trainY))
+  voxfeatcov = (t(trainY[,voxind]) %*% c_trainF[,featind])/(nrow(trainY))
+  fullbeta = matrix(0,nc=length(voxind),nr=length(featind))
+  for (i in 1:length(voxind)){
+    fullbeta[,i] = ind_struct[[voxind[i]]]$beta_coef
+  }
+  voxCondCov = voxcov - voxfeatcov%*%fullbeta
+  return (voxCondCov)
+}
+newCondVar =genCondVar(1:10409,usevox)
+
+# make variance symmetric
+newCondVarS = (newCondVar + t(newCondVar))/2
+ridgeinv = solve(newCondVarS + diag(length(usevox))*3)
+
+
+```
+
+
+```{r}
+# Matching score function
+bestMatch = function(preds, dataY, score,invCov = diag(length(usevox)), voxind=usevox){
+  npoints = nrow(preds)
+  chosen = numeric(nrow(dataY))
+  for (i in 1:nrow(dataY)){
+    if (score=='MSE'){
+      Yi = matrix(rep(dataY[i,voxind],npoints),nr=npoints,byrow=T)
+      ResYi = Yi - preds
+      chosen[i] = which.min(diag(ResYi %*% invCov %*% t(ResYi)))
+    }
+    else if (score=='COR'){
+      chosen[i] = which.max(apply(preds,1,cor,dataY[i,voxind]))
+    }
+    else if (score=='COV'){
+      chosen[i] = which.max(apply(preds,1,cov,dataY[i,voxind]))
+    }
+    if ((i%%20)==0){
+      cat(',')
+    }
+  }
+  return(sum(chosen==(1:nrow(dataY)))/nrow(dataY))
+}
+
+```
+
+## Validation (13-repeat) Results:
+```{r}
+bestMatch(validpred,validY[1:120,],'COR',invCov = ridgeinv)
+bestMatch(validpred,validY[1:120,],'MSE',invCov = ridgeinv)
+
+```
+
+## Test (single-run) Results:
+```{r}
+bestMatch(testpred,testY[1:120,],'COR',invCov = ridgeinv)
+bestMatch(testpred,testY[1:120,],'MSE',invCov = ridgeinv)
+
+bestMatch(testpred,testY[1:250,],'COR',invCov = ridgeinv)
+bestMatch(testpred,testY[1:250,],'MSE',invCov = ridgeinv)
+
+```
