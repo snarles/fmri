@@ -9,8 +9,11 @@ standards = apply(fit_feat,2,sd)
 constF = which(standards==0)    
 
 casenames <- paste0("s", 1:1750)
+voxnames <- paste0("vox", 1:1250)
+v1$resp <- v1$resp[, 1:1250]
 rownames(v1$resp) <- casenames
 rownames(fit_feat) <- casenames
+colnames(v1$resp) <- voxnames
 
 run_glmnet = function(voxnum, alpha_val=0.8, nfolds = 6) {
   require(glmnet)
@@ -44,6 +47,7 @@ getPreds = function(dataF,ind_struct=vox_prediction_rules,voxind=usevox){
     preds[,i] = dataF %*% ind_struct[[voxind[i]]]$beta_coef
   }
   rownames(preds) <- rownames(dataF)
+  colnames(preds) <- voxind
   return (preds)
 }
 
@@ -51,7 +55,8 @@ getPreds = function(dataF,ind_struct=vox_prediction_rules,voxind=usevox){
 ##  Actual bootstraps for a few voxels
 ####
 
-voxinds <- 1:3
+voxinds <- order(SNRv1_corr,decreasing = TRUE)[1:3]
+voxinds <- colnames(v1$resp)[voxinds]
 testpreds <- vector("list", 1750); 
 names(testpreds) <- casenames
 for(i in 1:1750) testpreds[[i]] <- matrix(0, 0, length(voxinds))
@@ -63,7 +68,8 @@ for (i in 1:boot.reps) {
   train_inds <- sort(sample(1750, 1500))
   zattach(makedata(train_inds))
   vox_prediction_rules = mclapply(voxinds, run_glmnet, mc.cores = 3)
-  trainpred = getPreds(c_trainF,ind_struct=vox_prediction_rules,voxind=voxinds)
+  names(vox_prediction_rules) <- voxinds
+  ##trainpred = getPreds(c_trainF,ind_struct=vox_prediction_rules,voxind=voxinds)
   testpred = getPreds(c_testF,ind_struct=vox_prediction_rules,voxind=voxinds)
   for (i in rownames(testpred)) {
     testpreds[[i]] <- rbind(testpreds[[i]], testpred[i, ])
