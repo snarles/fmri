@@ -21,4 +21,14 @@ trainY <- readRDS("trainData_RData_4.rds")
 c_trainF <- rbind(p1, p2, p3)
 save(c_trainF, trainY, file = "trainData.RData")
 
+## bootstrap results
+load('temp_booting.RData')
+rules1 <- rules; testpreds1 <- testpreds
+load('temp_booting2.RData')
+rules2 <- rules; testpreds2 <- testpreds
+rules <- c(rules1, rules2)
+testpreds <- testpreds1
+for (i in 1:1750) testpreds[[i]] <- rbind(testpreds[[i]], testpreds2[[i]])
+sapply(testpreds, nrow)
+
 setwd("..")
