@@ -66,16 +66,16 @@ get_boot <- function(i) {
 ##  Actual bootstraps for a few voxels
 ####
 
-voxinds <- order(SNRv1_corr,decreasing = TRUE)[1:3]
+voxinds <- order(SNRv1_corr,decreasing = TRUE)[1:9]
 voxinds <- colnames(v1$resp)[voxinds]
 testpreds <- vector("list", 1750); 
 rules <- list()
 names(testpreds) <- casenames
 for(i in 1:1750) testpreds[[i]] <- matrix(0, 0, length(voxinds))
 library(parallel)
-boot.reps <- 16 * 30
+boot.reps <- 40
 t1 <- proc.time()
-res <- mclapply(1:boot.reps, get_boot, mc.cores = 16)
+res <- mclapply(40 + (1:boot.reps), get_boot, mc.cores = 40)
 proc.time() - t1
 for (ii in 1:boot.reps) {
   rules[[ii]] <- res[[ii]]$rules
@@ -85,6 +85,6 @@ for (ii in 1:boot.reps) {
   }
 }
 
-save(testpreds, rules, file = "Yuval/temp_booting.RData")
+save(testpreds, rules, file = "Yuval/temp_booting2.RData")
 
 
