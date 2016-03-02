@@ -55,14 +55,14 @@ getPreds = function(dataF,ind_struct=vox_prediction_rules,voxind=usevox){
 ##  Actual bootstraps for a few voxels
 ####
 
-voxinds <- order(SNRv1_corr,decreasing = TRUE)[1:3]
+voxinds <- order(SNRv1_corr,decreasing = TRUE)[1:9]
 voxinds <- colnames(v1$resp)[voxinds]
 rules <- list()
 testpreds <- vector("list", 1750); 
 names(testpreds) <- casenames
 for(i in 1:1750) testpreds[[i]] <- matrix(0, 0, length(voxinds))
 library(parallel)
-boot.reps <- 60
+boot.reps <- 20
 t1 <- proc.time()
 for (i in 1:boot.reps) {
   set.seed(i)
@@ -79,4 +79,4 @@ for (i in 1:boot.reps) {
 }
 proc.time() - t1
 
-save(testpreds, rules, "Yuval/temp_booting.RData")
+save(testpreds, rules, file = "Yuval/temp_booting.RData")
