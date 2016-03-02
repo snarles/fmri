@@ -20,3 +20,5 @@ p3 <- readRDS("trainData_RData_3.rds")
 trainY <- readRDS("trainData_RData_4.rds")
 c_trainF <- rbind(p1, p2, p3)
 save(c_trainF, trainY, file = "trainData.RData")
+
+setwd("..")
