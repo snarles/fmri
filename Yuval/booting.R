@@ -51,32 +51,40 @@ getPreds = function(dataF,ind_struct=vox_prediction_rules,voxind=usevox){
   return (preds)
 }
 
+get_boot <- function(i) {
+  set.seed(i)
+  train_inds <- sort(sample(1750, 1500))
+  zattach(makedata(train_inds))
+  vox_prediction_rules = lapply(voxinds, run_glmnet)
+  names(vox_prediction_rules) <- voxinds
+  ##trainpred = getPreds(c_trainF,ind_struct=vox_prediction_rules,voxind=voxinds)
+  testpred = getPreds(c_testF,ind_struct=vox_prediction_rules,voxind=voxinds)
+  list(rules = vox_prediction_rules, testpred = testpred)
+}
+
 ####
 ##  Actual bootstraps for a few voxels
 ####
 
-voxinds <- order(SNRv1_corr,decreasing = TRUE)[1:9]
+voxinds <- order(SNRv1_corr,decreasing = TRUE)[1:3]
 voxinds <- colnames(v1$resp)[voxinds]
-rules <- list()
 testpreds <- vector("list", 1750); 
+rules <- list()
 names(testpreds) <- casenames
 for(i in 1:1750) testpreds[[i]] <- matrix(0, 0, length(voxinds))
 library(parallel)
-boot.reps <- 20
+boot.reps <- 16 * 30
 t1 <- proc.time()
-for (i in 1:boot.reps) {
-  set.seed(i)
-  train_inds <- sort(sample(1750, 1500))
-  zattach(makedata(train_inds))
-  vox_prediction_rules = mclapply(voxinds, run_glmnet, mc.cores = 3)
-  names(vox_prediction_rules) <- voxinds
-  rules[[i]] <- vox_prediction_rules
-  ##trainpred = getPreds(c_trainF,ind_struct=vox_prediction_rules,voxind=voxinds)
-  testpred = getPreds(c_testF,ind_struct=vox_prediction_rules,voxind=voxinds)
+res <- mclapply(1:boot.reps, get_boot, mc.cores = 16)
+proc.time() - t1
+for (ii in 1:boot.reps) {
+  rules[[ii]] <- res[[ii]]$rules
+  testpred <- res[[ii]]$testpred
   for (i in rownames(testpred)) {
     testpreds[[i]] <- rbind(testpreds[[i]], testpred[i, ])
   }
 }
-proc.time() - t1
 
 save(testpreds, rules, file = "Yuval/temp_booting.RData")
+
+
