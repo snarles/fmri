@@ -22,13 +22,22 @@ c_trainF <- rbind(p1, p2, p3)
 save(c_trainF, trainY, file = "trainData.RData")
 
 ## bootstrap results
+(fs <- paste0('temp_booting', paste(2:5), '.RData'))
 load('temp_booting.RData')
-rules1 <- rules; testpreds1 <- testpreds
-load('temp_booting2.RData')
-rules2 <- rules; testpreds2 <- testpreds
-rules <- c(rules1, rules2)
-testpreds <- testpreds1
-for (i in 1:1750) testpreds[[i]] <- rbind(testpreds[[i]], testpreds2[[i]])
-sapply(testpreds, nrow)
+rules_all <- rules
+testpreds_all <-testpreds
+rm(rules, testpreds)
+for (f in fs) {
+  load(f)
+  if ('rules' %in% ls()) {
+    rules_all <- c(rules_all, rules)
+    rm(rules)
+  }
+  for (i in 1:1750) testpreds_all[[i]] <- rbind(testpreds_all[[i]],
+                                                testpreds[[i]])
+  rm(testpreds)
+}
+sapply(testpreds_all, nrow)
+save('rules_all', 'testpreds_all', file = 'aggregate_booting.RData')
 
 setwd("..")
