@@ -118,15 +118,12 @@ gc()
 ##  Try to do the bootstraps
 ####
 
-(vox <- voxinds[2])
-ruleind <- 1
-
-rules[[ruleind]][[vox]]$lambda
-rules[[ruleind]][[vox]]$alpha
-sum(rules[[ruleind]][[vox]]$beta_coef != 0)
-
-(caseind <- casenames[3])
-
+(vox <- voxinds[4])
+ruleind <- 2
+# (caseind <- casenames[3])
+# rules[[ruleind]][[vox]]$lambda
+# rules[[ruleind]][[vox]]$alpha
+# sum(rules[[ruleind]][[vox]]$beta_coef != 0)
 feats <- which(rules[[ruleind]][[vox]]$beta_coef != 0)
 mc.reps <- 120
 preds <- matrix(NA, 1750, mc.reps, dimnames = list(casenames))
@@ -137,14 +134,15 @@ for (i in 1:mc.reps) {
   preds[rownames(pred), i] <- pred
 }
 
-hist(preds[caseind, ])
-hist(testpreds[[caseind]][, vox])
+#hist(preds[caseind, ])
+#hist(testpreds[[caseind]][, vox])
 
 mus <- lapply(testpreds, function(v) mean(v[, vox]))
 sds <- lapply(testpreds, function(v) sd(v[, vox]))
 musP <- apply(preds, 1, mean, na.rm = TRUE)
 sdsP <- apply(preds, 1, sd, na.rm = TRUE)
 
-View(cbind(mus, musP, sds, sdsP))
+##View(cbind(mus, musP, sds, sdsP))
+layout(t(1:2))
 plot(mus, musP); abline(0, 1, col = "red")
 plot(sds, sdsP); abline(0, 1, col = "red")
