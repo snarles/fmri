@@ -6,13 +6,13 @@
 source('Yuval/ident_setup.R')
 standards = apply(fit_feat,2,sd)
 constF = which(standards==0)   
-ttF <-  fit_feat[, -constF]
-c_ttF = scale(ttF,center = TRUE, scale = TRUE)
-ttY = v1$resp[, 1:1250]
 
-## Use the same condvar to save time (!?)
-# choose best nvox voxels
-nvox = 500# up to 1250
+
+
+###
+##  Try parametric bootstrap
+###
+nvox = 1250# up to 1250
 usevox = order(SNRv1_corr,decreasing = TRUE)[1:nvox]
 testpred = getPreds(c_testF,ind_struct=vox_prediction_rules,voxind=usevox)
 validpred = getPreds(c_validF,ind_struct=vox_prediction_rules,voxind=usevox)
@@ -21,9 +21,17 @@ newCondVar =genCondVar(1:10409,usevox)
 newCondVarS = (newCondVar + t(newCondVar))/2
 ridgeinv = solve(newCondVarS + diag(length(usevox))*3)
 bestMatch(testpred,testY,'MSE',invCov = ridgeinv)
+trainpred = getPreds(c_trainF,ind_struct=vox_prediction_rules,voxind=usevox)
+trainYh <- trainY; trainYh[, usevox] <- trainpred
+resid <- trainY - trainYh
+sds <- apply(resid[, 1:1250], 2, sd)
+sd_m <- median(sds); sd_m <- 0.1
+c_ttF <- rbind(c_trainF, c_testF)
+i <- 3; plot(trainY[, i], trainYh[, i])
+
 
 ## make random CV splits
-mc.reps <- 10
+mc.reps <- 3
 nte <- 250
 train_splits <- t(apply(t(1:100), 2, function(v) {
   sample(c(rep(TRUE, 1750-nte), rep(FALSE, nte)), 1750, FALSE)  
@@ -32,6 +40,9 @@ times <- c()
 results <- matrix(NA, mc.reps, 1)
 for (split.ind in 1:mc.reps) {
   t1 <- proc.time()
+  trainYh2 <- trainYh + sd_m * randn(dim(trainYh))
+  ttY <- rbind(trainYh2, testY)
+  ##ttY <- rbind(trainY, testY)
   tr.inds <- train_splits[split.ind, ]
   tpred.new <- matrix(0, nte, nvox)
   fullbeta = matrix(0,nc=nvox,nr=ncol(c_ttF))
@@ -60,5 +71,5 @@ for (split.ind in 1:mc.reps) {
   results[split.ind, ] <- c(score1)
   (times[split.ind] <- (proc.time() - t1)["elapsed"])
 }
-
+results
 
