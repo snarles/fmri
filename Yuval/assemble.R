@@ -14,12 +14,21 @@ load("v1_data_Rdata_0.RData")
 save(fit_feat, val_feat, SNRv1_corr, v1, file = "v1_data.RData")
 
 ## trainData.RData
-p1 <- readRDS("trainData_RData_1.rds")
-p2 <- readRDS("trainData_RData_2.rds")
-p3 <- readRDS("trainData_RData_3.rds")
-trainY <- readRDS("trainData_RData_4.rds")
-c_trainF <- rbind(p1, p2, p3)
-save(c_trainF, trainY, file = "trainData.RData")
+standards = apply(fit_feat,2,sd)
+constF = which(standards==0)     
+load('fit_trainS.RData') # loading fit_trainS
+trainF = fit_feat[fit_trainS,-constF]
+trainY = v1$resp[fit_trainS,]
+testF = fit_feat[-fit_trainS,-constF]
+testY = v1$resp[-fit_trainS,]
+validF = val_feat[,-constF]
+validY = v1$val
+c_trainF = scale(trainF,center = TRUE, scale = TRUE)
+feat_mean_vec = attr(c_trainF,'scaled:center')
+feat_scale_vec = attr(c_trainF,'scaled:center')
+c_testF = scale(testF,center = feat_mean_vec, scale = feat_scale_vec)
+c_validF = scale(validF,center = feat_mean_vec, scale = feat_scale_vec)
+save(file = 'trainData.RData', c_trainF, trainY, c_testF, c_validF )
 
 ## bootstrap results
 (fs <- paste0('temp_booting', paste(2:5), '.RData'))
