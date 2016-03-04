@@ -20,6 +20,8 @@ newCondVar =genCondVar(1:10409,usevox)
 # make variance symmetric
 newCondVarS = (newCondVar + t(newCondVar))/2
 ridgeinv = solve(newCondVarS + diag(length(usevox))*3)
+Sigma0 = newCondVarS + diag(length(usevox))*3
+
 bestMatch(testpred,testY,'MSE',invCov = ridgeinv)
 trainpred = getPreds(c_trainF,ind_struct=vox_prediction_rules,voxind=usevox)
 trainYh <- trainY; trainYh[, usevox] <- trainpred
@@ -40,7 +42,7 @@ times <- c()
 results <- matrix(NA, mc.reps, 1)
 for (split.ind in 1:mc.reps) {
   t1 <- proc.time()
-  trainYh2 <- trainYh + sd_m * randn(dim(trainYh))
+  trainYh2 <- trainYh + mvrnorm(n = 1500, mu = rep(0, 1331), Sigma = Sigma0)
   ttY <- rbind(trainYh2, testY)
   ##ttY <- rbind(trainY, testY)
   tr.inds <- train_splits[split.ind, ]
