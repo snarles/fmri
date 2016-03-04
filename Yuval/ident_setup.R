@@ -1,6 +1,4 @@
-####
-##  Charles' stuff using Yuval's stuff
-####
+library(MASS)
 
 load('Yuval/v1_data.RData')
 load('Yuval/trainData.RData') 
@@ -47,22 +45,3 @@ bestMatch = function(preds, dataY, score,invCov = diag(length(usevox)), voxind=u
   }
   return(sum(chosen==(1:nrow(dataY)))/nrow(dataY))
 }
-
-# choose best nvox voxels
-nvox = 500# up to 1250
-usevox = order(SNRv1_corr,decreasing = TRUE)[1:nvox]
-
-##trainpred = getPreds(c_trainF,ind_struct=vox_prediction_rules,voxind=usevox)
-testpred = getPreds(c_testF,ind_struct=vox_prediction_rules,voxind=usevox)
-validpred = getPreds(c_validF,ind_struct=vox_prediction_rules,voxind=usevox)
-
-newCondVar =genCondVar(1:10409,usevox)
-
-# make variance symmetric
-newCondVarS = (newCondVar + t(newCondVar))/2
-ridgeinv = solve(newCondVarS + diag(length(usevox))*3)
-
-
-bestMatch(validpred,validY[1:120,],'MSE',invCov = ridgeinv)
-bestMatch(testpred,testY[1:120,],'MSE',invCov = ridgeinv)
-bestMatch(testpred,testY[1:250,],'MSE',invCov = ridgeinv)
