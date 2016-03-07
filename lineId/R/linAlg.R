@@ -28,7 +28,7 @@ sqrtm <- function(m) {
 
 #' Frobenius norm squared
 #' 
-#' @param x
+#' @param x vector
 #' @param y (optional)
 #' @export
 f2 <- function(x, y = 0) sum((x - y)^2)
