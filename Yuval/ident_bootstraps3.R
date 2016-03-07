@@ -9,7 +9,7 @@ source('Yuval/ident_setup.R')
 ## PARAMS
 ###
 
-nvox = 100# up to 1250
+nvox = 600# up to 1250
 nsubsample <- 1250
 nboot <- 20
 ms <- c(25, 50, 75, 100, 125, 150, 175, 200, 225, 250)
