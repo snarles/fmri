@@ -14,6 +14,7 @@ load("v1_data_Rdata_0.RData")
 save(fit_feat, val_feat, SNRv1_corr, v1, file = "v1_data.RData")
 
 ## trainData.RData
+load("v1_data.RData")
 standards = apply(fit_feat,2,sd)
 constF = which(standards==0)     
 load('fit_trainS.RData') # loading fit_trainS
@@ -28,7 +29,7 @@ feat_mean_vec = attr(c_trainF,'scaled:center')
 feat_scale_vec = attr(c_trainF,'scaled:center')
 c_testF = scale(testF,center = feat_mean_vec, scale = feat_scale_vec)
 c_validF = scale(validF,center = feat_mean_vec, scale = feat_scale_vec)
-save(file = 'trainData.RData', c_trainF, trainY, c_testF, c_validF )
+save(file = 'trainData.RData', c_trainF, trainY, c_testF, c_validF, testY, validY )
 
 ## bootstrap results
 (fs <- paste0('temp_booting', paste(2:5), '.RData'))
