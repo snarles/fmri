@@ -10,8 +10,9 @@ source('Yuval/ident_setup.R')
 ###
 
 nvox = 600# up to 1250
+for (nvox in c(100, 200, 300, 400, 500, 600)) {
 nsubsample <- 1250
-nboot <- 20
+nboot <- 100
 ms <- c(25, 50, 75, 100, 125, 150, 175, 200, 225, 250)
 
 
@@ -80,7 +81,7 @@ for (boot.ind in 1:nboot) {
 
 fname <- paste0('Yuval/ident_bootstraps3_nvox', nvox, '.rds')
 saveRDS(ihats, file = fname)
-
+}
 ###
 ## ANALYZE RESULTS
 ###
