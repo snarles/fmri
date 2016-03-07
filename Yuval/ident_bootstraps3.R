@@ -12,7 +12,7 @@ source('Yuval/ident_setup.R')
 nvox = 100# up to 1250
 nsubsample <- 1250
 nboot <- 20
-ms <- c(50, 100, 150, 200, 250)
+ms <- c(25, 50, 75, 100, 125, 150, 175, 200, 225, 250)
 
 
 ###
@@ -31,6 +31,7 @@ ridgeinv = solve(newCondVarS + diag(length(usevox))*3)
 ##  For loop involving nboot
 ###
 for (boot.ind in 1:nboot) {
+  set.seed(boot.ind)
   inds_sub <- sample(1500, nsubsample, FALSE)
   c_ttF <- c_trainF[inds_sub, ]
   trY <- trainY[inds_sub, ]
@@ -66,7 +67,7 @@ for (boot.ind in 1:nboot) {
     m <- ms[ind]
     (p <- resample_misclassification(-scores, 1:250, m, replace = FALSE))
     (p_prime <- rbinom(1, 250, p)/250)
-    (IH <- Ihat_LI(p_prime, m1, 20))
+    (IH <- Ihat_LI(p_prime, m, 20))
     ihats[boot.ind, ind] <- IH
   }
 }
