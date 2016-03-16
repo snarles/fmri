@@ -1,4 +1,4 @@
-\title{Estimating Mutual Information from Misclassification Rates}
+\title{Estimating Mutual Information from Average Misclassification Error}
 \author{Charles Zheng and Yuval Benjamini}
 \date{\today}
 
@@ -33,25 +33,26 @@
 Mutual information is a useful measure of dependence between the input
 of a neural subsystem, $X$, and its output, or measured output, $Y$,
 due to its flexibility for capturing nonlinear associations, and its
-rich information-theoretic context.  However, since existing
-nonparametric methods for estimating mutual information scale so
-poorly for high-dimensional stimulus and response spaces, researchers
-often rely on supervised learning techniques to characterize nonlinear
-dependence in such settings.  We exploit the relationship between
-mutual information and Bayes error to obtain an estimate of mutual
-information from misclassification rate: such a procedure can be
-viewed as an indirect way of leveraging prior information about the
-dependence structure of $X$ and $Y$ to obtain a better estimate of
-mutual information.  However, the quality of the resulting estimate of
-mutual information depends on the accuracy of the predictive model, as
-well as the availability of data which which to train and test the
-predictive model.  Under a particular high-dimensional, low-SNR
-regime, we obtain an upper bound on the estimation error $|\hat{I}(X;
-Y) - I(X;Y)|$ of order $O(d/n)$, where $d$ is the dimensionality of
-the model and $n$ is the number of observations.  In simulated data,
-we compare our proposed approach to existing nonparametric methods for
-estimating $I(X; Y)$, both when the model is correct, and when the
-model is mildly misspecified.
+rich information-theoretic context.  In high-dimensional settings,
+non-parametric estimators of mutual information perform poorly,
+and the only remaining options for estimating mutual information are to
+either make a parametric assumption (such as multivariate Gaussianity)
+or obtain a lower bound on the mutual information $I(X; Y)$
+from the estimated mutual information between $X$ and an estimator
+or classification rule, $I(X; \hat{X}(Y))$.  But, assuming multivariate Gaussianity
+reduces mutual information to a linear correlation-based statistic; meanwhile,
+lower bounds based on $I(X; \hat{X}(Y))$ tend to be overconservative.
+We propose a new estimator of mutual information based on the concept of ``averaged Bayes error,"
+which we prove to be asymptotically a function of the mutual information.
+%Letting $X_1,\hdots, X_K$ be $K$ i.i.d. draws of random inputs from a continuous input space,
+%the Bayes error for the input set $X_1,\hdots, X_K$ is defined as the expected probability $\E[\hat{X}(Y) \neq X]$
+%when $X$ is drawn from $\{X_1,\hdots, X_K\}$ and $Y$ is drawn from the conditional distribution $Y|X$.
+%The K-class average Bayes error is the expected Bayes error, taking the expectation over the joint distribution
+%of input sets. 
+The average Bayes error can be estimated using the average misclassification rate from
+random classification tasks; our estimation procedure consists of plugging in such an estimate of average Bayes error into the inverse of the asymptotic formula.
+We demonstrate the utility of our method in obtaining accurate estimates of mutual information
+in simulated data, as well as an fMRI dataset, without having to make parametric assumptions.
 \end{abstract}
 
 
