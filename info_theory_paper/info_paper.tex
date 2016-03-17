@@ -28,6 +28,7 @@
 \newcommand{\argmin}{\text{argmin}}
 \newcommand{\Vol}{\text{Vol}}
 \newcommand{\comm}[1]{}
+\newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
 
 \begin{abstract}
 Mutual information is a useful measure of dependence between the input
@@ -145,50 +146,98 @@ Hence our main theoretical contribution is the derivation of an asymptotic relat
 and the mutual information, which in practice means that any estimate of the $K$-class Bayes error can be converted into an estimate of mutual information;
 and the resulting estimator of mutual information should be asymptotically independent of the choice of number of classes $K$.
 
-\subsection{Motivation}
+\section{Average Bayes Error}
 
-The specific setup we consider was motivated by a number of studies
-\begin{itemize}
-\item Face recognition in monkeys
-\item Identification of natural images
-\end{itemize}
+The following simplified model captures the essence of many neuroimaging studies.
+Let $\mathcal{X}$ be a space of stimuli, represented by $q$-dimensional vectors.
+In the design stage of the experiment, a set of stimuli exemplars $\{x_1,\hdots, x_k\}$ are selected,
+and then one specifies a $T$-length sequence of stimuli $( x_{i_1},\hdots, x_{i_n} )$ to be presented to the subject.
+In the execution of the experiment, an activation pattern, or \emph{response} $y_t$ is obtained for each of the stimuli presentations $x_{i_t}$.
+Generally $y_t$ is a $p$-dimensional vector, representing activity levels of $p$ disjoint brain regions.
+To simplify, assume that each of the $k$ stimuli is presented a total of $r$ times in the sequence;
+further assume that the responses to each stimulus presentation are conditionally independent, hence the ordering of the sequence does not matter.
+Henceforth we can let $y_i^j$ denote the response to the $j$th presentation of the stimulus $x_i$.
 
-\subsection{Setup}
-
-Assume $X$ and $Y$ are real random vectors with the same
-dimensionality, $d$.  Our results are derived under a model where $X$
-has a continuous density $p(x)$, but in which the experimenter
-observes multiple repeats of $Y$ conditional on a common $X$.  The
-data therefore consists of tuples $(x^{(i)}, y^{(i, 1)}, \hdots,
-y_i^{(i, r)})$, where $x^{(i)}$ is the $i$th unique stimulus, and
-$y^{(i, 1)},\hdots, y^{(i, r)}$ are the repeats of $Y$ given $X =
-x^{(i)}$, which are assumed to be conditionally independent given $X$.
-
-Let $K$ denote the number of unique stimuli.  The data therefore
-consists of $n = Kr$ observations.  When $r$ is large, the data can be
-nearly considered as i.i.d. observations from the joint distribution
-of $(\tilde{X}, \tilde{Y})$, where $\tilde{X}$ has a distribution
-$\tilde{p}$ consisting of a mixture of point masses at $x^{(i)}$:
+We now restate the model in application-independent terms.  Let $\mathcal{X} \subset \mathbb{R}^q$ and $\mathcal{Y} \subset \mathbb{R}^p$;
+let $p(x)$ be a probability density on $\mathcal{X}$.  For every $x \in \mathcal{X}$, let $p_x(y)$ be a probability density on $\mathcal{Y}$.
+Define the joint density
 \[
-\tilde{p} = \frac{1}{K}\sum_{i=1}^K \delta_{x^{(i)}},
+p(x, y) = p(x) p_x(y)
 \]
-and $\tilde{Y}|\tilde{X} = x^{(i)}$ has the same distribution as $Y|X
-= x^{(i)}$.
+so that $p_x(y)$ can also be written $p(y|x)$.
+Take a  subset $\{x_1,\hdots, x_k\} \subset \mathcal{X}$.  Let $Y_i^j$ be a random vector distributed according to density $p_{x_i}(y)$;
+and let $Y_i^j$ be conditionally independent given $\{x_1,\hdots, x_k\}$ for $i = 1,\hdots, k$ and $j = 1, \hdots, r.$
+ 
+In MVPA, one carries out a classification task to assess whether $y$ contains information about $x$.
+Formally, a classification rule is any (possibly stochastic) mapping $f: \mathcal{Y} \to \{1,\hdots, k\}$.
+The \emph{generalization error} of the classification rule is
+\[
+e_{gen}(f) = \frac{1}{k} \sum_{i=1}^k\Pr[f(Y) \neq i | X = x_i].
+\]
+A trivial classification rule which outputs the result of a $k$-sided die roll for all inputs $y$ would achieve a generalization error of $e_{gen} = \frac{1}{k}$.
+Conversely, even a single counterexample with $e_{gen} < \frac{1}{k}$ is indicative that $y$ contains nonzero information about $x$.
+Hence, in order to demonstrate that $y$ is informative of $x$, one tests the null hypothesis
+\[
+H_0: e_{gen}(f) = \frac{1}{k}.
+\]
+Rejecting the null hypothesis for a given classification rule $f$ can be taken as evidence that $y$ is informative of $x$.
+In the discussion thus far, ``information'' refers to an informal, intuitive notion, but it is also possible to formally establish
+that violation of the null hypothesis implies nonzero mutual information $I(X; Y)$.
 
-Yet, although our data was collected from the distribution
-$(\tilde{X}, \tilde{Y})$, our goal is to estimate $I(X; Y)$ rather
-than $I(\tilde{X}; \tilde{Y})$.  In order for the two quantities to
-have any connection, the selected stimuli $x^{(i)}$ must be
-`representative' of the continuous distribution $X$.  When the
-stimulus $X$ is very high-dimensional, it becomes quite reasonable to
-draw $x^{(i)}$ i.i.d. from the marginal distribution $p(x).$ This
-ensures that $I(\tilde{X}; \tilde{Y})$ converges to $I(X; Y)$ as
-$K \to \infty$.  Though, as noted by Gastpar et. al., for finite $K$,
-$I(\tilde{X}; \tilde{Y})$ tends to result in an underestimate of $I(X;
-Y)$. This motivates their antropic correction method for estimating
-$I(X;Y)$, which can be applied directly in this setting supposing that
-one has a method for estimating the conditional entropies $H(Y|X =
-x^{(i)})$.
+
+
+The classifier is a functional which maps a set of observations to a classification rule,
+\[
+\mathcal{F}: \{(x_1,y_1),\hdots, (x_m, y_m)\} \mapsto f(\cdot);
+\]
+informally, a classifier is an algorithm which ``learns'' a classification rule from data.
+For a valid test of $H_0$, 
+either the data-splitting approach or the cross-validation approach can be used.
+In the data-splitting approach, one creates a \emph{training set} consisting of $r_1$ repeats per class,
+\[
+\{(x_1, y_1^1),\hdots, (x_1,y_1^{r_1}), \hdots, (x_m, y_m^1),\hdots, (x_m,y_m^{r_1})\}
+\]
+and a \emph{test set} consisting of the remaining $r_2 = r - r_1$ repeats.
+\[
+\{(x_1, y_1^{r_1 + 1}),\hdots, (x_1,y_1^{r}), \hdots, (x_m, y_m^{r_1 + 1}),\hdots, (x_m,y_m^{r_1})\}.
+\]
+In the cross-validation approach, one applies the data-splitting approach multiple times, with different training and test partitions, and aggregates the results.
+We further discuss the cross-validation approach in section X.
+
+In the data-splitting approach, one obtains the classification rule $f$ by applying the classifier to the training data,
+\[
+f = \mathcal{F}(\{(x_1, y_1^1),\hdots, (x_1,y_1^{r_1}), \hdots, (x_m, y_m^1),\hdots, (x_m,y_m^{r_1})\})
+\]
+The test statistic of interest is the test error,
+defined as
+\[
+e_{test} = \frac{1}{k r_2} \sum_{i=1}^k \sum_{j = r_1 + 1}^r \text{I}(f(y_i^j) \neq i).
+\]
+Due to the conditional independence of the training set and test set, $e_{test}$ is an unbiased estimate of $e_{gen}$.
+Hence various approaches can be used to obtain a threshold $c_\alpha$
+such that $\Pr[e_{test} < c_\alpha] \leq \alpha$ holds (approximately) under the null hypothesis.
+To name a few, one can employ permutation tests, tests based on a universal variance bound, or the generalized likelihood ratio test.
+Regardless of the procedure used to derive the threshold $c_\alpha$, The hypothesis $H_0$ is rejected at level $\alpha$ if $e_{test} < c_\alpha$.
+
+While tests of the generalization error suffice to establish the presence of information,
+the generalization error is less satisfactory as a measure of the information between $X$ and $Y$,
+since the $e_{gen}$ depends on the classification rule $f$ obtained, and hence, varies randomly depending on the sampling of the data.
+For most reasonable classifiers, the generalization error decreases as the number of training observations increases.
+Therefore, the sample size is an additional confounding factor for interpreting the generalization error.
+
+A more ideal measure of information, still related to the classification, is the Bayes error, which is simply the \emph{optimal} generalization error
+\[
+e_{Bayes} = \min_f e_{gen}(f).
+\]
+Due to Bayes' theorem, the optimal classification rule $f^*$ which achieves the Bayes error can be given explicitly:
+it is the maximum a posteriori (MAP) rule
+\[
+f^*(y) = \argmax_{i=1}^k\ p(y|x_i).
+\]
+
+Estimating $e_{Bayes}$ is much more difficult in practice than estimating $e_{gen}$; however,
+a universal estimator for Bayes error \emph{does} exist, as proven by 
+
 
 In contrast, we will consider the misclassification errror as a means to
 estimate the mutual information.  Letting $p(x,y)$ denote the density of $(X,Y)$,
