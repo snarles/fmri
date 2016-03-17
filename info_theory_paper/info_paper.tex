@@ -1,4 +1,4 @@
-\title{Estimating Mutual Information from Average Misclassification Error}
+\title{Estimating Mutual Information from Average Classification Error}
 \author{Charles Zheng and Yuval Benjamini}
 \date{\today}
 
@@ -58,86 +58,92 @@ in simulated data, as well as an fMRI dataset, without having to make parametric
 
 \section{Introduction}
 
-%How the various subsystems of the human brain encode, process, and transmit information
-%about complex stimuli (faces, images, stories) is still poorly understood.
+Many of the key questions motivating neuroimaging studies involve some concept of information:
+which brain region processes sensory information?  how is information encoded in the form of memories?
+To answer whether or not a particular brain region receives information about a given stimulus,
+it suffices to demonstrate a systematic dependence between brain activity in that region and stimulus features;
+this was the approach taken for studying single-cell recordings.
+Moving beyond single-cell recordings, it becomes desirable to use methods which can quantify
+the information encoded by populations of cells.
 
-%Neuroscientists and psychologists commonly think about the human brain
-%as a network of specialized components--brain regions, such as the V1 visual area, or the fusiform face area (FFA),
-%connected to sensory inputs and motor outputs.
-Understanding the amount and type of `information' that flows from sensory inputs
-to the various components and subcomponents of the human brain is a key motivation for neuroimaging studies.
-However, it is not straightforward to decide how exactly to quantify `information' in the human brain,
-nor whether quantification should even be attempted, depending on the goals of the experiementer,
-the nature of the data collected, the complexity of the stimuli and the subsystems being studied.
-In practice, neuroscientists have a large repetoire of methods for quantifying information:
-these methods can be subdivided into methods based on linear dependency,
-such as correlation, multivariate R-squared, or signal-to-noise ratio; and methods based on nonlinear dependency such as
-mutual information, Fisher information, and prediction error.
+Following the seminal work by Haxby (2001), the dominant approach in this area,
+known as ``multivariate pattern analysis'' (MVPA), is to quantify information in the form of classification error.
+The classification approach contrasts with more traditional measures of information, such as mutual information and Fisher information.
+For example, to demonstrate that a particular brain region responds to a certain type of sensory information,
+one employs supervised learning to build a classifier which classifies the stimulus class from the brain activation in that region,
+and tests the statistical hypothesis that the classifier has above-chance classification accuracy.
+In principle, one could just as well test the statistical hypothesis that the Fisher information or mutual information between
+the stimulus and the activation patterns is nonzero.  But in practice, the machine learning approach enjoys several advantages over
+approaches based on estimating Fisher information or mutual information.
+First, one does not need a parameterization of the stimulus space: this is highly relevant for studying complex stimuli such as faces.
+Secondly, the machine learning approach does not require parametric model assumptions, unlike Fisher information.
+Thirdly, the machine learning approach scales well with dimensionality of both the stimulus space and the response space.
+In contrast, nonparametric methods for estimating mutual information scale extremely poorly with dimensionality of the response space.
+Meanwhile, a major detractor for using classification error as a measure of information is that the classification accuracy depends on the particular choice of stimuli exemplars employed in the study and the number of partitions used to define the classes for the classification task.
+The difficulty of the classification task depends on the number of classes defined: high classification accuracy can be achieved relatively easily by using a coarse partition of stimuli exemplars into classes.
+In a meta-analysis on visual decoding, Coutanche et al (2016) quantified the strength of a classification study
+using the formula
+\[
+\text{decoding strength} = \frac{\text{accuracy} - \text{chance}}{\text{chance}}.
+\]
+Such an approach may compensate for the differences in accuracy due purely to choice of number of classes defined;
+however, no theory is provided to justify the formula.
 
-Different methods tend to be
-used in different settings due to tradeoffs
-between interpretability, flexibility, and high-dimensional
-scalability.  Linear measures of dependence such as correlation is highly interpretable and scalable, but are
-inflexible: such measures fail to capture many forms of nonlinear dependence.
-It is a well-established fact that the relationship between the level of chemical and electrical input
-to a neuron, and the level of its corresponding output is nonlinear; however, it is reasonable
-to approximate the input-output relationship with a linear relationship, and such approximations
-may be especially appropriate if signals are averaged at a population level.
+In contrast, mutual information has ideal properties for the quantitatively 
+comparing information between different studies, or between different brain regions, subjects, featurization models, or modalities.
+Not only is the mutual information defined independently of the arbitrary definition of stimulus classes (albeit still dependent on an
+implied distribution over stimuli), it is even meaningful to discuss the difference between the mutual information measured for one system
+and the mutual information for a second system.
+Due to these appealing properties, as well as the success of information theoretic approaches in more traditional neuroscience studies,
+mutual information has been frequently proposed for application in neuroimaging studies (Quiroga 2009).
+However, since nonparametric approaches for estimating mutual information are unusably inaccurate for typical high-dimensional data sets,
+alternative approaches must be employed.  One can tractably estimate mutual information by assuming a multivariate Gaussian model:
+however, this approach essentially assumes a linear relationship between the input and output, and hence fails to quantify nonlinear dependencies.
+Alternatively, one can obtain a lower bound on the mutual information from the confusion matrix of the classifier.
+This is the most popular approach for estimating mutual information in neuroimaging studies, but suffers from known shortcomings
+(Gastpar 2010, Quiroga 2009).
 
-Mutual information is interpretable and flexible, but it is generally
-difficult to estimate in high-dimensional settings.  
-Fisher information is easier to estimate when the stimulus $X$ is low-dimensional,
-and the response $Y$ is high-dimensional; however, for $p$-dimensional $X$
-the Fisher information takes the form of a $p \times p$ matrix, rendering interpretation
-difficult when $p$ is large.
-In cases when both the stimulus space and the response space are high-dimensional a
-powerful approach is to apply supervised learning methods to either
-predict $X$ based on $Y$ (decoding), or $Y$ based on $X$ (encoding).
-Of course, predictive models are extremely interesting beyond the
-measure of prediction error: one commonly examines the fitted model to
-find clues to the underlying dynamics of the system.  However, one is
-still often interested in a one-dimensional summary of the dependence
-structure: in that regard, while prediction error and mutual
-information are both interpretable, mutual information has the added
-advantage of its rich context in information theory, while prediction
-error has the disadvantage of the arbitrariness of the loss function.
-Even when considering misclassification error, one often faces the
-problem of how to partition a high-dimensional space into discrete
-classes.  Furthermore, the ideal definition of prediction error is
-the \emph{Bayes error}, the prediction error of the optimal rule, but
-obtaining the Bayes error depends on having the correct
-model, as well as having infinite data to fit the model.  That said,
-in many problems it may be more feasible to estimate the Bayes error
-than to obtain a fully nonparametric estimate of the mutual
-information, since we can easily exploit prior knowledge about the
-dependence structure between $x$ and $Y$ (for instance, a generalized
-linear model) to train the predictive model, while nonparametric
-estimators of mutual information fail to exploit this prior knowledge.
+The idea of linking classification performance to mutual information is not new: 
+after all, Shannon's original motivation was to characterize the minimum achievable error probability
+of a noisy communication channel.  More explicitly, Fano's inequality provides a
+lower bound on mutual information in relation to the optimal prediction error, or Bayes error.
+Fano's inequality can be further refined to obtain a tighter lower bound on mutual information (Tebbe and Dwyer 1968.)
 
-In fact, one could exploit the strong relationship between mutual
-information and the prediction error to obtain an estimate of the
-mutual information from the observed classification rate.  For
-example, using generalizations of Fano's inequality, one can obtain a
-lower bound on mutual information in relation to the optimal
-prediction error, or Bayes error.  Such a technique for obtaining
-estimates of mutual information from classification rates can be
-understood as a way to leverage the prior information about $X$ and
-$Y$ implied by the prediction model in order to obtain
-a \emph{model-based} estimate of mutual information, $\hat{I}(X; Y)$.
-However, a prominent challenge to such an approach is the \emph{finite
-sample bias} resulting from having a limited number of observations
-$N$ for training and testing the prediction rule.
+In practice, the idea of deriving estimates of mutual information from classification performance occupies an advantageous middle ground
+between the two extremes of nonparametric and parametric approaches for estimating mutual information.
+In neuroimaging data, we lack prior knowledge for specifying parametric models, and the data is too high-dimensional for nonparametric approaches,
+but we have a sufficient idea of the general ``structure'' in the data to achieve above-chance classification rates.
 
-However, in low-SNR settings, which are commonly encountered in
-applications, we find that the connection between mutual information
-and prediction error in the form of misclassification rate, can be
-made even stronger than the lower bound implied by Fano's inequality.
-In a particular low-SNR regime, we find an exact asymptotic
-relationship between the Bayes misclassification probability and the
-mutual information.  Furthermore, our framework allows us to
-characterize the discrepancy between the observed misclassification
-rate, and the Bayes error, which allows us to derive that the sample
-complexity of estimating the mutual information.
+However, there are several practical issues for estimating mutual information from classification accuracy. 
+One, the achievable classification accuracy depends on the amount of data available for training.
+The test error is a unbiased estimate of the true error rate of the classifier on new data (called generalization error);
+but in turn, the generalization error can only be meaningfully interpreted as a lower bound on the error rate of the ideal classfier,
+or Bayes error.  Secondly, even if one could obtain the Bayes error, the Bayes error itself depends on the choices made by the experimenter
+in regards to the stimuli exemplar chosen in the experiment, and the decision of how to partition those exemplars in the classification task.
+For example, Nishimoto et al classified segments of a movie clips based on activation patterns, but the definition of the classification task,
+and the achievable classification performance, depends not only on the particular move clips used in the experiment, but also
+the choice of time interval used to define discrete classes: defining each class to be a 1sec segment of movie results in more distinct classes
+and lower classification accuracy than defining each class to be a 4sec segment of movie.
+The Bayes error, and any estimate of mutual information based on the Bayes error, would therefore be necessarily dependent on the experimental parameters.
+
+In principle, the first issue can be overcome by having sufficiently many observations: but a practical issue is that an astronomical amount
+of data might be needed to learn the optimal classification rule.  A more efficient approach would be to estimate the Bayes error from
+the classification performance.  Since the Bayes error is the large-sample limit of the achieved classification error, a promising approach is
+to perform classification using differently sized subsamples of the training data, producing a plot of classification error versus sample size--a ``learning curve.''
+One can then extrapolate the learning curve to estimate the Bayes error (Cortes et al. 1994.)
+However, much work remains to develop rigorous methodology for estimating Bayes error, and so we leave this first issue for future work.
+
+The starting point for our methodology is a proposal for overcoming the second issue: the non-uniqueness of the Bayes error.
+We define a notion of $K$-class \emph{average Bayes error} which is uniquely defined for any given stimulus distribution and stochastic mapping from stimulus to response.  The $K$-class average Bayes error is simply the expectation of the Bayes error when $K$ stimuli exemplars are drawn i.i.d. from the stimulus distribution, and treated as distinct classes.  Hence the average Bayes error can in principle be estimated if the appropriate randomization is employed
+for designing the experiment.
+
+While the $K$-class average Bayes error is defined independently of the particular choice of stimuli,
+the quantity still depends on the choice of number of classes, $K$.
+In comparison, the mutual information provides a quantification of information which does not depend on $K$,
+allowing more flexible comparisons and easier interpretation.
+Hence our main theoretical contribution is the derivation of an asymptotic relationship between the $K$-class average Bayes error
+and the mutual information, which in practice means that any estimate of the $K$-class Bayes error can be converted into an estimate of mutual information;
+and the resulting estimator of mutual information should be asymptotically independent of the choice of number of classes $K$.
 
 \subsection{Motivation}
 
