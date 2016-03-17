@@ -58,17 +58,39 @@ in simulated data, as well as an fMRI dataset, without having to make parametric
 
 \section{Introduction}
 
-In neuroscience, one is often interested in measuring dependence
-between the input of a neural subsystem, $X$, and its output, or
-measured output, $Y$.  A variety of measures of dependence--such
-as correlation, mutual information, and prediction error, tend to be
-used in different settings due to differing tradeoffs
+%How the various subsystems of the human brain encode, process, and transmit information
+%about complex stimuli (faces, images, stories) is still poorly understood.
+
+%Neuroscientists and psychologists commonly think about the human brain
+%as a network of specialized components--brain regions, such as the V1 visual area, or the fusiform face area (FFA),
+%connected to sensory inputs and motor outputs.
+Understanding the amount and type of `information' that flows from sensory inputs
+to the various components and subcomponents of the human brain is a key motivation for neuroimaging studies.
+However, it is not straightforward to decide how exactly to quantify `information' in the human brain,
+nor whether quantification should even be attempted, depending on the goals of the experiementer,
+the nature of the data collected, the complexity of the stimuli and the subsystems being studied.
+In practice, neuroscientists have a large repetoire of methods for quantifying information:
+these methods can be subdivided into methods based on linear dependency,
+such as correlation, multivariate R-squared, or signal-to-noise ratio; and methods based on nonlinear dependency such as
+mutual information, Fisher information, and prediction error.
+
+Different methods tend to be
+used in different settings due to tradeoffs
 between interpretability, flexibility, and high-dimensional
-scalability.  Correlation is highly interpretable and scalable, but is
-inflexible: it fails to capture many forms of nonlinear dependence.
+scalability.  Linear measures of dependence such as correlation is highly interpretable and scalable, but are
+inflexible: such measures fail to capture many forms of nonlinear dependence.
+It is a well-established fact that the relationship between the level of chemical and electrical input
+to a neuron, and the level of its corresponding output is nonlinear; however, it is reasonable
+to approximate the input-output relationship with a linear relationship, and such approximations
+may be especially appropriate if signals are averaged at a population level.
+
 Mutual information is interpretable and flexible, but it is generally
-difficult to estimate in high-dimensional settings.  Hence, in such
-settings, when a nonlinear measure of dependence is desired, a
+difficult to estimate in high-dimensional settings.  
+Fisher information is easier to estimate when the stimulus $X$ is low-dimensional,
+and the response $Y$ is high-dimensional; however, for $p$-dimensional $X$
+the Fisher information takes the form of a $p \times p$ matrix, rendering interpretation
+difficult when $p$ is large.
+In cases when both the stimulus space and the response space are high-dimensional a
 powerful approach is to apply supervised learning methods to either
 predict $X$ based on $Y$ (decoding), or $Y$ based on $X$ (encoding).
 Of course, predictive models are extremely interesting beyond the
