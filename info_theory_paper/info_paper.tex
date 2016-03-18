@@ -276,8 +276,78 @@ In the following section we investigate the relationship between $e_{ABE}$ and t
 
 \section{Asymptotic Theory}
 
-We give the proof with minimal context or motivation.  See the paper
-for more details.
+Our goal in this section is to establish a relationship between the mutual information $I(X; Y)$ and the $k$-class average Bayes error, $e_{ABE}$.
+In short, we will show that for some function $\pi$,
+\[
+e_{ABE} \approx \pi(\sqrt{2 I(X; Y)})
+\]
+and that this approximation becomes accurate under a limit where $I(X; Y)$ is small relative to the dimensionality of $X$,
+and under the condition that the components of $X$ are approximately independent.  Formal conditions are given in the proof statement.
+
+First, let us rewrite $e_{ABE}$ in terms of the density function.  Recall that the Bayes rule is
+\[
+e_{Bayes}(x_1,\hdots, x_k) = \frac{1}{k}\sum_{i=1}^k \Pr[\hat{X}(Y) \neq x_i| X = x_i].
+\]
+In turn, the Bayes classification rule is given in terms of the conditional density:
+\[
+\hat{X}(y) = \argmax_{x \in \{x_1,\hdots, x_k\}} p(y|x).
+\]
+Therefore, we obtain
+\[
+e_{Bayes}(x_1,\hdots, x_k) = \frac{1}{k}\sum_{i=1}^k \Pr[p(Y|x_i) \leq \max_{j \neq i} p(Y|x_j)| X = x_i].
+\]
+In turn the average Bayes error can be written as
+\begin{align}
+e_{ABE} &= \E[e_{Bayes}(X_1,\hdots, X_k)]
+\\&= \frac{1}{k}\sum_{i=1}^k \E[\Pr[p(Y|x_i) \leq \max_{j \neq i} p(Y|x_j)| X = x_i]]
+\\&= \E[\Pr[p(Y|x_1) \leq \max_{j \neq 1} p(Y|x_j)| X = x_1]]
+\\&= \Pr[p(Y|X_1) \leq \max_{j \neq 1} p(Y|X_j)| X = X_1].
+\end{align}
+
+Defining $Z_i = \log p(Y|X_i) - \log p(Y|X_1)$, where $Y \sim p(y|X_1)$.
+The we obtain
+\[
+e_{ABE} = \Pr[Z_1 < \max_{j > 1} Z_i].
+\]
+
+Our proof uses the assumption that $Z_1,\hdots, Z_k$ are asymptotically multivariate normal.
+To see why this might be justified, suppose that $X$ and $Y$ have the same dimensionality $d$, and that
+joint density factorizes as
+\[
+p(x_j, y) = \prod_{i=1}^d p_i(x_{j, i}, y_i)
+\]
+where $x_{j, i}, y_i$ are the components of $x_j$ and $y$.
+Then,
+\[
+Z_i = \sum_{m=1}^d \log p_m(y_m | x_{m, i}) - \log p_m(y_m | x_{m, 1})
+\]
+where $x_{i, j}$ is the $i$th component of $x_j$.
+The $d$ terms $\log p_m(y_m | x_{m, i}) - \log p_m(y_m | x_{m, 1})$ are independent across the indices $m$,
+but dependent between the $i = 1,\hdots, k$.
+Therefore, the multivariate central limit theorem can be applied to conclude that the vector
+$(Z_1,\hdots, Z_k)$ can be scaled to converge to a multivariate normal distribution.
+Now, since the average Bayes error $e_{ABE}$ is a continuous functional of the joint distribution $p(x, y)$,
+it follows that $e_{ABE}$ converges to a functional of the limiting mean and covariance of $(Z_1,\hdots, Z_k)$, assuming
+that the limits exist.
+In our theorem, we assume a specific regime where these limits exist as a consequence.
+While the componentwise independence condition is not a realistic assumption,
+the key property of multivariate normality of $(Z_1,\hdots, Z_k)$ holds under more general conditions, and appears reasonable in practice.
+
+The second component of our theorem is to manipulate the expression of the mutual information $I(X; Y)$.
+The differential mutual information is defined as
+\[
+I(X; Y) = \int p(x, y) \log \frac{p(x, y)}{p(x) p(y)} dx dy.
+\]
+The key manipulation we employ is to approximate the logarithmic term by the Taylor expansion
+\[
+\log \frac{p(x, y)}{p(x) p(y)} \approx \frac{p(x, y) - p(x) p(y)}{p(x) p(y)} - \left(\frac{p(x, y) - p(x) p(y)}{p(x) p(y)}\right)^2 + \hdots.
+\]
+The approximation is accurate if $I(X; Y)$ is small--or rather, small relative to the dimensionality within the asymptotic sequence.
+We state the theorem for the regime where $I(X; Y)$ is fixed, while the dimensionality of $X$ increases.
+
+\subsection{Formal statement of theorem}
+
+We formally state the assumptions and theorem in this section.  The less technically inclined reader may skip the section in order to continue to the proposed methodology for estimating mutual information, and results. [Note: slightly different notation in this section: we will make the notation consistent with the rest of the paper before submission.]
 
 Fix integer $K \geq 2$.  Let $p^{[d]}(x,y)$ be a sequence of
 probability density functions, where $x$ is of dimension $p^{[d]}$ and
@@ -328,11 +398,11 @@ converges in distribution to a univariate normal distribution.
 \end{itemize}
 Then for $\text{ABE}_K$ as defined above, we have
 \[
-\lim_{d \to \infty} \text{ABE}_{K} = \pi_K(\iota)
+\lim_{d \to \infty} \text{ABE}_{K} = \pi_K(\sqrt{2 \iota})
 \]
 where
 \[
-\pi_K(\iota) = 1 - \int_{\mathbb{R}} \phi(z - \sqrt{2\iota}) (1 - \Phi(z))^{K-1} dz
+\pi_K(c) = 1 - \int_{\mathbb{R}} \phi(z - c) (1 - \Phi(z))^{K-1} dz
 \]
 where $\phi$ and $\Phi$ are the standard normal density function and
 cumulative distribution function, respectively.
@@ -354,7 +424,7 @@ Then, we claim that $\vec{Z} = (Z_1,\hdots, Z_{K-1})$ converges in distribution 
 \end{bmatrix}
 \right).
 \]
-Combining the claim with the lemma in the following section yields the
+Combining the claim with the lemma (stated below this proof) yields the
 desired result.
 
 To prove the claim, it suffices to derive the limiting moments
@@ -429,9 +499,6 @@ and similarly
 \end{align*}
 This concludes the proof. $\Box$.
 
-
-\subsection{Lemma}
-
 \textbf{Lemma. }
 \emph{
 Suppose $(Z_*, Z_1, \hdots, Z_{K-1})$ are jointly multivariate normal, with 
@@ -455,7 +522,9 @@ where $W \sim N(\mu, \nu^2)$ and $M_{K-1}$ is the maximum of $K-1$
 independent standard normal variates, which are independent of $W$.
 }
 
-[ADD PROOF OF LEMMA HERE]
+\textbf{Proof.}
+
+
 
 \end{document}
 
