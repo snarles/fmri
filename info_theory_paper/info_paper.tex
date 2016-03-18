@@ -31,29 +31,23 @@
 \newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
 
 \begin{abstract}
-Mutual information is a useful measure of dependence between the input
-of a neural subsystem, $X$, and its output, or measured output, $Y$,
-due to its flexibility for capturing nonlinear associations, and its
-rich information-theoretic context.  In high-dimensional settings,
-non-parametric estimators of mutual information perform poorly,
-and the only remaining options for estimating mutual information are to
-either make a parametric assumption (such as multivariate Gaussianity)
-or obtain a lower bound on the mutual information $I(X; Y)$
-from the estimated mutual information between $X$ and an estimator
-or classification rule, $I(X; \hat{X}(Y))$.  But, assuming multivariate Gaussianity
-reduces mutual information to a linear correlation-based statistic; meanwhile,
-lower bounds based on $I(X; \hat{X}(Y))$ tend to be overconservative.
-We propose a new estimator of mutual information based on the concept of ``averaged Bayes error,"
-which we prove to be asymptotically a function of the mutual information.
-%Letting $X_1,\hdots, X_K$ be $K$ i.i.d. draws of random inputs from a continuous input space,
-%the Bayes error for the input set $X_1,\hdots, X_K$ is defined as the expected probability $\E[\hat{X}(Y) \neq X]$
-%when $X$ is drawn from $\{X_1,\hdots, X_K\}$ and $Y$ is drawn from the conditional distribution $Y|X$.
-%The K-class average Bayes error is the expected Bayes error, taking the expectation over the joint distribution
-%of input sets. 
-The average Bayes error can be estimated using the average misclassification rate from
-random classification tasks; our estimation procedure consists of plugging in such an estimate of average Bayes error into the inverse of the asymptotic formula.
-We demonstrate the utility of our method in obtaining accurate estimates of mutual information
-in simulated data, as well as an fMRI dataset, without having to make parametric assumptions.
+Multivariate pattern analyses approaches in neuroimaging are fundamentally concerned with investigating
+the quantity and type of information processed by various regions of the human brain;
+typically, estimates of classification accuracy are used to quantify information.
+While a extensive and powerful library of methods can be applied to train and assess classifiers,
+it is not always clear how to use the resulting measures of classification performance to draw scientific conclusions:
+e.g. for the purpose of evaluating redundancy between brain regions.
+An additional confound for interpreting classification performance is the dependence of the error rate on
+the number and choice of distinct classes obtained for the classification task.
+In contrast, mutual information is a quantity which is in principle defined independently of the experimental design,
+and has ideal properties for comparative analyses.
+One obstacle to wider use of mutual information is the difficulty of estimating mutual information in high-dimensional neuroimaging data.
+%Nonparametric estimators have poor finite-sample performance, and parametric approaches require unrealistic assumptions such as multivariate Gaussianity.
+%While one can obtain a lower bound using the mutual information of the confusion matrix, the lower bound obtained is usually quite poor.
+We propose a new estimator of mutual information based on the concept of "average Bayes error."
+By assuming that the classes obtained in the data are drawn randomly from a continuous population,
+we find that the expected Bayes error converges to a function of the mutual information in a high-dimensional limit.
+We demonstrate the utility of our approach in simulated and real-data examples.
 \end{abstract}
 
 
@@ -235,234 +229,208 @@ it is the maximum a posteriori (MAP) rule
 f^*(y) = \argmax_{i=1}^k\ p(y|x_i).
 \]
 
-Estimating $e_{Bayes}$ is much more difficult in practice than estimating $e_{gen}$; however,
-a universal estimator for Bayes error \emph{does} exist, as proven by 
-
-
-In contrast, we will consider the misclassification errror as a means to
-estimate the mutual information.  Letting $p(x,y)$ denote the density of $(X,Y)$,
-the Bayes rule for predicting $\tilde{X}$ from $\tilde{Y} = y^*$ is given by
+Estimating $e_{Bayes}$ is much more difficult in practice than estimating $e_{gen}$;
+however, nonparametric estimators of $e_{Bayes}$ have been proposed in the literature.
+Cover (1969) first noted that the leave-one-out error of 1-nearest neighbor, $e_{1nn}$,
+asymptotically bounds the Bayes error in the sense that
 \[
-\hat{X}_{Bayes} = \argmax_{x = x^{(1)}, \hdots, x^{(k)}} \log p(y^*|x)
+\frac{1}{2}\E[e_{1nn}] \leq e_{Bayes} \leq \E[e_{1nn}].
 \]
-where $p(y|x) = p(x,y)/p(x)$.  The Bayes error is
+Later, Fukunaga and Kessel (1971) and Fralick and Scott (1971) both proposed a consistent estimator of $e_{Bayes}$
+using the test error from kernel density estimation-based classifiers.
+Fukunaga and Hostetler 1975 improved on the density estimation approach by estimating the generalization error directly,
+rather than using empirical test error (hence reducing variance.)
+
+Nevertheless, the convergence rates of nonparametric methods of Bayes risk estimation are too slow to provide much assurance
+for their use in high-dimensional problems.  On the other hand, the empirical success of supervised learning approaches seems
+to justify a certain optimism that at least one of the popular black-box methods (random forests, neural networks, kernel SVM)
+can come close to the Bayes error rate within realistic sample sizes.  Methods such as random forests and neural networks
+are known to have \emph{universal approximation} properties that guarantee consistent recovery of the classification rule,
+given that the model complexity is scaled at an appropriate rate as the sample size increases; but methods such as kernel SVM
+have much more restrictive function classes and therefore have no guarantee of being able to recover the Bayes error.
+Yet, it is seen in many learning tasks that the test error is very similar for very different classification methods, 
+some universal and some non-universal, suggesting that the true signal lies in a low-complexity function class which can
+be adequately approximated using a variety of methods.  Empirical evidence for these phenomenon are collected in studies
+on the learning curves of classifers, beginning with Cortes 1994, and applied to specific applications by Figueroa et al. 2012, Beleites et al. 2013.
+We leave further discussion of Bayes error estimation for future work; in the theoretical portion of the current paper,
+we will simply leave unspecified the method used to estimate Bayes error, and in our simulation and real data examples,
+we will use an ad hoc approach for estimating Bayes error from test error for the purpose of demonstrating our method.
+
+As we pointed out in the introduction, the quantity $e_{Bayes}$ is not a parameter of the joint distribution $p(x, y)$,
+but rather depends on the specific exemplars $x_1,\hdots, x_k$ selected;
+hence, one may write $e_{Bayes}(x_1,\hdots, x_k)$ to emphasize this dependence.
+In many studies, the end goal is to make some inference about the joint distribution $p(x, y)$, such as the mutual information $I(X; Y)$.
+However, an estimate of $e_{Bayes}$ cannot possibly be sufficient as a basis for inference about $p(x, y)$ because
+there is no direct link between $e_{Bayes}$ and $p(x)$, given that we made no assumption on how $x_1,\hdots, x_k$ were obtained.
+This motivates definition of the \emph{average} Bayes error,
 \[
-\Pr[\tilde{X} \neq \hat{X}_{Bayes}],
+e_{ABE} = \E[e_{Bayes}(X_1,\hdots, X_k)],
 \]
-where the probability is taken over the joint distribution of
-$(\tilde{X}, \tilde{Y})$.  Since the Bayes error depends on the
-sample of representative stimuli $\{x^{(i)}\}$,
-we find it more useful to consider the average Bayes error:
+where $X_1,\hdots, X_K$ are drawn i.i.d. from $p(x)$.
+The $k$-class average Bayes error is uniquely defined for any joint distribution $p(x, y)$,
+and supposing that an unbiased estimator for Bayes error exists, $\hat{e}_{Bayes}$,
+then $\hat{e}_{Bayes}$ will also be unbiased for $e_{ABE}$ supposing that the experimental design randomized the selection of $X_1,\hdots, X_k$
+by drawing the vectors independently from $p(x)$.
+
+In the following section we investigate the relationship between $e_{ABE}$ and the mutual information $I(X; Y)$.
+
+\section{Asymptotic Theory}
+
+We give the proof with minimal context or motivation.  See the paper
+for more details.
+
+Fix integer $K \geq 2$.  Let $p^{[d]}(x,y)$ be a sequence of
+probability density functions, where $x$ is of dimension $p^{[d]}$ and
+$y$ is of dimension $q^{[d]}$.  Let $p^{[d]}(x)$ and $p^{[d]}(y)$
+denote the marginal densities, and let
 \[
-\text{MC} = \E[\Pr[\tilde{X} \neq \hat{X}_{Bayes}]],
+p^{[d]}(y|x) = p^{[d]}(x, y)/p^{[d]}(y).\]
+ Let $(X^{([d], i)}, Y^{([d], i)})$ be
+iid random variates from $p^{[d]}(x, y)$ for $i = 0, \hdots, K-1$; we will supress the
+superscripts $[d]$ and/or $(i)$ when convenient.  Recall the definitions of
+entropy,
+\[
+H(X) = -\int p(x) \log p(x) dx,
 \]
-where the outer expectation is over the distribution of $x^{(i)} \sim p(x)$.
-The following sections explore the relationship between $\text{MC}$
-and $I(X;Y)$.
-
-As a means to estimate the average Bayes error $\text{MC}$, we fit a
-predictive model for $\tilde{X}$ given $\tilde{Y}$.  This results in a
-$K$-class classification problem.  While in practice, a variety of
-multi-class classification methods can be employed, our theory depends
-on having a known, semiparametric generative model for the conditional
-distribution of $Y$: we study the misclassification rate obtained by
-using the maximum-likelihood plugin estimate of the Bayes rule.
-
-Hence, when deriving sample complexity results, we make the further assumptions
-that
+and mutual information
 \[
-p(x, y) = p(x) q(y|\mu(x))
+I(X; Y) = \int p(x, y) \log \frac{p(x, y)}{p(x)p(y)} dx dy.
 \]
-where $\mu$ is an unknown bijection from
-$\mathbb{R}^p \to \mathbb{R}^p$, and $q(y|\mu)$ is a known parametric family of density
-functions which are jointly differentiable in $y$ and $\mu$.  The
-model is semiparametric since we do not make any constraints on the
-function $\mu$, other than invertibility.  In fact, $X$ can be removed
-from the picture since $I(X; Y)= I(\mu; Y)$, where $\mu = \mu(X)$.
-This reflects practice in many neuroimaging studies where the actual
-pixel values of the stimuli are not incorporated in the model at all;
-rather, one simply models the joint distribution of the class of the
-stimulus and the response.  On the other hand, it is worth noting
-that the model-based approach demonstrated in Kay et al., and others,
-do model the mapping $\mu$.
-
-In order to get an estimate of the misclassification rate, one
-has to \emph{hold out} a number $r_{test}$ of the repeats from each class.
-The classification rule is based on estimates of $\mu^{(i)}
-= \mu(x^{(i)})$, given by the MLE estimator on the training set,
+Furthermore, define the $K$-class average Bayes error as
 \[
-\hat{\mu}^{(i)} = \argmax_\mu \sum_{j=1}^{r_{train}} \log q(y^{(i, j)}|\mu).
+\text{ABE}_K \Pr[p(Y^{(0)}|X^{(0)}) < \max_{i = 1}^{K-1} p(Y^{(0)}|X^{(i)})].
 \]
-The MLE classification rule is therefore defined as
+Define
 \[
-\hat{X}_{MLE} = x^{(i)} \text{ where }i = \argmax_i  \log q(y^*|\hat{\mu}^{(i)}).
+u^{[d]}(x, y) = \log p^{[d]}(x, y) - \log p^{[d]}(x) - \log p^{[d]}(y),
 \]
-The sample test error is therefore
+and define
 \[
-\frac{1}{K r_{test}} \sum_{i=1}^K \sum_{j=r_{train}+1}^r I(\hat{x}_{MLE}^{(i,j)} \neq x^{(i)}).
-\] 
-As an estimate of $\text{MC}$, the sample test error has variability
-both from the randomness in $\tilde{Y}$ conditional on the sampled
-stimuli $x^{(i)}$, and from the randomness in the sampled stimuli
-drawn from $p(x)$.  Therefore, it makes sense to repeat the procedure
-for $m$ independent \emph{samples} of $(x^{(1)},\hdots, x^{(K)})$, and
-then averaging the resulting test errors.  Let the resulting average
-misclassification rate be denoted $\hat{\text{MC}}$.  In later
-sections we will study the discrepancy between $\hat{\text{MC}}$ and
-$\text{MC}$, and how to optimally choose the experimental parameters
-$K$ and $r$ given a total budget of $N = Kmr$ observations.
+\ell_{ij}^{[d]} = \log p(y^{(i)}|x^{(j)})
+\]
 
 
-
-\section{Theory}
-
-\subsection{Application of classical results}
-
+\textbf{Theorem.} Let $p^{[d]}(x, y)$ be a sequence of joint densities
+for $d = 1,2,\hdots$ as given above.  Further assume that
 \begin{itemize}
-\item Using Fano's inequality
-\item Limitations
-\item Define $\tilde{X}$ to be the discretization of $X$
-\item Define $I(F)$ to be the mutual information $I(X;Y)$ when $(X, Y) \sim F$.
+\item[A1.] $\lim_{d \to \infty} I(X^{[d]}; Y^{[d]}) = \iota < \infty.$
+\item[A2.] There exists a sequence of scaling constants $a_{ij}^{[d]}$
+and $b_{ij}^{[d]}$ such that the random vector $(a_{ij}\ell_{ij}^{[d]} +
+b_{ij}^{[d]})_{i, j = 1,\hdots, K}$ converges in distribution to a
+multivariate normal distribution.
+\item[A3.] There exists a sequence of scaling constants $a^{[d]}$, $b^{[d]}$ such that
+\[
+a^{[d]}u(X^{(1)}, Y^{(2)}) + b^{[d]}
+\]
+converges in distribution to a univariate normal distribution.
+\item[A4.] For all $i \neq k$,
+\[\lim_{d \to \infty}\Cov[u(X^{(i)}, Y^{(j)}), u(X^{(k)}, Y^{(j)})] = 0.\]
 \end{itemize}
-
-\subsection{Low-SNR model}
-
-We have seen in the previous section that the lower bound implied by
-Fano's inequality is quite inaccurate when (...).  Certainly, an exact
-relationship between $I(X;Y)$ and the Bayes error cannot hold since
-given two different joint distibutions $F$, $G$ with $I(F) = I(G)$,
-the $K$-class misclassification rate $\text{MC}$ may be quite
-different between $F$ and $G$.  Yet, we observe that under the two
-conditions that (i) the dimensionality of $(X,Y)$ is high, and (ii)
-the signal-to-noise ratio is low, in the sense that $H(X, Y) >>
-I(X;Y)$, the relationship between information and misclassification
-rate begins to cohere.
-
-\begin{itemize}
-\item Give a counterexample (gaussian)
-\item Plot of $\text{MC}$ depending on $K$.
-\item Examples of low SNR regime.  Varying $I(X;Y)$ and also dimensionality 
-\item In all plots, compare with Fano inequality
-\item As we can see, low SNR regime gets more accurate than Fano
-\end{itemize}
-
-Assume that $X$ and $Y$ have joint density $p(x, y)$ with respect to
-Lesbegue measure on $\mathbb{R}^{2d}$.  Draw i.i.d. $(X^{(i)},
-Y^{(i)})$ from the joint distribution, for $i = 0,\hdots, K-1$, and let
-$(X^*, Y^*)$ denote $(X^{(0)}, Y^{(0)})$.  Define
+Then for $\text{ABE}_K$ as defined above, we have
 \[
-Z_i = \log p(Y^*|X_i) = \log p(Y^*, X_i) - \log p(X_i).
+\lim_{d \to \infty} \text{ABE}_{K} = \pi_K(\iota)
 \]
-The Bayes rule is therefore
+where
 \[
-\hat{X} = x^{(i)} \text{ where }i = \argmax_i Z_i
+\pi_K(\iota) = 1 - \int_{\mathbb{R}} \phi(z - \sqrt{2\iota}) (1 - \Phi(z))^{K-1} dz
 \]
+where $\phi$ and $\Phi$ are the standard normal density function and
+cumulative distribution function, respectively.
 
-It turns out the reason why the dimensionality and signal-to-noise
-ratio play a role is because those conditions ensure that the vector
-$Z = (Z_*, Z_1,\hdots, Z_{K-1})$ has an approximately normal
-distribution.  However, to formally prove this fact, we require an
-asymptotic framework.
+\textbf{Proof.}
 
-We consider a limiting sequence of problems of increasing
-dimensionality $d$.  Let $(X^{[d]}, Y^{[d]})$ denote the joint
-distributions in the sequence, for $d \in \{1, 2, \hdots\}.$ As $d$
-increases, the ratio of the information $I(X^{[d]}; Y^{[d]})$ and the
-joint entropy $H(X^{[d]}, Y^{[d]})$ decreases.
-
-\subsubsection{Gaussian Example}
-
-Before giving a general result, we illustrate this aymptotic regime by
-the following gaussian example.  Let
+For $i = 1,\hdots, K-1$, define
 \[
+Z_i = \log p(Y^{(0)}|X^{(i)}) - \log p(Y^{(0)}|X^{(0)}).
+\]
+Then, we claim that $\vec{Z} = (Z_1,\hdots, Z_{K-1})$ converges in distribution to
+\[
+\vec{Z} \sim N\left(-2\iota, 
 \begin{bmatrix}
-X^{[d]}\\Y^{[d]}
-\end{bmatrix} \sim 
-N\left(
-0, \begin{bmatrix}
-I & \frac{1}{\sqrt{1 + d\sigma^2}}I \\
-\frac{1}{\sqrt{1 + d\sigma^2}} I & I
-\end{bmatrix}.
-\right)
-\]
-
-For fixed $d$, we have $(X_i^{[d]}, Y_i^{[d]})$ drawn i.i.d. from a
-bivariate normal $N(0, \begin{bmatrix}1 & \rho\\\rho &
-1\end{bmatrix})$ where $\rho = (1 + d\sigma^2)^{-\frac{1}{2}}$.  Recalling that
-the mutual information of the components of such a bivariate normal is
-$-\log(1 - \rho^2)/2$, we easily calculate:
-\[
-I(X^{[d]}, Y{[d]}) = \sum_{i=1}^d I(X_i^{[d]}, Y_i^{[d]}) = -\frac{d}{2}\log(1 - \frac{1}{1+d\sigma^2}).
-\]
-Let $\iota$ denote the limit of the mutual information as $d \to \infty$: we have
-\begin{align*}
-\iota &= \lim_{d \to \infty} I(X^{[d]}, Y^{[d]}) =
-\lim_{d \to \infty} -\frac{d}{2}\log(1 - \frac{1}{1+d\sigma^2}) 
-\\&= \lim_{d \to \infty}\frac{d}{2}\frac{1}{1+d\sigma^2} = \frac{1}{2\sigma^2}.
-\end{align*}
-Meanwhile, $H(X^{[d]}) = H(Y^{[d]}) = \frac{d}{2}\log(2\pi)$, so it is clear that $H(X^{[d]}, Y^{[d]}) >> I(X^{[d]}; Y^{[d]})$.
-
-A simple calculation shows that
-\[
-Z_i = \log p(Y^*|X^{(i)}) = -\frac{1}{2(1-\rho^2)}||Y^* -\rho X^{(i)} ||^2 + C_\rho
-\]
-where the first term is a scaled chi-squared distribution with $d$
-degrees of freedom: the scale is $-\frac{1}{2}\frac{1 + \rho^2}{1-\rho^2}$ for $i = 1,\hdots, K-1$ and
-$-1/2$ for $i = 0$.  
-The omitted constant is
-\[
-C_\rho = -\frac{1}{2}\log(2\pi(1-\rho)^2)
-\]
-Since we can separate $Z_i$ into
-independent, componentwise sums,
-\[
-Z_i = C_\rho -\frac{1}{2(1-\rho^2)} \sum_{j=1}^d (Y^*_j - \rho X^{(i)}_j)^2,
-\]
-it follows from the multivariate central limit theorem that $Z_i$ are asymptotically jointly normal.
-
-A straightforward computation using multivariate normal moments (c.f. Muirhead) yields the limiting moments:
-\begin{align*}
-\E[Z_*] &= -\frac{d}{2} + C_\rho\\
-\E[Z_i] &= -\frac{d}{2}\frac{1 + \rho^2}{1-\rho^2} + C_\rho\\
-\Var[Z_*] &= \Cov(Z_*, Z_i) = \frac{d}{2}\\
-\Var[Z_i] &= \frac{d}{2}\frac{(1 + \rho^2)^2}{(1-\rho^2)^2}\\
-\Cov[Z_i, Z_j] &= \frac{d}{2}\frac{1}{(1-\rho^2)^2}
-\end{align*}
-for $i \neq j \neq 0$.
-Taking limits, the moments simplify to yield
-\[
-\begin{bmatrix}
-Z_*\\
-Z_1\\
-\vdots\\
-Z_{K-1}
-\end{bmatrix} \stackrel{d}{\to} N\left(
-\begin{bmatrix}
-C_0-\frac{d}{2}\\
-C_0-\frac{d}{2} - \frac{1}{\sigma^2}\\
-\vdots\\
-C_0-\frac{d}{2} - \frac{1}{\sigma^2}
-\end{bmatrix},
-\begin{bmatrix}
-\frac{d}{2} & \frac{d}{2} & \cdots & \frac{d}{2}\\
-\frac{d}{2} & \frac{d}{2} + \frac{2}{\sigma^2} & \cdots & \frac{d}{2} + \frac{1}{\sigma^2}\\
+4\iota & 2\iota & \cdots & 2\iota\\
+2\iota & 4\iota & \cdots & 2\iota\\
 \vdots & \vdots & \ddots & \vdots\\
-\frac{d}{2} & \frac{d}{2} + \frac{1}{\sigma^2} & \cdots & \frac{d}{2} + \frac{2}{\sigma^2}
+2\iota & 2\iota & \cdots & 4\iota
 \end{bmatrix}
-\right),
+\right).
 \]
-where $C_0 = -\log(2\pi)/2$.
-By the central limit theorem, the misclassification probability is
+Combining the claim with the lemma in the following section yields the
+desired result.
+
+To prove the claim, it suffices to derive the limiting moments
+\[\E[Z_i] \to -2\iota,\]
+\[\Cov[Z_i] \to 4\iota,\]
+\[\Cov[Z_i, Z_j] \to 2\iota,\]
+for $i \neq j$,
+since then assumption A2 implies the existence of a multivariate normal
+limiting distribution with the given moments.
+
+Before deriving the limiting moments, note the following identities.
+Let $X' = X^{(1)}$ and $Y = Y^{(0)}$.
 \[
-\text{MC} = \Pr[Z_* < \max_{i=1}^{K-1} Z_i]
+\E[e^{u(X', Y)}] = \int p(x) p(y) e^{u(x, y)} dx dy = \int p(x, y) dx dy = 1.
 \]
-for a random multivariate normal vector $(Z_*, Z_1, \hdots, Z_{K-1})$
-with the given mean and covariance matrix.  It is worth noting that
-the probability $\Pr[Z_* < \max_{i=1}^{K-1} Z_i]$ directly gives
-the \emph{averaged} Bayes error: indeed, in high dimensions it is not
-trivial to compute the Bayes error for fixed configuration.
-To obtain a simplified expression of this multivariate normal
-probability, we employ the following lemma.
+Therefore, from assumption A3 and the formula for gaussian exponential
+moments, we have
+\[
+\lim_{d \to \infty} \E[u(X', Y)]-\frac{1}{2}\Var[u(X', Y)] = 0.
+\]
+Let $\sigma^2 = \lim_{d \to \infty} \Var[u(X', Y)]$.
+Meanwhile, by applying assumption A2,
+\begin{align*}
+\lim_{d \to \infty} I(X; Y) &= \lim_{d \to \infty} \int p(x, y) u(x, y) dx dy 
+= \lim_{d \to \infty} \int p(x) p(y) e^{u(x, y)} u(x, y) dx dy
+\\&= \lim_{d \to \infty}  \E[e^{u(X, Y')}u(X, Y')]
+\\&= \int_{\mathbb{R}} e^z z \frac{1}{\sqrt{2\pi \sigma^2}} 
+e^{-\frac{(z + \sigma^2/2)^2}{2\sigma^2}} \text{ (applying A2)}
+\\&= \int_{\mathbb{R}} z \frac{1}{\sqrt{2\pi \sigma^2}} 
+e^{-\frac{(z - \sigma^2/2)^2}{2\sigma^2}}
+\\&= \frac{1}{2}\sigma^2.
+\end{align*}
+Therefore,
+\[
+\sigma^2 = 2\iota,
+\]
+and
+\[
+\lim_{d \to \infty} \E[u(X', Y)] = -\iota.
+\]
+Once again by applying A2, we get
+\begin{align*}
+\lim_{d \to \infty} \Var[u(X, Y)] 
+&= \lim_{d \to \infty} \int (u(x, y) - \iota)^2 p(x, y) dx dy
+\\&= \lim_{d \to \infty} \int (u(x, y) - \iota)^2 e^{u(x, y)} p(x) p(y) dx dy
+\\&= \lim_{d \to \infty} \E[(u(X', Y) - \iota)^2 e^{u(X', Y)}] 
+\\&= \int (z - \iota)^2 e^z \frac{1}{\sqrt{4\pi\iota}} e^{-\frac{(z+\iota)^2}{4\iota}} dz \text{ (applying A2)}
+\\&= \int (z - \iota)^2 \frac{1}{\sqrt{4\pi\iota}} e^{-\frac{(z-\iota)^2}{4\iota}} dz
+\\&= 2\iota.
+\end{align*}
+
+
+We now proceed to derive the limiting moments.
+We have
+\begin{align*}
+\lim_{d \to \infty} \E[Z] 
+&= \lim_{d \to \infty} \E[ \log p(Y|X') - \log p(Y|X)]
+\\&= \lim_{d \to \infty} \E[ u(X', Y) - u(X, Y) ] = -2\iota.
+\end{align*}
+Also,
+\begin{align*}
+\lim_{d \to \infty} \Var[Z]
+ &= \lim_{d \to \infty} \Var[ u(X', Y) - u(X, Y) ]
+\\&= \lim_{d \to \infty} \Var[ u(X', Y)] +\Var[ u(X, Y) ]\text{ (using assumption A4) }
+\\&= 4\iota,
+\end{align*}
+and similarly
+\begin{align*}
+\lim_{d \to \infty} \Cov[Z_i, Z_j]
+&= \lim_{d \to \infty} \Var[ u(X, Y)]\text{ (using assumption A4) }
+\\&= 2\iota.
+\end{align*}
+This concludes the proof. $\Box$.
+
+
+\subsection{Lemma}
 
 \textbf{Lemma. }
 \emph{
@@ -473,7 +441,7 @@ $\Cov(Z_*, Z_i) = \gamma$,
 $\Var(Z_i)= \delta$, and $\Cov(Z_i, Z_j) = \epsilon$ for all $i, j = 1, \hdots,
 K-1$.  Then, letting
 \[
-\mu = \frac{\E[Z_* - Z_i]]}{\sqrt{\frac{1}{2}\Var(Z_i - Z_j)}} = \frac{\alpha}{\sqrt{\delta - \epsilon}},
+\mu = \frac{\E[Z_* - Z_i]}{\sqrt{\frac{1}{2}\Var(Z_i - Z_j)}} = \frac{\alpha}{\sqrt{\delta - \epsilon}},
 \]
 \[
 \nu^2 = \frac{\Cov(Z_* -Z_i, Z_* - Z_j)}{\frac{1}{2}\Var(Z_i - Z_j)} = \frac{\beta + \epsilon - 2\gamma}{\delta - \epsilon},
@@ -487,237 +455,7 @@ where $W \sim N(\mu, \nu^2)$ and $M_{K-1}$ is the maximum of $K-1$
 independent standard normal variates, which are independent of $W$.
 }
 
-(See appendix for proof.)
-
-Applying the lemma, we compute
-\[
-\mu = \frac{\sigma^{-2}}{\sqrt{\sigma^{-2}}} = \frac{1}{\sigma},
-\]
-\[
-\nu^2 = \frac{\sigma^{-2}}{\sigma^{-2}} = 1,
-\]
-hence
-\[
-\text{MC} = \Pr[N(\frac{1}{\sigma}, 1) < M_{K-1}].
-\]
-Defining the function $f_K(\mu) = \Pr[N(\mu, 1) < M_{K-1}]$,
-we therefore get
-\[
-\text{MC} = f_K\left(\frac{1}{\sigma}\right) = f_K(\sqrt{2 \iota}),
-\]
-recalling that $\iota$ is the limiting value of the mutual information.
-
-Hence we obtain a fairly explicit relationship between average Bayes
-error $\text{MC}$ and limiting mutual information in the gaussian
-case.  In the following section, we see that the formula
-\[
-\text{MC} = f_K(\sqrt{2\iota})
-\]
-applies more generally!
-
-\subsubsection{Generalization}
-
-How far can we generalize the previous example?  For starters, we can
-allow $(X_i^{[d]}, Y_i^{[d]})$ to have a non-Gaussian bivariate
-distribution, with a density with respect to Lesbegue measure.
-However, we still require that $(X_i^{[d]}, Y_i^{[d]})$ are i.i.d. for
-$i = 1,\hdots, d$.  We let $b_d(x, y)$ denote the bivariate joint
-density of $(X_i^{[d]}, Y_i^{[d]})$, and $b(x)$ and $b(y)$ to denote
-the marginal distributions of $b_d(x, y)$, which are also assumed to
-be fixed.  The independence allows us to decompose the mutual
-information
-\[
-I(X^{[d]}, Y^{[d]}) = \sum_{i=1}^d I(X_i^{[d]}, Y_i^{[d]}) = d I(X_i^{[d]}. Y_i^{[d]}).
-\]
-Given some additional conditions on the marginal bivariate
-distributions $b_d(x, y)$, we can conclude joint asymptotic normality
-of all of the quantities $\log p(X^{(i)}, Y^{(j)}$ for $i, j =
-1,\hdots, K$.
-
-Now consider what happens if the total mutual information stays fixed,
-$I(X^{[d]}. Y^{[d]}) = c$, while the dimensionality increases.  Since
-$I(X_i^{[d]}. Y_i^{[d]}) = c/d$, and since the marginals are fixed,
-we conclude that the density functions $b_d(x, y)$ are converging
-to the product $b(x) b(y)$.  Now if we define
-\[
-u_d(x, y) = \frac{b_d(x, y)}{b(x) b(y)} - 1,
-\]
-we can say that $u_d(x, y) \to 0$ as $d \to \infty$.
-
-It turns out that in such a limit, the moments of $u_d(X_i^{(j)},
-Y_i^{(k)})$ determines many of the information theoretic-quantities of
-interest.  From the definition, we have 
-\[
-0 = \E[u(X_i, Y_i)|X_i] = \E[u(X_i, Y_i)|Y_i] = \E[u(X_i^{(j)}, Y_i^{(k)})]
-\]
-for $j, k \in \{1,\hdots, K\}$.
-Then observe that
-\begin{align*}
--H(X_1, Y_1) &= \int \log(b(x, y)) b(x,y) dx dy
-\\=& \int \log (b(x)b(y)(1 + u(x, y)) b(x) b(y) (1 + u(x, y)) dx dy
-\\=& \int \log(b(x)) b(x) \left[\int b(y) (1 + u(x, y)) dy\right]dx 
-\\&+ \int \log(b(y)) b(y) \left[\int b(x) (1 + u(x, y)) dx\right]dx 
-\\&+ \int \log(1 + u(x, y)) (1 + u(x, y)) b(x) b(y) dx dy
-\\=& \int \log(b(x)) b(x) \E[1 + u(X, Y)|X = x] dx 
-\\&+ \int \log(b(y)) b(y) \E[1 + u(X, Y)|X = y] dx 
-\\&+ \E[\log(1 + u(X_1, Y_*))(1 + u(X_1, Y_1^*))]
-\\=& -H(X_1) - H(Y_1) + \E[\log(1 + u(X_1, Y_1^*))(1 + u(X_1, Y_1^*))]
-\end{align*}
-where here $X_1, Y_1^*$ are drawn from the product marginal $b(x)b(y)$.
-Hence
-\[
-I(X_1; Y_1) = \E[\log(1 + u(X_1, Y_1^*))(1 + u(X_1, Y_1^*))].
-\]
-Since $I(X_1; Y_1)$ is `small'--order $O(1/d)$, the function $u(x,y)$
-must become `small' in some sense as well, as $d$ grows.  Assume for
-the moment that we can justifiably replace $\log(1 + u(x,y))$ with its
-second-order Taylor expansion,
-\[
-\log(1 + u_d(x,y)) \approx u_d(x,y) - \frac{1}{2}u_d(x, y)^2.
-\]
-Then we get
-\[
-I(X_1; Y_1) \approx \E\left[u_d(X_1,Y_1^*) + \frac{1}{2}u_d(X_1,Y_1)^2 - \frac{1}{2}u_d(X_1,Y_1^*)^3\right],
-\]
-which, since $\E[u_d(X_1,Y_1^*)] = 0$, and since we have been neglecting third-order terms,
-gives
-\[
-I(X_1;Y_1) \approx \frac{1}{2}\E[u_d(X_1,Y_1^*)^2] = \frac{1}{2}\Var[u_d(X_1,Y_1^*)].
-\]
-Many other similar identities occur in the following proof--all of
-which depend on neglecting higher-order terms of $u_d$.  But when can
-we justifiably ignore terms of the form $u_d(X_i, Y_i^*)^k$?  Ideally,
-we need $\E[|u_d(X_i, Y_i^*)|^k]$ uniformly bounded by $O(d^{-1
-+ \epsilon})$ for $k \geq 3$.  However, in
-order to conclude such a result, it is necessary to assume a few
-regularity conditions.  For instance, it suffices to assume that
-\[
-????
-\]
-We mention it to give a concrete example of a sufficient condition
-for being able to neglect higher moments of $u_d(X_i, Y_i^*)$.
-
-Collected together, we will assume the following:
-\begin{itemize}
-\item[A1. ] For all $d$, $I(X^{[d]}, Y^{[d]}) = \iota$.
-\item[A2. ] For all $d, d'$ and $i \leq d$, $j \leq d'$, we have $X_i^{[d]}$ is equal to $X_j^{[d']}$ in distribution,
-$Y_i^{[d]}$ is equal to $Y_j^{[d']}$ in distribution.  Let $b(x)$
-denote the marginal distribution of $X_j$ and $b(y)$ denote the
-marginal distribution of $Y_j$.
-\item[A3. ] Assume $X_j$ and $Y_j$ have finite third moments.
-\item[A4. ] For each $d = 1,2,\hdots$, the components $(X_i^{[d]}, Y_i^{[d]})$ are drawn i.i.d. from a bivariate density
-$b_d(x, y)$ for $i = 1,\hdots, d$.
-\item[A6. ] Defining $u_d(x, y) = \frac{b_d(x, y)}{b(x)b(y)}$,
-we have $\E[|u_d(X_i, Y_i^*)^3|] = O(d^{-1 - \epsilon})$, where
-$\epsilon > 0$.
-\end{itemize}
-
-\textbf{Theorem. }  
-\emph{
-Let $X^{[d]}, Y^{[d]}$ be a sequence of distributions satisfying
-assumptions A1-A6.  Then, as $d \to \infty$, the misclassification
-probability
-\[
-\text{MC} = \Pr[Z_* < \max_{i=1}^{K-1} Z_i]
-\]
-satisfies
-\[
-\lim_{d \to \infty} \text{MC} = f_K(\sqrt{2\iota}),
-\]
-where $f_K$ is defined in Lemma.
-}
-
-\textbf{Proof. }
-As mentioned in the preceding discussion, assumption A6 allows us to
-find some $\epsilon > 0$, allowing us to write
-\[
-I(X_1; Y_1) = \frac{1}{2}\Var[u(X_1,Y_1^*)] + O(d^{-1 - \epsilon}).
-\]
-Furthermore, we conclude that
-\[
-\Cov(u_d(X_i^{(j)}, Y_i^*)^2, u_d(X_i^{(k)}, Y_i^*)) = O(d^{-1-\epsilon})
-\]
-\[
-\Cov(u_d(X_i^{(j)}, Y_i^*), u_d(X_i^{(k)}, Y_i^*)) = O(d^{-1-\epsilon})
-\]
-for all $j, k = 0,\hdots, K-1$.
-And for $i \neq j \neq 0$, we have
-\begin{align*}
-\Cov(u_d(X_1^{(i)}, Y_1^*), u_d(X_1^{(j)}, Y_1^*)) 
-=& \Cov(\E[u_d(X_1^{(i)}, Y_1^*)|Y_1^*], \E[u_d(X_1^{(j)}, Y_1^*)|Y_1^*]) 
-\\&+ \E[\Cov(u_d(X_1^{(i)}, Y_1^*), u_d(X_1^{(j)}, Y_1^*))|Y_1^*]
-\\&= \Cov(0, 0) + \E[0] = 0
-\end{align*}
-due to the identity $\E[u_d(X_1,y)|y] = 0$, and conditional independence, respectively.
-By a similar argument,
-\[
-\Cov(u_d(X_1^{(i)}, Y_1^*), u_d(X_1^*, Y_1^*))  = 0.
-\]
-Noting that $\E[u_d(X_1,Y_1^*)^2] = 2\iota/d$,
-we can compute
-\begin{align*}
-\E[u_d(X_1^*, Y_1^*)] &= \int u_d(x, y)b(x,y) dx dy
-\\&= \int u_d(x, y)(1 + u_d(x, y))b(x)b(y) dx dy
-\\&= \E[u_d(X_1, Y_1^*)] + \E[u_d(X_1, Y_1^*)^2]
-\\&= 0 + 2\iota/d = 2\iota/d
-\end{align*}
-and
-\begin{align*}
-\E[u_d(X_1^*, Y_1^*)^2] &= \int u_d(x, y)^2(1 + u_d(x, y))b(x)b(y) dx dy
-\\&= \E[u_d(X_1, Y_1^*)^2] + \E[u_d(X_1, Y_1^*)^3]
-\\&= 2\iota/d + O(d^{-1-\epsilon}),
-\end{align*}
-hence
-\[
-\Var(u_d(X_1^*, Y_1^*)) = \frac{2\iota}{d} - \frac{4\iota^2}{d^2} + O(d^{-1-\epsilon}) = 
-\frac{2\iota}{d}+ O(d^{-1-\epsilon})
-\]
-
-
-Due to componentwise independence, the scores $Z_i = \log
-p(Y^*|X^{(i)}$ converge in distribution to a multivariate normal.  Now
-let us compute the moments of $Z_i$:
-\begin{align*}
-\E[Z_1] &= d\E[\log b(X_1, Y_1^*) - \log b(X_1)]
-\\&= d \E[\log b(Y_1^*) + u(X_1,Y_1^*) - u(X_1, Y_1^*)^2/2] + O(d^{-\epsilon})
-\\&= -H(Y) - I(X; Y) + O(d^{-\epsilon}).
-\end{align*}
-Meanwhile, we know that
-\[
-\E[Z_*] = \E[\log p(Y^*|X^*)] = H(X) - H(X, Y),
-\]
-hence
-\[
-\E[Z_* - Z_i] = 2 I(X; Y) + O(d^{-\epsilon}) = 2\iota + O(d^{-\epsilon}).
-\]
-We get
-\begin{align*}
-\Var(Z_i - Z_j) &= d\Var(\log(b_d(Y_1^*|X_1^{(i)})) - \log(b_d(Y_1^*|X_1^{(j)})))
-\\&= d\Var(\log(b_d(X_1^{(i)}, Y_1^*)) - \log(b_d(X_1^{(j)}, Y_1^*) - \log b(X_1^{(i)}) + \log b(X_1^{(j)})))
-\\&= d\Var(u_d(X_1^{(i)}, Y_1^*) - u_d(X_1^{(j)}, Y_1^*) - u_d(X_1^{(i)}, Y_1^*)^2/2 + u_d(X_1^{(j)}, Y_1^*)^2/2)
-\\&= d\Var(u_d(X_1^{(i)}, Y_1^*) - u_d(X_1^{(j)}, Y_1^*)) + O(d^{-\epsilon})
-\\&= 2d\Var(u_d(X_1^{(i)}, Y_1^*)) + O(d^{-\epsilon}) = 4\iota+ O(d^{-\epsilon}).
-\end{align*}
-
-Looking ahead to the application of the Lemma, we can already compute
-\[
-\mu = \lim_{d \to \infty} \frac{\E[Z_* - Z_i]}{\sqrt{\frac{1}{2} \Var(Z_i - Z_j)}} = \sqrt{2\iota}.
-\]
-
-It remains to compute
-\begin{align*}
-\Cov(Z_* - Z_i, Z_* - Z_j) &= d\Cov(u_d(X_1^*, Y_1^*) - u_d(X_1^{(i)}, Y_1^*), 
-u_d(X_1^*, Y_1^*) - u_d(X_1^{(j)}, Y_1^*)) + O(d^{-\epsilon})
-\\&= d\Var(u_d(X_1^*, Y_1^*)) = 2\iota + O(d^{-1-\epsilon})
-\end{align*}
-
-We conclude that
-\[
-\nu^2 = \lim_{d \to \infty} \frac{\Cov(Z_* - Z_i, Z_* - Z_j)}{\frac{1}{2}\Var(Z-i - Z_j)} = \frac{2\iota}{2\iota} = 1.
-\]
-
-Hence, the desired result follows from the asymptotic normality of
-$(Z_*, Z_1,\hdots, Z_{K-1})$ and Lemma. $\Box$
+[ADD PROOF OF LEMMA HERE]
 
 \end{document}
 
