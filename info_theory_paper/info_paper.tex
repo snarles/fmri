@@ -277,9 +277,9 @@ In the following section we investigate the relationship between $e_{ABE}$ and t
 \section{Asymptotic Theory}
 
 Our goal in this section is to establish a relationship between the mutual information $I(X; Y)$ and the $k$-class average Bayes error, $e_{ABE}$.
-In short, we will show that for some function $\pi$,
+In short, we will show that for some function $\pi_k$ (which depends on $k$), 
 \[
-e_{ABE} \approx \pi(\sqrt{2 I(X; Y)})
+e_{ABE} \approx \pi_k(\sqrt{2 I(X; Y)})
 \]
 and that this approximation becomes accurate under a limit where $I(X; Y)$ is small relative to the dimensionality of $X$,
 and under the condition that the components of $X$ are approximately independent.  Formal conditions are given in the proof statement.
@@ -345,9 +345,32 @@ The key manipulation we employ is to approximate the logarithmic term by the Tay
 The approximation is accurate if $I(X; Y)$ is small--or rather, small relative to the dimensionality within the asymptotic sequence.
 We state the theorem for the regime where $I(X; Y)$ is fixed, while the dimensionality of $X$ increases.
 
-\subsection{Formal statement of theorem}
+The function $\pi_k$ is given by
+\[
+\pi_k(c) = 1 - \int_{\mathbb{R}} \phi(z - c) (1 - \Phi(z))^{k-1} dz.
+\]
+Figure \ref{fig:pi} displays the plot of $\pi_k$ for several values of $k$.
+For all values of $k$, $\pi_k(\mu)$ is monotonically decreasing in $\mu$, and tends to zero as $\mu \to \infty$.
+This should not be surprising, because if $I(X; Y)$ is large, then the average Bayes error should be small.
+Another fact, which can be verified through a simple calculation, is that 
+\[
+\pi_k(0) = 1 - \frac{1}{k}.
+\]
+This should also not be surprising, since if $I(X; Y) = 0$, then it should not be possible to
+obtain a classification rule which is better than guessing at random, which is only correct with probability $1/k$.
+\begin{figure}
+\centering
+\includegraphics[scale = 0.5, clip=true, trim=0 0.2in 0 0.5in]{../info_theory_sims/illus_piK.pdf}
+\caption{The function $pi_k(\mu)$, for $k = \{2, 9, 99, 999\}$ (left to right) \label{fig:pi}}
+\end{figure}
+
+
+\subsection{Technical section}
 
 We formally state the assumptions and theorem in this section.  The less technically inclined reader may skip the section in order to continue to the proposed methodology for estimating mutual information, and results. [Note: slightly different notation in this section: we will make the notation consistent with the rest of the paper before submission.]
+
+The asymptotic regime we consider is one where the dimension of $X$ goes to infinity.
+This means that we have to consider a sequence of joint distributions $(X^{[d]}, Y^{[d]})$ indexed by the dimension $d$.
 
 Fix integer $K \geq 2$.  Let $p^{[d]}(x,y)$ be a sequence of
 probability density functions, where $x$ is of dimension $p^{[d]}$ and
@@ -368,7 +391,7 @@ I(X; Y) = \int p(x, y) \log \frac{p(x, y)}{p(x)p(y)} dx dy.
 \]
 Furthermore, define the $K$-class average Bayes error as
 \[
-\text{ABE}_K \Pr[p(Y^{(0)}|X^{(0)}) < \max_{i = 1}^{K-1} p(Y^{(0)}|X^{(i)})].
+\text{ABE}_K = \Pr[p(Y^{(0)}|X^{(0)}) < \max_{i = 1}^{K-1} p(Y^{(0)}|X^{(i)})].
 \]
 Define
 \[
@@ -376,11 +399,61 @@ u^{[d]}(x, y) = \log p^{[d]}(x, y) - \log p^{[d]}(x) - \log p^{[d]}(y),
 \]
 and define
 \[
-\ell_{ij}^{[d]} = \log p(y^{(i)}|x^{(j)})
+\ell_{ij}^{[d]} = \log p(y^{(i)}|x^{(j)}).
 \]
 
+We will need the following lemma:
 
-\textbf{Theorem.} Let $p^{[d]}(x, y)$ be a sequence of joint densities
+\textbf{Lemma 1. }
+\emph{
+Suppose $(Z_*, Z_1, \hdots, Z_{K-1})$ are jointly multivariate normal, with 
+$\E[Z_* - Z_1]= \alpha$, 
+$\Var(Z_*) = \beta$, 
+$\Cov(Z_*, Z_i) = \gamma$, 
+$\Var(Z_i)= \delta$, and $\Cov(Z_i, Z_j) = \epsilon$ for all $i, j = 1, \hdots,
+K-1$, such that $\beta + \epsilon - 2\gamma > 0$.  Then, letting
+\[
+\mu = \frac{\E[Z_* - Z_i]}{\sqrt{\frac{1}{2}\Var(Z_i - Z_j)}} = \frac{\alpha}{\sqrt{\delta - \epsilon}},
+\]
+\[
+\nu^2 = \frac{\Cov(Z_* -Z_i, Z_* - Z_j)}{\frac{1}{2}\Var(Z_i - Z_j)} = \frac{\beta + \epsilon - 2\gamma}{\delta - \epsilon},
+\]
+we have
+\begin{align*}
+\Pr[Z_* < \max_{i=1}^{K-1} Z_i] &= \Pr[W < M_{K-1}]
+\\&= 1 - \int -\frac{1}{\sqrt{2\pi\nu^2}} e^{-\frac{(w-\mu)^2}{2\nu^2}} (1-\Phi(w))^{K-1} dw,
+\end{align*}
+where $W \sim N(\mu, \nu^2)$ and $M_{K-1}$ is the maximum of $K-1$
+independent standard normal variates, which are independent of $W$.
+}
+
+\textbf{Proof.}
+We can construct independent normal variates $G_0$, $G_1,\hdots, G_{K-1}$
+such that
+\[
+G_0 \sim N(0, \beta + \epsilon - 2 \gamma)
+\]
+\[
+G_i \sim N(0, \delta - \epsilon)
+\]
+such that
+\[
+Z_* - Z_i = \alpha + G_0 + G_i.
+\]
+Hence
+\begin{align*}
+\Pr[Z_* < \max_{i=1}^{K-1} Z_i] &= \Pr[\min_i Z_* - Z_i < 0].
+\\&= \Pr[\min_{i=1}^{K-1} G_0 + G_i + \alpha < 0]
+\\&= \Pr[\min_{i=1}^{K-1} G_i < -\alpha - G_0]
+\\&= \Pr[\min_{i=1}^{K-1} \frac{G_i}{\sqrt{\delta - \epsilon}} < -\frac{\alpha - G_0}{\sqrt{\delta - \epsilon}}].
+\end{align*}
+Since $\frac{G_i}{\sqrt{\delta - \epsilon}}$ are iid standard normal variates, and since
+$-\frac{\alpha - G_0}{\sqrt{\delta - \epsilon}} \sim N(\mu,\nu^2)$ for $\mu$ and $\nu^2$ given in the statement of the Lemma, the proof is completed via a straightforward computation.  $\Box$
+
+
+We now give the theorem and its proof.
+
+\textbf{Theorem 1.} Let $p^{[d]}(x, y)$ be a sequence of joint densities
 for $d = 1,2,\hdots$ as given above.  Further assume that
 \begin{itemize}
 \item[A1.] $\lim_{d \to \infty} I(X^{[d]}; Y^{[d]}) = \iota < \infty.$
@@ -499,31 +572,102 @@ and similarly
 \end{align*}
 This concludes the proof. $\Box$.
 
-\textbf{Lemma. }
-\emph{
-Suppose $(Z_*, Z_1, \hdots, Z_{K-1})$ are jointly multivariate normal, with 
-$\E[Z_* - Z_1]= \alpha$, 
-$\Var(Z_*) = \beta$, 
-$\Cov(Z_*, Z_i) = \gamma$, 
-$\Var(Z_i)= \delta$, and $\Cov(Z_i, Z_j) = \epsilon$ for all $i, j = 1, \hdots,
-K-1$.  Then, letting
+Assumptions A1-A4 are satisfied in a variety of natural models.
+One example is a multivariate Gaussian model where
 \[
-\mu = \frac{\E[Z_* - Z_i]}{\sqrt{\frac{1}{2}\Var(Z_i - Z_j)}} = \frac{\alpha}{\sqrt{\delta - \epsilon}},
+X \sim N(0, \Sigma_d)
 \]
 \[
-\nu^2 = \frac{\Cov(Z_* -Z_i, Z_* - Z_j)}{\frac{1}{2}\Var(Z_i - Z_j)} = \frac{\beta + \epsilon - 2\gamma}{\delta - \epsilon},
+E \sim N(0, \Sigma_e)
 \]
-we have
-\begin{align*}
-\Pr[Z_* < \max_{i=1}^{K-1}] &= \Pr[W < M_{K-1}]
-\\&= 1 - \int -\frac{1}{\sqrt{2\pi\nu^2}} e^{-\frac{(w-\mu)^2}{2\nu^2}} (1-\Phi(w))^{K-1} dw,
-\end{align*}
-where $W \sim N(\mu, \nu^2)$ and $M_{K-1}$ is the maximum of $K-1$
-independent standard normal variates, which are independent of $W$.
-}
+\[
+Y = X + E
+\]
+where $\Sigma_d$ and $\Sigma_e$ are $d \times d$ covariance matrices, and where $X$ and $E$ are independent.  Then, if $d \Sigma_d$ and $\Sigma_e$ have limiting spectra $H$ and $G$ respectively,
+the joint densities $p(x, y)$ for $d = 1,\hdots, $ satisfy assumptions A1 - A4.
 
-\textbf{Proof.}
+We can also construct a family of densities satisfying A1 - A4,
+which we call an \emph{exponential family sequence model} since each joint distribution in the sequence
+is a member of an exponential family.
+A given exponential family sequence model is specified by choice of a base carrier function $b(x, y)$ and base sufficient statistic $t(x, y)$, with the property that carrier function factorizes as
+\[
+b(x, y) = b_x(x) b_y(y)
+\]
+for marginal densities $b_x$ and $b_y$.
+Note that the dimensions of $x$ and $y$ in the base carrier function are arbitrary;
+let $p$ denote the dimension of $x$ and $q$ the dimension of $y$ for the base carrier function.
+Next, one specifies a sequence of scalar parameters $\kappa_1, \kappa_2,\hdots$ such that
+\[
+\lim_{d \to \infty} d \kappa_d = c < \infty.
+\]
+for some constant $c$.
+For the $d$th element of the sequence, $X^{[d]}$ is a $pd$-dimensional vector,
+which can be partitioned into blocks
+\[
+X^{[d]} = (X_1^{[d]},\hdots, X_d^{[d]})
+\]
+where each $X_i^{[d]}$ is $p$-dimensional.  Similarly, $Y^{[d]}$ is partitioned into $Y_i^{[d]}$ for $i = 1,\hdots, d$.
+The density of $(X^{[d]}, Y^{[d]})$ is given by
+\[
+p^{[d]}(x^{[d]}, y^{[d]}) = Z_d^{-1} \left(\prod_{i=1}^d b(x_i^{[d]}, y_i^{[d]}) \right) 
+\exp\left[\kappa_d \sum_{i=1}^d t(x_i^{[d]}, y_i^{[d]}) \right],
+\]
+where $Z_d$ is a normalizing constant.
+Hence $p^{[d]}$ can be recognized as the member of an exponential family with carrier measure
+\[
+\left(\prod_{i=1}^d b(x_i^{[d]}, y_i^{[d]}) \right)
+\]
+and sufficient statistic
+\[
+\sum_{i=1}^d t(x_i^{[d]}, y_i^{[d]}).
+\]
 
+One example of such an exponential family sequence model is a multivariate Gaussian model with limiting spectra $H = \delta_1$ and $G = \delta_1$, but scaled so that the marginal variance of the components of $X$ and $Y$ are equal to one.  This corresponds to a exponential family sequence model with
+\[
+b_x(x) = b_y(x) = \frac{1}{\sqrt{2\pi}} e^{-x^2/2}
+\]
+and
+\[t(x, y) = xy.\]
+
+Another example is a multivariate logistic regression model,
+given by
+\[
+X \sim N(0, I)
+\]
+\[
+Y_i \sim \text{Bernoulli}(e^{\beta X_i}/(1 + e^{\beta X_i}))
+\]
+This corresponds to an exponential family sequence model with
+\[
+b_x(x) = \frac{1}{\sqrt{2\pi}} e^{-x^2/2}
+\]
+\[
+b_y(y) = \frac{1}{2}\text{ for }y = \{0, 1\},
+\]
+and
+\[
+t(x, y) = x\delta_1(y) - x\delta_0(y).
+\]
+The multivariate logistic regression model (and multivariate Poisson regression model)
+are especially suitable for modeling neural spike count data;
+we simulate data from such a multivariate logistic regression model in section X.
+
+\subsection{Inference for mutual information}
+
+In the previous section, we showed that
+\[
+\lim e_{ABE} = \pi_k(\sqrt{2 I(X; Y)}),
+\]
+where $e_{ABE}$ is the $k$-class average Bayes error,
+in an asymptotic regime where $I(X; Y)$ is fixed while the dimensionality of $X$ increases.
+Since $pi_k$ is invertible for all $k = 2, \hdots$,
+a converse relationship
+\[
+\lim I(X; Y) = \frac{1}{2}(\pi_K^{-1}(e_{ABE}))^2
+\]
+also holds in the same regime.  We formally state the result as follows.
+
+\textbf{Corollary.}
 
 
 \end{document}
