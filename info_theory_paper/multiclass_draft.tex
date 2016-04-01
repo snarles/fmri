@@ -133,7 +133,63 @@ Hence the average Bayes accuracy $p_k$ is defined as
 p_k = E[P_k]
 \]
 where the expectation is taken over the sampling distribution of $x_1,\hdots, x_k$.
+With these definitions, we can finally state the specific questions to be addressed in the paper.
 
+\begin{itemize}
+\item Suppose that for randomly drawn $x_1,\hdots, x_k$, 
+one is given knowledge of $p(y|x_1), \hdots, p(y|x_k)$.
+Can one estimate $p_N$ for some $N > k$?
+\item Suppose one is given $p_2,\hdots, p_k$. Can one estimate $p_N$?
+\end{itemize}
+
+The average Bayes accuracy is the complement of average Bayes error,
+ introduced in Zheng and Benjamini 2016.
+The paper showed that in a particular asymptotic regime, one obtained the following relationship between
+the average Bayes error and the mutual information $I(X;Y)$.
+\[
+1 - p_k \approx \pi_k(\sqrt{2I(X;Y)})
+\]
+where
+\[
+\pi_k(c) = \int \phi(x - c) \Phi(x)^{k-1} dx.
+\]
+In principle, this result allows one to extrapolate from $p_k$ to $p_N$ for any $2 \leq k \leq N$ by the following means: first, obtain $\hat{I}(X; Y) = \frac{1}{2}(\pi_k^{-1}(1-p_k))^2$,
+secondly, estimate $p_N = \pi_N(\sqrt{2 \hat{I}(X; Y)})$.
+While this method of extrapolation is consistent in the limit of the high-dimensional regime
+considered in the ZB 2016, it may be quite inaccurate in the finite dimensional cases.
+
+\section{Results}
+
+Our key insight is as follows: the average Bayes accuracy $p_k$ is the $k-1$th moment of a random variable $P$ which takes values in $[0,1]$.
+Since the moments of $P$ are completely determined by the distribution,
+the problem of predicting $p_N$ can be reduced to the problem of estimating the distribution of $P$
+in a suitable way (such that the moments can be recovered consistently.)
+
+The random variable $P$ is constructed as follows:
+\begin{itemize}
+\item Draw $X \sim p(x)$.
+\item Draw $Y \sim p(y|x)$.
+\item Let $P = \int I(p(y|X) > p(y|x)) p(x) dx.$ 
+\end{itemize}
+
+The fact that the average Bayes accuracies correspond to moments of $P$ is stated in the following theorem.
+
+\noindent\textbf{Theorem.} \emph{
+Let $P$ be defined as above.  Then $p_k = \E[P^{k-1}]$.
+}
+
+\noindent\textbf{Proof.}
+Note that by using conditioning and conditional independence, $p_k$ can be written
+\begin{align*}
+p_k &= \E\left[ \frac{1}{k}\sum_{i=1}^k  \Pr[p(Y|X_i) > \max_{j\neq i} p(Y|X_j)] \right]
+\\&= \E\left[ \Pr[p(Y|X_1) > \max_{j\neq 1} p(Y|X_j)] \right]
+\\&= \E[\Pr[p(Y|X_1) > \max_{j\neq 1} p(Y|X_j)|X_1, Y]]
+\\&= \E[\Pr[\cap_{j > 1} p(Y|X_1) > p(Y|X_j)|X_1, Y]]
+\\&= \E[\prod_{j > 1}\Pr[p(Y|X_1) > p(Y|X_j)|X_1, Y]]
+\\&= \E[\Pr[p(Y|X_1) > p(Y|X_2)|X_1, Y]^{k-1}]
+\end{align*}
+But observe that the conditional probability $\Pr[p(Y|X_1) > p(Y|X_2)|X_1, Y]$, viewed as a random variable,
+has the same distribution as $P$. $\Box$.
 
 \end{document}
 
