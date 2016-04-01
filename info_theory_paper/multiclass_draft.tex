@@ -1,0 +1,78 @@
+\title{Extrapolating Multi-class classification curves}
+\author{Charles Zheng and Yuval Benjamini}
+\date{\today}
+
+\documentclass[12pt]{article} 
+
+% packages with special commands
+\usepackage{amssymb, amsmath}
+\usepackage{epsfig}
+\usepackage{array}
+\usepackage{ifthen}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{csquotes}
+\definecolor{grey}{rgb}{0.5,0.5,0.5}
+
+\begin{document}
+\maketitle
+
+\newcommand{\tr}{\text{tr}}
+\newcommand{\E}{\textbf{E}}
+\newcommand{\diag}{\text{diag}}
+\newcommand{\argmax}{\text{argmax}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\argmin}{\text{argmin}}
+\newcommand{\Vol}{\text{Vol}}
+\newcommand{\comm}[1]{}
+
+\section{Introduction}
+
+Object recognition, face recognition (or more generally person recognition) and language are a few of
+the cognitive building blocks which are fundamental to human cognition, and which can be understood as 
+examples of generalized classification tasks.  Fundamentally, humans learn to recognize objects,
+persons, or linguistic entities and learn equivalence relationships between perceived objects, words, 
+or individuals.  A child will encounter their neighbor's dog for the first time, and at a later date,
+encounter the same dog in a different time or place.  But they will recognize that the dog is the same dog
+they met before.
+
+Machine classification can be employed to mimic this power of recognition.
+A robot equipped with a camera can algorithmically segment its input image into objects,
+and to learn to recognize unique objects and people which regularly appear in its environment.
+A general approach to implement such a recognition ability starts by employing some
+parametric featurization of the object to be identified.  For example, for the task of
+face recognition, one might define features such as the proportions between the eyes and the relative position
+and size of the nose.  Such features can be estimated from the video input,
+and while the estimated features might vary slightly depending on the configuration of the object
+(e.g. posture of the body, emotional expression of the face, opening/closing of the mouth)
+and while some features might be unobserved because of occlusion,
+the regularity of the the identified features can still be used as a basis for recognition.
+In the simplest case, a feature vector can be extracted from a given object from the input data,
+and this feature vector can be evaluated against a library of learned models
+for the distribution of the feature vector for various objects.
+In other words, given a method for extracting objects from input and producing feature vectors
+for those objects, one can employ multi-class classification to identify the object corresponding to the 
+feature vector.  In our discussion thus far, we neglected to mention how to learn
+object categories for novel objects, but this falls outside of the scope of the paper.
+
+A limitation to such recognition systems, whether they be natural or artificial,
+is that the performance of the system (in terms of correct classification)
+can degrade if there are too many categories.
+A face recognition algorithm can have very high success rate if it only needs
+to distinguish between 100 different faces, but its identifications may be less reliable
+when it needs to distinguish between 10000 different faces.
+In humans, it is known that repetition learning is hampered when there are
+too many similar concepts to be learned.
+
+
+
+\section{Definitions}
+
+
+\end{document}
+
+
+
