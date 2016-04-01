@@ -261,12 +261,53 @@ Let $Z$ be a normal $N(\sqrt{2\iota}, 1)$ variate,
 and define $P = \bar{\Phi}(Z)$.
 Then it is clear that
 \[
-\E[P^{k-1}] = \int_{\mathbb{R}} \phi(z - \sqrt{2\iota}) \bar{\Phi}(z)^{k-1} dz = \E[P^{k-1}]
+\lim_{d \to \infty} \E[P^{[d]k-1}] = \int_{\mathbb{R}} \phi(z - \sqrt{2\iota}) \bar{\Phi}(z)^{k-1} dz = \E[P^{k-1}]
 \]
 for all $k$.
 Since both $P^{[d]}$ and $P$ lie in the compact interval $[0, 1]$,
 the fact that the moments of $P^{[d]}$ converge to the moments of $P$ implies that the distribution of $P^[d]$
 converges to the distribution of $P$. $\Box$.
+
+The corollary identifies a parametric family of distributions $\mathcal{P} = \{P_\iota\}$ indexed by
+the mutual information $\iota$.
+For given $\iota$, the density of $P_\iota$ if given by
+\[
+g_\iota(u) = \frac{\phi(\bar{\Phi}^{-1}(u) - \sqrt{2\iota})}{\phi(\bar{\Phi}^{-1}(u))}.
+\]
+Note the special case $\iota = 0$, which yields $P_0 = U$, the uniform distribution on $[0,1]$.
+This implies that in the special case that $X$ is independent of $Y$,
+and hence optimal classification does no better than random guessing, $p_k = \frac{1}{k}$,
+which indeed matches the moments of the uniform distribution
+\[
+\E[U^{k-1}] = \int_0^1 u^{k-1} du = \frac{1}{k}.
+\]
+
+We see that for any given finite-dimensional joint distribution $p(x, y)$, if the distribution of $P$ lies close
+to a member of the parametric family $\mathcal{P}$, the information-theoretic methodology for estimating
+$p_N$ from $p_k$ will be accurate.
+
+[This allows us to get convergence rates ... to be continued.]
+
+Conversely, what happens if the distribution $P$ is not close to any member of $\mathcal{P}$?
+Will the information-theoretic method give an overestimate or underestimate of $p_N$?
+To address this question, consider the example of a \emph{well-separated mixture}.
+Suppose $p(x,y)$ is a mixture of joint distributions $q_1(x,y)$ and $q_2(x,y)$ with mixing fraction $\alpha$,
+\[
+p(x, y) = \alpha q_1(x, y) + (1-\alpha) q_2(x, y).
+\]
+Let $\iota_i$ be the mutual information of $X$ and $Y$ when $X, Y \sim q_i$
+for $i = 1,2$.
+The well-separated condition is that $q_1$ and $q_2$ have disjoint support marginally, that is
+\[
+\int_x \left| \int_y q_1(x, y) dy - \int_y q_2(x, y) dy\right| dx = 2;
+\]
+\[
+\int_y \left| \int_x q_1(x, y) dx - \int_x q_2(x, y) dx\right| dy = 2.
+\]
+Then it follows that $P$ has the density
+\[
+g(u) = 2\alpha(1-\alpha) + \alpha^2 g_{\iota_1}(u) + (1-\alpha)^2 g_{\iota_2}(u).
+\]
 
 \end{document}
 
