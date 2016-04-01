@@ -158,7 +158,7 @@ secondly, estimate $p_N = \pi_N(\sqrt{2 \hat{I}(X; Y)})$.
 While this method of extrapolation is consistent in the limit of the high-dimensional regime
 considered in the ZB 2016, it may be quite inaccurate in the finite dimensional cases.
 
-\section{Results}
+\section{Moment equivalence}
 
 Our key insight is as follows: the average Bayes accuracy $p_k$ is the $k-1$th moment of a random variable $P$ which takes values in $[0,1]$.
 Since the moments of $P$ are completely determined by the distribution,
@@ -174,8 +174,12 @@ The random variable $P$ is constructed as follows:
 
 The fact that the average Bayes accuracies correspond to moments of $P$ is stated in the following theorem.
 
-\noindent\textbf{Theorem.} \emph{
-Let $P$ be defined as above.  Then $p_k = \E[P^{k-1}]$.
+\noindent\textbf{Theorem 1.} \emph{
+Let $P$ be defined as the random variable
+\[\Pr[p(Y|X) > p(Y|X')|X, Y]\]
+for $X, Y$ drawn from $p(x, y) = p(x) p(y|x)$,
+and $X'$ drawn independently from $p(x)$.
+Then $p_k = \E[P^{k-1}]$.
 }
 
 \noindent\textbf{Proof.}
@@ -190,6 +194,79 @@ p_k &= \E\left[ \frac{1}{k}\sum_{i=1}^k  \Pr[p(Y|X_i) > \max_{j\neq i} p(Y|X_j)]
 \end{align*}
 But observe that the conditional probability $\Pr[p(Y|X_1) > p(Y|X_2)|X_1, Y]$, viewed as a random variable,
 has the same distribution as $P$. $\Box$.
+
+Before discussing a general method to estimate $P$, we gain some insight about
+the `information-based methodology' of ZB 2016 and possible shortcomings by explicitly calculating the distribution of $P$
+in the case when (a) the asymptotic regime considered in ZB 2016 is well-specified and (b)
+when the model of ZB 2016 is violated in a specific case.
+
+\section{Information-based methodology}
+
+We start by restating the results of ZB 2016.
+The asymptotic regime considered is a sequence of joint distributions $p(x,y)$ where the dimensionality of $x$ goes to infinity.  A specific example of a sequence in this regime is one where $X$ is $d$-dimensional multivariate normal with covariance identity $I_d$, and $Y = X + E$, where $E$ is an independent multivariate normal with covariance $cd I_d$, for some fixed constant $c > 0$.
+
+\textbf{Theorem 2.}\emph{
+Let $p^{[d]}(x, y)$ be a sequence of joint densities
+for $d = 1,2,\hdots$ as given above.  Further assume that
+\begin{itemize}
+\item[A1.] $\lim_{d \to \infty} I(X^{[d]}; Y^{[d]}) = \iota < \infty.$
+\item[A2.] There exists a sequence of scaling constants $a_{ij}^{[d]}$
+and $b_{ij}^{[d]}$ such that the random vector $(a_{ij}\ell_{ij}^{[d]} +
+b_{ij}^{[d]})_{i, j = 1,\hdots, K}$ converges in distribution to a
+multivariate normal distribution.
+\item[A3.] There exists a sequence of scaling constants $a^{[d]}$, $b^{[d]}$ such that
+\[
+a^{[d]}u(X^{(1)}, Y^{(2)}) + b^{[d]}
+\]
+converges in distribution to a univariate normal distribution.
+\item[A4.] For all $i \neq k$,
+\[\lim_{d \to \infty}\Cov[u(X^{(i)}, Y^{(j)}), u(X^{(k)}, Y^{(j)})] = 0.\]
+\end{itemize}
+Then for $p_K$ as defined above, we have
+\[
+\lim_{d \to \infty} 1-p_{K} = \pi_K(\sqrt{2 \iota})
+\]
+where
+\[
+\pi_K(c) = 1 - \int_{\mathbb{R}} \phi(z - c) (1 - \Phi(z))^{K-1} dz
+\]
+where $\phi$ and $\Phi$ are the standard normal density function and
+cumulative distribution function, respectively.
+}
+
+By combining Theorems 1 and 2, we immediately compute the limiting distribution of $P$
+in the given regime
+\noindent\textbf{Corollary.}\emph{Let $p^{[d]}(x, y)$ be a sequence of joint densities satisfying A1-A4 as stated in
+Theorem 2.
+For any $d$, let $P^{[d]}$ as defined in Theorem 1.
+Then $P^{[d]}$ converges in distribution to $P$, where the cdf of $P$ is given by
+\[
+\Pr[P < t] = \int_0^t \frac{\phi(\bar{\Phi}^{-1}(u) - \sqrt{2\iota})}{\phi(\bar{\Phi}^{-1}(u))} du.
+\]
+where $\bar{\Phi}^{-1}$ is the inverse of
+\[
+\bar{\Phi}(x) = 1 - \Phi(x).
+\]
+}
+
+\noindent\textbf{Proof.} By Theorem 1, the moments of $P^{[d]}$ are given by
+\[
+\E[P^{[d]k-1}] = p_k^{[d]}
+\]
+and meanwhile, Theorem 2 implies that
+\[
+\lim_{d \to \infty} p_k^{[d]} = \int_{\mathbb{R}} \phi(z - \sqrt{2\iota}) \bar{\Phi}(z)^{k-1} dz.
+\]
+Let $Z$ be a normal $N(\sqrt{2\iota}, 1)$ variate,
+and define $P = \bar{\Phi}(Z)$.
+Then it is clear that
+\[
+\E[P^{k-1}] = \int_{\mathbb{R}} \phi(z - \sqrt{2\iota}) \bar{\Phi}(z)^{k-1} dz = \E[P^{k-1}]
+\]
+for all $k$.
+Since both $P^{[d]}$ and $P$ lie in the compact interval $[0, 1]$,
+the fact that the moments of $P^{[d]}$ converge to the moments of $P$ implies that the distribution of $P^[d]$
+converges to the distribution of $P$. $\Box$.
 
 \end{document}
 
