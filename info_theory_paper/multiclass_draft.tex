@@ -67,9 +67,72 @@ when it needs to distinguish between 10000 different faces.
 In humans, it is known that repetition learning is hampered when there are
 too many similar concepts to be learned.
 
+The tradeoff between performance and the number of categories can be summarized
+by a \emph{classification curve} while plots the accuracy versus the number of categories.
+An interesting question is whether it is possible to \emph{extrapolate} a classification curve:
+i.e. given the performance with up to $N$ classes, can one predict the performance
+when the number of classes is increased to $2N$?
 
+In the most general setting, only fairly trivial worst-case guarantees are possible.
+Suppose a system has an accuracy of $p$ given the $N$-class problem,
+i.e., given a random feature vector, the system correctly identifies the class with probability $p$.
+Then, what can we say about the performance when $N$ additional classes are added?
+In a very bad (not necessarily the `worst') case, the $N$ additional classes are identical copies
+or the original $N$ classes, except we still consider it an error if a feature vector from one of the new classes
+is identified as coming from the corresponding class in the original set, or vice versa.
+In that case, a reasonable system would be the original system, but adding a coin flip to choose
+between the original classes or the copied new classes, and the resulting accuracy would
+be reduced from $p$ to $p/2$ due to the coin flip.  In general, we can state that when going from $N$
+classes to $kN$ classes, the Bayes accuracy might be as low as $p/k$.
 
-\section{Definitions}
+We can obtain more meaningful bounds if we are willing to assume more structure to the problem.
+In many applications, such as face recognition or word recognition, a reasonable model
+is to assume that there exists an infinite population of classes, and that given a classification problem
+with $N$ classes, that those $N$ classes were drawn i.i.d. from this infinite population.
+This is `random classification model' is the setting we consider in this paper.
+
+\section{Setup}
+
+Let $\mathcal{X}$ be a space of objects to be recognized, and let the objects be uniquely parameterized
+by a real vector $x \in \mathcal{X}$.  
+Let $y \in \mathcal{Y}$ be a possible feature vector for an object in $\mathcal{X}$.
+Let $p(x)$ be a distribution of random objects, and let a conditional feature vector distribution 
+$p(y|x)$ be defined for every $x \in \mathcal{X}$.
+
+The $k$-class random classification task is defined as follows.
+First, the $k$ classes are drawn iid from $\mathcal{X}$, represented by vectors $x_1,\hdots, x_k$.
+One obtains training data consisting of independent 
+$(x, y)$ pairs, where $x$ is equal to one of $x_1,\hdots, x_k$
+and $y$ is drawn from $p(y|x)$.
+Based on the training data, one constructs a classification rule $f$ which maps a feature vector
+to one of $\{x_1,\hdots, x_k\}$.
+The accuracy of the classification rule is
+\[
+\Pr[f(y) = x|x \sim \text{Unif}\{x_1,\hdots, x_k\}].
+\]
+The accuracy depends on what model is used to learn the classification rule.
+Hence, discussing the properties of the accuracy for finite sample sizes and specific
+classification rules is an immense task, falling outside of the scope of the paper.
+However, it is vastly easier to work with the accuracy of the \emph{Bayes rule},
+which is the optimal classification rule.
+This is because the Bayes rule $f^*$ can be written explicitly as
+\[
+f^*(y) = \argmax_{x_1,\hdots, x_k} p(y|x).
+\]
+Since there exist consistent estimators of the Bayes rule (under mild regularity conditions,)
+the theory we develop for the accuracy of the Bayes rule can be viewed as a large-sample approximation
+of the original problem.
+Henceforth we work with the accuracy of the Bayes rule for the $k$-class classification problem, $P_k$,
+where
+\[
+P_k = \Pr[\argmax_{x_1,\hdots, x_k} p(y|x) = x | x \sim \text{Unif}\{x_1,\hdots, x_k\}].
+\]
+Notice that $P_k$ is a random variable, since it varies depending on the sampling of $x_1,\hdots, x_k$.
+Hence the average Bayes accuracy $p_k$ is defined as
+\[
+p_k = E[P_k]
+\]
+where the expectation is taken over the sampling distribution of $x_1,\hdots, x_k$.
 
 
 \end{document}
