@@ -300,9 +300,55 @@ The well-separated condition is that $q_1$ and $q_2$ have disjoint support margi
 \[
 \int_y \left| \int_x q_1(x, y) dx - \int_x q_2(x, y) dx\right| dy = 2.
 \]
-Then it follows that $P$ has the density
+An interesting consequence of the well-separated condition is that the mutual information of the mixture is the mixture of the individual values of the  mutual information, as stated in the following lemma.
+
+\noindent\textbf{Lemma.}\emph{
+Suppose $p(x, y)$, is a well-separated mixture of $q_1(x, y)$ and $q_2(x, y)$,
+\[
+p(x, y) = \alpha q_1(x, y) + (1-\alpha) q_2(x, y).
+\]
+Then, letting $I_i$ denote the mutual information
+\[
+I_i = \int q_i(x, y) \log \frac{q_1(x, y)}{q_i(x) q_i(y)} dx dy
+\]
+and
+\[
+I = \int p(x, y) \log \frac{p(x, y)}{p(x) p(y)} dx dy
+\]
+we have
+\[
+I = \alpha I_1 + (1-\alpha) I_2.
+\]
+}
+
+\noindent\textbf{Proof.}
+The well-separated condition implies that we can find sets $S_1$ and $S_2$ such that
+\[
+\int_{S_i} q_j(x, y) dx dy = \delta_{ij}.
+\]
+\[
+\int_{S_i} q_j(x) dx dy = \delta_{ij}.
+\]
+\[
+\int_{S_i} q_j(y) dx dy = \delta_{ij}.
+\]
+Then we write
+\begin{align*}
+I &= \int p(x, y) \frac{p(x, y)}{p(x)p(y)}dx dy
+\\&= \int_{S_1 \cup S_2} (\alpha q_1(x, y) + (1-\alpha) q_2(x, y))\frac{p(x, y)}{p(x)p(y)}dx dy
+\\&= \alpha \int_{S_1}q_1(x, y) \frac{p(x, y)}{p(x)p(y)}dx dy + (1-\alpha) \int_{S_2}q_2(x, y) \frac{p(x, y)}{p(x)p(y)}dx dy
+\\&= \alpha \int_{S_1}q_1(x, y) \frac{q_1(x, y)}{q_1(x)q_1(y)}dx dy + (1-\alpha) \int_{S_2}q_2(x, y) \frac{q_2(x, y)}{q_2(x)q_2(y)}dx dy\\&= \alpha I_1 + (1-\alpha) I_2.
+\end{align*}
+$\Box$.
+
+What about the average Bayes accuracy?
+It follows that $P$ has the density
 \[
 g(u) = 2\alpha(1-\alpha)\delta_1(u) + \alpha^2 g_{\iota_1}(u) + (1-\alpha)^2 g_{\iota_2}(u).
+\]
+Therefore, if we let $p_k^i$ denote the average $k$-class Bayes accuracy of $q_i(x, y)$ for $i = 1,2$, we get
+\[
+p_k = 2\alpha(1-\alpha) + \alpha^2 p_k^1 + (1-\alpha)^2 p_k^2.
 \]
 
 \end{document}
