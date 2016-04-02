@@ -347,7 +347,7 @@ We state the theorem for the regime where $I(X; Y)$ is fixed, while the dimensio
 
 The function $\pi_k$ is given by
 \[
-\pi_k(c) = 1 - \int_{\mathbb{R}} \phi(z - c) (1 - \Phi(z))^{k-1} dz.
+\pi_k(c) = 1 - \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
 \]
 Figure \ref{fig:pi} displays the plot of $\pi_k$ for several values of $k$.
 For all values of $k$, $\pi_k(\mu)$ is monotonically decreasing in $\mu$, and tends to zero as $\mu \to \infty$.
@@ -421,7 +421,7 @@ K-1$, such that $\beta + \epsilon - 2\gamma > 0$.  Then, letting
 we have
 \begin{align*}
 \Pr[Z_* < \max_{i=1}^{K-1} Z_i] &= \Pr[W < M_{K-1}]
-\\&= 1 - \int -\frac{1}{\sqrt{2\pi\nu^2}} e^{-\frac{(w-\mu)^2}{2\nu^2}} (1-\Phi(w))^{K-1} dw,
+\\&= 1 - \int \frac{1}{\sqrt{2\pi\nu^2}} e^{-\frac{(w-\mu)^2}{2\nu^2}} \Phi(w)^{K-1} dw,
 \end{align*}
 where $W \sim N(\mu, \nu^2)$ and $M_{K-1}$ is the maximum of $K-1$
 independent standard normal variates, which are independent of $W$.
@@ -475,7 +475,7 @@ Then for $\text{ABE}_K$ as defined above, we have
 \]
 where
 \[
-\pi_K(c) = 1 - \int_{\mathbb{R}} \phi(z - c) (1 - \Phi(z))^{K-1} dz
+\pi_K(c) = 1 - \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{K-1} dz
 \]
 where $\phi$ and $\Phi$ are the standard normal density function and
 cumulative distribution function, respectively.

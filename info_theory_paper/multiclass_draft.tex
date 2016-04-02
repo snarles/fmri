@@ -228,7 +228,7 @@ Then for $p_K$ as defined above, we have
 \]
 where
 \[
-\pi_K(c) = 1 - \int_{\mathbb{R}} \phi(z - c) (1 - \Phi(z))^{K-1} dz
+\pi_K(c) = 1 - \int_{\mathbb{R}} \phi(z - c) \Phi(z)^{K-1} dz
 \]
 where $\phi$ and $\Phi$ are the standard normal density function and
 cumulative distribution function, respectively.
@@ -241,11 +241,7 @@ Theorem 2.
 For any $d$, let $P^{[d]}$ as defined in Theorem 1.
 Then $P^{[d]}$ converges in distribution to $P$, where the cdf of $P$ is given by
 \[
-\Pr[P < t] = \int_0^t \frac{\phi(\bar{\Phi}^{-1}(u) - \sqrt{2\iota})}{\phi(\bar{\Phi}^{-1}(u))} du.
-\]
-where $\bar{\Phi}^{-1}$ is the inverse of
-\[
-\bar{\Phi}(x) = 1 - \Phi(x).
+\Pr[P < t] = \int_0^t \frac{\phi(\Phi^{-1}(u) - \sqrt{2\iota})}{\phi(\Phi^{-1}(u))} du.
 \]
 }
 
@@ -255,13 +251,13 @@ where $\bar{\Phi}^{-1}$ is the inverse of
 \]
 and meanwhile, Theorem 2 implies that
 \[
-\lim_{d \to \infty} p_k^{[d]} = \int_{\mathbb{R}} \phi(z - \sqrt{2\iota}) \bar{\Phi}(z)^{k-1} dz.
+\lim_{d \to \infty} p_k^{[d]} = \int_{\mathbb{R}} \phi(z - \sqrt{2\iota}) \Phi(z)^{k-1} dz.
 \]
 Let $Z$ be a normal $N(\sqrt{2\iota}, 1)$ variate,
 and define $P = \bar{\Phi}(Z)$.
 Then it is clear that
 \[
-\lim_{d \to \infty} \E[P^{[d]k-1}] = \int_{\mathbb{R}} \phi(z - \sqrt{2\iota}) \bar{\Phi}(z)^{k-1} dz = \E[P^{k-1}]
+\lim_{d \to \infty} \E[P^{[d]k-1}] = \int_{\mathbb{R}} \phi(z - \sqrt{2\iota}) \Phi(z)^{k-1} dz = \E[P^{k-1}]
 \]
 for all $k$.
 Since both $P^{[d]}$ and $P$ lie in the compact interval $[0, 1]$,
@@ -272,7 +268,7 @@ The corollary identifies a parametric family of distributions $\mathcal{P} = \{P
 the mutual information $\iota$.
 For given $\iota$, the density of $P_\iota$ if given by
 \[
-g_\iota(u) = \frac{\phi(\bar{\Phi}^{-1}(u) - \sqrt{2\iota})}{\phi(\bar{\Phi}^{-1}(u))}.
+g_\iota(u) = \frac{\phi(\Phi^{-1}(u) - \sqrt{2\iota})}{\phi(\Phi^{-1}(u))}.
 \]
 Note the special case $\iota = 0$, which yields $P_0 = U$, the uniform distribution on $[0,1]$.
 This implies that in the special case that $X$ is independent of $Y$,
