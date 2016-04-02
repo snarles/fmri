@@ -1,7 +1,8 @@
 ms <- c(25, 50, 75, 100, 125, 150, 175, 200, 225, 250)
 
 ihatss <- list()
-nvoxs <- c(100, 200, 300, 400, 500, 600)
+##nvoxs <- c(100, 200, 300, 400, 500, 600)
+nvoxs <- c(20, 40, 60, 80, 100)
 
 ##fn <- 'Yuval/ident_bootstraps3_nvox'
 fn <- 'Yuval/replicates/res_nvox'

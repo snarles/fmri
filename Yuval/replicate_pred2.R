@@ -1,5 +1,6 @@
 ####
 ##  Predictions with bootstrap
+##  get `P' distribution
 ####
 
 source("Yuval/ident_setup_minus.R")
@@ -11,10 +12,10 @@ load("Yuval/v1_data.RData")
 standards = apply(fit_feat,2,sd)
 constF = which(standards==0)     
 
-##for (nvox in c(100, 200, 300, 400, 500, 600)) {
-for (nvox in c(20, 40, 60, 80)) {
+for (nvox in c(20, 40, 60, 80, 100)) {
+
 fs <- paste0("Yuval/replicates/pred_rules_boots_", 100:109, ".RData")
-ihats <- matrix(0, length(fs), nm)
+Pemps <- matrix(0, length(fs), 250)
 for (iii in 1:length(fs)) {
   load(fs[iii])
   fit_trainS <- attr(vox_prediction_rules, "train_samp")
@@ -45,16 +46,10 @@ for (iii in 1:length(fs)) {
   ridgeinv = solve(newCondVarS + diag(length(usevox))*3)
   
   scores <- matchResults(testpred, testY, 'MSE',invCov = ridgeinv, rankit = FALSE)
-  ihat <- numeric(nm)
-  for (ind in 1:nm) {
-    m <- ms[ind]
-    (p <- resample_misclassification(-scores, 1:250, m, replace = FALSE))
-    (IH <- Ihat_LI(p, m, 20))
-    ihat[ind] <- IH
-  }
-  ihats[iii, ] <- ihat
+  Pemp <- 1 - sapply(1:250, function(i) sum(scores[i, -i] < scores[i, i])/249)
+  Pemps[iii, ] <- Pemp
 }
-fname <- paste0('Yuval/replicates/res_nvox', nvox, '.rds')
-saveRDS(ihats, file = fname)
+fname <- paste0('Yuval/replicates/Pemp_res_nvox', nvox, '.rds')
+saveRDS(Pemps, file = fname)
 }
 
