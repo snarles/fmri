@@ -11,8 +11,13 @@ load("Yuval/v1_data.RData")
 standards = apply(fit_feat,2,sd)
 constF = which(standards==0)     
 
-##for (nvox in c(100, 200, 300, 400, 500, 600)) {
-for (nvox in c(20, 40, 60, 80)) {
+## random voxel selection
+vox1 = order(SNRv1_corr,decreasing = TRUE)[1:800]
+set.seed(1)
+vox1 <- sample(vox1, 800, FALSE)
+
+for (nvox in c(100, 200, 300, 400, 500, 600)) {
+##for (nvox in c(20, 40, 60, 80)) {
 fs <- paste0("Yuval/replicates/pred_rules_boots_", 100:109, ".RData")
 ihats <- matrix(0, length(fs), nm)
 for (iii in 1:length(fs)) {
@@ -33,7 +38,9 @@ for (iii in 1:length(fs)) {
   
   # choose best nvox voxels
   usevox = order(SNRv1_corr,decreasing = TRUE)[1:nvox]
+  usevox = vox1[1:nvox]
   
+    
   ##trainpred = getPreds(c_trainF,ind_struct=vox_prediction_rules,voxind=usevox)
   testpred = getPreds(c_testF,ind_struct=vox_prediction_rules,voxind=usevox)
   validpred = getPreds(c_validF,ind_struct=vox_prediction_rules,voxind=usevox)
@@ -54,7 +61,7 @@ for (iii in 1:length(fs)) {
   }
   ihats[iii, ] <- ihat
 }
-fname <- paste0('Yuval/replicates/res_nvox', nvox, '.rds')
+fname <- paste0('Yuval/replicates/res_voxseed01_nvox', nvox, '.rds')
 saveRDS(ihats, file = fname)
 }
 
