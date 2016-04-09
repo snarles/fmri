@@ -71,9 +71,12 @@ save(file = sprintf('trainDataReduced%d.rda', max_pyr_level), trainY , sel_train
 
 
 formNewRules = TRUE
-ncores = 2
+ncores = 3
 if(formNewRules){
   require('parallel')
+  # t1 <- proc.time()
+  # vox_prediction_rules_sel = mclapply(1:10, run_glmnet,sel_trainF, trainY, mc.cores = ncores)
+  # proc.time() - t1
   vox_prediction_rules_sel = mclapply(1:1250, run_glmnet, 
                                       sel_trainF, trainY, mc.cores = ncores) 
   save(vox_prediction_rules_sel,
