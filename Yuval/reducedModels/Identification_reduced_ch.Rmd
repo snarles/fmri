@@ -1,0 +1,262 @@
+---
+title: "Identification"
+author: "Yuval Benjamini"
+date: "February 18, 2016"
+output: html_document
+---
+
+## Prepare data
+```{r}
+
+source('Yuval/reducedModels/identification_functions.R')
+
+# Prepare features, voxel responses etc
+load('Yuval/v1_data.RData')
+# fit_feat, val_feat   (features for training and validation data)
+# v1$resp, v1$val      (train, validation responses for v1 voxels )
+# SNRv1_corr           (Explainable variance for 1:1250 v1 voxels)
+# vox_prediction_rules (prediction rules 1:1250 v1 vox fit by glmnet)
+
+# Remove features that have no variance
+standards = apply(fit_feat,2,sd)
+constF = which(standards==0)     
+
+# Choose training set
+
+load('Yuval/fit_trainS.RData') # loading fit_trainS
+
+trainF = fit_feat[fit_trainS,-constF]
+trainY = v1$resp[fit_trainS,]
+testF = fit_feat[-fit_trainS,-constF]
+testY = v1$resp[-fit_trainS,]
+validF = val_feat[,-constF]
+validY = v1$val
+
+c_trainF = scale(trainF,center = TRUE, scale = TRUE)
+feat_mean_vec = attr(c_trainF,'scaled:center')
+feat_scale_vec = attr(c_trainF,'scaled:center')
+c_testF = scale(testF,center = feat_mean_vec, scale = feat_scale_vec)
+c_validF = scale(validF,center = feat_mean_vec, scale = feat_scale_vec)
+```
+
+## Select specific pyramid level
+
+```{r}
+max_pyr_level = 5
+
+# generates the feature attributes vector.
+# Orientation -> featAtt[1,] (1 vertical, 5 horizontal)  
+# Pyramid level -> featAtt[2,]
+# Vertical location -> featAtt[3,]  (vert/horz might be confused)
+# Horizontal location -> featAtt[4,]
+
+featAll = featAtt()
+featNoConst = featAll[,-constF]
+select_feat = which(featNoConst[2,] <= max_pyr_level)
+
+sel_trainF = c_trainF[,select_feat]
+sel_testF = c_testF[,select_feat]
+sel_validF = c_validF[,select_feat]
+validY = v1$val
+
+save(file = sprintf('trainDataReduced%d.rda', max_pyr_level), trainY , sel_trainF)
+
+```
+
+## Fit linear models
+
+```{r, echo=FALSE}
+
+# run glmnet and crossvalidate to choose lambda
+
+
+formNewRules = TRUE
+ncores = 2
+if(formNewRules){
+  require('parallel')
+  vox_prediction_rules_sel = mclapply(1:1250, run_glmnet, 
+                                      sel_trainF, trainY, mc.cores = ncores) 
+  save(vox_prediction_rules_sel,
+       file = sprintf('sel_%d_pred_rules_new.RData',max_pyr_level))
+} else {
+  load(sprintf('Yuval/reducedModels/sel_%d_pred_rules_new.RData',max_pyr_level))
+} 
+```
+
+## Make predictions for the test data sets
+
+```{r}
+usevox = c(1:1250)
+sel_trainpred = getPreds(sel_trainF,ind_struct=vox_prediction_rules_sel,usevox)
+sel_testpred = getPreds(sel_testF,ind_struct=vox_prediction_rules_sel,usevox)
+sel_validpred = getPreds(sel_validF,ind_struct=vox_prediction_rules_sel,usevox)
+#imagepred = getPreds(c_aimagesF,ind_struct=voxel_predicts,voxind=usevox)
+
+newCondVar_sel =genCondVar(dataF = sel_trainF,dataY = trainY,1:ncol(sel_trainF),usevox,ind_struct = vox_prediction_rules_sel)
+
+# make variance symmetric
+newCondVarS_sel = (newCondVar_sel + t(newCondVar_sel))/2
+ridgeinv_sel = solve(newCondVarS_sel + diag(length(usevox))*3)
+
+
+```
+
+
+```{r}
+# Matching score function
+
+```
+
+## Validation (13-repeat) Results:
+```{r}
+bestMatch(sel_validpred,validY[1:120,],'COR',invCov = ridgeinv_sel)
+bestMatch(sel_validpred,validY[1:120,],'MSE',invCov = ridgeinv_sel)
+
+```
+
+## Test (single-run) Results:
+```{r}
+bestMatch(sel_testpred,testY[1:120,],'COR',invCov = ridgeinv_sel)
+bestMatch(sel_testpred,testY[1:120,],'MSE',invCov = ridgeinv_sel)
+
+```
+
+## Recover test set:
+
+```{r}
+
+# Recover train indexes used for the fitting. 
+fit_trainS = numeric(1500)
+for (i in 1:nrow(trainY)){
+  ind = which.min(abs(v1$resp[,1]-trainY[i,1]))
+  stopifnot(max(abs(v1$resp[ind,1:10]-trainY[i,1:10]))<0.000001)
+  fit_trainS[i] = ind
+}            
+
+sort(abs(v1$resp[,1]-trainY[10,1]))[1:10]
+
+```
+
+## Prediction on No-orientation features...
+
+```{r}
+
+load(file = 'Yuval/reducedModels/noOrientFeat.RData')
+# nor_features (train/test), nor_features_val (validation), nor_feat_ann (annotation)
+
+load(file = "Yuval/fit_trainS.RData")
+nor_standards = apply(nor_features,2,sd)
+nor_constF = which(nor_standards==0)     
+
+# Choose training set
+
+load('Yuval/fit_trainS.RData') # loading fit_trainS
+
+nor_trainF = nor_features[fit_trainS,-nor_constF]
+trainY = v1$resp[fit_trainS,]
+nor_testF = nor_features[-fit_trainS,-nor_constF]
+testY = v1$resp[-fit_trainS,]
+nor_validF = nor_features_val[,-nor_constF]
+validY = v1$val
+
+nor_c_trainF = scale(nor_trainF,center = TRUE, scale = TRUE)
+nor_feat_mean_vec = attr(nor_c_trainF,'scaled:center')
+nor_feat_scale_vec = attr(nor_c_trainF,'scaled:center')
+nor_c_testF = scale(nor_testF,center = nor_feat_mean_vec, scale = nor_feat_scale_vec)
+nor_c_validF = scale(nor_validF,center = nor_feat_mean_vec, scale = nor_feat_scale_vec)
+
+save(file = 'trainData_nor.rda', nor_c_trainF, trainY )
+
+```
+
+## Fit linear models
+
+```{r, echo=FALSE}
+
+formNewRules = FALSE
+ncores = 2
+if(formNewRules){
+  require('parallel')
+  vox_prediction_rules_nor = mclapply(1:1250, run_glmnet, mc.cores = ncores) 
+  save(vox_prediction_rules_nor,file = 'nor_pred_rules_new.RData')
+} else {
+  load('Yuval/reducedModels/nor_pred_rules.RData')
+} 
+```
+
+## Compare accuracy of reduced and full models
+
+```{r}
+
+load('pred_rules.RData')
+scores = matrix(nc=2,nr=1250)
+for (i in 1:1250){
+  scores[i,1] = vox_prediction_rules[[i]]$score
+  scores[i,2] = vox_prediction_rules_nor[[i]]$score
+}
+plot(scores[,1],scores[,2])
+```
+
+
+## Make predictions for the test data sets
+
+```{r}
+usevox = c(1:1250)
+nor_trainpred = getPreds(nor_c_trainF,ind_struct=vox_prediction_rules_nor,voxind=usevox)
+nor_testpred = getPreds(nor_c_testF,ind_struct=vox_prediction_rules_nor,voxind=usevox)
+nor_validpred = getPreds(nor_c_validF,ind_struct=vox_prediction_rules_nor,voxind=usevox)
+#imagepred = getPreds(c_aimagesF,ind_struct=voxel_predicts,voxind=usevox)
+
+newCondVar =genCondVar(dataF = nor_c_trainF, 
+                       dataY = trainY, 1:1302,usevox,ind_struct = vox_prediction_rules_nor)
+
+# make variance symmetric
+newCondVarS = (newCondVar + t(newCondVar))/2
+ridgeinv = solve(newCondVarS + diag(length(usevox))*3)
+```
+
+```{r}
+```
+
+```{r}
+
+nor_testpred = getPreds(nor_c_testF,ind_struct=vox_prediction_rules_nor,voxind=usevox)
+# testpred = getPreds(c_testF,ind_struct=vox_prediction_rules,voxind=usevox)
+
+nor_validpred = getPreds(nor_c_validF,ind_struct=vox_prediction_rules_nor,voxind=usevox)
+# validpred = getPreds(c_validF,ind_struct=vox_prediction_rules,voxind=usevox)
+
+# corscores = matrix(nc =2 ,nr= 1250)
+# v_corscores = matrix(nc =2 ,nr= 1250)
+# for (i in 1:1250){
+#   corscores[i,1] = cor(testpred[,i],testY[,i])
+#   corscores[i,2] = cor(nor_testpred[,i],testY[,i])
+#   v_corscores[i,1] = cor(validpred[,i],validY[,i])
+#   v_corscores[i,2] = cor(nor_validpred[,i],validY[,i])
+# 
+# }
+# vox_samp = rowMeans(corscores)>0.05
+# par(mfcol = c(1,2))
+# vox_samp = rowMeans(corscores)>0.05
+# plot(corscores[vox_samp,1],corscores[vox_samp,2])
+# abline(0,1,col=4,lw=2)
+# val_vox_samp = rowMeans(v_corscores)>0.05
+# plot(v_corscores[val_vox_samp,1],v_corscores[val_vox_samp,2])
+# abline(0,1,col=4,lw=2)
+
+```
+
+## Validation (13-repeat) Results:
+```{r}
+bestMatch(nor_validpred,validY[1:120,],'COR',invCov = ridgeinv)
+bestMatch(nor_validpred,validY[1:120,],'MSE',invCov = ridgeinv)
+
+```
+
+## Test (single-run) Results:
+```{r}
+bestMatch(nor_testpred,testY[1:120,],'COR',invCov = ridgeinv)
+bestMatch(nor_testpred,testY[1:120,],'MSE',invCov = ridgeinv)
+
+```
+
