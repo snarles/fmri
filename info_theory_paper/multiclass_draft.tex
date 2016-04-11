@@ -317,7 +317,7 @@ I = \int p(x, y) \log \frac{p(x, y)}{p(x) p(y)} dx dy
 \]
 we have
 \[
-I = \alpha I_1 + (1-\alpha) I_2.
+I = \alpha I_1 + (1-\alpha) I_2 - \log \alpha(1-\alpha).
 \]
 }
 
@@ -334,14 +334,16 @@ The well-separated condition implies that we can find sets $S_1$ and $S_2$ such 
 \]
 Then we write
 \begin{align*}
-I &= \int p(x, y) \frac{p(x, y)}{p(x)p(y)}dx dy
-\\&= \int_{S_1 \cup S_2} (\alpha q_1(x, y) + (1-\alpha) q_2(x, y))\frac{p(x, y)}{p(x)p(y)}dx dy
-\\&= \alpha \int_{S_1}q_1(x, y) \frac{p(x, y)}{p(x)p(y)}dx dy + (1-\alpha) \int_{S_2}q_2(x, y) \frac{p(x, y)}{p(x)p(y)}dx dy
-\\&= \alpha \int_{S_1}q_1(x, y) \frac{q_1(x, y)}{q_1(x)q_1(y)}dx dy + (1-\alpha) \int_{S_2}q_2(x, y) \frac{q_2(x, y)}{q_2(x)q_2(y)}dx dy\\&= \alpha I_1 + (1-\alpha) I_2.
+I &= \int p(x, y) \log \frac{p(x, y)}{p(x)p(y)}dx dy
+\\&= \int_{S_1 \cup S_2} (\alpha q_1(x, y) + (1-\alpha) q_2(x, y))\log \frac{p(x, y)}{p(x)p(y)}dx dy
+\\&= \alpha \int_{S_1}q_1(x, y) \log \frac{p(x, y)}{p(x)p(y)}dx dy + (1-\alpha) \int_{S_2}q_2(x, y) \log \frac{p(x, y)}{p(x)p(y)}dx dy
+\\&= \alpha \int_{S_1}q_1(x, y) \log \frac{\alpha q_1(x, y)}{\alpha^2 q_1(x)q_1(y)}dx dy + (1-\alpha) \int_{S_2}q_2(x, y) \log \frac{(1-\alpha)q_2(x, y)}{(1-\alpha)^2 q_2(x)q_2(y)}dx dy\\&= \alpha I_1 + (1-\alpha) I_2 - \log \alpha(1-\alpha).
 \end{align*}
 $\Box$.
 
 What about the average Bayes accuracy?
+
+\end{document}
 It follows that $P$ has the density
 \[
 g(u) = g_{\iota_1}(\frac{u - (1-\alpha)}{\alpha} ) + g_{\iota_2}(\frac{u - \alpha}{1-\alpha} ).
@@ -352,4 +354,4 @@ g(u) = 2 g_{\iota_1}(2u - 1).
 \]
 Therefore, if we let $p_k^i$ denote the average $k$-class Bayes accuracy of $q_i(x, y)$ for $i = 1,2$, we get
 
-\end{document}
+
