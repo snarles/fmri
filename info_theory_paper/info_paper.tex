@@ -53,50 +53,253 @@ We demonstrate the utility of our approach in simulated and real-data examples.
 
 \section{Introduction}
 
-Many of the key questions motivating neuroimaging studies involve some concept of information:
-which brain region processes sensory information?  how is information encoded in the form of memories?
-To answer whether or not a particular brain region receives information about a given stimulus,
-it suffices to demonstrate a systematic dependence between brain activity in that region and stimulus features;
-this was the approach taken for studying single-cell recordings.
-Moving beyond single-cell recordings, it becomes desirable to use methods which can quantify
-the information encoded by populations of cells.
+%% YUVAL'S REMIX
 
-Following the seminal work by Haxby (2001), the dominant approach in this area,
-known as ``multivariate pattern analysis'' (MVPA), is to quantify information in the form of classification error.
-The classification approach contrasts with more traditional measures of information, such as mutual information and Fisher information.
-For example, to demonstrate that a particular brain region responds to a certain type of sensory information,
-one employs supervised learning to build a classifier which classifies the stimulus class from the brain activation in that region,
-and tests the statistical hypothesis that the classifier has above-chance classification accuracy.
-In principle, one could just as well test the statistical hypothesis that the Fisher information or mutual information between
-the stimulus and the activation patterns is nonzero.  But in practice, the machine learning approach enjoys several advantages over
-approaches based on estimating Fisher information or mutual information.
-First, one does not need a parameterization of the stimulus space: this is highly relevant for studying complex stimuli such as faces.
-Secondly, the machine learning approach does not require parametric model assumptions, unlike Fisher information.
-Thirdly, the machine learning approach scales well with dimensionality of both the stimulus space and the response space.
-In contrast, nonparametric methods for estimating mutual information scale extremely poorly with dimensionality of the response space.
-Meanwhile, a major detractor for using classification error as a measure of information is that the classification accuracy depends on the particular choice of stimuli exemplars employed in the study and the number of partitions used to define the classes for the classification task.
-The difficulty of the classification task depends on the number of classes defined: high classification accuracy can be achieved relatively easily by using a coarse partition of stimuli exemplars into classes.
-In a meta-analysis on visual decoding, Coutanche et al (2016) quantified the strength of a classification study
-using the formula
+A fundamental challenge of computational neuroscience is to understand
+how information about the external world is processed and represented
+in the brain. Each individual neuron aggregates the incoming
+information into a single sequence of spikes, a simplistic output that
+cannot per itself represent the rich surroundings. Neuroscientists
+therefore study how ensamble of neurons code for stimuli, It is the
+ensemble of numerous neurons that, taken together, form our complex
+representation of the world. Nevertheless, neurons specialize and
+different regions of the brain . It Why it is important to quantify:
+outputs a single a rather simplstudying the fundamental question in
+studying information processing in the brain computational is
+quantifying the responsiveness of a brain region to changes in the
+stimulus. information of Many of the key questions motivating
+neuroimaging studies involve some concept of information: which brain
+region processes sensory information?  how is information encoded in
+the form of memories? To answer whether or not a particular brain
+region receives information about a given stimulus, it suffices to
+demonstrate a systematic dependence between brain activity in that
+region and stimulus features. For a recoding of a single neuron
+responding to varying stimuli, the noisy channel model at the basis of
+Shanon’s information theory was a natural fit. As new technologies for
+recording of the brain developed, more channels and often indirect
+measurements require the development of more ?? framework to
+estimate the joint.
+
+An influential model to describe how much of the input information can
+be extracted from the output channels is Shannon’s mutual information,
+defined XX. The mutual information represents the number of ??. A
+leading metaphore is that of a noisy communications channel; the
+mutual information describes ??. This framework fits well with a
+single neuron channel coding external stimulus information, and indeed
+they are often quantified this way. However, estimating mutual
+information for multiple channels require large and over parameterized
+generative models. Due to these appealing properties, as well as the
+success of information theoretic approaches in more traditional
+neuroscience studies, mutual information has been frequently proposed
+for application in neuroimaging studies (Quiroga 2009).  However,
+since nonparametric approaches for estimating mutual information are
+unusably inaccurate for typical high-dimensional data sets,
+alternative approaches must be employed.  One can tractably estimate
+mutual information by assuming a multivariate Gaussian model: however,
+this approach essentially assumes a linear relationship between the
+input and output, and hence fails to quantify nonlinear dependencies.
+Alternatively, one can obtain a lower bound on the mutual information
+from the confusion matrix of the classifier.
+
+This is the most popular approach for estimating mutual information in
+neuroimaging studies, but suffers from known shortcomings (Gastpar
+2010, Quiroga 2009).As the complexity of stimuli and the number of
+output channels increases, these models are hard or impossible to
+estimate without gross over fitting. A new way to measure the
+information in the ensemble was needed.
+ 
+Machine learning algorithms showed a way forward: in the seminal work
+by Haxby (2001) proposed to quantify the information in multiple
+channels by measuring how well the stimulus can be identified from the
+brain responses, in what is known as ``multivariate pattern analysis''
+(MVPA). To demonstrate that a particular brain region responds to a
+certain type of sensory information, one employs supervised learning
+to build a classifier that classifies the stimulus class from the
+brain activation in that region. Classifier that achieve above-chance
+classification accuracy indicate that information from the stimulus is
+represented in the brain region. In principle, one could just as well
+test the statistical hypothesis that the Fisher information or mutual
+information between the stimulus and the activation patterns is
+nonzero. But in practice, the machine learning approach enjoys several
+advantages: First, it is invariant to the parametric representation of
+the stimulus space, and is opportunistic in the parameterization of
+the response space. This is an important quality for naturalistic
+stimulus-spaces, such as faces or natural images. Second, it scales
+better with the dimensionality of both the stimulus space and the
+responses space, because a slimmer discriminative model can be used
+rather than a fully generative model.
+
+Nevertheless, classification error is problematic for quantifying the
+strength of the relation between stimulus and outputs due to its
+arbitrary scale and strong dependence on experimental
+choices. Classification accuracy depends on the particular choice of
+stimuli exemplars employed in the study and the number of partitions
+used to define the classes for the classification task.The difficulty
+of the classification task depends on the number of classes defined:
+high classification accuracy can be achieved relatively easily by
+using a coarse partition of stimuli exemplars into classes. In a
+meta-analysis on visual decoding, Coutanche et al (2016) quantified
+the strength of a classification study using the formula
+\[
+\text{decoding strength} = \frac{\text{accuracy} - \text{chance}}{\text{chance}}.
+\]
+Such an approach may compensate for the differences in accuracy due
+purely to choice of number of classes defined; however, no theory is
+provided to justify the formula. In contrast, mutual information has
+ideal properties for the quantitatively comparing information between
+different studies, or between different brain regions, subjects,
+featurization models, or modalities. Not only is the mutual
+information defined independently of the arbitrary definition of
+stimulus classes (albeit still dependent on an implied distribution
+over stimuli), it is even meaningful to discuss the difference between
+the mutual information measured for one system and the mutual
+information for a second system.
+
+
+The idea of linking classification performance to mutual information
+is not new: after all, Shannon's original motivation was to
+characterize the minimum achievable error probability of a noisy
+communication channel.  More explicitly, Fano's inequality provides a
+lower bound on mutual information in relation to the optimal
+prediction error, or Bayes error.  Fano's inequality can be further
+refined to obtain a tighter lower bound on mutual information (Tebbe
+and Dwyer 1968.)
+
+In this paper, we propose a new way to link classification performance
+to the implied mutual information. This approach takes an advantageous
+middle ground between the two extremes of nonparametric and parametric
+approaches for estimating mutual information. In neuroimaging data, we
+lack prior knowledge for specifying parametric models, and the data is
+too high-dimensional for nonparametric approaches, but we have a
+sufficient idea of the general ``structure'' in the data to achieve
+above-chance classification rates. To create this link we need to
+overcome the arbitrary choice of exemplars, and the arbitrary number
+of classes K. We therefore provide the link, for a given number of
+classes, between classification error and the implied mutual
+information.
+
+More accurately, we provide the link between the Bayes error and the
+mutual information. We define a notion of $K$-class \emph{average
+Bayes error} which is uniquely defined for any given stimulus
+distribution and stochastic mapping from stimulus to response.  The
+$K$-class average Bayes error is simply the expectation of the Bayes
+error when $K$ stimuli exemplars are drawn i.i.d. from the stimulus
+distribution, and treated as distinct classes.  Hence the average
+Bayes error can in principle be estimated if the appropriate
+randomization is employed for designing the experiment.
+
+Our main theoretical contribution is the derivation of an asymptotic
+relationship between the $K$-class average Bayes error and the mutual
+information. Although the $K$-class average Bayes error is defined
+independently of the particular choice of stimuli, the quantity still
+depends on the choice of number of classes, $K$. Mutual information
+provides a quantification of information that does not depend on $K$,
+allowing more flexible comparisons and easier interpretation. Out
+method allows estimates of the $K$-class Bayes error to be translated
+into estimate of the mutual information, and this resulting estimator
+of mutual information will be asymptotically independent of the choice
+of number of classes $K$.
+
+[[Move to the discussion??]]Since the Bayes error is the large-sample
+limit of the achieved classification error, a promising approach is to
+perform classification using differently sized subsamples of the
+training data, producing a plot of classification error versus sample
+size--a ``learning curve.'' One can then extrapolate the learning
+curve to estimate the Bayes error (Cortes et al. 1994.)However, much
+work remains to develop rigorous methodology for estimating Bayes
+error, and so we leave this first issue for future work.
+
+[[Move to the discussion?]] We should keep in mind that the definition
+of mutual information depends on the specific class of stimulus that
+is of interest in the experiment.  The Bayes error itself depends on
+the choices made by the experimenter in regards to the stimuli
+exemplar chosen in the experiment, and the decision of how to
+partition those exemplars in the classification task.  For example,
+Nishimoto et al classified segments of a movie clips based on
+activation patterns, but the definition of the classification task,
+and the achievable classification performance, depends not only on the
+particular move clips used in the experiment, but also the choice of
+time interval used to define discrete classes: defining each class to
+be a 1sec segment of movie results in more distinct classes and lower
+classification accuracy than defining each class to be a 4sec segment
+of movie. The Bayes error, and any estimate of mutual information
+based on the Bayes error, would therefore be necessarily dependent on
+the experimental parameters.
+
+%% PREVIOUS TEXT
+
+Many of the key questions motivating neuroimaging studies involve some
+concept of information: which brain region processes sensory
+information?  how is information encoded in the form of memories?  To
+answer whether or not a particular brain region receives information
+about a given stimulus, it suffices to demonstrate a systematic
+dependence between brain activity in that region and stimulus
+features; this was the approach taken for studying single-cell
+recordings.  Moving beyond single-cell recordings, it becomes
+desirable to use methods which can quantify the information encoded by
+populations of cells.
+
+
+Following the seminal work by Haxby (2001), the dominant approach in
+this area, known as ``multivariate pattern analysis'' (MVPA), is to
+quantify information in the form of classification error.  The
+classification approach contrasts with more traditional measures of
+information, such as mutual information and Fisher information.  For
+example, to demonstrate that a particular brain region responds to a
+certain type of sensory information, one employs supervised learning
+to build a classifier which classifies the stimulus class from the
+brain activation in that region, and tests the statistical hypothesis
+that the classifier has above-chance classification accuracy.  In
+principle, one could just as well test the statistical hypothesis that
+the Fisher information or mutual information between the stimulus and
+the activation patterns is nonzero.  But in practice, the machine
+learning approach enjoys several advantages over approaches based on
+estimating Fisher information or mutual information.  First, one does
+not need a parameterization of the stimulus space: this is highly
+relevant for studying complex stimuli such as faces.  Secondly, the
+machine learning approach does not require parametric model
+assumptions, unlike Fisher information.  Thirdly, the machine learning
+approach scales well with dimensionality of both the stimulus space
+and the response space.  In contrast, nonparametric methods for
+estimating mutual information scale extremely poorly with
+dimensionality of the response space.  Meanwhile, a major detractor
+for using classification error as a measure of information is that the
+classification accuracy depends on the particular choice of stimuli
+exemplars employed in the study and the number of partitions used to
+define the classes for the classification task.  The difficulty of the
+classification task depends on the number of classes defined: high
+classification accuracy can be achieved relatively easily by using a
+coarse partition of stimuli exemplars into classes.  In a
+meta-analysis on visual decoding, Coutanche et al (2016) quantified
+the strength of a classification study using the formula
 \[
 \text{decoding strength} = \frac{\text{accuracy} - \text{chance}}{\text{chance}}.
 \]
 Such an approach may compensate for the differences in accuracy due purely to choice of number of classes defined;
 however, no theory is provided to justify the formula.
 
-In contrast, mutual information has ideal properties for the quantitatively 
-comparing information between different studies, or between different brain regions, subjects, featurization models, or modalities.
-Not only is the mutual information defined independently of the arbitrary definition of stimulus classes (albeit still dependent on an
-implied distribution over stimuli), it is even meaningful to discuss the difference between the mutual information measured for one system
-and the mutual information for a second system.
-Due to these appealing properties, as well as the success of information theoretic approaches in more traditional neuroscience studies,
-mutual information has been frequently proposed for application in neuroimaging studies (Quiroga 2009).
-However, since nonparametric approaches for estimating mutual information are unusably inaccurate for typical high-dimensional data sets,
-alternative approaches must be employed.  One can tractably estimate mutual information by assuming a multivariate Gaussian model:
-however, this approach essentially assumes a linear relationship between the input and output, and hence fails to quantify nonlinear dependencies.
-Alternatively, one can obtain a lower bound on the mutual information from the confusion matrix of the classifier.
-This is the most popular approach for estimating mutual information in neuroimaging studies, but suffers from known shortcomings
-(Gastpar 2010, Quiroga 2009).
+In contrast, mutual information has ideal properties for the
+quantitatively comparing information between different studies, or
+between different brain regions, subjects, featurization models, or
+modalities.  Not only is the mutual information defined independently
+of the arbitrary definition of stimulus classes (albeit still
+dependent on an implied distribution over stimuli), it is even
+meaningful to discuss the difference between the mutual information
+measured for one system and the mutual information for a second
+system.  Due to these appealing properties, as well as the success of
+information theoretic approaches in more traditional neuroscience
+studies, mutual information has been frequently proposed for
+application in neuroimaging studies (Quiroga 2009).  However, since
+nonparametric approaches for estimating mutual information are
+unusably inaccurate for typical high-dimensional data sets,
+alternative approaches must be employed.  One can tractably estimate
+mutual information by assuming a multivariate Gaussian model: however,
+this approach essentially assumes a linear relationship between the
+input and output, and hence fails to quantify nonlinear dependencies.
+Alternatively, one can obtain a lower bound on the mutual information
+from the confusion matrix of the classifier.  This is the most popular
+approach for estimating mutual information in neuroimaging studies,
+but suffers from known shortcomings (Gastpar 2010, Quiroga 2009).
 
 The idea of linking classification performance to mutual information is not new: 
 after all, Shannon's original motivation was to characterize the minimum achievable error probability
@@ -140,45 +343,70 @@ Hence our main theoretical contribution is the derivation of an asymptotic relat
 and the mutual information, which in practice means that any estimate of the $K$-class Bayes error can be converted into an estimate of mutual information;
 and the resulting estimator of mutual information should be asymptotically independent of the choice of number of classes $K$.
 
-\section{Average Bayes Error}
+\section{Framework}
 
-The following simplified model captures the essence of many neuroimaging studies.
-Let $\mathcal{X}$ be a space of stimuli, represented by $q$-dimensional vectors.
-In the design stage of the experiment, a set of stimuli exemplars $\{x_1,\hdots, x_k\}$ are selected,
-and then one specifies a $T$-length sequence of stimuli $( x_{i_1},\hdots, x_{i_n} )$ to be presented to the subject.
-In the execution of the experiment, an activation pattern, or \emph{response} $y_t$ is obtained for each of the stimuli presentations $x_{i_t}$.
-Generally $y_t$ is a $p$-dimensional vector, representing activity levels of $p$ disjoint brain regions.
-To simplify, assume that each of the $k$ stimuli is presented a total of $r$ times in the sequence;
-further assume that the responses to each stimulus presentation are conditionally independent, hence the ordering of the sequence does not matter.
-Henceforth we can let $y_i^j$ denote the response to the $j$th presentation of the stimulus $x_i$.
+The following simplified model captures the essence of many
+neuroimaging studies.  Let $\mathcal{X}$ be a space of stimuli,
+represented by $q$-dimensional vectors.  In the design stage of the
+experiment, a set of $k$ stimuli exemplars $\{x_1,\hdots, x_k\}$ are
+selected, and then one specifies a $T$-length sequence of stimuli $(
+x_{i_1},\hdots, x_{i_T} )$ to be presented to the subject.  In the
+execution of the experiment, an activation pattern, or \emph{response}
+$y_t$ is obtained for each of the stimuli presentations $x_{i_t}$.
+Generally $y_t$ is a $p$-dimensional vector, representing activity
+levels of $p$ disjoint brain regions.  To simplify, assume that each
+of the $k$ stimuli is presented a total of $r$ times in the sequence;
+further assume that the responses to each stimulus presentation are
+conditionally independent, hence the ordering of the sequence does not
+matter.  Henceforth we can let $y_i^j$ denote the response to the
+$j$th presentation of the stimulus $x_i$.
 
-We now restate the model in application-independent terms.  Let $\mathcal{X} \subset \mathbb{R}^q$ and $\mathcal{Y} \subset \mathbb{R}^p$;
-let $p(x)$ be a probability density on $\mathcal{X}$.  For every $x \in \mathcal{X}$, let $p_x(y)$ be a probability density on $\mathcal{Y}$.
-Define the joint density
-\[
-p(x, y) = p(x) p_x(y)
-\]
-so that $p_x(y)$ can also be written $p(y|x)$.
-Take a  subset $\{x_1,\hdots, x_k\} \subset \mathcal{X}$.  Let $Y_i^j$ be a random vector distributed according to density $p_{x_i}(y)$;
-and let $Y_i^j$ be conditionally independent given $\{x_1,\hdots, x_k\}$ for $i = 1,\hdots, k$ and $j = 1, \hdots, r.$
+You can choose to either pick xi arbitrarily, or design the experiment picking xi randomly.
+Advantages to the latter...
+
+\subsection{fixed stimuli design}
+
+%We now restate the model in application-independent terms.  
+
+Let
+$\mathcal{X} \subset \mathbb{R}^q$ and
+$\mathcal{Y} \subset \mathbb{R}^p$; 
+%let $p(x)$ be a probability density on $\mathcal{X}$.
+For every $x \in \mathcal{X}$, let $p_x(y)$
+be a probability density on $\mathcal{Y}$.  
+%Define the joint density
+%\[
+%p(x, y) = p(x) p_x(y)
+%\]
+%so that $p_x(y)$ can also be written $p(y|x)$.
+Take a subset
+$\{x_1,\hdots, x_k\} \subset \mathcal{X}$.
+Let $Y_i^j$ be a random
+vector distributed according to density $p_{x_i}(y)$; and let $Y_i^j$
+be conditionally independent given $\{x_1,\hdots, x_k\}$ for $i =
+1,\hdots, k$ and $j = 1, \hdots, r.$
  
-In MVPA, one carries out a classification task to assess whether $y$ contains information about $x$.
-Formally, a classification rule is any (possibly stochastic) mapping $f: \mathcal{Y} \to \{1,\hdots, k\}$.
-The \emph{generalization error} of the classification rule is
+In MVPA, one carries out a classification task to assess whether $y$
+contains information about $x$.  Formally, a classification rule is
+any (possibly stochastic) mapping $f: \mathcal{Y} \to \{1,\hdots,
+k\}$.  The \emph{generalization error} of the classification rule for classes $x_1,\hdots, x_k$ is
 \[
 e_{gen}(f) = \frac{1}{k} \sum_{i=1}^k\Pr[f(Y) \neq i | X = x_i].
 \]
-A trivial classification rule which outputs the result of a $k$-sided die roll for all inputs $y$ would achieve a generalization error of $e_{gen} = \frac{1}{k}$.
-Conversely, even a single counterexample with $e_{gen} < \frac{1}{k}$ is indicative that $y$ contains nonzero information about $x$.
-Hence, in order to demonstrate that $y$ is informative of $x$, one tests the null hypothesis
+A trivial classification rule which outputs the result of a $k$-sided
+die roll for all inputs $y$ would achieve a generalization error of
+$e_{gen} = \frac{1}{k}$.  Conversely, even a single counterexample
+with $e_{gen} < \frac{k-1}{k}$ is indicative that $y$ contains nonzero
+information about $x$.  Hence, in order to demonstrate that $y$ is
+informative of $x$, one tests the null hypothesis
 \[
-H_0: e_{gen}(f) = \frac{1}{k}.
+H_0: e_{gen}(f) = \frac{k-1}{k}.
 \]
-Rejecting the null hypothesis for a given classification rule $f$ can be taken as evidence that $y$ is informative of $x$.
-In the discussion thus far, ``information'' refers to an informal, intuitive notion, but it is also possible to formally establish
-that violation of the null hypothesis implies nonzero mutual information $I(X; Y)$.
-
-
+Rejecting the null hypothesis for a given classification rule $f$ can
+be taken as evidence that $y$ is informative of $x$.  In the
+discussion thus far, ``information'' refers to an informal, intuitive
+notion, but it is also possible to formally establish that violation
+of the null hypothesis implies nonzero mutual information $I(X; Y)$.
 
 The classifier is a functional which maps a set of observations to a classification rule,
 \[
@@ -195,8 +423,10 @@ and a \emph{test set} consisting of the remaining $r_2 = r - r_1$ repeats.
 \[
 \{(x_1, y_1^{r_1 + 1}),\hdots, (x_1,y_1^{r}), \hdots, (x_m, y_m^{r_1 + 1}),\hdots, (x_m,y_m^{r_1})\}.
 \]
-In the cross-validation approach, one applies the data-splitting approach multiple times, with different training and test partitions, and aggregates the results.
-We further discuss the cross-validation approach in section X.
+In the cross-validation approach, one applies the data-splitting
+approach multiple times, with different training and test partitions,
+and aggregates the results.  We further discuss the cross-validation
+approach in section X.
 
 In the data-splitting approach, one obtains the classification rule $f$ by applying the classifier to the training data,
 \[
@@ -207,62 +437,105 @@ defined as
 \[
 e_{test} = \frac{1}{k r_2} \sum_{i=1}^k \sum_{j = r_1 + 1}^r \text{I}(f(y_i^j) \neq i).
 \]
-Due to the conditional independence of the training set and test set, $e_{test}$ is an unbiased estimate of $e_{gen}$.
-Hence various approaches can be used to obtain a threshold $c_\alpha$
-such that $\Pr[e_{test} < c_\alpha] \leq \alpha$ holds (approximately) under the null hypothesis.
-To name a few, one can employ permutation tests, tests based on a universal variance bound, or the generalized likelihood ratio test.
-Regardless of the procedure used to derive the threshold $c_\alpha$, The hypothesis $H_0$ is rejected at level $\alpha$ if $e_{test} < c_\alpha$.
+Due to the conditional independence of the training set and test set,
+$e_{test}$ is an unbiased estimate of $e_{gen}$.  Hence various
+approaches can be used to obtain a threshold $c_\alpha$ such that
+$\Pr[e_{test} < c_\alpha] \leq \alpha$ holds (approximately) under the
+null hypothesis.  These approaches include permutation tests,
+tests based on a universal variance bound, or the generalized
+likelihood ratio test.  Regardless of the procedure used to derive the
+threshold $c_\alpha$, The hypothesis $H_0$ is rejected at level
+$\alpha$ if $e_{test} < c_\alpha$.
 
-While tests of the generalization error suffice to establish the presence of information,
-the generalization error is less satisfactory as a measure of the information between $X$ and $Y$,
-since the $e_{gen}$ depends on the classification rule $f$ obtained, and hence, varies randomly depending on the sampling of the data.
-For most reasonable classifiers, the generalization error decreases as the number of training observations increases.
-Therefore, the sample size is an additional confounding factor for interpreting the generalization error.
+There are two issues...
 
-A more ideal measure of information, still related to the classification, is the Bayes error, which is simply the \emph{optimal} generalization error
+%% shift focus from sample size to arbitrary choice of classifier
+While tests of the generalization error suffice to establish the
+presence of information, the generalization error is less satisfactory
+as a measure of the information between $X$ and $Y$, because
+$e_{gen}$ depends on the classification rule $f$ obtained, and hence,
+varies randomly depending on the sampling of the data.  For most
+reasonable classifiers, the generalization error decreases as the
+number of training observations increases.  Therefore, the sample size
+is an additional confounding factor for interpreting the
+generalization error.
+
+A more ideal measure of information, still related to the
+classification, is the Bayes error, which is simply the \emph{optimal}
+generalization error
 \[
 e_{Bayes} = \min_f e_{gen}(f).
 \]
-Due to Bayes' theorem, the optimal classification rule $f^*$ which achieves the Bayes error can be given explicitly:
-it is the maximum a posteriori (MAP) rule
+Due to Bayes' theorem, the optimal classification rule $f^*$ which
+achieves the Bayes error can be given explicitly: it is the maximum a
+posteriori (MAP) rule
 \[
 f^*(y) = \argmax_{i=1}^k\ p(y|x_i).
 \]
 
-Estimating $e_{Bayes}$ is much more difficult in practice than estimating $e_{gen}$;
-however, nonparametric estimators of $e_{Bayes}$ have been proposed in the literature.
-Cover (1969) first noted that the leave-one-out error of 1-nearest neighbor, $e_{1nn}$,
+%% move somewhere
+Estimating $e_{Bayes}$ is much more difficult in practice than
+estimating $e_{gen}$; however, nonparametric estimators of $e_{Bayes}$
+have been proposed in the literature.  Cover (1969) first noted that
+the leave-one-out error of 1-nearest neighbor, $e_{1nn}$,
 asymptotically bounds the Bayes error in the sense that
 \[
 \frac{1}{2}\E[e_{1nn}] \leq e_{Bayes} \leq \E[e_{1nn}].
 \]
-Later, Fukunaga and Kessel (1971) and Fralick and Scott (1971) both proposed a consistent estimator of $e_{Bayes}$
-using the test error from kernel density estimation-based classifiers.
-Fukunaga and Hostetler 1975 improved on the density estimation approach by estimating the generalization error directly,
-rather than using empirical test error (hence reducing variance.)
+Later, Fukunaga and Kessel (1971) and Fralick and Scott (1971) both
+proposed a consistent estimator of $e_{Bayes}$ using the test error
+from kernel density estimation-based classifiers.  Fukunaga and
+Hostetler 1975 improved on the density estimation approach by
+estimating the generalization error directly, rather than using
+empirical test error (hence reducing variance.)
 
-Nevertheless, the convergence rates of nonparametric methods of Bayes risk estimation are too slow to provide much assurance
-for their use in high-dimensional problems.  On the other hand, the empirical success of supervised learning approaches seems
-to justify a certain optimism that at least one of the popular black-box methods (random forests, neural networks, kernel SVM)
-can come close to the Bayes error rate within realistic sample sizes.  Methods such as random forests and neural networks
-are known to have \emph{universal approximation} properties that guarantee consistent recovery of the classification rule,
-given that the model complexity is scaled at an appropriate rate as the sample size increases; but methods such as kernel SVM
-have much more restrictive function classes and therefore have no guarantee of being able to recover the Bayes error.
-Yet, it is seen in many learning tasks that the test error is very similar for very different classification methods, 
-some universal and some non-universal, suggesting that the true signal lies in a low-complexity function class which can
-be adequately approximated using a variety of methods.  Empirical evidence for these phenomenon are collected in studies
-on the learning curves of classifers, beginning with Cortes 1994, and applied to specific applications by Figueroa et al. 2012, Beleites et al. 2013.
-We leave further discussion of Bayes error estimation for future work; in the theoretical portion of the current paper,
-we will simply leave unspecified the method used to estimate Bayes error, and in our simulation and real data examples,
-we will use an ad hoc approach for estimating Bayes error from test error for the purpose of demonstrating our method.
+%% move somewhere
+Nevertheless, the convergence rates of nonparametric methods of Bayes
+risk estimation are too slow to provide much assurance for their use
+in high-dimensional problems.  On the other hand, the empirical
+success of supervised learning approaches seems to justify a certain
+optimism that at least one of the popular black-box methods (random
+forests, neural networks, kernel SVM) can come close to the Bayes
+error rate within realistic sample sizes.  Methods such as random
+forests and neural networks are known to have \emph{universal
+approximation} properties that guarantee consistent recovery of the
+classification rule, given that the model complexity is scaled at an
+appropriate rate as the sample size increases; but methods such as
+kernel SVM have much more restrictive function classes and therefore
+have no guarantee of being able to recover the Bayes error.  Yet, it
+is seen in many learning tasks that the test error is very similar for
+very different classification methods, some universal and some
+non-universal, suggesting that the true signal lies in a
+low-complexity function class which can be adequately approximated
+using a variety of methods.  Empirical evidence for these phenomenon
+are collected in studies on the learning curves of classifers,
+beginning with Cortes 1994, and applied to specific applications by
+Figueroa et al. 2012, Beleites et al. 2013.  We leave further
+discussion of Bayes error estimation for future work; in the
+theoretical portion of the current paper, we will simply leave
+unspecified the method used to estimate Bayes error, and in our
+simulation and real data examples, we will use an ad hoc approach for
+estimating Bayes error from test error for the purpose of
+demonstrating our method.
 
-As we pointed out in the introduction, the quantity $e_{Bayes}$ is not a parameter of the joint distribution $p(x, y)$,
-but rather depends on the specific exemplars $x_1,\hdots, x_k$ selected;
-hence, one may write $e_{Bayes}(x_1,\hdots, x_k)$ to emphasize this dependence.
-In many studies, the end goal is to make some inference about the joint distribution $p(x, y)$, such as the mutual information $I(X; Y)$.
-However, an estimate of $e_{Bayes}$ cannot possibly be sufficient as a basis for inference about $p(x, y)$ because
-there is no direct link between $e_{Bayes}$ and $p(x)$, given that we made no assumption on how $x_1,\hdots, x_k$ were obtained.
-This motivates definition of the \emph{average} Bayes error,
+
+This way you can draw inferences about information between the fixed ensemble x1...xk.
+But in many cases you can to generalize the results to other stimuli that were not included in the experiment.
+In order to do this, you need random design.
+
+\subsection{random stimuli}
+
+As we pointed out in the introduction, the quantity $e_{Bayes}$ is not
+a parameter of the joint distribution $p(x, y)$, but rather depends on
+the specific exemplars $x_1,\hdots, x_k$ selected; hence, one may
+write $e_{Bayes}(x_1,\hdots, x_k)$ to emphasize this dependence.  In
+many studies, the end goal is to make some inference about the joint
+distribution $p(x, y)$, such as the mutual information $I(X; Y)$.
+However, an estimate of $e_{Bayes}$ cannot possibly be sufficient as a
+basis for inference about $p(x, y)$ because there is no direct link
+between $e_{Bayes}$ and $p(x)$, given that we made no assumption on
+how $x_1,\hdots, x_k$ were obtained.  This motivates definition of
+the \emph{average} Bayes error,
 \[
 e_{ABE} = \E[e_{Bayes}(X_1,\hdots, X_k)],
 \]
@@ -276,13 +549,36 @@ In the following section we investigate the relationship between $e_{ABE}$ and t
 
 \section{Asymptotic Theory}
 
-Our goal in this section is to establish a relationship between the mutual information $I(X; Y)$ and the $k$-class average Bayes error, $e_{ABE}$.
-In short, we will show that for some function $\pi_k$ (which depends on $k$), 
+Our goal in this section is to establish a relationship between the
+mutual information $I(X; Y)$ and the $k$-class average Bayes error,
+$e_{ABE}$.  In short, we will indentify a function $\pi_k$
+(which depends on $k$),
 \[
 e_{ABE} \approx \pi_k(\sqrt{2 I(X; Y)})
 \]
 and that this approximation becomes accurate under a limit where $I(X; Y)$ is small relative to the dimensionality of $X$,
 and under the condition that the components of $X$ are approximately independent.  Formal conditions are given in the proof statement.
+
+The function $\pi_k$ is given by
+\[
+\pi_k(c) = 1 - \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
+\]
+One way of intuitively understanding $1-\pi_k$ is that a misclassification event is when one of the...
+Figure \ref{fig:pi} displays the plot of $\pi_k$ for several values of $k$.
+For all values of $k$, $\pi_k(\mu)$ is monotonically decreasing in $\mu$, and tends to zero as $\mu \to \infty$.
+This should not be surprising, because if $I(X; Y)$ is large, then the average Bayes error should be small.
+Another fact, which can be verified through a simple calculation, is that 
+\[
+\pi_k(0) = 1 - \frac{1}{k}.
+\]
+This should also not be surprising, since if $I(X; Y) = 0$, then it should not be possible to
+obtain a classification rule which is better than guessing at random, which is only correct with probability $1/k$.
+\begin{figure}
+\centering
+\includegraphics[scale = 0.5, clip=true, trim=0 0.2in 0 0.5in]{../info_theory_sims/illus_piK.pdf}
+\caption{The function $pi_k(\mu)$, for $k = \{2, 9, 99, 999\}$ (left to right) \label{fig:pi}}
+\end{figure}
+
 
 First, let us rewrite $e_{ABE}$ in terms of the density function.  Recall that the Bayes rule is
 \[
@@ -311,98 +607,8 @@ e_{ABE} = \Pr[Z_1 < \max_{j > 1} Z_i].
 \]
 
 Our proof uses the assumption that $Z_1,\hdots, Z_k$ are asymptotically multivariate normal.
-To see why this might be justified, suppose that $X$ and $Y$ have the same dimensionality $d$, and that
-joint density factorizes as
-\[
-p(x_j, y) = \prod_{i=1}^d p_i(x_{j, i}, y_i)
-\]
-where $x_{j, i}, y_i$ are the components of $x_j$ and $y$.
-Then,
-\[
-Z_i = \sum_{m=1}^d \log p_m(y_m | x_{m, i}) - \log p_m(y_m | x_{m, 1})
-\]
-where $x_{i, j}$ is the $i$th component of $x_j$.
-The $d$ terms $\log p_m(y_m | x_{m, i}) - \log p_m(y_m | x_{m, 1})$ are independent across the indices $m$,
-but dependent between the $i = 1,\hdots, k$.
-Therefore, the multivariate central limit theorem can be applied to conclude that the vector
-$(Z_1,\hdots, Z_k)$ can be scaled to converge to a multivariate normal distribution.
-Now, since the average Bayes error $e_{ABE}$ is a continuous functional of the joint distribution $p(x, y)$,
-it follows that $e_{ABE}$ converges to a functional of the limiting mean and covariance of $(Z_1,\hdots, Z_k)$, assuming
-that the limits exist.
-In our theorem, we assume a specific regime where these limits exist as a consequence.
-While the componentwise independence condition is not a realistic assumption,
-the key property of multivariate normality of $(Z_1,\hdots, Z_k)$ holds under more general conditions, and appears reasonable in practice.
-
-The second component of our theorem is to manipulate the expression of the mutual information $I(X; Y)$.
-The differential mutual information is defined as
-\[
-I(X; Y) = \int p(x, y) \log \frac{p(x, y)}{p(x) p(y)} dx dy.
-\]
-The key manipulation we employ is to approximate the logarithmic term by the Taylor expansion
-\[
-\log \frac{p(x, y)}{p(x) p(y)} \approx \frac{p(x, y) - p(x) p(y)}{p(x) p(y)} - \left(\frac{p(x, y) - p(x) p(y)}{p(x) p(y)}\right)^2 + \hdots.
-\]
-The approximation is accurate if $I(X; Y)$ is small--or rather, small relative to the dimensionality within the asymptotic sequence.
-We state the theorem for the regime where $I(X; Y)$ is fixed, while the dimensionality of $X$ increases.
-
-The function $\pi_k$ is given by
-\[
-\pi_k(c) = 1 - \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
-\]
-Figure \ref{fig:pi} displays the plot of $\pi_k$ for several values of $k$.
-For all values of $k$, $\pi_k(\mu)$ is monotonically decreasing in $\mu$, and tends to zero as $\mu \to \infty$.
-This should not be surprising, because if $I(X; Y)$ is large, then the average Bayes error should be small.
-Another fact, which can be verified through a simple calculation, is that 
-\[
-\pi_k(0) = 1 - \frac{1}{k}.
-\]
-This should also not be surprising, since if $I(X; Y) = 0$, then it should not be possible to
-obtain a classification rule which is better than guessing at random, which is only correct with probability $1/k$.
-\begin{figure}
-\centering
-\includegraphics[scale = 0.5, clip=true, trim=0 0.2in 0 0.5in]{../info_theory_sims/illus_piK.pdf}
-\caption{The function $pi_k(\mu)$, for $k = \{2, 9, 99, 999\}$ (left to right) \label{fig:pi}}
-\end{figure}
-
-
-\subsection{Technical section}
-
-We formally state the assumptions and theorem in this section.  The less technically inclined reader may skip the section in order to continue to the proposed methodology for estimating mutual information, and results. [Note: slightly different notation in this section: we will make the notation consistent with the rest of the paper before submission.]
-
-The asymptotic regime we consider is one where the dimension of $X$ goes to infinity.
-This means that we have to consider a sequence of joint distributions $(X^{[d]}, Y^{[d]})$ indexed by the dimension $d$.
-
-Fix integer $K \geq 2$.  Let $p^{[d]}(x,y)$ be a sequence of
-probability density functions, where $x$ is of dimension $p^{[d]}$ and
-$y$ is of dimension $q^{[d]}$.  Let $p^{[d]}(x)$ and $p^{[d]}(y)$
-denote the marginal densities, and let
-\[
-p^{[d]}(y|x) = p^{[d]}(x, y)/p^{[d]}(y).\]
- Let $(X^{([d], i)}, Y^{([d], i)})$ be
-iid random variates from $p^{[d]}(x, y)$ for $i = 0, \hdots, K-1$; we will supress the
-superscripts $[d]$ and/or $(i)$ when convenient.  Recall the definitions of
-entropy,
-\[
-H(X) = -\int p(x) \log p(x) dx,
-\]
-and mutual information
-\[
-I(X; Y) = \int p(x, y) \log \frac{p(x, y)}{p(x)p(y)} dx dy.
-\]
-Furthermore, define the $K$-class average Bayes error as
-\[
-\text{ABE}_K = \Pr[p(Y^{(0)}|X^{(0)}) < \max_{i = 1}^{K-1} p(Y^{(0)}|X^{(i)})].
-\]
-Define
-\[
-u^{[d]}(x, y) = \log p^{[d]}(x, y) - \log p^{[d]}(x) - \log p^{[d]}(y),
-\]
-and define
-\[
-\ell_{ij}^{[d]} = \log p(y^{(i)}|x^{(j)}).
-\]
-
-We will need the following lemma:
+Supposing that $Z_1,\hdots, Z_k$ are indeed asymptotically normal, the following lemma
+allows us to obtain a formula for the misclassification rate.
 
 \textbf{Lemma 1. }
 \emph{
@@ -450,6 +656,80 @@ Hence
 Since $\frac{G_i}{\sqrt{\delta - \epsilon}}$ are iid standard normal variates, and since
 $-\frac{\alpha - G_0}{\sqrt{\delta - \epsilon}} \sim N(\mu,\nu^2)$ for $\mu$ and $\nu^2$ given in the statement of the Lemma, the proof is completed via a straightforward computation.  $\Box$
 
+To see why the assumption that $Z_1,\hdots, Z_k$ are multivariate normal might be justified, suppose that $X$ and $Y$ have the same dimensionality $d$, and that
+joint density factorizes as
+\[
+p(x_j, y) = \prod_{i=1}^d p_i(x_{j, i}, y_i)
+\]
+where $x_{j, i}, y_i$ are the components of $x_j$ and $y$.
+Then,
+\[
+Z_i = \sum_{m=1}^d \log p_m(y_m | x_{m, i}) - \log p_m(y_m | x_{m, 1})
+\]
+where $x_{i, j}$ is the $i$th component of $x_j$.
+The $d$ terms $\log p_m(y_m | x_{m, i}) - \log p_m(y_m | x_{m, 1})$ are independent across the indices $m$,
+but dependent between the $i = 1,\hdots, k$.
+Therefore, the multivariate central limit theorem can be applied to conclude that the vector
+$(Z_1,\hdots, Z_k)$ can be scaled to converge to a multivariate normal distribution.
+Now, since the average Bayes error $e_{ABE}$ is a continuous functional of the joint distribution $p(x, y)$,
+it follows that $e_{ABE}$ converges to a functional of the limiting mean and covariance of $(Z_1,\hdots, Z_k)$, assuming
+that the limits exist.
+In our theorem, we assume a specific regime where these limits exist as a consequence.
+While the componentwise independence condition is not a realistic assumption,
+the key property of multivariate normality of $(Z_1,\hdots, Z_k)$ holds under more general conditions, and appears reasonable in practice.
+
+The second component of our theorem is to manipulate the expression of the mutual information $I(X; Y)$.
+The differential mutual information is defined as
+\[
+I(X; Y) = \int p(x, y) \log \frac{p(x, y)}{p(x) p(y)} dx dy.
+\]
+The key manipulation we employ is to approximate the logarithmic term by the Taylor expansion
+\[
+\log \frac{p(x, y)}{p(x) p(y)} \approx \frac{p(x, y) - p(x) p(y)}{p(x) p(y)} - \left(\frac{p(x, y) - p(x) p(y)}{p(x) p(y)}\right)^2 + \hdots.
+\]
+The approximation is accurate if $I(X; Y)$ is small--or rather, small relative to the dimensionality within the asymptotic sequence.
+We state the theorem for the regime where $I(X; Y)$ is fixed, while the dimensionality of $X$ increases.
+
+
+
+\subsection{Technical section}
+
+We formally state the assumptions and theorem in this section.  The less technically inclined reader may skip the section in order to continue to the proposed methodology for estimating mutual information, and results. [Note: slightly different notation in this section: we will make the notation consistent with the rest of the paper before submission.]
+
+The asymptotic regime we consider is one where the dimension of $X$ goes to infinity.
+This means that we have to consider a sequence of joint distributions $(X^{[d]}, Y^{[d]})$ indexed by the dimension $d$.
+
+Fix integer $K \geq 2$.  Let $p^{[d]}(x,y)$ be a sequence of
+probability density functions, where $x$ is of dimension $p^{[d]}$ and
+$y$ is of dimension $q^{[d]}$.  Let $p^{[d]}(x)$ and $p^{[d]}(y)$
+denote the marginal densities, and let
+\[
+p^{[d]}(y|x) = p^{[d]}(x, y)/p^{[d]}(y).\]
+ Let $(X^{([d], i)}, Y^{([d], i)})$ be
+iid random variates from $p^{[d]}(x, y)$ for $i = 0, \hdots, K-1$; we will supress the
+superscripts $[d]$ and/or $(i)$ when convenient.  Recall the definitions of
+entropy,
+\[
+H(X) = -\int p(x) \log p(x) dx,
+\]
+and mutual information
+\[
+I(X; Y) = \int p(x, y) \log \frac{p(x, y)}{p(x)p(y)} dx dy.
+\]
+Furthermore, define the $K$-class average Bayes error as
+\[
+\text{ABE}_K = \Pr[p(Y^{(0)}|X^{(0)}) < \max_{i = 1}^{K-1} p(Y^{(0)}|X^{(i)})].
+\]
+Define
+\[
+u^{[d]}(x, y) = \log p^{[d]}(x, y) - \log p^{[d]}(x) - \log p^{[d]}(y),
+\]
+and define
+\[
+\ell_{ij}^{[d]} = \log p(y^{(i)}|x^{(j)}).
+\]
+
+
 
 We now give the theorem and its proof.
 
@@ -480,6 +760,8 @@ where
 where $\phi$ and $\Phi$ are the standard normal density function and
 cumulative distribution function, respectively.
 
+[[Maybe add remark about assumptions here.]]
+
 \textbf{Proof.}
 
 For $i = 1,\hdots, K-1$, define
@@ -502,7 +784,7 @@ desired result.
 
 To prove the claim, it suffices to derive the limiting moments
 \[\E[Z_i] \to -2\iota,\]
-\[\Cov[Z_i] \to 4\iota,\]
+\[\Var[Z_i] \to 4\iota,\]
 \[\Cov[Z_i, Z_j] \to 2\iota,\]
 for $i \neq j$,
 since then assumption A2 implies the existence of a multivariate normal
