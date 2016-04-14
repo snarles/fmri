@@ -59,7 +59,7 @@ sel_testF = c_testF[,select_feat]
 sel_validF = c_validF[,select_feat]
 validY = v1$val
 
-save(file = sprintf('trainDataReduced%d.rda', max_pyr_level), trainY , sel_trainF)
+save(file = sprintf('Yuval/reducedModels/trainDataReduced%d.rda', max_pyr_level), trainY , sel_trainF)
 
 ```
 

@@ -31,23 +31,30 @@
 \newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
 
 \begin{abstract}
-Multivariate pattern analyses approaches in neuroimaging are fundamentally concerned with investigating
-the quantity and type of information processed by various regions of the human brain;
-typically, estimates of classification accuracy are used to quantify information.
-While a extensive and powerful library of methods can be applied to train and assess classifiers,
-it is not always clear how to use the resulting measures of classification performance to draw scientific conclusions:
-e.g. for the purpose of evaluating redundancy between brain regions.
-An additional confound for interpreting classification performance is the dependence of the error rate on
-the number and choice of distinct classes obtained for the classification task.
-In contrast, mutual information is a quantity which is in principle defined independently of the experimental design,
-and has ideal properties for comparative analyses.
-One obstacle to wider use of mutual information is the difficulty of estimating mutual information in high-dimensional neuroimaging data.
+Multivariate pattern analyses approaches in neuroimaging are
+fundamentally concerned with investigating the quantity and type of
+information processed by various regions of the human brain;
+typically, estimates of classification accuracy are used to quantify
+information.  While a extensive and powerful library of methods can be
+applied to train and assess classifiers, it is not always clear how to
+use the resulting measures of classification performance to draw
+scientific conclusions: e.g. for the purpose of evaluating redundancy
+between brain regions.  An additional confound for interpreting
+classification performance is the dependence of the error rate on the
+number and choice of distinct classes obtained for the classification
+task.  In contrast, mutual information is a quantity which is in
+principle defined independently of the experimental design, and has
+ideal properties for comparative analyses.  One obstacle to wider use
+of mutual information is the difficulty of estimating mutual
+information in high-dimensional neuroimaging data.
 %Nonparametric estimators have poor finite-sample performance, and parametric approaches require unrealistic assumptions such as multivariate Gaussianity.
 %While one can obtain a lower bound using the mutual information of the confusion matrix, the lower bound obtained is usually quite poor.
-We propose a new estimator of mutual information based on the concept of "average Bayes error."
-By assuming that the classes obtained in the data are drawn randomly from a continuous population,
-we find that the expected Bayes error converges to a function of the mutual information in a high-dimensional limit.
-We demonstrate the utility of our approach in simulated and real-data examples.
+We propose a new estimator of mutual information based on the concept
+of "average Bayes error."  By assuming that the classes obtained in
+the data are drawn randomly from a continuous population, we find that
+the expected Bayes error converges to a function of the mutual
+information in a high-dimensional limit.  We demonstrate the utility
+of our approach in simulated and real-data examples.
 \end{abstract}
 
 
