@@ -65,19 +65,24 @@ of our approach in simulated and real-data examples.
 A fundamental challenge of computational neuroscience is to understand
 how information about the external world is processed and represented
 in the brain. Each individual neuron aggregates the incoming
-information into a single sequence of spikes--an output which is too simplistic by itself to capture the full complexity of sensory input. Only by combining the signals from massive
-ensembles of neurons is it possible to reconstruct our complex
-representation of the world. Nevertheless, neurons form hierarchies of specialization
-within neural circuits, which are further organized in various specialized regions of the brain.
-It remains a key question to understand the division of labor at the macroscale level of organization in the brain.  To answer whether or not a particular brain
-region receives information about a given stimulus, it suffices to
-demonstrate a systematic dependence between brain activity in that
-region and stimulus features. For a recording of a single neuron
-responding to varying stimuli, the noisy channel model at the basis of
-Shanon'€™s information theory was a natural fit.  But as new technologies for
-recording of the brain developed, the resulting increase in the number of channels and often indirect
-measurements necessitate new approaches for summarizing and inferring measures of information
-in the brain.
+information into a single sequence of spikes--an output which is too
+simplistic by itself to capture the full complexity of sensory
+input. Only by combining the signals from massive ensembles of neurons
+is it possible to reconstruct our complex representation of the
+world. Nevertheless, neurons form hierarchies of specialization within
+neural circuits, which are further organized in various specialized
+regions of the brain.  It remains a key question to understand the
+division of labor at the macroscale level of organization in the
+brain.  To answer whether or not a particular brain region receives
+information about a given stimulus, it suffices to demonstrate a
+systematic dependence between brain activity in that region and
+stimulus features. For a recording of a single neuron responding to
+varying stimuli, the noisy channel model at the basis of
+Shanon'€™s information theory was a natural fit.  But as new
+technologies for recording of the brain developed, the resulting
+increase in the number of channels and often indirect measurements
+necessitate new approaches for summarizing and inferring measures of
+information in the brain.
 
 An influential model to describe how much of the input information can
 be extracted from the output channels is Shannon's mutual information,
@@ -85,20 +90,23 @@ defined as
 \[
 I(X;Y) = \int p(x, y) \log \frac{p(x, y)}{p(x)p(y)}dxdy
 \]
-where $X$ is the input channel and $Y$ is the output channel.
-A leading metaphor is that of a noisy communications channel; the
-mutual information describes the rate at which $Y$ can communicate bits from $X$.
-This framework is well-suited for summarizing the properties of a
-single neuron coding external stimulus information; indeed, experiments studying the properties of a single or a small number of neurons often make use of the concept of mutual information in summarizing or interpreting their results (Quiroga 2009). However, estimating mutual
-information for multiple channels require large and over-parameterized
-generative models.  For instance, one can tractably estimate
-mutual information by assuming a multivariate Gaussian model: however,
-this approach essentially assumes a linear relationship between the
-input and output, and hence fails to quantify nonlinear dependencies.
-As the complexity of stimuli and the number of
-output channels increases, these models are hard or impossible to
-estimate without gross over-fitting. A new way to measure the
-information in the ensemble was needed.
+where $X$ is the input channel and $Y$ is the output channel.  A
+leading metaphor is that of a noisy communications channel; the mutual
+information describes the rate at which $Y$ can communicate bits from
+$X$.  This framework is well-suited for summarizing the properties of
+a single neuron coding external stimulus information; indeed,
+experiments studying the properties of a single or a small number of
+neurons often make use of the concept of mutual information in
+summarizing or interpreting their results (Quiroga 2009). However,
+estimating mutual information for multiple channels require large and
+over-parameterized generative models.  For instance, one can tractably
+estimate mutual information by assuming a multivariate Gaussian model:
+however, this approach essentially assumes a linear relationship
+between the input and output, and hence fails to quantify nonlinear
+dependencies.  As the complexity of stimuli and the number of output
+channels increases, these models are hard or impossible to estimate
+without gross over-fitting. A new way to measure the information in
+the ensemble was needed.
  
 Machine learning algorithms showed a way forward: in the seminal work
 by Haxby (2001) proposed to quantify the information in multiple
@@ -147,20 +155,24 @@ over stimuli), it is even meaningful to discuss the difference between
 the mutual information measured for one system and the mutual
 information for a second system.
 
-Hence, a popular approach which combines the strengths of the machine learning approach and the advantages of the information theoretic approach is to obtain a lower bound on the mutual information
-by using the confusion matrix of a classifier.
-This is the most popular approach for estimating mutual information in
-neuroimaging studies, but suffers from known shortcomings (Gastpar
-2010, Quiroga 2009).
+Hence, a popular approach which combines the strengths of the machine
+learning approach and the advantages of the information theoretic
+approach is to obtain a lower bound on the mutual information by using
+the confusion matrix of a classifier.  This is the most popular
+approach for estimating mutual information in neuroimaging studies,
+but suffers from known shortcomings (Gastpar 2010, Quiroga 2009).
 
 The idea of linking classification performance to mutual information
-dates back to the beginnings of information theory: Shannon's original motivation was to
-characterize the minimum achievable error probability of a noisy
-communication channel.  More explicitly, Fano's inequality provides a
-lower bound on mutual information in relation to the optimal
-prediction error, or Bayes error.  Fano's inequality can be further
-refined to obtain a tighter lower bound on mutual information (Tebbe
-and Dwyer 1968.)  However, all approaches to date can only obtain a lower bound on the mutual information from classification error.  In practice, the bound obtained may be a vast underestimate.
+dates back to the beginnings of information theory: Shannon's original
+motivation was to characterize the minimum achievable error
+probability of a noisy communication channel.  More explicitly, Fano's
+inequality provides a lower bound on mutual information in relation to
+the optimal prediction error, or Bayes error.  Fano's inequality can
+be further refined to obtain a tighter lower bound on mutual
+information (Tebbe and Dwyer 1968.)  However, all approaches to date
+can only obtain a lower bound on the mutual information from
+classification error.  In practice, the bound obtained may be a vast
+underestimate.
 
 In this paper, we propose a new way to link classification performance
 to the implied mutual information. 
@@ -171,16 +183,17 @@ to the implied mutual information.
 %too high-dimensional for nonparametric approaches, but we have a
 %sufficient idea of the general ``structure'' in the data to achieve
 %above-chance classification rates. 
-To create this link we need to
-overcome the arbitrary choice of exemplars, and the arbitrary number
-of classes K.  Towards this end, we define a notion of $K$-class \emph{average
-Bayes error} which is uniquely defined for any given stimulus
-distribution and stochastic mapping from stimulus to response.  The
-$K$-class average Bayes error is simply the expectation of the Bayes
-error (the classification error of the optimal classifier) when $K$ stimuli exemplars are drawn i.i.d. from the stimulus
-distribution, and treated as distinct classes.  Hence the average
-Bayes error can in principle be estimated if the appropriate
-randomization is employed for designing the experiment.
+To create this link we need to overcome the arbitrary choice of
+exemplars, and the arbitrary number of classes K.  Towards this end,
+we define a notion of $K$-class \emph{average Bayes error} which is
+uniquely defined for any given stimulus distribution and stochastic
+mapping from stimulus to response.  The $K$-class average Bayes error
+is simply the expectation of the Bayes error (the classification error
+of the optimal classifier) when $K$ stimuli exemplars are drawn
+i.i.d. from the stimulus distribution, and treated as distinct
+classes.  Hence the average Bayes error can in principle be estimated
+if the appropriate randomization is employed for designing the
+experiment.
 
 Our main theoretical contribution is the derivation of an asymptotic
 relationship between the $K$-class average Bayes error and the mutual
@@ -196,31 +209,6 @@ of number of classes $K$.
 
 %% and vice-versa
 
-[[Move to the discussion??]]Since the Bayes error is the large-sample
-limit of the achieved classification error, a promising approach is to
-perform classification using differently sized subsamples of the
-training data, producing a plot of classification error versus sample
-size--a ``learning curve.'' One can then extrapolate the learning
-curve to estimate the Bayes error (Cortes et al. 1994.)However, much
-work remains to develop rigorous methodology for estimating Bayes
-error, and so we leave this first issue for future work.
-
-[[Move to the discussion?]] We should keep in mind that the definition
-of mutual information depends on the specific class of stimulus that
-is of interest in the experiment.  The Bayes error itself depends on
-the choices made by the experimenter in regards to the stimuli
-exemplar chosen in the experiment, and the decision of how to
-partition those exemplars in the classification task.  For example,
-Nishimoto et al classified segments of a movie clips based on
-activation patterns, but the definition of the classification task,
-and the achievable classification performance, depends not only on the
-particular move clips used in the experiment, but also the choice of
-time interval used to define discrete classes: defining each class to
-be a 1sec segment of movie results in more distinct classes and lower
-classification accuracy than defining each class to be a 4sec segment
-of movie. The Bayes error, and any estimate of mutual information
-based on the Bayes error, would therefore be necessarily dependent on
-the experimental parameters.
 
 %% PREVIOUS TEXT
 %
@@ -357,12 +345,31 @@ conditionally independent, hence the ordering of the sequence does not
 matter.  Henceforth we can let $y_i^j$ denote the response to the
 $j$th presentation of the stimulus $x_i$.
 
-You can choose to either pick xi arbitrarily, or design the experiment picking xi randomly.
-Advantages to the latter...
+While in many studies, the stimuli exemplars $x_1,\hdots,x_k$
+are chosen somewhat arbitrarily, more types of inferences can be drawn
+if randomization is employed to choose the stimuli.
+Based on this distinction, we discuss two types of experimental designs:
+\begin{itemize}
+\item[1.] \emph{Fixed stimuli design.}
+The exemplars $x_1,\hdots, x_k$ are treated as fixed.
+\item[2.] \emph{Randomized stimuli design.}
+The experimenter first specifies a space of stimuli $\mathcal{X}$
+and a probability distribution $p(x)$ over that space.
+Then, $k$ exemplars are drawn i.i.d. from that space,
+\[
+X_1,\hdots, X_k \stackrel{iid}{\sim} p(x).
+\]
+\end{itemize}
+As we will discuss, the randomized stimuli design allows the possibility of
+\emph{generalizing} beyond the chosen exemplars;
+i.e. drawing inferences about the entire joint distribution $p(x, y)$.
 
-\subsection{fixed stimuli design}
+\subsection{Fixed stimuli design}
 
 %We now restate the model in application-independent terms.  
+
+We begin by describing a fixed stimuli design,
+and the types of inferences that can be made using machine learning tools.
 
 Let
 $\mathcal{X} \subset \mathbb{R}^q$ and
@@ -391,7 +398,7 @@ e_{gen}(f) = \frac{1}{k} \sum_{i=1}^k\Pr[f(Y) \neq i | X = x_i].
 \]
 A trivial classification rule which outputs the result of a $k$-sided
 die roll for all inputs $y$ would achieve a generalization error of
-$e_{gen} = \frac{1}{k}$.  Conversely, even a single counterexample
+$e_{gen} = \frac{k-1}{k}$.  Conversely, even a single counterexample
 with $e_{gen} < \frac{k-1}{k}$ is indicative that $y$ contains nonzero
 information about $x$.  Hence, in order to demonstrate that $y$ is
 informative of $x$, one tests the null hypothesis
@@ -401,8 +408,9 @@ H_0: e_{gen}(f) = \frac{k-1}{k}.
 Rejecting the null hypothesis for a given classification rule $f$ can
 be taken as evidence that $y$ is informative of $x$.  In the
 discussion thus far, ``information'' refers to an informal, intuitive
-notion, but it is also possible to formally establish that violation
-of the null hypothesis implies nonzero mutual information $I(X; Y)$.
+notion.
+%, but it is also possible to formally establish that violation
+%of the null hypothesis implies nonzero mutual information $I(X; Y)$.
 
 The classifier is a functional which maps a set of observations to a classification rule,
 \[
@@ -443,21 +451,15 @@ likelihood ratio test.  Regardless of the procedure used to derive the
 threshold $c_\alpha$, The hypothesis $H_0$ is rejected at level
 $\alpha$ if $e_{test} < c_\alpha$.
 
-There are two issues...
-
 %% shift focus from sample size to arbitrary choice of classifier
 While tests of the generalization error suffice to establish the
 presence of information, the generalization error is less satisfactory
 as a measure of the information between $X$ and $Y$, because
-$e_{gen}$ depends on the classification rule $f$ obtained, and hence,
-varies randomly depending on the sampling of the data.  For most
-reasonable classifiers, the generalization error decreases as the
-number of training observations increases.  Therefore, the sample size
-is an additional confounding factor for interpreting the
-generalization error.
-
-A more ideal measure of information, still related to the
-classification, is the Bayes error, which is simply the \emph{optimal}
+$e_{gen}$ depends on the classification rule $f$ obtained--but since the performance of the classifier
+may vary depending on the choice of model ($k$-nearest neighbors, SVM, etc.) and the choice of tuning parameters,
+the quantity $e_{gen}$ is therefore not uniquely defined.
+To resolve the ill-definedness of the generalization error, we define
+the Bayes error, which is simply the \emph{optimal}
 generalization error
 \[
 e_{Bayes} = \min_f e_{gen}(f).
@@ -468,58 +470,20 @@ posteriori (MAP) rule
 \[
 f^*(y) = \argmax_{i=1}^k\ p(y|x_i).
 \]
+However, it is not possible to construct this rule in practice since
+the joint distribution is unknown.  Instead, in many cases, a
+reasonable approach is to try a variety of classifiers, producing
+rules $f_1,\hdots, f_m$, and taking the best generalization error as
+an estimate of the Bayes error.  We give more details of this approach
+in the Discussion.
 
-%% move somewhere
-Estimating $e_{Bayes}$ is much more difficult in practice than
-estimating $e_{gen}$; however, nonparametric estimators of $e_{Bayes}$
-have been proposed in the literature.  Cover (1969) first noted that
-the leave-one-out error of 1-nearest neighbor, $e_{1nn}$,
-asymptotically bounds the Bayes error in the sense that
-\[
-\frac{1}{2}\E[e_{1nn}] \leq e_{Bayes} \leq \E[e_{1nn}].
-\]
-Later, Fukunaga and Kessel (1971) and Fralick and Scott (1971) both
-proposed a consistent estimator of $e_{Bayes}$ using the test error
-from kernel density estimation-based classifiers.  Fukunaga and
-Hostetler 1975 improved on the density estimation approach by
-estimating the generalization error directly, rather than using
-empirical test error (hence reducing variance.)
+This way you can draw inferences about information between the fixed
+ensemble $x_1,...,x_k$ and the brain regions being examined.  But in
+many cases it is desired to generalize the results to other stimuli
+that were not included in the experiment.  In order to do this, a
+randomized design is needed.
 
-%% move somewhere
-Nevertheless, the convergence rates of nonparametric methods of Bayes
-risk estimation are too slow to provide much assurance for their use
-in high-dimensional problems.  On the other hand, the empirical
-success of supervised learning approaches seems to justify a certain
-optimism that at least one of the popular black-box methods (random
-forests, neural networks, kernel SVM) can come close to the Bayes
-error rate within realistic sample sizes.  Methods such as random
-forests and neural networks are known to have \emph{universal
-approximation} properties that guarantee consistent recovery of the
-classification rule, given that the model complexity is scaled at an
-appropriate rate as the sample size increases; but methods such as
-kernel SVM have much more restrictive function classes and therefore
-have no guarantee of being able to recover the Bayes error.  Yet, it
-is seen in many learning tasks that the test error is very similar for
-very different classification methods, some universal and some
-non-universal, suggesting that the true signal lies in a
-low-complexity function class which can be adequately approximated
-using a variety of methods.  Empirical evidence for these phenomenon
-are collected in studies on the learning curves of classifers,
-beginning with Cortes 1994, and applied to specific applications by
-Figueroa et al. 2012, Beleites et al. 2013.  We leave further
-discussion of Bayes error estimation for future work; in the
-theoretical portion of the current paper, we will simply leave
-unspecified the method used to estimate Bayes error, and in our
-simulation and real data examples, we will use an ad hoc approach for
-estimating Bayes error from test error for the purpose of
-demonstrating our method.
-
-
-This way you can draw inferences about information between the fixed ensemble x1...xk.
-But in many cases you can to generalize the results to other stimuli that were not included in the experiment.
-In order to do this, you need random design.
-
-\subsection{random stimuli}
+\subsection{Randomized stimuli design}
 
 As we pointed out in the introduction, the quantity $e_{Bayes}$ is not
 a parameter of the joint distribution $p(x, y)$, but rather depends on
@@ -686,11 +650,14 @@ The key manipulation we employ is to approximate the logarithmic term by the Tay
 The approximation is accurate if $I(X; Y)$ is small--or rather, small relative to the dimensionality within the asymptotic sequence.
 We state the theorem for the regime where $I(X; Y)$ is fixed, while the dimensionality of $X$ increases.
 
-
-
 \subsection{Technical section}
 
-We formally state the assumptions and theorem in this section.  The less technically inclined reader may skip the section in order to continue to the proposed methodology for estimating mutual information, and results. [Note: slightly different notation in this section: we will make the notation consistent with the rest of the paper before submission.]
+We formally state the assumptions and theorem in this section.  The
+less technically inclined reader may skip the section in order to
+continue to the proposed methodology for estimating mutual
+information, and results. [Note: slightly different notation in this
+section: we will make the notation consistent with the rest of the
+paper before submission.]
 
 The asymptotic regime we consider is one where the dimension of $X$ goes to infinity.
 This means that we have to consider a sequence of joint distributions $(X^{[d]}, Y^{[d]})$ indexed by the dimension $d$.
@@ -1096,6 +1063,81 @@ $K=20$, $r = 8000$, true $I(X; Y) = 1.86$ \emph{(dashed line.)}
 \textbf{Sampling distribution of $\hat{I}$.}
 \includegraphics[scale = 0.6, clip = true, trim = 0 0.5in 0 0.5in]{../info_theory_sims/fig6.pdf}
 \end{center}
+
+\section{Discussion}
+
+Since the Bayes error is the large-sample
+limit of the achieved classification error, a promising approach is to
+perform classification using differently sized subsamples of the
+training data, producing a plot of classification error versus sample
+size--a ``learning curve.'' One can then extrapolate the learning
+curve to estimate the Bayes error (Cortes et al. 1994.)However, much
+work remains to develop rigorous methodology for estimating Bayes
+error, and so we leave this first issue for future work.
+
+We should keep in mind that the definition
+of mutual information depends on the specific class of stimulus that
+is of interest in the experiment.  The Bayes error itself depends on
+the choices made by the experimenter in regards to the stimuli
+exemplar chosen in the experiment, and the decision of how to
+partition those exemplars in the classification task.  For example,
+Nishimoto et al classified segments of a movie clips based on
+activation patterns, but the definition of the classification task,
+and the achievable classification performance, depends not only on the
+particular move clips used in the experiment, but also the choice of
+time interval used to define discrete classes: defining each class to
+be a 1sec segment of movie results in more distinct classes and lower
+classification accuracy than defining each class to be a 4sec segment
+of movie. The Bayes error, and any estimate of mutual information
+based on the Bayes error, would therefore be necessarily dependent on
+the experimental parameters.
+
+
+%% move somewhere
+Estimating $e_{Bayes}$ is much more difficult in practice than
+estimating $e_{gen}$; however, nonparametric estimators of $e_{Bayes}$
+have been proposed in the literature.  Cover (1969) first noted that
+the leave-one-out error of 1-nearest neighbor, $e_{1nn}$,
+asymptotically bounds the Bayes error in the sense that
+\[
+\frac{1}{2}\E[e_{1nn}] \leq e_{Bayes} \leq \E[e_{1nn}].
+\]
+Later, Fukunaga and Kessel (1971) and Fralick and Scott (1971) both
+proposed a consistent estimator of $e_{Bayes}$ using the test error
+from kernel density estimation-based classifiers.  Fukunaga and
+Hostetler 1975 improved on the density estimation approach by
+estimating the generalization error directly, rather than using
+empirical test error (hence reducing variance.)
+
+%% move somewhere
+Nevertheless, the convergence rates of nonparametric methods of Bayes
+risk estimation are too slow to provide much assurance for their use
+in high-dimensional problems.  On the other hand, the empirical
+success of supervised learning approaches seems to justify a certain
+optimism that at least one of the popular black-box methods (random
+forests, neural networks, kernel SVM) can come close to the Bayes
+error rate within realistic sample sizes.  Methods such as random
+forests and neural networks are known to have \emph{universal
+approximation} properties that guarantee consistent recovery of the
+classification rule, given that the model complexity is scaled at an
+appropriate rate as the sample size increases; but methods such as
+kernel SVM have much more restrictive function classes and therefore
+have no guarantee of being able to recover the Bayes error.  Yet, it
+is seen in many learning tasks that the test error is very similar for
+very different classification methods, some universal and some
+non-universal, suggesting that the true signal lies in a
+low-complexity function class which can be adequately approximated
+using a variety of methods.  Empirical evidence for these phenomenon
+are collected in studies on the learning curves of classifers,
+beginning with Cortes 1994, and applied to specific applications by
+Figueroa et al. 2012, Beleites et al. 2013.  We leave further
+discussion of Bayes error estimation for future work; in the
+theoretical portion of the current paper, we will simply leave
+unspecified the method used to estimate Bayes error, and in our
+simulation and real data examples, we will use an ad hoc approach for
+estimating Bayes error from test error for the purpose of
+demonstrating our method.
+
 
 \section{Conclusions}
 
