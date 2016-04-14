@@ -12,9 +12,9 @@ standards = apply(fit_feat,2,sd)
 constF = which(standards==0)     
 
 ## random voxel selection
-vox1 = order(SNRv1_corr,decreasing = TRUE)[1:800]
+vox1 = order(SNRv1_corr,decreasing = TRUE)[1:1250]
 set.seed(1)
-vox1 <- sample(vox1, 800, FALSE)
+vox1 <- sample(vox1, 1250, FALSE)
 
 for (nvox in c(100, 200, 300, 400, 500, 600)) {
 ##for (nvox in c(20, 40, 60, 80)) {
