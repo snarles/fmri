@@ -29,6 +29,8 @@
 \newcommand{\Vol}{\text{Vol}}
 \newcommand{\comm}[1]{}
 \newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+\newcommand{\Cor}{\text{Cor}}
+
 
 \begin{abstract}
 Multivariate pattern analyses approaches in neuroimaging are
@@ -332,32 +334,32 @@ of number of classes $K$.
 The following simplified model captures the essence of many
 neuroimaging studies.  Let $\mathcal{X}$ be a space of stimuli,
 represented by $q$-dimensional vectors.  In the design stage of the
-experiment, a set of $k$ stimuli exemplars $\{x_1,\hdots, x_k\}$ are
+experiment, a set of $k$ stimuli exemplars $\{x^{(1)},\hdots, x^{(k)}\}$ are
 selected, and then one specifies a $T$-length sequence of stimuli $(
-x_{i_1},\hdots, x_{i_T} )$ to be presented to the subject.  In the
+x^{(i_1)},\hdots, x^{(i_T)} )$ to be presented to the subject.  In the
 execution of the experiment, an activation pattern, or \emph{response}
-$y_t$ is obtained for each of the stimuli presentations $x_{i_t}$.
-Generally $y_t$ is a $p$-dimensional vector, representing activity
+$y^{t}$ is obtained for each of the stimuli presentations $x^{(i_t)}$.
+Generally $y^t$ is a $p$-dimensional vector, representing activity
 levels of $p$ disjoint brain regions.  To simplify, assume that each
 of the $k$ stimuli is presented a total of $r$ times in the sequence;
 further assume that the responses to each stimulus presentation are
 conditionally independent, hence the ordering of the sequence does not
-matter.  Henceforth we can let $y_i^j$ denote the response to the
-$j$th presentation of the stimulus $x_i$.
+matter.  Henceforth we can let $y^{(i),j}$ denote the response to the
+$j$th presentation of the stimulus $x^{(i)}$.
 
-While in many studies, the stimuli exemplars $x_1,\hdots,x_k$
+While in many studies, the stimuli exemplars $x^{(1)},\hdots,x^{(k)}$
 are chosen somewhat arbitrarily, more types of inferences can be drawn
 if randomization is employed to choose the stimuli.
 Based on this distinction, we discuss two types of experimental designs:
 \begin{itemize}
 \item[1.] \emph{Fixed stimuli design.}
-The exemplars $x_1,\hdots, x_k$ are treated as fixed.
+The exemplars $x^{(1)},\hdots, x^{(k)}$ are treated as fixed.
 \item[2.] \emph{Randomized stimuli design.}
 The experimenter first specifies a space of stimuli $\mathcal{X}$
 and a probability distribution $p(x)$ over that space.
 Then, $k$ exemplars are drawn i.i.d. from that space,
 \[
-X_1,\hdots, X_k \stackrel{iid}{\sim} p(x).
+X^{(1)},\hdots, X^{(k)} \stackrel{iid}{\sim} p(x).
 \]
 \end{itemize}
 As we will discuss, the randomized stimuli design allows the possibility of
@@ -1130,9 +1132,32 @@ Kay et al. introduced the novel idea of assessing the accuracy of
 these predictions using a \emph{classification}-based metric, rather
 than a usual metric for prediction error such as mean-squared error.
 One treats the 120 validation stimuli $x_{1751},\hdots, x_{1870}$ as distinct classes.
-Next, for each $i = 1751, \hdots, 1870$, one predicts the class of $y^{(i)}$
-by correlating the observed $y^{(i)}$ with the 
+Next, for each $i = 1751, \hdots, 1870$, one predicts the class of $y^{(i)}$,
+by correlating the observed $y^{(i)}$ with the predictions $\hat{y}^{(j)}$.
+In other words, let $f$ be the mapping from the observed response to the predicted class:
+$f$ is given by
+\[
+f(y) = \argmax_{j =1751}^{1870} \Cor(y, \hat{y}^{(j)}).
+\]
+The test error is
+\[
+e_{test} = \frac{1}{120} \sum_{i=1751}^{1870} I(i \neq f(y^{(i)})).
+\]
 
+While differing from a conventional classification task, the Kay et
+al. \emph{identification} task can also be treated using our
+framework.  An \emph{identification rule} (as opposed to a
+classification rule) is defined by a function $f$ which takes arguments
+$\{y, x^{(1)},\hdots, x^{(k)}\}$ where $k$ can be any positive integer.
+The function $f$ returns an integer from 1 to $k$,
+\[
+f(y, x^{(1)},\hdots, x^{(k)}) \in \{1,\hdots, k\}.
+\]
+
+The generalization error for the identification task is defined as
+\[
+e_{gen}(f) = \Pr[f(Y, x^{(1)},\hdots, x^{(k)}) \neq i|Y \sim p(y|x^{(i)})].
+\]
 
 
 
