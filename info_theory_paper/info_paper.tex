@@ -885,7 +885,11 @@ and sufficient statistic
 \sum_{i=1}^d t(x_i^{[d]}, y_i^{[d]}).
 \]
 
-One example of such an exponential family sequence model is a multivariate Gaussian model with limiting spectra $H = \delta_1$ and $G = \delta_1$, but scaled so that the marginal variance of the components of $X$ and $Y$ are equal to one.  This corresponds to a exponential family sequence model with
+One example of such an exponential family sequence model is a
+multivariate Gaussian model with limiting spectra $H = \delta_1$ and
+$G = \delta_1$, but scaled so that the marginal variance of the
+components of $X$ and $Y$ are equal to one.  This corresponds to a
+exponential family sequence model with
 \[
 b_x(x) = b_y(x) = \frac{1}{\sqrt{2\pi}} e^{-x^2/2}
 \]
@@ -919,14 +923,14 @@ we simulate data from such a multivariate logistic regression model in section X
 
 In the previous section, we showed that
 \[
-\lim e_{ABE} = \pi_k(\sqrt{2 I(X; Y)}),
+\lim_{d \to \infty} e_{ABE, k} = \pi_k(\sqrt{2 I(X; Y)}),
 \]
-where $e_{ABE}$ is the $k$-class average Bayes error,
-in an asymptotic regime where $I(X; Y)$ is fixed while the dimensionality of $X$ increases.
-Since $pi_k$ is invertible for all $k = 2, \hdots$,
+where $e_{ABE, k}$ is the $k$-class average Bayes error,
+in an asymptotic regime where $I(X^{[d]}; Y^{[d]})$ is fixed while the dimensionality of $X$ increases.
+Since $\pi_k$ is invertible for all $k = 2, \hdots$,
 a converse relationship
 \[
-\lim I(X; Y) = \frac{1}{2}(\pi_K^{-1}(\eta))^2
+\lim_{d \to \infty} I(X^{[d]}; Y^{[d]}) = \frac{1}{2}(\pi_k^{-1}(\eta))^2
 \]
 also holds in the same regime.  We formally state the result, and a few consequences, as follows.
 
@@ -934,16 +938,16 @@ also holds in the same regime.  We formally state the result, and a few conseque
 Let $p^{[d]}(x, y)$ be a sequence of joint densities
 for $d = 1,2,\hdots$ as given above.  Further assume assumptions A2 - A4 and also
 \begin{itemize}
-\item[A1'.] $\lim_{d \to \infty} e_{ABE} = \eta < \infty.$
+\item[A1'.] $\lim_{d \to \infty} e_{ABE, k} = \eta < \infty.$
 \end{itemize}
 Then
 \begin{itemize}
 \item[i.]
 \[
-\lim_{d \to \infty} I(X^{[d]}; Y^{[d]}) = \frac{1}{2}(\pi_K^{-1}(e_{ABE}))^2.
+\lim_{d \to \infty} I(X^{[d]}; Y^{[d]}) = \frac{1}{2}(\pi_k^{-1}(e_{ABE}))^2.
 \]
 \item[ii.]
-If $[\underline{e}, \bar{e}]$ is a $1-\alpha$ confidence interval for $e_{ABE}$,
+If $[\underline{e}, \bar{e}]$ is a $1-\alpha$ confidence interval for $e_{ABE, k}$,
 then
 \[
 [\frac{1}{2}(\pi_k^{-1}(\bar{e}))^2, \frac{1}{2}(\pi_k^{-1}(\underline{e}))^2]
@@ -952,34 +956,35 @@ is asymptotically a $1-\alpha$ confidence interval of $I(X; Y)$: that is,
 \[
 \lim_{d \to \infty} \Pr\left[I(X^{[d]}; Y^{[d]}) \in [\frac{1}{2}(\pi_k^{-1}(\underline{e}))^2, \frac{1}{2}(\pi_k^{-1}(\bar{e}))^2]\right] = 1-\alpha.
 \]
-\item[iii.] If $\hat{e}$ is a $O(1/\sqrt{n})$-consistent estimator for $e_{ABE}$,
-and $\lim_{d \to \infty} e_{ABE} > 0,$
+\item[iii.] If $\hat{e}$ is a $O(1/\sqrt{n})$-consistent estimator for $e_{ABE, k}$,
+and $\lim_{d \to \infty} e_{ABE, k} > 0,$
 then $\frac{1}{2}(\pi_k^{-1}(\hat{e}))^2$ is a $O(1/\sqrt{n})$-consistent estimator for $I(X; Y)$.
 \end{itemize}
 
 \textbf{Proof.} 
 
 (i) Let $\{\iota_1,\hdots, \}$ be a collection of limiting points of $I(X^{[d]}; Y^{[d]})$.
-By Theorem 1, each of the corresponding subsequences has $e_{ABE}$ converging to
-$\pi_k(\sqrt{2 \iota_i})$.  However, by assumption A1', $e_{ABE}$ converges to $\eta$ in
+By Theorem 1, each of the corresponding subsequences has $e_{ABE, k}$ converging to
+$\pi_k(\sqrt{2 \iota_i})$.  However, by assumption A1', $e_{ABE, k}$ converges to $\eta$ in
 all subsequences.  Therefore, 
-\[\iota_1 = \iota_2 = \cdots = \frac{1}{2}(\pi_K^{-1}(\eta))^2,\]
+\[\iota_1 = \iota_2 = \cdots = \frac{1}{2}(\pi_k^{-1}(\eta))^2,\]
 implying the corollary.
 
 The proof of (ii) follows from continuity of probability, while the proof of (iii) follows from application of the delta method.  $\Box$
 
 Corollary 1 therefore suggests methods for obtaining confidence intervals and point estimates for $I(X; Y)$.
-To get a confidence interval for $I(X; Y)$, first find a confidence interval for the average Bayes error $e_{ABE}$; then obtain the confidence interval for $I(X; Y)$ as
+To get a confidence interval for $I(X; Y)$, first find a confidence interval for the average Bayes error $e_{ABE, k}$; then obtain the confidence interval for $I(X; Y)$ as
 \[
 [\frac{1}{2}(\pi_k^{-1}(\bar{e}))^2, \frac{1}{2}(\pi_k^{-1}(\underline{e}))^2].
 \]
+
 
 To obtain a point estimate for $I(X; Y)$, Corollary 1 suggests
 \[\hat{I}(X; Y) = \frac{1}{2}(\pi_k^{-1}(\hat{e}))^2.\]
 However, this procedure for obtaining point estimates can be easily seen to have suboptimal mean-squared risk in finite samples.
 Suppose that the estimator for average Bayes error has bias
 \[
-\E[\hat{e}] - e_{ABC} = \mu
+\E[\hat{e}] - e_{ABC, k} = \mu
 \]
 and variance
 \[
@@ -1000,7 +1005,7 @@ and also that
 \]
 Meanwhile, from the delta method we have
 \[
-\E[\hat{I}] = \E[f(\hat{e})] = I(X; Y) + \mu f'(e_{ABC}) + \frac{1}{2} \sigma^2 f''(e_{ABC}),
+\E[\hat{I}] = \E[f(\hat{e})] = I(X; Y) + \mu f'(e_{ABC, k}) + \frac{1}{2} \sigma^2 f''(e_{ABC, k}),
 \]
 and
 \[
@@ -1081,6 +1086,50 @@ $K=20$, $r = 8000$, true $I(X; Y) = 1.86$ \emph{(dashed line.)}
 \textbf{Sampling distribution of $\hat{I}$.}
 \includegraphics[scale = 0.6, clip = true, trim = 0 0.5in 0 0.5in]{../info_theory_sims/fig6.pdf}
 \end{center}
+
+\subsection{Application to data}
+
+Kay et al. employed a randomized stimuli design in their 2008 paper,
+``Identifying Natural Images from Human Brain Activity.''  The
+experiment was designed in order to investigate how visual information
+from natural images is encoded in the V1 through V3 brain regions.
+The stimulus space, $\mathcal{X}$, consists of $128 \times 128$-pixel
+grayscale photographs.  The response data consists of BOLD response in
+regions V1, V2, and V3 from a single subject.  The raw time series were
+processed to yield a single averaged response vector $y^{(i)}$ for each
+stimulus $x^{(i)}$, for $i = 1,\hdots, 1870$.
+The dimensionality of $y^{(i)}$ varies depending on which regions of interest
+we are discussing, and whether we consider a subset of the voxels in those regions.
+Let $v$ denote the dimensionality (number of voxels) of $y$.
+
+Let $x^{(i)}$ denote the native $128 \times 128$-pixel representation of the image
+(i.e. a $16384$-dimensional vector with entries between 0 and 1.)
+In the study, Kay et al. parameterized the raw stimuli $x^{(i)}$ using a library of
+Gabor wavelet filters, $g_1,\hdots, g_{10921}$, where each filter is a nonlinear mappping
+\[
+g_j: \mathcal{X} \to \mathbb{R}.
+\]
+Also let $\vec{g}$ denote the vector-valued function
+\[
+\vec{g}(x) = (g_1(x),\hdots, g_{10921}(x)).
+\]
+
+Using a \emph{training} subset of the stimulus-response pairs $(x_i, y_i)$, $i = 1,\hdots, 1750$,
+Kay et al. fit a regularized linear model
+\[
+y^{(i)} \approx B^T \vec{g}(x^{(i)})
+\]
+where $B$ is a $10921 \times v$-dimensional matrix, which is to be fit to the data.
+The resulting model is used to obtain predictions $\hat{y}^{(i)}$ for the remaining validation subset,
+$i = 1751,\hdots, 1870$,
+by
+\[
+\hat{y}^{(i)} = B^T \vec{g}(x^{(i)}).
+\]
+
+
+
+
 
 \section{Discussion}
 
