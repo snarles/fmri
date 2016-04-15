@@ -1104,18 +1104,17 @@ The dimensionality of $y^{(i)}$ varies depending on which regions of interest
 we are discussing, and whether we consider a subset of the voxels in those regions.
 Let $v$ denote the dimensionality (number of voxels) of $y$.
 
-Let $x^{(i)}$ denote the native $128 \times 128$-pixel representation of the image
-(i.e. a $16384$-dimensional vector with entries between 0 and 1.)
-In the study, Kay et al. parameterized the raw stimuli $x^{(i)}$ using a library of
-Gabor wavelet filters, $g_1,\hdots, g_{10921}$, where each filter is a nonlinear mappping
+Let $x^{(i)}$ denote the native $128 \times 128$-pixel representation
+of the image (i.e. a $16384$-dimensional vector with entries between 0
+and 1.)  One of the goals of the Kay et al. paper is to evaluate
+competing encoding models.  In the context of the study,
+an \emph{encoding model} is a vector-valued function from the stimulus
+to a $p$-dimensional space,
 \[
-g_j: \mathcal{X} \to \mathbb{R}.
+\vec{g}(x) = (g_1(x),\hdots, g_{p}(x)).
 \]
-Also let $\vec{g}$ denote the vector-valued function
-\[
-\vec{g}(x) = (g_1(x),\hdots, g_{10921}(x)).
-\]
-
+One of the encoding models studied by Kay et al. is the Gabor wavelet pyramid,
+$\vec{g}_{Gabor}$, with $p = 10921$.
 Using a \emph{training} subset of the stimulus-response pairs $(x_i, y_i)$, $i = 1,\hdots, 1750$,
 Kay et al. fit a regularized linear model
 \[
@@ -1143,6 +1142,12 @@ The test error is
 \[
 e_{test} = \frac{1}{120} \sum_{i=1751}^{1870} I(i \neq f(y^{(i)})).
 \]
+This test error can be computed using different encoding models
+$\vec{g}$ and different regions of the brain, or different-sized
+subsets of voxels.
+One can therefore get a sense of the differences between encoding models
+or between brain regions by comparing the resulting test errors.
+
 
 While differing from a conventional classification task, the Kay et
 al. \emph{identification} task can also be treated using our
@@ -1153,28 +1158,37 @@ The function $f$ returns an integer from 1 to $k$,
 \[
 f(y, x^{(1)},\hdots, x^{(k)}) \in \{1,\hdots, k\}.
 \]
+One can study competing encoding models by constraining identification rules
+to using features provided by the encoding, i.e. only considering functions
+\[
+f(y, \vec{g}(x^{(1)}),\hdots, \vec{g}(x^{(k)})) \in \{1,\hdots, k\}.
+\]
 
 The generalization error for the identification task is defined as
 \[
-e_{gen}(f) = \Pr[f(Y, x^{(1)},\hdots, x^{(k)}) \neq i|Y \sim p(y|x^{(i)})],
+e_{gen}(f) = \Pr[f(Y, \vec{g}(x^{(1)}),\hdots, \vec{g}(x^{(k)})) \neq i|Y \sim p(y|x^{(i)})],
 \]
-and once again the Bayes rule
+Now, the Bayes rule will be specific to the encoding model
 \[
-e_{Bayes}(x^{(1)},\hdots, x^{(k)}) = \inf_f \Pr[f(Y, x^{(1)},\hdots, x^{(k)}) \neq i|Y \sim p(y|x^{(i)})].
+e_{Bayes}(\vec{g}(x^{(1)}),\hdots, \vec{g}(x^{(k)})) = \inf_f \Pr[f(Y, \vec{g}(x^{(1)}),\hdots, \vec{g}(x^{(k)})) \neq i|Y \sim p(y|x^{(i)})].
 \]
-Also, the Bayes identification rule which attains the minimal error can be given explicitly,
+As before, the Bayes identification rule which attains the minimal error can be given explicitly,
 \[
-f_{Bayes}(y, x^{(1)},\hdots, x^{(k)}) = \argmin_{i=1}^k p(y|x^{(i)}).
+f_{Bayes}(y, \vec{g}(x^{(1)}),\hdots, \vec{g}(x^{(k)})) = \argmin_{i=1}^k p(y|\vec{g}(x^{(i)})).
 \]
-The average Bayes error is defined by \eqref{eq:abe} as before.
+The average Bayes error can be defined as before, but is specific to the encoding model:
+\[
+e_{ABE}(\vec{g}) = \E[e_{Bayes}(\vec{g}(X^{(1)}),\hdots, \vec{g}(X^{(k)}))]
+\]
 
 Our asymptotic theory links average Bayes error to information and
 is \emph{not specific} to the whether the task is based on
 identification or classification.  Hence, the approximation
 \[
-e_{ABE, k} \approx \pi_k(\sqrt{2 I(X; Y)})
+e_{ABE, k}(\vec{g}) \approx \pi_k(\sqrt{2 I(\vec{g}(X); Y)})
 \]
-holds under the same conditions on $p(x, y)$ as before.
+still holds in the appropriate regime.
+
 
 However, one adjustment that needs to be made is how to construct
 point estimates or confidence intervals for $e_{ABE}$.
@@ -1190,11 +1204,11 @@ Let $\beta \in [0, 1]$ be a Bayesian smoothing parameter (typically $\beta$ is c
 For each $b = 1,\hdots, B$, define the $b$th sampled test error $e_b$ by:
 \begin{enumerate}
 \item Sample $T$ stimuli exemplars without replacement from the library of $N$ exemplars.
-\item Train an identification rule $f_b$ using the training set pairs $(x^{(i)}, y^{(i)})$.
+\item Train an identification rule $f_b$ using the training set pairs $(\vec{g}(x^{(i)}), y^{(i)})$.
 \item Let $S_1,\hdots, S_M$ denote all possible subsets of size $k$ from the remaining $N-T$ exemplars.
 \item For each subset $S_j = \{x^{(i_{j, 1})}, \hdots, x^{(i_{j, k})}\}$, compute the test error $e_{test, b, j}$ via
 \[
-e_{test, b, j} = \frac{1}{k} \sum_{\ell = 1}^k I(i_{j, \ell} \neq f(y^{(i_{j, \ell})}, S_j))
+e_{test, b, j} = \frac{1}{k} \sum_{\ell = 1}^k I(i_{j, \ell} \neq f(y^{(i_{j, \ell})}, \vec{g}(x^{(i_{j, 1})}),\hdots, \vec{g}(x^{(i_{j, k})})))
 \]
 \item Set $e_b = \beta\frac{k-1}{k} + (1-\beta) \frac{1}{M} \sum_{j=1}^M e_{test, b, j}$.
 \end{enumerate}
@@ -1203,14 +1217,37 @@ by using the hypergeometric sampling formula; e.g., see Nishimoto
 (2011) for details.  Setting the parameter $\beta > 0$ is typically
 recommended in order to reduce variance in the procedure.
 
-Now, choosing a level $\alpha$, let $\bar{e}$ be the $(1-\alpha/2)$th
-quantile and $\underline{e}$ be the $(\alpha/2)$th quantile of
+Now, choosing a level $\alpha$, let $\bar{e}(\vec{g})$ be the $(1-\alpha/2)$th
+quantile and $\underline{e}(\vec{g})$ be the $(\alpha/2)$th quantile of
 $\{e_b\}_{b=1}^B$.  Then one constructs the confidence interval
 \[
 [\frac{1}{2}(\pi_k^{-1}(\bar{e}))^2, \frac{1}{2}(\pi_k^{-1}(\underline{e}))^2].
 \]
-for $I(X; Y)$.
+for $I(\vec{g}(X); Y)$.
 
+We computed such confidence intervals for $\vec{g}_{Gabor}$, taking
+$Y$ to be random subsamples of size $\{100, 200, \hdots, 600\}$ voxels
+from V1, and also varying the parameter $k$ within the procedure.
+The confidence intervals are shown in Figure ?.
+
+\begin{figure}
+\centering
+\includegraphics[scale = 0.7]{gabor_random_Y.pdf}
+\caption{Confidence intervals for $I(\vec{g}_{Gabor}(X); Y)$, where $Y$ are subsamples of size $\{100, 200, \hdots, 600\}$ voxels
+from V1.}
+\end{figure}
+
+Using the same voxel subsamples and parameters $k$, but now using a
+reduced encoding model $\vec{g}_{reduced}$ with $p=681$,
+we computed confidence intervals for
+$I(\vec{g}_{reduced}(X); Y)$.
+
+\begin{figure}
+\centering
+\includegraphics[scale = 0.7]{reduced_random_Y.pdf}
+\caption{Confidence intervals for $I(\vec{g}_{reduced}(X); Y)$, where $Y$ are subsamples of size $\{100, 200, \hdots, 600\}$ voxels
+from V1.}
+\end{figure}
 
 
 
