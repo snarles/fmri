@@ -477,7 +477,7 @@ rules $f_1,\hdots, f_m$, and taking the best generalization error as
 an estimate of the Bayes error.  We give more details of this approach
 in the Discussion.
 
-This way you can draw inferences about information between the fixed
+This way one can draw inferences about information between the fixed
 ensemble $x_1,...,x_k$ and the brain regions being examined.  But in
 many cases it is desired to generalize the results to other stimuli
 that were not included in the experiment.  In order to do this, a
@@ -485,36 +485,56 @@ randomized design is needed.
 
 \subsection{Randomized stimuli design}
 
-As we pointed out in the introduction, the quantity $e_{Bayes}$ is not
+In a randomized design, we specify a distribution $p(x)$ on $\mathcal{X}$,
+and require that the stimulus $x_1,\hdots, x_k$ are drawn iid from this distribution.
+Defining the joint distribution of the stimulus $X$ and the response $Y$ as
+\[
+p(x, y) = p(x) p(y|x),
+\]
+one can also define the mutual information
+\[
+I(X; Y) = \int p(x, y) \log \frac{p(x, y)}{p(x) p(y)} dxy
+\]
+
+Unlike in the case of fixed design, it becomes possible to infer functionals of $p(x, y)$, such as $I(X; Y)$,
+from the data.
+In other words, beyond merely testing for the existence of information,
+the additional assumption of randomization allows us to estimate the mutual information.
+While the fixed design setup allowed qualitative tests of information,
+the randomized design enables, in addition, a quantitative estimation approach,
+which in turn allows for a richer set of comparisons to be made from the data:
+which region has the most information about the stimulus?  
+how redundant is the information in region A compared to region B?
+
+Methodologies for estimating mutual information under the assumption of randomization
+have been studied in (Borst 1999), (Nelken 2005) and most notably (Gastpar 2010); the latter
+studies the problem under an identical setup to ours.  In addition to these approaches,
+one can obtain a lower bound on the information using the mutual information of the confusion matrix
+(Treves et al), (Quiroga 2009).  In the following section, we present our methodology for
+inferring mutual information under the randomized stimuli design setting,
+
+Before presenting our approach, we first define the notion of average Bayes error, which is fundamental to our approach.
+The motivation for defining average Bayes error is the fact that the quantity $e_{Bayes}$ is not
 a parameter of the joint distribution $p(x, y)$, but rather depends on
 the specific exemplars $x_1,\hdots, x_k$ selected; hence, one may
-write $e_{Bayes}(x_1,\hdots, x_k)$ to emphasize this dependence.  In
-many studies, the end goal is to make some inference about the joint
-distribution $p(x, y)$, such as the mutual information $I(X; Y)$.
-However, an estimate of $e_{Bayes}$ cannot possibly be sufficient as a
-basis for inference about $p(x, y)$ because there is no direct link
-between $e_{Bayes}$ and $p(x)$, given that we made no assumption on
-how $x_1,\hdots, x_k$ were obtained.  This motivates definition of
-the \emph{average} Bayes error,
+write $e_{Bayes}(x_1,\hdots, x_k)$ to emphasize this dependence. 
+The \emph{average} Bayes error, on the other hand, is defined uniquely for any joint distribution,
 \[
-e_{ABE} = \E[e_{Bayes}(X_1,\hdots, X_k)],
+e_{ABE, k} = \E[e_{Bayes}(X_1,\hdots, X_k)],
 \]
 where $X_1,\hdots, X_K$ are drawn i.i.d. from $p(x)$.
-The $k$-class average Bayes error is uniquely defined for any joint distribution $p(x, y)$,
-and supposing that an unbiased estimator for Bayes error exists, $\hat{e}_{Bayes}$,
-then $\hat{e}_{Bayes}$ will also be unbiased for $e_{ABE}$ supposing that the experimental design randomized the selection of $X_1,\hdots, X_k$
-by drawing the vectors independently from $p(x)$.
-
-In the following section we investigate the relationship between $e_{ABE}$ and the mutual information $I(X; Y)$.
+Supposing that an unbiased estimator for Bayes error exists, $\hat{e}_{Bayes}$,
+then $\hat{e}_{Bayes}$ will also be unbiased for $e_{ABE, k}$ under the randomization assumption.
+It turns out that under certain conditions, the average Bayes error can be well-approximated as a monotonically decreasing function of the mutual information, and vice-versa.
 
 \section{Asymptotic Theory}
 
 Our goal in this section is to establish a relationship between the
 mutual information $I(X; Y)$ and the $k$-class average Bayes error,
-$e_{ABE}$.  In short, we will indentify a function $\pi_k$
+$e_{ABE, k}$.  In short, we will identify a function $\pi_k$
 (which depends on $k$),
 \[
-e_{ABE} \approx \pi_k(\sqrt{2 I(X; Y)})
+e_{ABE, k} \approx \pi_k(\sqrt{2 I(X; Y)})
 \]
 and that this approximation becomes accurate under a limit where $I(X; Y)$ is small relative to the dimensionality of $X$,
 and under the condition that the components of $X$ are approximately independent.  Formal conditions are given in the proof statement.
@@ -523,7 +543,7 @@ The function $\pi_k$ is given by
 \[
 \pi_k(c) = 1 - \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
 \]
-One way of intuitively understanding $1-\pi_k$ is that a misclassification event is when one of the...
+%One way of intuitively understanding $1-\pi_k$ is that a misclassification event is when one of the...
 Figure \ref{fig:pi} displays the plot of $\pi_k$ for several values of $k$.
 For all values of $k$, $\pi_k(\mu)$ is monotonically decreasing in $\mu$, and tends to zero as $\mu \to \infty$.
 This should not be surprising, because if $I(X; Y)$ is large, then the average Bayes error should be small.
@@ -540,7 +560,7 @@ obtain a classification rule which is better than guessing at random, which is o
 \end{figure}
 
 
-First, let us rewrite $e_{ABE}$ in terms of the density function.  Recall that the Bayes rule is
+First, let us rewrite $e_{ABE, k}$ in terms of the joint density $p(x, y)$.  Recall that the Bayes rule is
 \[
 e_{Bayes}(x_1,\hdots, x_k) = \frac{1}{k}\sum_{i=1}^k \Pr[\hat{X}(Y) \neq x_i| X = x_i].
 \]
@@ -554,7 +574,7 @@ e_{Bayes}(x_1,\hdots, x_k) = \frac{1}{k}\sum_{i=1}^k \Pr[p(Y|x_i) \leq \max_{j \
 \]
 In turn the average Bayes error can be written as
 \begin{align}
-e_{ABE} &= \E[e_{Bayes}(X_1,\hdots, X_k)]
+e_{ABE, k} &= \E[e_{Bayes}(X_1,\hdots, X_k)]
 \\&= \frac{1}{k}\sum_{i=1}^k \E[\Pr[p(Y|x_i) \leq \max_{j \neq i} p(Y|x_j)| X = x_i]]
 \\&= \E[\Pr[p(Y|x_1) \leq \max_{j \neq 1} p(Y|x_j)| X = x_1]]
 \\&= \Pr[p(Y|X_1) \leq \max_{j \neq 1} p(Y|X_j)| X = X_1].
@@ -572,49 +592,49 @@ allows us to obtain a formula for the misclassification rate.
 
 \textbf{Lemma 1. }
 \emph{
-Suppose $(Z_*, Z_1, \hdots, Z_{K-1})$ are jointly multivariate normal, with 
-$\E[Z_* - Z_1]= \alpha$, 
-$\Var(Z_*) = \beta$, 
-$\Cov(Z_*, Z_i) = \gamma$, 
-$\Var(Z_i)= \delta$, and $\Cov(Z_i, Z_j) = \epsilon$ for all $i, j = 1, \hdots,
-K-1$, such that $\beta + \epsilon - 2\gamma > 0$.  Then, letting
+Suppose $(Z_1, Z_2, \hdots, Z_k)$ are jointly multivariate normal, with 
+$\E[Z_1 - Z_i]= \alpha$, 
+$\Var(Z_1) = \beta$, 
+$\Cov(Z_1, Z_i) = \gamma$, 
+$\Var(Z_i)= \delta$, and $\Cov(Z_i, Z_j) = \epsilon$ for all $i, j = 2, \hdots,
+k$, such that $\beta + \epsilon - 2\gamma > 0$.  Then, letting
 \[
-\mu = \frac{\E[Z_* - Z_i]}{\sqrt{\frac{1}{2}\Var(Z_i - Z_j)}} = \frac{\alpha}{\sqrt{\delta - \epsilon}},
+\mu = \frac{\E[Z_1 - Z_i]}{\sqrt{\frac{1}{2}\Var(Z_i - Z_j)}} = \frac{\alpha}{\sqrt{\delta - \epsilon}},
 \]
 \[
-\nu^2 = \frac{\Cov(Z_* -Z_i, Z_* - Z_j)}{\frac{1}{2}\Var(Z_i - Z_j)} = \frac{\beta + \epsilon - 2\gamma}{\delta - \epsilon},
+\nu^2 = \frac{\Cov(Z_1 -Z_i, Z_1 - Z_j)}{\frac{1}{2}\Var(Z_i - Z_j)} = \frac{\beta + \epsilon - 2\gamma}{\delta - \epsilon},
 \]
 we have
 \begin{align*}
-\Pr[Z_* < \max_{i=1}^{K-1} Z_i] &= \Pr[W < M_{K-1}]
-\\&= 1 - \int \frac{1}{\sqrt{2\pi\nu^2}} e^{-\frac{(w-\mu)^2}{2\nu^2}} \Phi(w)^{K-1} dw,
+\Pr[Z_1 < \max_{i=2}^k Z_i] &= \Pr[W < M_{k-1}]
+\\&= 1 - \int \frac{1}{\sqrt{2\pi\nu^2}} e^{-\frac{(w-\mu)^2}{2\nu^2}} \Phi(w)^{k-1} dw,
 \end{align*}
-where $W \sim N(\mu, \nu^2)$ and $M_{K-1}$ is the maximum of $K-1$
+where $W \sim N(\mu, \nu^2)$ and $M_{k-1}$ is the maximum of $k-1$
 independent standard normal variates, which are independent of $W$.
 }
 
 \textbf{Proof.}
-We can construct independent normal variates $G_0$, $G_1,\hdots, G_{K-1}$
+We can construct independent normal variates $G_1$, $G_2,\hdots, G_k$
 such that
 \[
-G_0 \sim N(0, \beta + \epsilon - 2 \gamma)
+G_1 \sim N(0, \beta + \epsilon - 2 \gamma)
 \]
 \[
-G_i \sim N(0, \delta - \epsilon)
+G_i \sim N(0, \delta - \epsilon)\text{ for }i > 1
 \]
 such that
 \[
-Z_* - Z_i = \alpha + G_0 + G_i.
+Z_1 - Z_i = \alpha + G_1 + G_i \text{ for }i > 1.
 \]
 Hence
 \begin{align*}
-\Pr[Z_* < \max_{i=1}^{K-1} Z_i] &= \Pr[\min_i Z_* - Z_i < 0].
-\\&= \Pr[\min_{i=1}^{K-1} G_0 + G_i + \alpha < 0]
-\\&= \Pr[\min_{i=1}^{K-1} G_i < -\alpha - G_0]
-\\&= \Pr[\min_{i=1}^{K-1} \frac{G_i}{\sqrt{\delta - \epsilon}} < -\frac{\alpha - G_0}{\sqrt{\delta - \epsilon}}].
+\Pr[Z_1 < \max_{i=2}^k Z_i] &= \Pr[\min_{i > 1} Z_1 - Z_i < 0].
+\\&= \Pr[\min_{i=2}^{k} G_1 + G_i + \alpha < 0]
+\\&= \Pr[\min_{i=2}^{k} G_i < -\alpha - G_1]
+\\&= \Pr[\min_{i=2}^{k} \frac{G_i}{\sqrt{\delta - \epsilon}} < -\frac{\alpha - G_1}{\sqrt{\delta - \epsilon}}].
 \end{align*}
 Since $\frac{G_i}{\sqrt{\delta - \epsilon}}$ are iid standard normal variates, and since
-$-\frac{\alpha - G_0}{\sqrt{\delta - \epsilon}} \sim N(\mu,\nu^2)$ for $\mu$ and $\nu^2$ given in the statement of the Lemma, the proof is completed via a straightforward computation.  $\Box$
+$-\frac{\alpha - G_1}{\sqrt{\delta - \epsilon}} \sim N(\mu,\nu^2)$ for $\mu$ and $\nu^2$ given in the statement of the Lemma, the proof is completed via a straightforward computation.  $\Box$
 
 To see why the assumption that $Z_1,\hdots, Z_k$ are multivariate normal might be justified, suppose that $X$ and $Y$ have the same dimensionality $d$, and that
 joint density factorizes as
@@ -631,8 +651,8 @@ The $d$ terms $\log p_m(y_m | x_{m, i}) - \log p_m(y_m | x_{m, 1})$ are independ
 but dependent between the $i = 1,\hdots, k$.
 Therefore, the multivariate central limit theorem can be applied to conclude that the vector
 $(Z_1,\hdots, Z_k)$ can be scaled to converge to a multivariate normal distribution.
-Now, since the average Bayes error $e_{ABE}$ is a continuous functional of the joint distribution $p(x, y)$,
-it follows that $e_{ABE}$ converges to a functional of the limiting mean and covariance of $(Z_1,\hdots, Z_k)$, assuming
+Now, since the average Bayes error $e_{ABE,k}$ is a continuous functional of the joint distribution $p(x, y)$,
+it follows that $e_{ABE,k}$ converges to a functional of the limiting mean and covariance of $(Z_1,\hdots, Z_k)$, assuming
 that the limits exist.
 In our theorem, we assume a specific regime where these limits exist as a consequence.
 While the componentwise independence condition is not a realistic assumption,
@@ -655,21 +675,19 @@ We state the theorem for the regime where $I(X; Y)$ is fixed, while the dimensio
 We formally state the assumptions and theorem in this section.  The
 less technically inclined reader may skip the section in order to
 continue to the proposed methodology for estimating mutual
-information, and results. [Note: slightly different notation in this
-section: we will make the notation consistent with the rest of the
-paper before submission.]
+information, and results.
 
 The asymptotic regime we consider is one where the dimension of $X$ goes to infinity.
 This means that we have to consider a sequence of joint distributions $(X^{[d]}, Y^{[d]})$ indexed by the dimension $d$.
 
-Fix integer $K \geq 2$.  Let $p^{[d]}(x,y)$ be a sequence of
+Fix integer $k \geq 2$.  Let $p^{[d]}(x,y)$ be a sequence of
 probability density functions, where $x$ is of dimension $p^{[d]}$ and
 $y$ is of dimension $q^{[d]}$.  Let $p^{[d]}(x)$ and $p^{[d]}(y)$
 denote the marginal densities, and let
 \[
 p^{[d]}(y|x) = p^{[d]}(x, y)/p^{[d]}(y).\]
  Let $(X^{([d], i)}, Y^{([d], i)})$ be
-iid random variates from $p^{[d]}(x, y)$ for $i = 0, \hdots, K-1$; we will supress the
+iid random variates from $p^{[d]}(x, y)$ for $i = 1, \hdots, k$; we will supress the
 superscripts $[d]$ and/or $(i)$ when convenient.  Recall the definitions of
 entropy,
 \[
@@ -681,7 +699,7 @@ I(X; Y) = \int p(x, y) \log \frac{p(x, y)}{p(x)p(y)} dx dy.
 \]
 Furthermore, define the $K$-class average Bayes error as
 \[
-\text{ABE}_K = \Pr[p(Y^{(0)}|X^{(0)}) < \max_{i = 1}^{K-1} p(Y^{(0)}|X^{(i)})].
+e_{ABE, k} = \Pr[p(Y^{(1)}|X^{(1)}) < \max_{i = 2}^{k} p(Y^{(1)}|X^{(i)})].
 \]
 Define
 \[
@@ -702,7 +720,7 @@ for $d = 1,2,\hdots$ as given above.  Further assume that
 \item[A1.] $\lim_{d \to \infty} I(X^{[d]}; Y^{[d]}) = \iota < \infty.$
 \item[A2.] There exists a sequence of scaling constants $a_{ij}^{[d]}$
 and $b_{ij}^{[d]}$ such that the random vector $(a_{ij}\ell_{ij}^{[d]} +
-b_{ij}^{[d]})_{i, j = 1,\hdots, K}$ converges in distribution to a
+b_{ij}^{[d]})_{i, j = 1,\hdots, k}$ converges in distribution to a
 multivariate normal distribution.
 \item[A3.] There exists a sequence of scaling constants $a^{[d]}$, $b^{[d]}$ such that
 \[
@@ -712,26 +730,26 @@ converges in distribution to a univariate normal distribution.
 \item[A4.] For all $i \neq k$,
 \[\lim_{d \to \infty}\Cov[u(X^{(i)}, Y^{(j)}), u(X^{(k)}, Y^{(j)})] = 0.\]
 \end{itemize}
-Then for $\text{ABE}_K$ as defined above, we have
+Then for $e_{ABE, k}$ as defined above, we have
 \[
-\lim_{d \to \infty} \text{ABE}_{K} = \pi_K(\sqrt{2 \iota})
+\lim_{d \to \infty} e_{ABE, k} = \pi_k(\sqrt{2 \iota})
 \]
 where
 \[
-\pi_K(c) = 1 - \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{K-1} dz
+\pi_k(c) = 1 - \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz
 \]
 where $\phi$ and $\Phi$ are the standard normal density function and
 cumulative distribution function, respectively.
 
-[[Maybe add remark about assumptions here.]]
+%[[Maybe add remark about assumptions here.]]
 
 \textbf{Proof.}
 
-For $i = 1,\hdots, K-1$, define
+For $i = 2,\hdots, k$, define
 \[
-Z_i = \log p(Y^{(0)}|X^{(i)}) - \log p(Y^{(0)}|X^{(0)}).
+Z_i = \log p(Y^{(1)}|X^{(i)}) - \log p(Y^{(1)}|X^{(1)}).
 \]
-Then, we claim that $\vec{Z} = (Z_1,\hdots, Z_{K-1})$ converges in distribution to
+Then, we claim that $\vec{Z} = (Z_2,\hdots, Z_k)$ converges in distribution to
 \[
 \vec{Z} \sim N\left(-2\iota, 
 \begin{bmatrix}
@@ -754,7 +772,7 @@ since then assumption A2 implies the existence of a multivariate normal
 limiting distribution with the given moments.
 
 Before deriving the limiting moments, note the following identities.
-Let $X' = X^{(1)}$ and $Y = Y^{(0)}$.
+Let $X' = X^{(2)}$ and $Y = Y^{(1)}$.
 \[
 \E[e^{u(X', Y)}] = \int p(x) p(y) e^{u(x, y)} dx dy = \int p(x, y) dx dy = 1.
 \]
@@ -1155,6 +1173,15 @@ where \[\text{ABE} \leftrightarrow \text{MI}.\]
 
 \section{References}
 \begin{itemize}
+\item Gastpar, M.  Gill, P.  Huth, A.  Theunissen, F. ``Anthropic Correction of Information Estimates and Its Application to Neural Coding.'' \emph{IEEE Trans. Info. Theory}, Vol 56 No 2, 2010.
+\item  A. Borst and F. E. Theunissen, ``Information theory and neural coding''
+Nature Neurosci., vol. 2, pp. 947?957, Nov. 1999.
+\item L. Paninski, ``Estimation of entropy and mutual information,'' Neural
+Comput., vol. 15, no. 6, pp. 1191?1253, 2003.
+\item I. Nelken, G. Chechik, T. D. Mrsic-Flogel, A. J. King, and J. W. H.
+Schnupp, ``Encoding stimulus information by spike numbers and mean
+response time in primary auditory cortex,'' J. Comput. Neurosci., vol.
+19, pp. 199?221, 2005.
 \item Cover and Thomas.  Elements of information theory.
 \item Muirhead.  Aspects of multivariate statistical theory.
 \item van der Vaart.  Asymptotic statistics.
