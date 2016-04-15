@@ -521,9 +521,9 @@ a parameter of the joint distribution $p(x, y)$, but rather depends on
 the specific exemplars $x_1,\hdots, x_k$ selected; hence, one may
 write $e_{Bayes}(x_1,\hdots, x_k)$ to emphasize this dependence. 
 The \emph{average} Bayes error, on the other hand, is defined uniquely for any joint distribution,
-\[
+\begin{equation}\label{eq:abe}
 e_{ABE, k} = \E[e_{Bayes}(X_1,\hdots, X_k)],
-\]
+\end{equation}
 where $X_1,\hdots, X_K$ are drawn i.i.d. from $p(x)$.
 Supposing that an unbiased estimator for Bayes error exists, $\hat{e}_{Bayes}$,
 then $\hat{e}_{Bayes}$ will also be unbiased for $e_{ABE, k}$ under the randomization assumption.
@@ -1156,8 +1156,61 @@ f(y, x^{(1)},\hdots, x^{(k)}) \in \{1,\hdots, k\}.
 
 The generalization error for the identification task is defined as
 \[
-e_{gen}(f) = \Pr[f(Y, x^{(1)},\hdots, x^{(k)}) \neq i|Y \sim p(y|x^{(i)})].
+e_{gen}(f) = \Pr[f(Y, x^{(1)},\hdots, x^{(k)}) \neq i|Y \sim p(y|x^{(i)})],
 \]
+and once again the Bayes rule
+\[
+e_{Bayes}(x^{(1)},\hdots, x^{(k)}) = \inf_f \Pr[f(Y, x^{(1)},\hdots, x^{(k)}) \neq i|Y \sim p(y|x^{(i)})].
+\]
+Also, the Bayes identification rule which attains the minimal error can be given explicitly,
+\[
+f_{Bayes}(y, x^{(1)},\hdots, x^{(k)}) = \argmin_{i=1}^k p(y|x^{(i)}).
+\]
+The average Bayes error is defined by \eqref{eq:abe} as before.
+
+Our asymptotic theory links average Bayes error to information and
+is \emph{not specific} to the whether the task is based on
+identification or classification.  Hence, the approximation
+\[
+e_{ABE, k} \approx \pi_k(\sqrt{2 I(X; Y)})
+\]
+holds under the same conditions on $p(x, y)$ as before.
+
+However, one adjustment that needs to be made is how to construct
+point estimates or confidence intervals for $e_{ABE}$.
+Here we will limit our discussion to confidence intervals.
+The approach taken is to use cross-validation to construct the confidence interval.
+
+Let $N$ be the total number of stimuli exemplars.  Choose $T < N$ and
+$k < N - T$; $T$ denotes the number of \emph{training} exemplars and
+$k$ controls the number of \emph{test} exemplars.
+
+Set $B$, the number of Monte Carlo simulations, to be a large number.
+Let $\beta \in [0, 1]$ be a Bayesian smoothing parameter (typically $\beta$ is close to 0).
+For each $b = 1,\hdots, B$, define the $b$th sampled test error $e_b$ by:
+\begin{enumerate}
+\item Sample $T$ stimuli exemplars without replacement from the library of $N$ exemplars.
+\item Train an identification rule $f_b$ using the training set pairs $(x^{(i)}, y^{(i)})$.
+\item Let $S_1,\hdots, S_M$ denote all possible subsets of size $k$ from the remaining $N-T$ exemplars.
+\item For each subset $S_j = \{x^{(i_{j, 1})}, \hdots, x^{(i_{j, k})}\}$, compute the test error $e_{test, b, j}$ via
+\[
+e_{test, b, j} = \frac{1}{k} \sum_{\ell = 1}^k I(i_{j, \ell} \neq f(y^{(i_{j, \ell})}, S_j))
+\]
+\item Set $e_b = \beta\frac{k-1}{k} + (1-\beta) \frac{1}{M} \sum_{j=1}^M e_{test, b, j}$.
+\end{enumerate}
+For most identification rules, $e_b$ can be computed in $O(N^2)$ time
+by using the hypergeometric sampling formula; e.g., see Nishimoto
+(2011) for details.  Setting the parameter $\beta > 0$ is typically
+recommended in order to reduce variance in the procedure.
+
+Now, choosing a level $\alpha$, let $\bar{e}$ be the $(1-\alpha/2)$th
+quantile and $\underline{e}$ be the $(\alpha/2)$th quantile of
+$\{e_b\}_{b=1}^B$.  Then one constructs the confidence interval
+\[
+[\frac{1}{2}(\pi_k^{-1}(\bar{e}))^2, \frac{1}{2}(\pi_k^{-1}(\underline{e}))^2].
+\]
+for $I(X; Y)$.
+
 
 
 
