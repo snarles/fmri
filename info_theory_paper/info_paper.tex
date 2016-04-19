@@ -161,7 +161,6 @@ approach is to obtain a lower bound on the mutual information by using
 the confusion matrix of a classifier.  This is the most popular
 approach for estimating mutual information in neuroimaging studies,
 but suffers from known shortcomings (Gastpar 2010, Quiroga 2009).
-
 The idea of linking classification performance to mutual information
 dates back to the beginnings of information theory: Shannon's original
 motivation was to characterize the minimum achievable error
@@ -188,7 +187,7 @@ exemplars, and the arbitrary number of classes K.  Towards this end,
 we define a notion of $K$-class \emph{average Bayes error} which is
 uniquely defined for any given stimulus distribution and stochastic
 mapping from stimulus to response.  The $K$-class average Bayes error
-is simply the expectation of the Bayes error (the classification error
+is the expectation of the Bayes error (the classification error
 of the optimal classifier) when $K$ stimuli exemplars are drawn
 i.i.d. from the stimulus distribution, and treated as distinct
 classes.  Hence the average Bayes error can in principle be estimated
@@ -206,15 +205,16 @@ method allows estimates of the $K$-class Bayes error to be translated
 into estimate of the mutual information, and this resulting estimator
 of mutual information will be asymptotically independent of the choice
 of number of classes $K$.
+
 \section{Framework}
 
 The following simplified model captures the essence of many
 neuroimaging studies.  Let $\mathcal{X}$ be a space of stimuli,
 represented by $q$-dimensional vectors.  In the design stage of the
 experiment, a set of $k$ stimuli exemplars $\{x^{(1)},\hdots, x^{(k)}\}$ are
-selected, and then one specifies a $T$-length sequence of stimuli $(
+selected, and assigned into a $T$-length sequence of stimuli $(
 x^{(i_1)},\hdots, x^{(i_T)} )$ to be presented to the subject.  In the
-execution of the experiment, an activation pattern, or \emph{response}
+execution of the experiment, an activation pattern or \emph{response}
 $y^{t}$ is obtained for each of the stimuli presentations $x^{(i_t)}$.
 Generally $y^t$ is a $p$-dimensional vector, representing activity
 levels of $p$ disjoint brain regions.  To simplify, assume that each
@@ -239,16 +239,39 @@ Then, $k$ exemplars are drawn i.i.d. from that space,
 X^{(1)},\hdots, X^{(k)} \stackrel{iid}{\sim} p(x).
 \]
 \end{itemize}
-As we will discuss, the randomized stimuli design allows the possibility of
+
+As we will discuss, the randomized stimuli design allows the
+possibility of
 \emph{generalizing} beyond the chosen exemplars;
 i.e. drawing inferences about the entire joint distribution $p(x, y)$.
+
+And while we draw a clear-cut distinction between the fixed design
+setting and randomized design setting, in practice, the boundaries are
+frequently blurred.  Indeed, few researchers in the field actually
+employ an explicit randomization mechanism to choose the stimuli, yet
+they may think that their stimuli are ``effectively random''.  For
+stimulus categories such as faces or natural images, it is not clear
+how to specify a probability distribution $p(x)$ in the first place.
+Yet, a practical approach is to choose stimuli in an \emph{ad-hoc}
+manner with the intent of obtaining a representative set, and to treat
+the stimuli as having been randomly sampled from some implicitly
+defined $p(x)$ \emph{after the fact.}  In such studies, the convenient
+fiction of a randomized design is employed to formalize the process of
+generalizing experimental results.  Such a cavalier attitude towards
+randomization may seem concerning by the standards of clinical trials,
+but it is appropriate for the goals of typical imaging studies, where
+the ultimate objective to discover some qualitative properties of
+human perception and cognition.
 
 \subsection{Fixed stimuli design}
 
 %We now restate the model in application-independent terms.  
 
-We begin by describing a fixed stimuli design,
-and the types of inferences that can be made using machine learning tools.
+We begin by describing a fixed stimuli design, and the types of
+inferences that can be made using machine learning tools.  The general
+approach we describe was first introduced to the neuroimaging
+community by Haxby (1999), but its foundational concepts belong to the
+area of statistical learning (Hastie et al. 2008).
 
 Let
 $\mathcal{X} \subset \mathbb{R}^q$ and
@@ -261,19 +284,17 @@ be a probability density on $\mathcal{Y}$.
 %p(x, y) = p(x) p_x(y)
 %\]
 %so that $p_x(y)$ can also be written $p(y|x)$.
-Take a subset
-$\{x_1,\hdots, x_k\} \subset \mathcal{X}$.
-Let $Y_i^j$ be a random
-vector distributed according to density $p_{x_i}(y)$; and let $Y_i^j$
-be conditionally independent given $\{x_1,\hdots, x_k\}$ for $i =
+Take a subset $\{x^{(1)},\hdots, x^{(k)}\} \subset \mathcal{X}$.  Let
+$Y_i^j$ be a random vector distributed according to density
+$p_{x^{(i)}}(y)$; and let $Y^{(i),j}$ be independent for $i =
 1,\hdots, k$ and $j = 1, \hdots, r.$
  
 In MVPA, one carries out a classification task to assess whether $y$
 contains information about $x$.  Formally, a classification rule is
 any (possibly stochastic) mapping $f: \mathcal{Y} \to \{1,\hdots,
-k\}$.  The \emph{generalization error} of the classification rule for classes $x_1,\hdots, x_k$ is
+k\}$.  The \emph{generalization error} of the classification rule for classes $x^{(1)},\hdots, x^{(k)}$ is
 \[
-e_{gen}(f) = \frac{1}{k} \sum_{i=1}^k\Pr[f(Y) \neq i | X = x_i].
+e_{gen}(f) = \frac{1}{k} \sum_{i=1}^k\Pr[f(Y) \neq i | X = x^{(i)}].
 \]
 A trivial classification rule which outputs the result of a $k$-sided
 die roll for all inputs $y$ would achieve a generalization error of
@@ -282,23 +303,46 @@ with $e_{gen} < \frac{k-1}{k}$ is indicative that $y$ contains nonzero
 information about $x$.  Hence, in order to demonstrate that $y$ is
 informative of $x$, one tests the null hypothesis
 \[
-H_0: e_{gen}(f) = \frac{k-1}{k}.
+H_0: e_{gen}(f) = \frac{k-1}{k}
+\]
+versus the alternative
+\[
+H_1: e_{gen}(f) < \frac{k-1}{k}.
 \]
 Rejecting the null hypothesis for a given classification rule $f$ can
-be taken as evidence that $y$ is informative of $x$.  In the
-discussion thus far, ``information'' refers to an informal, intuitive
-notion.
-%, but it is also possible to formally establish that violation
-%of the null hypothesis implies nonzero mutual information $I(X; Y)$.
+be taken as evidence that $y$ is informative of $x$.
 
-The classifier is a functional which maps a set of observations to a classification rule,
+We have not yet specified how any classification rule $f$ is to be
+obtained.  Unless one has strong prior knowledge about the nature of
+the brain encoding, it is necessary to choose the function $f$ in a
+data-dependent way in order to obtain a reasonable classification
+rule.  A wide variety of machine learning algorithms exist for
+``learning'' good classification rules $f$ from data.  We use the
+terminology \emph{classifier} to refer to any algorithm which takes
+data as input, and produces a classification rule $f$ as output.  The
+following discussion makes it necessary for us to make a precise
+distinction between the \emph{classifier} and the \emph{classification
+rule} it produces, and our usage of the terms may differ from the
+standard in the literature.  Mathematically speaking, the classifier
+is a functional which maps a set of observations to a classification
+rule,
 \[
-\mathcal{F}: \{(x_1,y_1),\hdots, (x_m, y_m)\} \mapsto f(\cdot);
+\mathcal{F}: \{(x_1,y_1),\hdots, (x_m, y_m)\} \mapsto f(\cdot).
 \]
-informally, a classifier is an algorithm which ``learns'' a classification rule from data.
-For a valid test of $H_0$, 
-either the data-splitting approach or the cross-validation approach can be used.
-In the data-splitting approach, one creates a \emph{training set} consisting of $r_1$ repeats per class,
+The data $(x_1,y_1),\hdots, (x_m, y_m)$ used to obtain the
+classification rule is called \emph{training data.}  When the
+objective is to obtain the best possible classification rule, as is
+the case in diagnostic settings, it is optimal to use all of the
+availible data to train the classifier.  However, when the goal is to
+obtain \emph{inference} about the performance of the classification
+rule, it beomes necessary to split the data into two independent sets:
+one set to train the classifier, and one to evaluate the performance.
+The reason that such a splitting is necessary is because using the
+same data to test and train a classifier introduces significant bias
+into the empirical classification error.
+
+In \emph{data-splitting}, one creates a \emph{training
+set} consisting of $r_1$ repeats per class,
 \[
 \{(x_1, y_1^1),\hdots, (x_1,y_1^{r_1}), \hdots, (x_m, y_m^1),\hdots, (x_m,y_m^{r_1})\}
 \]
@@ -306,14 +350,9 @@ and a \emph{test set} consisting of the remaining $r_2 = r - r_1$ repeats.
 \[
 \{(x_1, y_1^{r_1 + 1}),\hdots, (x_1,y_1^{r}), \hdots, (x_m, y_m^{r_1 + 1}),\hdots, (x_m,y_m^{r_1})\}.
 \]
-In the cross-validation approach, one applies the data-splitting
-approach multiple times, with different training and test partitions,
-and aggregates the results.  We further discuss the cross-validation
-approach in section X.
-
-In the data-splitting approach, one obtains the classification rule $f$ by applying the classifier to the training data,
+One inputs the training data into the classifier to obtain the classification rule $f$,
 \[
-f = \mathcal{F}(\{(x_1, y_1^1),\hdots, (x_1,y_1^{r_1}), \hdots, (x_m, y_m^1),\hdots, (x_m,y_m^{r_1})\})
+f = \mathcal{F}(\{(x_1, y_1^1),\hdots, (x_1,y_1^{r_1}), \hdots, (x_m, y_m^1),\hdots, (x_m,y_m^{r_1})\}).
 \]
 The test statistic of interest is the test error,
 defined as
@@ -324,11 +363,19 @@ Due to the conditional independence of the training set and test set,
 $e_{test}$ is an unbiased estimate of $e_{gen}$.  Hence various
 approaches can be used to obtain a threshold $c_\alpha$ such that
 $\Pr[e_{test} < c_\alpha] \leq \alpha$ holds (approximately) under the
-null hypothesis.  These approaches include permutation tests,
-tests based on a universal variance bound, or the generalized
-likelihood ratio test.  Regardless of the procedure used to derive the
-threshold $c_\alpha$, The hypothesis $H_0$ is rejected at level
-$\alpha$ if $e_{test} < c_\alpha$.
+null hypothesis.  These approaches include permutation tests, tests
+based on a universal variance bound, or the generalized likelihood
+ratio test.  The hypothesis $H_0$ is then rejected at level $\alpha$
+if $e_{test} < c_\alpha$.
+
+There is also a way to improve on data-splitting, by
+using \emph{cross-validation}. Essentially, one applies the
+data-splitting approach multiple times, with different training and
+test partitions, and aggregates the results. Cross-validation can be
+used to reduce the variance of the estimated $e_{gen}$ and hence
+improve the power of the test, and it can also be used to
+obtain \emph{confidence intervals} for the estimate.  We discuss such
+a cross-validation in greater detail in section 5.
 
 %% shift focus from sample size to arbitrary choice of classifier
 While tests of the generalization error suffice to establish the
@@ -349,24 +396,24 @@ posteriori (MAP) rule
 \[
 f^*(y) = \argmax_{i=1}^k\ p(y|x_i).
 \]
-However, it is not possible to construct this rule in practice since
-the joint distribution is unknown.  Instead, in many cases, a
-reasonable approach is to try a variety of classifiers, producing
-rules $f_1,\hdots, f_m$, and taking the best generalization error as
-an estimate of the Bayes error.  We give more details of this approach
-in the Discussion.
+Of course, it is not possible to construct this rule in practice since
+the joint distribution is unknown.  Instead, a reasonable approach is
+to try a variety of classifiers, producing rules $f_1,\hdots, f_m$,
+and taking the best generalization error as an estimate of the Bayes
+error.  We give more details of this approach in the Discussion.
 
 This way one can draw inferences about information between the fixed
 ensemble $x_1,...,x_k$ and the brain regions being examined.  But in
 many cases it is desired to generalize the results to other stimuli
-that were not included in the experiment.  In order to do this, a
-randomized design is needed.
+that were not included in the experiment.  In order to do this, we
+need to be able to assume a randomized design.
 
 \subsection{Randomized stimuli design}
 
-In a randomized design, we specify a distribution $p(x)$ on $\mathcal{X}$,
-and require that the stimulus $x_1,\hdots, x_k$ are drawn iid from this distribution.
-Defining the joint distribution of the stimulus $X$ and the response $Y$ as
+Under the assumption of randomized design, we treat the stimuli
+$x_1,\hdots, x_k$ as independent draws from some distribution $p(x)$.
+Defining the joint distribution of the stimulus $X$ and the response
+$Y$ as
 \[
 p(x, y) = p(x) p(y|x),
 \]
