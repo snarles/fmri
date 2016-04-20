@@ -419,39 +419,57 @@ p(x, y) = p(x) p(y|x),
 \]
 one can also define the mutual information
 \[
-I(X; Y) = \int p(x, y) \log \frac{p(x, y)}{p(x) p(y)} dxy
+I(X; Y) = \int p(x, y) \log \frac{p(x, y)}{p(x) p(y)} dxy.
 \]
 
-Unlike in the case of fixed design, it becomes possible to infer functionals of $p(x, y)$, such as $I(X; Y)$,
-from the data.
-In other words, beyond merely testing for the existence of information,
-the additional assumption of randomization allows us to estimate the mutual information.
-While the fixed design setup allowed qualitative tests of information,
-the randomized design enables, in addition, a quantitative estimation approach,
-which in turn allows for a richer set of comparisons to be made from the data:
-which region has the most information about the stimulus?  
-how redundant is the information in region A compared to region B?
+In contrast the case of fixed design, the randomized design framework
+provides a principled way of making inferences about the population of
+stimuli exemplars, beyond the particular exemplars that were chosen
+for the study.  This is particularly relevant for complex stimuli, for
+which the number of distinct stimuli species (e.g. distinct faces)
+could be astonomically large (i.e. the number of faces that a human
+could distinguish.)  The concept of information $I(X; Y)$ captures the
+notion of the ``complexity'' of the stimuli representation.  By
+inferring the information $I(X; Y)$, we make inferences about the
+complexity of the representation in the given brain region $Y$.
+%What we will demonstrate in section 4 is the possibility of inferring
+%$I(X; Y)$ by using the randomized stimuli framework.  Using
+%a \emph{relatively small} number of randomly sampled stimuli, we infer
+%$I(X; Y)$ and hence make inferences about the complexity of the full
+%population of stimuli.
+%While the fixed design setup allowed qualitative
+%tests of information, the randomized design enables, in addition, a
+%quantitative estimation approach, which in turn allows for a richer
+%set of comparisons to be made from the data: which region has the most
+%information about the stimulus?  how redundant is the information in
+%region A compared to region B?
 
-Methodologies for estimating mutual information under the assumption of randomization
-have been studied in (Borst 1999), (Nelken 2005) and most notably (Gastpar 2010); the latter
-studies the problem under an identical setup to ours.  In addition to these approaches,
-one can obtain a lower bound on the information using the mutual information of the confusion matrix
-(Treves et al), (Quiroga 2009).  In the following section, we present our methodology for
-inferring mutual information under the randomized stimuli design setting,
+Methodologies for estimating mutual information under the assumption
+of randomization have been studied in (Borst 1999), (Nelken 2005) and
+most notably (Gastpar 2010); the latter studies the problem under an
+identical setup to ours.  In addition to these approaches, one can
+obtain a lower bound on the information using the mutual information
+of the confusion matrix (Treves et al), (Quiroga 2009).  In Section 3,
+we present our methodology for inferring mutual information under the
+randomized stimuli design setting.
 
-Before presenting our approach, we first define the notion of average Bayes error, which is fundamental to our approach.
-The motivation for defining average Bayes error is the fact that the quantity $e_{Bayes}$ is not
-a parameter of the joint distribution $p(x, y)$, but rather depends on
-the specific exemplars $x_1,\hdots, x_k$ selected; hence, one may
-write $e_{Bayes}(x_1,\hdots, x_k)$ to emphasize this dependence. 
-The \emph{average} Bayes error, on the other hand, is defined uniquely for any joint distribution,
+Before presenting our approach, we first define the notion of average
+Bayes error, which is fundamental to our approach.  The motivation for
+defining average Bayes error is the fact that the quantity $e_{Bayes}$
+is not a parameter of the joint distribution $p(x, y)$, but rather
+depends on the specific exemplars $x_1,\hdots, x_k$ selected; hence,
+one may write $e_{Bayes}(x_1,\hdots, x_k)$ to emphasize this
+dependence.  The \emph{average} Bayes error, on the other hand, is
+defined uniquely for any joint distribution,
 \begin{equation}\label{eq:abe}
 e_{ABE, k} = \E[e_{Bayes}(X_1,\hdots, X_k)],
 \end{equation}
-where $X_1,\hdots, X_K$ are drawn i.i.d. from $p(x)$.
-Supposing that an unbiased estimator for Bayes error exists, $\hat{e}_{Bayes}$,
-then $\hat{e}_{Bayes}$ will also be unbiased for $e_{ABE, k}$ under the randomization assumption.
-It turns out that under certain conditions, the average Bayes error can be well-approximated as a monotonically decreasing function of the mutual information, and vice-versa.
+where $X_1,\hdots, X_K$ are drawn i.i.d. from $p(x)$.  Supposing that
+an unbiased estimator for Bayes error $\hat{e}_{Bayes}$ exists, then
+$\hat{e}_{Bayes}$ will also be unbiased for $e_{ABE, k}$ under the
+randomization assumption.  We show that under certain conditions, the
+average Bayes error can be well-approximated as a monotonically
+decreasing function of the mutual information, and vice-versa.
 
 \section{Asymptotic Theory}
 
@@ -898,47 +916,54 @@ implying the corollary.
 
 The proof of (ii) follows from continuity of probability, while the proof of (iii) follows from application of the delta method.  $\Box$
 
-Corollary 1 therefore suggests methods for obtaining confidence intervals and point estimates for $I(X; Y)$.
-To get a confidence interval for $I(X; Y)$, first find a confidence interval for the average Bayes error $e_{ABE, k}$; then obtain the confidence interval for $I(X; Y)$ as
+As corollary 1 states, it is possible to construct a confidence interval for $I(X; Y)$ by
+first constructing a confidence interval for the average Bayes error $e_{ABE,
+k}$; then obtaining the confidence interval for $I(X; Y)$ as
 \[
 [\frac{1}{2}(\pi_k^{-1}(\bar{e}))^2, \frac{1}{2}(\pi_k^{-1}(\underline{e}))^2].
 \]
 
+Corollary 1 also gives the consisistent point estimate
+\[\hat{I}(X; Y) = \frac{1}{2}(\pi_k^{-1}(\hat{e}))^2,\]
+where $\hat{e}$ is a $O(1/\sqrt{n})$-consistent estimate of $e_{ABE,
+k}.$ However, $\hat{I}(X, Y)$ may perform poorly in finite samples due
+to bias.  Better performance can be obtained by using bias-correction
+and shrinkage, but the optimality of the estimator depends on the
+choice of risk function and risk criterion.  In the remainder
+of the paper, we will be mainly interested in interval estimation.
 
-To obtain a point estimate for $I(X; Y)$, Corollary 1 suggests
-\[\hat{I}(X; Y) = \frac{1}{2}(\pi_k^{-1}(\hat{e}))^2.\]
-However, this procedure for obtaining point estimates can be easily seen to have suboptimal mean-squared risk in finite samples.
-Suppose that the estimator for average Bayes error has bias
-\[
-\E[\hat{e}] - e_{ABC, k} = \mu
-\]
-and variance
-\[
-\Var[\hat{e}] = \sigma^2,
-\]
-and assume that $\mu$ is $O(1/\sqrt{n})$ while $\sigma^2$ is $O(1/n)$.
-Let $f(e) = \frac{1}{2}(\pi_k^{-1}(e))^2$.
-We know that
-\[
-\lim_{e \to 0} f(e) = \infty,
-\]
-and also that
-\[
-\lim_{e \to 0} f'(e) = -\infty,
-\]
-\[
-\lim_{e \to 0} f''(e) = \infty.
-\]
-Meanwhile, from the delta method we have
-\[
-\E[\hat{I}] = \E[f(\hat{e})] = I(X; Y) + \mu f'(e_{ABC, k}) + \frac{1}{2} \sigma^2 f''(e_{ABC, k}),
-\]
-and
-\[
-\Var[\hat{I}] = \hdots.
-\]
 
-[to be continued.  Task: propose a better estimator in mean-squared error.]
+%However, this procedure for obtaining point estimates can be easily seen to have suboptimal mean-squared risk in finite samples.
+%Suppose that the estimator for average Bayes error has bias
+%\[
+%\E[\hat{e}] - e_{ABC, k} = \mu
+%\]
+%and variance
+%\[
+%\Var[\hat{e}] = \sigma^2,
+%\]
+%and assume that $\mu$ is $O(1/\sqrt{n})$ while $\sigma^2$ is $O(1/n)$.
+%Let $f(e) = \frac{1}{2}(\pi_k^{-1}(e))^2$.
+%We know that
+%\[
+%\lim_{e \to 0} f(e) = \infty,
+%\]
+%and also that
+%\[
+%\lim_{e \to 0} f'(e) = -\infty,
+%\]
+%\[
+%\lim_{e \to 0} f''(e) = \infty.
+%\]
+%Meanwhile, from the delta method we have
+%\[
+%\E[\hat{I}] = \E[f(\hat{e})] = I(X; Y) + \mu f'(e_{ABC, k}) + \frac{1}{2} \sigma^2 f''(e_{ABC, k}),
+%\]
+%and
+%\[
+%\Var[\hat{I}] = \hdots.
+%\]
+%[to be continued.  Task: propose a better estimator in mean-squared error.]
 
 \section{Results}
 
