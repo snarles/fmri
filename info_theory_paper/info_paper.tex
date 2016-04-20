@@ -965,6 +965,47 @@ of the paper, we will be mainly interested in interval estimation.
 %\]
 %[to be continued.  Task: propose a better estimator in mean-squared error.]
 
+\section{Applications}
+
+Having established the theoretical basis of our method, the current
+section is dedicated to discussing applications and practical issues.
+In contrast to the previous section, our focus in this section will be
+methodological rather than theoretical.
+
+Within the framework of randomized designs, a number of
+machine-learning-based modeling approaches can be applied to assess
+informativity.  The most common approaches are based
+on \emph{classification} and \emph{regression}, but a third
+approach, \emph{identification}, combines the strengths of both
+classification and regression.
+
+The different machine-learning-based modeling approaches excel in
+different experimental settings.  Classification-based approaches
+require large amounts of training data and test data for a small
+number of stimuli categories.  Therefore, an investigator intending to
+use classification will design the experiment to have a large number
+of repeats relative to the number of stimulus categories.
+
+In contrast, in the identification-based approach, it is not necessary
+to have multiple repeats for each stimulus exemplar.  On the other
+hand, it \emph{is} necessary to have a parameterization of the
+stimulus exemplars.  The success of the identification approach
+depends heavily on having a parameterization which captures the
+relevant features of the stimulus--this can be a difficult task when
+studying complex stimuli such as faces or natural images.
+
+While we described the classification
+approach in section 2, we describe the application of our method using
+classifiers in section 4.1.  Then, in section 4.2, we will introduce
+the identification task, and how our method can also be combined with
+the identification-based approach.
+
+
+
+\subsection{Classification setting}
+
+
+
 \section{Results}
 
 \subsection{Simulation}
