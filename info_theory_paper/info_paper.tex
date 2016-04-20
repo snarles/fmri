@@ -52,10 +52,11 @@ information in high-dimensional neuroimaging data.
 %Nonparametric estimators have poor finite-sample performance, and parametric approaches require unrealistic assumptions such as multivariate Gaussianity.
 %While one can obtain a lower bound using the mutual information of the confusion matrix, the lower bound obtained is usually quite poor.
 We propose a new estimator of mutual information based on the concept
-of "average Bayes error."  Under the assumption that the error of a classifier
-approximates the average Bayes error, we obtain an estimate of mutual information
-based on an asymptotic functional relationship between average Bayes error and
-mutual information.  We demonstrate the utility of our approach in simulated and real data examples.
+of "average Bayes error."  Under the assumption that the error of a
+classifier approximates the average Bayes error, we obtain an estimate
+of mutual information based on an asymptotic functional relationship
+between average Bayes error and mutual information.  We demonstrate
+the utility of our approach in simulated and real data examples.
 \end{abstract}
 
 
@@ -327,9 +328,9 @@ standard in the literature.  Mathematically speaking, the classifier
 is a functional which maps a set of observations to a classification
 rule,
 \[
-\mathcal{F}: \{(x_1,y_1),\hdots, (x_m, y_m)\} \mapsto f(\cdot).
+\mathcal{F}: \{(x^{1},y^{1}),\hdots, (x^{m}, y^{m})\} \mapsto f(\cdot).
 \]
-The data $(x_1,y_1),\hdots, (x_m, y_m)$ used to obtain the
+The data $(x^1,y^1),\hdots, (x^m, y^m)$ used to obtain the
 classification rule is called \emph{training data.}  When the
 objective is to obtain the best possible classification rule, as is
 the case in diagnostic settings, it is optimal to use all of the
@@ -344,20 +345,20 @@ into the empirical classification error.
 In \emph{data-splitting}, one creates a \emph{training
 set} consisting of $r_1$ repeats per class,
 \[
-\{(x_1, y_1^1),\hdots, (x_1,y_1^{r_1}), \hdots, (x_m, y_m^1),\hdots, (x_m,y_m^{r_1})\}
+\{(x^{(1)}, y^{(1),1}),\hdots, (x^1,y^{(1), r_1}), \hdots, (x^{(k)}, y^{(k),1}),\hdots, (x^{(m)},y^{(m), r_1})\}
 \]
 and a \emph{test set} consisting of the remaining $r_2 = r - r_1$ repeats.
 \[
-\{(x_1, y_1^{r_1 + 1}),\hdots, (x_1,y_1^{r}), \hdots, (x_m, y_m^{r_1 + 1}),\hdots, (x_m,y_m^{r_1})\}.
+\{(x^{(1)}, y^{(1), r_1 + 1}),\hdots, (x^{(1)},y^{(1),r}), \hdots, (x^{(k)}, y^{(k), r_1 + 1}),\hdots, (x^{(k)},y^{(k),r_1})\}.
 \]
 One inputs the training data into the classifier to obtain the classification rule $f$,
 \[
-f = \mathcal{F}(\{(x_1, y_1^1),\hdots, (x_1,y_1^{r_1}), \hdots, (x_m, y_m^1),\hdots, (x_m,y_m^{r_1})\}).
+f = \mathcal{F}(\{(x^{(1)}, y^{(1),1}),\hdots, (x^{(1)},y^{(1),r_1}), \hdots, (x^{(k)}, y^{(k),1},\hdots, (x^{(k)},y^{(k), r_1})\}).
 \]
 The test statistic of interest is the test error,
 defined as
 \[
-e_{test} = \frac{1}{k r_2} \sum_{i=1}^k \sum_{j = r_1 + 1}^r \text{I}(f(y_i^j) \neq i).
+e_{test} = \frac{1}{k r_2} \sum_{i=1}^k \sum_{j = r_1 + 1}^r \text{I}(f(y^{(i),j}) \neq i).
 \]
 Due to the conditional independence of the training set and test set,
 $e_{test}$ is an unbiased estimate of $e_{gen}$.  Hence various
@@ -394,7 +395,7 @@ Due to Bayes' theorem, the optimal classification rule $f^*$ which
 achieves the Bayes error can be given explicitly: it is the maximum a
 posteriori (MAP) rule
 \[
-f^*(y) = \argmax_{i=1}^k\ p(y|x_i).
+f^*(y) = \argmax_{i=1}^k\ p(y|x^{(i)}).
 \]
 Of course, it is not possible to construct this rule in practice since
 the joint distribution is unknown.  Instead, a reasonable approach is
@@ -1001,9 +1002,60 @@ the identification task, and how our method can also be combined with
 the identification-based approach.
 
 
-
 \subsection{Classification setting}
 
+Recall the notation used in section 2.1: the $k$ stimuli exemplars are
+denoted $\{x^{(1)},\hdots, x^{(k)}\}$ and the $r$ responses for the
+$i$th class are given by $y^{(i), 1},\hdots, y^{(i), r}$.
+
+For a given classifier $\mathcal{F}$, the classification rule $f$ varies randomly depending on the input.
+One can define the average generalization error
+\[
+e_{AGE} = \E[e_{gen}(\mathcal{F}(\{(x^{(1)}, Y^{(1),1}),\hdots, (x^{(1)},Y^{(1),r_1}), \hdots, (x^{(k)}, Y^{(k),1},\hdots, (x^{(k)},Y^{(k), r_1})\}))]
+\]
+where the expectation is taken over the sampling of the training
+data \emph{conditional} on fixing the stimuli $x^{(1)},\hdots,
+x^{(r)}.$ The procedure we suggest for obtaining a confidence interval
+for $\hat{I}(X; Y)$ is to first obtain a confidence interval for the
+average generalization error, $[\underline{e}, \bar{e}]$, then apply
+the inversion formula to construct the interval\footnote{Note that the theory established in section 3.2 does not apply to the
+coverage properties of $C$, since we used a confidence interval for
+$e_{AGE}$ rather than $e_{Bayes}$ to construct the interval.  Despite
+this limitation, the resulting interval $C$ still serves the useful
+purpose of conveying the uncertainty about the inferred information.}
+\[
+C = [\frac{1}{2}(\pi_k^{-1}(\bar{e}))^2, \frac{1}{2}(\pi_k^{-1}(\underline{e}))^2].
+\]
+
+We can use cross-validation to construct such a confidence interval
+$C$.  For a large number of resampling trials $B$, let $S_1,\hdots,
+S_B$ be random subsets of the data such that each $S_i$ consists of
+$r_1$ repeats for each stimulus\footnote{ That is, let $\rho^{i,
+j}(\ell)$ be a random injective mapping from $\{1,\hdots, r_1\}$ to
+$\{1,\hdots, r\}$ for each $i = 1,\hdots, B$ and $j = 1,\hdots, k$.
+The $\rho^{i,j}$ are i.i.d. from the uniform distribution on such
+mappings.  Define $S_i = \{(x^{(j)}, y^{(j), \rho^{i, j}(\ell)})|
+1 \leq \ell\leq r \text{ and }1\leq j \leq k\}$. Meanwhile, define
+$\bar{S}_i = \{(x^{(j)}, y^{(j), \ell})|1\leq j\leq k, 1\leq \ell \leq
+r\}\setminus S_i$. }.  Let $\bar{S}_i$ denote the complement of $S_i$
+in the data.  For each $i = 1,\hdots, B$, construct a classification
+rule $f^{(i)}$ by inputting the set $S_i$ as training data for the
+classifier,
+\[
+f^{(i)} = \mathcal{F}(\{(x, y): (x, y) \in S_i\})
+\]
+Define the $i$th estimate of test error
+as
+\[
+e^{(i)} = \frac{1}{kr_2} \sum_{j=1}^{k}\sum_{(x^{(j)}, y) \in \bar{S}_i} I(f(y) \neq j).
+\]
+
+In both cases, the general idea is to first assume that the
+generalization error $e_{AGE}$ of the classifer $\mathcal{F}$
+approximates the Bayes error
+
+
+\subsection{Identification setting}
 
 
 \section{Results}
