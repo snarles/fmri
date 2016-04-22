@@ -7,7 +7,7 @@
 % to avoid loading the natbib package, add option nonatbib:
 % \usepackage[nonatbib]{nips_2016}
 
-\usepackage{nips_2016}
+\usepackage[final]{nips_2016}
 
 % to compile a camera-ready version, add the [final] option, e.g.:
 % \usepackage[final]{nips_2016}
@@ -248,286 +248,425 @@ The reason that such a splitting is necessary is because using the
 same data to test and train a classifier introduces significant bias
 into the empirical classification error.
 
+While tests of the generalization error suffice to establish the
+presence of information, the generalization error is less satisfactory
+as a measure of the information between $X$ and $Y$, because
+$e_{gen}$ depends on the classification rule $f$ obtained--but since the performance of the classifier
+may vary depending on the choice of model ($k$-nearest neighbors, SVM, etc.) and the choice of tuning parameters,
+the quantity $e_{gen}$ is therefore not uniquely defined.
+To resolve the ill-definedness of the generalization error, we define
+the Bayes error, which is simply the \emph{optimal}
+generalization error
+\[
+e_{Bayes} = \min_f e_{gen}(f).
+\]
+Due to Bayes' theorem, the optimal classification rule $f^*$ which
+achieves the Bayes error can be given explicitly: it is the maximum a
+posteriori (MAP) rule
+\[
+f^*(y) = \argmax_{i=1}^k\ p(y|x^{(i)}).
+\]
+Of course, it is not possible to construct this rule in practice since
+the joint distribution is unknown.  Instead, a reasonable approach is
+to try a variety of classifiers, producing rules $f_1,\hdots, f_m$,
+and taking the best generalization error as an estimate of the Bayes
+error.  We give more details of this approach in the Discussion.
 
-\subsection{Style}
+Under the assumption of randomized design, we treat the stimuli
+$x_1,\hdots, x_k$ as independent draws from some distribution $p(x)$.
+Defining the joint distribution of the stimulus $X$ and the response
+$Y$ as
+\[
+p(x, y) = p(x) p(y|x),
+\]
+one can also define the mutual information
+\[
+I(X; Y) = \int p(x, y) \log \frac{p(x, y)}{p(x) p(y)} dxy.
+\]
 
-Papers to be submitted to NIPS 2016 must be prepared according to the
-instructions presented here. Papers may only be up to eight pages
-long, including figures. Since 2009 an additional ninth page
-\emph{containing only acknowledgments and/or cited references} is
-allowed. Papers that exceed nine pages will not be reviewed, or in any
-other way considered for presentation at the conference.
+In contrast the case of fixed design, the randomized design framework
+provides a principled way of making inferences about the population of
+stimuli exemplars, beyond the particular exemplars that were chosen
+for the study.  This is particularly relevant for complex stimuli, for
+which the number of distinct stimuli species (e.g. distinct faces)
+could be astonomically large (i.e. the number of faces that a human
+could distinguish.)  The concept of information $I(X; Y)$ captures the
+notion of the ``complexity'' of the stimuli representation.  By
+inferring the information $I(X; Y)$, we make inferences about the
+complexity of the representation in the given brain region $Y$.
 
-The margins in 2016 are the same as since 2007, which allow for
-$\sim$$15\%$ more words in the paper compared to earlier years.
+Methodologies for estimating mutual information under the assumption
+of randomization have been studied in (Borst 1999), (Nelken 2005) and
+most notably (Gastpar 2010); the latter studies the problem under an
+identical setup to ours.  In addition to these approaches, one can
+obtain a lower bound on the information using the mutual information
+of the confusion matrix (Treves et al), (Quiroga 2009).  In Section 3,
+we present our methodology for inferring mutual information under the
+randomized stimuli design setting.
 
-Authors are required to use the NIPS \LaTeX{} style files obtainable
-at the NIPS website as indicated below. Please make sure you use the
-current files and not previous versions. Tweaking the style files may
-be grounds for rejection.
+Before presenting our approach, we first define the notion of average
+Bayes error, which is fundamental to our approach.  The motivation for
+defining average Bayes error is the fact that the quantity $e_{Bayes}$
+is not a parameter of the joint distribution $p(x, y)$, but rather
+depends on the specific exemplars $x_1,\hdots, x_k$ selected; hence,
+one may write $e_{Bayes}(x_1,\hdots, x_k)$ to emphasize this
+dependence.  The \emph{average} Bayes error, on the other hand, is
+defined uniquely for any joint distribution,
+\begin{equation}\label{eq:abe}
+e_{ABE, k} = \E[e_{Bayes}(X_1,\hdots, X_k)],
+\end{equation}
+where $X_1,\hdots, X_K$ are drawn i.i.d. from $p(x)$.  Supposing that
+an unbiased estimator for Bayes error $\hat{e}_{Bayes}$ exists, then
+$\hat{e}_{Bayes}$ will also be unbiased for $e_{ABE, k}$ under the
+randomization assumption.  We show that under certain conditions, the
+average Bayes error can be well-approximated as a monotonically
+decreasing function of the mutual information, and vice-versa.
 
-\subsection{Retrieval of style files}
+[[remove stuff abot testing, add def of saturation]]
 
-The style files for NIPS and other conference information are
-available on the World Wide Web at
-\begin{center}
-  \url{http://www.nips.cc/}
-\end{center}
-The file \verb+nips_2016.pdf+ contains these instructions and
-illustrates the various formatting requirements your NIPS paper must
-satisfy.
+\section{Theory}
 
-The only supported style file for NIPS 2016 is \verb+nips_2016.sty+,
-rewritten for \LaTeXe{}.  \textbf{Previous style files for \LaTeX{}
-  2.09, Microsoft Word, and RTF are no longer supported!}
+Our goal in this section is to establish a relationship between the
+mutual information $I(X; Y)$ and the $k$-class average Bayes error,
+$e_{ABE, k}$.  In short, we will identify a function $\pi_k$
+(which depends on $k$),
+\[
+e_{ABE, k} \approx \pi_k(\sqrt{2 I(X; Y)})
+\]
+and that this approximation becomes accurate under a limit where $I(X; Y)$ is small relative to the dimensionality of $X$,
+and under the condition that the components of $X$ are approximately independent.  Formal conditions are given in the proof statement.
 
-The new \LaTeX{} style file contains two optional arguments:
-\verb+final+, which creates a camera-ready copy, and \verb+nonatbib+,
-which will not load the \verb+natbib+ package for you in case of
-package clash.
-
-At submission time, please omit the \verb+final+ option. This will
-anonymize your submission and add line numbers to aid review.  Please
-do \emph{not} refer to these line numbers in your paper as they will
-be removed during generation of camera-ready copies.
-
-The file \verb+nips_2016.tex+ may be used as a ``shell'' for writing
-your paper. All you have to do is replace the author, title, abstract,
-and text of the paper with your own.
-
-The formatting instructions contained in these style files are
-summarized in Sections \ref{gen_inst}, \ref{headings}, and
-\ref{others} below.
-
-\section{General formatting instructions}
-\label{gen_inst}
-
-The text must be confined within a rectangle 5.5~inches (33~picas)
-wide and 9~inches (54~picas) long. The left margin is 1.5~inch
-(9~picas).  Use 10~point type with a vertical spacing (leading) of
-11~points.  Times New Roman is the preferred typeface throughout, and
-will be selected for you by default.  Paragraphs are separated by
-\nicefrac{1}{2}~line space (5.5 points), with no indentation.
-
-The paper title should be 17~point, initial caps/lower case, bold,
-centered between two horizontal rules. The top rule should be 4~points
-thick and the bottom rule should be 1~point thick. Allow
-\nicefrac{1}{4}~inch space above and below the title to rules. All
-pages should start at 1~inch (6~picas) from the top of the page.
-
-For the final version, authors' names are set in boldface, and each
-name is centered above the corresponding address. The lead author's
-name is to be listed first (left-most), and the co-authors' names (if
-different address) are set to follow. If there is only one co-author,
-list both author and co-author side by side.
-
-Please pay special attention to the instructions in Section \ref{others}
-regarding figures, tables, acknowledgments, and references.
-
-\section{Headings: first level}
-\label{headings}
-
-All headings should be lower case (except for first word and proper
-nouns), flush left, and bold.
-
-First-level headings should be in 12-point type.
-
-\subsection{Headings: second level}
-
-Second-level headings should be in 10-point type.
-
-\subsubsection{Headings: third level}
-
-Third-level headings should be in 10-point type.
-
-\paragraph{Paragraphs}
-
-There is also a \verb+\paragraph+ command available, which sets the
-heading in bold, flush left, and inline with the text, with the
-heading followed by 1\,em of space.
-
-\section{Citations, figures, tables, references}
-\label{others}
-
-These instructions apply to everyone.
-
-\subsection{Citations within the text}
-
-The \verb+natbib+ package will be loaded for you by default.
-Citations may be author/year or numeric, as long as you maintain
-internal consistency.  As to the format of the references themselves,
-any style is acceptable as long as it is used consistently.
-
-The documentation for \verb+natbib+ may be found at
-\begin{center}
-  \url{http://mirrors.ctan.org/macros/latex/contrib/natbib/natnotes.pdf}
-\end{center}
-Of note is the command \verb+\citet+, which produces citations
-appropriate for use in inline text.  For example,
-\begin{verbatim}
-   \citet{hasselmo} investigated\dots
-\end{verbatim}
-produces
-\begin{quote}
-  Hasselmo, et al.\ (1995) investigated\dots
-\end{quote}
-
-If you wish to load the \verb+natbib+ package with options, you may
-add the following before loading the \verb+nips_2016+ package:
-\begin{verbatim}
-   \PassOptionsToPackage{options}{natbib}
-\end{verbatim}
-
-If \verb+natbib+ clashes with another package you load, you can add
-the optional argument \verb+nonatbib+ when loading the style file:
-\begin{verbatim}
-   \usepackage[nonatbib]{nips_2016}
-\end{verbatim}
-
-As submission is double blind, refer to your own published work in the
-third person. That is, use ``In the previous work of Jones et
-al.\ [4],'' not ``In our previous work [4].'' If you cite your other
-papers that are not widely available (e.g., a journal paper under
-review), use anonymous author names in the citation, e.g., an author
-of the form ``A.\ Anonymous.''
-
-\subsection{Footnotes}
-
-Footnotes should be used sparingly.  If you do require a footnote,
-indicate footnotes with a number\footnote{Sample of the first
-  footnote.} in the text. Place the footnotes at the bottom of the
-page on which they appear.  Precede the footnote with a horizontal
-rule of 2~inches (12~picas).
-
-Note that footnotes are properly typeset \emph{after} punctuation
-marks.\footnote{As in this example.}
-
-\subsection{Figures}
-
-All artwork must be neat, clean, and legible. Lines should be dark
-enough for purposes of reproduction. The figure number and caption
-always appear after the figure. Place one line space before the figure
-caption and one line space after the figure. The figure caption should
-be lower case (except for first word and proper nouns); figures are
-numbered consecutively.
-
-You may use color figures.  However, it is best for the figure
-captions and the paper body to be legible if the paper is printed in
-either black/white or in color.
-\begin{figure}[h]
-  \centering
-  \fbox{\rule[-.5cm]{0cm}{4cm} \rule[-.5cm]{4cm}{0cm}}
-  \caption{Sample figure caption.}
+The function $\pi_k$ is given by
+\[
+\pi_k(c) = 1 - \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
+\]
+%One way of intuitively understanding $1-\pi_k$ is that a misclassification event is when one of the...
+Figure \ref{fig:pi} displays the plot of $\pi_k$ for several values of $k$.
+For all values of $k$, $\pi_k(\mu)$ is monotonically decreasing in $\mu$, and tends to zero as $\mu \to \infty$.
+This should not be surprising, because if $I(X; Y)$ is large, then the average Bayes error should be small.
+Another fact, which can be verified through a simple calculation, is that 
+\[
+\pi_k(0) = 1 - \frac{1}{k}.
+\]
+This should also not be surprising, since if $I(X; Y) = 0$, then it should not be possible to
+obtain a classification rule which is better than guessing at random, which is only correct with probability $1/k$.
+\begin{figure}
+\centering
+\includegraphics[scale = 0.5, clip=true, trim=0 0.2in 0 0.5in]{../info_theory_sims/illus_piK.pdf}
+\caption{The function $pi_k(\mu)$, for $k = \{2, 9, 99, 999\}$ (left to right) \label{fig:pi}}
 \end{figure}
 
-\subsection{Tables}
 
-All tables must be centered, neat, clean and legible.  The table
-number and title always appear before the table.  See
-Table~\ref{sample-table}.
+First, let us rewrite $e_{ABE, k}$ in terms of the joint density $p(x, y)$.  Recall that the Bayes rule is
+\[
+e_{Bayes}(x_1,\hdots, x_k) = \frac{1}{k}\sum_{i=1}^k \Pr[\hat{X}(Y) \neq x_i| X = x_i].
+\]
+In turn, the Bayes classification rule is given in terms of the conditional density:
+\[
+\hat{X}(y) = \argmax_{x \in \{x_1,\hdots, x_k\}} p(y|x).
+\]
+Therefore, we obtain
+\[
+e_{Bayes}(x_1,\hdots, x_k) = \frac{1}{k}\sum_{i=1}^k \Pr[p(Y|x_i) \leq \max_{j \neq i} p(Y|x_j)| X = x_i].
+\]
+In turn the average Bayes error can be written as
+\begin{align}
+e_{ABE, k} &= \E[e_{Bayes}(X_1,\hdots, X_k)]
+\\&= \frac{1}{k}\sum_{i=1}^k \E[\Pr[p(Y|x_i) \leq \max_{j \neq i} p(Y|x_j)| X = x_i]]
+\\&= \E[\Pr[p(Y|x_1) \leq \max_{j \neq 1} p(Y|x_j)| X = x_1]]
+\\&= \Pr[p(Y|X_1) \leq \max_{j \neq 1} p(Y|X_j)| X = X_1].
+\end{align}
 
-Place one line space before the table title, one line space after the
-table title, and one line space after the table. The table title must
-be lower case (except for first word and proper nouns); tables are
-numbered consecutively.
+Defining $Z_i = \log p(Y|X_i) - \log p(Y|X_1)$, where $Y \sim p(y|X_1)$.
+The we obtain
+\[
+e_{ABE} = \Pr[Z_1 < \max_{j > 1} Z_i].
+\]
 
-Note that publication-quality tables \emph{do not contain vertical
-  rules.} We strongly suggest the use of the \verb+booktabs+ package,
-which allows for typesetting high-quality, professional tables:
-\begin{center}
-  \url{https://www.ctan.org/pkg/booktabs}
-\end{center}
-This package was used to typeset Table~\ref{sample-table}.
+Our proof uses the assumption that $Z_1,\hdots, Z_k$ are asymptotically multivariate normal.
+Supposing that $Z_1,\hdots, Z_k$ are indeed asymptotically normal, the following lemma
+allows us to obtain a formula for the misclassification rate.
 
-\begin{table}[t]
-  \caption{Sample table title}
-  \label{sample-table}
-  \centering
-  \begin{tabular}{lll}
-    \toprule
-    \multicolumn{2}{c}{Part}                   \\
-    \cmidrule{1-2}
-    Name     & Description     & Size ($\mu$m) \\
-    \midrule
-    Dendrite & Input terminal  & $\sim$100     \\
-    Axon     & Output terminal & $\sim$10      \\
-    Soma     & Cell body       & up to $10^6$  \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+\textbf{Lemma 1. }
+\emph{
+Suppose $(Z_1, Z_2, \hdots, Z_k)$ are jointly multivariate normal, with 
+$\E[Z_1 - Z_i]= \alpha$, 
+$\Var(Z_1) = \beta$, 
+$\Cov(Z_1, Z_i) = \gamma$, 
+$\Var(Z_i)= \delta$, and $\Cov(Z_i, Z_j) = \epsilon$ for all $i, j = 2, \hdots,
+k$, such that $\beta + \epsilon - 2\gamma > 0$.  Then, letting
+\[
+\mu = \frac{\E[Z_1 - Z_i]}{\sqrt{\frac{1}{2}\Var(Z_i - Z_j)}} = \frac{\alpha}{\sqrt{\delta - \epsilon}},
+\]
+\[
+\nu^2 = \frac{\Cov(Z_1 -Z_i, Z_1 - Z_j)}{\frac{1}{2}\Var(Z_i - Z_j)} = \frac{\beta + \epsilon - 2\gamma}{\delta - \epsilon},
+\]
+we have
+\begin{align*}
+\Pr[Z_1 < \max_{i=2}^k Z_i] &= \Pr[W < M_{k-1}]
+\\&= 1 - \int \frac{1}{\sqrt{2\pi\nu^2}} e^{-\frac{(w-\mu)^2}{2\nu^2}} \Phi(w)^{k-1} dw,
+\end{align*}
+where $W \sim N(\mu, \nu^2)$ and $M_{k-1}$ is the maximum of $k-1$
+independent standard normal variates, which are independent of $W$.
+}
 
-\section{Final instructions}
+[[proof in appendix]]
 
-Do not change any aspects of the formatting parameters in the style
-files.  In particular, do not modify the width or length of the
-rectangle the text should fit into, and do not change font sizes
-(except perhaps in the \textbf{References} section; see below). Please
-note that pages should be numbered.
+To see why the assumption that $Z_1,\hdots, Z_k$ are multivariate normal might be justified, suppose that $X$ and $Y$ have the same dimensionality $d$, and that
+joint density factorizes as
+\[
+p(x_j, y) = \prod_{i=1}^d p_i(x_{j, i}, y_i)
+\]
+where $x_{j, i}, y_i$ are the components of $x_j$ and $y$.
+Then,
+\[
+Z_i = \sum_{m=1}^d \log p_m(y_m | x_{m, i}) - \log p_m(y_m | x_{m, 1})
+\]
+where $x_{i, j}$ is the $i$th component of $x_j$.
+The $d$ terms $\log p_m(y_m | x_{m, i}) - \log p_m(y_m | x_{m, 1})$ are independent across the indices $m$,
+but dependent between the $i = 1,\hdots, k$.
+Therefore, the multivariate central limit theorem can be applied to conclude that the vector
+$(Z_1,\hdots, Z_k)$ can be scaled to converge to a multivariate normal distribution.
+Now, since the average Bayes error $e_{ABE,k}$ is a continuous functional of the joint distribution $p(x, y)$,
+it follows that $e_{ABE,k}$ converges to a functional of the limiting mean and covariance of $(Z_1,\hdots, Z_k)$, assuming
+that the limits exist.
+In our theorem, we assume a specific regime where these limits exist as a consequence.
+While the componentwise independence condition is not a realistic assumption,
+the key property of multivariate normality of $(Z_1,\hdots, Z_k)$ holds under more general conditions, and appears reasonable in practice.
 
-\section{Preparing PDF files}
+The second component of our theorem is to manipulate the expression of the mutual information $I(X; Y)$.
+The differential mutual information is defined as
+\[
+I(X; Y) = \int p(x, y) \log \frac{p(x, y)}{p(x) p(y)} dx dy.
+\]
+The key manipulation we employ is to approximate the logarithmic term by the Taylor expansion
+\[
+\log \frac{p(x, y)}{p(x) p(y)} \approx \frac{p(x, y) - p(x) p(y)}{p(x) p(y)} - \left(\frac{p(x, y) - p(x) p(y)}{p(x) p(y)}\right)^2 + \hdots.
+\]
+The approximation is accurate if $I(X; Y)$ is small--or rather, small relative to the dimensionality within the asymptotic sequence.
+We state the theorem for the regime where $I(X; Y)$ is fixed, while the dimensionality of $X$ increases.
 
-Please prepare submission files with paper size ``US Letter,'' and
-not, for example, ``A4.''
+The asymptotic regime we consider is one where the dimension of $X$ goes to infinity.
+This means that we have to consider a sequence of joint distributions $(X^{[d]}, Y^{[d]})$ indexed by the dimension $d$.
 
-Fonts were the main cause of problems in the past years. Your PDF file
-must only contain Type 1 or Embedded TrueType fonts. Here are a few
-instructions to achieve this.
+Fix integer $k \geq 2$.  Let $p^{[d]}(x,y)$ be a sequence of
+probability density functions, where $x$ is of dimension $p^{[d]}$ and
+$y$ is of dimension $q^{[d]}$.  Let $p^{[d]}(x)$ and $p^{[d]}(y)$
+denote the marginal densities, and let
+\[
+p^{[d]}(y|x) = p^{[d]}(x, y)/p^{[d]}(y).\]
+ Let $(X^{([d], i)}, Y^{([d], i)})$ be
+iid random variates from $p^{[d]}(x, y)$ for $i = 1, \hdots, k$; we will supress the
+superscripts $[d]$ and/or $(i)$ when convenient.  Recall the definitions of
+entropy,
+\[
+H(X) = -\int p(x) \log p(x) dx,
+\]
+and mutual information
+\[
+I(X; Y) = \int p(x, y) \log \frac{p(x, y)}{p(x)p(y)} dx dy.
+\]
+Furthermore, define the $K$-class average Bayes error as
+\[
+e_{ABE, k} = \Pr[p(Y^{(1)}|X^{(1)}) < \max_{i = 2}^{k} p(Y^{(1)}|X^{(i)})].
+\]
+Define
+\[
+u^{[d]}(x, y) = \log p^{[d]}(x, y) - \log p^{[d]}(x) - \log p^{[d]}(y),
+\]
+and define
+\[
+\ell_{ij}^{[d]} = \log p(y^{(i)}|x^{(j)}).
+\]
 
+
+
+We now give the theorem and its proof.
+
+\textbf{Theorem 1.} Let $p^{[d]}(x, y)$ be a sequence of joint densities
+for $d = 1,2,\hdots$ as given above.  Further assume that
 \begin{itemize}
+\item[A1.] $\lim_{d \to \infty} I(X^{[d]}; Y^{[d]}) = \iota < \infty.$
+\item[A2.] There exists a sequence of scaling constants $a_{ij}^{[d]}$
+and $b_{ij}^{[d]}$ such that the random vector $(a_{ij}\ell_{ij}^{[d]} +
+b_{ij}^{[d]})_{i, j = 1,\hdots, k}$ converges in distribution to a
+multivariate normal distribution.
+\item[A3.] There exists a sequence of scaling constants $a^{[d]}$, $b^{[d]}$ such that
+\[
+a^{[d]}u(X^{(1)}, Y^{(2)}) + b^{[d]}
+\]
+converges in distribution to a univariate normal distribution.
+\item[A4.] For all $i \neq k$,
+\[\lim_{d \to \infty}\Cov[u(X^{(i)}, Y^{(j)}), u(X^{(k)}, Y^{(j)})] = 0.\]
+\end{itemize}
+Then for $e_{ABE, k}$ as defined above, we have
+\[
+\lim_{d \to \infty} e_{ABE, k} = \pi_k(\sqrt{2 \iota})
+\]
+where
+\[
+\pi_k(c) = 1 - \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz
+\]
+where $\phi$ and $\Phi$ are the standard normal density function and
+cumulative distribution function, respectively.
 
-\item You should directly generate PDF files using \verb+pdflatex+.
+%[[Maybe add remark about assumptions here.]]
 
-\item You can check which fonts a PDF files uses.  In Acrobat Reader,
-  select the menu Files$>$Document Properties$>$Fonts and select Show
-  All Fonts. You can also use the program \verb+pdffonts+ which comes
-  with \verb+xpdf+ and is available out-of-the-box on most Linux
-  machines.
+[Proof in supplemtn]
 
-\item The IEEE has recommendations for generating PDF files whose
-  fonts are also acceptable for NIPS. Please see
-  \url{http://www.emfield.org/icuwb2010/downloads/IEEE-PDF-SpecV32.pdf}
+Assumptions A1-A4 are satisfied in a variety of natural models.
+One example is a multivariate Gaussian sequence model where
+\[
+X \sim N(0, \Sigma_d)
+\]
+\[
+E \sim N(0, \Sigma_e)
+\]
+\[
+Y = X + E
+\]
+where $\Sigma_d$ and $\Sigma_e$ are $d \times d$ covariance matrices, and where $X$ and $E$ are independent.  Then, if $d \Sigma_d$ and $\Sigma_e$ have limiting spectra $H$ and $G$ respectively,
+the joint densities $p(x, y)$ for $d = 1,\hdots, $ satisfy assumptions A1 - A4.
 
-\item \verb+xfig+ "patterned" shapes are implemented with bitmap
-  fonts.  Use "solid" shapes instead.
+We can also construct a family of densities satisfying A1 - A4,
+which we call an \emph{exponential family sequence model} since each joint distribution in the sequence
+is a member of an exponential family: details are given in the supplement.
+One example of such an exponential family sequence model is a multivariate logistic regression model,
+given by
+\[
+X \sim N(0, I)
+\]
+\[
+Y_i \sim \text{Bernoulli}(e^{\beta X_i}/(1 + e^{\beta X_i}))
+\]
+The multivariate logistic regression model (and multivariate Poisson regression model)
+are especially suitable for modeling neural spike count data;
+we simulate data from such a multivariate logistic regression model in section X.
 
-\item The \verb+\bbold+ package almost always uses bitmap fonts.  You
-  should use the equivalent AMS Fonts:
-\begin{verbatim}
-   \usepackage{amsfonts}
-\end{verbatim}
-followed by, e.g., \verb+\mathbb{R}+, \verb+\mathbb{N}+, or
-\verb+\mathbb{C}+ for $\mathbb{R}$, $\mathbb{N}$ or $\mathbb{C}$.  You
-can also use the following workaround for reals, natural and complex:
-\begin{verbatim}
-   \newcommand{\RR}{I\!\!R} %real numbers
-   \newcommand{\Nat}{I\!\!N} %natural numbers
-   \newcommand{\CC}{I\!\!\!\!C} %complex numbers
-\end{verbatim}
-Note that \verb+amsfonts+ is automatically loaded by the
-\verb+amssymb+ package.
+Since $\pi_k$ is invertible for all $k = 2, \hdots$,
+a converse relationship
+\[
+\lim_{d \to \infty} I(X^{[d]}; Y^{[d]}) = \frac{1}{2}(\pi_k^{-1}(\eta))^2
+\]
+also holds in the same regime.  We formally state the result, and a few consequences, as follows.
 
+\textbf{Corollary 1.}
+Let $p^{[d]}(x, y)$ be a sequence of joint densities
+for $d = 1,2,\hdots$ as given above.  Further assume assumptions A2 - A4 and also
+\begin{itemize}
+\item[A1'.] $\lim_{d \to \infty} e_{ABE, k} = \eta < \infty.$
+\end{itemize}
+Then
+\begin{itemize}
+\item[i.]
+\[
+\lim_{d \to \infty} I(X^{[d]}; Y^{[d]}) = \frac{1}{2}(\pi_k^{-1}(e_{ABE}))^2.
+\]
+\item[ii.]
+If $[\underline{e}, \bar{e}]$ is a $1-\alpha$ confidence interval for $e_{ABE, k}$,
+then
+\[
+[\frac{1}{2}(\pi_k^{-1}(\bar{e}))^2, \frac{1}{2}(\pi_k^{-1}(\underline{e}))^2]
+\]
+is asymptotically a $1-\alpha$ confidence interval of $I(X; Y)$: that is,
+\[
+\lim_{d \to \infty} \Pr\left[I(X^{[d]}; Y^{[d]}) \in [\frac{1}{2}(\pi_k^{-1}(\underline{e}))^2, \frac{1}{2}(\pi_k^{-1}(\bar{e}))^2]\right] = 1-\alpha.
+\]
+\item[iii.] If $\hat{e}$ is a $O(1/\sqrt{n})$-consistent estimator for $e_{ABE, k}$,
+and $\lim_{d \to \infty} e_{ABE, k} > 0,$
+then $\frac{1}{2}(\pi_k^{-1}(\hat{e}))^2$ is a $O(1/\sqrt{n})$-consistent estimator for $I(X; Y)$.
 \end{itemize}
 
-If your file contains type 3 fonts or non embedded TrueType fonts, we
-will ask you to fix it.
+[[Proof in appendix]]
 
-\subsection{Margins in \LaTeX{}}
+As corollary 1 states, it is possible to construct a confidence interval for $I(X; Y)$ by
+first constructing a confidence interval for the average Bayes error $e_{ABE,
+k}$; then obtaining the confidence interval for $I(X; Y)$ as
+\[
+[\frac{1}{2}(\pi_k^{-1}(\bar{e}))^2, \frac{1}{2}(\pi_k^{-1}(\underline{e}))^2].
+\]
 
-Most of the margin problems come from figures positioned by hand using
-\verb+\special+ or other commands. We suggest using the command
-\verb+\includegraphics+ from the \verb+graphicx+ package. Always
-specify the figure width as a multiple of the line width as in the
-example below:
-\begin{verbatim}
-   \usepackage[pdftex]{graphicx} ...
-   \includegraphics[width=0.8\linewidth]{myfile.pdf}
-\end{verbatim}
-See Section 4.4 in the graphics bundle documentation
-(\url{http://mirrors.ctan.org/macros/latex/required/graphics/grfguide.pdf})
+Corollary 1 also gives the consisistent point estimate
+\[\hat{I}(X; Y) = \frac{1}{2}(\pi_k^{-1}(\hat{e}))^2,\]
+where $\hat{e}$ is a $O(1/\sqrt{n})$-consistent estimate of $e_{ABE,
+k}.$ However, $\hat{I}(X, Y)$ may perform poorly in finite samples due
+to bias.  Better performance can be obtained by using bias-correction
+and shrinkage, but the optimality of the estimator depends on the
+choice of risk function and risk criterion.  In the remainder
+of the paper, we will be mainly interested in interval estimation.
 
-A number of width problems arise when \LaTeX{} cannot properly
-hyphenate a line. Please give LaTeX hyphenation hints using the
-\verb+\-+ command when necessary.
+\section{Results}
+
+Multiple-response logistic regression model
+\[
+X \sim N(0, I_p)
+\]
+\[
+Y \in \{0,1\}^q
+\]
+\[
+Y_i|X = x \sim \text{Bernoulli}(x^T B_i)
+\]
+where $B$ is a $p \times q$ matrix.
+
+\emph{Methods.}
+\begin{itemize}
+\item \text{Nonparametric}: $\hat{I}_0$ naive estimator, $\hat{I}_\alpha$ anthropic correction.
+\item \text{ML-based}: $\hat{I}_{CM}$ confusion matrix, $\hat{I}_F$ Fano, $\hat{I}_{LS}$ low-SNR method.
+\end{itemize}
+
+Sampling distribution of $\hat{I}$ for \small{$\{p = 3$, $B = \frac{4}{\sqrt{3}} I_3$, $K = 20$, $r = 40\}$.}
+
+True parameter $I(X; Y) = 0.800$ \emph{(dotted line.)}
+\begin{center}
+\includegraphics[scale = 0.5, clip = true, trim = 0 0.5in 0 0.5in]{../info_theory_sims/fig1.pdf}
+\end{center}
+Na\"{i}ve estimator performs best!  $\hat{I}_{LS}$ not effective.
+
+Sampling distribution of $\hat{I}$ for \small{$\{p = 50$, $B = \frac{4}{\sqrt{50}} I_{50}$, $K = 20$, $r = 8000\}$.}
+
+True parameter $I(X; Y) = 1.794$ \emph{(dashed line.)}
+\begin{center}
+\includegraphics[scale = 0.5, clip = true, trim = 0 0.5in 0 0.5in]{../info_theory_sims/fig2.pdf}
+\end{center}
+Non-parametric methods extremely biased.
+
+Estimation path of $\hat{I}_{LS}$ and $\hat{I}_\alpha$ as $n$ ranges from $10$ to $8000$.
+
+\small{$\{p = 10$, $B = \frac{4}{\sqrt{10}} I_{10}$, $K = 20\}$.
+True parameter $I(X; Y) = 1.322$ \emph{(dashed line.)}}
+
+\begin{center}
+\includegraphics[scale = 0.4]{../info_theory_sims/fig3.pdf}
+\end{center}
+
+\begin{center}
+\textbf{Estimated $\hat{I}$ vs true $I$.} 
+
+\includegraphics[scale = 0.5, clip=true, trim=0.4in 0.5in 0 0.5in]{../info_theory_sims/fig4.pdf}
+\end{center}
+
+Sampling distribution of $\hat{I}_{LS}$ for \small{$\{p = 10$, $B = \frac{4}{\sqrt{10}} I_{10}$, $N = 80000\}$,
+
+and $K = \{5, 10, 15, 20, \hdots, 80\}$, $r = N/k$.}
+
+True parameter $I(X; Y) = 1.322$ \emph{(dashed line.)}
+\begin{center}
+\includegraphics[scale = 0.6, clip = true, trim = 0 0.5in 0 0.5in]{../info_theory_sims/fig5a.pdf}
+\end{center}
+
+Decreasing variance as $K$ increases. Bias at large and small $K$.
+
+$p = 20$ and $q = 40$, entries of $B$ are iid $N(0, 0.025)$.
+
+$K=20$, $r = 8000$, true $I(X; Y) = 1.86$ \emph{(dashed line.)}
+
+\begin{center}
+\textbf{Sampling distribution of $\hat{I}$.}
+\includegraphics[scale = 0.6, clip = true, trim = 0 0.5in 0 0.5in]{../info_theory_sims/fig6.pdf}
+\end{center}
+
+\section{Discussion}
 
 \subsubsection*{Acknowledgments}
 
@@ -546,6 +685,25 @@ size to \verb+small+ (9 point) when listing the references. {\bf
 \medskip
 
 \small
+
+[X] Gastpar, M.  Gill, P.  Huth, A.  Theunissen, F. ``Anthropic Correction of Information Estimates and Its Application to Neural Coding.'' \emph{IEEE Trans. Info. Theory}, Vol 56 No 2, 2010.
+
+[X] A. Borst and F. E. Theunissen, ``Information theory and neural coding''
+Nature Neurosci., vol. 2, pp. 947?957, Nov. 1999.
+
+[X] L. Paninski, ``Estimation of entropy and mutual information,'' Neural
+Comput., vol. 15, no. 6, pp. 1191?1253, 2003.
+
+[X] I. Nelken, G. Chechik, T. D. Mrsic-Flogel, A. J. King, and J. W. H.
+Schnupp, ``Encoding stimulus information by spike numbers and mean
+response time in primary auditory cortex,'' J. Comput. Neurosci., vol.
+19, pp. 199?221, 2005.
+
+[X] Cover and Thomas.  Elements of information theory.
+
+[X]  Muirhead.  Aspects of multivariate statistical theory.
+
+[X] van der Vaart.  Asymptotic statistics.
 
 [1] Alexander, J.A.\ \& Mozer, M.C.\ (1995) Template-based algorithms
 for connectionist rule extraction. In G.\ Tesauro, D.S.\ Touretzky and
