@@ -1047,12 +1047,10 @@ f^{(i)} = \mathcal{F}(\{(x, y): (x, y) \in S_i\})
 Define the $i$th estimate of test error
 as
 \[
-e^{(i)} = \frac{1}{kr_2} \sum_{j=1}^{k}\sum_{(x^{(j)}, y) \in \bar{S}_i} I(f(y) \neq j).
+e_i = \frac{1}{kr_2} \sum_{j=1}^{k}\sum_{(x^{(j)}, y) \in \bar{S}_i} I(f(y) \neq j).
 \]
+Order the estimates so that $e_{(1)} \leq e_{(2)} \leq \cdots \leq e_{(B)}$.
 
-In both cases, the general idea is to first assume that the
-generalization error $e_{AGE}$ of the classifer $\mathcal{F}$
-approximates the Bayes error
 
 
 \subsection{Identification setting}
