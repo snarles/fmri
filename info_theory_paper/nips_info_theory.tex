@@ -18,7 +18,7 @@
 \usepackage{url}            % simple URL typesetting
 \usepackage{booktabs}       % professional-quality tables
 \usepackage{amsfonts}       % blackboard math symbols
-\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+%\usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
 
 \usepackage{amssymb, amsmath}
@@ -43,7 +43,7 @@
 \newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
 \newcommand{\Cor}{\text{Cor}}
 
-\title{A saturating lower confidence bound for mutual information based on classification error}
+\title{Estimating mutual information in high dimensions via classification error}
 
 % The \author macro works with any number of authors. There are two
 % commands used to separate the names and addresses of multiple
@@ -56,15 +56,18 @@
 % author name.
 
 \author{
-  Charles Y.~Zheng\thanks{snarles@stanford,edu} \\
+  Charles Y.~Zheng \\
   Department of Statistics\\
   Stanford University\\
   Stanford, CA 94305 \\
   \texttt{snarles@stanford.edu} \\
   %% examples of more authors
   \And
-  Yuval Benjamini \\
-  %% Affiliation \\
+  Yuval ~Benjamini \\
+  Department of Statistics \\
+  Hebrew University\\
+  Jerusalem, Israel\\
+  \texttt{yuval.benjamini@mail.huji.ac.il}
   %% Address \\
   %% \texttt{email} \\
   %% \AND
@@ -90,12 +93,33 @@
 \maketitle
 
 \begin{abstract}
-Estimating the mutual information $I(X; Y)$ based on observations becomes statistically infeasible in high
-dimensions without some kind of modeling assumption.  One approach is to assume a parametric joint distribution on $(X, Y)$, but in many applications, such a strong modeling assumption cannot be justified.
-An alternative approach is to obtain a lower bound on the mutual information based on a classification task.
-Existing methods include lower confidence bounds based on the confusion matrix of the classifier, as well as
-Fano's inequality and its generalizations.  One might hope that if the classifier is \emph{consistent}, in the sense that the classification error approaches the Bayes error in the large-sample limit, that the information lower bound $\underline{I}(X, Y)$ should also approach the true information $I(X; Y)$.  However, existing methods always produce a bound which is on the order $O(\log k)$, where $K$ is the number of classes, so when $I(X; Y) \gg \log k$, the lower confidence bound is inconsistent even when the classifier is consistent.  On the other hand, consistency is not possible with a fixed number of classes since the full distribution of $X$ is not revealed.  In this paper, we construct a novel lower bound based on high-dimensional asymptotics; our proposed bound satisfies a weaker property than consistency, called \emph{saturation.}  A saturating lower bound has the property that as $I(X; Y)$ and the number of observations grow to infinity (while the number of classes $K$ stays fixed,) that $\underline{I}((X, Y)) = O(I(X, Y))$, assuming that the classifier used is consistent. %%We show that in a particular asymptotic regime, the mutual information is an invertible function of the expected $k$-class Bayes error.  The performance of any consistent classifier can be used to obtain a one-sided confidence interval on the expected Bayes error, which in turn produces a saturating lower confidence bound on the mutual information.
-While the theory is based on a large-sample, high-dimensional limit, we demonstrate through simulations that our proposed lower confidence bound has superior performance to the alternatives in problems of moderate dimensionality.
+Estimating the mutual information $I(X; Y)$ based on observations
+becomes statistically infeasible in high dimensions without some kind
+of assumption or prior.  One approach is to assume a parametric joint
+distribution on $(X, Y)$, but in many applications, such a strong
+modeling assumption cannot be justified.  Alternatively, one can to
+obtain a lower bound on the mutual information based the performance
+of a classifier trained on the data.  Existing methods include lower
+confidence bounds based on the confusion matrix of the classifier, as
+well as Fano's inequality and its generalizations.  However, these
+methods all produce a bound which is limited by $O(\log k)$, where $k$
+is the number of classes, so when $I(X; Y) \gg \log k$, the bound
+produced is not a good estimate.  This presents a substantial
+limitation for classification-based approaches, since the number of
+repeats per class must be large for the classifier to work well. In
+this paper, we construct a novel lower confidence bound which
+overcomes these limitations.  Our lower bound is based on
+high-dimensional asymptotics: we show that in a particular limiting
+regime, the mutual information is an invertible function of the
+expected $k$-class Bayes error.  The empirical performance of any
+consistent classifier can be used to obtain a lower confidence bound
+on the expected Bayes error, which in turn produces a local confidence
+bound of the the mutual information which is asymptotically
+independent of the number of classes $k$.  While the theory is based
+on a large-sample, high-dimensional limit, we demonstrate through
+simulations that our proposed lower confidence bound has superior
+performance to the alternatives in problems of moderate
+dimensionality.
 \end{abstract}
 
 \section{Introduction}
@@ -105,35 +129,138 @@ between random variables $X$ and $Y$, and is defined as
 \[
 I(X;Y) = \int p(x, y) \log \frac{p(x, y)}{p(x)p(y)}dxdy.
 \]
-In its original context of information theory, the mutual
-information describes the rate at which a noisy communications channel $Y$ can communicate bits from
-a source stream $X$, but by now, the quantity $I(X, Y)$ has found many new uses
-in science and engineering.  Mutual information is used to test for conditional independence, to quantifying the information between a random stimulus $X$ and the signaling behavior of an ensembles of neurons, $Y$ (Borst 1999); for use as an objective function for training neural networks (CITE), for feature selection in machine learning, and even as an all-purpose nonlinear measure of ``correlation for the 21st century'' (Speed.)  What is common to all of these new applications, and what differs from the original setting of Shannon's theory of information, is that the variables $X$ and $Y$ have unknown distributions which must be inferred from data.  In the case when $X$ and $Y$ are both low-dimensional,
-for instance, when summarizing the properties of a single neuron in response to a single stimulus feature, $I(X; Y)$ can be estimated nonparametrically using a reasonable number of observations.
-There exists a huge literature on nonparametric estimation of entropy and mutual information exists, see (CITE) for a review.
+In its original context of information theory, the mutual information
+describes the rate at which a noisy communications channel $Y$ can
+communicate bits from a source stream $X$, but by now, the quantity
+$I(X, Y)$ has found many new uses in science and engineering.  Mutual
+information is used to test for conditional independence (CITE), to
+quantifying the information between a random stimulus $X$ and the
+signaling behavior of an ensembles of neurons, $Y$ (Borst 1999); for
+use as an objective function for training neural networks (CITE), for
+feature selection in machine learning, and even as an all-purpose
+nonlinear measure of ``correlation for the 21st century'' (Speed.)
+What is common to all of these new applications, and what differs from
+the original setting of Shannon's theory of information, is that the
+variables $X$ and $Y$ have unknown distributions which must be
+inferred from data.  In the case when $X$ and $Y$ are both
+low-dimensional, for instance, when summarizing the properties of a
+single neuron in response to a single stimulus feature, $I(X; Y)$ can
+be estimated nonparametrically using a reasonable number of
+observations.  There exists a huge literature on nonparametric
+estimation of entropy and mutual information exists, see (CITE) for a
+review.
 
-However, for high-dimensional $X$ and $Y$ the sample complexity grows exponentially with the dimension,
-making nonparametric approaches intractable in applications with high-dimensional data.
-One such application includes multivariate pattern analysis (MVPA), an area of neuroscience research pioneered by Haxby (2001), which studies how entire regions of the human brain respond to stimuli, using function magnetic resonance imaging (fMRI) data;
-in MVPA studies, the input $X$ could be a natural image parameterized by $p = 10000$ image features,
-while the output $Y$ is a $q=20000$-dimensional vector of brain activation features obtained from the fMRI scan.  In problems of such dimensionality, one can tractably
-estimate mutual information by assuming a multivariate Gaussian model:
-however, this approach essentially assumes a linear relationship
-between the input and output, and hence fails to quantify nonlinear
-dependencies.  Rather than assuming a full parametric generative model,
-one can empirically select a good \emph{discriminative} model by using machine learning.
-Treves (1997) first proposed using the empirical mutual information of the classification matrix in order to obtain a lower bound of the mutual information $I(X; Y)$; this confusion-matrix-based lower bound has subsequently enjoyed widespread use in the MVPA literature (Quiroga 2009.)  But even earlier that this, the idea of linking classification performance to mutual information can be found in the beginnings of information theory: after all, Shannon's original
+However, the sample complexity for nonparametric estimation grows
+exponentially with the dimension, rendering such methods ineffective
+in applications with high-dimensional data.  One such application
+includes multivariate pattern analysis (MVPA), an area of neuroscience
+research pioneered by Haxby (2001), which studies how entire regions
+of the human brain respond to stimuli, using function magnetic
+resonance imaging (fMRI) data; in MVPA studies, the input $X$ could be
+a natural image parameterized by $p = 10000$ image features, while the
+output $Y$ is a $q=20000$-dimensional vector of brain activation
+features obtained from the fMRI scan.  In problems of such
+dimensionality, one can tractably estimate mutual information by
+assuming a multivariate Gaussian model: however, this approach
+essentially assumes a linear relationship between the input and
+output, and hence fails to quantify nonlinear dependencies.  Rather
+than assuming a full parametric generative model, one can empirically
+select a good \emph{discriminative} model by using machine learning.
+Treves (1997) first proposed using the empirical mutual information of
+the classification matrix in order to obtain a lower bound of the
+mutual information $I(X; Y)$; this confusion-matrix-based lower bound
+has subsequently enjoyed widespread use in the MVPA literature
+(Quiroga 2009.)  But even earlier that this, the idea of linking
+classification performance to mutual information can be found in the
+beginnings of information theory: after all, Shannon's original
 motivation was to characterize the minimum achievable error
 probability of a noisy communication channel.  More explicitly, Fano's
 inequality provides a lower bound on mutual information in relation to
 the optimal prediction error, or Bayes error.  Fano's inequality can
 be further refined to obtain a tighter lower bound on mutual
-information (Tebbe and Dwyer 1968.)  How do these different classification-based methods for lower bounding mutual information compare, to each other, and to nonparametric and parametric estimators of mutual information?  Before discussing such comparisons, we must first delineate a number of assumptions on the sampling regime, and the properties of the classifiers.
+information (Tebbe and Dwyer 1968.)
 
-\subsection{Sampling assumptions}
+The estimator based on the confusion matrix, $\underline{I}_{CM}$, and
+the estimator based on Tebbe and Dwyer's improvement of Fano's
+inequality,$\underline{I}_{TD}$, are the best two examples of what
+might be called the \emph{discriminative} approach to mutual
+information estimation, in contrast to the \emph{parametric} and
+\emph{nonparametric} approaches.  In many applications, the
+discriminative approach takes an advantageous middle ground between
+the two extremes of nonparametric and parametric approaches for
+estimating mutual information. In neuroimaging data, we lack prior
+knowledge for specifying parametric models, and the data is too
+high-dimensional for nonparametric approaches, but we have a
+sufficient idea of the general ``structure'' in the data to achieve
+above-chance classification rates.
 
-Assume that the variables $X, Y$ have a joint distribution $F$, and that one can define a conditional
-distribution of $Y$ given $X$,
+But as noted in the literature (Quiroga et al. 2009), such
+discriminative approaches can only hope to produce an estimated
+\emph{lower bound} to the mutual information.  Two sources of
+``information loss'' are (1) the fact that a continuous input variable
+$X$ is discretized into $k$ classes, and (2) that the performance of
+any classifier trained from data can at best given an \emph{upper
+  bound} to the error of the best classification rule: the Bayes
+error.  Hence, from now on, we refer to discriminative estimators of
+mutual information as lower confidence bounds (LCBs).  Two desirable
+properties for a lower confidence bound $\underline{I}$ are:
+\begin{itemize}
+\item[1.] \emph{coverage probability}.  The probability that
+  $\underline{I}$ overestimates $I(X; Y)$ is controlled at some level
+  $\alpha$:
+\[\Pr[\underline{I} > I(X; Y)] < \alpha.\]
+\item[2.] \emph{tightness}.  The gap between $I(X; Y)$ and
+  $\underline{I}$ is small, according to some loss function.  For
+  example, under squared-error loss, we prefer LCBs $\underline{I}$
+  such that the risk
+\[
+\E[(I(X; Y) - \underline{I})^2]
+\]
+is small.
+\end{itemize}
+
+Furthermore, all existing approaches for discriminative LCBs share the
+limitation that $\underline{I}$ is a \emph{bounded} estimator:
+\[
+\underline{I} \in [0, \log(k)]
+\] 
+where $k$ is the number of classes defined in the classification task.
+This is a reasonable limitation, since one can construct a worst-case
+example where the $I(X; Y) = \log(k)$ and the Bayes error has a
+positive probability of equalling zero\footnote{Let $p(x, y) =
+  I(\min(|x - y|, |x - y + 1|) < \frac{1}{k})$ over the unit square,
+  and assume that stratified sampling is used to define the classes
+  (see section 1.1).}.  However, in situations where we can rule out
+such pathological cases, an \emph{unbounded} estimate of mutual
+information could potentially outperform $\underline{I}_{TD}$ and
+$\underline{I}_{CM}$, especially if $I(X; Y) \gg \log(k)$.
+
+What we propose in this paper is to exploit an assumption of
+\emph{high dimensionality} in order to rule out pathological cases
+where the mutual information becomes decoupled from the classification
+error.  This assumption of high dimensionality is well-suited for the
+applications where discriminative approaches for estimating mutual
+information are appropriate.  In section 2 we present an asymptotic
+setting intended to capture the notion of high dimensionality; namely,
+one where the number of classes is fixed, and where the information
+$I(X; Y)$ remains fixed, while the dimensionality of the input $X$ and
+output $Y$ both grow to infinity.  We make a number of additional
+regularity conditions to rule out scenarios where $(X, Y)$ is really
+less ``high-dimensional'' than it appears, since most of the variation
+is captured a low-dimensional manifold.  In section 2.2 we present our
+key result, which links the asymptotic average Bayes error to the
+mutual information; in section 2.3 we apply this result to derive our
+proposed estimator, $\underline{I}_{HD}$ (where HD stands for ``high-dimensional.'')  Section 3 presents
+simulation results, and section 4 concludes.
+
+\subsection{Framework}
+
+Before presenting our asymptotic analysis, we provide some background
+on discriminative methods for estimating mutual information and
+define the sampling assumptions behind our procedure.
+
+Assume that the variables $X, Y$ have a joint distribution $F$, and
+that one can define a conditional distribution of $Y$ given $X$,
 \[
 Y|X \sim F_X,
 \]
