@@ -27,11 +27,11 @@ Ys <- generate_sample(ps, prob.ps, k, n)
 Ymat <- cbind(k - Ys, Ys)
 hist(Ys)
 library(mixtools)
-res <- multmixEM(Ymat, rep(1/10, 10), theta = NULL)
+res <- multmixEM(Ymat, k = 10, verb = TRUE)
 est_moment(res, 2)
 pk_moment(ps, prob.ps, 2)
 est_moment(res, 3)
 pk_moment(ps, prob.ps, 3)
-
+mean((Ys/k)^2)
 
 
