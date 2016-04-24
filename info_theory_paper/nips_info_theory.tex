@@ -332,6 +332,8 @@ When $\log(k) \ll I(X; Y)$, we say that the data is \emph{undersampled}:
 meaning that even if the total number of observations is large (due to having many repeats per class,)
 the diversity of the exemplar set is poor.
 
+The parametric approach is relatively robust to undersampling of the exemplars,
+since $k$ exemplars suffice to identify a $p < k$-parameter model.
 Gastpar et al. (2009), studied the nonparametric estimator
 \[
 \hat{I}_0 = \hat{H}(Y) - \frac{1}{k}\sum_{i=1}\hat{H}(Y|X),
@@ -342,40 +344,28 @@ to counteract this bias, they introduce the anthropic correction estimator $\hat
 However, without a principled approach to choose the parameter $\alpha \in (0,1]$,
 $\hat{I}_\alpha$ could still vastly underestimate or overestimate the mutual information.
 
-In contrast, the parametric approach is relatively robust to undersampling of the exemplars.
-For instance, in the multivariate Gaussian model, the mutual information is a function of the eigenvalues of the canonical correlation matrix $R  =\Sigma_X^{-1/2}\Sigma_{XY}\Sigma_Y^{-1/2}$.  If $X$ is a controlled stimulus, $\Sigma_X$ can be taken to be identity, and the interclass covariance matrix of $Y$ suffices to estimate $\Sigma_Y$ consistently.  The remaining parameter $\Sigma_{XY}$ can be estimated from the inner-product matrix $\boldsymbol{X}^T \boldsymbol{Y}$, which is unbiased for $\Sigma_{XY}$ regardless of whether pair sampling or stratified sampling is employed.
-
-Meanwhile, the discriminative estimators face serious limitations under the undersampled regime--
-which is especially unfortunate, because exemplar undersampling is usually necessary for obtaining a good
-classification rule.  It is easy to show that $\log(k)$ is a tight upper bound for both $\hat{I}_{CM}$ and 
-$\hat{I}_{Fano}$.  As $I(X; Y)$ exceeds $\log(k)$, the estimate $\hat{I}$ can no longer approximate $I(X; Y)$, even up to a constant factor.  On the other hand, the $\log(k)$ barrier is a reasonable limitation, if we consider the following worst-case example.  Let $X$ and $Y$ have joint density
+Meanwhile, the discriminative estimators $\hat{I}_{CM}$ and $\hat{I}_{Fano}$ perform quite badly in the undersampled regime.  It is easy to show that $\log(k)$ is a tight upper bound for both $\hat{I}_{CM}$ and 
+$\hat{I}_{Fano}$.  As $I(X; Y)$ exceeds $\log(k)$, the estimate $\hat{I}$ can no longer approximate $I(X; Y)$, even up to a constant factor.  On the other hand, the following worst-case example shows that discriminative estimators cannot overcome this $\log(k)$ barrier in general.  Let $X$ and $Y$ have joint density
 $
 p(x, y) = \frac{1}{k}I(\lfloor kx \rfloor = \lfloor ky \rfloor)
 $ on the unit square.  Under partition-based classification, if we set $Z(x) = \lfloor kx \rfloor + 1$,
-then no errors are made under the Bayes rule. We therefore have a joint distribution which maximizes $\hat{I}_{CM}$ and $\hat{I}_{Fano}$ but has \emph{finite} information $I(X; Y) = \log(k)$.
+then no errors are made under the Bayes rule. We therefore have a joint distribution which maximizes any reasonable discriminative estimator but has \emph{finite} information $I(X; Y) = \log(k)$.
 The consequence of this is that under partition-based classification,
 we cannot hope to distinguish distributions with $I(X; Y) > \log(k)$.
+The situation is more promising if we specialize to stratified sampling: in the same example, a Bayes of zero is no longer likely due to the possibility of exemplars being sampled from the same bin (`collisions')--we obtain an approximation to the average Bayes error through a Poisson sampling model: $e_{ABE, k} \approx \frac{1}{e}\sum_{j=1}^\infty \frac{1}{j(j!)}= 0.484$.
+Recognizing that the natural setting for discriminative estimation is for high-dimensional data,
+we specialize further to consider deriving an estimator under a \emph{high-dimensional} regime.
+The extra assumption of high dimensionality allows an extreme degree of control over the average Bayes error--it reduces the average Bayes error to a function of the mutual information!
 
-However, in situations where we can rule out such pathological cases, an \emph{unbounded} estimate of mutual information could potentially outperform $\hat{I}_{Fano}$ and
-$\hat{I}_{CM}$, especially if $I(X; Y) \gg \log(k)$.
-The strategy we adopt for overcoming this $\log(k)$ barrier to combine the stratified sampling assumption with an additional assumption of high dimensionality.
-Referring to the earlier example, we see that under stratified sampling,
-the average Bayes error is approximately $e_{ABE, k} = 1- e$ rather than zero.
-Therefore, we could potentially distinguish distributions with $I(X; Y) \gg \log(k)$.
-
-Yet, the bulk of the power in our proposed approach comes from the high-dimensionality assumption.
 In section 2 we present an asymptotic
 setting intended to capture the notion of high dimensionality; namely,
 one where the number of classes is fixed, and where the information
 $I(X; Y)$ remains fixed, while the dimensionality of the input $X$ and
 output $Y$ both grow to infinity.  
-These are appropriate modeling assumptions for many applications
-that have high-dimensional data and low signal-to-noise ratio--in other words, the kind of application
-for which machine learning is most suited.
 We make a number of additional
 regularity conditions to rule out scenarios where $(X, Y)$ is really
 less ``high-dimensional'' than it appears, since most of the variation
-is captured a low-dimensional manifold.  In section 2.1 we present our
+is captured a low-dimensional manifold\footnote{In situations where $(X, Y)$ lie on a manifold, one could effectively estimate mutual information by would be to combining dimensionality reduction with nonparametric information estimation (Theunnissen and Miller, 1991). }.  In section 2.1 we present our
 key result, which links the asymptotic average Bayes error to the
 mutual information; in section 2.2 we apply this result to derive our
 proposed estimator, $\hat{I}_{HD}$ (where HD stands for ``high-dimensional.'')  Section 3 presents
@@ -551,9 +541,10 @@ and $Y$ is a binary vector with conditional distribution
 \[
 Y_i|X = x \sim \text{Bernoulli}(x^T B_i)
 \]
-where $B$ is a $p \times q$ matrix. 
+where $B$ is a $p \times q$ matrix.
 One application of this model might be modeling neural spike count data $Y$ arising in response
 to environmental stimuli $X$.
+We choose the naive Bayes for the classifier $\mathcal{F}$: it is consistent for estimating the Bayes rule.
 In Figure 2 we show the sampling distributions of the four estimators as $I(X; Y)$ is varied in the interval $[0, 4]$.  We see that $\hat{I}_{CM}$, $\hat{I}_{Fano}$, and $\hat{I}_0$ indeed begin to asymptote as they approach $\log(k) = 2.995$.  In contrast, $\hat{I}_{HD}$ remains a good approximation of $I(X; Y)$ within the range, although it begins to overestimate at the right endpoint.
 
 \begin{figure}
@@ -567,9 +558,29 @@ In Figure 2 we show the sampling distributions of the four estimators as $I(X; Y
 
 \section{Discussion}
 
+Discriminative estimators of mutual information have the potential to estimate
+mutual information in high-dimensional data without resorting to fully parametric assumptions.
+However, a number of practical considerations also limit their usage.
+First, one has to find a good classifier $\mathcal{F}$ for the data:
+techniques for model selection can be used to choose $\mathcal{F}$
+from a large library of methods.  However, there is no way to guarantee how well
+the chosen classifier approximates the optimal classification rule.
+Secondly, one has to estimate the generalization error from test data:
+the complexity of estimating $e_{gen}$ could become the bottleneck when $e_{gen}$ is close to 0.
+Thirdly, for previous estimators $\hat{I}_{Fano}$ and $\hat{I}_{CM}$,
+the ability of the estimator to distinguish high values of $I(X; Y)$ is limited by the number of classes $k$.
+Our estimator $\hat{I}_{HD}$ is subject to the first two limitations, along with
+any conceivable discriminative estimator, but overcomes the third limitation
+under the assumption of stratified sampling and high dimensionality.
 
+While the high-dimensionality assumption is well-suited for a broad class of applications,
+the stratified sampling assumption can be justified only in certain types of controlled experiments.
+On the other hand, the stratified sampling assumption may not be essential to our approach:
+we use it mainly as a mathematical convenience.  Therefore, it remains a possibility to
+extend the proposed estimation approach to handle partition-based classification, under certain assumptions
+on the partition.
 
-A number of adjustments can be made to $\hat{I}_{HD}$ to improve
+As it stands, a number of adjustments can be made to $\hat{I}_{HD}$ to improve
 its performance in special cases.  One can employ more sophisticated methods to
 estimate $e_{ABE, k}$: for example, extrapolating from learning curves (Cortes et al. 1999).
 Furthermore, depending on the risk function, one may debias or shrink the estimate $\hat{I}_{HD}$
@@ -577,22 +588,16 @@ to achieve better performance.  It can be seen from the delta method that $\hat{
 highly biased for small $e_{gen, \alpha}$: in such settings, it may be appropriate to consider
 some form of Bayesian smoothing.
 
+In our simulation experiment, our proposed estimator is seen to outperform existing
+estimators, but it remains to assess the utility of our estimation
+procedure in a real-world example.  We apply our framework to evaluate visual encoding models
+in a forthcoming work.
 
 \subsubsection*{Acknowledgments}
 
-Use unnumbered third level headings for the acknowledgments. All
-acknowledgments go at the end of the paper. Do not include
-acknowledgments in the anonymized submission, only in the final paper.
+CZ is supported by an NSF graduate research fellowship.
 
 \section*{References}
-
-References follow the acknowledgments. Use unnumbered first-level
-heading for the references. Any choice of citation style is acceptable
-as long as you are consistent. It is permissible to reduce the font
-size to \verb+small+ (9 point) when listing the references. {\bf
-  Remember that you can use a ninth page as long as it contains
-  \emph{only} cited references.}
-\medskip
 
 \small
 
@@ -614,6 +619,9 @@ response time in primary auditory cortex,'' J. Comput. Neurosci., vol.
 [X]  Muirhead.  Aspects of multivariate statistical theory.
 
 [X] van der Vaart.  Asymptotic statistics.
+
+[X] F. E. Theunissen and J. P. Miller, ``Representation of sensory information in the cricket cercal sensory system. II. information theoretic calculation of system accuracy and optimal tuning-curve widths of four primary interneurons,'' J. Neurophysiol., vol. 66, no. 5, pp. 1690?1703, 1991.
+[8]
 
 [1] Alexander, J.A.\ \& Mozer, M.C.\ (1995) Template-based algorithms
 for connectionist rule extraction. In G.\ Tesauro, D.S.\ Touretzky and
