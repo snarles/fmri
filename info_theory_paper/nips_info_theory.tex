@@ -30,6 +30,9 @@
 \usepackage{graphicx}
 \usepackage{mathtools}
 \usepackage{csquotes}
+\usepackage{xcolor}
+\usepackage{multirow}
+\newcommand\crule[3][black]{\textcolor{#1}{\rule{#2}{#3}}}
 
 \newcommand{\tr}{\text{tr}}
 \newcommand{\E}{\textbf{E}}
@@ -42,6 +45,11 @@
 \newcommand{\comm}[1]{}
 \newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
 \newcommand{\Cor}{\text{Cor}}
+
+\definecolor{color1}{RGB}{128,13,13}
+\definecolor{color2}{RGB}{70,128,13}
+\definecolor{color3}{RGB}{13,128,128}
+\definecolor{color4}{RGB}{70,13,128}
 
 \title{Estimating mutual information in high dimensions via classification error}
 
@@ -400,8 +408,21 @@ $ since after all, an uninformative response cannot lead to above-chance classif
 
 \begin{figure}
 \centering
-\includegraphics[scale = 0.5, clip=true, trim=0 0.2in 0 0.5in]{../info_theory_sims/illus_piK.pdf}
-\caption{The function $pi_k(\mu)$, for $k = \{2, 9, 99, 999\}$ (left to right) \label{fig:pi}}
+\begin{tabular}{ccrl}
+\multirow{5}{*}{\includegraphics[scale = 0.5, clip=true, trim=0 0.2in 0 0.5in]{../info_theory_sims/illus_piK_flat.pdf}} &
+\multirow{5}{*}{\includegraphics[scale = 0.5, clip=true, trim=0 0.2in 0.4in 0.5in]{../info_theory_sims/ihat_comp.pdf}} & & \\
+& & & \\
+& & \crule[color1]{0.2cm}{0.2cm} & $\hat{I}_{Fano}$\\
+& & \crule[color3]{0.2cm}{0.2cm} & $\hat{I}_{HD}$\\
+& & & \\
+& & & \\
+& & & \\
+& & & 
+\end{tabular}
+\caption{Left: The function $pi_k(\mu)$ for $k = \{2, 10\}$.
+Right: $\hat{I}_{HD}$ with $\hat{I}_{Fano}$ as functions of $\hat{e}_{gen}$, for $k = 3$.
+While $\hat{I}_{Fano}$ is bounded from above by $\log(k)$ (dotted line), $\hat{I}_{HD}$ is unbounded.
+\label{fig:pi}}
 \end{figure}
 
 \subsection{Universality result}
@@ -549,11 +570,21 @@ In Figure 2 we show the sampling distributions of the four estimators as $I(X; Y
 
 \begin{figure}
 \begin{center}
-\textbf{Estimated $\hat{I}$ vs true $I$.} 
-
-\includegraphics[scale = 0.5, clip=true, trim=0.4in 0.5in 0 0.5in]{../info_theory_sims/fig4.pdf}
+\begin{tabular}{ccrl}
+&\multirow{10}{*}{\includegraphics[scale = 0.5, clip=true, trim=0.4in 0.5in 0 0.5 in]{../info_theory_sims/fig4.pdf}}&&\\
+&  $I(X; Y)$& &\\
+& & &\\
+& & &\\
+& & \crule[color3]{0.2cm}{0.2cm} &$\hat{I}_{HD}$\\
+ & &\crule[color1]{0.2cm}{0.2cm} &$\hat{I}_{CM}$ \\
+$\hat{I}$& & \crule[color2]{0.2cm}{0.2cm} &$\hat{I}_{Fano}$\\
+& & \crule[color4]{0.2cm}{0.2cm} &$\hat{I}_{0}$\\
+& & &\\
+& & &\\
+& & &\\
+\end{tabular}
 \end{center}
-\caption{$p = q = 10$. $B = sI_{10}$, where $s \in [0, \sqrt{200}]$.  $r = 1000$.}
+\caption{Sampling distributions of $\hat{I}$ for data generated from the multiple-response logistic model.  $p = q = 10$; $k= 20$; $B = sI_{10}$, where $s \in [0, \sqrt{200}]$; and  $r = 1000$.}
 \end{figure}
 
 \section{Discussion}
@@ -584,14 +615,12 @@ As it stands, a number of adjustments can be made to $\hat{I}_{HD}$ to improve
 its performance in special cases.  One can employ more sophisticated methods to
 estimate $e_{ABE, k}$: for example, extrapolating from learning curves (Cortes et al. 1999).
 Furthermore, depending on the risk function, one may debias or shrink the estimate $\hat{I}_{HD}$
-to achieve better performance.  It can be seen from the delta method that $\hat{I}_{HD}$ is
-highly biased for small $e_{gen, \alpha}$: in such settings, it may be appropriate to consider
-some form of Bayesian smoothing.
+to achieve a more favorable bias-variance tradeoff.
 
 In our simulation experiment, our proposed estimator is seen to outperform existing
 estimators, but it remains to assess the utility of our estimation
-procedure in a real-world example.  We apply our framework to evaluate visual encoding models
-in a forthcoming work.
+procedure in a real-world example.  In a forthcoming work, we apply our framework to evaluate visual encoding models in human fMRI data.
+
 
 \subsubsection*{Acknowledgments}
 
