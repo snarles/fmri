@@ -379,7 +379,7 @@ The parametric approach is relatively robust to undersampling of the
 exemplars, since $k$ exemplars suffice to identify a $p < k$-parameter
 model.  Gastpar et al. (2009), studied the nonparametric estimator
 \[
-\hat{I}_0 = \hat{H}(Y) - \frac{1}{k}\sum_{i=1}\hat{H}(Y|X),
+\hat{I}_0 = \hat{H}(Y) - \frac{1}{k}\sum_{i=1}\hat{H}(Y|X^{(i)}),
 \]
 where $\hat{H}$ is an estimator for the entropy.  Gastpar et
 al. showed that $\hat{I}_0$ is biased downwards due to undersampling
@@ -454,7 +454,7 @@ The function $\pi_k$ is given by
 \pi_k(c) = 1 - \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
 \]
 This formula is not new to the information theory literature: it
-appears as the error rate of an orthogonal constellation (CITE).  What
+appears as the error rate of an orthogonal constellation (Tse 2005).  What
 is surprising is that the same formula can be used to approximate the
 error rate in much more general class of classification
 problems\footnote{An intuitive explanation for this fact is that
@@ -669,37 +669,45 @@ $\hat{I}$& & \crule[color2]{0.2cm}{0.2cm} &$\hat{I}_{Fano}$\\
 
 \section{Discussion}
 
-Discriminative estimators of mutual information have the potential to estimate
-mutual information in high-dimensional data without resorting to fully parametric assumptions.
-However, a number of practical considerations also limit their usage.
-First, one has to find a good classifier $\mathcal{F}$ for the data:
-techniques for model selection can be used to choose $\mathcal{F}$
-from a large library of methods.  However, there is no way to guarantee how well
-the chosen classifier approximates the optimal classification rule.
-Secondly, one has to estimate the generalization error from test data:
-the complexity of estimating $e_{gen}$ could become the bottleneck when $e_{gen}$ is close to 0.
-Thirdly, for previous estimators $\hat{I}_{Fano}$ and $\hat{I}_{CM}$,
-the ability of the estimator to distinguish high values of $I(X; Y)$ is limited by the number of classes $k$.
-Our estimator $\hat{I}_{HD}$ is subject to the first two limitations, along with
-any conceivable discriminative estimator, but overcomes the third limitation
-under the assumption of stratified sampling and high dimensionality.
+Discriminative estimators of mutual information have the potential to
+estimate mutual information in high-dimensional data without resorting
+to fully parametric assumptions.  However, a number of practical
+considerations also limit their usage.  First, one has to find a good
+classifier $\mathcal{F}$ for the data: techniques for model selection
+can be used to choose $\mathcal{F}$ from a large library of methods.
+However, there is no way to guarantee how well the chosen classifier
+approximates the optimal classification rule.  Secondly, one has to
+estimate the generalization error from test data: the complexity of
+estimating $e_{gen}$ could become the bottleneck when $e_{gen}$ is
+close to 0.  Thirdly, for previous estimators $\hat{I}_{Fano}$ and
+$\hat{I}_{CM}$, the ability of the estimator to distinguish high
+values of $I(X; Y)$ is limited by the number of classes $k$.  Our
+estimator $\hat{I}_{HD}$ is subject to the first two limitations,
+along with any conceivable discriminative estimator, but overcomes the
+third limitation under the assumption of stratified sampling and high
+dimensionality.
 
-While the high-dimensionality assumption is well-suited for a broad class of applications,
-the stratified sampling assumption can be justified only in certain types of controlled experiments.
-On the other hand, the stratified sampling assumption may not be essential to our approach:
-we use it mainly as a mathematical convenience.  Therefore, it remains a possibility to
-extend the proposed estimation approach to handle partition-based classification, under certain assumptions
-on the partition.
+While the high-dimensionality assumption is well-suited for a broad
+class of applications, the stratified sampling assumption can be
+justified only in certain types of controlled experiments.  On the
+other hand, the stratified sampling assumption may not be essential to
+our approach: we use it mainly as a mathematical convenience.
+Therefore, it remains a possibility to extend the proposed estimation
+approach to handle partition-based classification, under certain
+assumptions on the partition.
 
-As it stands, a number of adjustments can be made to $\hat{I}_{HD}$ to improve
-its performance in special cases.  One can employ more sophisticated methods to
-estimate $e_{ABE, k}$: for example, extrapolating from learning curves (Cortes et al. 1999).
-Furthermore, depending on the risk function, one may debias or shrink the estimate $\hat{I}_{HD}$
-to achieve a more favorable bias-variance tradeoff.
+As it stands, a number of adjustments can be made to $\hat{I}_{HD}$ to
+improve its performance in special cases.  One can employ more
+sophisticated methods to estimate $e_{ABE, k}$: for example,
+extrapolating from learning curves (Cortes et al. 1999).  Furthermore,
+depending on the risk function, one may debias or shrink the estimate
+$\hat{I}_{HD}$ to achieve a more favorable bias-variance tradeoff.
 
-In our simulation experiment, our proposed estimator is seen to outperform existing
-estimators, but it remains to assess the utility of our estimation
-procedure in a real-world example.  In a forthcoming work, we apply our framework to evaluate visual encoding models in human fMRI data.
+In our simulation experiment, our proposed estimator is seen to
+outperform existing estimators, but it remains to assess the utility
+of our estimation procedure in a real-world example.  In a forthcoming
+work, we apply our framework to evaluate visual encoding models in
+human fMRI data.
 
 
 \subsubsection*{Acknowledgments}
