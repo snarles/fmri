@@ -72,16 +72,21 @@ estimate_mc_acc <- function(pmat, ksamp, r, k, nreps = 1) {
 ####
 ##  TESTS
 ####
-pmat <- create_pmat(100, 0.8, 10, 1)
-avg_mc_acc_naive(pmat, 2)
-avg_mc_acc_p(pmat, 2)
-avg_mc_acc_naive(pmat, 3)
-avg_mc_acc_p(pmat, 3)
-
-k <- 4
-avg_mc_acc_p(pmat, k)
-ests <- estimate_mc_acc(pmat, 10, 8, k, 100)
-mean(ests)
-
+# pmat <- create_pmat(2000, 2, 10, 0)
+# rankconv <- (apply(pmat, 2, rank) - 0.5)/nrow(pmat)
+# plot(density(as.numeric(rankconv), weights = as.numeric(pmat)/sum(pmat)))
+# ps <- sample(as.numeric(rankconv), 10000, replace = TRUE, prob = as.numeric(pmat)/sum(pmat))
+# plot(sort(ps), type = "l")
+# 
+# avg_mc_acc_naive(pmat, 2)
+# avg_mc_acc_p(pmat, 2)
+# avg_mc_acc_naive(pmat, 3)
+# avg_mc_acc_p(pmat, 3)
+# 
+# k <- 4
+# avg_mc_acc_p(pmat, k)
+# ests <- estimate_mc_acc(pmat, 10, 8, k, 100)
+# mean(ests)
+# 
 
 

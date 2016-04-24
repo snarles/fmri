@@ -105,17 +105,22 @@ Estimating the mutual information $I(X; Y)$ based on observations
 becomes statistically infeasible in high dimensions without some kind
 of assumption or prior.  One approach is to assume a parametric joint
 distribution on $(X, Y)$, but in many applications, such a strong
-modeling assumption cannot be justified.  Alternatively, one can estimate the mutual information based the performance of a classifier trained on the data.  Existing methods include using the empirical mutual information of the confusion matrix of the classifier, as
-well as an estimator based on Fano's inequality.  However, both of these
-methods all produce an estimate which is bounded by $\log(k)$,
-where $k$ is the number of classes.
-This presents a substantial limitation for classification-based approaches, since the number of
-repeats per class must be large for the classifier to work well, hence limiting the number of classes $k$ that can be defined. In this paper, we construct a novel classification-based estimator of mutual information which
-overcomes these limitations.  Our estimator is based on
+modeling assumption cannot be justified.  Alternatively, one can
+estimate the mutual information based the performance of a classifier
+trained on the data.  Existing methods include using the empirical
+mutual information of the confusion matrix of the classifier, as well
+as an estimator based on Fano's inequality.  However, both of these
+methods all produce an estimate which is bounded by $\log(k)$, where
+$k$ is the number of classes.  This presents a substantial limitation
+for classification-based approaches, since the number of repeats per
+class must be large for the classifier to work well, hence limiting
+the number of classes $k$ that can be defined. In this paper, we
+construct a novel classification-based estimator of mutual information
+which overcomes these limitations.  Our estimator is based on
 high-dimensional asymptotics: we show that in a particular limiting
 regime, the mutual information is an invertible function of the
-expected $k$-class Bayes error.  While the theory is based
-on a large-sample, high-dimensional limit, we demonstrate through
+expected $k$-class Bayes error.  While the theory is based on a
+large-sample, high-dimensional limit, we demonstrate through
 simulations that our proposed lower confidence bound has superior
 performance to the alternatives in problems of moderate
 dimensionality.
@@ -132,12 +137,12 @@ In its original context of information theory, the mutual information
 describes the rate at which a noisy communications channel $Y$ can
 communicate bits from a source stream $X$, but by now, the quantity
 $I(X, Y)$ has found many new uses in science and engineering.  Mutual
-information is used to test for conditional independence (CITE), to
+information is used to test for conditional independence (DeCampos 2006), to
 quantifying the information between a random stimulus $X$ and the
 signaling behavior of an ensembles of neurons, $Y$ (Borst 1999); for
-use as an objective function for training neural networks (CITE), for
+use as an objective function for training neural networks (Linkser 1989), for
 feature selection in machine learning, and even as an all-purpose
-nonlinear measure of ``correlation for the 21st century'' (Speed.)
+nonlinear measure of ``correlation for the 21st century'' (Speed 2011.)
 What is common to all of these new applications, and what differs from
 the original setting of Shannon's theory of information, is that the
 variables $X$ and $Y$ have unknown distributions which must be
@@ -146,19 +151,19 @@ low-dimensional, for instance, when summarizing the properties of a
 single neuron in response to a single stimulus feature, $I(X; Y)$ can
 be estimated nonparametrically using a reasonable number of
 observations.  There exists a huge literature on nonparametric
-estimation of entropy and mutual information exists, see (CITE) for a
+estimation of entropy and mutual information, see (Beirlant 1997) for a
 review.
 
 However, the sample complexity for nonparametric estimation grows
 exponentially with the dimension, rendering such methods ineffective
-in applications with high-dimensional data.  One such application
-includes multivariate pattern analysis (MVPA), an area of neuroscience
-research pioneered by Haxby (2001), which studies how entire regions
-of the human brain respond to stimuli, using function magnetic
-resonance imaging (fMRI) data; in MVPA studies, the input $X$ could be
-a natural image parameterized by $p = 10000$ image features, while the
-output $Y$ is a $q=20000$-dimensional vector of brain activation
-features obtained from the fMRI scan.  In problems of such
+in applications with high-dimensional data (Beirlant 1997).  One such
+application includes multivariate pattern analysis (MVPA), an area of
+neuroscience research pioneered by Haxby (2001), which studies how
+entire regions of the human brain respond to stimuli, using function
+magnetic resonance imaging (fMRI) data; in MVPA studies, the input $X$
+could be a natural image parameterized by $p = 10000$ image features,
+while the output $Y$ is a $q=20000$-dimensional vector of brain
+activation features obtained from the fMRI scan.  In problems of such
 dimensionality, one can tractably estimate mutual information by
 assuming a multivariate Gaussian model: however, this approach
 essentially assumes a linear relationship between the input and
@@ -175,143 +180,170 @@ beginnings of information theory: after all, Shannon's original
 motivation was to characterize the minimum achievable error
 probability of a noisy communication channel.  More explicitly, Fano's
 inequality provides a lower bound on mutual information in relation to
-the optimal prediction error, or Bayes error.   Therefore, one can construct an estimator based on Fano's inequality, $\hat{I}_{Fano}$.  In either case, any method which derives an estimate of mutual information
-from classification performance may be considered a \emph{discriminative} estimation procedure, in contrast to the \emph{parametric} and
-\emph{nonparametric} classes of estimation procedures.  
+the optimal prediction error, or Bayes error.  Therefore, one can
+construct an estimator based on Fano's inequality, $\hat{I}_{Fano}$.
+In either case, any method which derives an estimate of mutual
+information from classification performance may be considered a
+\emph{discriminative} estimation procedure, in contrast to the
+\emph{parametric} and \emph{nonparametric} classes of estimation
+procedures.
 
 \subsection{Discriminative estimators of mutual information}
 
-In many applications, the
-discriminative approach takes an advantageous middle ground between
-the two extremes of nonparametric and parametric approaches for
-estimating mutual information. In neuroimaging data, we lack prior
-knowledge for specifying parametric models, and the data is too
-high-dimensional for nonparametric approaches, but we have a
-sufficient idea of the general ``structure'' in the data to achieve
-above-chance classification rates.
+In many applications, the discriminative approach takes an
+advantageous middle ground between the two extremes of nonparametric
+and parametric approaches for estimating mutual information. In
+neuroimaging data, we lack prior knowledge for specifying parametric
+models, and the data is too high-dimensional for nonparametric
+approaches, but we have a sufficient idea of the general ``structure''
+in the data to achieve above-chance classification rates.
 
-Five steps are required to implement discriminative estimation of mutual information.
-First, one must define a classification task.  The kinds of tasks that can be defined
-depend on the sampling scheme used to collect the data.  Second,
-one chooses a classifier $\mathcal{F}$.   Third, the classifier is trained on a training subset
-of the data to obtain a classification rule $f$.  Fourthly, the performance of the rule $f$ is evaluated on the held-out test set.  Finally, the performance metrics of the classifier are converted into
-an estimate of mutual information.  In this paper we are mostly concerned with the final step:
-how to convert measures of classification performance into estimates of mutual information.
+Five steps are required to implement discriminative estimation of
+mutual information.  First, one must define a classification task.
+The kinds of tasks that can be defined depend on the sampling scheme
+used to collect the data.  Second, one chooses a classifier
+$\mathcal{F}$.  Third, the classifier is trained on a training subset
+of the data to obtain a classification rule $f$.  Fourthly, the
+performance of the rule $f$ is evaluated on the held-out test set.
+Finally, the performance metrics of the classifier are converted into
+an estimate of mutual information.  In this paper we are mostly
+concerned with the final step: how to convert measures of
+classification performance into estimates of mutual information.
 
-Let us assume that the variables $X, Y$ have a joint distribution $F$, and
-that one can define a conditional distribution of $Y$ given $X$,
-$Y|X \sim F_X,$
-and let $G$ denote the marginal distribution of $X$.
+Let us assume that the variables $X, Y$ have a joint distribution $F$,
+and that one can define a conditional distribution of $Y$ given $X$,
+$Y|X \sim F_X,$ and let $G$ denote the marginal distribution of $X$.
 We consider two different types of sampling procedures:
 \begin{itemize}
-\item \emph{pair sampling}:  For $i = 1,\hdots, n$, the data $(X^i, Y^i)$ are sampled i.i.d. from the joint distribution of $(X, Y)$.
-\item \emph{stratified sampling}:  For $j = 1,\hdots, k$, sample i.i.d. \emph{exemplars} $X^{(1)},\hdots, X^{(k)} \sim G$.  For $i = 1,\hdots, n$, draw $Z^i$ iid from the uniform distribution on $1,\hdots, k$, then draw $Y^i$ from the conditional distribution $F_{X^{(Z_i)}}$.
+\item \emph{pair sampling}: For $i = 1,\hdots, n$, the data $(X^i,
+  Y^i)$ are sampled i.i.d. from the joint distribution of $(X, Y)$.
+\item \emph{stratified sampling}: For $j = 1,\hdots, k$, sample
+  i.i.d. \emph{exemplars} $X^{(1)},\hdots, X^{(k)} \sim G$.  For $i =
+  1,\hdots, n$, draw $Z^i$ iid from the uniform distribution on
+  $1,\hdots, k$, then draw $Y^i$ from the conditional distribution
+  $F_{X^{(Z_i)}}$.
 \end{itemize}
 
-Pair sampling occurs in observational studies, where one observes both $X$ and $Y$ externally.  On the other hand, stratified sampling is more commonly seen in controlled experiments, where an experimenter chooses an input $X$ to feed into a black box, which outputs $Y$.  An example from fMRI studies is an experimental design where the subject is presented a stimulus $X$, and the experimenter measures the subject's response via the brain activation $Y$. \footnote{Note the asymmetry in our definition of stratified sampling: our convention is to take $X$ to be the variable preceding $Y$ in causal order.  Such causal directionality constrains the stratified sampling to have repeated $X$ rather than repeated $Y$ values, but has no consequence for the mutual information $I(X; Y)$, which is a symmetric function.}
+Pair sampling occurs in observational studies, where one observes both
+$X$ and $Y$ externally.  On the other hand, stratified sampling is
+more commonly seen in controlled experiments, where an experimenter
+chooses an input $X$ to feed into a black box, which outputs $Y$.  An
+example from fMRI studies is an experimental design where the subject
+is presented a stimulus $X$, and the experimenter measures the
+subject's response via the brain activation $Y$. \footnote{Note the
+  asymmetry in our definition of stratified sampling: our convention
+  is to take $X$ to be the variable preceding $Y$ in causal order.
+  Such causal directionality constrains the stratified sampling to
+  have repeated $X$ rather than repeated $Y$ values, but has no
+  consequence for the mutual information $I(X; Y)$, which is a
+  symmetric function.}
 
-Given data from either pair sampling or stratified sampling, one can define various
-\emph{classification tasks}.  Here, the point is to use classification as a tool for extracting information
-about the relationship between $X$ and $Y$.  As such, it is up to us to define the classification tasks
-of interest.  For instance, one can define tasks which either classify $Y$ based on $X$, or classify $X$ based on $Y$; without loss of generality, we henceforth consider the latter.  In the case of continuous $X$, we can define an arbitrary number of classes $k$ by specifying a partition on the space of $X$.
-That is, one can define a \emph{class function} $Z: X \to \{1,\hdots, k\}$, and consider the problem of classifying $Z$ given $Y$.  A classification rule is
-any (possibly stochastic) mapping $f: \mathcal{Y} \to \{1,\hdots,
-k\}$, where $\mathcal{Y}$ is a superset of the support of $Y$.  The \emph{generalization error} of the classification rule is
-$
-e_{gen}(f) = Pr[f(Y) \neq Z].
-$
-The Bayes error is the generalization error of the optimal classification rule,
-$
-e_{Bayes}(f) = \inf_f e_{gen}(f)
-$
-We call such a classification task a \emph{partition-based} classification task.
+Given data from either pair sampling or stratified sampling, one can
+define various \emph{classification tasks}.  Here, the point is to use
+classification as a tool for extracting information about the
+relationship between $X$ and $Y$.  As such, it is up to us to define
+the classification tasks of interest.  For instance, one can define
+tasks which either classify $Y$ based on $X$, or classify $X$ based on
+$Y$; without loss of generality, we henceforth consider the latter.
+In the case of continuous $X$, we can define an arbitrary number of
+classes $k$ by specifying a partition on the space of $X$.  That is,
+one can define a \emph{class function} $Z: X \to \{1,\hdots, k\}$, and
+consider the problem of classifying $Z$ given $Y$.  A classification
+rule is any (possibly stochastic) mapping $f: \mathcal{Y} \to
+\{1,\hdots, k\}$, where $\mathcal{Y}$ is a superset of the support of
+$Y$.  The \emph{generalization error} of the classification rule is $
+e_{gen}(f) = Pr[f(Y) \neq Z].  $ The Bayes error is the generalization
+error of the optimal classification rule, $ e_{Bayes}(f) = \inf_f
+e_{gen}(f) $ We call such a classification task a
+\emph{partition-based} classification task.
 
-The freedom to choose the partition $Z$ may be more of a curse than a blessing when it is unclear how
-to choose an appropriate partition on the support of $X$.  If stratified sampling is employed,
-one can define an \emph{exemplar-based} classification task which avoids having to specify a partition.  One defines the \emph{class function} $Z$ by
+The freedom to choose the partition $Z$ may be more of a curse than a
+blessing when it is unclear how to choose an appropriate partition on
+the support of $X$.  If stratified sampling is employed, one can
+define an \emph{exemplar-based} classification task which avoids
+having to specify a partition.  One defines the \emph{class function}
+$Z$ by
 \[
 Z: \{X^{(1)}, \hdots, X^{(k)}\} \to \{1,\hdots, k\},
 \]
 \[
 Z(X^{(i)}) = i\text{ for }i = 1, \hdots, k.
 \]
-Note that the domain of $Z$ is restricted to the set of observed exemplars $X^{(1)},\hdots, X^{(k)}$.
-The loss function is not well-defined when $X$ lies outside the set of exemplars,
-so it is natural to define the generalization error by
+Note that the domain of $Z$ is restricted to the set of observed
+exemplars $X^{(1)},\hdots, X^{(k)}$.  The loss function is not
+well-defined when $X$ lies outside the set of exemplars, so it is
+natural to define the generalization error by
 \begin{equation}\label{egendef}
 e_{gen}(f) = \frac{1}{k} \sum_{i=1}^k\Pr[f(Y) \neq Z|X = X^{(i)}].
 \end{equation}
-Indeed, in experiments where stratified sampling is used, this is the most commonly employed notion
-of generalization error (CITE).
-In an exemplar-based classification, there is no need to specify an arbitrary partition on the input space, but now the $k$ classes will now be \emph{randomly} defined.  One consequence is that the Bayes error $e_{Bayes}$ is a random variable: when the sampling produces $k$ similar exemplars, $e_{Bayes}$ will be higher, and when the sampling produces well-separated exemplars $e_{Bayes}$ may be lower.  
-Therefore, in stratified sampling, it is useful to consider the \emph{average Bayes error},
+Indeed, in experiments where stratified sampling is used, this is the
+most commonly employed notion of generalization error (Naselaris
+2011).  In an exemplar-based classification, there is no need to
+specify an arbitrary partition on the input space, but now the $k$
+classes will now be \emph{randomly} defined.  One consequence is that
+the Bayes error $e_{Bayes}$ is a random variable: when the sampling
+produces $k$ similar exemplars, $e_{Bayes}$ will be higher, and when
+the sampling produces well-separated exemplars $e_{Bayes}$ may be
+lower.  Therefore, in stratified sampling, it is useful to consider
+the \emph{average Bayes error},
 \begin{equation}\label{abedef}
 e_{ABE, k} = \E_{X^{(1)},\hdots, X^{(k)}}[e_{Bayes}],
 \end{equation}
-where the expectation is taken over the joint distribution of $X^{(1)},\hdots, X^{(k)} \stackrel{iid}{\sim} G$.
+where the expectation is taken over the joint distribution of
+$X^{(1)},\hdots, X^{(k)} \stackrel{iid}{\sim} G$.
 
-Unless expert knowledge is available, it is usually necessary to choose the function $f$ in a
-data-dependent way in order to obtain a reasonable classification
-rule.  We use the terminology \emph{classifier} to refer to any algorithm which takes
-data as input, and produces a classification rule $f$ as output.
-Mathematically speaking, the classifier
-is a functional which maps a set of observations to a classification
-rule,
-$
-\mathcal{F}: \{(x^{1},y^{1}),\hdots, (x^{m}, y^{m})\} \mapsto f(\cdot).
-$
-The data $(x^1,y^1),\hdots, (x^m, y^m)$ used to obtain the
-classification rule is called \emph{training data.}  When the goal is to
-obtain \emph{inference} about the generalization error $e_{gen}$ of the classification
-rule $f$, it becomes necessary to split the data into two independent sets:
-one set to train the classifier, and one to evaluate the performance.
-The reason that such a splitting is necessary is because using the
-same data to test and train a classifier introduces significant bias
-into the empirical classification error (CITE ESL).
-One creates a \emph{training
-set} consisting of $r_1$ repeats per class,
-$
-S_{train} = \{(x^{(i)}, y^{(i),j})\}_{i=1, j=1}^{k, r_1},
-$
-and a \emph{test set} consisting of the remaining $r_2 = r - r_1$ repeats,
-$
-S_{test} = \{(x^{(i)}, y^{(i),j})\}_{i=1, j=r_1}^{k, r}.
-$
-The classification rule is obtained via
-$
-f = \mathcal{F}(S_{train}),
-$
-and the performance of the classifier is evaluated by predicting the classes of the test set.
-The results of this test are summarized by a $k \times k$ \emph{confusion matrix} $M$ with
-$
-M_{ij} = \sum_{\ell=r_1 + 1}^r I(f(y^{(i), r}) = j).
-$
-The $i, j$th entry of $M$ counts how many times a output in the $i$th class was classified  to the $j$th class.
-The \emph{test error} is the proportion of off-diagonal terms of $M$,
-$
-e_{test} = \frac{1}{kr} \sum_{i \neq j} M_{ij},
-$
-and is an unbiased estimator of $e_{gen}$.
-However, in small sampling regimes the quantity $e_{test}$ may be too variable to use as an estimator of $e_{gen}$.  We recommend the use of Bayesian smoothing, defining an  $\alpha$-smoothed estimate $\hat{e}_{gen, \alpha}$ by
-$
-\hat{e}_{gen, \alpha} = (1 - \alpha) e_{test} + \alpha \frac{k-1}{k},
-$
-which takes a weighted average of the unbiased estimate $e_{test}$, and the natural prior of \emph{chance classification}.
+Unless expert knowledge is available, it is usually necessary to
+choose the function $f$ in a data-dependent way in order to obtain a
+reasonable classification rule.  We use the terminology
+\emph{classifier} to refer to any algorithm which takes data as input,
+and produces a classification rule $f$ as output.  Mathematically
+speaking, the classifier is a functional which maps a set of
+observations to a classification rule, $ \mathcal{F}:
+\{(x^{1},y^{1}),\hdots, (x^{m}, y^{m})\} \mapsto f(\cdot).  $ The data
+$(x^1,y^1),\hdots, (x^m, y^m)$ used to obtain the classification rule
+is called \emph{training data.}  When the goal is to obtain
+\emph{inference} about the generalization error $e_{gen}$ of the
+classification rule $f$, it becomes necessary to split the data into
+two independent sets: one set to train the classifier, and one to
+evaluate the performance.  The reason that such a splitting is
+necessary is because using the same data to test and train a
+classifier introduces significant bias into the empirical
+classification error (Friedman et al 2008).  One creates a
+\emph{training set} consisting of $r_1$ repeats per class, $ S_{train}
+= \{(x^{(i)}, y^{(i),j})\}_{i=1, j=1}^{k, r_1}, $ and a \emph{test
+  set} consisting of the remaining $r_2 = r - r_1$ repeats, $ S_{test}
+= \{(x^{(i)}, y^{(i),j})\}_{i=1, j=r_1}^{k, r}.  $ The classification
+rule is obtained via $ f = \mathcal{F}(S_{train}), $ and the
+performance of the classifier is evaluated by predicting the classes
+of the test set.  The results of this test are summarized by a $k
+\times k$ \emph{confusion matrix} $M$ with $ M_{ij} = \sum_{\ell=r_1 +
+  1}^r I(f(y^{(i), r}) = j).  $ The $i, j$th entry of $M$ counts how
+many times a output in the $i$th class was classified to the $j$th
+class.  The \emph{test error} is the proportion of off-diagonal terms
+of $M$, $ e_{test} = \frac{1}{kr} \sum_{i \neq j} M_{ij}, $ and is an
+unbiased estimator of $e_{gen}$.  However, in small sampling regimes
+the quantity $e_{test}$ may be too variable to use as an estimator of
+$e_{gen}$.  We recommend the use of Bayesian smoothing, defining an
+$\alpha$-smoothed estimate $\hat{e}_{gen, \alpha}$ by $ \hat{e}_{gen,
+  \alpha} = (1 - \alpha) e_{test} + \alpha \frac{k-1}{k}, $ which
+takes a weighted average of the unbiased estimate $e_{test}$, and the
+natural prior of \emph{chance classification}.
 
-We define a discriminative estimator to be a function which maps the misclassification matrix to a positive number,
-$
-\hat{I}: \mathbb{N}^{k \times k} \to \mathbb{R}.
-$
-We are aware of the following examples of discriminative estimators: (1) estimators derived from using Fano's inequality, and (2) the empirical information of the confusion matrix, as introduced by Treves (1999).
+We define a discriminative estimator to be a function which maps the
+misclassification matrix to a positive number, $ \hat{I}:
+\mathbb{N}^{k \times k} \to \mathbb{R}.  $ We are aware of the
+following examples of discriminative estimators: (1) estimators
+derived from using Fano's inequality, and (2) the empirical
+information of the confusion matrix, as introduced by Treves (1999).
 
-Fano's inequality can be easily adapted to yield a discriminative estimator.
-The original inequality reads
+Fano's inequality can be easily adapted to yield a discriminative
+estimator.  The original inequality reads
 \[
 H(Z|Y) \leq H(e_{Bayes}) + e_{Bayes} \log ||\mathcal{Z}| - 1|
 \]
-where $H(e)$ is the entropy of a Bernoulli random variable with probability $e$.
-Replacing $H(Z|Y)$ with $H(X|Y)$ and replacing $e_{Bayes}$ with $\hat{e}_{gen, \alpha}$,
-we get the estimator
+where $H(e)$ is the entropy of a Bernoulli random variable with
+probability $e$.  Replacing $H(Z|Y)$ with $H(X|Y)$ and replacing
+$e_{Bayes}$ with $\hat{e}_{gen, \alpha}$, we get the estimator
 \[
 \hat{I}_{Fano}(M) = log(K) - \hat{e}_{gen, \alpha} log(K-1) + \hat{e}_{gen, \alpha} log(p) + (1-\hat{e}_{gen, \alpha}) log(1-\hat{e}_{gen, \alpha}).
 \]
@@ -319,92 +351,125 @@ Meanwhile, the confusion matrix estimator computes
 \[
 \hat{I}_{CM}(M) = \frac{1}{k^2} \sum_{i=1}^k \sum_{j=1}^k \log \frac{M_{ij}}{r/k},
 \]
-which is the empirical mutual information of the discrete joint distribution $(Z, f(Y))$.
+which is the empirical mutual information of the discrete joint
+distribution $(Z, f(Y))$.
 
-As noted in the literature (Quiroga et al. 2009), such
-discriminative approaches tend to underestimate the mutual information.  Two sources of
-``information loss'' are (1) the fact that a continuous input variable
-$X$ is discretized into $k$ classes, and (2) that the performance of
-any classifier trained from data can at best given an \emph{upper
-  bound} to the error of the best classification rule: the Bayes
-error.  Dealing with the problem of estimating the Bayes error is beyond the scope of the current paper,
-but we will argue that the stratified sampling design overcomes some of the limitations
-imposed by the discretization of $X$.
+As noted in the literature (Quiroga et al. 2009), such discriminative
+approaches tend to underestimate the mutual information.  Two sources
+of ``information loss'' are (1) the fact that a continuous input
+variable $X$ is discretized into $k$ classes, and (2) that the
+performance of any classifier trained from data can at best given an
+\emph{upper bound} to the error of the best classification rule: the
+Bayes error.  Dealing with the problem of estimating the Bayes error
+is beyond the scope of the current paper, but we will argue that the
+stratified sampling design overcomes some of the limitations imposed
+by the discretization of $X$.
 
 \subsection{The problem of undersampling}
 
-Stratified sampling is commonly used in neuroscience experiments,
-and furthermore, it is often the case that the number of classes $k$ is constrained
-to be small due to practical and statistical considerations (Gastpar 2009.)
-When $\log(k) \ll I(X; Y)$, we say that the data is \emph{undersampled}:
-meaning that even if the total number of observations is large (due to having many repeats per class,)
-the diversity of the exemplar set is poor.
+Stratified sampling is commonly used in neuroscience experiments, and
+furthermore, it is often the case that the number of classes $k$ is
+constrained to be small due to practical and statistical
+considerations (Gastpar 2009.)  When $\log(k) \ll I(X; Y)$, we say
+that the data is \emph{undersampled}: meaning that even if the total
+number of observations is large (due to having many repeats per
+class,) the diversity of the exemplar set is poor.
 
-The parametric approach is relatively robust to undersampling of the exemplars,
-since $k$ exemplars suffice to identify a $p < k$-parameter model.
-Gastpar et al. (2009), studied the nonparametric estimator
+The parametric approach is relatively robust to undersampling of the
+exemplars, since $k$ exemplars suffice to identify a $p < k$-parameter
+model.  Gastpar et al. (2009), studied the nonparametric estimator
 \[
 \hat{I}_0 = \hat{H}(Y) - \frac{1}{k}\sum_{i=1}\hat{H}(Y|X),
 \]
-where $\hat{H}$ is an estimator for the entropy.
-Gastpar et al. showed that $\hat{I}_0$ is biased downwards due to undersampling of the exemplars:
-to counteract this bias, they introduce the anthropic correction estimator $\hat{I}_\alpha$.
-However, without a principled approach to choose the parameter $\alpha \in (0,1]$,
-$\hat{I}_\alpha$ could still vastly underestimate or overestimate the mutual information.
+where $\hat{H}$ is an estimator for the entropy.  Gastpar et
+al. showed that $\hat{I}_0$ is biased downwards due to undersampling
+of the exemplars: to counteract this bias, they introduce the
+anthropic correction estimator $\hat{I}_\alpha$.  However, without a
+principled approach to choose the parameter $\alpha \in (0,1]$,
+  $\hat{I}_\alpha$ could still vastly underestimate or overestimate
+  the mutual information.
 
-Meanwhile, the discriminative estimators $\hat{I}_{CM}$ and $\hat{I}_{Fano}$ perform quite badly in the undersampled regime.  It is easy to show that $\log(k)$ is a tight upper bound for both $\hat{I}_{CM}$ and 
-$\hat{I}_{Fano}$.  As $I(X; Y)$ exceeds $\log(k)$, the estimate $\hat{I}$ can no longer approximate $I(X; Y)$, even up to a constant factor.  On the other hand, the following worst-case example shows that discriminative estimators cannot overcome this $\log(k)$ barrier in general.  Let $X$ and $Y$ have joint density
-$
-p(x, y) = \frac{1}{k}I(\lfloor kx \rfloor = \lfloor ky \rfloor)
-$ on the unit square.  Under partition-based classification, if we set $Z(x) = \lfloor kx \rfloor + 1$,
-then no errors are made under the Bayes rule. We therefore have a joint distribution which maximizes any reasonable discriminative estimator but has \emph{finite} information $I(X; Y) = \log(k)$.
-The consequence of this is that under partition-based classification,
-we cannot hope to distinguish distributions with $I(X; Y) > \log(k)$.
-The situation is more promising if we specialize to stratified sampling: in the same example, a Bayes of zero is no longer likely due to the possibility of exemplars being sampled from the same bin (`collisions')--we obtain an approximation to the average Bayes error through a Poisson sampling model: $e_{ABE, k} \approx \frac{1}{e}\sum_{j=1}^\infty \frac{1}{j(j!)}= 0.484$.
-Recognizing that the natural setting for discriminative estimation is for high-dimensional data,
-we specialize further to consider deriving an estimator under a \emph{high-dimensional} regime.
-The extra assumption of high dimensionality allows an extreme degree of control over the average Bayes error--it reduces the average Bayes error to a function of the mutual information!
+Meanwhile, the discriminative estimators $\hat{I}_{CM}$ and
+$\hat{I}_{Fano}$ perform quite badly in the undersampled regime.  It
+is easy to show that $\log(k)$ is a tight upper bound for both
+$\hat{I}_{CM}$ and $\hat{I}_{Fano}$.  As $I(X; Y)$ exceeds $\log(k)$,
+the estimate $\hat{I}$ can no longer approximate $I(X; Y)$, even up to
+a constant factor.  On the other hand, the following worst-case
+example shows that discriminative estimators cannot overcome this
+$\log(k)$ barrier in general.  Let $X$ and $Y$ have joint density $
+p(x, y) = \frac{1}{k}I(\lfloor kx \rfloor = \lfloor ky \rfloor) $ on
+the unit square.  Under partition-based classification, if we set
+$Z(x) = \lfloor kx \rfloor + 1$, then no errors are made under the
+Bayes rule. We therefore have a joint distribution which maximizes any
+reasonable discriminative estimator but has \emph{finite} information
+$I(X; Y) = \log(k)$.  The consequence of this is that under
+partition-based classification, we cannot hope to distinguish
+distributions with $I(X; Y) > \log(k)$.  The situation is more
+promising if we specialize to stratified sampling: in the same
+example, a Bayes of zero is no longer likely due to the possibility of
+exemplars being sampled from the same bin (`collisions')--we obtain an
+approximation to the average Bayes error through a Poisson sampling
+model: $e_{ABE, k} \approx \frac{1}{e}\sum_{j=1}^\infty
+\frac{1}{j(j!)}= 0.484$.  Recognizing that the natural setting for
+discriminative estimation is for high-dimensional data, we specialize
+further to consider deriving an estimator under a
+\emph{high-dimensional} regime.  The extra assumption of high
+dimensionality allows an extreme degree of control over the average
+Bayes error--it reduces the average Bayes error to a function of the
+mutual information!
 
-In section 2 we present an asymptotic
-setting intended to capture the notion of high dimensionality; namely,
-one where the number of classes is fixed, and where the information
-$I(X; Y)$ remains fixed, while the dimensionality of the input $X$ and
-output $Y$ both grow to infinity.  
-We make a number of additional
-regularity conditions to rule out scenarios where $(X, Y)$ is really
-less ``high-dimensional'' than it appears, since most of the variation
-is captured a low-dimensional manifold\footnote{In situations where $(X, Y)$ lie on a manifold, one could effectively estimate mutual information by would be to combining dimensionality reduction with nonparametric information estimation (Theunnissen and Miller, 1991). }.  In section 2.1 we present our
-key result, which links the asymptotic average Bayes error to the
-mutual information; in section 2.2 we apply this result to derive our
-proposed estimator, $\hat{I}_{HD}$ (where HD stands for ``high-dimensional.'')  Section 3 presents
-simulation results, and section 4 concludes.  All proofs are given in the supplement.
+In section 2 we present an asymptotic setting intended to capture the
+notion of high dimensionality; namely, one where the number of classes
+is fixed, and where the information $I(X; Y)$ remains fixed, while the
+dimensionality of the input $X$ and output $Y$ both grow to infinity.
+We make a number of additional regularity conditions to rule out
+scenarios where $(X, Y)$ is really less ``high-dimensional'' than it
+appears, since most of the variation is captured a low-dimensional
+manifold\footnote{In situations where $(X, Y)$ lie on a manifold, one
+  could effectively estimate mutual information by would be to
+  combining dimensionality reduction with nonparametric information
+  estimation (Theunnissen and Miller, 1991). }.  In section 2.1 we
+present our key result, which links the asymptotic average Bayes error
+to the mutual information; in section 2.2 we apply this result to
+derive our proposed estimator, $\hat{I}_{HD}$ (where HD stands for
+``high-dimensional.'')  Section 3 presents simulation results, and
+section 4 concludes.  All proofs are given in the supplement.
 
 \section{Theory}
 
-We derive a new discriminative estimator 
-by exploiting the properties of stratified sampling, plus a universality property that arises in high-dimensions.
-This universality phenomenon allows us to establish a relationship between the
-mutual information $I(X; Y)$ and the $k$-class average Bayes error,
-$e_{ABE, k}$.  In short, we will identify a function $\pi_k$
-(which depends on $k$),
+We derive a new discriminative estimator by exploiting the properties
+of stratified sampling, plus a universality property that arises in
+high-dimensions.  This universality phenomenon allows us to establish
+a relationship between the mutual information $I(X; Y)$ and the
+$k$-class average Bayes error, $e_{ABE, k}$.  In short, we will
+identify a function $\pi_k$ (which depends on $k$),
 \begin{equation}\label{abepi}
 e_{ABE, k} \approx \pi_k(\sqrt{2 I(X; Y)})
 \end{equation}
-and that this approximation becomes accurate under a limit where $I(X; Y)$ is small relative to the dimensionality of $X$,
-and under the condition that the components of $X$ are approximately independent.
+and that this approximation becomes accurate under a limit where $I(X;
+Y)$ is small relative to the dimensionality of $X$, and under the
+condition that the components of $X$ are approximately independent.
 The function $\pi_k$ is given by
 \[
 \pi_k(c) = 1 - \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
 \]
-This formula is not new to the information theory literature: it appears as the error rate of an orthogonal constellation (CITE).  What is surprising is that the same formula can be used to approximate the error rate in much more general class of classification problems\footnote{An intuitive explanation for this fact is that points from any high-dimensional distribution lie in an orthogonal configuration with high probability.}--this 
-is precisely the universality result which provides the basis for our proposed estimator.
+This formula is not new to the information theory literature: it
+appears as the error rate of an orthogonal constellation (CITE).  What
+is surprising is that the same formula can be used to approximate the
+error rate in much more general class of classification
+problems\footnote{An intuitive explanation for this fact is that
+  points from any high-dimensional distribution lie in an orthogonal
+  configuration with high probability.}--this is precisely the
+universality result which provides the basis for our proposed
+estimator.
 
-Figure \ref{fig:pi} displays the plot of $\pi_k$ for several values of $k$.
-For all values of $k$, $\pi_k(\mu)$ is monotonically decreasing in $\mu$, and tends to zero as $\mu \to \infty$, which is what we expect since if $I(X; Y)$ is large, then the average Bayes error should be small.
-Another intuitive fact is that 
-$
-\pi_k(0) = 1 - \frac{1}{k},
-$ since after all, an uninformative response cannot lead to above-chance classification accuracy.
+Figure \ref{fig:pi} displays the plot of $\pi_k$ for several values of
+$k$.  For all values of $k$, $\pi_k(\mu)$ is monotonically decreasing
+in $\mu$, and tends to zero as $\mu \to \infty$, which is what we
+expect since if $I(X; Y)$ is large, then the average Bayes error
+should be small.  Another intuitive fact is that $ \pi_k(0) = 1 -
+\frac{1}{k}, $ since after all, an uninformative response cannot lead
+to above-chance classification accuracy.
 
 \begin{figure}
 \centering
@@ -427,19 +492,21 @@ While $\hat{I}_{Fano}$ is bounded from above by $\log(k)$ (dotted line), $\hat{I
 
 \subsection{Universality result}
 
-We obtain the universality result in two steps.  First, we link the average Bayes error to the moments of
-some statistics $Z_i$.  Secondly, we use taylor approximation in order to express $I(X; Y)$ in terms of the moments of $Z_i$.  Connecting these two pieces yields the formula \eqref{abepi}.
+We obtain the universality result in two steps.  First, we link the
+average Bayes error to the moments of some statistics $Z_i$.
+Secondly, we use taylor approximation in order to express $I(X; Y)$ in
+terms of the moments of $Z_i$.  Connecting these two pieces yields the
+formula \eqref{abepi}.
 
 Let us start by rewriting the average Bayes error:
 \[
 e_{ABE, k} = \Pr[p(Y|X_1) \leq \max_{j \neq 1} p(Y|X_j)| X = X_1].
 \]
-Defining the statistic $Z_i = \log p(Y|X_i) - \log p(Y|X_1)$, where $Y \sim p(y|X_1)$, we obtain $
-e_{ABE} = \Pr[\max_{j > 1} Z_i > 0].
-$
-The key assumption we need is that $Z_2,\hdots, Z_k$ are asymptotically multivariate normal.
-If so, the following lemma
-allows us to obtain a formula for the misclassification rate.
+Defining the statistic $Z_i = \log p(Y|X_i) - \log p(Y|X_1)$, where $Y
+\sim p(y|X_1)$, we obtain $ e_{ABE} = \Pr[\max_{j > 1} Z_i > 0].  $
+The key assumption we need is that $Z_2,\hdots, Z_k$ are
+asymptotically multivariate normal.  If so, the following lemma allows
+us to obtain a formula for the misclassification rate.
 
 \textbf{Lemma 1. }
 \emph{
@@ -474,20 +541,25 @@ Then,
 \[
 Z_i = \sum_{m=1}^d \log p_m(y_m | x^{(i)}_m) - \log p_m(y_m | x^{(m)}_1)
 \]
-where $x_{i, j}$ is the $i$th component of $x_j$.
-The $d$ terms $\log p_m(y_m | x_{m, i}) - \log p_m(y_m | x_{m, 1})$ are independent across the indices $m$,
-but dependent between the $i = 1,\hdots, k$.
-Therefore, the multivariate central limit theorem can be applied to conclude that the vector
-$(Z_2,\hdots, Z_k)$ can be scaled to converge to a multivariate normal distribution.
-While the componentwise independence condition is not a realistic assumption,
-the key property of multivariate normality of $(Z_2,\hdots, Z_k)$ holds under more general conditions, and appears reasonable in practice.  
+where $x_{i, j}$ is the $i$th component of $x_j$.  The $d$ terms $\log
+p_m(y_m | x_{m, i}) - \log p_m(y_m | x_{m, 1})$ are independent across
+the indices $m$, but dependent between the $i = 1,\hdots, k$.
+Therefore, the multivariate central limit theorem can be applied to
+conclude that the vector $(Z_2,\hdots, Z_k)$ can be scaled to converge
+to a multivariate normal distribution.  While the componentwise
+independence condition is not a realistic assumption, the key property
+of multivariate normality of $(Z_2,\hdots, Z_k)$ holds under more
+general conditions, and appears reasonable in practice.
 
 It remains to link the moments of $Z_i$ to $I(X;Y)$.  This is accomplished by approximating the logarithmic term by the Taylor expansion
 \[
 \log \frac{p(x, y)}{p(x) p(y)} \approx \frac{p(x, y) - p(x) p(y)}{p(x) p(y)} - \left(\frac{p(x, y) - p(x) p(y)}{p(x) p(y)}\right)^2 + \hdots.
 \]
-A number of assumptions are needed to ensure that needed approximations are sufficiently accurate;
-and additionally,  in order to apply the central limit theorem, we need to consider a \emph{limiting sequence} of problems with increasing dimensionality.  We now state the theorem.
+A number of assumptions are needed to ensure that needed
+approximations are sufficiently accurate; and additionally, in order
+to apply the central limit theorem, we need to consider a
+\emph{limiting sequence} of problems with increasing dimensionality.
+We now state the theorem.
 
 \textbf{Theorem 1.} \emph{Let $p^{[d]}(x, y)$ be a sequence of joint densities
 for $d = 1,2,\hdots$.  Further assume that
@@ -516,20 +588,16 @@ where
 where $\phi$ and $\Phi$ are the standard normal density function and
 cumulative distribution function, respectively.}
 
-Assumptions A1-A4 are satisfied in a variety of natural models.
-One example is a multivariate Gaussian sequence model where
-$X \sim N(0, \Sigma_d)$
-and 
-$
-Y = X + E
-$ with
-$
-E \sim N(0, \Sigma_e),
-$
-where $\Sigma_d$ and $\Sigma_e$ are $d \times d$ covariance matrices, and where $X$ and $E$ are independent.  Then, if $d \Sigma_d$ and $\Sigma_e$ have limiting spectra $H$ and $G$ respectively,
-the joint densities $p(x, y)$ for $d = 1,\hdots, $ satisfy assumptions A1 - A4.
-Another example is the multivariate logistic model, which we describe in section 3.
-We further discuss the rationale behind A1-A4 in the supplement, along with the detailed proof.
+Assumptions A1-A4 are satisfied in a variety of natural models.  One
+example is a multivariate Gaussian sequence model where $X \sim N(0,
+\Sigma_d)$ and $ Y = X + E $ with $ E \sim N(0, \Sigma_e), $ where
+$\Sigma_d$ and $\Sigma_e$ are $d \times d$ covariance matrices, and
+where $X$ and $E$ are independent.  Then, if $d \Sigma_d$ and
+$\Sigma_e$ have limiting spectra $H$ and $G$ respectively, the joint
+densities $p(x, y)$ for $d = 1,\hdots, $ satisfy assumptions A1 - A4.
+Another example is the multivariate logistic model, which we describe
+in section 3.  We further discuss the rationale behind A1-A4 in the
+supplement, along with the detailed proof.
 
 \subsection{High-dimensional estimator}
 
@@ -537,36 +605,48 @@ The estimator we propose is
 \[
 \hat{I}_{HD}(M) = \frac{1}{2}(\pi_{k}^{-1}(\hat{e}_{gen, \alpha}))^2,
 \]
-obtained by inverting the relation \eqref{abepi}, then substituting the estimate $\hat{e}_{gen, \alpha}$ for the $e_{ABE, k}$.
-As such, our estimator can be directly compared to the $\hat{I}_{Fano}$, since both are functions of $\hat{e}_{gen,\alpha}$ (Figure 1.)  
+obtained by inverting the relation \eqref{abepi}, then substituting
+the estimate $\hat{e}_{gen, \alpha}$ for the $e_{ABE, k}$.  As such,
+our estimator can be directly compared to the $\hat{I}_{Fano}$, since
+both are functions of $\hat{e}_{gen,\alpha}$ (Figure 1.)
 
-For sufficiently high-dimensional problems, $\hat{I}_{HD}$ can accurately recover $I(X; Y) > \log k$,
-supposing also that the classifier $\mathcal{F}$ consistently estimates the Bayes rule.
-The number of observations needed depends on the convergence rate of $\mathcal{F}$
-and also the complexity of estimating $e_{gen, \alpha}$.  Therefore, without making assumptions on $\mathcal{F}$, the sample complexity is at least exponential in $I(X; Y)$.
-This is because when $I(X; Y)$ is large relative to $\log(k)$, the Bayes error $e_{ABE, k}$ is exponentially small.  Hence $O(1/e_{ABE, k})$ observations in the test set are needed to recover $e_{ABE, k}$ to sufficient precision.  While the sample complexity exponential in $I(X; Y)$ is by no means ideal,
-by comparison, the nonparametric estimation approaches have a complexity exponential in the dimensionality.  Hence, $\hat{I}_{HD}$ is favored over nonparametric approaches in settings
-with high dimensionality and low signal-to-noise ratio.
+For sufficiently high-dimensional problems, $\hat{I}_{HD}$ can
+accurately recover $I(X; Y) > \log k$, supposing also that the
+classifier $\mathcal{F}$ consistently estimates the Bayes rule.  The
+number of observations needed depends on the convergence rate of
+$\mathcal{F}$ and also the complexity of estimating $e_{gen, \alpha}$.
+Therefore, without making assumptions on $\mathcal{F}$, the sample
+complexity is at least exponential in $I(X; Y)$.  This is because when
+$I(X; Y)$ is large relative to $\log(k)$, the Bayes error $e_{ABE, k}$
+is exponentially small.  Hence $O(1/e_{ABE, k})$ observations in the
+test set are needed to recover $e_{ABE, k}$ to sufficient precision.
+While the sample complexity exponential in $I(X; Y)$ is by no means
+ideal, by comparison, the nonparametric estimation approaches have a
+complexity exponential in the dimensionality.  Hence, $\hat{I}_{HD}$
+is favored over nonparametric approaches in settings with high
+dimensionality and low signal-to-noise ratio.
 
 
 \section{Simulation}
 
-We compare the discriminative estimators $\hat{I}_{CM}$, $\hat{I}_{Fano}$, $\hat{I}_{HD}$
-with a nonparametric estimator $\hat{I}_0$ in the following simulation.
-We generate data according to a multiple-response logistic regression model, 
-where
-$
-X \sim N(0, I_p)
-$,
-and $Y$ is a binary vector with conditional distribution
+We compare the discriminative estimators $\hat{I}_{CM}$,
+$\hat{I}_{Fano}$, $\hat{I}_{HD}$ with a nonparametric estimator
+$\hat{I}_0$ in the following simulation.  We generate data according
+to a multiple-response logistic regression model, where $ X \sim N(0,
+I_p) $, and $Y$ is a binary vector with conditional distribution
 \[
 Y_i|X = x \sim \text{Bernoulli}(x^T B_i)
 \]
-where $B$ is a $p \times q$ matrix.
-One application of this model might be modeling neural spike count data $Y$ arising in response
-to environmental stimuli $X$.
-We choose the naive Bayes for the classifier $\mathcal{F}$: it is consistent for estimating the Bayes rule.
-In Figure 2 we show the sampling distributions of the four estimators as $I(X; Y)$ is varied in the interval $[0, 4]$.  We see that $\hat{I}_{CM}$, $\hat{I}_{Fano}$, and $\hat{I}_0$ indeed begin to asymptote as they approach $\log(k) = 2.995$.  In contrast, $\hat{I}_{HD}$ remains a good approximation of $I(X; Y)$ within the range, although it begins to overestimate at the right endpoint.
+where $B$ is a $p \times q$ matrix.  One application of this model
+might be modeling neural spike count data $Y$ arising in response to
+environmental stimuli $X$ (Banerjee et al 2011).  We choose the naive Bayes for the
+classifier $\mathcal{F}$: it is consistent for estimating the Bayes
+rule.  In Figure 2 we show the sampling distributions of the four
+estimators as $I(X; Y)$ is varied in the interval $[0, 4]$.  We see
+that $\hat{I}_{CM}$, $\hat{I}_{Fano}$, and $\hat{I}_0$ indeed begin to
+asymptote as they approach $\log(k) = 2.995$.  In contrast,
+$\hat{I}_{HD}$ remains a good approximation of $I(X; Y)$ within the
+range, although it begins to overestimate at the right endpoint.
 
 \begin{figure}
 \begin{center}
@@ -630,7 +710,9 @@ CZ is supported by an NSF graduate research fellowship.
 
 \small
 
-[X] Gastpar, M.  Gill, P.  Huth, A.  Theunissen, F. ``Anthropic Correction of Information Estimates and Its Application to Neural Coding.'' \emph{IEEE Trans. Info. Theory}, Vol 56 No 2, 2010.
+[X] Gastpar, M.  Gill, P.  Huth, A.  Theunissen, F. ``Anthropic
+Correction of Information Estimates and Its Application to Neural
+Coding.'' \emph{IEEE Trans. Info. Theory}, Vol 56 No 2, 2010.
 
 [X] A. Borst and F. E. Theunissen, ``Information theory and neural coding''
 Nature Neurosci., vol. 2, pp. 947?957, Nov. 1999.
@@ -649,21 +731,41 @@ response time in primary auditory cortex,'' J. Comput. Neurosci., vol.
 
 [X] van der Vaart.  Asymptotic statistics.
 
-[X] F. E. Theunissen and J. P. Miller, ``Representation of sensory information in the cricket cercal sensory system. II. information theoretic calculation of system accuracy and optimal tuning-curve widths of four primary interneurons,'' J. Neurophysiol., vol. 66, no. 5, pp. 1690?1703, 1991.
-[8]
+[X] F. E. Theunissen and J. P. Miller, ``Representation of sensory
+information in the cricket cercal sensory system. II. information
+theoretic calculation of system accuracy and optimal tuning-curve
+widths of four primary interneurons,'' J. Neurophysiol., vol. 66,
+no. 5, pp. 1690?1703, 1991.  [8]
 
-[1] Alexander, J.A.\ \& Mozer, M.C.\ (1995) Template-based algorithms
-for connectionist rule extraction. In G.\ Tesauro, D.S.\ Touretzky and
-T.K.\ Leen (eds.), {\it Advances in Neural Information Processing
-  Systems 7}, pp.\ 609--616. Cambridge, MA: MIT Press.
+[X] De Campos, Luis M. "A scoring function for learning Bayesian networks
+based on mutual information and conditional independence tests." The
+Journal of Machine Learning Research 7 (2006): 2149-2187.
 
-[2] Bower, J.M.\ \& Beeman, D.\ (1995) {\it The Book of GENESIS:
-  Exploring Realistic Neural Models with the GEneral NEural SImulation
-  System.}  New York: TELOS/Springer--Verlag.
+[X] Linsker, Ralph. "An application of the principle of maximum
+information preservation to linear systems." Advances in neural
+information processing systems. 1989.
 
-[3] Hasselmo, M.E., Schnell, E.\ \& Barkai, E.\ (1995) Dynamics of
-learning and recall at excitatory recurrent synapses and cholinergic
-modulation in rat hippocampal region CA3. {\it Journal of
-  Neuroscience} {\bf 15}(7):5249-5262.
+[X] Speed, Terry. "A correlation for the 21st century." Science
+334.6062 (2011): 1502-1503.
+
+[X] Beirlant, J., Dudewicz, E. J., Gy\:{o}rfi, L., \& der Meulen,
+E. C. (1997). Nonparametric Entropy Estimation: An
+Overview. International Journal of Mathematical and Statistical
+Sciences, 6, 17–40. doi:10.1.1.87.5281
+
+[X] Naselaris, T., Kay, K. N., Nishimoto, S., \& Gallant,
+J. L. (2011). Encoding and decoding in fMRI. \emph{Neuroimage}, 56(2),
+400-410.
+
+[X] Friedman, Jerome, Trevor Hastie, and Robert Tibshirani. \emph{The elements
+of statistical learning.} Vol. 1. Springer, Berlin: Springer series in
+statistics, 2008.
+
+[X] Tse, David, and Pramod Viswanath. \emph{Fundamentals of wireless
+communication.} Cambridge university press, 2005.
+
+[X] Banerjee, Arpan, Heather L. Dean, and Bijan Pesaran. "Parametric
+models to relate spike train and LFP dynamics with neural information
+processing." \emph{Frontiers in computational neuroscience} 6 (2011): 51-51.
 
 \end{document}
