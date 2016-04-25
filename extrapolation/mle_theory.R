@@ -17,7 +17,7 @@ est_moment <- function(res, k) {
 }
 
 k.comps <- 3 ## number of components of mixture
-ps <- rbeta(k.comps, 1, 1) ## Ps
+ps <- rbeta(k.comps, 10, 1) ## Ps
 prob.ps <-  rbeta(k.comps, 1, 1) ## prob of ps
 prob.ps <- prob.ps/sum(prob.ps)
 
@@ -55,6 +55,8 @@ pk_moment(ps, prob.ps, 25)
 est_moment(res, 30)
 pk_moment(ps, prob.ps, 30)
 mean((Ys/k)^30)
+est_moment(res, 50)
+pk_moment(ps, prob.ps, 50)
 
 
 mean((Ys/k)^2)
