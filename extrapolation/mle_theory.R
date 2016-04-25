@@ -3,7 +3,7 @@
 ####
 
 generate_sample <- function(ps, prob.ps, k, n) {
-  samp.p <- sample(ps, n, TRUE, prob = ps)
+  samp.p <- sample(ps, n, TRUE, prob = prob.ps)
   obs <- rbinom(n, k, samp.p)
   obs
 }
@@ -30,8 +30,27 @@ library(mixtools)
 res <- multmixEM(Ymat, k = 10, verb = TRUE)
 est_moment(res, 2)
 pk_moment(ps, prob.ps, 2)
+mean(sapply(Ys, binmom, k, 2))
+
 est_moment(res, 3)
 pk_moment(ps, prob.ps, 3)
+mean(sapply(Ys, binmom, k, 3))
+
+est_moment(res, 5)
+pk_moment(ps, prob.ps, 5)
+mean(sapply(Ys, binmom, k, 5))
+
+est_moment(res, 10)
+pk_moment(ps, prob.ps, 10)
+mean(sapply(Ys, binmom, k, 10))
+
+
+est_moment(res, 20)
+pk_moment(ps, prob.ps, 20)
+mean(sapply(Ys, binmom, k, 20))
+
+est_moment(res, 25)
+pk_moment(ps, prob.ps, 25)
 
 est_moment(res, 30)
 pk_moment(ps, prob.ps, 30)
