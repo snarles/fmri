@@ -49,7 +49,7 @@ empirical_p_dist <- function(pmat, k, r) {
   Pmat <- matrix(0, k, r)
   for (j in 1:k) {
     ys[j, ] <- sample(1:ncol(pmat), r, prob = pmat[xs[j], ], replace = TRUE)
-    tmat <- apply(subps[, ys[j, ]], 2, rank)
+    tmat <- apply(subps[, ys[j, ]], 2, rank, ties.method = "random")
     Pmat[j, ] <- tmat[j, ]
   }
   Pmat

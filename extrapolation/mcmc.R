@@ -24,6 +24,21 @@ mix_model   <- "
     }
 "
 
-mixdata <- list(K=3, N= 5, Y = c(1, 2, 3, 2, 1))
-testfit <- stan(model_code=mix_model, data=mixdata, iter=10)
-fit     <- stan(fit=testfit, data=mixdata, iter=25000, chains=5)
+# mixdata <- list(K=3, N= 5, Y = c(1, 2, 3, 2, 1))
+# testfit <- stan(model_code=mix_model, data=mixdata, iter=10)
+# fit     <- stan(fit=testfit, data=mixdata, iter=25000, chains=5)
+
+mcmc_fitting <- function(ppmat, k, iter = 25000, chains = 5) {
+  Ys <- as.numeric(ppmat)
+  mixdata <- list(K=k, N= length(Ys), Y  = Ys)
+  testfit <- stan(model_code=mix_model, data=mixdata, iter=10)
+  fit <- stan(fit=testfit, data=mixdata, iter=iter, chains=chains)
+  extract(fit)
+}
+
+mchain_est <- function(res, K) {
+  samps <- rowSums(res$theta * res$us^K)
+  samps
+}
+
+

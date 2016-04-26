@@ -4,7 +4,7 @@
 
 source("extrapolation/example2d.R")
 source("extrapolation/mle_theory.R")
-
+source("extrapolation/mcmc.R")
 
 library(pracma)
 
@@ -29,12 +29,21 @@ for (i in 1:10) {
 # avg_mc_acc_p(pmat, 300)
 
 
-# rankconv <- (apply(pmat, 2, rank) - 0.5)/nrow(pmat)
-# plot(density(as.numeric(rankconv), weights = as.numeric(pmat)/sum(pmat)))
-# ps <- sample(as.numeric(rankconv), 10000, replace = TRUE, prob = as.numeric(pmat)/sum(pmat))
-# plot(sort(ps), type = "l")
+####
+##  LOOKING AT TRUE DISTIRUBITION
+####
+
+rankconv <- (apply(pmat, 2, rank) - 0.5)/nrow(pmat)
+plot(density(as.numeric(rankconv), weights = as.numeric(pmat)/sum(pmat)))
+ps <- sample(as.numeric(rankconv), 10000, replace = TRUE, prob = as.numeric(pmat)/sum(pmat))
+plot(sort(ps), type = "l")
+
+####
+##  USING MLE
+####
 
 ppmat <- empirical_p_dist(pmat, 30, 100)
+table(as.numeric(ppmat))
 res <- res_mixtools(ppmat, 30)
 
 avg_mc_acc_p(pmat, 90)
@@ -42,3 +51,9 @@ est_moment(res, 90)
 
 avg_mc_acc_p(pmat, 300)
 est_moment(res, 300)
+
+####
+##  USING MCMC
+####
+
+res <- mcmc_fitting(ppmat, 30)
