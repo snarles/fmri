@@ -14,7 +14,7 @@ rk <- 10
 xfax <- randn(nX, rk)
 yfax <- randn(nY, rk)
 ipmat <- xfax %*% t(yfax)
-coefs <- c(-2, 5, 0.1, 0.1)
+coefs <- c(-2, 1, 0, 0)
 pmat <- exp(coefs[1] + coefs[2] * ipmat + coefs[3] * ipmat^2 + coefs[4] * ipmat)
 for (i in 1:10) {
   rs <- rowSums(pmat)
@@ -56,4 +56,10 @@ est_moment(res, 300)
 ##  USING MCMC
 ####
 
-res <- mcmc_fitting(ppmat, 30)
+mc <- mcmc_fitting(ppmat, 30, iter = 50, chains = 2)
+mean(mchain_est(mc, 90))
+avg_mc_acc_p(pmat, 90)
+
+mean(mchain_est(res, 300))
+avg_mc_acc_p(pmat, 300)
+
