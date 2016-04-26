@@ -8,7 +8,7 @@ source("extrapolation/mle_theory.R")
 
 library(pracma)
 
-nX <- 200
+nX <- 500
 nY <- 500
 rk <- 10
 xfax <- randn(nX, rk)
@@ -21,12 +21,12 @@ for (i in 1:10) {
   pmat <- pmat/rs
   pmat <- t(pmat)
 }
-avg_mc_acc_naive(pmat, 20)
-avg_mc_acc_p(pmat, 20)
-avg_mc_acc_naive(pmat, 40)
-avg_mc_acc_p(pmat, 40)
-avg_mc_acc_p(pmat, 90)
-avg_mc_acc_p(pmat, 300)
+# avg_mc_acc_naive(pmat, 20)
+# avg_mc_acc_p(pmat, 20)
+# avg_mc_acc_naive(pmat, 40)
+# avg_mc_acc_p(pmat, 40)
+# avg_mc_acc_p(pmat, 90)
+# avg_mc_acc_p(pmat, 300)
 
 
 # rankconv <- (apply(pmat, 2, rank) - 0.5)/nrow(pmat)
