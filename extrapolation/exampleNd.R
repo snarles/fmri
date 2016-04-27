@@ -5,6 +5,7 @@
 source("extrapolation/example2d.R")
 source("extrapolation/mle_theory.R")
 source("extrapolation/mcmc.R")
+source("extrapolation/constrained_mle.R")
 
 library(pracma)
 
@@ -45,21 +46,27 @@ plot(sort(ps), type = "l")
 ppmat <- empirical_p_dist(pmat, 30, 100)
 table(as.numeric(ppmat))
 res <- res_mixtools(ppmat, 30)
+cm <- cons_mle_est(ppmat, 30, 1)
 
-avg_mc_acc_p(pmat, 90)
-est_moment(res, 90)
+avg_mc_acc_p(pmat, 30)
+est_moment(res, 30)
+mean(sapply(as.numeric(ppmat), binmom, k, 30))
+cm_est_moment(cm, 30)
+
+hist(ps)
+plot(cm)
 
 avg_mc_acc_p(pmat, 300)
 est_moment(res, 300)
 
 ####
 ##  USING MCMC
-####
-
-mc <- mcmc_fitting(ppmat, 30, iter = 50, chains = 2)
-mean(mchain_est(mc, 90))
-avg_mc_acc_p(pmat, 90)
-
-mean(mchain_est(res, 300))
-avg_mc_acc_p(pmat, 300)
+# ####
+# 
+# mc <- mcmc_fitting(ppmat, 30, iter = 50, chains = 2)
+# mean(mchain_est(mc, 90))
+# avg_mc_acc_p(pmat, 90)
+# 
+# mean(mchain_est(res, 300))
+# avg_mc_acc_p(pmat, 300)
 
