@@ -62,9 +62,3 @@ numDeriv::grad(of, bt0)
 og(bt0)
 numDeriv::hessian(of, bt0)
 oh(bt0)
-
-
-numDeriv::grad(of, rep(1/(k+1), k))
-og(rep(1/(k+1), k))
-numDeriv::hessian(of, rep(1/(k+1), k))
-oh(rep(1/(k+1), k))
