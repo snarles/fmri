@@ -2,6 +2,7 @@
 
 source("extrapolation/example2d.R")
 source("extrapolation/mle_theory.R")
+source("extrapolation/constrained_mle.R")
 
 true_p_dist <- readRDS("extrapolation/testcase_ps.rds")
 
@@ -12,7 +13,16 @@ n <- 1000
 Ys <- rbinom(n, 30, prob = sample(true_p_dist, n, TRUE))
 mle_est <-  res_mixtools(Ys, 30)
 pseq <- seq(0, 1, 1/300)
-cm <- cons_mle_est(Ys, k, pseq, 0.1)
+gu0 <- binned_gu(true_p_dist, pseq)
+cm <- cons_mle_est(Ys, k, pseq, 0.01)
+cmsamp <- sample(cm$ps, length(true_p_dist), replace = TRUE, prob = cm$gu)
+plot(sort(true_p_dist), type = "l")
+lines(sort(cmsamp), col = "red")
+
+plot(gu0, type = "l")
+lines(cm$gu, col = "red")
+cm$of_gu(cm$gu)
+cm$of_gu(gu0)
 
 
 mean(true_p_dist^20)
