@@ -38,6 +38,7 @@ rankconv <- (apply(pmat, 2, rank) - 0.5)/nrow(pmat)
 plot(density(as.numeric(rankconv), weights = as.numeric(pmat)/sum(pmat)))
 ps <- sample(as.numeric(rankconv), 10000, replace = TRUE, prob = as.numeric(pmat)/sum(pmat))
 plot(sort(ps), type = "l")
+saveRDS(ps, file = "extrapolation/testcase_ps.rds")
 
 ####
 ##  USING MLE
