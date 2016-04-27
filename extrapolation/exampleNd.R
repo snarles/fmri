@@ -46,7 +46,8 @@ plot(sort(ps), type = "l")
 ppmat <- empirical_p_dist(pmat, 30, 100)
 table(as.numeric(ppmat))
 res <- res_mixtools(ppmat, 30)
-cm <- cons_mle_est(ppmat, 30, 1)
+pseq <- seq(0, 1, 1/300)
+cm <- cons_mle_est(ppmat, k = 30, ps = pseq, lbda = 0.1)
 
 avg_mc_acc_p(pmat, 30)
 est_moment(res, 30)
@@ -54,7 +55,7 @@ mean(sapply(as.numeric(ppmat), binmom, k, 30))
 cm_est_moment(cm, 30)
 
 hist(ps)
-plot(cm)
+plot(cm$gu)
 
 avg_mc_acc_p(pmat, 300)
 est_moment(res, 300)
