@@ -41,7 +41,30 @@ og <- function(bt) {
   }
   ans
 }
+oh <- function(bt) {
+  k <- length(bt)
+  ans <- matrix(0, k, k)
+  ft <- vprobs %*% c(1-sum(bt), bt)
+  for (i in 1:k) {
+    for (j in 1:k) {
+      s <- sum(ws * (vprobs[, i + 1] - vprobs[, 1]) * 
+                 (vprobs[, j + 1] - vprobs[, 1])/(ft^2))
+      if (i == j) s <- s + lambda/(bt[i]^2)
+      s <- s + lambda/(1 - sum(bt))^2
+      ans[i, j] <- s
+    }
+  }
+  ans
+}
 of(bt)
 of(bt0)
-numDeriv::grad(of, bt)
-og(bt)
+numDeriv::grad(of, bt0)
+og(bt0)
+numDeriv::hessian(of, bt0)
+oh(bt0)
+
+
+numDeriv::grad(of, rep(1/(k+1), k))
+og(rep(1/(k+1), k))
+numDeriv::hessian(of, rep(1/(k+1), k))
+oh(rep(1/(k+1), k))
