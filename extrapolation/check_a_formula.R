@@ -16,3 +16,32 @@ vprobs <- matrix(0, k + 1, k + 1)
 for (i in 0:k) vprobs[, i+1] <- binprobs %*% c(rep(0, i), rep(1, k + 1 - i))
 hy2 <- vprobs %*% dgu
 cbind(hy, hy2)
+
+lambda <- 2
+bt <- runif(k + 1); bt <- bt/sum(bt)
+(bt <- bt[-(k+1)])
+bt0 <- bt
+ft <- vprobs %*% c(bt, 1-sum(bt))
+(ys <- sample(k + 1, 20, TRUE, prob = ft))
+(ws <- sapply(0:k, function(i) sum(ys == i)))
+bt <- runif(k + 1); bt <- bt/sum(bt)
+(bt <- bt[-(k+1)])
+of <- function(bt) {
+  ft <- vprobs %*% c(1-sum(bt), bt)
+  -sum(ws * log(ft)) - lambda * (sum(log(bt)) + log(1 - sum(bt)))
+}
+og <- function(bt) {
+  k <- length(bt)
+  ans <- numeric(k)
+  ft <- vprobs %*% c(1-sum(bt), bt)
+  for (i in 1:k) {
+    s <- -sum(ws * (vprobs[, i + 1] - vprobs[, 1])/ft)
+    s <- s - lambda/bt[i] + lambda/(1-sum(bt))
+    ans[i] <- s
+  }
+  ans
+}
+of(bt)
+of(bt0)
+numDeriv::grad(of, bt)
+og(bt)
