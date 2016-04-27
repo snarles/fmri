@@ -4,10 +4,13 @@ source("extrapolation/example2d.R")
 source("extrapolation/mle_theory.R")
 source("extrapolation/constrained_mle.R")
 
+library(lineId)
+
 true_p_dist <- readRDS("extrapolation/testcase_ps.rds")
 
-mean(true_p_dist^30)
+ihat <- Ihat_LI(1 - mean(true_p_dist^30), 30)
 mean(true_p_dist^90)
+1 - lineId::piK(sqrt(2 * ihat), 90)
 
 n <- 1000
 Ys <- rbinom(n, 30, prob = sample(true_p_dist, n, TRUE))
