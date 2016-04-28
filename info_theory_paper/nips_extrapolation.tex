@@ -1,0 +1,444 @@
+\documentclass{article}
+
+% if you need to pass options to natbib, use, e.g.:
+% \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading nips_2016
+%
+% to avoid loading the natbib package, add option nonatbib:
+% \usepackage[nonatbib]{nips_2016}
+
+\usepackage[final]{nips_2016}
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+% \usepackage[final]{nips_2016}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+%\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+
+\usepackage{amssymb, amsmath}
+\usepackage{epsfig}
+\usepackage{array}
+\usepackage{ifthen}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{csquotes}
+\usepackage{xcolor}
+\usepackage{multirow}
+\newcommand\crule[3][black]{\textcolor{#1}{\rule{#2}{#3}}}
+
+\newcommand{\tr}{\text{tr}}
+\newcommand{\E}{\textbf{E}}
+\newcommand{\diag}{\text{diag}}
+\newcommand{\argmax}{\text{argmax}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\argmin}{\text{argmin}}
+\newcommand{\Vol}{\text{Vol}}
+\newcommand{\comm}[1]{}
+\newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+\newcommand{\Cor}{\text{Cor}}
+
+\definecolor{color1}{RGB}{128,13,13}
+\definecolor{color2}{RGB}{70,128,13}
+\definecolor{color3}{RGB}{13,128,128}
+\definecolor{color4}{RGB}{70,13,128}
+
+\title{How many faces can be recognized? Performance extrapolation for
+  multi-class classification}
+
+% The \author macro works with any number of authors. There are two
+% commands used to separate the names and addresses of multiple
+% authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to
+% break the lines. Using \AND forces a line break at that point. So,
+% if LaTeX puts 3 of 4 authors names on the first line, and the last
+% on the second line, try using \AND instead of \And before the third
+% author name.
+
+\author{
+  Charles Y.~Zheng \\
+  Department of Statistics\\
+  Stanford University\\
+  Stanford, CA 94305 \\
+  \texttt{snarles@stanford.edu} \\
+  %% examples of more authors
+  \And
+  Rakesh ~Achanta \\
+  Department of Statistics\\
+  Stanford University\\
+  Stanford, CA 94305 \\
+  \texttt{rakesha@stanford.edu} \\
+  \And
+  Yuval ~Benjamini \\
+  Department of Statistics \\
+  Hebrew University\\
+  Jerusalem, Israel\\
+  \texttt{yuval.benjamini@mail.huji.ac.il}
+  %% Address \\
+  %% \texttt{email} \\
+  %% \AND
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+  %% \And
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+  %% \And
+  %% Coauthor \\
+  %% Affiliation \\
+  %% Address \\
+  %% \texttt{email} \\
+}
+
+\begin{document}
+% \nipsfinalcopy is no longer used
+
+\maketitle
+
+\begin{abstract}
+The difficulty of multi-class classification generally increases with
+the number of classes.  For \emph{recognition systems} such as
+classifiers used for recognizing people, spoken words, or chemicals,
+it is often of interest to know how many species the system can be
+trained to recognize before dropping below a minimum accuracy
+threshold.  However, before such systems are deployed, typically only
+a small number of species are available for testing the system.  Can
+we predict how well the recognition system will scale with an
+increased number of classes?  We distinguish between two types of
+recognition systems: \emph{pooling} systems, such as deep neural
+networks, which combine information across classes, and
+\emph{non-pooling} systems, which learn the distribution of each class
+separately.  For non-pooling systems, the problem of predicting
+scalability reduces to the problem of estimating the higher-order
+moments of a \emph{conditional accuracy distribution}, which in turn can
+be estimated from data.
+\end{abstract}
+
+\section{Introduction}
+
+Object recognition, face recognition (or more generally person
+recognition) and language are a few of the cognitive building blocks
+which are fundamental to human cognition, and which can be understood
+as examples of generalized classification tasks. Machine
+classification can be employed to mimic this power of recognition.  A
+robot equipped with a camera can algorithmically segment its input
+image into objects, and to learn to recognize unique objects and
+people which regularly appear in its environment.  A general approach
+to implement such a recognition ability starts by employing some
+parametric featurization of the object to be identified.  For example,
+for the task of face recognition, one might define features such as
+the proportions between the eyes and the relative position and size of
+the nose.  The full domain of the recognition task is a collection of
+\emph{instances} (e.g. photographs of faces) which is divided into
+\emph{species.}  The recognition system can be implemented by training
+a multi-class classifier to assign instances to their corresponding
+species.  While the system is in deployment, new species may be added
+to the system: when this happens, the classifier is retrained (or
+updated) using training data from the species to be added.
+
+A limitation to such recognition systems, whether they be natural or
+artificial, is that the performance of the system (in terms of correct
+classification) can degrade if there are too many species.  A face
+recognition algorithm can have very high success rate if it only needs
+to distinguish between 100 different faces, but its identifications
+may be less reliable when it needs to distinguish between 10000
+different faces.  The consequences of such errors may be severe: Cole
+(2005) lists 22 cases of fingerprint misindentification in criminal
+trials.
+
+Therefore, in the case of engineering recognition systems, it is of
+much practical interest to be able to evaluate the reliability of such
+systems before they are deployed.  Yet, during the development phase,
+typically data from only a fraction of the species in the domain are
+available.  From the empirical performance of the classifier on this
+initial subset of species, can we predict the performance of the
+system on a larger subset of species (or the entire domain)?
+
+A related problem arises in studying \emph{naturally occurring}
+recognition systems: for instance, human memory.  Neuroscientists may
+be directly interested in the number of different cues which can be
+recalled by a subject.  A similar dilemma arises, where data from only
+small number of species can be obtained, due to experimental
+constraints.  From this data, can we predict the number of species
+which can be distinguished by the recognition system, above a minimum
+accuracy threshold?
+
+We adress this problem of \emph{performance extrapolation} under the
+assumption that the initial subset of species is an i.i.d. sample from
+a larger population of species.  For a restricted family of
+classifiers--\emph{non-pooling} classifiers, we show that the problem
+of performance extrapolation reduces to a problem of nonparametric
+moment estimation.  But this is still a difficult problem, and in
+section 3 we find limitations to traditional maximum likelihood and
+Bayesian inference techniques.  Additional assumptions may be needed
+to achieve usable extrapolations--we discuss the assumption of
+\emph{high-dimensionality} in section 4.
+
+\subsection{Multi-class classification}
+
+[Briefly discusses one-vs-one, one-vs-all, etc]
+
+[Define pooling and non-pooling.  Score-based as special case of non-pooling.]
+
+\section{Theory}
+
+\subsection{Conditional accuracy}
+
+Let $\mathcal{X}$ be a space of species to be recognized, and let each
+distinct species be uniquely parameterized by a real \emph{parameter
+  vector} $x \in \mathcal{X}$.  Let $y \in \mathcal{Y}$ be a possible
+\emph{feature vector} for a species in $\mathcal{X}$.  Let $p(x)$ be
+the population distribution of species, and assume that a conditional
+feature vector distribution $p(y|x)$ be defined for every $x \in
+\mathcal{X}$.
+
+The $k$-class random classification task is defined as follows.
+First, the $k$ classes are drawn iid from $\mathcal{X}$, represented
+by vectors $x_1,\hdots, x_k$.  One obtains training data consisting of
+independent $(x, y)$ pairs, where $x$ is equal to one of $x_1,\hdots,
+x_k$ and $y$ is drawn from $p(y|x)$.  Based on the training data, one
+constructs a classification rule $f$ which maps a feature vector to
+one of $\{x_1,\hdots, x_k\}$.  The accuracy of the classification rule
+is
+\[
+\Pr[f(y) = x|x \sim \text{Unif}\{x_1,\hdots, x_k\}].
+\]
+The accuracy varies randomly dependending on the sampling of the $k$
+species $x_1,\hdots, x_k$.
+Hence, define the $k$-class average accuracy $p_k$ by
+\[
+p_k = \E_{x_1,\hdots, x_k}[\Pr[f(y) = x|x \sim \text{Unif}\{x_1,\hdots, x_k\}]].
+\]
+
+Let us consider the restricted \emph{score-based} classification
+rules, which fit a scoring function $q(x, y)$ to the data:
+intuitively, $q(x, y)$ can be understood as an estimate of a monotonic
+function of the joint density $p(x, y)$.  The score-based
+classification rule $f_q(y)$ is defined
+\[
+f_q(y) = \argmax_{x_1,\hdots, x_k} q(x, y).
+\]
+Define the \emph{conditional accuracy} function $u: \mathcal{X} \times \mathcal{Y} \to [0,1]$
+which maps a data point $(x, y)$ to its conditional accuracy,
+\[
+u(x, y) = \Pr[q(x, y) > q(X, y)|X \sim p(x)].
+\] 
+
+Our key insight is as follows: the average $k$-class accuracy $p_k$ is
+the $k-1$th moment of a random variable $U$, called the
+\emph{conditional accuracy}, which takes values in $[0,1]$.  Since the
+moments of $U$ are completely determined by the joint distribution
+$p(x, y)$ and the scoring function $q(x, y)$, the problem of
+predicting $p_N$ can be reduced to the problem of estimating the
+distribution of $U$.
+
+The random variable $U$ is constructed as follows:
+\begin{itemize}
+\item Draw $X \sim p(x)$.
+\item Draw $Y \sim p(y|x)$.
+\item Let $U = \int I(q(X, y) > q(x, y)) p(x) dx.$
+\end{itemize}
+
+The fact that the average $k$-class accuracies correspond to moments of
+$U$ is stated in the following theorem.
+
+\noindent\textbf{Theorem 1.} \emph{
+Let $U$ be defined as the random variable
+\[U = \Pr[q(X, Y) > q(X', Y)|X, Y]\]
+for $X, Y$ drawn from $p(x, y) = p(x) p(y|x)$,
+and $X'$ drawn independently from $p(x)$.
+Then $p_k = \E[U^{k-1}]$.
+}
+
+\noindent\textbf{Proof.}  Note that by using conditioning and
+conditional independence, $p_k$ can be written
+\begin{align*}
+p_k &= \E\left[ \frac{1}{k}\sum_{i=1}^k  \Pr[q(X_i, Y) > \max_{j\neq i} q(X_j, Y)] \right]
+\\&= \E\left[ \Pr[q(X_1, Y) > \max_{j\neq 1} q(X_j, Y)] \right]
+\\&= \E[\Pr[q(X_1, Y) > \max_{j\neq 1} q(X_j, Y)|X_1, Y]]
+\\&= \E[\Pr[\cap_{j > 1} q(X_1, Y) > q(X_j, Y)|X_1, Y]]
+\\&= \E[\prod_{j > 1}\Pr[q(X_1, Y) > q(X_j, Y)|X_1, Y]]
+\\&= \E[\Pr[q(X_1, Y) > q(X_2, Y)|X_1, Y]^{k-1}]
+\end{align*}
+But observe that the conditional probability $\Pr[q(X_1, Y) >
+  q(X_2, Y)|X_1, Y]$, viewed as a random variable, has the same
+distribution as $U$. $\Box$.
+
+
+\section{Nonparametric Estimation}
+
+[Discusses constrained MLE and Bayesian approaches]
+
+\section{Information-based methodology}
+
+[Mostly copy and paste, needs fixing]
+
+We start by restating the results of ZB 2016.  The asymptotic regime
+considered is a sequence of joint distributions $p(x,y)$ where the
+dimensionality of $x$ goes to infinity.  A specific example of a
+sequence in this regime is one where $X$ is $d$-dimensional
+multivariate normal with covariance identity $I_d$, and $Y = X + E$,
+where $E$ is an independent multivariate normal with covariance $cd
+I_d$, for some fixed constant $c > 0$.
+
+\textbf{Theorem 2.}\emph{
+Let $p^{[d]}(x, y)$ be a sequence of joint densities
+for $d = 1,2,\hdots$ as given above.  Further assume that
+\begin{itemize}
+\item[A1.] $\lim_{d \to \infty} I(X^{[d]}; Y^{[d]}) = \iota < \infty.$
+\item[A2.] There exists a sequence of scaling constants $a_{ij}^{[d]}$
+and $b_{ij}^{[d]}$ such that the random vector $(a_{ij}\ell_{ij}^{[d]} +
+b_{ij}^{[d]})_{i, j = 1,\hdots, K}$ converges in distribution to a
+multivariate normal distribution.
+\item[A3.] There exists a sequence of scaling constants $a^{[d]}$, $b^{[d]}$ such that
+\[
+a^{[d]}u(X^{(1)}, Y^{(2)}) + b^{[d]}
+\]
+converges in distribution to a univariate normal distribution.
+\item[A4.] For all $i \neq k$,
+\[\lim_{d \to \infty}\Cov[u(X^{(i)}, Y^{(j)}), u(X^{(k)}, Y^{(j)})] = 0.\]
+\end{itemize}
+Then for $p_K$ as defined above, we have
+\[
+\lim_{d \to \infty} 1-p_{K} = \pi_K(\sqrt{2 \iota})
+\]
+where
+\[
+\pi_K(c) = 1 - \int_{\mathbb{R}} \phi(z - c) \Phi(z)^{K-1} dz
+\]
+where $\phi$ and $\Phi$ are the standard normal density function and
+cumulative distribution function, respectively.
+}
+
+By combining Theorems 1 and 2, we immediately compute the limiting distribution of $P$
+in the given regime
+\noindent\textbf{Corollary.}\emph{Let $p^{[d]}(x, y)$ be a sequence of joint densities satisfying A1-A4 as stated in
+Theorem 2.
+For any $d$, let $P^{[d]}$ as defined in Theorem 1.
+Then $P^{[d]}$ converges in distribution to $P$, where the cdf of $P$ is given by
+\[
+\Pr[P < t] = \int_0^t \frac{\phi(\Phi^{-1}(u) - \sqrt{2\iota})}{\phi(\Phi^{-1}(u))} du.
+\]
+}
+
+\noindent\textbf{Proof.} By Theorem 1, the moments of $P^{[d]}$ are given by
+\[
+\E[P^{[d]k-1}] = p_k^{[d]}
+\]
+and meanwhile, Theorem 2 implies that
+\[
+\lim_{d \to \infty} p_k^{[d]} = \int_{\mathbb{R}} \phi(z - \sqrt{2\iota}) \Phi(z)^{k-1} dz.
+\]
+Let $Z$ be a normal $N(\sqrt{2\iota}, 1)$ variate,
+and define $P = \bar{\Phi}(Z)$.
+Then it is clear that
+\[
+\lim_{d \to \infty} \E[P^{[d]k-1}] = \int_{\mathbb{R}} \phi(z - \sqrt{2\iota}) \Phi(z)^{k-1} dz = \E[P^{k-1}]
+\]
+for all $k$.  Since both $P^{[d]}$ and $P$ lie in the compact interval
+$[0, 1]$, the fact that the moments of $P^{[d]}$ converge to the
+moments of $P$ implies that the distribution of $P^[d]$ converges to
+the distribution of $P$. $\Box$.
+
+The corollary identifies a parametric family of distributions
+$\mathcal{P} = \{P_\iota\}$ indexed by the mutual information $\iota$.
+For given $\iota$, the density of $P_\iota$ if given by
+\[
+g_\iota(u) = \frac{\phi(\Phi^{-1}(u) - \sqrt{2\iota})}{\phi(\Phi^{-1}(u))}.
+\]
+Note the special case $\iota = 0$, which yields $P_0 = U$, the uniform
+distribution on $[0,1]$.  This implies that in the special case that
+$X$ is independent of $Y$, and hence optimal classification does no
+better than random guessing, $p_k = \frac{1}{k}$, which indeed matches
+the moments of the uniform distribution
+\[
+\E[U^{k-1}] = \int_0^1 u^{k-1} du = \frac{1}{k}.
+\]
+
+We see that for any given finite-dimensional joint distribution $p(x,
+y)$, if the distribution of $P$ lies close to a member of the
+parametric family $\mathcal{P}$, the information-theoretic methodology
+for estimating $p_N$ from $p_k$ will be accurate.
+
+\subsubsection*{Acknowledgments}
+
+CZ is supported by an NSF graduate research fellowship.
+
+\section*{References}
+
+\small
+
+[X] Anonymous, A. ``High-dimensional estimation of mutual information
+via classification error.''
+
+[X] Gastpar, M.  Gill, P.  Huth, A.  Theunissen, F. ``Anthropic
+Correction of Information Estimates and Its Application to Neural
+Coding.'' \emph{IEEE Trans. Info. Theory}, Vol 56 No 2, 2010.
+
+[X] A. Borst and F. E. Theunissen, ``Information theory and neural coding''
+Nature Neurosci., vol. 2, pp. 947?957, Nov. 1999.
+
+[X] L. Paninski, ``Estimation of entropy and mutual information,'' Neural
+Comput., vol. 15, no. 6, pp. 1191?1253, 2003.
+
+[X] I. Nelken, G. Chechik, T. D. Mrsic-Flogel, A. J. King, and J. W. H.
+Schnupp, ``Encoding stimulus information by spike numbers and mean
+response time in primary auditory cortex,'' J. Comput. Neurosci., vol.
+19, pp. 199?221, 2005.
+
+[X] Cover and Thomas.  Elements of information theory.
+
+[X]  Muirhead.  Aspects of multivariate statistical theory.
+
+[X] van der Vaart.  Asymptotic statistics.
+
+[X] F. E. Theunissen and J. P. Miller, ``Representation of sensory
+information in the cricket cercal sensory system. II. information
+theoretic calculation of system accuracy and optimal tuning-curve
+widths of four primary interneurons,'' J. Neurophysiol., vol. 66,
+no. 5, pp. 1690?1703, 1991.  [8]
+
+[X] De Campos, Luis M. "A scoring function for learning Bayesian networks
+based on mutual information and conditional independence tests." The
+Journal of Machine Learning Research 7 (2006): 2149-2187.
+
+[X] Linsker, Ralph. "An application of the principle of maximum
+information preservation to linear systems." Advances in neural
+information processing systems. 1989.
+
+[X] Speed, Terry. "A correlation for the 21st century." Science
+334.6062 (2011): 1502-1503.
+
+[X] Beirlant, J., Dudewicz, E. J., Gy\:{o}rfi, L., \& der Meulen,
+E. C. (1997). Nonparametric Entropy Estimation: An
+Overview. International Journal of Mathematical and Statistical
+Sciences, 6, 17–40. doi:10.1.1.87.5281
+
+[X] Naselaris, T., Kay, K. N., Nishimoto, S., \& Gallant,
+J. L. (2011). Encoding and decoding in fMRI. \emph{Neuroimage}, 56(2),
+400-410.
+
+[X] Friedman, Jerome, Trevor Hastie, and Robert Tibshirani. \emph{The elements
+of statistical learning.} Vol. 1. Springer, Berlin: Springer series in
+statistics, 2008.
+
+[X] Tse, David, and Pramod Viswanath. \emph{Fundamentals of wireless
+communication.} Cambridge university press, 2005.
+
+[X] Banerjee, Arpan, Heather L. Dean, and Bijan Pesaran. "Parametric
+models to relate spike train and LFP dynamics with neural information
+processing." \emph{Frontiers in computational neuroscience} 6 (2011): 51-51.
+
+\end{document}
