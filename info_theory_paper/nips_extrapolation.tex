@@ -204,48 +204,61 @@ the population distribution of species, and assume that a conditional
 feature vector distribution $p(y|x)$ be defined for every $x \in
 \mathcal{X}$.
 
-Assume that we have data for $k$ species, with parameters $x^{(1)},\hdots, x^{(k)}$.
+In order to formalize the problem of \emph{extrapolation}, we model
+the data collection process as a stochastic process.  Let $(\Omega,
+\mathcal{F}, \mathbb{P})$ define a probability space.  Let $t = 1, 2,
+3, \hdots $ index discrete time steps; each time step is associated
+with a filtration $\mathcal{F}_t$, with $\mathcal{F}_1 \subset
+\mathcal{F}_2 \subset \cdots \subset \mathcal{F}$.  At time zero, we
+have not observed any data.  At time $k$, we sample a new species
+$x^{(k)}$ from the population distribution $p(x)$, and also observe
+$r$ replicates $y^{(i), 1}, \hdots, y^{(i), r}$ from the conditional
+distribution $p(y|x^{(i)})$.  Choose some $r_1 < r$: this determines
+the number of training observations $y^{(i), 1},\hdots, y^{(i), r_1}$
+from each class.  The filtration at time $t$ is defined as the
+$\sigma$-algebra induced by observations from species $x^{(1)},
+\hdots, x^{(k)}$, hence $\mathcal{F}_t = \sigma\{(x^{(i)}, y^{(i),
+  j})\}_{i=1, j=1}^{t, r}$.
 
-Suppose for each $i = 1,\hdots, k$, we observe $r$ replicates 
-
-The $k$-class random classification task is defined as follows.
-First, the $k$ classes are drawn iid from $\mathcal{X}$, represented
-by vectors $x_1,\hdots, x_k$.  One obtains training data consisting of
-independent $(x, y)$ pairs, where $x$ is equal to one of $x_1,\hdots,
-x_k$ and $y$ is drawn from $p(y|x)$.  Based on the training data, one
-constructs a classification rule $f$ which maps a feature vector to
-one of $\{x_1,\hdots, x_k\}$.  The accuracy of the classification rule
-is
+The classifier also changes with time.  At time $t$, $f^{(t)}$ is
+(random) function from $\mathcal{Y}$ to $\{x^{(1)}, \hdots,
+x^{(k)}\}$.  The randomness is due to the variability of the training
+set, hence $f^{(t)}$ is independent of the test data $\{y^{(i), r_1 +
+  1}, \hdots, y^{(i), r}\}$ for $i = 1,\hdots, t$.  Furthermore, we
+assume that the classifier $f^{(t)}$ is constructed in the following
+way.  The user chooses an algorithm $\mathcal{Q}$ which constructs
+scoring functions $q^{(i)}$ from the training data for the $i$th
+class:
 \[
-\Pr[f(y) = x|x \sim \text{Unif}\{x_1,\hdots, x_k\}].
+q^{(i)} = \mathcal{Q}(x^{(i)}, y^{(i), 1}, \hdots, y^{(i), r}).
 \]
-The accuracy varies randomly depending on the sampling of the $k$
-species $x_1,\hdots, x_k$.
-Hence, define the $k$-class average accuracy $p_k$ by
+The classifier $f^{(t)}$ is defined
 \[
-p_k = \E_{x_1,\hdots, x_k}[\Pr[f(y) = x|x \sim \text{Unif}\{x_1,\hdots, x_k\}]].
+f^{(t)}(y) = \argmax_i q^{(i)}(y).
 \]
-
-
-
+The generalization error at time $t$ is defined
+\[
+e^{(t)} = \frac{1}{k}\sum_{i=1}^k \Pr[f^{(t)}(y) \neq x^{(i)}|y \sim p(y|x^{(i)})].
+\]
+The extrapolation problem is the problem of predicting $e^{(K)}$ using
+only information known at time $k < K$.
 
 \subsection{Conditional accuracy}
 
+The optimal predictor of the generalization error (in mean square) is
+the conditional expected generalization error,
+$\E[e^{(t)}|\mathcal{F}_k]$.  However, it is easier to work with the
+unconditional expected generalization error $p_t \stackrel{def}{=}
+\E[e^{(t)}]$.
 
-
-Let us consider the restricted \emph{score-based} classification
-rules, which fit a scoring function $q(x, y)$ to the data:
-intuitively, $q(x, y)$ can be understood as an estimate of a monotonic
-function of the joint density $p(x, y)$.  The score-based
-classification rule $f_q(y)$ is defined
+Define the \emph{conditional accuracy} function $u: \mathcal{X} \times
+\mathcal{Y} \to [0,1]$ which maps a data point $(x, y)$ to its
+conditional accuracy,
 \[
-f_q(y) = \argmax_{x_1,\hdots, x_k} q(x, y).
+u(x, y) = \Pr[\mathcal{Q}(x, y) > q(X, y)|X \sim p(x)].
 \]
-Define the \emph{conditional accuracy} function $u: \mathcal{X} \times \mathcal{Y} \to [0,1]$
-which maps a data point $(x, y)$ to its conditional accuracy,
-\[
-u(x, y) = \Pr[q(x, y) > q(X, y)|X \sim p(x)].
-\] 
+
+
 
 Our key insight is as follows: the average $k$-class accuracy $p_k$ is
 the $k-1$th moment of a random variable $U$, called the
