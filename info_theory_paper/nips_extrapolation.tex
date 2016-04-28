@@ -194,7 +194,7 @@ to achieve usable extrapolations--we discuss the assumption of
 
 \section{Theory}
 
-\subsection{Conditional accuracy}
+\subsection{Setup}
 
 Let $\mathcal{X}$ be a space of species to be recognized, and let each
 distinct species be uniquely parameterized by a real \emph{parameter
@@ -203,6 +203,10 @@ distinct species be uniquely parameterized by a real \emph{parameter
 the population distribution of species, and assume that a conditional
 feature vector distribution $p(y|x)$ be defined for every $x \in
 \mathcal{X}$.
+
+Assume that we have data for $k$ species, with parameters $x^{(1)},\hdots, x^{(k)}$.
+
+Suppose for each $i = 1,\hdots, k$, we observe $r$ replicates 
 
 The $k$-class random classification task is defined as follows.
 First, the $k$ classes are drawn iid from $\mathcal{X}$, represented
@@ -215,12 +219,19 @@ is
 \[
 \Pr[f(y) = x|x \sim \text{Unif}\{x_1,\hdots, x_k\}].
 \]
-The accuracy varies randomly dependending on the sampling of the $k$
+The accuracy varies randomly depending on the sampling of the $k$
 species $x_1,\hdots, x_k$.
 Hence, define the $k$-class average accuracy $p_k$ by
 \[
 p_k = \E_{x_1,\hdots, x_k}[\Pr[f(y) = x|x \sim \text{Unif}\{x_1,\hdots, x_k\}]].
 \]
+
+
+
+
+\subsection{Conditional accuracy}
+
+
 
 Let us consider the restricted \emph{score-based} classification
 rules, which fit a scoring function $q(x, y)$ to the data:
@@ -277,9 +288,21 @@ But observe that the conditional probability $\Pr[q(X_1, Y) >
 distribution as $U$. $\Box$.
 
 
+
 \section{Nonparametric Estimation}
 
-[Discusses constrained MLE and Bayesian approaches]
+While $U = u(x, y)$ cannot be directly observed, we can estimate $u(x, y)$ for any $(x, y)$ in the training data,
+since defining the count $V$
+\[
+V = \sum_{i=1}^k I(q(x, y) \geq q(x^{(i)}, y)).
+\]
+Let $V$ denote the random variable $k u(X^{(1)}, Y)$ when $X^{(1)} \sim p(x)$,
+$Y \sim p(y|X^{(1)})$, and when $X^{(2)},\hdots, X^{(k)} \sim p(x)$.
+Then the distribution of $\hat{U}$ is given by
+\[
+h(\hat{u})
+\]
+
 
 \section{Information-based methodology}
 
