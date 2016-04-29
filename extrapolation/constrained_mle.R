@@ -11,7 +11,7 @@ make_vprob <- function(k, ps = seq(0, 1, 1/(2 * k))) {
 
 cons_mle_est <- function(ppmat, k, ps = seq(0, 1, 1/(2 * k)), lbda = 0.1) {
   Ys <- as.numeric(ppmat)
-  (ws <- sapply(0:k, function(i) sum(ys == i)))
+  (ws <- sapply(0:k, function(i) sum(Ys == i)))
   binprobs <- matrix(0, k + 1, length(ps))
   for (i in 1:length(ps)) binprobs[, i] <- dbinom(0:k, k, ps[i])
   # matplot(binprobs, type = "l")
