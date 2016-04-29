@@ -214,11 +214,11 @@ have not observed any data.  At time $k$, we sample a new species
 $x^{(k)}$ from the population distribution $p(x)$, and also observe
 $r$ replicates $y^{(i), 1}, \hdots, y^{(i), r}$ from the conditional
 distribution $p(y|x^{(i)})$.  Choose some $r_1 < r$: this determines
-the number of training observations $y^{(i), 1},\hdots, y^{(i), r_1}$
-from each class.  The filtration at time $t$ is defined as the
-$\sigma$-algebra induced by observations from species $x^{(1)},
-\hdots, x^{(k)}$, hence $\mathcal{F}_t = \sigma\{(x^{(i)}, y^{(i),
-  j})\}_{i=1, j=1}^{t, r}$.
+the number of training observations $S(x^{(i)}) = \{y^{(i), 1},\hdots,
+y^{(i), r_1}\}$ from each class.  The filtration at time $t$ is
+defined as the $\sigma$-algebra induced by observations from species
+$x^{(1)}, \hdots, x^{(k)}$, hence $\mathcal{F}_t = \sigma\{(x^{(i)},
+y^{(i), j})\}_{i=1, j=1}^{t, r}$.
 
 The classifier also changes with time.  At time $t$, $f^{(t)}$ is
 (random) function from $\mathcal{Y}$ to $\{x^{(1)}, \hdots,
@@ -230,9 +230,10 @@ way.  The user chooses an algorithm $\mathcal{Q}$ which constructs
 scoring functions $q^{(i)}$ from the training data for the $i$th
 class:
 \[
-q^{(i)} = \mathcal{Q}(x^{(i)}, y^{(i), 1}, \hdots, y^{(i), r}).
+q^{(i)} = \mathcal{Q}(x^{(i)}, S(x^{(i)})).
 \]
-The classifier $f^{(t)}$ is defined
+Each $q^{(i)}$ is a function from $\mathcal{Y}$ to $\mathbb{R}$.  The
+classifier $f^{(t)}$ is defined
 \[
 f^{(t)}(y) = \argmax_i q^{(i)}(y).
 \]
@@ -251,55 +252,69 @@ $\E[e^{(t)}|\mathcal{F}_k]$.  However, it is easier to work with the
 unconditional expected generalization error $p_t \stackrel{def}{=}
 \E[e^{(t)}]$.
 
-Define the \emph{conditional accuracy} function $u: \mathcal{X} \times
-\mathcal{Y} \to [0,1]$ which maps a data point $(x, y)$ to its
-conditional accuracy,
+Define the \emph{conditional accuracy} function $u(x, y, S(x))$ which
+maps a data triple consisting of a species $x$, a \emph{test}
+observation $y$, and a set of $r_1$ training replicates $S(x) =
+\{y^{1}, \hdots, y^{r_1}\}$ to a real number in $[0,1]$.  The
+conditional accuracy gives the probability that for independently
+drawn $(X, S(X))$ such that $X \sim p(x)$, and $S(X) = \{Y^1,\hdots,
+Y^{r_1}\}$ with $Y^i \stackrel{iid}{\sim} p(y|X)$, that the scoring
+function $\mathcal{Q}(x, S(x))$ will give a higher score to $y$ than
+the scoring function $\mathcal{Q}(X, S(X))$:
 \[
-u(x, y) = \Pr[\mathcal{Q}(x, y) > q(X, y)|X \sim p(x)].
+u(x, y, S(x)) = \Pr[(\mathcal{Q}(x, S(x)))(y) > (\mathcal{Q}(X, s(X)))(y)].
 \]
+Define the \emph{conditional accuracy} distribution $\mu$ as the law of
+$u(X, Y, S(X))$ when $X \sim p(x)$, $Y\sim p(y|X)$, and $S(X)$ is
+drawn as specified above.  The significance of the conditional
+accuracy distribution is that the expected generalization error $p_t$
+can be written in terms of its moments.
 
-
-
-Our key insight is as follows: the average $k$-class accuracy $p_k$ is
-the $k-1$th moment of a random variable $U$, called the
-\emph{conditional accuracy}, which takes values in $[0,1]$.  Since the
-moments of $U$ are completely determined by the joint distribution
-$p(x, y)$ and the scoring function $q(x, y)$, the problem of
-predicting $p_N$ can be reduced to the problem of estimating the
-distribution of $U$.
-
-The random variable $U$ is constructed as follows:
-\begin{itemize}
-\item Draw $X \sim p(x)$.
-\item Draw $Y \sim p(y|x)$.
-\item Let $U = \int I(q(X, y) > q(x, y)) p(x) dx.$
-\end{itemize}
-
-The fact that the average $k$-class accuracies correspond to moments of
-$U$ is stated in the following theorem.
-
-\noindent\textbf{Theorem 1.} \emph{
+\noindent\textbf{Theorem 2.1.} \emph{
 Let $U$ be defined as the random variable
-\[U = \Pr[q(X, Y) > q(X', Y)|X, Y]\]
+\[U = u(X, Y, S(X))\]
 for $X, Y$ drawn from $p(x, y) = p(x) p(y|x)$,
-and $X'$ drawn independently from $p(x)$.
+and $S(X) = \{Y^1,\hdots, Y^{r_1}\}$ with $Y^i \stackrel{iid}{\sim} p(y|X)$
 Then $p_k = \E[U^{k-1}]$.
 }
 
-\noindent\textbf{Proof.}  Note that by using conditioning and
+\noindent\textbf{Proof.}  
+Write $q^{(i)} = \mathcal{Q}(x^{(i)}, S(x^{(i)}))$
+Note that by using conditioning and
 conditional independence, $p_k$ can be written
 \begin{align*}
-p_k &= \E\left[ \frac{1}{k}\sum_{i=1}^k  \Pr[q(X_i, Y) > \max_{j\neq i} q(X_j, Y)] \right]
-\\&= \E\left[ \Pr[q(X_1, Y) > \max_{j\neq 1} q(X_j, Y)] \right]
-\\&= \E[\Pr[q(X_1, Y) > \max_{j\neq 1} q(X_j, Y)|X_1, Y]]
-\\&= \E[\Pr[\cap_{j > 1} q(X_1, Y) > q(X_j, Y)|X_1, Y]]
-\\&= \E[\prod_{j > 1}\Pr[q(X_1, Y) > q(X_j, Y)|X_1, Y]]
-\\&= \E[\Pr[q(X_1, Y) > q(X_2, Y)|X_1, Y]^{k-1}]
+p_k &= \E\left[ \frac{1}{k}\sum_{i=1}^k  \Pr[q^{(i)}(Y) > \max_{j\neq i} q^{(j)}(Y)] \right]
+\\&= \E\left[ \Pr[q^{(1)}(Y) > \max_{j\neq 1} q^{(j)}(Y)] \right]
+\\&= \E[\Pr[q^{(1)}(Y) > \max_{j\neq 1} q^{(j)}(Y)|X^{(1)}, Y, S(X^{(1)})]]
+\\&= \E[\Pr[\cap_{j > 1} q^{(1)}(Y) > q^{(j)}(Y)|X^{(1)}, Y, S(X^{(1)})]]
+\\&= \E[\prod_{j > 1}\Pr[q^{(1)}(Y) > q^{(j)}(Y)|X^{(1)}, Y, S(X^{(1)})]]
+\\&= \E[\Pr[q^{(1)}(Y) > q^{(2)}(Y)|X^{(1)}, Y, S(X^{(1)})]^{k-1}]
+\\&= \E[u(X^{(1)}, Y, S(X^{(1)}))^{k-1}].
 \end{align*}
-But observe that the conditional probability $\Pr[q(X_1, Y) >
-  q(X_2, Y)|X_1, Y]$, viewed as a random variable, has the same
-distribution as $U$. $\Box$.
+$\Box$
 
+Theorem 2.1 tells us that the problem of extrapolation can be
+approached by attempting to estimate the conditional accuracy
+distribution.  The $(t-1)$th moment of $U$ gives us $p_t$, which will
+in turn be a good estimate of $e^{(t)}$.
+
+\subsection{Properties of the conditional accuracy distribution}
+
+The conditional error distribution $\mu$ is determined by $p(x, y)$
+and $\mathcal{Q}$.  What can we say about the the conditional accuracy
+distribution without making any assumptions on either $p(x, y)$ or
+$\mathcal{Q}$?  The answer is: not much--for an arbitrary probability
+measure $\nu$ on $[0,1]$, one can construct $p(x, y)$ and
+$\mathcal{Q}$ such that $\mu = \nu$.
+
+\noindent\textbf{Theorem 2.1.} \emph{ Let $U$ be defined as in Theorem
+  2.2, and let $\mu$ denote the law of $U$.  Then, for any probability
+  distribution $\nu$ on $[0,1]$, one can construct a joint
+  distribution $p(x, y)$ and a scoring rule $\mathcal{Q}$ such that 
+  $\mu = \nu$.
+}
+
+\noindent\textbf{Proof.}  
 
 
 \section{Nonparametric Estimation}
