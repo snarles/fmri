@@ -29,8 +29,8 @@ getYs <- function(pmat, ncl, ny) {
 }
 
 
-pmat <- read.table('/home/snarles/github/predict_test_error/lala.txt', header = FALSE)
-saveRDS(pmat, "extrapolation/cifar100.rds")
+# read.table('/home/snarles/github/predict_test_error/lala.txt', header = FALSE)
+pmat <- readRDS("extrapolation/cifar100.rds")
 cl <- rep(1:100, each = 100)
 # cl_assigned <- apply(pmat, 2, function(v) which(v==max(v))[1])
 # sum(cl == cl_assigned)/length(cl)
