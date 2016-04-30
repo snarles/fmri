@@ -202,7 +202,8 @@ distinct species be uniquely parameterized by a real \emph{parameter
 \emph{feature vector} for a species in $\mathcal{X}$.  Let $p(x)$ be
 the population distribution of species, and assume that a conditional
 feature vector distribution $p(y|x)$ be defined for every $x \in
-\mathcal{X}$.
+\mathcal{X}$.  We require that $p(x)$ be a density with respect to
+Lesbegue measure, but $p(y|x)$ is allowed to include Dirac delta components.
 
 In order to formalize the problem of \emph{extrapolation}, we model
 the data collection process as a stochastic process.  Let $(\Omega,
@@ -307,14 +308,48 @@ $\mathcal{Q}$?  The answer is: not much--for an arbitrary probability
 measure $\nu$ on $[0,1]$, one can construct $p(x, y)$ and
 $\mathcal{Q}$ such that $\mu = \nu$.
 
-\noindent\textbf{Theorem 2.1.} \emph{ Let $U$ be defined as in Theorem
-  2.2, and let $\mu$ denote the law of $U$.  Then, for any probability
+\noindent\textbf{Theorem 2.2.} \emph{ Let $U$ be defined as in Theorem
+  2.1, and let $\mu$ denote the law of $U$.  Then, for any probability
   distribution $\nu$ on $[0,1]$, one can construct a joint
   distribution $p(x, y)$ and a scoring rule $\mathcal{Q}$ such that 
   $\mu = \nu$.
 }
 
 \noindent\textbf{Proof.}  
+Let $X$ and $Y$ have the degenerate joint distribution $X= Y \sim Unif[0, 1]$.
+Let $G$ be the cdf of $\nu$, $G(x) = \int_0^x d\nu(x)$, and let $H(u) = \sup_x \{G(x) \leq u\}/$.
+Define $\mathcal{Q}$ by
+\[
+\left(\mathcal{Q}(x, S(x))\right)(y) = \begin{cases}
+0 &\text{ if }x > y + H(y)\\
+0 & \text{ if }y + H(y) > 1 \text{ and }x \in [H(y) - y, y]\\
+1 + x - y &\text{ if } x \in [y, y + H(y)]\\
+1 + y + x &\text{ if }y + H(y) > 1 \text{ and }x \in [0, H(y) - y]. 
+\end{cases}
+\]
+One can verify that $u(x, x, S(x)) = H(u).$  Therefore, the cdf of $U$ is equal to $G$, as needed. $\Box$
+
+In practice, however, the scoring rule $\mathcal{Q}$ must approximate a monotonic function of the conditional density $p(y|x)$
+in order to yield an effective classifier.  It is therefore notable that in the case that $(X, Y)$ have a density with respect to Lesbegue measure,
+taking an \emph{optimal} scoring rule,
+with the property that $\mathcal{Q}(x, y, S(x)) = g(p(y|x))$ for monotonic $g$,
+the distribution of $U$ has a monotonically increasing density.
+
+\noindent\textbf{Theorem 2.1.} \emph{ Let $U$ be defined as in Theorem
+  2.2, and let $\mu$ denote the law of $U$.  Suppose $(X, Y)$ has a density $p(x, y)$ with respect to 
+  Lebesgue measure on $\mathcal{X} \times \mathcal{Y}$,
+  and $\mathcal{Q}(x, S(x))$ satisfies the property of monotonicity
+  \[
+  p(y|x) > p(y'|x) \text{ implies } \mathcal{Q}(x, S(x))(y) > \mathcal{Q}(x, S(x))(y')
+  \]
+  and the property of tie-breaking,
+  \[
+  \Pr[\mathcal{Q}(x, S(x))(Y) = \mathcal{Q}(x, S(x))(Y')] = 0\text{ for }Y, Y' \stackrel{iid}{\sim} p(y|x),
+  \]
+  then $\mu$ has a density $f(u)$ on $[0, 1]$ which is monotonic in $u$.
+}
+
+\noindent\textbf{Proof.}
 
 
 \section{Nonparametric Estimation}
@@ -331,8 +366,13 @@ Then the distribution of $\hat{U}$ is given by
 h(\hat{u})
 \]
 
+\subsection{Unbiased estimation}
 
-\section{Information-based methodology}
+\subsection{Maximum pseudo-likelihood}
+
+\subsection{Moment-constrained pseudo-likelihood}
+
+\subsection{Information-based methodology}
 
 [Mostly copy and paste, needs fixing]
 
