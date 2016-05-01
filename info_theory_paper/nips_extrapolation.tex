@@ -225,7 +225,7 @@ Divide-and-conquer approaches include one-vs-all and one-vs-one (CITE).
 In the recognition problem, there exists a large or infinite population of \emph{species}, e.g. individuals,
 and an infinite population of \emph{measurements}, and each measurement is associated with a single species.
 A recognition system is an algorithm which contains a database of measurements from a number of species:
-each measurement is represented within the recognition system by a real vector $y$ which lies in the space $\mathcal{Y}$, and labeled with an integer-valued ID key.
+each measurement is represented within the recognition system by a real vector $y \in \mathbb{R}^p$ which lies in the space $\mathcal{Y}$, and labeled with an integer-valued ID key.
 The ID key is the recognition system's internal representation of the species associated to the measurements:
 we assume that the database is accurate in the sense that two measurements in the database share the same ID key
 if and only if they are associated with the same species.
@@ -261,31 +261,28 @@ at time $t$; also define $n_{i, t}$ analogously.
 
 The property of separability captures the intuitive notion that \emph{information is not shared between classes}.
 To formalize the notion of separability, we begin with the class of \emph{scoring rule}-based classifier.
-A scoring rule $\mathcal{Q}$ is a mapping from a set of measurements $\{y^1,\hdots, y^n\}$, for $n \in \{0, 1,\hdots, \}$, to a function 
-$q: \mathcal{Y} \to \mathbb{R}.$
-A scoring-based classifier constructs
-\[
-q^{(i)} = \mathcal{Q}(y^{(i),1},\hdots, y^{(i), n_i})
-\]
-for each $i = 1,\hdots, k$, and then defines
+A scoring rule $\mathcal{Q}$ is a real-valued function which takes three arguments:
+a parameter vector $x$,
+a non-empty set of \emph{training} measurements $\{y^1,\hdots, y^n\}$, and a query measurement $y$.
+In settings where the parameter vector $x$ is not observed, then only scoring rules with a trivial dependence on $x$ can be implemented.
+A scoring-based classifier defines
  \[
-f^{(t)}(y) = \argmax_i q^{(i)}(y).
+f^{(t)}(y) = \argmax_i \mathcal{Q}(x^{(i)}, \{y^{(i), 1},\hdots, y^{(i), n_i}\}, y).
 \]
-If we assume that the parameter vectors are observed, then the scoring rule may also take $x$ as an argument:
-$q^{(i)} = \mathcal{Q}(x^{(i)}, y^{(i),1},\hdots, y^{(i), n_i})$.
-For notational convenience, we assume that ties occur with probability zero: that is, $\mathcal{Q}$ satisfies the tie-breaking property
+For notational convenience, we assume that ties occur with probability zero: that is, $\mathcal{Q}$ satisfies the tie-breaking property:
+for any $x$ and training subset $S = \{y^1,\hdots, y^n\}$,
 \begin{equation}\label{eq:tie}
-\Pr[\mathcal{Q}(x, S(x))(Y) = \mathcal{Q}(x, S(x))(Y')] = 0\text{ for }Y, Y' \stackrel{iid}{\sim} p(y|x),
+\Pr[\mathcal{Q}(x, S, Y) = \mathcal{Q}(x, S, Y')] = 0\text{ for }Y, Y' \stackrel{iid}{\sim} p(y|x).
 \end{equation}
 Quadratic discriminant analysis and Naive Bayes are two examples of scoring-based classifiers.
 For QDA, the scoring rule is given by
 \[
-\mathcal{Q}_{QDA}(y^1,\hdots, y^n)(y) = -(y - \bar{y})^T S^{-1} (y-\bar{y})
+\mathcal{Q}_{QDA}(x, \{y^1,\hdots, y^n\}, y) = -(y - \bar{y})^T S^{-1} (y-\bar{y})
 \]
-where $\bar{y} = \frac{1}{n}\sum_{i=1}^n y^i$ and $S = \frac{1}{n}\sum_{i=1}^n (y^i - \bar{y})^T(y^i - \bar{y})$.
+where $\bar{y} = \frac{1}{n}\sum_{i=1}^n y^i$ and $S = \frac{1}{n}\sum_{i=1}^n (y^i - \bar{y})(y^i - \bar{y})^T$.
 In Naive Bayes, the scoring rule is
 \[
-\mathcal{Q}_{NB}(y^1,\hdots, y^n)(y) = \sum_{i=1}^n \log \hat{f}_i(y_i)
+\mathcal{Q}_{NB}(x, \{y^1,\hdots, y^n\}, y) = \sum_{i=1}^n \log \hat{f}_i(y_i)
 \]
 where $\hat{f}_i$ is a density estimate obtained from $\{y^1_i,\hdots, y^n_i\}$.
 
@@ -297,16 +294,58 @@ with $x^{(1)}, x^{(2)},\hdots$ drawn i.i.d. from $p(x)$, and $y^{(i),1},\hdots$ 
 A recognition system (characterized by mappings $f_t$) is considered \emph{separable} if and only there exists a scoring rule $\mathcal{Q}$
 such that defining
 \[
-\tilde{f}_t(y) = \argmax_{i=1}^{k_t} \mathcal{Q}(x^{(i)}, y^{(i), 1},\hdots, y^{(i), n_t})(y)
+\tilde{f}_t(y) = \argmax_{i=1}^{k_t} \mathcal{Q}(x^{(i)}, \{y^{(i), 1},\hdots, y^{(i), n_t}\}, y)
 \]
 we have
 \[
 \lim_{t \to \infty} \frac{1}{k_t} \sum_{i=1}^{k_t}\Pr[f_t(y) = \tilde{f}_t(y) | y \sim p(y|x^{(i)})] \to 1.
 \]
 
-We will show that certain implementations of $k$-nearest neighbors, LDA, one-vs-one, or one-vs-all classifiers satisfy this definition of separability.
+We will show that recognition systems based on certain implementations of $k$-nearest neighbors, LDA, one-vs-one, or one-vs-all classifiers satisfy this definition of separability.  Let $S_{i, t} = \{y^{(i),1 }, \hdots, y^{(i), n_i}\}$ denote the set of measurements of species $i$ at time $t$.
 
+\textbf{Definition 2.2.}(i)  Define a binary classifier $\mathcal{B}$ as a binary-valued mapping with three arguments: two training sets $\{y^1,\hdots, y^n\}$ and $\{w^1,\hdots, w^m\}$, and a query $y$.  A one-vs-one (OVO) recognition system is defined by
+\[
+f_t(y) = \argmax_{i=1}^{k_t} \sum_{j \neq i} I(\mathcal{B}(S_{i, t}, S_{j, t}, y)=0),
+\]
+resolving ties arbitrarily.
 
+(ii) Define a binary scoring rule $\mathcal{D}$ as a real-valued mapping with three arguments:
+two training sets $\{y^1,\hdots, y^n\}$ and $\{w^1,\hdots, w^m\}$, and a query $y$.
+A one-vs-all (OVA) recognition system is defined by
+\[
+f_t(y) = \argmax_{i=1}^{k_t} \mathcal{D}(S_{i, t}, \cup_{j\neq i} S_{j, t}, y).
+\]
+
+(iii) Let $d$ be a distance metric on $\mathcal{Y}$.
+Let $D_t(y)$ be the multiset of distances $D_t(y) = (d(y, y^{(i), j}))_{i=1, j=1}^{k_t, n_i}$,
+and let $d_{t, m}(y)$ denote the $m$th smallest value in $D_t(y)$.
+A kNN recognition system is defined by
+\[
+f_t(y) = \argmax_{i=1}^{k_t} \sum_{j=1}^{n_i} I(d(y, y^{(i), j}) \leq d_{t, m_t}(y)).
+\]
+where $m_1,m_2, \hdots$ is a predefined sequence of neighborhood sizes,
+resolving ties arbitrarily.
+
+(iv) Assume WLOG that $y_1 = 1$ for all $y \in \mathcal{Y}$, and
+let $B^t$ be a $p \times k_t$ matrix which minimizes the log-likelihood
+\[
+\sum_{i=1}^{k_t} \sum_{j=1}^{n_i} \langle y^{(i), j}, B^t_j \rangle - \log\left[\sum_{\ell=1}^{k_t} \exp[\langle y^{(i), j}, B^t_\ell \rangle]\right].
+\]
+A multinomial logistic regression recognition system is defined by
+\[
+f_t(y) = \argmax_{i=1}^{k_t} \langle y, B^t_i\rangle.
+\]
+
+(v) Let $\bar{y}^{(i) , t}= \frac{1}{n}\sum_{j=1}^{n_i} y^{(i), j}$, and let $S_t = \sum_{i=1}^{k_t} \sum_{j=1}^{n_i} (y^{(i), j} - \bar{y}^{(i), t})(y^{(i), j} - \bar{y}^{(i), t})^T$.  An LDA recognition system is defined by
+\[
+f_t(y) = \argmax_{i=1}^{k_t} -(y-\bar{y}^{(i), t})^T S_t^{-1} (y-\bar{y}^{(i), t}).
+\]
+
+\textbf{Theorem 2.1.} \emph{(i) OVO recognition systems are separable; (ii) OVA recognition systems are separable;
+(iii) a kNN recognition system with neighborhood size $m_t = O(n^\alpha)$ is separable; (iv) multinomial logistic regression recognition systems are separable; (v) LDA recognition systems are separable.}
+
+\textbf{Proof.} 
+(i.)
 
 \section{Prediction Extrapolation}
 
