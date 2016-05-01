@@ -350,6 +350,31 @@ the distribution of $U$ has a monotonically increasing density.
 }
 
 \noindent\textbf{Proof.}
+Choose $0 < u < v < 1$ and $0 < \delta < \min(u, 1-v, v-u)$.
+For $x \in \mathcal{X}$, define the set 
+\[
+\underline{J}_x = \{y \in \mathcal{Y}: \int_\mathcal{Y} I(p(y|x) > p(w|x))p(w|x) dw \in [u - \delta, u + \delta]\}
+\]
+and
+\[
+\bar{J}_x = \{y \in \mathcal{Y}: \int_\mathcal{Y} I(p(y|x) > p(w|x))p(w|x) dw \in [v - \delta, v + \delta]\}
+\]
+One can verify that for all $x \in \mathcal{X}$,
+\[
+\int_{\underline{J}_x} p(y|x) dy \leq \int_{\bar{J}_x} p(y|x) dy.
+\]
+Yet, since
+\[
+\Pr[U \in [u-\delta, u + \delta]] = \Pr[\cup_\mathcal{X} x \times \underline{J}_x]
+\]
+\[
+\Pr[U \in [v-\delta, v + \delta]] = \Pr[\cup_\mathcal{X} x \times \underline{J}_x].
+\]
+we obtain
+\[
+\Pr[U \in [u-\delta, u + \delta]] \leq \Pr[U \in [v - \delta, v + \delta]].
+\]
+Taking $\delta \to 0$, we conclude the theorem. $\Box$
 
 
 \section{Nonparametric Estimation}
