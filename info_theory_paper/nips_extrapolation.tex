@@ -181,18 +181,14 @@ a larger population of species.  For a restricted family of
 classifiers--\emph{non-pooling} classifiers, we show that the problem
 of performance extrapolation reduces to a problem of nonparametric
 moment estimation.  But this is still a difficult problem, and in
-section 3 we find limitations to traditional maximum likelihood and
-Bayesian inference techniques.  Additional assumptions may be needed
-to achieve usable extrapolations--we discuss the assumption of
-\emph{high-dimensionality} in section 4.
+section 4 we find limitations to traditional maximum likelihood and
+Bayesian inference techniques.  We propose two novel estimators which have reasonable empirical performance:
+a likelihood-based estimator with constrained moments,
+and an estimator based on the mutual information estimator of Anon 2016.
 
-\subsection{Multi-class classification}
+\section{Multi-class classification}
 
-[Briefly discusses one-vs-one, one-vs-all, etc]
-
-[Define pooling and non-pooling.  Score-based as special case of non-pooling.]
-
-\section{Theory}
+\section{Prediction Extrapolation}
 
 \subsection{Setup}
 
@@ -238,6 +234,12 @@ classifier $f^{(t)}$ is defined
 \[
 f^{(t)}(y) = \argmax_i q^{(i)}(y).
 \]
+For notational convenience, we assume that ties occur with probability zero: that is, $\mathcal{Q}$ satisfies the tie-breaking property
+\begin{equation}\label{eq:tie}
+\Pr[\mathcal{Q}(x, S(x))(Y) = \mathcal{Q}(x, S(x))(Y')] = 0\text{ for }Y, Y' \stackrel{iid}{\sim} p(y|x),
+\end{equation}
+
+
 The generalization error at time $t$ is defined
 \[
 e^{(t)} = \frac{1}{k}\sum_{i=1}^k \Pr[f^{(t)}(y) \neq x^{(i)}|y \sim p(y|x^{(i)})].
@@ -271,7 +273,7 @@ drawn as specified above.  The significance of the conditional
 accuracy distribution is that the expected generalization error $p_t$
 can be written in terms of its moments.
 
-\noindent\textbf{Theorem 2.1.} \emph{
+\noindent\textbf{Theorem 3.1.} \emph{
 Let $U$ be defined as the random variable
 \[U = u(X, Y, S(X))\]
 for $X, Y$ drawn from $p(x, y) = p(x) p(y|x)$,
@@ -294,7 +296,7 @@ p_k &= \E\left[ \frac{1}{k}\sum_{i=1}^k  \Pr[q^{(i)}(Y) > \max_{j\neq i} q^{(j)}
 \end{align*}
 $\Box$
 
-Theorem 2.1 tells us that the problem of extrapolation can be
+Theorem 3.1 tells us that the problem of extrapolation can be
 approached by attempting to estimate the conditional accuracy
 distribution.  The $(t-1)$th moment of $U$ gives us $p_t$, which will
 in turn be a good estimate of $e^{(t)}$.
@@ -308,7 +310,7 @@ $\mathcal{Q}$?  The answer is: not much--for an arbitrary probability
 measure $\nu$ on $[0,1]$, one can construct $p(x, y)$ and
 $\mathcal{Q}$ such that $\mu = \nu$.
 
-\noindent\textbf{Theorem 2.2.} \emph{ Let $U$ be defined as in Theorem
+\noindent\textbf{Theorem 3.2.} \emph{ Let $U$ be defined as in Theorem
   2.1, and let $\mu$ denote the law of $U$.  Then, for any probability
   distribution $\nu$ on $[0,1]$, one can construct a joint
   distribution $p(x, y)$ and a scoring rule $\mathcal{Q}$ such that 
@@ -335,18 +337,15 @@ taking an \emph{optimal} scoring rule,
 with the property that $\mathcal{Q}(x, y, S(x)) = g(p(y|x))$ for monotonic $g$,
 the distribution of $U$ has a monotonically increasing density.
 
-\noindent\textbf{Theorem 2.1.} \emph{ Let $U$ be defined as in Theorem
+\noindent\textbf{Theorem 3.1.} \emph{ Let $U$ be defined as in Theorem
   2.2, and let $\mu$ denote the law of $U$.  Suppose $(X, Y)$ has a density $p(x, y)$ with respect to 
   Lebesgue measure on $\mathcal{X} \times \mathcal{Y}$,
   and $\mathcal{Q}(x, S(x))$ satisfies the property of monotonicity
   \[
   p(y|x) > p(y'|x) \text{ implies } \mathcal{Q}(x, S(x))(y) > \mathcal{Q}(x, S(x))(y')
   \]
-  and the property of tie-breaking,
-  \[
-  \Pr[\mathcal{Q}(x, S(x))(Y) = \mathcal{Q}(x, S(x))(Y')] = 0\text{ for }Y, Y' \stackrel{iid}{\sim} p(y|x),
-  \]
-  then $\mu$ has a density $f(u)$ on $[0, 1]$ which is monotonic in $u$.
+  and the property of tie-breaking \eqref{eq:tie},
+  then $\mu$ has a density $\eta(u)$ on $[0, 1]$ which is monotonic in $u$.
 }
 
 \noindent\textbf{Proof.}
@@ -379,23 +378,86 @@ Taking $\delta \to 0$, we conclude the theorem. $\Box$
 
 \section{Nonparametric Estimation}
 
-While $U = u(x, y)$ cannot be directly observed, we can estimate $u(x, y)$ for any $(x, y)$ in the training data,
-since defining the count $V$
+Let us assume that $U$ has a density $\eta(u)$.
+While $U = u(x, y)$ cannot be directly observed, we can estimate $u(x^{(i)}, y^{(i), r_1 + j}, S(x^{(i)}))$ for any $1 \leq i \leq k$,
+$1 \leq j \leq r_2$, where $r_2 = r - r_1$ is the number of testing repeats.
+
+\noindent\textbf{Theorem 4.1}\emph{
+Assume that $\mathcal{Q}$ satisfies the tie-breaking property \eqref{eq:tie}.
+Define
 \[
-V = \sum_{i=1}^k I(q(x, y) \geq q(x^{(i)}, y)).
+V_{i, j} = \sum_{i=1}^k I(q^{(i)}(y^{(i), j}) > q^{(j)}(y^{(i), j})).
 \]
-Let $V$ denote the random variable $k u(X^{(1)}, Y)$ when $X^{(1)} \sim p(x)$,
-$Y \sim p(y|X^{(1)})$, and when $X^{(2)},\hdots, X^{(k)} \sim p(x)$.
-Then the distribution of $\hat{U}$ is given by
+Then
 \[
-h(\hat{u})
+V_{i, j} \sim \text{Binomial}(k, u(x^{(i)}, y^{(i), j}, S(x^{(i)}))).
+\]}
+$\Box$
+
+The proof of Theorem 4.1 follows from the same conditioning argument used in Theorem 3.1.
+
+At a high level, we have a hierarchical model where $U$ is drawn from a density $\eta(u)$ on $[0, 1]$
+and then $V_{i, j} \sim \text{Binomial}(k, U)$;
+therefore the marginal distribution of $V_{i, j}$ can be written
+\[
+\Pr[V_{i,j} = \ell] = \begin{pmatrix}
+k \\ \ell
+\end{pmatrix}
+\int_0^1 u^\ell (1-u)^{k-\ell} \eta(u) du.
 \]
+However, the observed $\{V_{i, j}\}$ do \emph{not} comprise an i.i.d. sample.
+
+We discuss the following three approaches for estimating $p_t = \E[U^{t-1}]$ based on $V_{i, j}$.
+The first is \emph{unbiased estimation} based on binomial U-statistics, which is discussed in Section 4.1.
+The second is the \emph{psuedolikelihood} approach.  In problems where the marginal distributions
+are known, but the dependence structure between variables is unknown, the \emph{psuedolikelihood} is defined
+as the product of the marginal distributions.  For certain problems in time series analysis and
+spatial statistics, the maximum psuedolikelihood estimator (MPLE) is proved to be consistent (CITE).
+We discuss psuedolikelihood-based approaches in Sections 4.2 and 4.3.
+A third approach is an adaptation of the \emph{mutual information estimator} developed by (Anon 2016).
+Anon 2016 develop an asymptotic theory which relates the Bayes error to the mutual information $I(X; Y)$
+and vice versa.  This allows us to estimate ``information'' from classification error $p_k$, and then predict
+the generalization error $p_t$ from the estimated information: details are given in Section 4.4.
 
 \subsection{Unbiased estimation}
 
-\subsection{Maximum pseudo-likelihood}
+If $V \sim \text{Binomial}(k, \eta)$, then an unbiased estimator $f_t(V)$ of $\eta^t$ exists
+if and only if $0 \leq t \leq k$.
 
-\subsection{Moment-constrained pseudo-likelihood}
+The theory of U-statistics provides the minimal variance unbiased estimator for $\eta^t$:
+\[
+\eta^t = \E\left[\frac{\begin{pmatrix}
+V \\ t
+\end{pmatrix}}{\begin{pmatrix}
+k \\ t
+\end{pmatrix}}\right].
+\]
+
+This result can be immediately applied to yield an unbiased estimator of $p_t$, when $t \leq k$:
+\begin{equation}\label{eq:ustat}
+p_t = \E\left[ \frac{1}{kr_2}\sum_{i=1}^k\sum_{j=1}^{r_2} \frac{\begin{pmatrix}
+V_{i, j} \\ t
+\end{pmatrix}}{\begin{pmatrix}
+k \\ t
+\end{pmatrix}} \right].
+\end{equation}
+The problem of \emph{extrapolation} concerns the case $t > k$, in which the expression \eqref{eq:ustat} is undefined.
+Still, the estimator \eqref{eq:ustat} is worthy of study, since it has close to optimal performance for the case $t \leq k$.
+
+\subsection{Maximum pseudo-likelihood}
+For fixed $j$ the quantities
+$\{V_{1, j},\hdots, V_{k, j}\}$ are mutually independent, and
+one can write a nonparametric likelihood for the density $\eta(u)$ of $U$:
+\[
+\mathcal{L}_j(\eta) = \prod_{i=1}^k \begin{pmatrix}
+k \\ V_{i, j}
+\end{pmatrix}
+\eta(u)^{V_{i, j}} (1-\eta(u))^{k- V_{i, j}}.
+\]
+However, it is not possible to write a likelihood for $\eta(u)$ depending on all the terms $V_{i, j}$,
+
+
+\subsection{Constrained pseudo-likelihood}
 
 \subsection{Information-based methodology}
 
