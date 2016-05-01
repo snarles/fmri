@@ -109,18 +109,17 @@
 
 \begin{abstract}
 The difficulty of multi-class classification generally increases with
-the number of classes.  For \emph{recognition systems} such as
-classifiers used for recognizing people, spoken words, or chemicals,
+the number of classes.  \emph{Recognition systems} employ such classifiers 
+in order to recognize people, spoken words, or chemicals:
 it is often of interest to know how many species the system can be
 trained to recognize before dropping below a minimum accuracy
 threshold.  However, before such systems are deployed, typically only
 a small number of species are available for testing the system.  Can
 we predict how well the recognition system will scale with an
 increased number of classes?  We distinguish between two types of
-recognition systems: \emph{pooling} systems, such as deep neural
-networks, which combine information across classes, and
-\emph{non-pooling} systems, which learn the distribution of each class
-separately.  For non-pooling systems, the problem of predicting
+multi-class classifiers: \emph{separable} classifiers, which include $k$-nearest neighbors, multinomial regression,
+one-vs-one and one-vs-all classifiers, 
+\emph{non-separable} classifiers, such as deep neural networks and decision trees.  For recognition systems based on separable classifiers, the problem of predicting
 scalability reduces to the problem of estimating the higher-order
 moments of a \emph{conditional accuracy distribution}, which in turn can
 be estimated from data.
@@ -188,9 +187,57 @@ and an estimator based on the mutual information estimator of Anon 2016.
 
 \section{Multi-class classification}
 
-\section{Prediction Extrapolation}
+Let $z$ be a label from $\{1,\hdots,k\}$, and let $\mathcal{Y} \subset \mathbb{R}^p$
+be a space of feature vectors.  Suppose that $(z, y)$ is drawn from a joint distribution $F$.
+We observe independent pairs $(z_i, y_i)$ for $i = 1,\hdots, n$.
+The \emph{multi-class classification problem} is to learn a \emph{classification rule}
+for predicting the label $z$ as a function of $y$:
+in other words, to construct a function $f:\mathcal{Y} \to \{1,\hdots, k\}$
+such that the \emph{risk}
+\[
+\E \mathcal{L}(z, f(y))
+\]
+is minimized.
+Common examples of loss functions are the 0-1 loss \[\mathcal{L}(z, \hat{z}) = I(z = \hat{z})\]
+and the weighted loss
+\[
+\mathcal{L}(z, \hat{z}) = C_{z, \hat{z}}
+\]
+where $C$ is a $k \times k$ cost matrix.
+The weighted loss is often used in multi-class classification problems, because the cost of confusing similar classes (cats and dogs)
+is less severe than confusing very different classes (dogs and airplanes.)
 
-\subsection{Setup}
+We provide a very brief overview of existing methods for multiclass classification.  We neglect a number of important
+aspects of multiclass classification, including categorical predictors, missing data, model selection,
+and regularization: for a fuller treatment of the subject, see (CITE) (CITE) or (CITE).
+Furthermore, in this paper we specialize to the 0-1 loss, as it provides the simplest setting for developing theory.
+
+The multi-class classification problem is a generalization of the more common \emph{binary classification} problem,
+in which $k = 2$.  Existing approaches for multi-class classification fall into two categories:
+methods which directly learn a multi-class mapping $f: \mathcal{Y} \to \{1,\hdots, k\}$,
+and `divide-and-conquer' methods which convert the multi-class problem into a combination of multiple binary
+classification problems.  In the first category, we have:
+\begin{itemize}
+\item \emph{k-nearest neighbors}.  Define $f(y)$ as the majority class in the $k$ nearest neighbors of $y$ within the training data.
+\item \emph{multinomial logistic regression}.  Fit a conditional probability model
+\[
+\hat{\Pr}[Z = z|y] = \frac{\exp[\beta_z^T y + \beta_{z,0}]}{\sum_{j=1}^k \exp[\beta_j^T y + \beta_{j,0}}
+\]
+and let $f(y) = \argmax_z \hat{Pr}[Z = z|Y]$.
+\item \emph{LDA, QDA, and RDA}.  Models each $p(y|z)$ as multivariate normal $N(\mu_z, \Sigma_z)$.
+In LDA, the covariances $\Sigma_z$ are assumed to be shared across classes; this results in linear decision boundaries.
+In QDA, the covariances $\Sigma_z$ are allowed to be class-specific.  In RDA, a regularized estimator is used to estimate $\Sigma_z$.
+\item \emph{multiclass SVM}.  (CITE)
+\item \emph{decision trees, random forests}.  Constructs $f(y)$ as a sum of products of indicator functions, of the form $I(y_i > t)$.
+The individual indicators functions are called `splits,' and determined in a greedy fashion (CITE).
+\end{itemize}
+Among divide-and-conquer approaches:
+\begin{itemize}
+\item \emph{One-vs-one}.
+\item \emph{One-vs-all}.
+\end{itemize}
+
+\subsection{The recognition problem}
 
 Let $\mathcal{X}$ be a space of species to be recognized, and let each
 distinct species be uniquely parameterized by a real \emph{parameter
@@ -201,7 +248,13 @@ feature vector distribution $p(y|x)$ be defined for every $x \in
 \mathcal{X}$.  We require that $p(x)$ be a density with respect to
 Lesbegue measure, but $p(y|x)$ is allowed to include Dirac delta components.
 
-In order to formalize the problem of \emph{extrapolation}, we model
+
+
+\section{Prediction Extrapolation}
+
+\subsection{Problem formulation}
+
+Recall the notation from section 2.1. In order to formalize the problem of \emph{extrapolation}, we model
 the data collection process as a stochastic process.  Let $(\Omega,
 \mathcal{F}, \mathbb{P})$ define a probability space.  Let $t = 1, 2,
 3, \hdots $ index discrete time steps; each time step is associated
@@ -240,20 +293,20 @@ For notational convenience, we assume that ties occur with probability zero: tha
 \end{equation}
 
 
-The generalization error at time $t$ is defined
+The generalization accuracy at time $t$ is defined
 \[
-e^{(t)} = \frac{1}{k}\sum_{i=1}^k \Pr[f^{(t)}(y) \neq x^{(i)}|y \sim p(y|x^{(i)})].
+\text{acc}^{(t)} = \frac{1}{k}\sum_{i=1}^k \Pr[f^{(t)}(y) = i|y \sim p(y|x^{(i)})].
 \]
-The extrapolation problem is the problem of predicting $e^{(K)}$ using
+The extrapolation problem is the problem of predicting $\text{acc}^{(K)}$ using
 only information known at time $k < K$.
 
 \subsection{Conditional accuracy}
 
 The optimal predictor of the generalization error (in mean square) is
 the conditional expected generalization error,
-$\E[e^{(t)}|\mathcal{F}_k]$.  However, it is easier to work with the
+$\E[\text{acc}^{(t)}|\mathcal{F}_k]$.  However, it is easier to work with the
 unconditional expected generalization error $p_t \stackrel{def}{=}
-\E[e^{(t)}]$.
+\E[\text{acc}^{(t)}]$.
 
 Define the \emph{conditional accuracy} function $u(x, y, S(x))$ which
 maps a data triple consisting of a species $x$, a \emph{test}
