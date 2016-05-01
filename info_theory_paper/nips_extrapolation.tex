@@ -185,7 +185,11 @@ Bayesian inference techniques.  We propose two novel estimators which have reaso
 a likelihood-based estimator with constrained moments,
 and an estimator based on the mutual information estimator of Anon 2016.
 
-\section{Multi-class classification}
+\subsection{Multi-class classification}
+
+We provide a very brief overview of existing methods for multi-class classification.  We neglect a number of important
+aspects of multiclass classification, including categorical predictors, missing data, model selection,
+and regularization: for a fuller treatment of the subject, see (CITE) (CITE) or (CITE).
 
 Let $z$ be a label from $\{1,\hdots,k\}$, and let $\mathcal{Y} \subset \mathbb{R}^p$
 be a space of feature vectors.  Suppose that $(z, y)$ is drawn from a joint distribution $F$.
@@ -206,47 +210,101 @@ and the weighted loss
 where $C$ is a $k \times k$ cost matrix.
 The weighted loss is often used in multi-class classification problems, because the cost of confusing similar classes (cats and dogs)
 is less severe than confusing very different classes (dogs and airplanes.)
-
-We provide a very brief overview of existing methods for multiclass classification.  We neglect a number of important
-aspects of multiclass classification, including categorical predictors, missing data, model selection,
-and regularization: for a fuller treatment of the subject, see (CITE) (CITE) or (CITE).
-Furthermore, in this paper we specialize to the 0-1 loss, as it provides the simplest setting for developing theory.
+In this paper we specialize to the 0-1 loss, as it provides the simplest setting for developing theory.
 
 The multi-class classification problem is a generalization of the more common \emph{binary classification} problem,
 in which $k = 2$.  Existing approaches for multi-class classification fall into two categories:
 methods which directly learn a multi-class mapping $f: \mathcal{Y} \to \{1,\hdots, k\}$,
 and `divide-and-conquer' methods which convert the multi-class problem into a combination of multiple binary
-classification problems.  In the first category, we have:
-\begin{itemize}
-\item \emph{k-nearest neighbors}.  Define $f(y)$ as the majority class in the $k$ nearest neighbors of $y$ within the training data.
-\item \emph{multinomial logistic regression}.  Fit a conditional probability model
-\[
-\hat{\Pr}[Z = z|y] = \frac{\exp[\beta_z^T y + \beta_{z,0}]}{\sum_{j=1}^k \exp[\beta_j^T y + \beta_{j,0}}
-\]
-and let $f(y) = \argmax_z \hat{Pr}[Z = z|Y]$.
-\item \emph{LDA, QDA, and RDA}.  Models each $p(y|z)$ as multivariate normal $N(\mu_z, \Sigma_z)$.
-In LDA, the covariances $\Sigma_z$ are assumed to be shared across classes; this results in linear decision boundaries.
-In QDA, the covariances $\Sigma_z$ are allowed to be class-specific.  In RDA, a regularized estimator is used to estimate $\Sigma_z$.
-\item \emph{multiclass SVM}.  (CITE)
-\item \emph{decision trees, random forests}.  Constructs $f(y)$ as a sum of products of indicator functions, of the form $I(y_i > t)$.
-The individual indicators functions are called `splits,' and determined in a greedy fashion (CITE).
-\end{itemize}
-Among divide-and-conquer approaches:
-\begin{itemize}
-\item \emph{One-vs-one}.  Let $\mathcal{G}: $
-\item \emph{One-vs-all}.
-\end{itemize}
+classification problems.  Methods in the first category include $k$-nearest neighbors, multinomial logistic regression, linear discriminant analysis (LDA), quadratic discriminant analysis (QDA), decision trees, and random forests (CITE).
+Divide-and-conquer approaches include one-vs-all and one-vs-one (CITE).
 
-\subsection{The recognition problem}
 
-Let $\mathcal{X}$ be a space of species to be recognized, and let each
-distinct species be uniquely parameterized by a real \emph{parameter
-  vector} $x \in \mathcal{X}$.  Let $y \in \mathcal{Y}$ be a possible
-\emph{feature vector} for a species in $\mathcal{X}$.  Let $p(x)$ be
-the population distribution of species, and assume that a conditional
+\section{The recognition problem}
+
+In the recognition problem, there exists a large or infinite population of \emph{species}, e.g. individuals,
+and an infinite population of \emph{measurements}, and each measurement is associated with a single species.
+A recognition system is an algorithm which contains a database of measurements from a number of species:
+each measurement is represented within the recognition system by a real vector $y$ which lies in the space $\mathcal{Y}$, and labeled with an integer-valued ID key.
+The ID key is the recognition system's internal representation of the species associated to the measurements:
+we assume that the database is accurate in the sense that two measurements in the database share the same ID key
+if and only if they are associated with the same species.
+Given a query measurement, the system answers with an ID number: this answer is correct
+if and only if the query measurement and the database measurements labeled with the same ID are associated to the same species.
+New data can be added to the recognition system: we assume that the integrity of the database remains intact,
+so that an added measurement from species already existing in the database is labelled with the same ID,
+and that an added measurement from a new species is labelled with a new ID key.
+
+Let us assume that each species can be \emph{uniquely} parameterized by a parameter vector $x$,
+and let $\mathcal{X}$ denote the space of parameter vectors.  Note that the parameter $x$ may or may not observed by
+the recognition system: in the latter case, the system only has access to arbitrary ID keys.
+Let $p(x)$ be the population distribution of species, and assume that a conditional
 feature vector distribution $p(y|x)$ be defined for every $x \in
 \mathcal{X}$.  We require that $p(x)$ be a density with respect to
 Lesbegue measure, but $p(y|x)$ is allowed to include Dirac delta components.
+
+A natural approach for implementing a recognition system is to train a multi-class classifier on its database,
+treating each species as a distinct class.  Whenever new data is added, the classifier is retrained.
+Depending on which multi-class classifier is used, we can categorize the recognition system as either a
+\emph{separable} system, or a \emph{non-separable} system.
+The database of the classifier therefore consists of pairs $\{(x^{(i)}), y^{(i), j})\}$
+where $x^{(i)}$ is the parameter of the $i$th species in the database, and $y^{(i), j}$ is the $j$th measurement
+associated with that species.  Without loss of generality, let $i$ be the ID key of the species $x^{(i)}$.
+Let $k$ denote the total number of species in the database, and let $n_i$ be the number of measurements
+associated with the $i$th species.
+The recognition system maps queries $y$ to an ID key; let us refer to this mapping as $f:\mathcal{Y} \to \{1,\hdots, k\}$.
+We may study the recognition system as more data is added over time: let $t = 1, 2 ,\hdots$ refer to discrete time stages,
+and let $k_t$ denote the number of classes in the database at time $t$, and $f_t$ denote the mapping from queries to answers
+at time $t$; also define $n_{i, t}$ analogously.
+
+\subsection{Separability}
+
+The property of separability captures the intuitive notion that \emph{information is not shared between classes}.
+To formalize the notion of separability, we begin with the class of \emph{scoring rule}-based classifier.
+A scoring rule $\mathcal{Q}$ is a mapping from a set of measurements $\{y^1,\hdots, y^n\}$, for $n \in \{0, 1,\hdots, \}$, to a function 
+$q: \mathcal{Y} \to \mathbb{R}.$
+A scoring-based classifier constructs
+\[
+q^{(i)} = \mathcal{Q}(y^{(i),1},\hdots, y^{(i), n_i})
+\]
+for each $i = 1,\hdots, k$, and then defines
+ \[
+f^{(t)}(y) = \argmax_i q^{(i)}(y).
+\]
+If we assume that the parameter vectors are observed, then the scoring rule may also take $x$ as an argument:
+$q^{(i)} = \mathcal{Q}(x^{(i)}, y^{(i),1},\hdots, y^{(i), n_i})$.
+For notational convenience, we assume that ties occur with probability zero: that is, $\mathcal{Q}$ satisfies the tie-breaking property
+\begin{equation}\label{eq:tie}
+\Pr[\mathcal{Q}(x, S(x))(Y) = \mathcal{Q}(x, S(x))(Y')] = 0\text{ for }Y, Y' \stackrel{iid}{\sim} p(y|x),
+\end{equation}
+Quadratic discriminant analysis and Naive Bayes are two examples of scoring-based classifiers.
+For QDA, the scoring rule is given by
+\[
+\mathcal{Q}_{QDA}(y^1,\hdots, y^n)(y) = -(y - \bar{y})^T S^{-1} (y-\bar{y})
+\]
+where $\bar{y} = \frac{1}{n}\sum_{i=1}^n y^i$ and $S = \frac{1}{n}\sum_{i=1}^n (y^i - \bar{y})^T(y^i - \bar{y})$.
+In Naive Bayes, the scoring rule is
+\[
+\mathcal{Q}_{NB}(y^1,\hdots, y^n)(y) = \sum_{i=1}^n \log \hat{f}_i(y_i)
+\]
+where $\hat{f}_i$ is a density estimate obtained from $\{y^1_i,\hdots, y^n_i\}$.
+
+A \emph{separable} classifier is a classifier which can be \emph{approximated} by a scoring-based classifier
+in a certain asymptotic sense.  
+
+\textbf{Definition 2.1.}  (Separability) Suppose that for time stages $t = 1,2,\hdots$, $k_t = O(t)$ and $n_{i,t} = O(t)$,
+with $x^{(1)}, x^{(2)},\hdots$ drawn i.i.d. from $p(x)$, and $y^{(i),1},\hdots$ drawn i.i.d. from $p(y|x^{(i)})$ for each $i = 1,2,\hdots$.
+A recognition system (characterized by mappings $f_t$) is considered \emph{separable} if and only there exists a scoring rule $\mathcal{Q}$
+such that defining
+\[
+\tilde{f}_t(y) = \argmax_{i=1}^{k_t} \mathcal{Q}(x^{(i)}, y^{(i), 1},\hdots, y^{(i), n_t})(y)
+\]
+we have
+\[
+\lim_{t \to \infty} \frac{1}{k_t} \sum_{i=1}^{k_t}\Pr[f_t(y) = \tilde{f}_t(y) | y \sim p(y|x^{(i)})] \to 1.
+\]
+
+We will show that certain implementations of $k$-nearest neighbors, LDA, one-vs-one, or one-vs-all classifiers satisfy this definition of separability.
 
 
 
@@ -287,10 +345,6 @@ classifier $f^{(t)}$ is defined
 \[
 f^{(t)}(y) = \argmax_i q^{(i)}(y).
 \]
-For notational convenience, we assume that ties occur with probability zero: that is, $\mathcal{Q}$ satisfies the tie-breaking property
-\begin{equation}\label{eq:tie}
-\Pr[\mathcal{Q}(x, S(x))(Y) = \mathcal{Q}(x, S(x))(Y')] = 0\text{ for }Y, Y' \stackrel{iid}{\sim} p(y|x),
-\end{equation}
 
 
 The generalization accuracy at time $t$ is defined
