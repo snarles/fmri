@@ -180,9 +180,7 @@ a larger population of species.  Section 2 formalizes the recognition problem, a
 formalizes the problem of performance extrapolation.  For a restricted family of
 classifiers--\emph{separable} classifiers, we show that the problem
 of performance extrapolation reduces to a problem of nonparametric
-moment estimation.  But this is still a difficult problem, and in
-section 4 we find limitations to traditional maximum likelihood and
-Bayesian inference techniques.  
+moment estimation.  In section 4, we explore methods for nonparametric estimation.
 We propose a method called \emph{moment-constrained maximum pseudolikelihood},
 and demonstrate that it has reasonable performance in simulated and real data examples
 in section 5;  section 6 concludes.
@@ -322,14 +320,8 @@ A multinomial logistic regression recognition system is defined by
 f_t(y) = \argmax_{i=1}^{k_t} \langle y, B^t_i\rangle.
 \]
 
-(v) An LDA recognition system is defined by
-\[
-f_t(y) = \argmax_{i=1}^{k_t} 2\log \vec{\pi}_i -(y-\mu(\hat{F}_{i, t}))^T \Sigma(\hat{F}_t)^{-1} (y-\mu(\hat{F}_{i, t})).
-\]
-for arbitrary $\vec{\pi}$.
-
-\textbf{Theorem 2.1.} \emph{(i) an OVO recognition systems equipped with a continuous binary classifier is separable; (ii) an OVA recognition systems equipped with a continuous binary scoring rule is separable;
-(iii) a kNN recognition system with fixed neighborhood size $\alpha \in (0, 1)$ is separable; (iv) multinomial logistic regression recognition systems are separable; (v) LDA recognition systems are separable.}
+\textbf{Theorem 2.1.} \emph{(i) an OVO recognition system equipped with a continuous binary classifier is separable; (ii) an OVA recognition system equipped with a continuous binary scoring rule is separable;
+(iii) a kNN recognition system with fixed neighborhood size $\alpha \in (0, 1)$ is separable; (iv) a multinomial logistic regression recognition system is separable.}
 
 \section{Prediction Extrapolation}
 
@@ -434,7 +426,7 @@ with the property that $\mathcal{Q}(x, y, S(x)) = g(p(y|x))$ for monotonic $g$,
 the distribution of $U$ has a monotonically increasing density.
 
 \noindent\textbf{Theorem 3.3.} \emph{ Let $U$ be defined as in Theorem
-  2.2, and let $\nu$ denote the law of $U$.  Suppose $(X, Y)$ has a density $p(x, y)$ with respect to 
+  3.1, and let $\nu$ denote the law of $U$.  Suppose $(X, Y)$ has a density $p(x, y)$ with respect to 
   Lebesgue measure on $\mathcal{X} \times \mathcal{Y}$,
   and with probability one, $\mathcal{Q}(y, 0, \hat{F}(X))$ satisfies the property of monotonicity
   \[
@@ -450,19 +442,17 @@ Let us assume that $U$ has a density $\eta(u)$.
 While $U = u(\hat{F}(X), Y)$ cannot be directly observed, we can estimate $u(\hat{F}_i, y^{(i), r_1 + j})$ for any $1 \leq i \leq k$,
 $1 \leq j \leq r_2$ from the data.
 
-\noindent\textbf{Theorem 4.1}\emph{
-Assume that $\mathcal{Q}$ satisfies the tie-breaking property \eqref{eq:tie}.
+\noindent\textbf{Theorem 4.1.}\emph{
+For given $p(x, y)$ and scoring rule $\mathcal{Q}$, assume that $U$ as defined in Theorem 3.1 has a density $\eta(u)$
+and that $\mathcal{Q}$ satisfies the tie-breaking property \eqref{eq:tie}.
 Define
 \[
 V_{i, j} = \sum_{i=1}^k I(q^{(i)}(y^{(i), j}) > q^{(j)}(y^{(i), j})).
 \]
 Then
 \[
-V_{i, j} \sim \text{Binomial}(k, u(x^{(i)}, y^{(i), j}, S(x^{(i)}))).
+V_{i, j} \sim \text{Binomial}(k, u(\hat{F}_i, y^{(i), j})).
 \]}
-$\Box$
-
-The proof of Theorem 4.1 follows from the same conditioning argument used in Theorem 3.1.
 
 At a high level, we have a hierarchical model where $U$ is drawn from a density $\eta(u)$ on $[0, 1]$
 and then $V_{i, j} \sim \text{Binomial}(k, U)$;
@@ -489,10 +479,10 @@ the generalization error $p_t$ from the estimated information: details are given
 
 \subsection{Unbiased estimation}
 
-If $V \sim \text{Binomial}(k, \eta)$, then an unbiased estimator $f_t(V)$ of $\eta^t$ exists
+If $V \sim \text{Binomial}(k, \eta)$, then an unbiased estimator $f_t(V)$ of $\eta^(t-1)$ exists
 if and only if $0 \leq t \leq k$.
 
-The theory of U-statistics provides the minimal variance unbiased estimator for $\eta^t$:
+The theory of U-statistics provides the minimal variance unbiased estimator for $\eta^(t-1)$:
 \[
 \eta^t = \E\left[\frac{\begin{pmatrix}
 V \\ t
@@ -503,7 +493,7 @@ k \\ t
 
 This result can be immediately applied to yield an unbiased estimator of $p_t$, when $t \leq k$:
 \begin{equation}\label{eq:ustat}
-p_t = \E\left[ \frac{1}{kr_2}\sum_{i=1}^k\sum_{j=1}^{r_2} \frac{\begin{pmatrix}
+\hat{p}_t^{UN} = \E\left[ \frac{1}{kr_2}\sum_{i=1}^k\sum_{j=1}^{r_2} \frac{\begin{pmatrix}
 V_{i, j} \\ t
 \end{pmatrix}}{\begin{pmatrix}
 k \\ t
@@ -513,110 +503,66 @@ The problem of \emph{extrapolation} concerns the case $t > k$, in which the expr
 Still, the estimator \eqref{eq:ustat} is worthy of study, since it has close to optimal performance for the case $t \leq k$.
 
 \subsection{Maximum pseudo-likelihood}
-For fixed $j$ the quantities
-$\{V_{1, j},\hdots, V_{k, j}\}$ are mutually independent, and
-one can write a nonparametric likelihood for the density $\eta(u)$ of $U$:
-\[
-\mathcal{L}_j(\eta) = \prod_{i=1}^k \begin{pmatrix}
-k \\ V_{i, j}
-\end{pmatrix}
-\eta(u)^{V_{i, j}} (1-\eta(u))^{k- V_{i, j}}.
-\]
-However, it is not possible to write a likelihood for $\eta(u)$ depending on all the terms $V_{i, j}$,
 
+The psuedolikelihood is defined as
+\begin{equation}\label{eq:psuedo}
+\ell_t(\eta) = \sum_{i=1}^k \sum_{j=1}^{r_1} \log\left(\int u^{V_{i, j}} (1-u)^{k - V_{i, j}} \eta(u) du\right),
+\end{equation}
+and a maximum psuedolikelihood estimator (MPLE) is defined as any density $\hat{\eta}$ such that
+\[
+\ell(\hat{\eta}_{MPLE}) = \sup_{\eta} \ell_t(\eta).
+\]
+The motivation for $\hat{\eta}_{MPLE}$ is that it consistently estimates $\eta$ in the limit where $k \to \infty$.
+
+\noindent\textbf{Theorem 4.2.}
+\emph{
+For given $p(x, y)$ and scoring rule $\mathcal{Q}$, assume that $U$ as defined in Theorem 3.1 has a density $\eta(u)$
+and that $\mathcal{Q}$ satisfies the tie-breaking property \eqref{eq:tie}, and also that $r_2 \geq 1$.
+For $t = 1, 2, \hdots, $, let $\hat{\eta}_t$ be any MPLE for $\ell_t$.
+As $k_t \to \infty$, $\hat{\eta}_t$ weakly converges to $\eta$.}
+
+However, in finite samples, $\hat{\eta}_{MPLE}$ is not uniquely defined,
+and if we define the plug-in estimator
+\[
+\hat{p}_t^{MPLE} = \int u^{t-1} \hat{\eta}_{MPLE}(u) du,
+\]
+$\hat{p}_t^{MPLE}$ can vary over a large range, depending on which $\hat{\eta} \in \argmax_{\eta} \ell_t(\eta)$
+is selected.
+These shortcomings motivate the adoption of additional constraints on the estimator $\hat{\eta}.$
 
 \subsection{Constrained pseudo-likelihood}
 
-\subsection{Information-based methodology}
+Theorem 3.2. motivates the \emph{monotonicity constraint} that $\frac{d\hat{\eta}}{du} > 0$,
+hence we define $\hat{\eta}_{INC}$ as a solution to
+\[
+\text{maximize }\ell_t(\eta) \text{ subject to }\frac{d\hat{\eta}}{du} > 0.
+\]
+An alternative strategy is to directly attack the variability is $\hat{p}_t$ due to non-uniqueness of $\hat{\eta}$.
+Therefore, we define $\hat{\eta}_{MC}$ (where MC stands for moment-constrained)
+as
+\[
+\text{maximize }\ell_t(\eta) \text{ subject to }\int u^{k-1} \eta(u) du = \hat{p}_k^{UN}.
+\]
+Thirdly, we can combine both the moment constraint and the monotonicity constraint, yielding
+$\hat{\eta}_{COM}$, which is obtained by solving
+\[
+\text{maximize }\ell_t(\eta) \text{ subject to }\int u^{k-1} \eta(u) du = \hat{p}_k^{UN}\text{ and }\frac{d\hat{\eta}}{du} > 0.
+\]
+Unfortunately, none of the three density estimators are uniquely defined.
+An easy way to see this is to transform the parameterization of $\eta(u)$,
+defining
+\[
+\eta(u) = \int_0^u \xi(u) du;
+\]
+the monotonicity constraint is equivalent to the condition that $\xi > 0$,
+and the moment condition translates into a linear equality constraint on $\xi$.
 
-[Mostly copy and paste, needs fixing]
 
-We start by restating the results of ZB 2016.  The asymptotic regime
-considered is a sequence of joint distributions $p(x,y)$ where the
-dimensionality of $x$ goes to infinity.  A specific example of a
-sequence in this regime is one where $X$ is $d$-dimensional
-multivariate normal with covariance identity $I_d$, and $Y = X + E$,
-where $E$ is an independent multivariate normal with covariance $cd
-I_d$, for some fixed constant $c > 0$.
 
-\textbf{Theorem 2.}\emph{
-Let $p^{[d]}(x, y)$ be a sequence of joint densities
-for $d = 1,2,\hdots$ as given above.  Further assume that
-\begin{itemize}
-\item[A1.] $\lim_{d \to \infty} I(X^{[d]}; Y^{[d]}) = \iota < \infty.$
-\item[A2.] There exists a sequence of scaling constants $a_{ij}^{[d]}$
-and $b_{ij}^{[d]}$ such that the random vector $(a_{ij}\ell_{ij}^{[d]} +
-b_{ij}^{[d]})_{i, j = 1,\hdots, K}$ converges in distribution to a
-multivariate normal distribution.
-\item[A3.] There exists a sequence of scaling constants $a^{[d]}$, $b^{[d]}$ such that
-\[
-a^{[d]}u(X^{(1)}, Y^{(2)}) + b^{[d]}
-\]
-converges in distribution to a univariate normal distribution.
-\item[A4.] For all $i \neq k$,
-\[\lim_{d \to \infty}\Cov[u(X^{(i)}, Y^{(j)}), u(X^{(k)}, Y^{(j)})] = 0.\]
-\end{itemize}
-Then for $p_K$ as defined above, we have
-\[
-\lim_{d \to \infty} 1-p_{K} = \pi_K(\sqrt{2 \iota})
-\]
-where
-\[
-\pi_K(c) = 1 - \int_{\mathbb{R}} \phi(z - c) \Phi(z)^{K-1} dz
-\]
-where $\phi$ and $\Phi$ are the standard normal density function and
-cumulative distribution function, respectively.
-}
+\section{Results}
 
-By combining Theorems 1 and 2, we immediately compute the limiting distribution of $P$
-in the given regime
-\noindent\textbf{Corollary.}\emph{Let $p^{[d]}(x, y)$ be a sequence of joint densities satisfying A1-A4 as stated in
-Theorem 2.
-For any $d$, let $P^{[d]}$ as defined in Theorem 1.
-Then $P^{[d]}$ converges in distribution to $P$, where the cdf of $P$ is given by
-\[
-\Pr[P < t] = \int_0^t \frac{\phi(\Phi^{-1}(u) - \sqrt{2\iota})}{\phi(\Phi^{-1}(u))} du.
-\]
-}
+\section{Discussion}
 
-\noindent\textbf{Proof.} By Theorem 1, the moments of $P^{[d]}$ are given by
-\[
-\E[P^{[d]k-1}] = p_k^{[d]}
-\]
-and meanwhile, Theorem 2 implies that
-\[
-\lim_{d \to \infty} p_k^{[d]} = \int_{\mathbb{R}} \phi(z - \sqrt{2\iota}) \Phi(z)^{k-1} dz.
-\]
-Let $Z$ be a normal $N(\sqrt{2\iota}, 1)$ variate,
-and define $P = \bar{\Phi}(Z)$.
-Then it is clear that
-\[
-\lim_{d \to \infty} \E[P^{[d]k-1}] = \int_{\mathbb{R}} \phi(z - \sqrt{2\iota}) \Phi(z)^{k-1} dz = \E[P^{k-1}]
-\]
-for all $k$.  Since both $P^{[d]}$ and $P$ lie in the compact interval
-$[0, 1]$, the fact that the moments of $P^{[d]}$ converge to the
-moments of $P$ implies that the distribution of $P^[d]$ converges to
-the distribution of $P$. $\Box$.
-
-The corollary identifies a parametric family of distributions
-$\mathcal{P} = \{P_\iota\}$ indexed by the mutual information $\iota$.
-For given $\iota$, the density of $P_\iota$ if given by
-\[
-g_\iota(u) = \frac{\phi(\Phi^{-1}(u) - \sqrt{2\iota})}{\phi(\Phi^{-1}(u))}.
-\]
-Note the special case $\iota = 0$, which yields $P_0 = U$, the uniform
-distribution on $[0,1]$.  This implies that in the special case that
-$X$ is independent of $Y$, and hence optimal classification does no
-better than random guessing, $p_k = \frac{1}{k}$, which indeed matches
-the moments of the uniform distribution
-\[
-\E[U^{k-1}] = \int_0^1 u^{k-1} du = \frac{1}{k}.
-\]
-
-We see that for any given finite-dimensional joint distribution $p(x,
-y)$, if the distribution of $P$ lies close to a member of the
-parametric family $\mathcal{P}$, the information-theoretic methodology
-for estimating $p_N$ from $p_k$ will be accurate.
 
 \subsubsection*{Acknowledgments}
 
@@ -626,52 +572,6 @@ CZ is supported by an NSF graduate research fellowship.
 
 \small
 
-[X] Anonymous, A. ``High-dimensional estimation of mutual information
-via classification error.''
-
-[X] Gastpar, M.  Gill, P.  Huth, A.  Theunissen, F. ``Anthropic
-Correction of Information Estimates and Its Application to Neural
-Coding.'' \emph{IEEE Trans. Info. Theory}, Vol 56 No 2, 2010.
-
-[X] A. Borst and F. E. Theunissen, ``Information theory and neural coding''
-Nature Neurosci., vol. 2, pp. 947?957, Nov. 1999.
-
-[X] L. Paninski, ``Estimation of entropy and mutual information,'' Neural
-Comput., vol. 15, no. 6, pp. 1191?1253, 2003.
-
-[X] I. Nelken, G. Chechik, T. D. Mrsic-Flogel, A. J. King, and J. W. H.
-Schnupp, ``Encoding stimulus information by spike numbers and mean
-response time in primary auditory cortex,'' J. Comput. Neurosci., vol.
-19, pp. 199?221, 2005.
-
-[X] Cover and Thomas.  Elements of information theory.
-
-[X]  Muirhead.  Aspects of multivariate statistical theory.
-
-[X] van der Vaart.  Asymptotic statistics.
-
-[X] F. E. Theunissen and J. P. Miller, ``Representation of sensory
-information in the cricket cercal sensory system. II. information
-theoretic calculation of system accuracy and optimal tuning-curve
-widths of four primary interneurons,'' J. Neurophysiol., vol. 66,
-no. 5, pp. 1690?1703, 1991.  [8]
-
-[X] De Campos, Luis M. "A scoring function for learning Bayesian networks
-based on mutual information and conditional independence tests." The
-Journal of Machine Learning Research 7 (2006): 2149-2187.
-
-[X] Linsker, Ralph. "An application of the principle of maximum
-information preservation to linear systems." Advances in neural
-information processing systems. 1989.
-
-[X] Speed, Terry. "A correlation for the 21st century." Science
-334.6062 (2011): 1502-1503.
-
-[X] Beirlant, J., Dudewicz, E. J., Gy\:{o}rfi, L., \& der Meulen,
-E. C. (1997). Nonparametric Entropy Estimation: An
-Overview. International Journal of Mathematical and Statistical
-Sciences, 6, 17–40. doi:10.1.1.87.5281
-
 [X] Naselaris, T., Kay, K. N., Nishimoto, S., \& Gallant,
 J. L. (2011). Encoding and decoding in fMRI. \emph{Neuroimage}, 56(2),
 400-410.
@@ -679,12 +579,5 @@ J. L. (2011). Encoding and decoding in fMRI. \emph{Neuroimage}, 56(2),
 [X] Friedman, Jerome, Trevor Hastie, and Robert Tibshirani. \emph{The elements
 of statistical learning.} Vol. 1. Springer, Berlin: Springer series in
 statistics, 2008.
-
-[X] Tse, David, and Pramod Viswanath. \emph{Fundamentals of wireless
-communication.} Cambridge university press, 2005.
-
-[X] Banerjee, Arpan, Heather L. Dean, and Bijan Pesaran. "Parametric
-models to relate spike train and LFP dynamics with neural information
-processing." \emph{Frontiers in computational neuroscience} 6 (2011): 51-51.
 
 \end{document}

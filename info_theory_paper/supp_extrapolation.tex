@@ -36,6 +36,8 @@
 \textbf{Theorem 2.1.} \emph{(i) an OVO recognition systems equipped with a continuous binary classifier is separable; (ii) an OVA recognition systems equipped with a continuous binary scoring rule is separable;
 (iii) a kNN recognition system with fixed neighborhood size $\alpha \in (0, 1)$ is separable; (iv) multinomial logistic regression recognition systems are separable; (v) LDA recognition systems are separable.}
 
+\noindent\textbf{Proof.}  \newline
+
 \noindent\textbf{Theorem 3.1.} \emph{
 Let $U$ be defined as the random variable
 \[U = u(F, Y)\]
@@ -57,10 +59,12 @@ p_k &= \E\left[ \frac{1}{k}\sum_{i=1}^k  \Pr[q^{(i)}(Y^{(i), *}) > \max_{j\neq i
 \\&= \E[\Pr[q^{(1)}(Y^{(1), *}) > q^{(2)}(Y^{(1), *})|Y^{(1), *}, \hat{F}_1]^{k-1}]
 \\&= \E[u(\hat{F}_1, Y^{(1), *})^{k-1}] = \E[U^{k-1}].
 \end{align*}
-$\Box$
+$\Box$\newline
+
+
 
 \noindent\textbf{Theorem 3.2.} \emph{ Let $U$ be defined as in Theorem
-  2.1, and let $\nu$ denote the law of $U$.  Then, for any probability
+  3.1, and let $\nu$ denote the law of $U$.  Then, for any probability
   distribution $\nu'$ on $[0,1]$, one can construct a joint
   distribution $p(x, y)$ and a scoring rule $\mathcal{Q}$ such that 
   $\nu = \nu'$.
@@ -78,7 +82,9 @@ Define $\mathcal{Q}$ by
 1 + y + \mu(F) &\text{ if }\mu(F) + H(y) > 1 \text{ and }\mu(F) \in [0, H(y) - y]. 
 \end{cases}
 \]
-One can verify that $u(\hat{F}(X), X) = H(X).$  Therefore, the cdf of $U$ is equal to $G$, as needed. $\Box$
+One can verify that $u(\hat{F}(X), X) = H(X).$  Therefore, the cdf of $U$ is equal to $G$, as needed. $\Box$\newline
+
+
 
 \noindent\textbf{Theorem 3.3.} \emph{ Let $U$ be defined as in Theorem
   2.2, and let $\nu$ denote the law of $U$.  Suppose $(X, Y)$ has a density $p(x, y)$ with respect to 
@@ -116,9 +122,32 @@ we obtain
 \[
 \Pr[U \in [u-\delta, u + \delta]] \leq \Pr[U \in [v - \delta, v + \delta]].
 \]
-Taking $\delta \to 0$, we conclude the theorem. $\Box$
+Taking $\delta \to 0$, we conclude the theorem. $\Box$\newline
 
 
+
+\noindent\textbf{Theorem 4.1.}\emph{
+For given $p(x, y)$ and scoring rule $\mathcal{Q}$, assume that $U$ as defined in Theorem 3.1 has a density $\eta(u)$
+and that $\mathcal{Q}$ satisfies the tie-breaking property.
+Define
+\[
+V_{i, j} = \sum_{i=1}^k I(q^{(i)}(y^{(i), j}) > q^{(j)}(y^{(i), j})).
+\]
+Then
+\[
+V_{i, j} \sim \text{Binomial}(k, u(\hat{F}_i, y^{(i), j})).
+\]}
+
+\noindent\textbf{Proof.}\newline
+
+\noindent\textbf{Theorem 4.2.}
+\emph{
+For given $p(x, y)$ and scoring rule $\mathcal{Q}$, assume that $U$ as defined in Theorem 3.1 has a density $\eta(u)$
+and that $\mathcal{Q}$ satisfies the tie-breaking property, and also that $r_2 \geq 1$.
+For $t = 1, 2, \hdots, $, let $\hat{\eta}_t$ be any MPLE for $\ell_t$.
+As $k_t \to \infty$, $\hat{\eta}_t$ weakly converges to $\eta$.}
+
+\noindent\textbf{Proof.}\newline
 
 \end{document}
 
