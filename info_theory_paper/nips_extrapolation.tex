@@ -252,7 +252,7 @@ A scoring rule $\mathcal{Q}$ is a real-valued function which takes three argumen
 a distribution $F$ on $\mathcal{Y}$, a prior probability $\pi$, and a query measurement $y \in \mathcal{Y}$.
 A scoring-based classifier defines
  \[
-\mathcal{C}(F_1,\hdots, F_k, \vec{\pi}, y) = \argmax_i \mathcal{Q}(F_i, y, \vec{\pi}_i).
+\mathcal{C}(F_1,\hdots, F_k, \vec{\pi}, y) = \argmax_i \mathcal{Q}(F_i, \vec{\pi}_i, y).
 \]
 For notational convenience, we assume that ties occur with probability zero: that is, $p(x, y)$ and $\mathcal{Q}$ jointly satisfy the \emph{tie-breaking} property:
 for any $x$ and $\pi \in [0,1]$,
@@ -335,131 +335,97 @@ for arbitrary $\vec{\pi}$.
 
 \subsection{Problem formulation}
 
-Recall the notation from section 2.1. In order to formalize the problem of \emph{extrapolation}, we
-adopt the language of stochastic processes.  Let $(\Omega,
-\mathcal{F}, \mathbb{P})$ define a probability space.  Let $t = 1, 2,
-3, \hdots $ index discrete time steps; each time step is associated
-with a filtration $\mathcal{F}_t$, with $\mathcal{F}_1 \subset
-\mathcal{F}_2 \subset \cdots \subset \mathcal{F}$.  At time zero, we
-have not observed any data.  At time $k$, we sample a new species
-$x^{(k)}$ from the population distribution $p(x)$, and also observe
-$r$ replicates $y^{(i), 1}, \hdots, y^{(i), r}$ from the conditional
-distribution $p(y|x^{(i)})$.  Choose some $r_1 < r$: this determines
-the number of training observations $S(x^{(i)}) = \{y^{(i), 1},\hdots,
-y^{(i), r_1}\}$ from each class.  The filtration at time $t$ is
-defined as the $\sigma$-algebra induced by observations from species
-$x^{(1)}, \hdots, x^{(k)}$, hence $\mathcal{F}_t = \sigma\{(x^{(i)},
-y^{(i), j})\}_{i=1, j=1}^{t, r}$.
+Recall the notation from section 2.1. Assume that
+$x^{(1)}, x^{(2)}, \hdots$ are sampled i.i.d. from the population distribution $p(x)$, 
+and $y^{(i), 1}, \hdots, y^{(i), r}$ from the conditional
+distribution $p(y|x^{(i)})$ for $i = 1, 2, \hdots$.
+Take $k_t = t$ and $n_{i, t} = r$.
 
-The classifier also changes with time.  At time $t$, $f^{(t)}$ is
-(random) function from $\mathcal{Y}$ to $\{x^{(1)}, \hdots,
-x^{(k)}\}$.  The randomness is due to the variability of the training
-set, hence $f^{(t)}$ is independent of the test data $\{y^{(i), r_1 +
-  1}, \hdots, y^{(i), r}\}$ for $i = 1,\hdots, t$.  Furthermore, we
-assume that the classifier $f^{(t)}$ is constructed in the following
-way.  The user chooses an algorithm $\mathcal{Q}$ which constructs
-scoring functions $q^{(i)}$ from the training data for the $i$th
-class:
+Unlike in section 2.1., only the first $r_1 < r$ measurements in each species will
+be used to construct the classifier: redefine
 \[
-q^{(i)} = \mathcal{Q}(x^{(i)}, S(x^{(i)})).
+\hat{F}_{i, t} = \frac{1}{r_1} \sum_{j=1}^{r_1} \delta_{y^{(i), j}}.
 \]
-Each $q^{(i)}$ is a function from $\mathcal{Y}$ to $\mathbb{R}$.  The
-classifier $f^{(t)}$ is defined
-\[
-f^{(t)}(y) = \argmax_i q^{(i)}(y).
-\]
-
+Since $\hat{F}_{i, t}$ no longer depends on $t$, we will write it as $\hat{F}_i$.
+The remaining $r_2 = r - r_1$ measurements of each species constitute the \emph{test set},
+used to evaluate the performance of the classifier.
 
 The generalization accuracy at time $t$ is defined
 \[
-\text{acc}^{(t)} = \frac{1}{k}\sum_{i=1}^k \Pr[f^{(t)}(y) = i|y \sim p(y|x^{(i)})].
+\text{acc}^{(t)} = \frac{1}{k}\sum_{i=1}^k \Pr[f_t(y) = i|y \sim p(y|x^{(i)})].
 \]
 The extrapolation problem is the problem of predicting $\text{acc}^{(K)}$ using
-only information known at time $k < K$.
+only information known at time $k < K$, namely,
+$\{y^{(i), j}\}_{i=1, j=1}^{k, r}$.
 
 \subsection{Conditional accuracy}
 
-The optimal predictor of the generalization error (in mean square) is
-the conditional expected generalization error,
-$\E[\text{acc}^{(t)}|\mathcal{F}_k]$.  However, it is easier to work with the
-unconditional expected generalization error $p_t \stackrel{def}{=}
-\E[\text{acc}^{(t)}]$.
+Consider estimating the expected accuracy at time $t$, \[p_t \stackrel{def}{=} \E[\text{acc}^{(t)}].\]
 
-Define the \emph{conditional accuracy} function $u(x, y, S(x))$ which
-maps a data triple consisting of a species $x$, a \emph{test}
-observation $y$, and a set of $r_1$ training replicates $S(x) =
-\{y^{1}, \hdots, y^{r_1}\}$ to a real number in $[0,1]$.  The
-conditional accuracy gives the probability that for independently
-drawn $(X, S(X))$ such that $X \sim p(x)$, and $S(X) = \{Y^1,\hdots,
-Y^{r_1}\}$ with $Y^i \stackrel{iid}{\sim} p(y|X)$, that the scoring
-function $\mathcal{Q}(x, S(x))$ will give a higher score to $y$ than
-the scoring function $\mathcal{Q}(X, S(X))$:
+Assume that the classifier is based on a scoring rule $\mathcal{Q}$.
+Further assume that $\mathcal{Q}$ has a trivial dependence on the prior probability parameter: 
+$\mathcal{Q}(F, a, y) = \mathcal{Q}(F, b, y)$ for all $F$, $y$, and $a, b \in [0, 1]$.
+This assumption is more mild than it appears, since most classifiers indeed have a trivial dependence on $\vec{\pi}$
+in the case when $\vec{\pi}$ is set to the uniform distribution.
+
+Define the \emph{conditional accuracy} function $u(F, y)$ which
+maps a distribution $F$ on $\mathcal{Y}$ and a \emph{test} observation $y$ to a real number in $[0,1]$.
+The conditional accuracy gives the probability that for independently
+drawn $X$, letting $\hat{F}(X)$ be the empirical distribution of $r_1$ measurements drawn from $p(y|X)$,
+that the scoring function $\mathcal{Q}(F, 0, y)$ will give a higher score to $y$ than
+the scoring function $\mathcal{Q}(\hat{F}(X), 0, y)$:
 \[
-u(x, y, S(x)) = \Pr[(\mathcal{Q}(x, S(x)))(y) > (\mathcal{Q}(X, s(X)))(y)].
+u(F, y) = \Pr[\mathcal{Q}(F, 0, y) > \mathcal{Q}(\hat{F}(X), 0, y)].
 \]
 Define the \emph{conditional accuracy} distribution $\mu$ as the law of
-$u(X, Y, S(X))$ when $X \sim p(x)$, $Y\sim p(y|X)$, and $S(X)$ is
+$u(\hat{F}(X), Y)$ when $X \sim p(x)$, $Y\sim p(y|X)$, and $\hat{F}(X)$ is
 drawn as specified above.  The significance of the conditional
 accuracy distribution is that the expected generalization error $p_t$
 can be written in terms of its moments.
 
 \noindent\textbf{Theorem 3.1.} \emph{
 Let $U$ be defined as the random variable
-\[U = u(X, Y, S(X))\]
+\[U = u(F, Y)\]
 for $X, Y$ drawn from $p(x, y) = p(x) p(y|x)$,
-and $S(X) = \{Y^1,\hdots, Y^{r_1}\}$ with $Y^i \stackrel{iid}{\sim} p(y|X)$
+and $\hat{F}(X) = \frac{1}{r_1}\sum_{j=1}^{r_1} \delta{Y^j}$ with $Y^i \stackrel{iid}{\sim} p(y|X)$
 Then $p_k = \E[U^{k-1}]$.
 }
 
 \noindent\textbf{Proof.}  
-Write $q^{(i)} = \mathcal{Q}(x^{(i)}, S(x^{(i)}))$
+Write $q^{(i)}(y) = \mathcal{Q}(\hat{F}_i, 0, y)$, and let $Y^{(i), *} \sim p(y|X^{(i)}$ for $i = 1,\hdots, k$.
 Note that by using conditioning and
 conditional independence, $p_k$ can be written
 \begin{align*}
-p_k &= \E\left[ \frac{1}{k}\sum_{i=1}^k  \Pr[q^{(i)}(Y) > \max_{j\neq i} q^{(j)}(Y)] \right]
-\\&= \E\left[ \Pr[q^{(1)}(Y) > \max_{j\neq 1} q^{(j)}(Y)] \right]
-\\&= \E[\Pr[q^{(1)}(Y) > \max_{j\neq 1} q^{(j)}(Y)|X^{(1)}, Y, S(X^{(1)})]]
-\\&= \E[\Pr[\cap_{j > 1} q^{(1)}(Y) > q^{(j)}(Y)|X^{(1)}, Y, S(X^{(1)})]]
-\\&= \E[\prod_{j > 1}\Pr[q^{(1)}(Y) > q^{(j)}(Y)|X^{(1)}, Y, S(X^{(1)})]]
-\\&= \E[\Pr[q^{(1)}(Y) > q^{(2)}(Y)|X^{(1)}, Y, S(X^{(1)})]^{k-1}]
-\\&= \E[u(X^{(1)}, Y, S(X^{(1)}))^{k-1}].
+p_k &= \E\left[ \frac{1}{k}\sum_{i=1}^k  \Pr[q^{(i)}(Y^{(i), *}) > \max_{j\neq i} q^{(j)}(Y^{(i), *})] \right]
+\\&= \E\left[ \Pr[q^{(1)}(Y^{(1), *}) > \max_{j\neq 1} q^{(j)}(Y^{(1), *})] \right]
+\\&= \E[\Pr[q^{(1)}(Y^{(1), *}) > \max_{j\neq 1} q^{(j)}(Y^{(1), *})|Y^{(1), *}, \hat{F}_1]]
+\\&= \E[\Pr[\cap_{j > 1} q^{(1)}(Y^{(1), *}) > q^{(j)}(Y^{(1), *})|Y^{(1), *}, \hat{F}_1]]
+\\&= \E[\prod_{j > 1}\Pr[q^{(1)}(Y^{(1), *}) > q^{(j)}(Y^{(1), *})|Y^{(1), *}, \hat{F}_1]]
+\\&= \E[\Pr[q^{(1)}(Y^{(1), *}) > q^{(2)}(Y^{(1), *})|Y^{(1), *}, \hat{F}_1]^{k-1}]
+\\&= \E[u(\hat{F}_1, Y^{(1), *})^{k-1}] = \E[U^{k-1}].
 \end{align*}
 $\Box$
 
 Theorem 3.1 tells us that the problem of extrapolation can be
 approached by attempting to estimate the conditional accuracy
 distribution.  The $(t-1)$th moment of $U$ gives us $p_t$, which will
-in turn be a good estimate of $e^{(t)}$.
+in turn be a good estimate of $\text{acc}^{(t)}$.
 
 \subsection{Properties of the conditional accuracy distribution}
 
-The conditional error distribution $\mu$ is determined by $p(x, y)$
+The conditional error distribution $\nu$ is determined by $p(x, y)$
 and $\mathcal{Q}$.  What can we say about the the conditional accuracy
 distribution without making any assumptions on either $p(x, y)$ or
 $\mathcal{Q}$?  The answer is: not much--for an arbitrary probability
-measure $\nu$ on $[0,1]$, one can construct $p(x, y)$ and
-$\mathcal{Q}$ such that $\mu = \nu$.
+measure $\nu'$ on $[0,1]$, one can construct $p(x, y)$ and
+$\mathcal{Q}$ such that $\nu = \nu'$.
 
 \noindent\textbf{Theorem 3.2.} \emph{ Let $U$ be defined as in Theorem
-  2.1, and let $\mu$ denote the law of $U$.  Then, for any probability
-  distribution $\nu$ on $[0,1]$, one can construct a joint
+  2.1, and let $\nu$ denote the law of $U$.  Then, for any probability
+  distribution $\nu'$ on $[0,1]$, one can construct a joint
   distribution $p(x, y)$ and a scoring rule $\mathcal{Q}$ such that 
-  $\mu = \nu$.
+  $\nu = \nu'$.
 }
-
-\noindent\textbf{Proof.}  
-Let $X$ and $Y$ have the degenerate joint distribution $X= Y \sim Unif[0, 1]$.
-Let $G$ be the cdf of $\nu$, $G(x) = \int_0^x d\nu(x)$, and let $H(u) = \sup_x \{G(x) \leq u\}/$.
-Define $\mathcal{Q}$ by
-\[
-\left(\mathcal{Q}(x, S(x))\right)(y) = \begin{cases}
-0 &\text{ if }x > y + H(y)\\
-0 & \text{ if }y + H(y) > 1 \text{ and }x \in [H(y) - y, y]\\
-1 + x - y &\text{ if } x \in [y, y + H(y)]\\
-1 + y + x &\text{ if }y + H(y) > 1 \text{ and }x \in [0, H(y) - y]. 
-\end{cases}
-\]
-One can verify that $u(x, x, S(x)) = H(u).$  Therefore, the cdf of $U$ is equal to $G$, as needed. $\Box$
 
 In practice, however, the scoring rule $\mathcal{Q}$ must approximate a monotonic function of the conditional density $p(y|x)$
 in order to yield an effective classifier.  It is therefore notable that in the case that $(X, Y)$ have a density with respect to Lesbegue measure,
@@ -467,50 +433,22 @@ taking an \emph{optimal} scoring rule,
 with the property that $\mathcal{Q}(x, y, S(x)) = g(p(y|x))$ for monotonic $g$,
 the distribution of $U$ has a monotonically increasing density.
 
-\noindent\textbf{Theorem 3.1.} \emph{ Let $U$ be defined as in Theorem
-  2.2, and let $\mu$ denote the law of $U$.  Suppose $(X, Y)$ has a density $p(x, y)$ with respect to 
+\noindent\textbf{Theorem 3.3.} \emph{ Let $U$ be defined as in Theorem
+  2.2, and let $\nu$ denote the law of $U$.  Suppose $(X, Y)$ has a density $p(x, y)$ with respect to 
   Lebesgue measure on $\mathcal{X} \times \mathcal{Y}$,
-  and $\mathcal{Q}(x, S(x))$ satisfies the property of monotonicity
+  and with probability one, $\mathcal{Q}(y, 0, \hat{F}(X))$ satisfies the property of monotonicity
   \[
-  p(y|x) > p(y'|x) \text{ implies } \mathcal{Q}(x, S(x))(y) > \mathcal{Q}(x, S(x))(y')
+  p(y|x) > p(y'|x) \text{ implies } \mathcal{Q}(\hat{F}(X), 0, y) > \mathcal{Q}(\hat{F}(X), 0, y')
   \]
   and the property of tie-breaking \eqref{eq:tie},
   then $\mu$ has a density $\eta(u)$ on $[0, 1]$ which is monotonic in $u$.
 }
 
-\noindent\textbf{Proof.}
-Choose $0 < u < v < 1$ and $0 < \delta < \min(u, 1-v, v-u)$.
-For $x \in \mathcal{X}$, define the set 
-\[
-\underline{J}_x = \{y \in \mathcal{Y}: \int_\mathcal{Y} I(p(y|x) > p(w|x))p(w|x) dw \in [u - \delta, u + \delta]\}
-\]
-and
-\[
-\bar{J}_x = \{y \in \mathcal{Y}: \int_\mathcal{Y} I(p(y|x) > p(w|x))p(w|x) dw \in [v - \delta, v + \delta]\}
-\]
-One can verify that for all $x \in \mathcal{X}$,
-\[
-\int_{\underline{J}_x} p(y|x) dy \leq \int_{\bar{J}_x} p(y|x) dy.
-\]
-Yet, since
-\[
-\Pr[U \in [u-\delta, u + \delta]] = \Pr[\cup_\mathcal{X} x \times \underline{J}_x]
-\]
-\[
-\Pr[U \in [v-\delta, v + \delta]] = \Pr[\cup_\mathcal{X} x \times \underline{J}_x].
-\]
-we obtain
-\[
-\Pr[U \in [u-\delta, u + \delta]] \leq \Pr[U \in [v - \delta, v + \delta]].
-\]
-Taking $\delta \to 0$, we conclude the theorem. $\Box$
-
-
 \section{Nonparametric Estimation}
 
 Let us assume that $U$ has a density $\eta(u)$.
-While $U = u(x, y)$ cannot be directly observed, we can estimate $u(x^{(i)}, y^{(i), r_1 + j}, S(x^{(i)}))$ for any $1 \leq i \leq k$,
-$1 \leq j \leq r_2$, where $r_2 = r - r_1$ is the number of testing repeats.
+While $U = u(\hat{F}(X), Y)$ cannot be directly observed, we can estimate $u(\hat{F}_i, y^{(i), r_1 + j})$ for any $1 \leq i \leq k$,
+$1 \leq j \leq r_2$ from the data.
 
 \noindent\textbf{Theorem 4.1}\emph{
 Assume that $\mathcal{Q}$ satisfies the tie-breaking property \eqref{eq:tie}.
