@@ -57,13 +57,13 @@ extr[1:ksub, ] <- sas[1:ksub]
 
 for (i in 2:100) {
   (fa_i <- 1 - lineId::piK(sqrt(2 * ihat), i))
-  (fa_m <- est_moment(mle_est, i))
-  (fa_c <- cm_est_moment(cm2, i))
+  (fa_m <- est_moment(mle_est, i-1))
+  (fa_c <- cm_est_moment(cm2, i-1))
   extr[i, 2:4] <- c(fa_i, fa_m, fa_c)
 }
 
 for (i in 1:ksub) {
-  extr[i, 5] <- mean(binmom(sub_us, ksub, i))
+  extr[i, 5] <- mean(binmom(sub_us, ksub, i-1))
 }
 
 colnames(extr) <- c("true", "info", "MPLE", "MCMPLE", "unbiased")

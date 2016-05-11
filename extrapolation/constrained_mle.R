@@ -90,6 +90,18 @@ momk_cons_est <- function(ppmat, k, ps = seq(0, 1, 1/(2 * k)), lbda = 0.1, mpen 
 }
 
 
+
+####
+##  U statistic extrapolation
+####
+
+## get moments from 0 to k-1
+u_binmoms <- function(ppmat, k) {
+  Ys <- as.numeric(ppmat)
+  momks <- sapply(1:k, function(x) mean(binmom(Ys, k, x)))
+}
+
+
 ####
 ##  Misc stuff thrown in here
 ####
