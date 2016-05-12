@@ -91,9 +91,15 @@ res <- auglag(gu_temp, of_gu, hin = hinf, heq = heqf)
 # library(NlcOptim)
 # library(pracma)
 # gu_temp <- gu_unif2
-# res <-NlcOptim(gu_temp, of_gu, A = -eye(length(us)),
-#                B = 0 * us, Aeq = t(0 * us + 1), Beq = 1)
+# res <-NlcOptim(gu_temp, of_gu, confun = function(x) return(list(ceq=0, c=1)),
+#                A = -eye(length(us)),
+#                B = t(t(0 * us)), Aeq = t(0 * us + 1), Beq = 1)
+
 
 # library(Rsolnp)
 # gu_temp <- gu_unif
 # res <- solnp(gu_temp, of_gu, eqfun = heqf, eqB = 1, LB = 0 * us, UB = 1 + 0 * us)
+
+
+library(nloptr)gu_temp <- gu_unif
+res <- auglag(gu_temp, of_gu, hin = hinf, heq = heqf)
