@@ -80,3 +80,20 @@ of_gu_pen(gu_temp)
 
 plot(gu_temp)
 lines(gu)
+
+
+library(alabama)
+hinf <- function(gu) gu
+heqf <- function(gu) 1 - sum(gu)
+gu_temp <- gu_unif
+res <- auglag(gu_temp, of_gu, hin = hinf, heq = heqf)
+# 
+# library(NlcOptim)
+# library(pracma)
+# gu_temp <- gu_unif2
+# res <-NlcOptim(gu_temp, of_gu, A = -eye(length(us)),
+#                B = 0 * us, Aeq = t(0 * us + 1), Beq = 1)
+
+# library(Rsolnp)
+# gu_temp <- gu_unif
+# res <- solnp(gu_temp, of_gu, eqfun = heqf, eqB = 1, LB = 0 * us, UB = 1 + 0 * us)
