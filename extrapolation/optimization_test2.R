@@ -82,11 +82,11 @@ plot(gu_temp)
 lines(gu)
 
 
-library(alabama)
+# library(alabama)
 hinf <- function(gu) gu
 heqf <- function(gu) 1 - sum(gu)
-gu_temp <- gu_unif
-res <- auglag(gu_temp, of_gu, hin = hinf, heq = heqf)
+# gu_temp <- gu_unif
+# res <- auglag(gu_temp, of_gu, hin = hinf, heq = heqf)
 # 
 # library(NlcOptim)
 # library(pracma)
@@ -101,5 +101,23 @@ res <- auglag(gu_temp, of_gu, hin = hinf, heq = heqf)
 # res <- solnp(gu_temp, of_gu, eqfun = heqf, eqB = 1, LB = 0 * us, UB = 1 + 0 * us)
 
 
-library(nloptr)gu_temp <- gu_unif
+library(nloptr)
+gu_temp <- gu_unif
 res <- auglag(gu_temp, of_gu, hin = hinf, heq = heqf)
+
+
+####
+###  TEST NLOPTR
+####
+
+library(nloptr)
+eval_f <- function(x) {
+  return( 100 * (x[2] - x[1] * x[1])^2 + (1 - x[1])^2 )
+}
+eval_grad_f <- function(x) {
+  c(-400 * x[1] * (x[2] - x[1]^2) - 2 * (1 - x[1]),
+    200 * (x[2] - x[1]^2))
+}
+x0 <- c(-1.2, 1)
+opts = list("algorithm" = "NLOPT_LD_LBFGS", "xtol_rel" = 1.0e-8)
+res <- nloptr(x0 = x0, eval_f = eval_f, eval_grad_f = eval_grad_f, opts = opts)
