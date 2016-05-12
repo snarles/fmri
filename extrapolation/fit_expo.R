@@ -11,14 +11,15 @@ expbasis <- function(as, xs) {
   t(exp(t(t(as)) %*%  t(xs)))
 }
 
-fit_expmix <- function(as, y) {
+fit_expmix <- function(as, xs, y) {
   X <- expbasis(as, xs)
   res <- nnls(X, y)
   sol <- res$x
   sol[sol < 1e-10] <- 0
   fit_a <- as[sol > 0]
   fit_w <- sol[sol > 0]
-  list(a = fit_a, w = fit_w)
+  ff <- function(xs) expmix(fit_w, fit_a, xs)
+  list(a = fit_a, w = fit_w, f = ff)
 }
 
 # as <- -(1:3)
@@ -29,4 +30,4 @@ fit_expmix <- function(as, y) {
 # X <- expbasis(basis_a, xs)
 # res <- nnls(X, y)
 # res$x
-# fit_expmix(basis_a, y)
+# fit_expmix(basis_a, xs, y)

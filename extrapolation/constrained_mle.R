@@ -1,3 +1,5 @@
+source("extrapolation/fit_expo.R")
+
 ## binomial moment fomula
 binmom <- function(succ, tot, k) {
   choose(succ, k)/choose(tot, k)
@@ -95,12 +97,20 @@ momk_cons_est <- function(ppmat, k, ps = seq(0, 1, 1/(2 * k)), lbda = 0.1, mpen 
 ##  U statistic extrapolation
 ####
 
-## get moments from 0 to k-1
-u_binmoms <- function(ppmat, k) {
+## get moments from 1 to k
+# u_binmoms <- function(ppmat, k) {
+#   Ys <- as.numeric(ppmat)
+#   momks <- sapply(1:k, function(x) mean(binmom(Ys, k, x)))
+#   momks
+# }
+
+expmix_binmom <- function(ppmat, k, K) {
   Ys <- as.numeric(ppmat)
   momks <- sapply(1:k, function(x) mean(binmom(Ys, k, x)))
+  res <- fit_expmix(-seq(0, 5, 0.01), 1:k, momks)
+  # plot(1:max(K), res$f(1:max(K)), type = "l"); points(1:k, momks)
+  res$f(K)
 }
-
 
 ####
 ##  Misc stuff thrown in here
