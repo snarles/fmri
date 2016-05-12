@@ -51,7 +51,7 @@ Ys <- sub_us
 cm2 <- momk_mle_est(Ys, ksub, pseq, lbda = 0.001, mpen = 10000)
 cm2[3]
 c(sum(cm2$ps^ksub * cm2$gu), mean(binmom(sub_us, ksub, ksub)))
-extr <- matrix(NA, 100, 5)
+extr <- matrix(NA, 100, 6)
 extr[, 1] <- sas
 extr[1:ksub, ] <- sas[1:ksub]
 
@@ -65,12 +65,13 @@ for (i in 2:100) {
 for (i in 1:ksub) {
   extr[i, 5] <- mean(binmom(sub_us, ksub, i-1))
 }
+extr[2:100, 6] <- expmix_binmom(Ys, ksub, 1:99)
 
-colnames(extr) <- c("true", "info", "MPLE", "MCMPLE", "unbiased")
+colnames(extr) <- c("true", "info", "MPLE", "MCMPLE", "unbiased", "expo")
 
 View(extr)
 
-matplot(extr, type = "l", xlab = "no. classes", ylab = "accuracy", lty = 1:5, col = 1:5, lwd = 2)
+matplot(extr, type = "l", xlab = "no. classes", ylab = "accuracy", lty = 1:6, col = 1:6, lwd = 2)
 abline(v = 30, lty = 2, col = "grey", lwd = 2)
 title("Extrapolating accuracy for 100 classes from 30")
-legend(70, 0.5, colnames(extr), lty = 1:5, col = 1:5, lwd = 2)
+legend(70, 0.5, colnames(extr), lty = 1:6, col = 1:6, lwd = 2)
