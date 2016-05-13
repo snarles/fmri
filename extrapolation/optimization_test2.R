@@ -91,13 +91,19 @@ gof(gu_unif)
 numDeriv::grad(of_gu, gu_unif)
 res <- nloptr(gu_unif, of_gu, eval_grad_f = gof, 
               lb = 0 * us, ub = 0 * us + 1, 
-              eval_g_ineq = function(gu) 1 - sum(gu), 
-              eval_jac_g_ineq = function(gu) 0 * gu - 1, 
+              eval_g_ineq = function(gu) sum(gu) - 1, 
+              eval_jac_g_ineq = function(gu) 0 * gu + 1, 
               opts = list(algorithm = "NLOPT_LD_MMA",
                           xtol_rel = 1.0e-8,
                           print_level = 2,
                           check_derivatives = TRUE,
                           check_derivatives_print = "all"))
+print(res)
+gu_temp <- res$solution
+of_gu(gu_temp)
+of_gu(gu)
+plot(gu_temp)
+lines(gu)
 
 
 # library(alabama)
