@@ -25,7 +25,7 @@ mle_est <- function(ppmat, k, ps = seq(0, 1, 1/(2 * k))) {
 }
 
 n <- 1000
-us <- seq(0, 1, 0.05)
+us <- seq(0, 1, 0.1)
 gu <- cumsum(runif(length(us)) * (1:length(us))^4)
 gu <- gu/sum(gu)
 plot(us, gu, type = "l")
@@ -81,10 +81,28 @@ of_gu_pen(gu_temp)
 plot(gu_temp)
 lines(gu)
 
+library(nloptr)
+gof <- function(gu) {
+  ft <- binprobs %*% gu
+  -as.numeric(t(binprobs) %*% (ws/ft))
+}
+of_gu(gu_unif)
+gof(gu_unif)
+numDeriv::grad(of_gu, gu_unif)
+res <- nloptr(gu_unif, of_gu, eval_grad_f = gof, 
+              lb = 0 * us, ub = 0 * us + 1, 
+              eval_g_ineq = function(gu) 1 - sum(gu), 
+              eval_jac_g_ineq = function(gu) 0 * gu - 1, 
+              opts = list(algorithm = "NLOPT_LD_MMA",
+                          xtol_rel = 1.0e-8,
+                          print_level = 2,
+                          check_derivatives = TRUE,
+                          check_derivatives_print = "all"))
+
 
 # library(alabama)
-hinf <- function(gu) gu
-heqf <- function(gu) 1 - sum(gu)
+# hinf <- function(gu) gu
+# heqf <- function(gu) 1 - sum(gu)
 # gu_temp <- gu_unif
 # res <- auglag(gu_temp, of_gu, hin = hinf, heq = heqf)
 # 
@@ -101,9 +119,9 @@ heqf <- function(gu) 1 - sum(gu)
 # res <- solnp(gu_temp, of_gu, eqfun = heqf, eqB = 1, LB = 0 * us, UB = 1 + 0 * us)
 
 
-library(nloptr)
-gu_temp <- gu_unif
-res <- auglag(gu_temp, of_gu, hin = hinf, heq = heqf)
+# library(nloptr)
+# gu_temp <- gu_unif
+# res <- auglag(gu_temp, of_gu, hin = hinf, heq = heqf)
 
 
 ####
