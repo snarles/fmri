@@ -6,7 +6,7 @@ binmom <- function(succ, tot, k) {
 
 ## Generate data
 n <- 1000
-us <- seq(0, 1, 0.1)
+us <- seq(0, 1, 0.02)
 gu <- cumsum(runif(length(us)) * (1:length(us))^4)
 gu <- gu/sum(gu)
 plot(us, gu, type = "l")
@@ -39,7 +39,7 @@ gof <- function(gu) {
 gu_unif <- rep(1/length(us), length(us))
 of_gu(gu)
 of_gu(gu_unif)
-
+layout(matrix(1:4, 2, 2))
 
 ## MPLE unconstrained
 t1 <- proc.time()
@@ -51,11 +51,11 @@ res <- nloptr(gu_unif, of_gu, eval_grad_f = gof,
                           xtol_rel = 1.0e-8,
                           print_level = 2,
                           check_derivatives = TRUE,
-                          check_derivatives_print = "all"))
+                          check_derivatives_print = "all", maxeval = 1e4))
 (t2u <- proc.time() - t1)
 # print(res)
 gu_temp <- res$solution
-disp_solution(res$solution)
+disp_solution(res$solution); title("uncon")
 
 
 ## MPLE moment constraint
@@ -70,12 +70,12 @@ res <- nloptr(gu_unif, of_gu, eval_grad_f = gof,
                           xtol_rel = 1.0e-8,
                           print_level = 2,
                           check_derivatives = TRUE,
-                          check_derivatives_print = "all"))
+                          check_derivatives_print = "all", maxeval = 1e4))
 (t2mom <- proc.time() - t1)
 # print(res)
 gu_temp <- res$solution
 c(sum(gu_temp * usk), momK)
-disp_solution(res$solution)
+disp_solution(res$solution); title("moment")
 
 
 ## MPLE monotonic constraint
@@ -96,12 +96,12 @@ res <- nloptr(gu_unif, of_gu, eval_grad_f = gof,
                           xtol_rel = 1.0e-8,
                           print_level = 2,
                           check_derivatives = TRUE,
-                          check_derivatives_print = "all"))
+                          check_derivatives_print = "all", maxeval = 1e4))
 (t2mono <- proc.time() - t1)
 # print(res)
 gu_temp <- res$solution
 c(sum(gu_temp * usk), momK)
-disp_solution(res$solution)
+disp_solution(res$solution); title("mono")
 
 
 
@@ -123,10 +123,11 @@ res <- nloptr(gu_unif, of_gu, eval_grad_f = gof,
                           xtol_rel = 1.0e-8,
                           print_level = 2,
                           check_derivatives = TRUE,
-                          check_derivatives_print = "all"))
+                          check_derivatives_print = "all", maxeval = 1e4))
 (t2c2 <- proc.time() - t1)
 # print(res)
 gu_temp <- res$solution
 c(sum(gu_temp * usk), momK)
-disp_solution(res$solution)
+disp_solution(res$solution); title("2 cons")
 
+list(t2u, t2mom, t2mono, t2c2)
