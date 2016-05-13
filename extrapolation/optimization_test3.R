@@ -42,32 +42,63 @@ of_gu(gu_unif)
 
 
 ## MPLE unconstrained
+t1 <- proc.time()
 res <- nloptr(gu_unif, of_gu, eval_grad_f = gof, 
               lb = 0 * us, ub = 0 * us + 1, 
               eval_g_ineq = function(gu) sum(gu) - 1, 
               eval_jac_g_ineq = function(gu) 0 * gu + 1, 
-              opts = list(algorithm = "NLOPT_LD_MMA",
+              opts = list(algorithm = "NLOPT_LD_SLSQP",
                           xtol_rel = 1.0e-8,
                           print_level = 2,
                           check_derivatives = TRUE,
                           check_derivatives_print = "all"))
+(t2 <- proc.time() - t1)
 # print(res)
 gu_temp <- res$solution
 disp_solution(res$solution)
 
 
 ## MPLE moment constraint
+t1 <- proc.time()
 res <- nloptr(gu_unif, of_gu, eval_grad_f = gof, 
               lb = 0 * us, ub = 0 * us + 1, 
               eval_g_ineq = function(gu) sum(gu) - 1, 
               eval_jac_g_ineq = function(gu) 0 * gu + 1, 
               eval_g_eq = function(gu) sum(gu * usk) - momK,
               eval_jac_g_eq = function(gu) usk,
-              opts = list(algorithm = "NLOPT_LD_MMA",
+              opts = list(algorithm = "NLOPT_LD_SLSQP",
                           xtol_rel = 1.0e-8,
                           print_level = 2,
                           check_derivatives = TRUE,
                           check_derivatives_print = "all"))
+(t2 <- proc.time() - t1)
 # print(res)
 gu_temp <- res$solution
+c(sum(gu_temp * usk), momK)
+disp_solution(res$solution)
+
+
+## MPLE monotonic constraint
+ll <- length(us)
+mat <- matrix(0, ll - 1, ll)
+cmat <- (row(mat) == col(mat)) - (row(mat) == (col(mat) - 1))
+eval_g_ineq_mono = function(gu) c(sum(gu) - 1, gu[-ll] - gu[-1])
+eval_jac_g_ineq_mono = function(gu) rbind(0 * gu + 1, cmat)
+
+t1 <- proc.time()
+res <- nloptr(gu_unif, of_gu, eval_grad_f = gof, 
+              lb = 0 * us, ub = 0 * us + 1, 
+              eval_g_ineq = eval_g_ineq_mono, 
+              eval_jac_g_ineq = eval_jac_g_ineq_mono, 
+              eval_g_eq = function(gu) sum(gu * usk) - momK,
+              eval_jac_g_eq = function(gu) usk,
+              opts = list(algorithm = "NLOPT_LD_SLSQP",
+                          xtol_rel = 1.0e-8,
+                          print_level = 2,
+                          check_derivatives = TRUE,
+                          check_derivatives_print = "all"))
+(t2 <- proc.time() - t1)
+# print(res)
+gu_temp <- res$solution
+c(sum(gu_temp * usk), momK)
 disp_solution(res$solution)
