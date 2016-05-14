@@ -393,91 +393,10 @@ natural prior of \emph{chance classification}.
 We define a discriminative estimator to be a function which maps the
 misclassification matrix to a positive number, $ \hat{I}:
 \mathbb{N}^{k \times k} \to \mathbb{R}.  $ We are aware of the
-following examples of discriminative estimators: (1) estimators
+following examples of discriminative estimators: (1) estimators $\hat{I}_{Fano}$
 derived from using Fano's inequality, and (2) the empirical
-information of the confusion matrix, as introduced by Treves [7].
-
-Fano's inequality can be easily adapted to yield a discriminative
-estimator.  The original inequality reads
-\[
-H(Z|Y) \leq H(e_{Bayes}) + e_{Bayes} \log ||\mathcal{Z}| - 1|
-\]
-where $H(e)$ is the entropy of a Bernoulli random variable with
-probability $e$.  Replacing $H(Z|Y)$ with $H(X|Y)$ and replacing
-$e_{Bayes}$ with $\hat{e}_{gen, \alpha}$, we get the estimator
-\[
-\hat{I}_{Fano}(M) = log(K) - \hat{e}_{gen, \alpha} log(K-1) + \hat{e}_{gen, \alpha} log(p) + (1-\hat{e}_{gen, \alpha}) log(1-\hat{e}_{gen, \alpha}).
-\]
-Meanwhile, the confusion matrix estimator computes
-\[
-\hat{I}_{CM}(M) = \frac{1}{k^2} \sum_{i=1}^k \sum_{j=1}^k \log \frac{M_{ij}}{r/k},
-\]
-which is the empirical mutual information of the discrete joint
-distribution $(Z, f(Y))$.
-
-As noted in the literature [8], such discriminative
-approaches tend to underestimate the mutual information.  Two sources
-of ``information loss'' are (1) the fact that a continuous input
-variable $X$ is discretized into $k$ classes, and (2) that the
-performance of any classifier trained from data can at best given an
-\emph{upper bound} to the error of the best classification rule: the
-Bayes error.  Dealing with the problem of estimating the Bayes error
-is beyond the scope of the current paper, but we will argue that the
-stratified sampling design overcomes some of the limitations imposed
-by the discretization of $X$.
-
-\subsection{The problem of undersampling}
-
-Stratified sampling is commonly used in neuroscience experiments, and
-furthermore, it is often the case that the number of classes $k$ is
-constrained to be small due to practical and statistical
-considerations [11].  When $\log(k) \ll I(X; Y)$, we say
-that the data is \emph{undersampled}: meaning that even if the total
-number of observations is large (due to having many repeats per
-class,) the diversity of the exemplar set is poor.
-
-The parametric approach is relatively robust to undersampling of the
-exemplars, since $k$ exemplars suffice to identify a $p < k$-parameter
-model.  Gastpar et al. [11], studied the nonparametric estimator
-\[
-\hat{I}_0 = \hat{H}(Y) - \frac{1}{k}\sum_{i=1}\hat{H}(Y|X^{(i)}),
-\]
-where $\hat{H}$ is an estimator for the entropy.  Gastpar et
-al. showed that $\hat{I}_0$ is biased downwards due to undersampling
-of the exemplars: to counteract this bias, they introduce the
-anthropic correction estimator $\hat{I}_\alpha$.  However, without a
-principled approach to choose the parameter $\alpha \in (0,1]$,
-  $\hat{I}_\alpha$ could still vastly underestimate or overestimate
-  the mutual information.
-
-Meanwhile, the discriminative estimators $\hat{I}_{CM}$ and
-$\hat{I}_{Fano}$ perform quite badly in the undersampled regime.  It
-is easy to show that $\log(k)$ is a tight upper bound for both
-$\hat{I}_{CM}$ and $\hat{I}_{Fano}$.  As $I(X; Y)$ exceeds $\log(k)$,
-the estimate $\hat{I}$ can no longer approximate $I(X; Y)$, even up to
-a constant factor.  On the other hand, the following worst-case
-example shows that discriminative estimators cannot overcome this
-$\log(k)$ barrier in general.  Let $X$ and $Y$ have joint density $
-p(x, y) = \frac{1}{k}I(\lfloor kx \rfloor = \lfloor ky \rfloor) $ on
-the unit square.  Under partition-based classification, if we set
-$Z(x) = \lfloor kx \rfloor + 1$, then no errors are made under the
-Bayes rule. We therefore have a joint distribution which maximizes any
-reasonable discriminative estimator but has \emph{finite} information
-$I(X; Y) = \log(k)$.  The consequence of this is that under
-partition-based classification, we cannot hope to distinguish
-distributions with $I(X; Y) > \log(k)$.  The situation is more
-promising if we specialize to stratified sampling: in the same
-example, a Bayes of zero is no longer likely due to the possibility of
-exemplars being sampled from the same bin (`collisions')--we obtain an
-approximation to the average Bayes error through a Poisson sampling
-model: $e_{ABE, k} \approx \frac{1}{e}\sum_{j=1}^\infty
-\frac{1}{j(j!)}= 0.484$.  Recognizing that the natural setting for
-discriminative estimation is for high-dimensional data, we specialize
-further to consider deriving an estimator under a
-\emph{high-dimensional} regime.  The extra assumption of high
-dimensionality allows an extreme degree of control over the average
-Bayes error--it reduces the average Bayes error to a function of the
-mutual information!
+information of the confusion matrix, $\hat{I}_{CM}$, as introduced by Treves [7].
+We discuss these estimators in section 3.
 
 In section 2 we present an asymptotic setting intended to capture the
 notion of high dimensionality; namely, one where the number of classes
@@ -495,6 +414,10 @@ to the mutual information; in section 2.2 we apply this result to
 derive our proposed estimator, $\hat{I}_{HD}$ (where HD stands for
 ``high-dimensional.'')  Section 3 presents simulation results, and
 section 4 concludes.  All proofs are given in the supplement.
+
+
+
+
 
 \section{Theory}
 
@@ -652,12 +575,7 @@ where $B$ is a $p \times q$ matrix.  One application of this model
 might be modeling neural spike count data $Y$ arising in response to
 environmental stimuli $X$ [14].  We choose the naive Bayes for the
 classifier $\mathcal{F}$: it is consistent for estimating the Bayes
-rule.  In Figure 2 we show the sampling distributions of the four
-estimators as $I(X; Y)$ is varied in the interval $[0, 4]$.  We see
-that $\hat{I}_{CM}$, $\hat{I}_{Fano}$, and $\hat{I}_0$ indeed begin to
-asymptote as they approach $\log(k) = 2.995$.  In contrast,
-$\hat{I}_{HD}$ remains a good approximation of $I(X; Y)$ within the
-range, although it begins to overestimate at the right endpoint.
+rule. 
 
 \begin{figure}
 \begin{center}
@@ -678,6 +596,50 @@ $\hat{I}$& & \crule[color2]{0.2cm}{0.2cm} &$\hat{I}_{Fano}$\\
 \caption{Sampling distributions of $\hat{I}$ for data generated from the multiple-response logistic model.  $p = q = 10$; $k= 20$; $B = sI_{10}$, where $s \in [0, \sqrt{200}]$; and  $r = 1000$.}
 \end{figure}
 
+The estimator $\hat{I}_{Fano}$ is based on Fano's inequality, which reads
+\[
+H(Z|Y) \leq H(e_{Bayes}) + e_{Bayes} \log ||\mathcal{Z}| - 1|
+\]
+where $H(e)$ is the entropy of a Bernoulli random variable with
+probability $e$.  Replacing $H(Z|Y)$ with $H(X|Y)$ and replacing
+$e_{Bayes}$ with $\hat{e}_{gen, \alpha}$, we get the estimator
+\[
+\hat{I}_{Fano}(M) = log(K) - \hat{e}_{gen, \alpha} log(K-1) + \hat{e}_{gen, \alpha} log(p) + (1-\hat{e}_{gen, \alpha}) log(1-\hat{e}_{gen, \alpha}).
+\]
+Meanwhile, the confusion matrix estimator computes
+\[
+\hat{I}_{CM}(M) = \frac{1}{k^2} \sum_{i=1}^k \sum_{j=1}^k \log \frac{M_{ij}}{r/k},
+\]
+which is the empirical mutual information of the discrete joint
+distribution $(Z, f(Y))$.
+
+It is known that $\hat{I}_{CM}$, $\hat{I}_0$ tend to underestimate the mutual information.
+Quiroga et al. [8] discussed two sources of `information loss' which lead to $\hat{I}_{CM}$ underestimating the mutual information:
+the discretization of the classes, and the error in approximating the Bayes rule.
+Meanwhile, Gastpar et
+al. [11] showed that $\hat{I}_0$ is biased downwards due to undersampling
+of the exemplars: to counteract this bias, they introduce the
+anthropic correction estimator $\hat{I}_\alpha$\footnote{However, without a
+principled approach to choose the parameter $\alpha \in (0,1]$,
+  $\hat{I}_\alpha$ could still vastly underestimate or overestimate
+  the mutual information.}.
+
+In addition to the sources of information loss discussed by Quiroga et al., an additional reason why $\hat{I}_{CM}$ and $\hat{I}_{Fano}$ underestimate the mutual information is that they are upper bounded by $\log(k)$, where $k$ is the number of classes.  As $I(X; Y)$ exceeds $\log(k)$,
+the estimate $\hat{I}$ can no longer approximate $I(X; Y)$, even up to
+a constant factor.  In contrast, $\hat{I}_{HD}$ is unbounded and 
+may either underestimate or overestimate the mutual information in general,
+but performs well when the high-dimensionality assumption is met.
+
+In Figure 2 we show the sampling distributions of the four
+estimators as $I(X; Y)$ is varied in the interval $[0, 4]$.  We see
+that $\hat{I}_{CM}$, $\hat{I}_{Fano}$, and $\hat{I}_0$ indeed begin to
+asymptote as they approach $\log(k) = 2.995$.  In contrast,
+$\hat{I}_{HD}$ remains a good approximation of $I(X; Y)$ within the
+range, although it begins to overestimate at the right endpoint.  
+The reason why $\hat{I}_{HD}$ loses accuracy as the true information $I(X; Y)$ increases is that
+the multivariate normality approximation used to derive the estimator becomes less accurate when the conditional distribution 
+$p(y|x)$ becomes highly concentrated.
+
 \section{Discussion}
 
 Discriminative estimators of mutual information have the potential to
@@ -692,11 +654,31 @@ estimate the generalization error from test data: the complexity of
 estimating $e_{gen}$ could become the bottleneck when $e_{gen}$ is
 close to 0.  Thirdly, for previous estimators $\hat{I}_{Fano}$ and
 $\hat{I}_{CM}$, the ability of the estimator to distinguish high
-values of $I(X; Y)$ is limited by the number of classes $k$.  Our
-estimator $\hat{I}_{HD}$ is subject to the first two limitations,
+values of $I(X; Y)$ is limited by the number of classes $k$.  
+Our estimator $\hat{I}_{HD}$ is subject to the first two limitations,
 along with any conceivable discriminative estimator, but overcomes the
 third limitation under the assumption of stratified sampling and high
 dimensionality.
+
+It can be seen that additional assumptions are indeed needed to overcome the third limitation,
+the  $\log(k)$ upper bound.  Consider the following worst-case example: let $X$ and $Y$ have joint density $
+p(x, y) = \frac{1}{k}I(\lfloor kx \rfloor = \lfloor ky \rfloor) $ on
+the unit square.  Under partition-based classification, if we set
+$Z(x) = \lfloor kx \rfloor + 1$, then no errors are made under the
+Bayes rule. We therefore have a joint distribution which maximizes any
+reasonable discriminative estimator but has \emph{finite} information
+$I(X; Y) = \log(k)$.  The consequence of this is that under
+partition-based classification, we cannot hope to distinguish
+distributions with $I(X; Y) > \log(k)$.  The situation is more
+promising if we specialize to stratified sampling: in the same
+example, a Bayes of zero is no longer likely due to the possibility of
+exemplars being sampled from the same bin (`collisions')--we obtain an
+approximation to the average Bayes error through a Poisson sampling
+model: $e_{ABE, k} \approx \frac{1}{e}\sum_{j=1}^\infty
+\frac{1}{j(j!)}= 0.484$.  By specializing further to the high-dimensional regime,
+we obtain even tighter control on the relation between Bayes error and mutual information.
+Our estimator therefore provides more accurate estimation at the cost of more additional assumptions,
+but just how restrictive are these assumptions?
 
 The assumption of stratified sampling is satisfied through appropriate design.
 However, the assumption of high dimensionality is much more difficult to check:
@@ -726,7 +708,7 @@ human fMRI data.
 
 %\subsubsection*{Acknowledgments}
 
-%CZ is supported by an NSF graduate research fellowship.
+%We thank John Duchi, Jonathan Taylor, Trevor Hastie, and Robert Tibshirani for useful discussion.  CZ is supported by an NSF graduate research fellowship.
 
 \section*{References}
 
