@@ -36,7 +36,7 @@ compute_g0 <- function(p, g.res, mc.res) {
   for (i in 1:mc.res) {
     nm <- nms2[i]
     qbreaks <- qchisq(1-ubreaks, p, ncp = nm)
-    pbreaks <- pchisq(qbreaks, p)
+    pbreaks <- pchisq(qbreaks/4, p)
     pcont <- pbreaks[-(g.res + 1)] - pbreaks[-1]
     ans <- ans + pcont/mc.res * g.res
   }
@@ -58,7 +58,7 @@ r <- 2
 mus <- randn(k, p)
 
 t1 <- proc.time()
-mus <- randn(2000, 1)
+mus <- randn(5000, 1)
 vs <- get_vs(mus, 1)
 g.res <- 100
 us <- (1:g.res - 0.5)/g.res
@@ -69,7 +69,7 @@ plot(us, gu.emp, type = "l")
 proc.time() - t1
 
 t1 <- proc.time()
-gu0 <- compute_g0(1, 100, 400)
+gu0 <- compute_g0(1, 100, 1000)
 proc.time() - t1
 sum(gu0)
 lines(us, gu0, col = "red")
