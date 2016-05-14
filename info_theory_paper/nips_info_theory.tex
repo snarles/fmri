@@ -194,7 +194,7 @@ random sampling of the classes (described in section 1.1) and also
 a universality property that arises in
 high-dimensions.  This universality phenomenon allows us to establish
 a relationship between the mutual information $I(X; Y)$ and the
-$k$-class average Bayes error, $e_{ABE, k}$.  In short, we will
+average $k$-class Bayes error, $e_{ABE, k}$.  In short, we will
 identify a function $\pi_k$ (which depends on $k$),
 \begin{equation}\label{abepi}
 e_{ABE, k} \approx \pi_k(\sqrt{2 I(X; Y)})
@@ -242,6 +242,15 @@ Right: $\hat{I}_{HD}$ with $\hat{I}_{Fano}$ as functions of $\hat{e}_{gen}$, for
 While $\hat{I}_{Fano}$ is bounded from above by $\log(k)$ (dotted line), $\hat{I}_{HD}$ is unbounded.
 \label{fig:pi}}
 \end{figure}
+
+The estimator we propose is
+\[
+\hat{I}_{HD}(M) = \frac{1}{2}(\pi_{k}^{-1}(\hat{e}_{gen, \alpha}))^2,
+\]
+obtained by inverting the relation \eqref{abepi}, then substituting
+an estimate of generalization error $\hat{e}_{gen, \alpha}$ for the $e_{ABE, k}$.  As such,
+our estimator can be directly compared to the $\hat{I}_{Fano}$, since
+both are functions of $\hat{e}_{gen,\alpha}$ (Figure 1.)
 
 In this paper, we argue for the advantages of our method in comparison to alternative discriminative estimators
 under the assumption that the discriminative model approximates the Bayes rule.
@@ -480,15 +489,10 @@ supplement, along with the detailed proof.
 
 \subsection{High-dimensional estimator}
 
-The estimator we propose is
+As stated in the introduction, we propose the estimator
 \[
-\hat{I}_{HD}(M) = \frac{1}{2}(\pi_{k}^{-1}(\hat{e}_{gen, \alpha}))^2,
+\hat{I}_{HD}(M) = \frac{1}{2}(\pi_{k}^{-1}(\hat{e}_{gen, \alpha}))^2.
 \]
-obtained by inverting the relation \eqref{abepi}, then substituting
-the estimate $\hat{e}_{gen, \alpha}$ for the $e_{ABE, k}$.  As such,
-our estimator can be directly compared to the $\hat{I}_{Fano}$, since
-both are functions of $\hat{e}_{gen,\alpha}$ (Figure 1.)
-
 For sufficiently high-dimensional problems, $\hat{I}_{HD}$ can
 accurately recover $I(X; Y) > \log k$, supposing also that the
 classifier $\mathcal{F}$ consistently estimates the Bayes rule.  The
