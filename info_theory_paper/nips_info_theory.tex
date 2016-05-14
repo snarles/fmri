@@ -249,45 +249,19 @@ While this is an unrealistic assumption, it simplifies the theoretical discussio
 discuss the principles behind our method.  We outline our framework in the following section.
 
 
-\subsection{Discriminative estimators of mutual information}
-
-In many applications, the discriminative approach takes an
-advantageous middle ground between the two extremes of nonparametric
-and parametric approaches for estimating mutual information. In
-neuroimaging data, we lack prior knowledge for specifying parametric
-models, and the data is too high-dimensional for nonparametric
-approaches, but we have a sufficient idea of the general ``structure''
-in the data to achieve above-chance classification rates.
-
-Five steps are required to implement discriminative estimation of
-mutual information.  First, one must define a classification task.
-The kinds of tasks that can be defined depend on the sampling scheme
-used to collect the data.  Second, one chooses a classifier
-$\mathcal{F}$.  Third, the classifier is trained on a training subset
-of the data to obtain a classification rule $f$.  Fourthly, the
-performance of the rule $f$ is evaluated on the held-out test set.
-Finally, the performance metrics of the classifier are converted into
-an estimate of mutual information.  In this paper we are mostly
-concerned with the final step: how to convert measures of
-classification performance into estimates of mutual information.
+\subsection{Setting}
 
 Let us assume that the variables $X, Y$ have a joint distribution $F$,
 and that one can define a conditional distribution of $Y$ given $X$,
 $Y|X \sim F_X,$ and let $G$ denote the marginal distribution of $X$.
-We consider two different types of sampling procedures:
-\begin{itemize}
-\item \emph{pair sampling}: For $i = 1,\hdots, n$, the data $(X^i,
-  Y^i)$ are sampled i.i.d. from the joint distribution of $(X, Y)$.
-\item \emph{stratified sampling}: For $j = 1,\hdots, k$, sample
+We assume that data is collected using \emph{stratified sampling}.
+For $j = 1,\hdots, k$, sample
   i.i.d. \emph{exemplars} $X^{(1)},\hdots, X^{(k)} \sim G$.  For $i =
   1,\hdots, n$, draw $Z^i$ iid from the uniform distribution on
   $1,\hdots, k$, then draw $Y^i$ from the conditional distribution
   $F_{X^{(Z_i)}}$.
-\end{itemize}
 
-Pair sampling occurs in observational studies, where one observes both
-$X$ and $Y$ externally.  On the other hand, stratified sampling is
-more commonly seen in controlled experiments, where an experimenter
+Stratified sampling is commonly seen in controlled experiments, where an experimenter
 chooses an input $X$ to feed into a black box, which outputs $Y$.  An
 example from fMRI studies is an experimental design where the subject
 is presented a stimulus $X$, and the experimenter measures the
@@ -299,30 +273,9 @@ subject's response via the brain activation $Y$. \footnote{Note the
   consequence for the mutual information $I(X; Y)$, which is a
   symmetric function.}
 
-Given data from either pair sampling or stratified sampling, one can
-define various \emph{classification tasks}.  Here, the point is to use
-classification as a tool for extracting information about the
-relationship between $X$ and $Y$.  As such, it is up to us to define
-the classification tasks of interest.  For instance, one can define
-tasks which either classify $Y$ based on $X$, or classify $X$ based on
-$Y$; without loss of generality, we henceforth consider the latter.
-In the case of continuous $X$, we can define an arbitrary number of
-classes $k$ by specifying a partition on the space of $X$.  That is,
-one can define a \emph{class function} $Z: X \to \{1,\hdots, k\}$, and
-consider the problem of classifying $Z$ given $Y$.  A classification
-rule is any (possibly stochastic) mapping $f: \mathcal{Y} \to
-\{1,\hdots, k\}$, where $\mathcal{Y}$ is a superset of the support of
-$Y$.  The \emph{generalization error} of the classification rule is $
-e_{gen}(f) = Pr[f(Y) \neq Z].  $ The Bayes error is the generalization
-error of the optimal classification rule, $ e_{Bayes}(f) = \inf_f
-e_{gen}(f) $ We call such a classification task a
-\emph{partition-based} classification task.
-
-The freedom to choose the partition $Z$ may be more of a curse than a
-blessing when it is unclear how to choose an appropriate partition on
-the support of $X$.  If stratified sampling is employed, one can
-define an \emph{exemplar-based} classification task which avoids
-having to specify a partition.  One defines the \emph{class function}
+When stratified sampling is employed, one can
+define an \emph{exemplar-based} classification task.
+One defines the \emph{class function}
 $Z$ by
 \[
 Z: \{X^{(1)}, \hdots, X^{(k)}\} \to \{1,\hdots, k\},
@@ -330,22 +283,17 @@ Z: \{X^{(1)}, \hdots, X^{(k)}\} \to \{1,\hdots, k\},
 \[
 Z(X^{(i)}) = i\text{ for }i = 1, \hdots, k.
 \]
-Note that the domain of $Z$ is restricted to the set of observed
-exemplars $X^{(1)},\hdots, X^{(k)}$.  The loss function is not
-well-defined when $X$ lies outside the set of exemplars, so it is
-natural to define the generalization error by
+One defines the generalization error by
 \begin{equation}\label{egendef}
 e_{gen}(f) = \frac{1}{k} \sum_{i=1}^k\Pr[f(Y) \neq Z|X = X^{(i)}].
 \end{equation}
-Indeed, in experiments where stratified sampling is used, this is the
-most commonly employed notion of generalization error [9].  
 In an exemplar-based classification, there is no need to
-specify an arbitrary partition on the input space, but now the $k$
-classes will now be \emph{randomly} defined.  One consequence is that
+specify an arbitrary partition on the input space (as is the case in category-based classification),
+but now the $k$ classes will now be \emph{randomly} defined.  One consequence is that
 the Bayes error $e_{Bayes}$ is a random variable: when the sampling
 produces $k$ similar exemplars, $e_{Bayes}$ will be higher, and when
 the sampling produces well-separated exemplars $e_{Bayes}$ may be
-lower.  Therefore, in stratified sampling, it is useful to consider
+lower.  Therefore, it is useful to consider
 the \emph{average Bayes error},
 \begin{equation}\label{abedef}
 e_{ABE, k} = \E_{X^{(1)},\hdots, X^{(k)}}[e_{Bayes}],
@@ -414,9 +362,6 @@ to the mutual information; in section 2.2 we apply this result to
 derive our proposed estimator, $\hat{I}_{HD}$ (where HD stands for
 ``high-dimensional.'')  Section 3 presents simulation results, and
 section 4 concludes.  All proofs are given in the supplement.
-
-
-
 
 
 \section{Theory}
@@ -680,12 +625,21 @@ we obtain even tighter control on the relation between Bayes error and mutual in
 Our estimator therefore provides more accurate estimation at the cost of more additional assumptions,
 but just how restrictive are these assumptions?
 
-The assumption of stratified sampling is satisfied through appropriate design.
-However, the assumption of high dimensionality is much more difficult to check:
+The assumption of stratified sampling is usually not met in the most common applications of classification
+where the classes are defined \emph{a priori}.  For instance, if the classes consist of three different species of iris,
+it does not seem appropriate to model the three species as i.i.d. draws from some distribution on a space of infinitely many
+potential iris species.  Yet, when the classes have been pre-defined in an arbitrary manner,
+the mutual information between a latent class-defining variable $X$ and $Y$ may be only weakly related to the classification
+accuracy.  We rely on the stratified sampling assumption to obtain the necessary control on how the classes
+in the classification task are defined.  Fortunately, in many applications where one is interested in estimating $I(X; Y)$,
+a stratified sampling design can be practically implemented.
+
+The assumption of high dimensionality is not easy to check:
 having a high-dimension response $Y$ does not suffice, since $Y$ could
-lie close to a low-dimensional manifold.  One useful diagnostic is to subsample within the classes collected
+lie close to a low-dimensional manifold.  In such cases, $\hat{I}_{HD}$ could either overestimate or underestimate the mutual information.
+One useful diagnostic is to subsample within the classes collected
 and check that $\hat{I}_{HD}$ does not systematically increase or decrease with the number of classes $k$.
-Based on simulations, $\hat{I}_{HD}$ could either overestimate or underestimate the mutual information when the high-dimensional assumption is violated.
+
 The assumption of approximating the Bayes rule is impractical to check, 
 as any nonparametric estimate of the Bayes error requires exponentially many observations.
 Hence, while the present paper studies the `best-case' scenario where the model is well-specified,
@@ -699,9 +653,9 @@ where the model is misspecified.  We leave this question to future work.
 %depending on the risk function, one may debias or shrink the estimate
 %$\hat{I}_{HD}$ to achieve a more favorable bias-variance tradeoff.
 
-In our simulation experiment, our proposed estimator is seen to
-outperform existing estimators, but it remains to assess the utility
-of our estimation procedure in a real-world example.  In a forthcoming
+All of these three assumptions are met in our simulation experiment, 
+hence our proposed estimator is seen to dramatically outperform existing estimators. It remains to assess the utility
+of our estimation procedure in a real-world example, where both the high-dimensional assumption and the model specification assumption are likely to be violated.  In a forthcoming
 work, we apply our framework to evaluate visual encoding models in
 human fMRI data.
 
@@ -777,3 +731,59 @@ processing." \emph{Frontiers in computational neuroscience} 6 (2011): 51-51.
 
 
 \end{document}
+
+
+
+
+
+In many applications, the discriminative approach takes an
+advantageous middle ground between the two extremes of nonparametric
+and parametric approaches for estimating mutual information. In
+neuroimaging data, we lack prior knowledge for specifying parametric
+models, and the data is too high-dimensional for nonparametric
+approaches, but we have a sufficient idea of the general ``structure''
+in the data to achieve above-chance classification rates.
+
+Five steps are required to implement discriminative estimation of
+mutual information.  First, one must define a classification task.
+The kinds of tasks that can be defined depend on the sampling scheme
+used to collect the data.  Second, one chooses a classifier
+$\mathcal{F}$.  Third, the classifier is trained on a training subset
+of the data to obtain a classification rule $f$.  Fourthly, the
+performance of the rule $f$ is evaluated on the held-out test set.
+Finally, the performance metrics of the classifier are converted into
+an estimate of mutual information.  In this paper we are mostly
+concerned with the final step: how to convert measures of
+classification performance into estimates of mutual information.
+
+
+We consider two different types of sampling procedures:
+\begin{itemize}
+\item \emph{pair sampling}: For $i = 1,\hdots, n$, the data $(X^i,
+  Y^i)$ are sampled i.i.d. from the joint distribution of $(X, Y)$.
+\item \emph{stratified sampling}: 
+\end{itemize}
+
+
+Given data from either pair sampling or stratified sampling, one can
+define various \emph{classification tasks}.  Here, the point is to use
+classification as a tool for extracting information about the
+relationship between $X$ and $Y$.  As such, it is up to us to define
+the classification tasks of interest.  For instance, one can define
+tasks which either classify $Y$ based on $X$, or classify $X$ based on
+$Y$; without loss of generality, we henceforth consider the latter.
+In the case of continuous $X$, we can define an arbitrary number of
+classes $k$ by specifying a partition on the space of $X$.  That is,
+one can define a \emph{class function} $Z: X \to \{1,\hdots, k\}$, and
+consider the problem of classifying $Z$ given $Y$.  A classification
+rule is any (possibly stochastic) mapping $f: \mathcal{Y} \to
+\{1,\hdots, k\}$, where $\mathcal{Y}$ is a superset of the support of
+$Y$.  The \emph{generalization error} of the classification rule is $
+e_{gen}(f) = Pr[f(Y) \neq Z].  $ The Bayes error is the generalization
+error of the optimal classification rule, $ e_{Bayes}(f) = \inf_f
+e_{gen}(f) $ We call such a classification task a
+\emph{partition-based} classification task.
+
+The freedom to choose the partition $Z$ may be more of a curse than a
+blessing when it is unclear how to choose an appropriate partition on
+the support of $X$.  
