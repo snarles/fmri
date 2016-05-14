@@ -36,11 +36,17 @@ Sigma0 <- cov(randn(8, 5))
 scalings <- (5:15)/10
 
 
-res <- lclapply(1:100, expment1, mc.cores = 7)
+res <- lclapply(1:100, expment1)
 #res <- lclapply(1:length(scalings), expment2, mc.cores = 7)
 zattach(res)
 curves <- do.call(cbind, curve)
 mutual <- unlist(mutual)
+ind <- 3
+mi_est <- sapply(1:20, function(v) lineId::Ihat_LI(curves[v, ind], v))
+plot(2:20, mi_est[-1], xlim = c(0, 20), ylim = c(0, 3)); abline(mutual[ind], 0, lty = 2)
+
+
+
 cols <- rainbow(length(mutual))[order(mutual)]
 par(bg = "grey")
 plot(1:Kmax, 1:Kmax/Kmax, pch = ".", col = "grey")

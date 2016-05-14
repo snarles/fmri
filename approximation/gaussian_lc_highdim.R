@@ -29,7 +29,7 @@ Sigma <- SigHd(cc, d)
 maxK <- 20
 scalings <- floor((1:20)^1.5)
 Sigmas <- lapply(scalings, function(s) SigHd(cc, s))
-res <- mclapply(Sigmas, function(s) mcK(s, maxK), mc.cores = mcc)
+res <- lapply(Sigmas, function(s) mcK(s, maxK))
 mat <- do.call(cbind, res)
 par(bg = "grey")
 matplot(mat, type = "l", col = rainbow(length(Sigmas)), lty = 1, lwd = 1)
