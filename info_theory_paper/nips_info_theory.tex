@@ -569,13 +569,16 @@ for $d = 1,2,\hdots$.  Further assume that
 and $b_{ij}^{[d]}$ such that the random vector $(a_{ij}\ell_{ij}^{[d]} +
 b_{ij}^{[d]})_{i, j = 1,\hdots, k}$ converges in distribution to a
 multivariate normal distribution.
-\item[A3.] There exists a sequence of scaling constants $a^{[d]}$, $b^{[d]}$ such that
+\item[A3.] Define \[
+u^{[d]}(x, y) = \log p^{[d]}(x, y) - \log p^{[d]}(x) - \log p^{[d]}(y).
+\]
+There exists a sequence of scaling constants $a^{[d]}$, $b^{[d]}$ such that
 \[
-a^{[d]}u(X^{(1)}, Y^{(2)}) + b^{[d]}
+a^{[d]}u^{[d]}(X^{(1)}, Y^{(2)}) + b^{[d]}
 \]
 converges in distribution to a univariate normal distribution.
 \item[A4.] For all $i \neq k$,
-\[\lim_{d \to \infty}\Cov[u(X^{(i)}, Y^{(j)}), u(X^{(k)}, Y^{(j)})] = 0.\]
+\[\lim_{d \to \infty}\Cov[u^{[d]}(X^{(i)}, Y^{(j)}), u^{[d]}(X^{(k)}, Y^{(j)})] = 0.\]
 \end{itemize}
 Then for $e_{ABE, k}$ as defined above, we have
 \[
