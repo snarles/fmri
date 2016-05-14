@@ -27,22 +27,17 @@ get_vs <- function(mus, r) {
   Vs
 }
 
-compute_g0 <- function(p, g.res, mc.res) {
-  psM <- (1:mc.res - 0.5)/mc.res
-  us <- (1:g.res - 0.5)/g.res
-  ubreaks <- (0:g.res)/g.res
-  nms2 <- qchisq(psM, df = p)
-  ans <- 0 * us
-  for (i in 1:mc.res) {
-    nm <- nms2[i]
-    qbreaks <- qchisq(1-ubreaks, p, ncp = nm)
-    pbreaks <- pchisq(qbreaks/4, p)
-    pcont <- pbreaks[-(g.res + 1)] - pbreaks[-1]
-    ans <- ans + pcont/mc.res * g.res
-  }
-  ans
+get_us <- function(mus, r) {
+  k <- nrow(mus)
+  p <- ncol(mus)
+  zs <- rep(1:k, each = r)
+  mus2 <- mus[zs, , drop = FALSE]
+  errs <- randn(k * r, p)
+  ys <- mus2 + errs
+  nms <- rowSums(ys^2)
+  enms <- rowSums(errs^2)
+  1 - pchisq(enms, p, ncp = nms)
 }
-
 
 
 
@@ -57,8 +52,9 @@ g.res <- 100
 r <- 2
 mus <- randn(k, p)
 
+p <- 2
 t1 <- proc.time()
-mus <- randn(5000, 1)
+mus <- randn(2000, p)
 vs <- get_vs(mus, 1)
 g.res <- 100
 us <- (1:g.res - 0.5)/g.res
@@ -69,7 +65,13 @@ plot(us, gu.emp, type = "l")
 proc.time() - t1
 
 t1 <- proc.time()
-gu0 <- compute_g0(1, 100, 1000)
+mus <- randn(1e6, p)
+usamp <- get_us(mus, 1)
+res <- hist(usamp, breaks = ubreaks, plot = FALSE)
+gu.emp2 <- res$counts/length(usamp) * g.res
+lines(us, gu.emp2, col = "red")
 proc.time() - t1
+
+
 sum(gu0)
 lines(us, gu0, col = "red")
