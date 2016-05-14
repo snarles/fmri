@@ -2,6 +2,7 @@ library(lineId)
 source("extrapolation/constrained_mle.R")
 source("extrapolation/mle_theory.R")
 source("extrapolation/moment_mle.R")
+source("extrapolation/bayes_binom.R")
 
 getUs <- function(pmat, ncl, ny) {
   rankconv <- (apply(pmat, 2, rank) - 0.5)/nrow(pmat)
@@ -14,7 +15,7 @@ getUs <- function(pmat, ncl, ny) {
 }
 
 getYs <- function(pmat, ncl, ny) {
-  rankconv <- apply(pmat, 2, rank)
+  rankconv <- apply(pmat, 2, function(v) rank(v, ties.method = "random"))
   Us <- list()
   for (i in 1:ncl) {
     Us[[i]] <- rankconv[i, 1:ny + (ny) * (i-1)]  
@@ -36,19 +37,19 @@ pmat <- lprobs$flat_noise_067902.logprobs
 (ac0 <- 1 - err1[err1$configuration=="svm" & err1$num_classes==400, "TestErr"])
 pmat <- lprobs$svm_114562.logprobs
 
-(ac0 <- 1 - err_knn400[err_knn400$k==40, "te"])
+(ac0 <- err_knn400[err_knn400$k==40, "te"])
 pmat <- knnprobs$knn_415154_probs_02
 
-(ac0 <- 1 - err_knn400[err_knn400$k==100, "te"])
+(ac0 <- err_knn400[err_knn400$k==100, "te"])
 pmat <- knnprobs$knn_415154_probs_05
 
-(ac0 <- 1 - err_knn400[err_knn400$k==180, "te"])
+(ac0 <- err_knn400[err_knn400$k==180, "te"])
 pmat <- knnprobs$knn_415154_probs_09
 
-(ac0 <- 1 - err_knn400[err_knn400$k==300, "te"])
+(ac0 <- err_knn400[err_knn400$k==300, "te"])
 pmat <- knnprobs$knn_415154_probs_15
 
-(ac0 <- 1 - err_knn400[err_knn400$k==500, "te"])
+(ac0 <- err_knn400[err_knn400$k==500, "te"])
 pmat <- knnprobs$knn_415154_probs_25
 
 
