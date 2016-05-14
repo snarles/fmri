@@ -189,6 +189,66 @@ information from classification performance may be considered a
 \emph{parametric} and \emph{nonparametric} classes of estimation
 procedures.
 
+We derive a new discriminative estimator by exploiting an assumption on the
+random sampling of the classes (described in section 1.1) and also
+a universality property that arises in
+high-dimensions.  This universality phenomenon allows us to establish
+a relationship between the mutual information $I(X; Y)$ and the
+$k$-class average Bayes error, $e_{ABE, k}$.  In short, we will
+identify a function $\pi_k$ (which depends on $k$),
+\begin{equation}\label{abepi}
+e_{ABE, k} \approx \pi_k(\sqrt{2 I(X; Y)})
+\end{equation}
+and that this approximation becomes accurate under a limit where $I(X;
+Y)$ is small relative to the dimensionality of $X$, and under the
+condition that the components of $X$ are approximately independent.
+The function $\pi_k$ is given by
+\[
+\pi_k(c) = 1 - \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
+\]
+This formula is not new to the information theory literature: it
+appears as the error rate of an orthogonal constellation [13].  What
+is surprising is that the same formula can be used to approximate the
+error rate in much more general class of classification
+problems\footnote{An intuitive explanation for this fact is that
+  points from any high-dimensional distribution lie in an orthogonal
+  configuration with high probability.}--this is precisely the
+universality result which provides the basis for our proposed
+estimator.
+
+Figure \ref{fig:pi} displays the plot of $\pi_k$ for several values of
+$k$.  For all values of $k$, $\pi_k(\mu)$ is monotonically decreasing
+in $\mu$, and tends to zero as $\mu \to \infty$, which is what we
+expect since if $I(X; Y)$ is large, then the average Bayes error
+should be small.  Another intuitive fact is that $ \pi_k(0) = 1 -
+\frac{1}{k}, $ since after all, an uninformative response cannot lead
+to above-chance classification accuracy.
+
+\begin{figure}
+\centering
+\begin{tabular}{ccrl}
+\multirow{5}{*}{\includegraphics[scale = 0.5, clip=true, trim=0 0.2in 0 0.5in]{../info_theory_sims/illus_piK_flat.pdf}} &
+\multirow{5}{*}{\includegraphics[scale = 0.5, clip=true, trim=0 0.2in 0.4in 0.5in]{../info_theory_sims/ihat_comp.pdf}} & & \\
+& & & \\
+& & \crule[color1]{0.2cm}{0.2cm} & $\hat{I}_{Fano}$\\
+& & \crule[color3]{0.2cm}{0.2cm} & $\hat{I}_{HD}$\\
+& & & \\
+& & & \\
+& & & \\
+& & & 
+\end{tabular}
+\caption{Left: The function $pi_k(\mu)$ for $k = \{2, 10\}$.
+Right: $\hat{I}_{HD}$ with $\hat{I}_{Fano}$ as functions of $\hat{e}_{gen}$, for $k = 3$.
+While $\hat{I}_{Fano}$ is bounded from above by $\log(k)$ (dotted line), $\hat{I}_{HD}$ is unbounded.
+\label{fig:pi}}
+\end{figure}
+
+In this paper, we argue for the advantages of our method in comparison to alternative discriminative estimators
+under the assumption that the discriminative model approximates the Bayes rule.
+While this is an unrealistic assumption, it simplifies the theoretical discussion, and allows us to clearly
+discuss the principles behind our method.  We outline our framework in the following section.
+
+
 \subsection{Discriminative estimators of mutual information}
 
 In many applications, the discriminative approach takes an
@@ -438,59 +498,6 @@ section 4 concludes.  All proofs are given in the supplement.
 
 \section{Theory}
 
-We derive a new discriminative estimator by exploiting the properties
-of stratified sampling, plus a universality property that arises in
-high-dimensions.  This universality phenomenon allows us to establish
-a relationship between the mutual information $I(X; Y)$ and the
-$k$-class average Bayes error, $e_{ABE, k}$.  In short, we will
-identify a function $\pi_k$ (which depends on $k$),
-\begin{equation}\label{abepi}
-e_{ABE, k} \approx \pi_k(\sqrt{2 I(X; Y)})
-\end{equation}
-and that this approximation becomes accurate under a limit where $I(X;
-Y)$ is small relative to the dimensionality of $X$, and under the
-condition that the components of $X$ are approximately independent.
-The function $\pi_k$ is given by
-\[
-\pi_k(c) = 1 - \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
-\]
-This formula is not new to the information theory literature: it
-appears as the error rate of an orthogonal constellation [13].  What
-is surprising is that the same formula can be used to approximate the
-error rate in much more general class of classification
-problems\footnote{An intuitive explanation for this fact is that
-  points from any high-dimensional distribution lie in an orthogonal
-  configuration with high probability.}--this is precisely the
-universality result which provides the basis for our proposed
-estimator.
-
-Figure \ref{fig:pi} displays the plot of $\pi_k$ for several values of
-$k$.  For all values of $k$, $\pi_k(\mu)$ is monotonically decreasing
-in $\mu$, and tends to zero as $\mu \to \infty$, which is what we
-expect since if $I(X; Y)$ is large, then the average Bayes error
-should be small.  Another intuitive fact is that $ \pi_k(0) = 1 -
-\frac{1}{k}, $ since after all, an uninformative response cannot lead
-to above-chance classification accuracy.
-
-\begin{figure}
-\centering
-\begin{tabular}{ccrl}
-\multirow{5}{*}{\includegraphics[scale = 0.5, clip=true, trim=0 0.2in 0 0.5in]{../info_theory_sims/illus_piK_flat.pdf}} &
-\multirow{5}{*}{\includegraphics[scale = 0.5, clip=true, trim=0 0.2in 0.4in 0.5in]{../info_theory_sims/ihat_comp.pdf}} & & \\
-& & & \\
-& & \crule[color1]{0.2cm}{0.2cm} & $\hat{I}_{Fano}$\\
-& & \crule[color3]{0.2cm}{0.2cm} & $\hat{I}_{HD}$\\
-& & & \\
-& & & \\
-& & & \\
-& & & 
-\end{tabular}
-\caption{Left: The function $pi_k(\mu)$ for $k = \{2, 10\}$.
-Right: $\hat{I}_{HD}$ with $\hat{I}_{Fano}$ as functions of $\hat{e}_{gen}$, for $k = 3$.
-While $\hat{I}_{Fano}$ is bounded from above by $\log(k)$ (dotted line), $\hat{I}_{HD}$ is unbounded.
-\label{fig:pi}}
-\end{figure}
-
 \subsection{Universality result}
 
 We obtain the universality result in two steps.  First, we link the
@@ -691,21 +698,24 @@ along with any conceivable discriminative estimator, but overcomes the
 third limitation under the assumption of stratified sampling and high
 dimensionality.
 
-While the high-dimensionality assumption is well-suited for a broad
-class of applications, the stratified sampling assumption can be
-justified only in certain types of controlled experiments.  On the
-other hand, the stratified sampling assumption may not be essential to
-our approach: we use it mainly as a mathematical convenience.
-Therefore, it remains a possibility to extend the proposed estimation
-approach to handle partition-based classification, under certain
-assumptions on the partition.
+The assumption of stratified sampling is satisfied through appropriate design.
+However, the assumption of high dimensionality is much more difficult to check:
+having a high-dimension response $Y$ does not suffice, since $Y$ could
+lie close to a low-dimensional manifold.  One useful diagnostic is to subsample within the classes collected
+and check that $\hat{I}_{HD}$ does not systematically increase or decrease with the number of classes $k$.
+Based on simulations, $\hat{I}_{HD}$ could either overestimate or underestimate the mutual information when the high-dimensional assumption is violated.
+The assumption of approximating the Bayes rule is impractical to check, 
+as any nonparametric estimate of the Bayes error requires exponentially many observations.
+Hence, while the present paper studies the `best-case' scenario where the model is well-specified,
+it is even more important to understand the robustness of our method in the more realistic case
+where the model is misspecified.  We leave this question to future work.
 
-As it stands, a number of adjustments can be made to $\hat{I}_{HD}$ to
-improve its performance in special cases.  One can employ more
-sophisticated methods to estimate $e_{ABE, k}$: for example,
-extrapolating from learning curves [15].  Furthermore,
-depending on the risk function, one may debias or shrink the estimate
-$\hat{I}_{HD}$ to achieve a more favorable bias-variance tradeoff.
+%As it stands, a number of adjustments can be made to $\hat{I}_{HD}$ to
+%improve its performance in special cases.  One can employ more
+%sophisticated methods to estimate $e_{ABE, k}$: for example,
+%extrapolating from learning curves [15].  Furthermore,
+%depending on the risk function, one may debias or shrink the estimate
+%$\hat{I}_{HD}$ to achieve a more favorable bias-variance tradeoff.
 
 In our simulation experiment, our proposed estimator is seen to
 outperform existing estimators, but it remains to assess the utility
