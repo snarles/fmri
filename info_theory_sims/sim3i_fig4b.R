@@ -43,13 +43,29 @@ for (ii in 1:length(ss)) {
 }
 ress[, , 1]
 
+
+load("info_theory_sims/fig4.Rdata", verbose = TRUE)
+ress <- allresults[[1]]$ress
+data.reps <- dim(ress)[1]
+
+li <- floor(0.1 * data.reps + 1); ui <- floor(0.9 * data.reps + 1)
+m_i <- floor(0.5 * data.reps)
+lowers0 <- t(apply(ress[,c(1:4),], c(2, 3), function(v) sort(v)[li]))
+uppers0 <- t(apply(ress[,c(1:4),], c(2, 3), function(v) sort(v)[ui]))
+
+load("info_theory_sims/fig4b.Rdata", verbose = TRUE)
+ress <- allresults[[1]]$ress
+data.reps <- dim(ress)[1]
+
+
 li <- floor(0.1 * data.reps + 1); ui <- floor(0.9 * data.reps + 1)
 m_i <- floor(0.5 * data.reps)
 lowers <- t(apply(ress[,c(1:4, 8),], c(2, 3), function(v) sort(v)[li]))
 uppers <- t(apply(ress[,c(1:4, 8),], c(2, 3), function(v) sort(v)[ui]))
-meds <- t(apply(ress, c(2, 3), function(v) sort(v)[m_i]))
-colnames(lowers) <- colnames(res)
-colnames(uppers) <- colnames(res)
+
+lowers[, 1:4] <- lowers0
+uppers[, 1:4] <- uppers0
+
 
 plot(NA, NA, xlab = "I", ylab = expression(hat(I)), xlim = c(0, max(mi_trues)),
      ylim = c(0, max(uppers)))
@@ -66,11 +82,11 @@ for (i in 1:5) {
 abline(0, 1, lwd = 3, col = "white", lty = 2)
 
 ## save results
-packet <- list(ss=ss, m.folds = m.folds,
-               k.each = k.each, r.each = r.each, r.train = r.train,
-               mi_true, est_ls = est_ls, ress = ress,
-               mc.reps = mc.reps, mc.abe = mc.abe)
-allresults <- c(allresults, list(packet))
+# packet <- list(ss=ss, m.folds = m.folds,
+#                k.each = k.each, r.each = r.each, r.train = r.train,
+#                mi_true, est_ls = est_ls, ress = ress,
+#                mc.reps = mc.reps, mc.abe = mc.abe)
+# allresults <- c(allresults, list(packet))
 
 
-save(allresults, file = 'info_theory_sims/fig4b.Rdata')
+# save(allresults, file = 'info_theory_sims/fig4b.Rdata')
