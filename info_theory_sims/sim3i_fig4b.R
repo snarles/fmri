@@ -11,7 +11,7 @@ mc.reps <- 1e4
 mc.abe <- 1e2
 abe.each <- 1e2
 mcc <- 39
-data.reps <- 750
+data.reps <- 75
 
 ## problem params
 ss <- sqrt(seq(0, 200, by = 5))
