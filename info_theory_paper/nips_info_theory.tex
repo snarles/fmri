@@ -230,8 +230,8 @@ to above-chance classification accuracy.
 \multirow{5}{*}{\includegraphics[scale = 0.5, clip=true, trim=0 0.2in 0 0.5in]{../info_theory_sims/illus_piK_flat.pdf}} &
 \multirow{5}{*}{\includegraphics[scale = 0.5, clip=true, trim=0 0.2in 0.4in 0.5in]{../info_theory_sims/ihat_comp.pdf}} & & \\
 & & & \\
-& & \crule[color1]{0.2cm}{0.2cm} & $\hat{I}_{Fano}$\\
 & & \crule[color3]{0.2cm}{0.2cm} & $\hat{I}_{HD}$\\
+& & \crule[color1]{0.2cm}{0.2cm} & $\hat{I}_{Fano}$\\
 & & & \\
 & & & \\
 & & & \\
@@ -251,6 +251,10 @@ obtained by inverting the relation \eqref{abepi}, then substituting
 an estimate of generalization error $\hat{e}_{gen, \alpha}$ for the $e_{ABE, k}$.  As such,
 our estimator can be directly compared to the $\hat{I}_{Fano}$, since
 both are functions of $\hat{e}_{gen,\alpha}$ (Figure 1.)
+As the estimate of generalization error goes to zero, $\hat{I}_{Fano}$ approaches $\log(k)$
+while $\hat{I}_{HD}$ goes to infinity.   This difference in behavior is due to the fact that
+in contrast to Fano's inequality, the asymptotic relationship \eqref{abepi} is independent of the
+number of classes $k$.
 
 In this paper, we argue for the advantages of our method in comparison to alternative discriminative estimators
 under the assumption that the discriminative model approximates the Bayes rule.
@@ -534,9 +538,9 @@ rule.
 & & &\\
 & & &\\
 & & \crule[color3]{0.2cm}{0.2cm} &$\hat{I}_{HD}$\\
- & &\crule[color1]{0.2cm}{0.2cm} &$\hat{I}_{CM}$ \\
-$\hat{I}$& & \crule[color2]{0.2cm}{0.2cm} &$\hat{I}_{Fano}$\\
-& & \crule[color4]{0.2cm}{0.2cm} &$\hat{I}_{0}$\\
+ & &\crule[color4]{0.2cm}{0.2cm} &$\hat{I}_{0}$ \\
+$\hat{I}$& & \crule[color1]{0.2cm}{0.2cm} &$\hat{I}_{CM}$\\
+& & \crule[color2]{0.2cm}{0.2cm} &$\hat{I}_{Fano}$\\
 & & &\\
 & & &\\
 & & &\\
