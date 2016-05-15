@@ -58,6 +58,12 @@ run_simulation <- function(Bmat, m.folds, k.each, r.each, r.train) {
     zs <- rep(1:k.each, each = r.each)
     test_filt <- rep(c(rep(FALSE, r.train), rep(TRUE, r.test)), k.each)
     Y <- (rand(k.each * r.each, q) < ps[zs, ]) + 0
+    Xmat <- X[zs, ]
+    Bhat <- sapply(1:ncol(Xmat), function(i) {
+      res <- glm(Y[, i] ~ Xmat + 0, family = "binomial")
+      coefficients(res)
+    })
+    (mi_par <- compute_mi(Bhat, mc.reps = 10000)["mi_jvhw"])
     mu.tr <- zeros(k.each, q)
     for (ii in 1:k.each) mu.tr[ii, ] <- colMeans(Y[zs ==ii, ][1:r.train, ])
     ## Bayes smoothing
@@ -93,7 +99,7 @@ run_simulation <- function(Bmat, m.folds, k.each, r.each, r.train) {
   (mi_j <- mi_naive(ytab, h_jvhw))
   ## answer
   c(mi_cm = mi_cm, mi_fano = mi_fano, mi_ls = mi_ls,
-    mi_0 = mi_0, mi_5 = mi_5, mi_9 = mi_9, mi_j = mi_j, abe0 = abe0, abe = abe)
+    mi_0 = mi_0, mi_5 = mi_5, mi_9 = mi_9, mi_j = mi_j, mi_par = mi_par, abe0 = abe0, abe = abe)
 }
 
 get_abe <- function(Bmat, k.each, r.each = 1, mc.reps=1e3, mcc=0) {

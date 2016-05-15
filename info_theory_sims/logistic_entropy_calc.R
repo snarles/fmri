@@ -102,16 +102,16 @@ prox_nll <- function(y, x, Bmat, x0 = opt_nll(y, Bmat)) {
     sum(dn * (-y * (t(Bmat) %*% delta))) + sum(d2n * (-y * (t(Bmat) %*% delta))^2)/2
 }
 
-p <- 2
-q <- 4
-Bmat <- 2 * randn(p, q)
-mc.reps <- 1
-X <- randn(mc.reps, p)
-ps <- 1/(1 + exp(-X %*% Bmat))
-Y <- (rand(mc.reps, q) < ps) + 0
-y <- 2 * as.numeric(Y) - 1
-(pr_true <- pr_grid(y, Bmat, 100))
-pr_true2 <- pr_grid(y, Bmat, 200)
-pr_the <- pr_laplace(y, Bmat)
-(pr_the2 <- pr_laplace2(y, Bmat, in.reps = 1e5))
-c(pr_true = pr_true, pr_true2 = pr_true2, pr_the = pr_the, pr_the2 = pr_the2)
+# p <- 2
+# q <- 4
+# Bmat <- 2 * randn(p, q)
+# mc.reps <- 1
+# X <- randn(mc.reps, p)
+# ps <- 1/(1 + exp(-X %*% Bmat))
+# Y <- (rand(mc.reps, q) < ps) + 0
+# y <- 2 * as.numeric(Y) - 1
+# (pr_true <- pr_grid(y, Bmat, 100))
+# pr_true2 <- pr_grid(y, Bmat, 200)
+# pr_the <- pr_laplace(y, Bmat)
+# (pr_the2 <- pr_laplace2(y, Bmat, in.reps = 1e5))
+# c(pr_true = pr_true, pr_true2 = pr_true2, pr_the = pr_the, pr_the2 = pr_the2)
