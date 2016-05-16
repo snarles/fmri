@@ -234,7 +234,6 @@ Meanwhile, $\hat{\mathbb{F}}$ is the meta-distribution of the empirical distribu
 
 \subsection{Multi-class classification}
 
-
 Combining the formalism of Tewari and Bartlett (2007),
 we define a classifier as a collection of mappings
 $\mathcal{M}_i: \mathcal{P}(\mathcal{Y})^k \times \mathcal{Y} \to \mathbb{R}$ called \emph{margin functions.}
@@ -246,71 +245,6 @@ a class with maximum margin to $y$:
 \[
 h(y) = \argmax_{i \in \{1,\hdots, k\}} \mathcal{M}_i(y).
 \]
-For our purposes, it is not important how ties are resolved.  We will also neglect discussion of randomized classifiers,
-except to mention that they can be treated in our framework as probability distributions over deterministic classifiers;
-we also neglect the incorporation of prior class probabilities into the classifier, since in our setting
-the prior class probabilities are uniform.
-
-One reason why we formalize a classifier in terms of \emph{empirical distributions} rather than data points
-is to formalize the notion of \emph{continuity}.
-The level sets $\{y: \argmax_i \mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y) = k\}$ are called
-\emph{decision regions.}  We say the classifier is \emph{continuous}
-if and only if the \emph{decision regions} of $\mathcal{M}_{i=1}^k$ are
-continuous in the first $k$ arguments with respect to the topology of
-weak convergence.
-
-To acquaint the reader with our formalism, we redefine a number of familiar classifiers according to our notation.
-
-\noindent\emph{Example 1. (OVO)} Let $\mathcal{B}$ (the \emph{base classifier}) be a binary-valued mapping with three arguments: distributions $\hat{F}_0$,
-$\hat{F}_1$, and query $y$.  A one-vs-one (OVO)
-classifier is defined by
-\[
-\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y) = \sum_{j \neq i} \mathcal{B}(\hat{F}_j, \hat{F}_i, y).
-\]
-
-\noindent\emph{Example 2. (OVA)}  Let $\mathcal{D}$ (\emph{the base classifier}) be a real-valued mapping with three arguments: 
-distributions $F_0$, $F_1$, and query $y$.  A one-vs-all (OVA) classifier is defined by
-\[
-\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y) = \mathcal{D}(\hat{F}_i, \frac{1}{k}\sum_{j = 1}^k \hat{F}_j, y).
-\]
-
-It is immediate that an OVO classifier is continuous if and only if the level sets of $\mathcal{B}$ are continuous with respect
-to the topology of weak convergence,
-and similarly that an OVA classifier is continuous if and only if $\mathcal{D}$ is continuous.
-
-\noindent\emph{Example 3. ($\epsilon$-NN)}  
-$\epsilon$-nearest neighbors can be thought of as $k$-nearest neighbors with $k = \epsilon n$ for fixed $\epsilon$.
-Let $d$ be a distance metric on $\mathcal{Y}$.  
-Let $D(y)$ denote the induced distribution of $d(Y, y)$ when $Y \sim \frac{1}{k}\sum_{i=1}^k \hat{F}_i$,
-and let $d_{\epsilon}(y)$ denote the $\epsilon$-quantile of $D(y)$. 
-An $\epsilon$-nearest neighbor classifier is defined by
-\[
-\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y) = \Pr_{Y \sim \hat{F}_i}[d(Y, y) < d_{\epsilon}(y)].
-\]
-
-Note that the $\epsilon$-NN classifier is also an example of a OVA classifier, with 
-$\mathcal{D}(F_0, F_1, y) = F_1(B_{d_{\epsilon}(y)})$, where $B_r$ is the $d$-ball of radius $r$,
-since one can define $d_{\epsilon, t}(y) = \sup_r \text{ s.t. }\frac{k-1}{k}F_0 + \frac{1}{k}F_1)(B_r(y)) \leq \epsilon$.
-
-\noindent\emph{Example 4. (Multinomial logistic regression.)}   
-Assume WLOG that $y_1 = 1$ for all $y \in \mathcal{Y}$, and let $B$ be a $p \times k$ matrix which minimizes the objective function
-\[
--\E_{\hat{F}_j}\left[\langle Y, B_j \rangle - \log\left[\sum_{\ell=1}^{k} \exp[\langle Y, B_\ell \rangle]\right]\right].
-\]
-A multinomial logistic regression classifier is defined by
-\[
-\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y) = \langle y, B_i \rangle.
-\]
-By the convexity of the objective function, multinomial logistic regression is continuous wherever the minimizer $B$
-is unique.
-
-Throughout these examples we have neglected to discuss model selection or parameter tuning.
-It is admittedly non-trivial to formalize procedures such as cross-validation
-using our formalism, and since model selection lies beyond the scope of our paper,
-we omit the definitions.
-
-\subsection{Generative classifiers}
-
 For some classifiers, the margin function $\mathcal{M}_i$ is especially simple
 in that $\mathcal{M}_i$ is only a function of $\hat{F}_i$ and $y$.
 Furthermore, due to symmetry, in such cases one can write
@@ -337,7 +271,6 @@ In Naive Bayes, the margin is
 \]
 where $\hat{f}_i$ is a density estimate for the $i$th component of
 $\hat{F}$.
-
 The \emph{generative} property allows us to prove strong results about the accuracy of the classifier
 under the exchangeable sampling assumption.  For starters, we can show that the
 expected accuracy follows a \emph{mixed exponential decay}, as stated by the following theorem.
@@ -357,21 +290,17 @@ there exists a measure $\alpha$ on $[0, \infty)$ such that
 \E[\text{acc}^{(t)}] = \int_{\mathbb{R}^{+}} e^{-\kappa t} d\alpha(\kappa).
 \]
 }
-
 (We give the proof in section 3.)
-
 The theorem immediately suggests a method for predicting $\text{acc}^{(K)}$:
 fit a mixed exponential decay to $a(t) = \text{acc}^{(t)}$ for $t = 2,\hdots, k$ and extrapolate the curve to $t = K$.
 This is just one of many methods which can be developed for generative classifiers,
 which we discuss more fully in Section 3 and 4.
-
 
 \section{Prediction extrapolation for generative classifiers}
 
 Let us specialize to the case of a generative classifier, with scoring rule $\mathcal{Q}$.
 Consider estimating the expected accuracy at time $t$, \[p_t
 \stackrel{def}{=} \E[\text{acc}^{(t)}].\]
-
 Define the \emph{conditional accuracy} function $u(\hat{F}, y)$ which maps a
 distribution $\hat{F}$ on $\mathcal{Y}$ and a \emph{test} observation $y$ to
 a real number in $[0,1]$.  The conditional accuracy gives the
@@ -432,7 +361,10 @@ Then $\hat{u}(\hat{F}_i, Y)$ is an unbiased estimate of $u(\hat{F}_i, Y)$, as st
 
 \noindent\textbf{Theorem 3.2.}\emph{
 Assume the conditions of theorem 3.1.
-Then defining $V = (k-1)\hat{u}(\hat{F}_i, y)$, we have
+Then defining 
+\begin{equation}\label{eqref:veq}
+V = (k-1)\hat{u}(\hat{F}_i, y),\end{equation}
+we have
 \[V \sim \text{\emph{Binomial}}(k, u(\hat{F}_i, y)).\]
 Hence,
 \[\E[\hat{u}(\hat{F}_i, y)] = u(\hat{F}_i, y).\]
@@ -530,10 +462,11 @@ Taking $\delta \to 0$, we conclude the theorem. $\Box$\newline
 \section{Estimation}
 
 Suppose we have $m$ independent test repeats per class, $y^{(i),1}\hdots, y^{(i), m}$.
-According to theorem 3.2, we can obtain binomial-distributed observations
+Let us define
 \[
-V_{i,j} = (k-1)\hat{u}(\hat{F}_i, y^{(i), j}).
+V_{i,j} = \sum_{\ell\neq i} I(M_i(\hat{F}_1,\hdots, \hat{F}_k, y^{(i, j)})  > M_\ell(\hat{F}_1,\hdots, \hat{F}_k, y^{(i, j)})),
 \]
+which coincides with the definition 
 
 At a high level, we have a hierarchical model where $U$ is drawn from a distribution $nu$ on $[0, 1]$
 and then $V_{i, j} \sim \text{Binomial}(k, U)$;
@@ -562,31 +495,33 @@ theory of Anon 2006 can be applied for prediction accuracy, which we discuss in 
 
 \subsection{Extensions of unbiased estimation}
 
-If $V \sim \text{Binomial}(k, \eta)$, then an unbiased estimator $f_t(V)$ of $\eta^(t-1)$ exists
+If $V \sim \text{Binomial}(k, U)$, then an unbiased estimator of $U^t$ exists
 if and only if $0 \leq t \leq k$.
 
-The theory of U-statistics provides the minimal variance unbiased estimator for $\eta^(t-1)$:
+The theory of U-statistics provides the minimal variance unbiased estimator for $U^t$:
 \[
-\eta^t = \E\left[\frac{\begin{pmatrix}
+U^t = \E\left[\begin{pmatrix}
 V \\ t
-\end{pmatrix}}{\begin{pmatrix}
+\end{pmatrix}
+\begin{pmatrix}
 k \\ t
-\end{pmatrix}}\right].
+\end{pmatrix}^{-1}\right].
 \]
 
 This result can be immediately applied to yield an unbiased estimator of $p_t$, when $t \leq k$:
 \begin{equation}\label{eq:ustat}
-\hat{p}_t^{UN} =  \frac{1}{km}\sum_{i=1}^k\sum_{j=1}^{m} \frac{\begin{pmatrix}
-V_{i, j} \\ t
-\end{pmatrix}}{\begin{pmatrix}
-k \\ t
-\end{pmatrix}}.
+\hat{p}_t^{UN} =  \frac{1}{km}\sum_{i=1}^k\sum_{j=1}^{m} \begin{pmatrix}
+V_{i, j} \\ t-1
+\end{pmatrix}
+\begin{pmatrix}
+k \\ t-1
+\end{pmatrix}^{-1}.
 \end{equation}
 However, since $\hat{p}_t^{UN}$ is undefined for $k \geq t$, we can use exponential extrapolation
 to define an extended estimator $\hat{p}_t^{EXP}$ for $k > t$.
 Let $\hat{\alpha}$ be a measure defined by solving the optimization problem
 \[
-\text{minimize} \sum_{t=2}^{k} (\hat{p}_t^{UN} - \int_0^\infty \exp[-t\kappa] d\alpha(\kappa))^2
+\text{minimize} \sum_{t=2}^{k} \left(\hat{p}_t^{UN} - \int_0^\infty \exp[-t\kappa] d\alpha(\kappa)\right)^2
 \]
 After discretizing the measure $\hat{\alpha}$, we obtain a convex optimization problem
 which can be solved using non-negative least squares (Lawson 1974).
