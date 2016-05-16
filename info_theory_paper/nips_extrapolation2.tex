@@ -207,7 +207,7 @@ which we confirm in data examples.  We speculate that achieving prediction extra
 for a representation-learning classifier would require a theory tailored to the dynamics of that particular classifier.
 
 In section 2 we formalize the concepts of \emph{classifier} and \emph{prediction extrapolation},
-and define generative and asymptotic generative classifiers.  In section 3 we develop the theory of prediction
+and define generative and asymptotically generative classifiers.  In section 3 we develop the theory of prediction
 extrapolation for generative classifiers, culminating in the definition of the conditional accuracy distribution
 and the equivalence between the moments of the conditional accuracy distribution and the expected accuracy.
 In section 4 we present three classes of methods for prediction extrapolation:
@@ -288,7 +288,7 @@ if and only if the \emph{decision regions} of $\mathcal{M}_{i=1}^k$ are
 continuous in the first $k$ arguments with respect to the topology of
 weak convergence.
 
-\subsection{Generative and Asymptotic Generative classifiers}
+\subsection{Generative and Asymptotically Generative classifiers}
 
 For some classifiers, the margin function $\mathcal{M}_i$ is especially simple
 in that $\mathcal{M}_i$ is only a function of $\hat{F}_i$ and $y$.
@@ -301,9 +301,9 @@ For notational convenience, we assume that ties occur with probability
 zero: that is, $\hat{\mathbb{F}}$ and $\mathcal{Q}$ jointly satisfy the
 \emph{tie-breaking} property:
 \begin{equation}\label{eq:tie}
-\Pr[\mathcal{Q}(\hat{F}, y) = \mathcal{Q}(\hat{F}, y')] = 0.
+\Pr[\mathcal{Q}(\hat{F}, y) = \mathcal{Q}(\hat{F}', y)] = 0.
 \end{equation}
-for all $y \neq y' \in \mathcal{Y}$, where $\mathbb{F} \sim \hat{\mathbb{F}}$.
+for all $y \mathcal{Y}$, where $\mathbb{F}, \mathbb{F}' \stackrel{iid}{\sim} \hat{\mathbb{F}}$.
 Quadratic discriminant analysis and Naive Bayes are two examples of
 generative classifiers.  For QDA, the scoring rule is given by
 \[
@@ -329,7 +329,7 @@ following the notation of section 2.
 Further assume that $\mathcal{Q}$ and $\mathbb{F}$ satisfy the tie-breaking property \eqref{eq:tie}.
 Then, recalling the definition of accuracy,
 \[
-\text{acc}^{(t)} = \frac{1}{t}\sum_{i=1}^t \Pr_{F_i}[\mathcal{Q}(\hat{F}_i, y) > \argmax_{i > j} \mathcal{Q}(\hat{F}_i, y)],
+\text{acc}^{(t)} = \frac{1}{t}\sum_{i=1}^t \Pr_{Y \sim F_i}[\mathcal{Q}(\hat{F}_i, Y) > \argmax_{i > j} \mathcal{Q}(\hat{F}_i, Y)],
 \]
 there exists a measure $\alpha$ on $[0, \infty)$ such that
 \[
@@ -344,16 +344,19 @@ but this is just a preview of the methods which can be developed for generative 
 which we discuss more fully in Section 3.
 
 Unfortunately, the majority of classifiers used in practice are \emph{not} generative,
-and for good reason.  While generative classifiers attempt to estimate the marginal distributions,
-discriminative classifiers directly search for good classification boundaries based on the data:
+and for good reason.  Generative classifiers construct decision boundaries out of estimated marginal distributions,
+so while a correctly specified marginal model can lead to an extremely efficient classifier,
+a misspecified marginal model leads to extremely poor decision boundaries.
+In contrast, discriminative classifiers directly search for good classification boundaries based on the data,
+making them more robust to the data generating process, and as a result,
 in most problems, discriminative classifiers outperform generative classifiers (Ng 2002).
-Despite this fact, it can be shown that many non-generative classifiers are \emph{asymptotic generative},
+Despite this fact, it can be shown that many non-generative classifiers are \emph{asymptotically generative},
 meaning that i$\mathcal{M}_i^{(t)}$, the $i$th margin for the $t$th classification problem in the sequence,
 converges to a function of $\hat{F}_i$ and $y$ with probability one:
 \begin{equation}\label{eq:agen}
 \lim_{t \to \infty} \mathcal{M}_i^{(t)}(\hat{F}_1,\hdots, \hat{F}_t, y) = \mathcal{Q}(\hat{F}_i, y) \text{ w.h.p. }
 \end{equation}
-While asymptotic generative classifiers share the properties of generative classifiers with respect to
+While asymptotically generative classifiers share the properties of generative classifiers with respect to
 prediction extrapolation, they need not share the same \emph{limitations} as generative classifiers.
 A generative classifier requires the user to specify the scoring function $\mathcal{Q}$ in advance:
 this practically requires some prior knowledge about the marginal distributions of the classes,
@@ -361,30 +364,39 @@ e.g. that the marginal distributions are approximately multivariate Gaussian.
 But the scoring function $\mathcal{Q}$ appearing in the definition of an asymptotically generative classifier
 \emph{need not be specified} by the user: 
 it can (and usually does) depend on the unknown meta-distribution $\mathbb{F}$.
-Therefore one can think of asymptotic generative classifiers as generative classifiers with `adaptive' $\mathcal{Q}$,
-which explains how an asymptotic generative classifier could outperform generative classifiers.
+Therefore one can think of asymptotically generative classifiers as generative classifiers with `adaptive' $\mathcal{Q}$,
+which suggests that the class of asymptotically generative classifiers could be quite diverse.
 
-[[rewrite completed to here]]
-
-\textbf{Definition 2.1.}  (Asymptotically generative) Suppose that for
-time stages $t = 1,2,\hdots$, $k_t = O(t)$ and $n_{i,t} = O(t)$, with
-$F_1,F_2,\hdots$ drawn i.i.d. from $\mathbb{F}$, and
-$y^{(i),1},\hdots$ drawn i.i.d. from $F_i$ for each $i = 1,2,\hdots$.
-A recognition system (characterized by mappings $f_t$) is considered
-\emph{asymptotically generative} if and only there exists a scoring
-rule $\mathcal{Q}$ and probability vector $\tilde{\pi}$ such that
-defining
+Ideally, we could extend Theorem 2.2 for asymptotic generative classifiers, but a stronger condition is needed.
+Note that under the tie-breaking assumption, one can always take $\mathcal{Q}$ in \eqref{eq:agen} so that
 \[
-\tilde{f}_t(y) = \argmax_{i=1}^{k_t} \mathcal{Q}(\hat{F}_{i, t}, \tilde{\pi}_i, y)
+\Pr[\mathcal{Q}(\hat{F}, y) < u] = u\text{ for }u \in [0,1],
 \]
-we have
-\[
-\lim_{t \to \infty} \frac{1}{k_t} \sum_{i=1}^{k_t}\Pr[f_t(Y) = \tilde{f}_t(Y) | Y \sim p(y|x^{(i)})] \to 1.
-\]
+for all $y \in \mathcal{Y}$: we refer to such $\mathcal{Q}$ as \emph{calibrated.}
+We define a \emph{uniformly asymptotic generative} classifier by adding conditions on the worst-case rate that
+$\mathcal{M}_i$ converges to calibrated $\mathcal{Q}$: these additional conditions are sufficient for the generalization of Theorem 2.3.  We now give the definition and the theorem.
 
-We will show that recognition systems based on certain implementations
-of $k$-nearest neighbors, LDA, one-vs-one, or one-vs-all classifiers
-satisfy this definition of separability.
+\textbf{Definition 2.1.}  \emph{(Uniformly asymptotically generative) Suppose classifier $\mathcal{M}$ satisfies \eqref{eq:agen} for calibrated $\mathcal{Q}$, and furthermore that
+\[
+\lim_{t \to \infty} \sup_{i \leq t} \frac{1}{t}\sum_{j=1}^t \Pr_{F_j}[\mathcal{M}(\hat{F}_1,\hdots, \hat{F}_t, Y) - \mathcal{Q}(\hat{F}_i, Y)| > \epsilon] \to 0
+\]
+with probability one for all $\epsilon > 0$.  Then we say that $\mathcal{M}$ is uniformly asymptotically generative.}
+
+\textbf{Theorem 2.3}\emph{
+Let $\mathcal{Q}$ be the scoring function of a uniformly generative classifier, and 
+assume that $F_1,\hdots, F_k \stackrel{iid}{\sim} \mathbb{F}$ and $\hat{F}_i \sim \hat{\mathbb{F}}(F_i)$ independently,
+following the notation of section 2.
+Further assume that $\mathcal{Q}$ and $\mathbb{F}$ satisfy the tie-breaking property \eqref{eq:tie}.
+Then, recalling the definition of accuracy,
+\[
+\text{acc}^{(t)} = \frac{1}{t}\sum_{i=1}^t \Pr_{Y \sim F_i}[\mathcal{M}_i(\hat{F}_1,\hdots,\hat{F}_t, Y) > \argmax_{i > j} \mathcal{M}_j(\hat{F}_1,\hdots, \hat{F}_t, Y)],
+\]
+there exists a measure $\alpha$ on $[0, \infty)$ such that
+\[
+\E[\text{acc}^{(t)}] = \int_{\mathbb{R}^{+}} e^{\kappa t} d\alpha(\kappa).\]
+}
+
+[[rewrite ends here]]
 
 \textbf{Definition 2.2.}(i) Define a binary classifier $\mathcal{B}$
 as a binary-valued mapping with four arguments: distributions $F_0$,
