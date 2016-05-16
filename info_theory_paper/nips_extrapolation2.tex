@@ -527,17 +527,18 @@ we obtain
 \]
 Taking $\delta \to 0$, we conclude the theorem. $\Box$\newline
 
-\section{Nonparametric Estimation}
+\section{Estimation}
 
-Let us assume that $U$ has a density $\eta(u)$.  While $U = u(\hat{F},
-0, Y)$ cannot be directly observed, we can estimate $u(\hat{F}_i, 0,
-y^{(i), r_1 + j})$ for any $1 \leq i \leq k$, $1 \leq j \leq r_2$ from
-the data.
+Suppose we have $m$ independent test repeats per class, $y^{(i),1}\hdots, y^{(i), m}$.
+According to theorem 3.2, we can obtain binomial-distributed observations
+\[
+V_{i,j} = (k-1)\hat{u}(\hat{F}_i, y^{(i), j}).
+\]
 
-
-At a high level, we have a hierarchical model where $U$ is drawn from a density $\eta(u)$ on $[0, 1]$
+At a high level, we have a hierarchical model where $U$ is drawn from a distribution $nu$ on $[0, 1]$
 and then $V_{i, j} \sim \text{Binomial}(k, U)$;
-therefore the marginal distribution of $V_{i, j}$ can be written
+
+Let us assume that $U$ has a density $\eta(u)$: then the marginal distribution of $V_{i, j}$ can be written
 \[
 \Pr[V_{i,j} = \ell] = \begin{pmatrix}
 k \\ \ell
@@ -547,16 +548,17 @@ k \\ \ell
 However, the observed $\{V_{i, j}\}$ do \emph{not} comprise an i.i.d. sample.
 
 We discuss the following three approaches for estimating $p_t =
-\E[U^{t-1}]$ based on $V_{i, j}$.  The first is \emph{unbiased
+\E[U^{t-1}]$ based on $V_{i, j}$.  The first is an extension of \emph{unbiased
   estimation} based on binomial U-statistics, which is discussed in
-Section 4.1.  The second is the \emph{psuedolikelihood} approach.  In
+Section 4.1.  The second is the \emph{pseudolikelihood} approach.  In
 problems where the marginal distributions are known, but the
 dependence structure between variables is unknown, the
-\emph{psuedolikelihood} is defined as the product of the marginal
+\emph{pseudolikelihood} is defined as the product of the marginal
 distributions.  For certain problems in time series analysis and
 spatial statistics, the maximum psuedolikelihood estimator (MPLE) is
-proved to be consistent (CITE).  We discuss psuedolikelihood-based
-approaches in Sections 4.2 and 4.3.  
+proved to be consistent (Arnold 1991).  We discuss psuedolikelihood-based
+approaches in Section 4.2.  Thirdly, we note that the high-dimensional
+theory of Anon 2006 can be applied for prediction accuracy, which we discuss in Section 4.3.
 
 \subsection{Unbiased estimation}
 
@@ -574,37 +576,41 @@ k \\ t
 
 This result can be immediately applied to yield an unbiased estimator of $p_t$, when $t \leq k$:
 \begin{equation}\label{eq:ustat}
-\hat{p}_t^{UN} = \E\left[ \frac{1}{kr_2}\sum_{i=1}^k\sum_{j=1}^{r_2} \frac{\begin{pmatrix}
+\hat{p}_t^{UN} =  \frac{1}{km}\sum_{i=1}^k\sum_{j=1}^{m} \frac{\begin{pmatrix}
 V_{i, j} \\ t
 \end{pmatrix}}{\begin{pmatrix}
 k \\ t
-\end{pmatrix}} \right].
+\end{pmatrix}}.
 \end{equation}
-The problem of \emph{extrapolation} concerns the case $t > k$, in
-which the expression \eqref{eq:ustat} is undefined.  Still, the
-estimator \eqref{eq:ustat} is worthy of study, since it has close to
-optimal performance for the case $t \leq k$.
+However, since $\hat{p}_t^{UN}$ is undefined for $k \geq t$, we can use exponential extrapolation
+to define an extended estimator $\hat{p}_t^{EXP}$ for $k > t$.
+Let $\hat{\alpha}$ be a measure defined by solving the optimization problem
+\[
+\text{minimize} \sum_{t=2}^{k} (\hat{p}_t^{UN} - \int_0^\infty \exp[-t\kappa] d\alpha(\kappa))^2
+\]
+After discretizing the measure $\hat{\alpha}$, we obtain a convex optimization problem
+which can be solved using non-negative least squares (Lawson 1974).
+Then define
+\[
+\hat{p}_t^{EXP} = \begin{cases}
+\hat{p}_t^{UN}&\text{ for }t \leq k,\\
+\int_0^\infty \exp[-t\kappa] d\hat{\alpha}(\kappa))&\text{ for }t > k.
+\end{cases}
+\]
 
-\subsection{Maximum pseudo-likelihood}
+\subsection{Maximum pseudolikelihood}
 
-The psuedolikelihood is defined as
+The pseudolikelihood is defined as
 \begin{equation}\label{eq:psuedo}
-\ell_t(\eta) = \sum_{i=1}^k \sum_{j=1}^{r_1} \log\left(\int u^{V_{i, j}} (1-u)^{k - V_{i, j}} \eta(u) du\right),
+\ell_t(\eta) = \sum_{i=1}^k \sum_{j=1}^{m} \log\left(\int u^{V_{i, j}} (1-u)^{k - V_{i, j}} \eta(u) du\right),
 \end{equation}
-and a maximum psuedolikelihood estimator (MPLE) is defined as any
+and a maximum pseudolikelihood estimator (MPLE) is defined as any
 density $\hat{\eta}$ such that
 \[
 \ell(\hat{\eta}_{MPLE}) = \sup_{\eta} \ell_t(\eta).
 \]
 The motivation for $\hat{\eta}_{MPLE}$ is that it consistently
 estimates $\eta$ in the limit where $k \to \infty$.
-
-\noindent\textbf{Theorem 4.2.}  \emph{ For given $\mathbb{F}$ and scoring
-  rule $\mathcal{Q}$, assume that $U$ as defined in Theorem 3.1 has a
-  density $\eta(u)$ and that $\mathcal{Q}$ satisfies the tie-breaking
-  property \eqref{eq:tie}, and also that $r_2 \geq 1$.  For $t = 1, 2,
-  \hdots, $, let $\hat{\eta}_t$ be any MPLE for $\ell_t$.  As $k_t \to
-  \infty$, $\hat{\eta}_t$ weakly converges to $\eta$.}
 
 However, in finite samples, $\hat{\eta}_{MPLE}$ is not uniquely defined,
 and if we define the plug-in estimator
@@ -615,9 +621,7 @@ $\hat{p}_t^{MPLE}$ can vary over a large range, depending on which $\hat{\eta} \
 is selected.
 These shortcomings motivate the adoption of additional constraints on the estimator $\hat{\eta}.$
 
-\subsection{Constrained pseudo-likelihood}
-
-Theorem 3.2. motivates the \emph{monotonicity constraint} that $\frac{d\hat{\eta}}{du} > 0$,
+Theorem 3.4. motivates the \emph{monotonicity constraint} that $\frac{d\hat{\eta}}{du} > 0$,
 hence we define $\hat{\eta}_{INC}$ as a solution to
 \[
 \text{maximize }\ell_t(\eta) \text{ subject to }\frac{d\hat{\eta}}{du} > 0.
@@ -633,14 +637,7 @@ $\hat{\eta}_{COM}$, which is obtained by solving
 \[
 \text{maximize }\ell_t(\eta) \text{ subject to }\int u^{k-1} \eta(u) du = \hat{p}_k^{UN}\text{ and }\frac{d\hat{\eta}}{du} > 0.
 \]
-Unfortunately, none of the three density estimators are uniquely defined.
-An easy way to see this is to transform the parameterization of $\eta(u)$,
-defining
-\[
-\eta(u) = \int_0^u \xi(u) du;
-\]
-the monotonicity constraint is equivalent to the condition that $\xi > 0$,
-and the moment condition translates into a linear equality constraint on $\xi$.
+
 
 
 
@@ -666,6 +663,10 @@ CZ is supported by an NSF graduate research fellowship.
 \small
 
 [X] Ng, Andrew Y., and Michael I. Jordan. "On Discriminative vs. Generative classifiers: A comparison of logistic regression and naive Bayes." (2002).
+
+[X] Arnold, Barry C., and David Strauss. ``Pseudolikelihood estimation: some examples." Sankhya: The Indian Journal of Statistics, Series B (1991): 233-243.
+
+[X] Lawson, Charles L., and Richard J. Hanson. Solving least squares problems. Vol. 161. Englewood Cliffs, NJ: Prentice-hall, 1974.
 
 [X] Naselaris, T., Kay, K. N., Nishimoto, S., \& Gallant,
 J. L. (2011). Encoding and decoding in fMRI. \emph{Neuroimage}, 56(2),
