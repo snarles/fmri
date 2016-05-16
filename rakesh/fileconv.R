@@ -26,4 +26,17 @@ for (ff in fl) {
   knnprobs[[ff]] <- tab
 }
 
-save(err_knn400, err1, knnprobs, lprobs, file = "rakesh/converted1.rds")
+save(err_knn400, err1, knnprobs, lprobs, file = "rakesh/converted1.rda")
+
+
+####
+##  New 100-class
+####
+
+lprobs <- list()
+fl <- list.files("rakesh/sub_sub_runs/")
+for (ff in fl) {
+  tab <- read.table(paste0("rakesh/sub_sub_runs/", ff), header = FALSE)
+  lprobs[[ff]] <- tab
+}
+saveRDS(lprobs, file = "rakesh/converted2.rds")
