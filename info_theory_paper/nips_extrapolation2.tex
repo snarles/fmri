@@ -560,7 +560,7 @@ proved to be consistent (Arnold 1991).  We discuss psuedolikelihood-based
 approaches in Section 4.2.  Thirdly, we note that the high-dimensional
 theory of Anon 2006 can be applied for prediction accuracy, which we discuss in Section 4.3.
 
-\subsection{Unbiased estimation}
+\subsection{Extensions of unbiased estimation}
 
 If $V \sim \text{Binomial}(k, \eta)$, then an unbiased estimator $f_t(V)$ of $\eta^(t-1)$ exists
 if and only if $0 \leq t \leq k$.
@@ -602,12 +602,12 @@ Then define
 
 The pseudolikelihood is defined as
 \begin{equation}\label{eq:psuedo}
-\ell_t(\eta) = \sum_{i=1}^k \sum_{j=1}^{m} \log\left(\int u^{V_{i, j}} (1-u)^{k - V_{i, j}} \eta(u) du\right),
+\ell(\eta) = \sum_{i=1}^k \sum_{j=1}^{m} \log\left(\int u^{V_{i, j}} (1-u)^{k - V_{i, j}} \eta(u) du\right),
 \end{equation}
 and a maximum pseudolikelihood estimator (MPLE) is defined as any
 density $\hat{\eta}$ such that
 \[
-\ell(\hat{\eta}_{MPLE}) = \sup_{\eta} \ell_t(\eta).
+\ell(\hat{\eta}_{MPLE}) = \sup_{\eta} \ell(\eta).
 \]
 The motivation for $\hat{\eta}_{MPLE}$ is that it consistently
 estimates $\eta$ in the limit where $k \to \infty$.
@@ -624,20 +624,22 @@ These shortcomings motivate the adoption of additional constraints on the estima
 Theorem 3.4. motivates the \emph{monotonicity constraint} that $\frac{d\hat{\eta}}{du} > 0$,
 hence we define $\hat{\eta}_{INC}$ as a solution to
 \[
-\text{maximize }\ell_t(\eta) \text{ subject to }\frac{d\hat{\eta}}{du} > 0.
+\text{maximize }\ell(\eta) \text{ subject to }\frac{d\hat{\eta}}{du} > 0.
 \]
 An alternative strategy is to directly attack the variability is $\hat{p}_t$ due to non-uniqueness of $\hat{\eta}$.
 Therefore, we define $\hat{\eta}_{MC}$ (where MC stands for moment-constrained)
 as
 \[
-\text{maximize }\ell_t(\eta) \text{ subject to }\int u^{k-1} \eta(u) du = \hat{p}_k^{UN}.
+\text{maximize }\ell(\eta) \text{ subject to }\int u^{k-1} \eta(u) du = \hat{p}_k^{UN}.
 \]
 Thirdly, we can combine both the moment constraint and the monotonicity constraint, yielding
 $\hat{\eta}_{COM}$, which is obtained by solving
 \[
-\text{maximize }\ell_t(\eta) \text{ subject to }\int u^{k-1} \eta(u) du = \hat{p}_k^{UN}\text{ and }\frac{d\hat{\eta}}{du} > 0.
+\text{maximize }\ell(\eta) \text{ subject to }\int u^{k-1} \eta(u) du = \hat{p}_k^{UN}\text{ and }\frac{d\hat{\eta}}{du} > 0.
 \]
-
+By discretizing $\eta$, all of the above maximization problems can be solved using a general-purpose convex solver\footnote{
+We found that the CVX discipline convex programming language, using the ECOS second-order cone programming solver,
+succeeds in optimizing the problems where the dimension of the discretized $\eta$ is as large as 100,000 (Hong 2014, Domahidi 2013.)}.
 
 
 
@@ -645,7 +647,7 @@ $\hat{\eta}_{COM}$, which is obtained by solving
 
 \begin{figure}
 \centering
-\includegraphics[scale = 0.6]{gabor_random_Y.pdf}
+\includegraphics[scale = 0.6]{cifar_example.pdf}
 \caption{Extrapolation classification performance for CIFAR data.  (This simulation needs to be fixed later.)
 PMLE: maximum psuedolikelihood. MCPMLE: Moment-constrained max psuedolikelihood.  Info: Zheng and Benjamini's info-theoretic method.
 Unbiased: U-statistic (cannot be used to extrapolate.) }
@@ -667,6 +669,10 @@ CZ is supported by an NSF graduate research fellowship.
 [X] Arnold, Barry C., and David Strauss. ``Pseudolikelihood estimation: some examples." Sankhya: The Indian Journal of Statistics, Series B (1991): 233-243.
 
 [X] Lawson, Charles L., and Richard J. Hanson. Solving least squares problems. Vol. 161. Englewood Cliffs, NJ: Prentice-hall, 1974.
+
+[X] Hong, Jenny, Karanveer Mohan, and David Zeng. ``CVX. jl: A Convex Modeling Environment in Julia." (2014).
+
+[X] Domahidi, Alexander, Eric Chu, and Stephen Boyd. "ECOS: An SOCP solver for embedded systems." Control Conference (ECC), 2013 European. IEEE, 2013.
 
 [X] Naselaris, T., Kay, K. N., Nishimoto, S., \& Gallant,
 J. L. (2011). Encoding and decoding in fMRI. \emph{Neuroimage}, 56(2),
