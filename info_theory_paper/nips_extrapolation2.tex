@@ -118,9 +118,6 @@ when the classifier is trained on $k$ classes is the $k-1$st moment
 of a \emph{conditional accuracy distribution}, which can be estimated from data.
 We discuss estimation approaches based on pseudolikelihood, 
 unbiased estimation, and high-dimensional asymptotics.
-These methods can be extended to a larger class of \emph{asymptotically generative} classifiers,
-which include $k$-nearest neighbors, one-vs-one and
-one-vs-all classifiers.
 We compare these methods in simulations and real data.
 \end{abstract}
 
@@ -184,36 +181,17 @@ It would be interesting to extend our theory to the hierarchical setting, or to 
 with non-uniform prior class probabilities, but we leave the subject for future work.
 
 In addition to the assumption of exchangeability, we restrict the set of classifiers considered.
-We focus initially on \emph{generative classifiers}, which are classifiers which work by training
+We focus on \emph{generative classifiers}, which are classifiers which work by training
 a model separately on each class.  This convenient property 
-allows us to characterize the accuracy of the classifier by selectively conditioning on one class at a time,
-which then reveals an equivalence between 
+allows us to characterize the accuracy of the classifier by selectively conditioning on one class at a time:
+in section 3, we use this technique to reveal an equivalence between 
 the expected accuracies of $\mathcal{Z}_k$ to moments of a common distribution.
 This moment equivalence result allows standard approaches in statistics, such as U-statistics and
-nonparametric pseudolikelilood, to be directly applied to the extrapolation problem.
+nonparametric pseudolikelilood, to be directly applied to the extrapolation problem, as we discuss in section 4.
 In non-generative classifiers, the classification rule has a joint dependence on the entire set of classes,
 and cannot be analyzed by conditioning on individual classes.
-However, in a particular limit (where the number of classes grows to infinity), we note that
-some non-generative multi-class classifiers can
-be \emph{approximated} by a generative classifier, which therefore allows our framework
-to be extended to the class of \emph{asymptotic generative} classifiers.
-In this paper, we show that particular variants of k-nearest neighbors, one-vs-one (OVO) and one-vs-all (OVA) classifiers
-are asymptotically generative.  There are other classifiers, such as multinomial logistic regression, which
-we conjecture to be asymptotically generative, but at the same time we suspect that classifiers capable of representation learning, such as deep neural networks, are not asymptotically generative.  
-Unlike generative classifiers, representation-learning classifiers can improve the model learned for a single class by using data from other classes.  One can construct examples of representation-learning classifiers with counter-intuitive behaviors, such 
-as a non-monotonic expected accuracy in the number of classes.  Intuitively,
-we expect our theory to apply poorly to such representation-learning classifiers,
-which we confirm in data examples.  We speculate that achieving prediction extrapolation
-for a representation-learning classifier would require a theory tailored to the dynamics of that particular classifier.
-
-In section 2 we formalize the concepts of \emph{classifier} and \emph{prediction extrapolation},
-and define generative and asymptotically generative classifiers.  In section 3 we develop the theory of prediction
-extrapolation for generative classifiers, culminating in the definition of the conditional accuracy distribution
-and the equivalence between the moments of the conditional accuracy distribution and the expected accuracy.
-In section 4 we present three classes of methods for prediction extrapolation:
-moment-based, pseudolikelihood-based, and a method derived from the high-dimensional asymptotic 
-classification theory of Anon (2016.)  Section 5 presents simulated and real data examples, and section 6 concludes.
-All proofs are given in the supplement.
+Nevertheless, in Section 5, we see that our methods achieve similarly accurate extrapolation for both
+generative and non-generative classifiers in real data examples.  Section 6 concludes.
 
 \section{Setting}
 
@@ -240,35 +218,23 @@ where the probabilities are taken over $Y \sim F_i$.
 
 In order to construct the classification rule $h^{(t)}$, we need data from the classes $F_1,\hdots, F_t$.
 In most instances of multi-class classification, one observes independent observations from each $F_i$
-which are used to construct the classifier.
-However, there are more general problems, such as \emph{identification} (Kay 2008, Naselaris 2011)
-where classification rules can be constructed even in the absence of observations from a given class,
-as long as some form of prior information is available for each class.
-A unifying framework for this \emph{generalized classification} task, 
-which includes both classification and identification is to suppose that one observes empirical marginals
-$\hat{F}_i$ for $i = 1,\hdots, t$.
-In the case of classification, $\hat{F}_i$ is the empirical distribution of training data, but in the case of
-identification, $\hat{F}_i$ may be obtained from a model.
-Let us assume that $\hat{F}_i$ are conditionally independent given $F_1,F_2,\hdots$, and let
-$\hat{\mathbb{F}}(F)$ denote the conditional distribution of $\hat{F}_i$ given  $F_i = F$.
-Also write $\hat{\mathbb{F}}$ for the marginal distribution of $\hat{F}$ when $F \sim \mathbb{F}.$
-It must be noted that we implicitly assumed that in the classification setting,
-the training data for the $i$th class remains unchanged
-for $t = 1,2,\hdots$; in general, we would have to write $\hat{F}_i^{(t)}$ to denote the training data
-for the $i$th class in the $t$th time step.  In the current paper, we assume fixed $\hat{F}_i$ (meaning fixed training data per class) for notational convenience.
+which are used to construct the classifier.  Since the order of the observations
+does not generally matter, a sufficient statistic for the training data for the $t$th classification problem
+is the collection of empirical distributions
+$\hat{F}_1^{(t)},\hdots,\hat{F}_t^{(t)}$ for each class.
+Henceforth, we make the simplifying assumption that the training data for the $i$th class remains fixed
+from $t =i, i+1,\hdots$, so we drop the superscript on $\hat{F}_i^{(t)}$.
+Write $\hat{\mathbb{F}}(F)$ for the conditional distribution of $\hat{F}_i$ given  $F_i = F$;
+also write $\hat{\mathbb{F}}$ for the marginal distribution of $\hat{F}$ when $F \sim \mathbb{F}.$
+As an example, suppose every class has the number of training examples $r \in \mathbb{N}$; then $\hat{F}$
+is the empirical distribution of $r$ i.i.d. observations from $F$, and $\hat{\mathbb{F}}(F)$ is the \emph{empirical meta-distribution} of $\hat{F}$.
+Meanwhile, $\hat{\mathbb{F}}$ is the meta-distribution of the empirical distribution of $r$ i.i.d. draws from a random $F \sim \mathbb{F}$.
 
-Most of the commonly used multi-class classifiers can be extended to the generalized classification setting.
-Some examples of classifiers which can be given generalized definitions
-and which we will discuss throughout the paper are multinomial logistic regression, linear discriminant
-analysis (LDA), quadratic discriminant analysis (QDA), decision trees,
-and random forests, as well as the two `divide and conquer'
-approaches, one-vs-one (OVO) and one-vs-all (OVA) (Friedman et al,
-2008.)  One exception is $k$-nearest neighbors, since the concept of k-nearest neighbors
-can only be applied to discrete point clouds, and not to continuous distributions.
-On the other hand, $\epsilon$-nearest neighbors (which is $k$-nearest neighbors with $k = \epsilon n$),
-can be given a generalized definition, since one can redefine a neighborhood as a ball of probability mass $\epsilon$.
 
-Extending the formalism of Tewari and Bartlett (2007), 
+\subsection{Multi-class classification}
+
+
+Combining the formalism of Tewari and Bartlett (2007),
 we define a classifier as a collection of mappings
 $\mathcal{M}_i: \mathcal{P}(\mathcal{Y})^k \times \mathcal{Y} \to \mathbb{R}$ called \emph{margin functions.}
 Intuitively speaking, each margin function \emph{learns a model} from the first $k$ arguments, which are
@@ -280,15 +246,69 @@ a class with maximum margin to $y$:
 h(y) = \argmax_{i \in \{1,\hdots, k\}} \mathcal{M}_i(y).
 \]
 For our purposes, it is not important how ties are resolved.  We will also neglect discussion of randomized classifiers,
-except to mention that they can be treated in our framework as probability distributions over deterministic classifiers.
+except to mention that they can be treated in our framework as probability distributions over deterministic classifiers;
+we also neglect the incorporation of prior class probabilities into the classifier, since in our setting
+the prior class probabilities are uniform.
 
+One reason why we formalize a classifier in terms of \emph{empirical distributions} rather than data points
+is to formalize the notion of \emph{continuity}.
 The level sets $\{y: \argmax_i \mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y) = k\}$ are called
 \emph{decision regions.}  We say the classifier is \emph{continuous}
 if and only if the \emph{decision regions} of $\mathcal{M}_{i=1}^k$ are
 continuous in the first $k$ arguments with respect to the topology of
 weak convergence.
 
-\subsection{Generative and Asymptotically Generative classifiers}
+To acquaint the reader with our formalism, we redefine a number of familiar classifiers according to our notation.
+
+\noindent\emph{Example 1. (OVO)} Let $\mathcal{B}$ (the \emph{base classifier}) be a binary-valued mapping with three arguments: distributions $\hat{F}_0$,
+$\hat{F}_1$, and query $y$.  A one-vs-one (OVO)
+classifier is defined by
+\[
+\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y) = \sum_{j \neq i} \mathcal{B}(\hat{F}_j, \hat{F}_i, y).
+\]
+
+\noindent\emph{Example 2. (OVA)}  Let $\mathcal{D}$ (\emph{the base classifier}) be a real-valued mapping with three arguments: 
+distributions $F_0$, $F_1$, and query $y$.  A one-vs-all (OVA) classifier is defined by
+\[
+\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y) = \mathcal{D}(\hat{F}_i, \frac{1}{k}\sum_{j = 1}^k \hat{F}_j, y).
+\]
+
+It is immediate that an OVO classifier is continuous if and only if the level sets of $\mathcal{B}$ are continuous with respect
+to the topology of weak convergence,
+and similarly that an OVA classifier is continuous if and only if $\mathcal{D}$ is continuous.
+
+\noindent\emph{Example 3. ($\epsilon$-NN)}  
+$\epsilon$-nearest neighbors can be thought of as $k$-nearest neighbors with $k = \epsilon n$ for fixed $\epsilon$.
+Let $d$ be a distance metric on $\mathcal{Y}$.  
+Let $D(y)$ denote the induced distribution of $d(Y, y)$ when $Y \sim \frac{1}{k}\sum_{i=1}^k \hat{F}_i$,
+and let $d_{\epsilon}(y)$ denote the $\epsilon$-quantile of $D(y)$. 
+An $\epsilon$-nearest neighbor classifier is defined by
+\[
+\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y) = \Pr_{Y \sim \hat{F}_i}[d(Y, y) < d_{\epsilon}(y)].
+\]
+
+Note that the $\epsilon$-NN classifier is also an example of a OVA classifier, with 
+$\mathcal{D}(F_0, F_1, y) = F_1(B_{d_{\epsilon}(y)})$, where $B_r$ is the $d$-ball of radius $r$,
+since one can define $d_{\epsilon, t}(y) = \sup_r \text{ s.t. }\frac{k-1}{k}F_0 + \frac{1}{k}F_1)(B_r(y)) \leq \epsilon$.
+
+\noindent\emph{Example 4. (Multinomial logistic regression.)}   
+Assume WLOG that $y_1 = 1$ for all $y \in \mathcal{Y}$, and let $B$ be a $p \times k$ matrix which minimizes the objective function
+\[
+-\E_{\hat{F}_j}\left[\langle Y, B_j \rangle - \log\left[\sum_{\ell=1}^{k} \exp[\langle Y, B_\ell \rangle]\right]\right].
+\]
+A multinomial logistic regression classifier is defined by
+\[
+\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y) = \langle y, B_i \rangle.
+\]
+By the convexity of the objective function, multinomial logistic regression is continuous wherever the minimizer $B$
+is unique.
+
+Throughout these examples we have neglected to discuss model selection or parameter tuning.
+It is admittedly non-trivial to formalize procedures such as cross-validation
+using our formalism, and since model selection lies beyond the scope of our paper,
+we omit the definitions.
+
+\subsection{Generative classifiers}
 
 For some classifiers, the margin function $\mathcal{M}_i$ is especially simple
 in that $\mathcal{M}_i$ is only a function of $\hat{F}_i$ and $y$.
@@ -296,26 +316,26 @@ Furthermore, due to symmetry, in such cases one can write
 \[
 \mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y) = \mathcal{Q}(\hat{F}_i, y)
 \]
-where $\mathcal{Q}$ is \emph{scoring rule}.
+where $\mathcal{Q}$ is called a \emph{single-class margin} (or simply \emph{margin}.)
 For notational convenience, we assume that ties occur with probability
 zero: that is, $\hat{\mathbb{F}}$ and $\mathcal{Q}$ jointly satisfy the
 \emph{tie-breaking} property:
 \begin{equation}\label{eq:tie}
 \Pr[\mathcal{Q}(\hat{F}, y) = \mathcal{Q}(\hat{F}', y)] = 0.
 \end{equation}
-for all $y \mathcal{Y}$, where $\mathbb{F}, \mathbb{F}' \stackrel{iid}{\sim} \hat{\mathbb{F}}$.
+for all $y \in \mathcal{Y}$, where $\mathbb{F}, \mathbb{F}' \stackrel{iid}{\sim} \hat{\mathbb{F}}$.
 Quadratic discriminant analysis and Naive Bayes are two examples of
-generative classifiers.  For QDA, the scoring rule is given by
+generative classifiers.  For QDA, the margin is given by
 \[
-\mathcal{Q}_{QDA}(F, y) = -(y - \mu(F))^T \Sigma(F)^{-1} (y-\mu(F)) - \log\det(\Sigma(F))
+\mathcal{Q}_{QDA}(\hat{F}, y) = -(y - \mu(\hat{F}))^T \Sigma(\hat{F})^{-1} (y-\mu(\hat{F})) - \log\det(\Sigma(\hat{F}))
 \]
 where $\mu(F) = \int y dF(y)$ and $\Sigma(F) = \int (y-\mu(F))(y-\mu(F))^T dF(y)$.
-In Naive Bayes, the scoring rule is
+In Naive Bayes, the margin is
 \[
 \mathcal{Q}_{NB}(\hat{F},  y) = \sum_{i=1}^n \log \hat{f}_i(y_i)
 \]
 where $\hat{f}_i$ is a density estimate for the $i$th component of
-$F$.
+$\hat{F}$.
 
 The \emph{generative} property allows us to prove strong results about the accuracy of the classifier
 under the exchangeable sampling assumption.  For starters, we can show that the
@@ -337,189 +357,63 @@ there exists a measure $\alpha$ on $[0, \infty)$ such that
 \]
 }
 
+(We give the proof in section 3.)
+
 The theorem immediately suggests a method for predicting $\text{acc}^{(K)}$:
-fit a mixed exponential curve to $\text{acc}^{(2)},\hdots, \text{acc}^{(k)}$
-(we discuss a similar approach in Section 4),
-but this is just a preview of the methods which can be developed for generative classifiers,
-which we discuss more fully in Section 3.
+fit a mixed exponential decay to $a(t) = \text{acc}^{(t)}$ for $t = 2,\hdots, k$ and extrapolate the curve to $t = K$.
+This is just one of many methods which can be developed for generative classifiers,
+which we discuss more fully in Section 3 and 4.
 
-Unfortunately, the majority of classifiers used in practice are \emph{not} generative,
-and for good reason.  Generative classifiers construct decision boundaries out of estimated marginal distributions,
-so while a correctly specified marginal model can lead to an extremely efficient classifier,
-a misspecified marginal model leads to extremely poor decision boundaries.
-In contrast, discriminative classifiers directly search for good classification boundaries based on the data,
-making them more robust to the data generating process, and as a result,
-in most problems, discriminative classifiers outperform generative classifiers (Ng 2002).
-Despite this fact, it can be shown that many non-generative classifiers are \emph{asymptotically generative},
-meaning that i$\mathcal{M}_i^{(t)}$, the $i$th margin for the $t$th classification problem in the sequence,
-converges to a function of $\hat{F}_i$ and $y$ with probability one:
-\begin{equation}\label{eq:agen}
-\lim_{t \to \infty} \mathcal{M}_i^{(t)}(\hat{F}_1,\hdots, \hat{F}_t, y) = \mathcal{Q}(\hat{F}_i, y) \text{ w.h.p. }
-\end{equation}
-While asymptotically generative classifiers share the properties of generative classifiers with respect to
-prediction extrapolation, they need not share the same \emph{limitations} as generative classifiers.
-A generative classifier requires the user to specify the scoring function $\mathcal{Q}$ in advance:
-this practically requires some prior knowledge about the marginal distributions of the classes,
-e.g. that the marginal distributions are approximately multivariate Gaussian.
-But the scoring function $\mathcal{Q}$ appearing in the definition of an asymptotically generative classifier
-\emph{need not be specified} by the user: 
-it can (and usually does) depend on the unknown meta-distribution $\mathbb{F}$.
-Therefore one can think of asymptotically generative classifiers as generative classifiers with `adaptive' $\mathcal{Q}$,
-which suggests that the class of asymptotically generative classifiers could be quite diverse.
 
-Ideally, we could extend Theorem 2.2 for asymptotic generative classifiers, but a stronger condition is needed.
-Note that under the tie-breaking assumption, one can always take $\mathcal{Q}$ in \eqref{eq:agen} so that
-\[
-\Pr[\mathcal{Q}(\hat{F}, y) < u] = u\text{ for }u \in [0,1],
-\]
-for all $y \in \mathcal{Y}$: we refer to such $\mathcal{Q}$ as \emph{calibrated.}
-We define a \emph{uniformly asymptotic generative} classifier by adding conditions on the worst-case rate that
-$\mathcal{M}_i$ converges to calibrated $\mathcal{Q}$: these additional conditions are sufficient for the generalization of Theorem 2.3.  We now give the definition and the theorem.
+\section{Prediction extrapolation for generative classifiers}
 
-\textbf{Definition 2.1.}  \emph{(Uniformly asymptotically generative) Suppose classifier $\mathcal{M}$ satisfies \eqref{eq:agen} for calibrated $\mathcal{Q}$, and furthermore that
-\[
-\lim_{t \to \infty} \sup_{i \leq t} \frac{1}{t}\sum_{j=1}^t \Pr_{F_j}[\mathcal{M}(\hat{F}_1,\hdots, \hat{F}_t, Y) - \mathcal{Q}(\hat{F}_i, Y)| > \epsilon] \to 0
-\]
-with probability one for all $\epsilon > 0$.  Then we say that $\mathcal{M}$ is uniformly asymptotically generative.}
-
-\textbf{Theorem 2.3}\emph{
-Let $\mathcal{Q}$ be the scoring function of a uniformly generative classifier, and 
-assume that $F_1,\hdots, F_k \stackrel{iid}{\sim} \mathbb{F}$ and $\hat{F}_i \sim \hat{\mathbb{F}}(F_i)$ independently,
-following the notation of section 2.
-Further assume that $\mathcal{Q}$ and $\mathbb{F}$ satisfy the tie-breaking property \eqref{eq:tie}.
-Then, recalling the definition of accuracy,
-\[
-\text{acc}^{(t)} = \frac{1}{t}\sum_{i=1}^t \Pr_{Y \sim F_i}[\mathcal{M}_i(\hat{F}_1,\hdots,\hat{F}_t, Y) > \argmax_{i > j} \mathcal{M}_j(\hat{F}_1,\hdots, \hat{F}_t, Y)],
-\]
-there exists a measure $\alpha$ on $[0, \infty)$ such that
-\[
-\E[\text{acc}^{(t)}] = \int_{\mathbb{R}^{+}} e^{\kappa t} d\alpha(\kappa).\]
-}
-
-[[rewrite ends here]]
-
-\textbf{Definition 2.2.}(i) Define a binary classifier $\mathcal{B}$
-as a binary-valued mapping with four arguments: distributions $F_0$,
-$F_1$, prior probability $\pi_0$ and a query $y$.  A one-vs-one (OVO)
-recognition system is defined by
-\[
-f_t(y) = \argmax_{i=1}^{k_t} \sum_{j \neq i} I\left(\mathcal{B}(\hat{F}_{i, t}, \hat{F}_{j, t}, \frac{n_{i, t}}{n_{i, t} + n_{j, t}}, y)=0\right),
-\]
-resolving ties arbitrarily.
-
-(ii) Define a binary scoring rule $\mathcal{D}$ as a real-valued
-mapping with four arguments: distributions $F_0$, $F_1$, prior
-probability $\pi_0$, and a query $y$.  A one-vs-all (OVA) recognition
-system is defined by
-\[
-f_t(y) = \argmax_{i=1}^{k_t} \mathcal{D}\left(\hat{F}_{i, t},
-\sum_{j\neq i} \frac{n_{j, t}}{n_t - n_{i, t}}\hat{F}_{j, t},
-\frac{n_{i, t}}{n_t}, y\right).
-\]
-
-(iii) Let $d$ be a distance metric on $\mathcal{Y}$.  Let $D_t(y)$
-denote the induced distribution of $d(Y, y)$ when $Y \sim \hat{F}_t$,
-and let $d_{\alpha, t}$ denote the $\alpha$-quantile of $D_t(y)$.  A
-kNN recognition system with neighborhood size $\alpha$ is defined by
-\[
-f_t(y) = \argmax_{i=1}^{k_t} \Pr[d(y, Y) < d_{\alpha, t} |Y \sim \hat{F}_{i, t}].
-\]
-
-(iv) Assume WLOG that $y_1 = 1$ for all $y \in \mathcal{Y}$, and let
-$B^t$ be a $p \times k_t$ matrix which minimizes the log-likelihood
-\[
-\sum_{j=1}^{k_t}n_{j, t}\E_{\hat{F}_j}\left[\langle Y, B^t_j \rangle - \log\left[\sum_{\ell=1}^{k_t} \exp[\langle Y, B^t_\ell \rangle]\right]\right].
-\]
-A multinomial logistic regression recognition system is defined by
-\[
-f_t(y) = \argmax_{i=1}^{k_t} \langle y, B^t_i\rangle.
-\]
-
-\textbf{Theorem 2.1.}{\color{red} (more like conjecture; not actually
-  proved yet!!)}  \emph{(i) an OVO recognition system equipped with a
-  continuous binary classifier is separable; (ii) an OVA recognition
-  system equipped with a continuous binary scoring rule is separable;
-  (iii) a kNN recognition system with fixed neighborhood size $\alpha
-  \in (0, 1)$ is separable; (iv) a multinomial logistic regression
-  recognition system is separable.}
-
-\section{Prediction Extrapolation}
-
-\subsection{Problem formulation}
-
-Recall the notation from section 2.1. Assume that $F_1,F_2, \hdots$
-are sampled i.i.d. from the meta-distribution $\mathbb{F}$, and
-$y^{(i), 1}, \hdots, y^{(i), r}$ from $F_i$ for $i = 1, 2, \hdots$.
-Take $k_t = t$ and $n_{i, t} = r$.
-
-Unlike in section 2.1., only the first $r_1 < r$ measurements in each
-species will be used to construct the classifier: redefine
-\[
-\hat{F}_{i, t} = \frac{1}{r_1} \sum_{j=1}^{r_1} \delta_{y^{(i), j}}.
-\]
-Since $\hat{F}_{i, t}$ no longer depends on $t$, we will write it as
-$\hat{F}_i$.  The remaining $r_2 = r - r_1$ measurements of each
-species constitute the \emph{test set}, used to evaluate the
-performance of the classifier.
-
-The generalization accuracy at time $t$ is defined
-\[
-\text{acc}^{(t)} = \frac{1}{k}\sum_{i=1}^k \Pr[f_t(y) = i|y \sim p(y|x^{(i)})].
-\]
-The extrapolation problem is the problem of predicting
-$\text{acc}^{(K)}$ using only information known at time $k < K$,
-namely, $\{y^{(i), j}\}_{i=1, j=1}^{k, r}$.
-
-\subsection{Conditional accuracy}
-
+Let us specialize to the case of a generative classifier, with scoring rule $\mathcal{Q}$.
 Consider estimating the expected accuracy at time $t$, \[p_t
 \stackrel{def}{=} \E[\text{acc}^{(t)}].\]
 
-Assume that the classifier is based on a scoring rule $\mathcal{Q}$.
-Further assume that $\mathcal{Q}$ has a trivial dependence on the
-prior probability parameter: $\mathcal{Q}(F, a, y) = \mathcal{Q}(F, b,
-y)$ for all $F$, $y$, and $a, b \in [0, 1]$.  This assumption is more
-mild than it appears, since most classifiers indeed have a trivial
-dependence on $\vec{\pi}$ in the case when $\vec{\pi}$ is set to the
-uniform distribution.
-
-Define the \emph{conditional accuracy} function $u(F, y)$ which maps a
-distribution $F$ on $\mathcal{Y}$ and a \emph{test} observation $y$ to
+Define the \emph{conditional accuracy} function $u(\hat{F}, y)$ which maps a
+distribution $\hat{F}$ on $\mathcal{Y}$ and a \emph{test} observation $y$ to
 a real number in $[0,1]$.  The conditional accuracy gives the
-probability that for independently drawn $F$ and $F'$ from
-$\mathbb{F}$, letting $\hat{F}'$ be the empirical distribution of
-$r_1$ measurements drawn from $F'$, that the scoring function
-$\mathcal{Q}(F, 0, y)$ will give a higher score to $y$ than the
-scoring function $\mathcal{Q}(\hat{F}', 0, y)$:
+probability that for independently drawn $\hat{F}'$ from $\hat{\mathbb{F}}$, that
+$\mathcal{Q}(\hat{F}, y)$ will be greater than $\mathcal{Q}(\hat{F}', y)$:
 \[
-u(F, y) = \Pr[\mathcal{Q}(F, 0, y) > \mathcal{Q}(\hat{F}', 0, y)].
+u(\hat{F}, y) = \Pr_{\hat{F} \sim \hat{\mathbb{F}}}[\mathcal{Q}(\hat{F}, y) > \mathcal{Q}(\hat{F}', y)].
 \]
-Define the \emph{conditional accuracy} distribution $\mu$ as the law
-of $u(\hat{F}, Y)$ when $F \sim \mathbb{F}$, and $\hat{F}, Y$ are both
-obtained from $F$.  The significance of the conditional accuracy
+Define the \emph{conditional accuracy} distribution $\nu$ as the law
+of $u(\hat{F}, Y)$ where $\hat{F}$ and $Y$ are generated as follows:
+(i) a true distribution $F$ is drawn from $\mathbb{F}$; (ii) the query $Y$ is drawn from $F$, 
+and (iii) the empirical distribution $\hat{F}$ is drawn from $\hat{\mathbb{F}}(F)$ 
+(e.g., the distribution of the empirical distribution of $r$ i.i.d. observations drawn from $F$),
+with $Y$ independent of $\hat{F}$.  The significance of the conditional accuracy
 distribution is that the expected generalization error $p_t$ can be
 written in terms of its moments.
 
 \noindent\textbf{Theorem 3.1.} \emph{
+Let $\mathcal{Q}$ be a single-distribution margin, and let $\mathbb{F}$, $\hat{F}(F)$ be a distribution on $\mathcal{P}(\mathcal{Y}).$
 Let $U$ be defined as the random variable
-\[U = u(F, Y)\]
-for $X, Y$ drawn from $p(x, y) = p(x) p(y|x)$,
-and $\hat{F}(X) = \frac{1}{r_1}\sum_{j=1}^{r_1} \delta{Y^j}$ with $Y^i \stackrel{iid}{\sim} p(y|X)$
-Then $p_k = \E[U^{k-1}]$.
+\[
+U = u(\hat{F}, Y)
+\]
+for $F \sim \mathbb{F}$, $Y \sim F$, and $\hat{F} \sim \hat{\mathbb{F}}(F)$ with $Y \perp \hat{F}$.
+Recall the definition
+\[
+p_k = \E[acc^{(k)}] = \E\left[\frac{1}{t}\sum_{i=1}^k \Pr_{Y \sim F_i}[\mathcal{Q}(\hat{F}_i, Y) > \max_{j \neq i}\mathcal{Q}(\hat{F}_j, Y)]\right].
+\]
+Then \[p_k = \E[U^{k-1}].\]
 }
 
 \noindent\textbf{Proof.}  
-Write $q^{(i)}(y) = \mathcal{Q}(\hat{F}_i, 0, y)$, and let $Y^{(i), *} \sim p(y|X^{(i)}$ for $i = 1,\hdots, k$.
-Note that by using conditioning and
+Write $q^{(i)}(y) = \mathcal{Q}(\hat{F}_i, y)$.
+By using conditioning and
 conditional independence, $p_k$ can be written
 \begin{align*}
-p_k &= \E\left[ \frac{1}{k}\sum_{i=1}^k  \Pr[q^{(i)}(Y^{(i), *}) > \max_{j\neq i} q^{(j)}(Y^{(i), *})] \right]
-\\&= \E\left[ \Pr[q^{(1)}(Y^{(1), *}) > \max_{j\neq 1} q^{(j)}(Y^{(1), *})] \right]
-\\&= \E[\Pr[q^{(1)}(Y^{(1), *}) > \max_{j\neq 1} q^{(j)}(Y^{(1), *})|Y^{(1), *}, \hat{F}_1]]
-\\&= \E[\Pr[\cap_{j > 1} q^{(1)}(Y^{(1), *}) > q^{(j)}(Y^{(1), *})|Y^{(1), *}, \hat{F}_1]]
-\\&= \E[\prod_{j > 1}\Pr[q^{(1)}(Y^{(1), *}) > q^{(j)}(Y^{(1), *})|Y^{(1), *}, \hat{F}_1]]
-\\&= \E[\Pr[q^{(1)}(Y^{(1), *}) > q^{(2)}(Y^{(1), *})|Y^{(1), *}, \hat{F}_1]^{k-1}]
-\\&= \E[u(\hat{F}_1, Y^{(1), *})^{k-1}] = \E[U^{k-1}].
+p_k &= \E\left[ \frac{1}{k}\sum_{i=1}^k  \Pr_{F_i}[q^{(i)}(Y) > \max_{j\neq i} q^{(j)}(Y)] \right]
+\\&= \E\left[ \Pr_{F_1}[q^{(1)}(Y) > \max_{j\neq 1} q^{(j)}(Y)] \right]
+\\&= \E_{F_1}[\Pr[q^{(1)}(Y) > \max_{j\neq 1} q^{(j)}(Y)|\hat{F}_1, Y]]
+\\&= \E_{F_1}[\Pr[\cap_{j > 1} q^{(1)}(Y) > q^{(j)}(Y)|\hat{F}_1, Y]]
+\\&= \E_{F_1}[\prod_{j > 1}\Pr[q^{(1)}(Y) > q^{(j)}(Y)|\hat{F}_1, Y]]
+\\&= \E_{F_1}[\Pr[q^{(1)}(Y) > q^{(2)}(Y)|\hat{F}_1, Y]^{k-1}]
+\\&= \E_{F_1}[u(\hat{F}_1, Y)^{k-1}] = \E[U^{k-1}].
 \end{align*}
 $\Box$
 
@@ -725,3 +619,64 @@ of statistical learning.} Vol. 1. Springer, Berlin: Springer series in
 statistics, 2008.
 
 \end{document}
+
+
+
+
+
+
+
+
+Unfortunately, the majority of classifiers used in practice are \emph{not} generative,
+and for good reason.  Generative classifiers construct decision boundaries out of estimated marginal distributions,
+so while a correctly specified marginal model can lead to an extremely efficient classifier,
+a misspecified marginal model leads to extremely poor decision boundaries.
+In contrast, discriminative classifiers directly search for good classification boundaries based on the data,
+making them more robust to the data generating process, and as a result,
+in most problems, discriminative classifiers outperform generative classifiers (Ng 2002).
+Despite this fact, it can be shown that many non-generative classifiers are \emph{asymptotically generative},
+meaning that i$\mathcal{M}_i^{(t)}$, the $i$th margin for the $t$th classification problem in the sequence,
+converges to a function of $\hat{F}_i$ and $y$ with probability one:
+\begin{equation}\label{eq:agen}
+\lim_{t \to \infty} \mathcal{M}_i^{(t)}(\hat{F}_1,\hdots, \hat{F}_t, y) = \mathcal{Q}(\hat{F}_i, y) \text{ w.h.p. }
+\end{equation}
+While asymptotically generative classifiers share the properties of generative classifiers with respect to
+prediction extrapolation, they need not share the same \emph{limitations} as generative classifiers.
+A generative classifier requires the user to specify the scoring function $\mathcal{Q}$ in advance:
+this practically requires some prior knowledge about the marginal distributions of the classes,
+e.g. that the marginal distributions are approximately multivariate Gaussian.
+But the scoring function $\mathcal{Q}$ appearing in the definition of an asymptotically generative classifier
+\emph{need not be specified} by the user: 
+it can (and usually does) depend on the unknown meta-distribution $\mathbb{F}$.
+Therefore one can think of asymptotically generative classifiers as generative classifiers with `adaptive' $\mathcal{Q}$,
+which suggests that the class of asymptotically generative classifiers could be quite diverse.
+
+Ideally, we could extend Theorem 2.2 for asymptotic generative classifiers, but a stronger condition is needed.
+Note that under the tie-breaking assumption, one can always take $\mathcal{Q}$ in \eqref{eq:agen} so that
+\[
+\Pr[\mathcal{Q}(\hat{F}, y) < u] = u\text{ for }u \in [0,1],
+\]
+for all $y \in \mathcal{Y}$: we refer to such $\mathcal{Q}$ as \emph{calibrated.}
+We define a \emph{uniformly asymptotic generative} classifier by adding conditions on the worst-case rate that
+$\mathcal{M}_i$ converges to calibrated $\mathcal{Q}$: these additional conditions are sufficient for the generalization of Theorem 2.3.  We now give the definition and the theorem.
+
+\textbf{Definition 2.1.}  \emph{(Uniformly asymptotically generative) Suppose classifier $\mathcal{M}$ satisfies \eqref{eq:agen} for calibrated $\mathcal{Q}$, and furthermore that
+\[
+\lim_{t \to \infty} \sup_{i \leq t} \frac{1}{t}\sum_{j=1}^t \Pr_{F_j}[\mathcal{M}(\hat{F}_1,\hdots, \hat{F}_t, Y) - \mathcal{Q}(\hat{F}_i, Y)| > \epsilon] \to 0
+\]
+with probability one for all $\epsilon > 0$.  Then we say that $\mathcal{M}$ is uniformly asymptotically generative.}
+
+\textbf{Theorem 2.3}\emph{
+Let $\mathcal{Q}$ be the scoring function of a uniformly generative classifier, and 
+assume that $F_1,\hdots, F_k \stackrel{iid}{\sim} \mathbb{F}$ and $\hat{F}_i \sim \hat{\mathbb{F}}(F_i)$ independently,
+following the notation of section 2.
+Further assume that $\mathcal{Q}$ and $\mathbb{F}$ satisfy the tie-breaking property \eqref{eq:tie}.
+Then, recalling the definition of accuracy,
+\[
+\text{acc}^{(t)} = \frac{1}{t}\sum_{i=1}^t \Pr_{Y \sim F_i}[\mathcal{M}_i(\hat{F}_1,\hdots,\hat{F}_t, Y) > \argmax_{i > j} \mathcal{M}_j(\hat{F}_1,\hdots, \hat{F}_t, Y)],
+\]
+there exists a measure $\alpha$ on $[0, \infty)$ such that
+\[
+\E[\text{acc}^{(t)}] = \int_{\mathbb{R}^{+}} e^{\kappa t} d\alpha(\kappa).\]
+}
+
