@@ -137,11 +137,12 @@ At a later time, one might consider a larger (but still finite) classification p
 with $\mathcal{Z}_2 \supset \mathcal{Z}_1$.
 In general, consider an infinite sequence of classification problems on subsets $\mathcal{Z}_1 \subset \cdots \subset \mathcal{Z}_t \subset \cdots$.  
 Let $S_i$ represent the training data available for the $i$th classification problem,
-and let $h_i: \mathcal{Y} \to \mathcal{Z}_i$ be the learned classification rule.
+and let $h^{(i)}: \mathcal{Y} \to \mathcal{Z}_i$ be the learned classification rule.
 Define the accuracy for the $i$th problem as
 \[
-\text{acc}_i = \Pr[h_i(y) = z|z \in \mathcal{Z}_i].
+\text{acc}^{(i)} = \Pr[h^{(i)}(Y) = Z|Z \in \mathcal{Z}_i].
 \]
+where the probability is taken over the joint distribution of $(Z, Y)$.
 Using data from only $\mathcal{Z}_k$, can one predict the accuracy achieved on the larger label set $\mathcal{Z}_K$, with $K> k$?  This is the problem of \emph{prediction extrapolation}.
 
 A practical instance of prediction extrapolation occurs in neuroimaging studies,
@@ -157,14 +158,14 @@ before the accuracy of the model drops below 0.10!  Directly validating this est
 so it would be useful to develop the theory needed to understand how to compute such extrapolations
 in a principled way. 
 
-The most important assumption for our theory is that of \emph{exchangeable sampling}.
+However, in the fully general setting, it is impossible on construct
+non-trivial bounds on the accuracy achieved on the new classes $\mathcal{Z}_K \setminus \mathcal{Z}_k$
+based only on knowledge of $\mathcal{Z}_k$: after all, $\mathcal{Z}_k$ could consist entirely of well-separated classes
+while the new classes $\mathcal{Z}_K \setminus \mathcal{Z}_k$ consist entirely of highly inseparable classes, or vice-versa.
+Thus, the most important assumption for our theory is that of \emph{exchangeable sampling}.
 The labels in $\mathcal{Z}_i$ are assumed to be an exchangeable sample from $\mathcal{Z}$.
 The exchangeability further implies that the marginal distributions of $z \in \mathcal{Z}$ 
-are equiprobable within every subset $\mathcal{Z}_i$.  Without the condition of exchangeability (or a similar assumption),
-it is impossible on construct
-non-trivial bounds on the accuracy achieved on the new classes $\mathcal{Z}_K \setminus \mathcal{Z}_k$
-based only on knowledge of $\mathcal{Z}_k$, since $\mathcal{Z}_k$ could consist entirely of well-separated classes
-while the new classes $\mathcal{Z}_K \setminus \mathcal{Z}_k$ consist entirely of highly inseparable classes, or vice-versa.
+are equiprobable within every subset $\mathcal{Z}_i$. 
 The condition of exchangeability ensures that the separability of random subsets of $\mathcal{Z}$ can be inferred
 by looking at the empirical distributions in $\mathcal{Z}_k$, and therefore that some estimate of the achievable
 accuracy on $\mathcal{Z}_K$ can be obtained.
@@ -212,97 +213,158 @@ and the equivalence between the moments of the conditional accuracy distribution
 In section 4 we present three classes of methods for prediction extrapolation:
 moment-based, pseudolikelihood-based, and a method derived from the high-dimensional asymptotic 
 classification theory of Anon (2016.)  Section 5 presents simulated and real data examples, and section 6 concludes.
+All proofs are given in the supplement.
 
-\section{Prediction extrapolation}
+\section{Setting}
 
-\subsection{Multi-class classification}
+\subsection{Prediction extrapolation}
 
-A natural approach for implementing a recognition system is through
-\emph{supervised learning}: the data is input into a supervised
-learning algorithm in order to \emph{learn} a classification rule
-$f(y)$.  Examples of multi-class classifiers include $k$-nearest
-neighbors, multinomial logistic regression, linear discriminant
+Having motivated the problem of prediction extrapolation,
+we now reformulate the problem for notational and theoretical convenience.
+Instead of requiring $\mathcal{Z}_k$ to be a random subset of $\mathcal{Z}$ as we did in section 1, take
+$\mathcal{Z}=\mathbb{N}$ and $\mathcal{Z}_k = \{1,\hdots, k\}$.
+We fix the size of $\mathcal{Z}_k$ without losing generality, since any monotonic sequence of 
+finite subsets can be embedded in a sequence with $|\mathcal{Z}_k| = k$.
+In addition, rather than randomizing the labels, we will randomize the marginal distribution of each label;
+Towards that end, let $\mathcal{Y} \subset \mathbb{R}^p$ be a space of feature vectors, and
+let $\mathcal{P}(\mathcal{Y})$ be a measurable space of probability distributions on $\mathcal{Y}$.
+Let $\mathcal{F}$ be a probability measure on $\mathcal{P}$,
+and let $F_1, F_2,\hdots$ be an infinite sequence of i.i.d. draws from $\mathbb{F}$.
+We refer to $\mathbb{F}$, a probability measure on probability measures, as a \emph{meta-distribution}.
+The distributions $F_1,\hdots, F_k$ are the marginal distributions of the first $k$ classes.
+We therefore rewrite the accuracy as
+\[
+\text{acc}^{(i)} = \frac{1}{t}\sum_{i=1}^t \Pr_{F_i}[h^{(t)}(Y) = i].
+\]
+where the probabilities are taken over $Y \sim F_i$.
+
+In order to construct the classification rule $h^{(t)}$, we need data from the classes $F_1,\hdots, F_t$.
+In most instances of multi-class classification, one observes independent observations from each $F_i$
+which are used to construct the classifier.
+However, there are more general problems, such as \emph{identification} (Kay 2008, Naselaris 2011)
+where classification rules can be constructed even in the absence of observations from a given class,
+as long as some form of prior information is available for each class.
+A unifying framework for this \emph{generalized classification} task, 
+which includes both classification and identification is to suppose that one observes empirical marginals
+$\hat{F}_i$ for $i = 1,\hdots, t$.
+In the case of classification, $\hat{F}_i$ is the empirical distribution of training data, but in the case of
+identification, $\hat{F}_i$ may be obtained from a model.
+Let us assume that $\hat{F}_i$ are conditionally independent given $F_1,F_2,\hdots$, and let
+$\hat{\mathbb{F}}(F)$ denote the conditional distribution of $\hat{F}_i$ given  $F_i = F$.
+Also write $\hat{\mathbb{F}}$ for the marginal distribution of $\hat{F}$ when $F \sim \mathbb{F}.$
+It must be noted that we implicitly assumed that in the classification setting,
+the training data for the $i$th class remains unchanged
+for $t = 1,2,\hdots$; in general, we would have to write $\hat{F}_i^{(t)}$ to denote the training data
+for the $i$th class in the $t$th time step.  In the current paper, we assume fixed $\hat{F}_i$ (meaning fixed training data per class) for notational convenience.
+
+Most of the commonly used multi-class classifiers can be extended to the generalized classification setting.
+Some examples of classifiers which can be given generalized definitions
+and which we will discuss throughout the paper are multinomial logistic regression, linear discriminant
 analysis (LDA), quadratic discriminant analysis (QDA), decision trees,
 and random forests, as well as the two `divide and conquer'
 approaches, one-vs-one (OVO) and one-vs-all (OVA) (Friedman et al,
-2008.)  A unified definition of a classifier is as follows: a
-$k$-class classifier $\mathcal{C}$ is a function which takes $k+2$
-arguments: the first $k$ arguments are \emph{probability
-  distributions} $F_1,\hdots, F_k$, the $(k+1)$st argument is a vector
-of prior probabilities $\vec{\pi}$, and the $(k+2)$nd argument is a
-\emph{query} $y$
-\footnote{We treat randomized classifiers (such as random forests) as
-  a probability distribution over deterministic classifiers.}.  The
-level sets $\{y: \mathcal{C}(F_1,\hdots, F_k, y) = k\}$ are called
-\emph{decision regions.}  We say the classifier is \emph{continuous}
-if and only if the \emph{decision regions} of $\mathcal{C}$ are
-continuous in the first $k$ arguments with respect to the topology of
-weak convergence\footnote{We say that a randomized classifier is
-  continuous if and only if it is continuous with probability one.}.
-Most of the commonly used classifiers satisfy this definition of
-continuity: an exception is $k$-nearest neighbors with fixed $k$, but
-then again, $k$-nearest neighbors with $\lim_{n \to \infty} k/n \in
-(0, 1)$ is continuous.  \emph{Training a classifier} refers to
-defining a classification rule
+2008.)  One exception is $k$-nearest neighbors, since the concept of k-nearest neighbors
+can only be applied to discrete point clouds, and not to continuous distributions.
+On the other hand, $\epsilon$-nearest neighbors (which is $k$-nearest neighbors with $k = \epsilon n$),
+can be given a generalized definition, since one can redefine a neighborhood as a ball of probability mass $\epsilon$.
+
+Extending the formalism of Tewari and Bartlett (2007), 
+we define a classifier as a collection of mappings
+$\mathcal{M}_i: \mathcal{P}(\mathcal{Y})^k \times \mathcal{Y} \to \mathbb{R}$ called \emph{margin functions.}
+Intuitively speaking, each margin function \emph{learns a model} from the first $k$ arguments, which are
+the empirical marginals of the $k$ classes, which it uses to assign a \emph{margin} or \emph{score} to the
+\emph{query point} $y \in \mathcal{Y}$.  A higher score $\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y)$ indicates a higher estimated probability that $y$ belongs to the $k$th class.  
+Therefore, the classification rule corresponding to a classifier $\mathcal{M}_i$ assigns
+a class with maximum margin to $y$:
 \[
-f(y) = \mathcal{C}(\hat{F}_1,\hdots, \hat{F}_k, \vec{\pi}, y)
+h(y) = \argmax_{i \in \{1,\hdots, k\}} \mathcal{M}_i(y).
 \]
-where $\hat{F}_i = \frac{1}{n_i}\sum_{j=1}^{n_i} \delta_{y^{(i), j}}$
-is the empirical distribution, and where $\vec{\pi}$ is commonly set
-to either be the uniform distribution on $k$ elements, or the
-empirical proportions of the classes, but can be adjusted in order to
-favor certain classes over others.
+For our purposes, it is not important how ties are resolved.  We will also neglect discussion of randomized classifiers,
+except to mention that they can be treated in our framework as probability distributions over deterministic classifiers.
 
-Whenever new data is added, the classifier is retrained.  
-Let $\hat{F}_{i, t}$ denote the empirical distribution of the
-measurements of species $i$ at time $t$, and $\hat{F}_t$ denote the
-empirical distribution of all measurements at time $t$.
+The level sets $\{y: \argmax_i \mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y) = k\}$ are called
+\emph{decision regions.}  We say the classifier is \emph{continuous}
+if and only if the \emph{decision regions} of $\mathcal{M}_{i=1}^k$ are
+continuous in the first $k$ arguments with respect to the topology of
+weak convergence.
 
-\subsection{Exchangeability}
+\subsection{Generative and Asymptotic Generative classifiers}
 
-A key assumption for our theory is that the marginal distributions of
-the classes $F_1, F_2, \hdots$ are \emph{exchangeable}: equivalently,
-that there exists a measure $\mathbb{F}$ on probability distributions
-in $\mathcal{Y}$, and $F_i \sim{i.i.d.} \mathbb{F}$ for $i =
-1,\hdots$.  We call $\mathbb{F}$ a meta-distribution.
-
-[[Discuss the signficance of this assumption.  Without it, extrapolation is impossible.]]
-
-\subsection{Asymptotic Generative}
-
-Define a generative classifier $\mathcal{C}$ as satisfying
- \[
-\mathcal{C}(F_1,\hdots, F_k, \vec{\pi}, y) = \argmax_i \mathcal{Q}(F_i, \vec{\pi}_i, y).
+For some classifiers, the margin function $\mathcal{M}_i$ is especially simple
+in that $\mathcal{M}_i$ is only a function of $\hat{F}_i$ and $y$.
+Furthermore, due to symmetry, in such cases one can write
+\[
+\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y) = \mathcal{Q}(\hat{F}_i, y)
 \]
-where $\mathcal{Q}$ is \emph{scoring rule}: a real-valued function
-which takes three arguments: a distribution $F$ on $\mathcal{Y}$, a
-prior probability $\pi$, and a query measurement $y \in \mathcal{Y}$.
+where $\mathcal{Q}$ is \emph{scoring rule}.
 For notational convenience, we assume that ties occur with probability
-zero: that is, $\mathbb{F}$ and $\mathcal{Q}$ jointly satisfy the
-\emph{tie-breaking} property: for any $\pi \in [0,1]$, letting
-$\hat{F}$ be an empirical distribution of finitely many points drawn
-from $F \sim \mathbb{F}$ respectively, $Y, Y' \stackrel{iid}{\sim} F$,
+zero: that is, $\hat{\mathbb{F}}$ and $\mathcal{Q}$ jointly satisfy the
+\emph{tie-breaking} property:
 \begin{equation}\label{eq:tie}
-\Pr[\mathcal{Q}(\hat{F}, \pi, Y) = \mathcal{Q}(\hat{F}, \pi, Y')] = 0.
+\Pr[\mathcal{Q}(\hat{F}, y) = \mathcal{Q}(\hat{F}, y')] = 0.
 \end{equation}
+for all $y \neq y' \in \mathcal{Y}$, where $\mathbb{F} \sim \hat{\mathbb{F}}$.
 Quadratic discriminant analysis and Naive Bayes are two examples of
 generative classifiers.  For QDA, the scoring rule is given by
 \[
-\mathcal{Q}_{QDA}(F, \pi, y) = -(y - \mu(F))^T \Sigma(F)^{-1} (y-\mu(F)) - \log\det(\Sigma(F)) + 2\log\pi
+\mathcal{Q}_{QDA}(F, y) = -(y - \mu(F))^T \Sigma(F)^{-1} (y-\mu(F)) - \log\det(\Sigma(F))
 \]
 where $\mu(F) = \int y dF(y)$ and $\Sigma(F) = \int (y-\mu(F))(y-\mu(F))^T dF(y)$.
 In Naive Bayes, the scoring rule is
 \[
-\mathcal{Q}_{NB}(\hat{F}, \pi, y) = \log\pi + \sum_{i=1}^n \log \hat{f}_i(y_i)
+\mathcal{Q}_{NB}(\hat{F},  y) = \sum_{i=1}^n \log \hat{f}_i(y_i)
 \]
 where $\hat{f}_i$ is a density estimate for the $i$th component of
-$F$.  Generative classifiers have the property that \emph{information
-  is not shared between classes}: one consequence is that such
-classifiers can be easily trained in parallel.  More importantly,
-unsupervised data cannot be used to improve the classification rule.
-A larger class of classifiers shares this key property: these are
-\emph{asymptotically generative} classifiers.
+$F$.
 
+The \emph{generative} property allows us to prove strong results about the accuracy of the classifier
+under the exchangeable sampling assumption.  For starters, we can show that the
+expected accuracy follows a \emph{mixed exponential decay}, as stated by the following theorem.
+
+\noindent\textbf{Theorem 2.1}
+\emph{
+Let $\mathcal{Q}$ be the scoring function of a generative classifier, and 
+assume that $F_1,\hdots, F_k \stackrel{iid}{\sim} \mathbb{F}$ and $\hat{F}_i \sim \hat{\mathbb{F}}(F_i)$ independently,
+following the notation of section 2.
+Further assume that $\mathcal{Q}$ and $\mathbb{F}$ satisfy the tie-breaking property \eqref{eq:tie}.
+Then, recalling the definition of accuracy,
+\[
+\text{acc}^{(t)} = \frac{1}{t}\sum_{i=1}^t \Pr_{F_i}[\mathcal{Q}(\hat{F}_i, y) > \argmax_{i > j} \mathcal{Q}(\hat{F}_i, y)],
+\]
+there exists a measure $\alpha$ on $[0, \infty)$ such that
+\[
+\E[\text{acc}^{(t)}] = \int_{\mathbb{R}^{+}} e^{\kappa t} d\alpha(\kappa).
+\]
+}
+
+The theorem immediately suggests a method for predicting $\text{acc}^{(K)}$:
+fit a mixed exponential curve to $\text{acc}^{(2)},\hdots, \text{acc}^{(k)}$
+(we discuss a similar approach in Section 4),
+but this is just a preview of the methods which can be developed for generative classifiers,
+which we discuss more fully in Section 3.
+
+Unfortunately, the majority of classifiers used in practice are \emph{not} generative,
+and for good reason.  While generative classifiers attempt to estimate the marginal distributions,
+discriminative classifiers directly search for good classification boundaries based on the data:
+in most problems, discriminative classifiers outperform generative classifiers (Ng 2002).
+Despite this fact, it can be shown that many non-generative classifiers are \emph{asymptotic generative},
+meaning that i$\mathcal{M}_i^{(t)}$, the $i$th margin for the $t$th classification problem in the sequence,
+converges to a function of $\hat{F}_i$ and $y$ with probability one:
+\begin{equation}\label{eq:agen}
+\lim_{t \to \infty} \mathcal{M}_i^{(t)}(\hat{F}_1,\hdots, \hat{F}_t, y) = \mathcal{Q}(\hat{F}_i, y) \text{ w.h.p. }
+\end{equation}
+While asymptotic generative classifiers share the properties of generative classifiers with respect to
+prediction extrapolation, they need not share the same \emph{limitations} as generative classifiers.
+A generative classifier requires the user to specify the scoring function $\mathcal{Q}$ in advance:
+this practically requires some prior knowledge about the marginal distributions of the classes,
+e.g. that the marginal distributions are approximately multivariate Gaussian.
+But the scoring function $\mathcal{Q}$ appearing in the definition of an asymptotically generative classifier
+\emph{need not be specified} by the user: 
+it can (and usually does) depend on the unknown meta-distribution $\mathbb{F}$.
+Therefore one can think of asymptotic generative classifiers as generative classifiers with `adaptive' $\mathcal{Q}$,
+which explains how an asymptotic generative classifier could outperform generative classifiers.
+
+[[rewrite completed to here]]
 
 \textbf{Definition 2.1.}  (Asymptotically generative) Suppose that for
 time stages $t = 1,2,\hdots$, $k_t = O(t)$ and $n_{i,t} = O(t)$, with
@@ -639,6 +701,8 @@ CZ is supported by an NSF graduate research fellowship.
 \section*{References}
 
 \small
+
+[X] Ng, Andrew Y., and Michael I. Jordan. "On Discriminative vs. Generative classifiers: A comparison of logistic regression and naive Bayes." (2002).
 
 [X] Naselaris, T., Kay, K. N., Nishimoto, S., \& Gallant,
 J. L. (2011). Encoding and decoding in fMRI. \emph{Neuroimage}, 56(2),
