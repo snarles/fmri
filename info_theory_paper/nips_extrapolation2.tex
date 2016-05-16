@@ -116,9 +116,10 @@ are sampled exchangeably, and under the assumption that
 the classifier is generative (e.g. QDA or Naive Bayes), we show that the expected accuracy
 when the classifier is trained on $k$ classes is the $k-1$st moment
 of a \emph{conditional accuracy distribution}, which can be estimated from data.
-We discuss estimation approaches based on pseudolikelihood, 
+This provides the theoretical foundation for developing estimation approaches based on pseudolikelihood, 
 unbiased estimation, and high-dimensional asymptotics.
-We compare these methods in simulations and real data.
+We find empirically that these methods work well for generative classifiers and non-generative classifiers alike,
+suggesting a possible extension of our theory to a larger class of \emph{asymptotically generative} classifiers.
 \end{abstract}
 
 \section{Introduction}
@@ -353,7 +354,7 @@ Then, recalling the definition of accuracy,
 \]
 there exists a measure $\alpha$ on $[0, \infty)$ such that
 \[
-\E[\text{acc}^{(t)}] = \int_{\mathbb{R}^{+}} e^{\kappa t} d\alpha(\kappa).
+\E[\text{acc}^{(t)}] = \int_{\mathbb{R}^{+}} e^{-\kappa t} d\alpha(\kappa).
 \]
 }
 
@@ -422,6 +423,35 @@ approached by attempting to estimate the conditional accuracy
 distribution.  The $(t-1)$th moment of $U$ gives us $p_t$, which will
 in turn be a good estimate of $\text{acc}^{(t)}$.
 
+While $U = u(\hat{F}, Y)$ is not directly observed, we can obtain unbiased estimates of $u(\hat{F}_i, y)$
+by using test data.  For any $\hat{F}_1,\hdots, \hat{F}_k$, and independent test point $Y \sim F_i$, define
+\begin{equation}\label{eq:hatu}
+\hat{u}(\hat{F}_i, Y) = \frac{1}{k -1}\sum_{j \neq i} I(\mathcal{Q}(\hat{F}_i, Y) > \mathcal{Q}(\hat{F}_j, Y)).
+\end{equation}
+Then $\hat{u}(\hat{F}_i, Y)$ is an unbiased estimate of $u(\hat{F}_i, Y)$, as stated in the following theorem.
+
+\noindent\textbf{Theorem 3.2.}\emph{
+Assume the conditions of theorem 3.1.
+Then defining $V = (k-1)\hat{u}(\hat{F}_i, y)$, we have
+\[V \sim \text{\emph{Binomial}}(k, u(\hat{F}_i, y)).\]
+Hence,
+\[\E[\hat{u}(\hat{F}_i, y)] = u(\hat{F}_i, y).\]
+}
+
+In section 4, we will use this result to estimate the moments of $U$.
+Meanwhile, since $U$ is a random variable on $[0, 1]$, we can immediately prove theorem 2.1.
+
+\noindent\textbf{Proof of theorem 2.1.}  
+Let $\alpha$ be the law of $-\log(U)$.
+Then from change-of-variables $\kappa =-\log(u)$, we get
+\[\E[\text{acc}^{(t)}] = \E[U^{t-1}] = 
+\int_0^1 u^{t-1} d\nu(u) = \int_0^1 e^{t\log(u)} \frac{1}{u}d\nu(u) = 
+\int_{\mathbb{R}^{+}} e^{-\kappa t} d\alpha(\kappa).\]
+$\Box$
+
+
+
+
 \subsection{Properties of the conditional accuracy distribution}
 
 The conditional error distribution $\nu$ is determined by $\mathbb{F}$
@@ -429,35 +459,73 @@ and $\mathcal{Q}$.  What can we say about the the conditional accuracy
 distribution without making any assumptions on either $\mathbb{F}$ or
 $\mathcal{Q}$?  The answer is: not much--for an arbitrary probability
 measure $\nu'$ on $[0,1]$, one can construct $\mathbb{F}$ and
-$\mathcal{Q}$ such that $\nu = \nu'$.
-
-\noindent\textbf{Theorem 3.2.} \emph{ Let $U$ be defined as in Theorem
-  2.1, and let $\nu$ denote the law of $U$.  Then, for any probability
-  distribution $\nu'$ on $[0,1]$, one can construct a
-  meta-distribution $\mathbb{F}$ and a scoring rule $\mathcal{Q}$ such
-  that $\nu = \nu'$.  }
-
-In practice, however, the scoring rule $\mathcal{Q}$ must approximate
-a monotonic function of the conditional density $f = \frac{dF}{dy}$ in order to
-yield an effective classifier.
-
-It is therefore notable that in the case that $F$ has a density with
-respect to Lesbegue measure, and where $\mathbb{F}$ has no atoms,
-taking an \emph{optimal} scoring rule, with the property that
-$\mathcal{Q}(\hat{F}, y) = g(f(y))$ for monotonic $g$, the
-distribution of $U$ has a monotonically increasing density.
+$\mathcal{Q}$ such that $\nu = \nu'$, even if one makes the \emph{perfect sampling assumption} that $\hat{F}=F.$
 
 \noindent\textbf{Theorem 3.3.} \emph{ Let $U$ be defined as in Theorem
-  3.1, and let $\nu$ denote the law of $U$.  Suppose $F$ has a density
-  $f(y)$ with respect to Lebesgue measure on $\mathcal{Y}$ with
-  probability one, $\mathbb{F}$ has no atoms, and ($\mathbb{F}$,
-  $\mathcal{Q}$) jointly satisfy the property of monotonicity
-  \[
-  f(y) > f(y') \text{ implies } \mathcal{Q}(\hat{F}, 0, y) > \mathcal{Q}(\hat{F}, 0, y')
-  \]
-  and the property of tie-breaking \eqref{eq:tie} with probability one.
-  Then $\mu$ has a density $\eta(u)$ on $[0, 1]$ which is monotonic in $u$.
+  3.1, and let $\nu$ denote the law of $U$.  Then, for any probability
+  distribution $\nu'$ on $[0,1]$, one can construct a
+  meta-distribution $\mathbb{F}$ and a scoring rule $\mathcal{Q}$ such
+  that $\nu = \nu'$ under perfect sampling (that is, $\hat{F} = F$.)  }
+
+\textbf{Proof.}  
+Let $G$ be the cdf of $\nu$, $G(x) = \int_0^x d\nu(x)$, and let $H(u) = \sup_x \{G(x) \leq u\}$.
+Define $\mathcal{Q}$ by
+\[
+\mathcal{Q}(\hat{F}, y) = \begin{cases}
+0 &\text{ if }\mu(\hat{F}) > y + H(y)\\
+0 & \text{ if }y + H(y) > 1 \text{ and }\mu(\hat{F}) \in [H(y) - y, y]\\
+1 + \mu(\hat{F}) - y &\text{ if } \mu(\hat{F}) \in [y, y + H(y)]\\
+1 + y + \mu(\hat{F}) &\text{ if }\mu(\hat{F}) + H(y) > 1 \text{ and }\mu(\hat{F}) \in [0, H(y) - y]. 
+\end{cases}
+\]
+Let $\theta \sim \text{Uniform}[0,1]$,
+and define $F \sim \mathbb{F}$ by $F = \delta_\theta$, and also $\hat{F} = F.$
+A straightforward calculation yields that $\nu = \nu'$. $\Box$
+
+On the other hand, we can obtain a positive result if we assume that
+the classifier approximates a \emph{Bayes classifier.}
+Assuming that $F$ is absolutely continuous with respect to Lebesgue measure $\Lambda$ with probability one,
+a Bayes classifier results from assuming perfect sampling ($\hat{F} = F$) and taking
+$\mathcal{Q}(\hat{F}, y) = \frac{dF}{d\Lambda}(y)$.
+Theorem 3.4. states that for a Bayes classifier, $\nu$ has a density $\eta(u)$ which is monotonically increasing.
+Since a `good' classifier approximates the Bayes classifier, we intuitively expect that a monotonically
+increasing density $\eta$ is a good model for the conditional accuracy distribution of a `good' classifier.
+
+\noindent\textbf{Theorem 3.4.} \emph{ Assume the conditions of theorem 3.1, and further suppose
+that $\hat{F} = F$, $F$ is absolutely continuous with respect to $\Lambda$ with probability one,
+and that $\mathcal{Q}(\hat{F}, y) = \frac{dF}{d\Lambda}(y)$.
+Let $\nu$ denote the law of $U$.    Then $\nu$ has a density $\eta(u)$ on $[0, 1]$ which is monotonic in $u$.
 }
+
+\noindent\textbf{Proof.}
+It suffices to prove that
+\[
+\nu([u, u + \delta]) < \nu([v, v + \delta])
+\]
+for all $0 < u < v < 1$ and $0 < \delta < 1-v$.
+Let $\mathcal{P}_{ac}(\mathcal{Y})$ denote the space of distributions supported on $\mathcal{Y}$ which are
+absolutely continuous with respect to $p$-dimensional Lebesgue measure $\Lambda$.
+For $F \in \mathcal{P}_{ac}(\mathcal{Y})$, let $f = \frac{dF}{d\Lambda}$. Define the set 
+\[
+J_F(A) =\{y \in \mathcal{Y}: u(F, y) \in A\} = \left\{y \in \mathcal{Y}: \Pr_{Y \sim F}[f(y) > f(Y)] \in A\right\}.
+\]
+for all $A \subset [0, 1].$
+One can verify that for all $F \in \mathcal{P}_{ac}\mathcal{Y}$,
+\[
+F(J_F([u, u + \delta])) \leq F(J_F([v, v + \delta])).
+\]
+Yet, since
+\[
+\Pr[U \in [u, u + \delta]] = \Pr_{F \sim \mathbb{F}}[Y \in J_F([u, u + \delta])] = \E_{F \sim \mathbb{F}}[F(J_F([u, u + \delta]))]
+\]
+\[
+\Pr[U \in [v, v + \delta]] = \Pr_{F \sim \mathbb{F}}[Y \in J_F([v, v + \delta])] = \E_{F \sim \mathbb{F}}[F(J_F([v, v + \delta]))]
+\]
+we obtain
+\[
+\Pr[U \in [u-\delta, u + \delta]] \leq \Pr[U \in [v - \delta, v + \delta]].
+\]
+Taking $\delta \to 0$, we conclude the theorem. $\Box$\newline
 
 \section{Nonparametric Estimation}
 
@@ -466,17 +534,6 @@ Let us assume that $U$ has a density $\eta(u)$.  While $U = u(\hat{F},
 y^{(i), r_1 + j})$ for any $1 \leq i \leq k$, $1 \leq j \leq r_2$ from
 the data.
 
-\noindent\textbf{Theorem 4.1.}\emph{
-For given $p(x, y)$ and scoring rule $\mathcal{Q}$, assume that $U$ as defined in Theorem 3.1 has a density $\eta(u)$
-and that $\mathcal{Q}$ satisfies the tie-breaking property \eqref{eq:tie}.
-Define
-\[
-V_{i, j} = \sum_{i=1}^k I(q^{(i)}(y^{(i), j}) > q^{(j)}(y^{(i), j})).
-\]
-Then
-\[
-V_{i, j} \sim \text{Binomial}(k, u(\hat{F}_i, y^{(i), j})).
-\]}
 
 At a high level, we have a hierarchical model where $U$ is drawn from a density $\eta(u)$ on $[0, 1]$
 and then $V_{i, j} \sim \text{Binomial}(k, U)$;
