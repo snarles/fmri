@@ -25,6 +25,7 @@ getYs <- function(pmat, ncl, ny) {
 }
 
 load("rakesh/converted1.rds", verbose = TRUE)
+# err1$TestErr <- 1 - err1$TestErr
 View(err1)
 View(err_knn400)
 

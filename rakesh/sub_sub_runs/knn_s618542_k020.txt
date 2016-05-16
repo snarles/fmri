@@ -1,0 +1,46 @@
+{} [n_sub_classes=False] [neigh_from=0] [neigh_to=neigh_from+1 / end]
+Sub classes: 20
+Neighbourhood: [ 2  5  9 15 25 40]
+Reading  data/tel400_train_x.bz2
+Reading  data/tel400_test_x.bz2
+Reading  data/tel400_train_y.bz2
+Reading  data/tel400_test_y.bz2
+Training Data ...
+X (samples, dimensions): (41200, 1, 48, 48) 759398KB
+X (min, max) : 0 1
+Y (samples, dimensions): (41200,) 329KB
+Y (min, max) : 0 399
+Test Data ...
+X (samples, dimensions): (20000, 1, 48, 48) 368640KB
+X (min, max) : 0 1
+Y (samples, dimensions): (20000,) 160KB
+Y (min, max) : 0 399
+Selected 20 sub classes [  4  22  32  55  92  93 122 127 167 190 220 222 230 250 281 299 312 365
+ 371 391]
+(2060, 2304) (2060,)
+(1000, 2304) (1000,)
+#N TrinAcc TestAcc
+Building tree with 2 neighbours...
+knn_s618542_k020_n02
+Scoring...
+ 2  96.21%  93.90%
+Building tree with 5 neighbours...
+knn_s618542_k020_n05
+Scoring...
+ 5  96.46%  94.90%
+Building tree with 9 neighbours...
+knn_s618542_k020_n09
+Scoring...
+ 9  93.93%  93.50%
+Building tree with 15 neighbours...
+knn_s618542_k020_n15
+Scoring...
+15  92.04%  91.70%
+Building tree with 25 neighbours...
+knn_s618542_k020_n25
+Scoring...
+25  89.71%  90.20%
+Building tree with 40 neighbours...
+knn_s618542_k020_n40
+Scoring...
+40  86.31%  87.20%

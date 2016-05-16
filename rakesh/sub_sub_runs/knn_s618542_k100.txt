@@ -1,0 +1,33 @@
+Sub classes: 100
+Neighbourhood: [ 10  25  45  75 125 200]
+Reading  data/tel400_train_x.bz2
+Reading  data/tel400_test_x.bz2
+Reading  data/tel400_train_y.bz2
+Reading  data/tel400_test_y.bz2
+Training Data ...
+X (samples, dimensions): (41200, 1, 48, 48) 759398KB
+X (min, max) : 0 1
+Y (samples, dimensions): (41200,) 329KB
+Y (min, max) : 0 399
+Test Data ...
+X (samples, dimensions): (20000, 1, 48, 48) 368640KB
+X (min, max) : 0 1
+Y (samples, dimensions): (20000,) 160KB
+Y (min, max) : 0 399
+Selected 100 sub classes [  4  16  21  22  24  25  32  33  43  50  52  55  64  65  66  73  75  82
+  89  92  93  96 102 103 115 116 118 120 121 122 127 132 133 157 164 167
+ 173 178 180 181 183 186 189 190 196 198 208 220 222 225 230 232 235 236
+ 237 242 245 246 248 249 250 252 254 265 268 269 272 276 278 281 288 293
+ 296 299 302 308 309 312 313 315 318 319 320 330 349 356 358 362 363 365
+ 366 368 371 373 384 388 389 391 392 398]
+(10300, 2304) (10300,)
+(5000, 2304) (5000,)
+#N TrinAcc TestAcc
+10  85.55%  81.02%
+25  79.49%  77.84%
+45  75.20%  74.58%
+75  70.66%  70.44%
+125  65.16%  64.58%
+200  58.48%  57.56%
+
+knn_s618542_k100_n10, ... 200
