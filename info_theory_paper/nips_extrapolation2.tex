@@ -160,19 +160,6 @@ The condition of exchangeability ensures that the separability of random subsets
 by looking at the empirical distributions in $\mathcal{Z}_k$, and therefore that some estimate of the achievable
 accuracy on $\mathcal{Z}_K$ can be obtained.
 
-Unfortunately, the assumption of exchangeability is clearly violated in a
-majority of instances of multi-class classification.  Many multi-class classification problems
-have a hierarchical structure, where the initial label set $\mathcal{Z}_1$ corresponds to a coarse-grained partition of the instances, and an expanded label set $\mathcal{Z}_2$ corresponds to a refinement of the partition induced by $\mathcal{Z}_1$:
-for instance, $\mathcal{Z}_1$ consists of the categories $\{\text{animal}, \text{vegetable}, \text{mineral}\}$,
-while $\mathcal{Z}_2$ consists of subcategories 
-$\{\text{mammal}, \text{bird}, \text{insect}, \text{reptile}, \text{fungus}, \text{tree}, \text{flower}, \text{rock}, \text{metal}\}$.
-Not only is $\mathcal{Z}_2$ not a superset of $\mathcal{Z}_1$, but the marginal distributions within $\mathcal{Z}_2$ are necessarily more concentrated than the marginals of $\mathcal{Z}_1$.
-Many non-hierarchical classification problems are also excluded by the requirement of exchangeability.
-Consider the problem of annotating spoken words: the set $\mathcal{Z}_1$ might consist of data from the 100 most common words, while the set $\mathcal{Z}_2$ consists of data from the 1000 most common words.
-Exchangeability is violated because the words $z \in \mathcal{Z}$ are not equiprobable, but rather follow a long-tail law.
-It would be interesting to extend our theory to the hierarchical setting, or to handle non-hierarchical settings
-with non-uniform prior class probabilities, but we leave the subject for future work.
-
 In addition to the assumption of exchangeability, we restrict the set of classifiers considered.
 We focus on \emph{generative classifiers}, which are classifiers which work by training
 a model separately on each class.  This convenient property 
@@ -556,7 +543,7 @@ the Bayes classifier, we naturally obtain the following estimator
 \section{Results}
 
 We applied the methods described in Section 4 to predict the 400-class accuracy of multinomial
-logistic regression, SVM, and $\epsilon$-nearest neighbors on a Telegu character classification task,
+logistic regression, SVM, and $\epsilon$-nearest neighbors\footnote{$k$-nearest neighbors with $k = \epsilon n$ for fixed $\epsilon > 0$} on a Telegu character classification task,
 using 20-class data with 100 examples per class.  The results are displayed in Figure 1.
 The constrained PMLE method performs best, obtaining the best accuracy for two out of the three classifiers.
 
@@ -583,6 +570,40 @@ $\epsilon = 0.002$ for $\epsilon$-nearest neighbors.}
 
 \section{Discussion}
 
+We have developed a theory of prediction extrapolation for generative classifiers,
+under the assumption of exchangeable classes.  However, empirical results indicate
+that our methods generalize beyond generative classifiers.
+A possible explanation is that many non-generative classifiers are \emph{asymptotically generative},
+meaning that $\mathcal{M}_i^{(t)}$, the $i$th margin for the $t$th classification problem in the sequence,
+converges to a function of $\hat{F}_i$ and $y$ with probability one:
+\begin{equation}\label{eq:agen}
+\lim_{t \to \infty} \mathcal{M}_i^{(t)}(\hat{F}_1,\hdots, \hat{F}_t, y) = \mathcal{Q}(\hat{F}_i, y) \text{ w.h.p. }
+\end{equation}
+While asymptotically generative classifiers can be decomposed in a similar manner as generative classifiers,
+they need not share the same practical \emph{limitations} as generative classifiers.
+A generative classifier requires the user to specify the scoring function $\mathcal{Q}$ in advance:
+this practically requires some prior knowledge about the marginal distributions of the classes,
+e.g. that the marginal distributions are approximately multivariate Gaussian.
+But the scoring function $\mathcal{Q}$ appearing in the definition of an asymptotically generative classifier
+\emph{need not be specified} by the user: 
+it can (and usually does) depend on the unknown meta-distribution $\mathbb{F}$.
+One can show that one-vs-one, one-vs-all, and $\epsilon$-nearest neighbors satisfy the definition \eqref{eq:agen}
+after assuming some additional continuity conditions; however, the definition \eqref{eq:agen} does not
+suffice to extend the key result in theorem 3.1.  Finding appropriate conditions to obtain a useful
+definition of an \emph{asymptotically generative} classifier is the subject of current work.
+
+The assumption of exchangeability greatly limits the scope of application for our methods.
+ Many multi-class classification problems
+have a hierarchical structure, where the initial label set $\mathcal{Z}_1$ corresponds to a coarse-grained partition of the instances, and an expanded label set $\mathcal{Z}_2$ corresponds to a refinement of the partition induced by $\mathcal{Z}_1$:
+for instance, $\mathcal{Z}_1$ consists of the categories $\{\text{animal}, \text{vegetable}, \text{mineral}\}$,
+while $\mathcal{Z}_2$ consists of subcategories 
+$\{\text{mammal}, \text{bird}, \text{insect}, \text{reptile}, \text{fungus}, \text{tree}, \text{flower}, \text{rock}, \text{metal}\}$.
+Not only is $\mathcal{Z}_2$ not a superset of $\mathcal{Z}_1$, but the marginal distributions within $\mathcal{Z}_2$ are necessarily more concentrated than the marginals of $\mathcal{Z}_1$.
+Many non-hierarchical classification problems are also excluded by the requirement of exchangeability.
+Consider the problem of annotating spoken words: the set $\mathcal{Z}_1$ might consist of data from the 100 most common words, while the set $\mathcal{Z}_2$ consists of data from the 1000 most common words.
+Exchangeability is violated because the words $z \in \mathcal{Z}$ are not equiprobable, but rather follow a long-tail law.
+It would be interesting to extend our theory to the hierarchical setting, or to handle non-hierarchical settings
+with non-uniform prior class probabilities, but again we leave the subject for future work.
 
 \subsubsection*{Acknowledgments}
 
@@ -619,29 +640,6 @@ statistics, 2008.
 
 
 
-Unfortunately, the majority of classifiers used in practice are \emph{not} generative,
-and for good reason.  Generative classifiers construct decision boundaries out of estimated marginal distributions,
-so while a correctly specified marginal model can lead to an extremely efficient classifier,
-a misspecified marginal model leads to extremely poor decision boundaries.
-In contrast, discriminative classifiers directly search for good classification boundaries based on the data,
-making them more robust to the data generating process, and as a result,
-in most problems, discriminative classifiers outperform generative classifiers (Ng 2002).
-Despite this fact, it can be shown that many non-generative classifiers are \emph{asymptotically generative},
-meaning that i$\mathcal{M}_i^{(t)}$, the $i$th margin for the $t$th classification problem in the sequence,
-converges to a function of $\hat{F}_i$ and $y$ with probability one:
-\begin{equation}\label{eq:agen}
-\lim_{t \to \infty} \mathcal{M}_i^{(t)}(\hat{F}_1,\hdots, \hat{F}_t, y) = \mathcal{Q}(\hat{F}_i, y) \text{ w.h.p. }
-\end{equation}
-While asymptotically generative classifiers share the properties of generative classifiers with respect to
-prediction extrapolation, they need not share the same \emph{limitations} as generative classifiers.
-A generative classifier requires the user to specify the scoring function $\mathcal{Q}$ in advance:
-this practically requires some prior knowledge about the marginal distributions of the classes,
-e.g. that the marginal distributions are approximately multivariate Gaussian.
-But the scoring function $\mathcal{Q}$ appearing in the definition of an asymptotically generative classifier
-\emph{need not be specified} by the user: 
-it can (and usually does) depend on the unknown meta-distribution $\mathbb{F}$.
-Therefore one can think of asymptotically generative classifiers as generative classifiers with `adaptive' $\mathcal{Q}$,
-which suggests that the class of asymptotically generative classifiers could be quite diverse.
 
 Ideally, we could extend Theorem 2.2 for asymptotic generative classifiers, but a stronger condition is needed.
 Note that under the tie-breaking assumption, one can always take $\mathcal{Q}$ in \eqref{eq:agen} so that
