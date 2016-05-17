@@ -135,15 +135,13 @@ Supposing that $(Z, Y)$ have a joint distribution, define the accuracy for the $
 \]
 Using data from only $\mathcal{Z}_k$, can one predict the accuracy achieved on the larger label set $\mathcal{Z}_K$, with $K> k$?  This is the problem of \emph{performance extrapolation}.
 
-A practical instance of performance extrapolation occurs in neuroimaging studies,
-Kay et al. (2008) obtain fMRI brain scans which record how a single subject's visual cortex responds to natural images.
+A practical instance of performance extrapolation occurs in neuroimaging studies, where the number of classes $k$ is
+limited by experimental considerations.
+Kay et al. (2008) obtained fMRI brain scans which record how a single subject's visual cortex responds to natural images.
 The label set $\mathcal{Z}$ corresponds to the space of all grayscale photographs of natural images,
 and the set $\mathcal{Z}_1$ is a subset of 1750 photographs used in the experiment.
-Kay et al. construct a classifier based on a combination of regularized multiple-response regression
-and Naive Bayes: they achieve over 0.75 accuracy on the subset of 1750 photographs,
-which by itself is already a convincing demonstration of the richness of the information contained in the fMRI scan.
-However, it would also be of interest to know what accuracy could be achieved on a larger set of photographs.
-Kay et al. calculated (based on exponential extrapolation) that it would take on the order of $10^{9.5}$ photographs
+They construct a classifier which achieves over 0.75 accuracy for classifying the 1750 photographs;
+based on exponential extrapolation, they estimate that it would take on the order of $10^{9.5}$ photographs
 before the accuracy of the model drops below 0.10!  Directly validating this estimate would take immense resources,
 so it would be useful to develop the theory needed to understand how to compute such extrapolations
 in a principled way. 
@@ -154,14 +152,12 @@ based only on knowledge of $\mathcal{Z}_k$: after all, $\mathcal{Z}_k$ could con
 while the new classes $\mathcal{Z}_K \setminus \mathcal{Z}_k$ consist entirely of highly inseparable classes, or vice-versa.
 Thus, the most important assumption for our theory is that of \emph{exchangeable sampling}.
 The labels in $\mathcal{Z}_i$ are assumed to be an exchangeable sample from $\mathcal{Z}$.
-The exchangeability further implies that the marginal distributions of $z \in \mathcal{Z}$ 
-are equiprobable within every subset $\mathcal{Z}_i$. 
 The condition of exchangeability ensures that the separability of random subsets of $\mathcal{Z}$ can be inferred
 by looking at the empirical distributions in $\mathcal{Z}_k$, and therefore that some estimate of the achievable
 accuracy on $\mathcal{Z}_K$ can be obtained.
 
 In addition to the assumption of exchangeability, we restrict the set of classifiers considered.
-We focus on \emph{generative classifiers}, which are classifiers which work by training
+We focus on \emph{generative classifiers}, which are classifiers that work by training
 a model separately on each class.  This convenient property 
 allows us to characterize the accuracy of the classifier by selectively conditioning on one class at a time:
 in section 3, we use this technique to reveal an equivalence between 
@@ -209,9 +205,10 @@ is the empirical distribution of $r$ i.i.d. observations from $F$, and $\hat{\ma
 Meanwhile, $\hat{\mathbb{F}}$ is the meta-distribution of the empirical distribution of $r$ i.i.d. draws from a random $F \sim \mathbb{F}$.
 
 
-\subsection{Multi-class classification}
+\subsection{Multiclass classification}
 
-Extending the formalism of Tewari and Bartlett (2007),
+Extending the formalism of Tewari and Bartlett (2007)\footnote{We borrow their terminology of \emph{margin functions}, but introduce the notion of a classifier as a multiple-argument functional on empirical distributions.  
+The functional formulation of a classifier echoes the functional formulation of estimators common in the statistical literature.},
 we define a classifier as a collection of mappings
 $\mathcal{M}_i: \mathcal{P}(\mathcal{Y})^k \times \mathcal{Y} \to \mathbb{R}$ called \emph{margin functions.}
 Intuitively speaking, each margin function \emph{learns a model} from the first $k$ arguments, which are
@@ -229,15 +226,8 @@ Furthermore, due to symmetry, in such cases one can write
 \mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y) = \mathcal{Q}(\hat{F}_i, y)
 \]
 where $\mathcal{Q}$ is called a \emph{single-class margin} (or simply \emph{margin}.)
-For notational convenience, we assume that ties occur with probability
-zero: that is, $\hat{\mathbb{F}}$ and $\mathcal{Q}$ jointly satisfy the
-\emph{tie-breaking} property:
-\begin{equation}\label{eq:tie}
-\Pr[\mathcal{Q}(\hat{F}, y) = \mathcal{Q}(\hat{F}', y)] = 0.
-\end{equation}
-for all $y \in \mathcal{Y}$, where $\mathbb{F}, \mathbb{F}' \stackrel{iid}{\sim} \hat{\mathbb{F}}$.
 Quadratic discriminant analysis and Naive Bayes are two examples of
-generative classifiers.  For QDA, the margin is given by
+generative classifiers\footnote{For QDA, the margin is given by
 \[
 \mathcal{Q}_{QDA}(\hat{F}, y) = -(y - \mu(\hat{F}))^T \Sigma(\hat{F})^{-1} (y-\mu(\hat{F})) - \log\det(\Sigma(\hat{F}))
 \]
@@ -247,7 +237,16 @@ In Naive Bayes, the margin is
 \mathcal{Q}_{NB}(\hat{F},  y) = \sum_{i=1}^n \log \hat{f}_i(y_i)
 \]
 where $\hat{f}_i$ is a density estimate for the $i$th component of
-$\hat{F}$.
+$\hat{F}$.}.
+
+For notational convenience, we assume that ties occur with probability
+zero: that is, $\hat{\mathbb{F}}$ and $\mathcal{Q}$ jointly satisfy the
+\emph{tie-breaking} property:
+\begin{equation}\label{eq:tie}
+\Pr[\mathcal{Q}(\hat{F}, y) = \mathcal{Q}(\hat{F}', y)] = 0
+\end{equation}
+for all $y \in \mathcal{Y}$, where $\mathbb{F}, \mathbb{F}' \stackrel{iid}{\sim} \hat{\mathbb{F}}$.
+Note that the tie-breaking property implies that $\mathbb{F}$ contains no atoms.
 The \emph{generative} property allows us to prove strong results about the accuracy of the classifier
 under the exchangeable sampling assumption, as we see in Section 3.
 
@@ -282,7 +281,7 @@ U = u(\hat{F}, Y)
 for $F \sim \mathbb{F}$, $Y \sim F$, and $\hat{F} \sim \hat{\mathbb{F}}(F)$ with $Y \perp \hat{F}$.
 Recall the definition
 \[
-p_k = \E[acc^{(k)}] = \E\left[\frac{1}{t}\sum_{i=1}^k \Pr_{Y \sim F_i}[\mathcal{Q}(\hat{F}_i, Y) > \max_{j \neq i}\mathcal{Q}(\hat{F}_j, Y)]\right].
+p_k = \E[acc^{(k)}] = \E\left[\frac{1}{k}\sum_{i=1}^k \Pr_{Y \sim F_i}[\mathcal{Q}(\hat{F}_i, Y) > \max_{j \neq i}\mathcal{Q}(\hat{F}_j, Y)]\right].
 \]
 Then \[p_k = \E[U^{k-1}].\]
 }
@@ -320,7 +319,7 @@ Then defining
 \begin{equation}\label{eq:veq}
 V = (k-1)\hat{u}(\hat{F}_i, y),\end{equation}
 we have
-\[V \sim \text{\emph{Binomial}}(k, u(\hat{F}_i, y)).\]
+\[V \sim \text{\emph{Binomial}}(k-1, u(\hat{F}_i, y)).\]
 Hence,
 \[\E[\hat{u}(\hat{F}_i, y)] = u(\hat{F}_i, y).\]
 }
@@ -388,25 +387,21 @@ It suffices to prove that
 for all $0 < u < v < 1$ and $0 < \delta < 1-v$.
 Let $\mathcal{P}_{ac}(\mathcal{Y})$ denote the space of distributions supported on $\mathcal{Y}$ which are
 absolutely continuous with respect to $p$-dimensional Lebesgue measure $\Lambda$.
-For $F \in \mathcal{P}_{ac}(\mathcal{Y})$, let $f = \frac{dF}{d\Lambda}$. Define the set 
+Let $\mathbb{Y}$ denote the marginal distribution of $Y$ for $Y \sim F$ with $F \sim \mathbb{F}$.
+%For $F \in \mathcal{P}_{ac}(\mathcal{Y})$, let $f = \frac{dF}{d\Lambda}$. 
+Define the set 
 \[
-J_F(A) =\{y \in \mathcal{Y}: u(F, y) \in A\} = \left\{y \in \mathcal{Y}: \Pr_{Y \sim F}[f(y) > f(Y)] \in A\right\}.
+J_y(A) =\{F \in \mathcal{P}_{ac}(\mathcal{Y}): u(F, y) \in A\}.
 \]
 for all $A \subset [0, 1].$
-One can verify that for all $F \in \mathcal{P}_{ac}\mathcal{Y}$,
+One can verify that for all $y \in \mathcal{Y}$,
 \[
-F(J_F([u, u + \delta])) \leq F(J_F([v, v + \delta])).
+\Pr_\mathbb{F}[J_y([u, u + \delta])|Y=y] \leq \Pr_\mathbb{F}[J_y([v, v + \delta])|Y=y],
 \]
-Yet, since
+using the fact that $\mathbb{F}$ has no atoms.  Hence, we obtain
 \[
-\Pr[U \in [u, u + \delta]] = \Pr_{F \sim \mathbb{F}}[Y \in J_F([u, u + \delta])] = \E_{F \sim \mathbb{F}}[F(J_F([u, u + \delta]))]
-\]
-\[
-\Pr[U \in [v, v + \delta]] = \Pr_{F \sim \mathbb{F}}[Y \in J_F([v, v + \delta])] = \E_{F \sim \mathbb{F}}[F(J_F([v, v + \delta]))]
-\]
-we obtain
-\[
-\Pr[U \in [u-\delta, u + \delta]] \leq \Pr[U \in [v - \delta, v + \delta]].
+\Pr[U \in [u-\delta, u + \delta]] = \E_{\mathbb{Y}}[\Pr_\mathbb{F}[J_Y([u, u + \delta])|Y]] 
+\leq \E_{\mathbb{Y}}[\Pr_\mathbb{F}[J_Y([v, v + \delta])|Y]]  = Pr[U \in [v - \delta, v + \delta]].
 \]
 Taking $\delta \to 0$, we conclude the theorem. $\Box$\newline
 
@@ -420,8 +415,7 @@ V_{i,j} = \sum_{\ell\neq i} I(\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y^{(i, 
 which coincides with the definition \eqref{eq:veq} in the special case that $\mathcal{M}$ is generative.
 
 At a high level, we have a hierarchical model where $U$ is drawn from a distribution $\nu$ on $[0, 1]$
-and then $V_{i, j} \sim \text{Binomial}(k, U)$;
-
+and then $V_{i, j} \sim \text{Binomial}(k, U)$.
 Let us assume that $U$ has a density $\eta(u)$: then the marginal distribution of $V_{i, j}$ can be written
 \[
 \Pr[V_{i,j} = \ell] = \begin{pmatrix}
@@ -615,7 +609,7 @@ definition of an \emph{asymptotically generative} classifier is the subject of c
 The assumption of exchangeability greatly limits the scope of application for our methods.
 Many multi-class classification problems
 have a hierarchical structure (Deng 2010), or have classes distributed according to
-non-uniform distributions (e.g. power laws) (Garfield 2005); in either case, exchangeability is violated.
+non-uniform discrete distributions (e.g. power laws) (Garfield 2005); in either case, exchangeability is violated.
 It would be interesting to extend our theory to the hierarchical setting, or to handle non-hierarchical settings
 with non-uniform prior class probabilities, but again we leave the subject for future work.
 
