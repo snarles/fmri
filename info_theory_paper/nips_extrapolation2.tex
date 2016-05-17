@@ -546,6 +546,8 @@ We applied the methods described in Section 4 to predict the 400-class accuracy 
 logistic regression, SVM, and $\epsilon$-nearest neighbors\footnote{$k$-nearest neighbors with $k = \epsilon n$ for fixed $\epsilon > 0$} on a Telegu character classification task,
 using 20-class data with 100 examples per class.  The results are displayed in Figure 1.
 
+Taking the test accuracy on 400 classes (using 50 test examples per class) as a proxy for $\text{acc}^{(400)}$,
+we compare the performance of the three extrapolation methods.
 The exponential extrapolation method makes use of the fewest theoretical assumptions,
 but performs badly on all three problems.  Meanwhile, constrained PMLE makes an extra assumption
 in the monotonicity of $\eta(u)$, which is true if the classifier is sufficiently close to the Bayes classifier,
@@ -564,11 +566,11 @@ which has the highest accuracy and therefore might be the best approximator of t
 
 \begin{figure}
 \centering
-\begin{tabular}{|c||c|c|c|c|}\hline
-Classifier & Ground truth & $\hat{p}^{EXP}$ & $\hat{p}^{CON}$ & $\hat{p}^{HD}$\\ \hline
-Logistic & 0.711 & 0.844 & \textbf{0.721} & 0.686 \\ \hline
-SVM & 0.545 & 0.737 & 0.575 & \textbf{0.546} \\ \hline
-$\epsilon$-NN & 0.591 & 0.903 & \textbf{0.608} & 0.839\\ \hline
+\begin{tabular}{|c||c|c|c|c|c|}\hline
+Classifier & Test 20 & Test 400 & $\hat{p}^{EXP}$ & $\hat{p}^{CON}$ & $\hat{p}^{HD}$\\ \hline
+Logistic & 0.922 & 0.711 & 0.844 & \textbf{0.721} & 0.686 \\ \hline
+SVM & 0.860 & 0.545 & 0.737 & 0.575 & \textbf{0.546} \\ \hline
+$\epsilon$-NN & 0.880 & 0.591 & 0.903 & \textbf{0.608} & 0.839\\ \hline
 \end{tabular}
 \caption{Prediction extrapolation: predicting the error on 400 classes using data from 20 classes on a Telugu character dataset.
 $\epsilon = 0.002$ for $\epsilon$-nearest neighbors.}
