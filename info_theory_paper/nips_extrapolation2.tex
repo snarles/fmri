@@ -118,8 +118,7 @@ when the classifier is trained on $k$ classes is the $k-1$st moment
 of a \emph{conditional accuracy distribution}, which can be estimated from data.
 This provides the theoretical foundation for developing estimation approaches based on pseudolikelihood, 
 unbiased estimation, and high-dimensional asymptotics.
-We find empirically that these methods work well for generative classifiers and non-generative classifiers alike,
-suggesting a possible extension of our theory to a larger class of \emph{asymptotically generative} classifiers.
+We find empirically that these methods work well for generative classifiers and non-generative classifiers alike.
 \end{abstract}
 
 \section{Introduction}
@@ -129,18 +128,11 @@ and $z$ are unknown labels, which lie in a countable label set $\mathcal{Z}$.  T
 predicting the label of a new data point; generally, the classification rule $h: \mathcal{Y} \to \mathcal{Z}$
 is learned from previously observed data points.  In many applications of multi-class classification,
 such as face recognition or image recognition, the space of potential labels is practically infinite.
-However, one considers the classification problem on a finite subset of the labels $\mathcal{Z}_1 \subset \mathcal{Z}$:
-for instance, classifying the faces of 100 selected individuals from the population.
-At a later time, one might consider a larger (but still finite) classification problem on $\mathcal{Z}_2 \subset \mathcal{Z}$
-with $\mathcal{Z}_2 \supset \mathcal{Z}_1$.
-In general, consider an infinite sequence of classification problems on subsets $\mathcal{Z}_1 \subset \cdots \subset \mathcal{Z}_t \subset \cdots$.  
-Let $S_i$ represent the training data available for the $i$th classification problem,
-and let $h^{(i)}: \mathcal{Y} \to \mathcal{Z}_i$ be the learned classification rule.
-Define the accuracy for the $i$th problem as
+In such a setting, one might consider a sequence of classification problems on finite label subsets $\mathcal{Z}_1 \subset \cdots \subset \mathcal{Z}_K$, where in the $i$th problem, one constructs the classification rule $h^{(i)}:\mathcal{Y} \to \mathcal{Z}_i$.
+Supposing that $(Z, Y)$ have a joint distribution, define the accuracy for the $i$th problem as
 \[
 \text{acc}^{(i)} = \Pr[h^{(i)}(Y) = Z|Z \in \mathcal{Z}_i].
 \]
-where the probability is taken over the joint distribution of $(Z, Y)$.
 Using data from only $\mathcal{Z}_k$, can one predict the accuracy achieved on the larger label set $\mathcal{Z}_K$, with $K> k$?  This is the problem of \emph{prediction extrapolation}.
 
 A practical instance of prediction extrapolation occurs in neuroimaging studies,
@@ -192,11 +184,9 @@ nonparametric pseudolikelilood, to be directly applied to the extrapolation prob
 In non-generative classifiers, the classification rule has a joint dependence on the entire set of classes,
 and cannot be analyzed by conditioning on individual classes.
 Nevertheless, in Section 5, we see that our methods achieve similarly accurate extrapolation for both
-generative and non-generative classifiers in real data examples.  Section 6 concludes.
+generative and non-generative classifiers in real data examples.
 
 \section{Setting}
-
-\subsection{Prediction extrapolation}
 
 Having motivated the problem of prediction extrapolation,
 we now reformulate the problem for notational and theoretical convenience.
@@ -272,29 +262,7 @@ In Naive Bayes, the margin is
 where $\hat{f}_i$ is a density estimate for the $i$th component of
 $\hat{F}$.
 The \emph{generative} property allows us to prove strong results about the accuracy of the classifier
-under the exchangeable sampling assumption.  For starters, we can show that the
-expected accuracy follows a \emph{mixed exponential decay}, as stated by the following theorem.
-
-\noindent\textbf{Theorem 2.1}
-\emph{
-Let $\mathcal{Q}$ be the scoring function of a generative classifier, and 
-assume that $F_1,\hdots, F_k \stackrel{iid}{\sim} \mathbb{F}$ and $\hat{F}_i \sim \hat{\mathbb{F}}(F_i)$ independently,
-following the notation of section 2.
-Further assume that $\mathcal{Q}$ and $\mathbb{F}$ satisfy the tie-breaking property \eqref{eq:tie}.
-Then, recalling the definition of accuracy,
-\[
-\text{acc}^{(t)} = \frac{1}{t}\sum_{i=1}^t \Pr_{Y \sim F_i}[\mathcal{Q}(\hat{F}_i, Y) > \argmax_{i > j} \mathcal{Q}(\hat{F}_i, Y)],
-\]
-there exists a measure $\alpha$ on $[0, \infty)$ such that
-\[
-\E[\text{acc}^{(t)}] = \int_{\mathbb{R}^{+}} e^{-\kappa t} d\alpha(\kappa).
-\]
-}
-(We give the proof in section 3.)
-The theorem immediately suggests a method for predicting $\text{acc}^{(K)}$:
-fit a mixed exponential decay to $a(t) = \text{acc}^{(t)}$ for $t = 2,\hdots, k$ and extrapolate the curve to $t = K$.
-This is just one of many methods which can be developed for generative classifiers,
-which we discuss more fully in Section 3 and 4.
+under the exchangeable sampling assumption, as we see in Section 3.
 
 \section{Prediction extrapolation for generative classifiers}
 
@@ -362,7 +330,7 @@ Then $\hat{u}(\hat{F}_i, Y)$ is an unbiased estimate of $u(\hat{F}_i, Y)$, as st
 \noindent\textbf{Theorem 3.2.}\emph{
 Assume the conditions of theorem 3.1.
 Then defining 
-\begin{equation}\label{eqref:veq}
+\begin{equation}\label{eq:veq}
 V = (k-1)\hat{u}(\hat{F}_i, y),\end{equation}
 we have
 \[V \sim \text{\emph{Binomial}}(k, u(\hat{F}_i, y)).\]
@@ -371,18 +339,14 @@ Hence,
 }
 
 In section 4, we will use this result to estimate the moments of $U$.
-Meanwhile, since $U$ is a random variable on $[0, 1]$, we can immediately prove theorem 2.1.
-
-\noindent\textbf{Proof of theorem 2.1.}  
+Meanwhile, since $U$ is a random variable on $[0, 1]$, we also conclude that $p_t$ follows a \emph{mixed exponential decay}.
 Let $\alpha$ be the law of $-\log(U)$.
 Then from change-of-variables $\kappa =-\log(u)$, we get
 \[\E[\text{acc}^{(t)}] = \E[U^{t-1}] = 
 \int_0^1 u^{t-1} d\nu(u) = \int_0^1 e^{t\log(u)} \frac{1}{u}d\nu(u) = 
 \int_{\mathbb{R}^{+}} e^{-\kappa t} d\alpha(\kappa).\]
-$\Box$
-
-
-
+This fact immediately suggests the technique of fitting an mixture of exponentials to the test error at $t =2,3,\hdots, k$:
+we explore this idea further in Section 4.1.
 
 \subsection{Properties of the conditional accuracy distribution}
 
@@ -464,9 +428,9 @@ Taking $\delta \to 0$, we conclude the theorem. $\Box$\newline
 Suppose we have $m$ independent test repeats per class, $y^{(i),1}\hdots, y^{(i), m}$.
 Let us define
 \[
-V_{i,j} = \sum_{\ell\neq i} I(M_i(\hat{F}_1,\hdots, \hat{F}_k, y^{(i, j)})  > M_\ell(\hat{F}_1,\hdots, \hat{F}_k, y^{(i, j)})),
+V_{i,j} = \sum_{\ell\neq i} I(\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y^{(i, j)})  > \mathcal{M}_\ell(\hat{F}_1,\hdots, \hat{F}_k, y^{(i, j)})),
 \]
-which coincides with the definition 
+which coincides with the definition \eqref{eq:veq} in the special case that $\mathcal{M}$ is generative.
 
 At a high level, we have a hierarchical model where $U$ is drawn from a distribution $nu$ on $[0, 1]$
 and then $V_{i, j} \sim \text{Binomial}(k, U)$;
@@ -546,7 +510,6 @@ density $\hat{\eta}$ such that
 \]
 The motivation for $\hat{\eta}_{MPLE}$ is that it consistently
 estimates $\eta$ in the limit where $k \to \infty$.
-
 However, in finite samples, $\hat{\eta}_{MPLE}$ is not uniquely defined,
 and if we define the plug-in estimator
 \[
@@ -556,19 +519,10 @@ $\hat{p}_t^{MPLE}$ can vary over a large range, depending on which $\hat{\eta} \
 is selected.
 These shortcomings motivate the adoption of additional constraints on the estimator $\hat{\eta}.$
 
-Theorem 3.4. motivates the \emph{monotonicity constraint} that $\frac{d\hat{\eta}}{du} > 0$,
-hence we define $\hat{\eta}_{INC}$ as a solution to
-\[
-\text{maximize }\ell(\eta) \text{ subject to }\frac{d\hat{\eta}}{du} > 0.
-\]
-An alternative strategy is to directly attack the variability is $\hat{p}_t$ due to non-uniqueness of $\hat{\eta}$.
-Therefore, we define $\hat{\eta}_{MC}$ (where MC stands for moment-constrained)
-as
-\[
-\text{maximize }\ell(\eta) \text{ subject to }\int u^{k-1} \eta(u) du = \hat{p}_k^{UN}.
-\]
-Thirdly, we can combine both the moment constraint and the monotonicity constraint, yielding
-$\hat{\eta}_{COM}$, which is obtained by solving
+Theorem 3.4. motivates the \emph{monotonicity constraint} that $\frac{d\hat{\eta}}{du} > 0$.
+A second constraint is to restrict the $k$th moment of $\hat{\eta}$ to match the unbiased estimate.
+The addition of these constraints yields the constrained PMLE
+$\hat{\eta}_{CON}$, which is obtained by solving
 \[
 \text{maximize }\ell(\eta) \text{ subject to }\int u^{k-1} \eta(u) du = \hat{p}_k^{UN}\text{ and }\frac{d\hat{\eta}}{du} > 0.
 \]
@@ -576,17 +530,38 @@ By discretizing $\eta$, all of the above maximization problems can be solved usi
 We found that the CVX discipline convex programming language, using the ECOS second-order cone programming solver,
 succeeds in optimizing the problems where the dimension of the discretized $\eta$ is as large as 100,000 (Hong 2014, Domahidi 2013.)}.
 
+\subsection{High-dimensional asymptotics}
 
+Under a number of conditions on the distribution $\mathbb{F}$, including (but not limited to) having a large dimension $p$,
+Anon 2016 relate the accuracy $p_t$ of the Bayes classifier to the mutual information between the label $z$ and
+the response $y$:
+\[
+p_t = 1-\pi_t(\sqrt{2I(Z; Y)}).
+\]
+where
+\[
+\pi_k = \pi_k(c) = 1 - \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
+\]
+While our goal is not to estimate the mutual information, we note that the results of Anon 2016
+imply a relationship between $p_k$ and $p_K$ for the Bayes error under the high-dimensional regime:
+\[
+p_K = 1-\pi_K\left(\frac{1}{2}(\pi_k^{-1}(1-p_k))^2\right).
+\]
+Therefore, under the high-dimensional conditions of Anon 2016 and assuming that the classifier approximates
+the Bayes classifier, we naturally obtain the following estimator
+\[
+\hat{p}_t^{HD} = 1-\pi_K\left(\frac{1}{2}(\pi_k^{-1}(1-\hat{p}_k^{UN}))^2\right).
+\]
 
 \section{Results}
 
-\begin{figure}
-\centering
-\includegraphics[scale = 0.6]{cifar_example.pdf}
-\caption{Extrapolation classification performance for CIFAR data.  (This simulation needs to be fixed later.)
-PMLE: maximum psuedolikelihood. MCPMLE: Moment-constrained max psuedolikelihood.  Info: Zheng and Benjamini's info-theoretic method.
-Unbiased: U-statistic (cannot be used to extrapolate.) }
-\end{figure}
+%\begin{figure}
+%\centering
+%\includegraphics[scale = 0.6]{cifar_example.pdf}
+%\caption{Extrapolation classification performance for CIFAR data.  (This simulation needs to be fixed later.)
+%PMLE: maximum psuedolikelihood. MCPMLE: Moment-constrained max psuedolikelihood.  Info: Zheng and Benjamini's info-%theoretic method.
+%Unbiased: U-statistic (cannot be used to extrapolate.) }
+%\end{figure}
 
 \section{Discussion}
 
