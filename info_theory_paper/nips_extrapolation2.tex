@@ -118,7 +118,7 @@ when the classifier is trained on $k$ classes is the $k-1$st moment
 of a \emph{conditional accuracy distribution}, which can be estimated from data.
 This provides the theoretical foundation for developing estimation approaches based on pseudolikelihood, 
 unbiased estimation, and high-dimensional asymptotics.
-We find empirically that these methods work well for generative classifiers and non-generative classifiers alike.
+We find empirically that some of the methods work well even for non-generative classifiers.
 \end{abstract}
 
 \section{Introduction}
@@ -528,7 +528,7 @@ $\hat{\eta}_{CON}$, which is obtained by solving
 \]
 By discretizing $\eta$, all of the above maximization problems can be solved using a general-purpose convex solver\footnote{
 We found that the CVX discipline convex programming language, using the ECOS second-order cone programming solver,
-succeeds in optimizing the problems where the dimension of the discretized $\eta$ is as large as 100,000 (Hong 2014, Domahidi 2013.)}.
+succeeds in optimizing the problems where the dimension of the discretized $\eta$ is as large as 10,000 (Hong 2014, Domahidi 2013.)}.
 
 \subsection{High-dimensional asymptotics}
 
@@ -554,6 +554,24 @@ the Bayes classifier, we naturally obtain the following estimator
 \]
 
 \section{Results}
+
+We applied the methods described in Section 4 to predict the 400-class accuracy of multinomial
+logistic regression, SVM, and $\epsilon$-nearest neighbors on a Telegu character classification task,
+using 20-class data with 100 examples per class.  The results are displayed in Figure 1.
+The constrained PMLE method performs best, obtaining the best accuracy for two out of the three classifiers.
+
+\begin{figure}
+\centering
+\begin{tabular}{|c||c|c|c|c|}\hline
+Classifier & Ground truth & $\hat{p}^{(EXP)}$ & $\hat{p}^{(CON)}$ & $\hat{p}^{(HD)}$\\ \hline
+Logistic & 0.711 & 0.844 & \textbf{0.721} & 0.686 \\ \hline
+SVM & 0.545 & 0.737 & 0.575 & \textbf{0.546} \\ \hline
+$\epsilon$-NN & 0.591 & 0.903 & \textbf{0.608} & 0.839\\ \hline
+\end{tabular}
+\caption{Prediction extrapolation: predicting the error on 400 classes using data from 20 classes on a Telugu character dataset.
+$\epsilon = 0.002$ for $\epsilon$-nearest neighbors.}
+\end{figure}
+
 
 %\begin{figure}
 %\centering
