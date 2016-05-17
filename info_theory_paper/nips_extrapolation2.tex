@@ -133,9 +133,9 @@ Supposing that $(Z, Y)$ have a joint distribution, define the accuracy for the $
 \[
 \text{acc}^{(i)} = \Pr[h^{(i)}(Y) = Z|Z \in \mathcal{Z}_i].
 \]
-Using data from only $\mathcal{Z}_k$, can one predict the accuracy achieved on the larger label set $\mathcal{Z}_K$, with $K> k$?  This is the problem of \emph{prediction extrapolation}.
+Using data from only $\mathcal{Z}_k$, can one predict the accuracy achieved on the larger label set $\mathcal{Z}_K$, with $K> k$?  This is the problem of \emph{performance extrapolation}.
 
-A practical instance of prediction extrapolation occurs in neuroimaging studies,
+A practical instance of performance extrapolation occurs in neuroimaging studies,
 Kay et al. (2008) obtain fMRI brain scans which record how a single subject's visual cortex responds to natural images.
 The label set $\mathcal{Z}$ corresponds to the space of all grayscale photographs of natural images,
 and the set $\mathcal{Z}_1$ is a subset of 1750 photographs used in the experiment.
@@ -175,7 +175,7 @@ generative and non-generative classifiers in real data examples.
 
 \section{Setting}
 
-Having motivated the problem of prediction extrapolation,
+Having motivated the problem of performance extrapolation,
 we now reformulate the problem for notational and theoretical convenience.
 Instead of requiring $\mathcal{Z}_k$ to be a random subset of $\mathcal{Z}$ as we did in section 1, take
 $\mathcal{Z}=\mathbb{N}$ and $\mathcal{Z}_k = \{1,\hdots, k\}$.
@@ -251,7 +251,7 @@ $\hat{F}$.
 The \emph{generative} property allows us to prove strong results about the accuracy of the classifier
 under the exchangeable sampling assumption, as we see in Section 3.
 
-\section{Prediction extrapolation for generative classifiers}
+\section{Performance extrapolation for generative classifiers}
 
 Let us specialize to the case of a generative classifier, with scoring rule $\mathcal{Q}$.
 Consider estimating the expected accuracy at time $t$, \[p_t
@@ -572,7 +572,7 @@ Logistic & 0.922 & 0.711 & 0.844 & \textbf{0.721} & 0.686 \\ \hline
 SVM & 0.860 & 0.545 & 0.737 & 0.575 & \textbf{0.546} \\ \hline
 $\epsilon$-NN & 0.880 & 0.591 & 0.903 & \textbf{0.608} & 0.839\\ \hline
 \end{tabular}
-\caption{Prediction extrapolation: predicting the error on 400 classes using data from 20 classes on a Telugu character dataset.
+\caption{Performance extrapolation: predicting the error on 400 classes using data from 20 classes on a Telugu character dataset.
 $\epsilon = 0.002$ for $\epsilon$-nearest neighbors.}
 \end{figure}
 
