@@ -545,12 +545,27 @@ the Bayes classifier, we naturally obtain the following estimator
 We applied the methods described in Section 4 to predict the 400-class accuracy of multinomial
 logistic regression, SVM, and $\epsilon$-nearest neighbors\footnote{$k$-nearest neighbors with $k = \epsilon n$ for fixed $\epsilon > 0$} on a Telegu character classification task,
 using 20-class data with 100 examples per class.  The results are displayed in Figure 1.
-The constrained PMLE method performs best, obtaining the best accuracy for two out of the three classifiers.
+
+The exponential extrapolation method makes use of the fewest theoretical assumptions,
+but performs badly on all three problems.  Meanwhile, constrained PMLE makes an extra assumption
+in the monotonicity of $\eta(u)$, which is true if the classifier is sufficiently close to the Bayes classifier,
+and achieves the best and most consistent results.  The high-dimensional estimator $\hat{p}^{HD}$ is
+the most assumption-heavy; in addition to assuming approximation to the Bayes classifier,
+it also requires $Y$ to be high-dimensional, and to satisfy a number of other technical conditions (Anon 2016).
+Nevertheless, it performs well on the multinomial logistic and SVM classifiers.
+That said, all three classifiers studied are non-generative, hence violating an assumption common to both the $\hat{p}^{EXP}$
+and $\hat{p}^{CON}$ estimators: therefore, it is doubtful if the theory developed so far can do much to explain
+the relative performance of these methods.  
+
+While $\hat{p}^{HD}$ does not explicitly require the classifier to be generative,
+the assumption that the classifier approximates the Bayes rule is arguably a stronger assumption.
+It is notably, however, that $\hat{p}^{HD}$ performs best for multinomial logistic regression,
+which has the highest accuracy and therefore might be the best approximator of the Bayes classifier among the three classifiers studied.
 
 \begin{figure}
 \centering
 \begin{tabular}{|c||c|c|c|c|}\hline
-Classifier & Ground truth & $\hat{p}^{(EXP)}$ & $\hat{p}^{(CON)}$ & $\hat{p}^{(HD)}$\\ \hline
+Classifier & Ground truth & $\hat{p}^{EXP}$ & $\hat{p}^{CON}$ & $\hat{p}^{HD}$\\ \hline
 Logistic & 0.711 & 0.844 & \textbf{0.721} & 0.686 \\ \hline
 SVM & 0.545 & 0.737 & 0.575 & \textbf{0.546} \\ \hline
 $\epsilon$-NN & 0.591 & 0.903 & \textbf{0.608} & 0.839\\ \hline
@@ -571,8 +586,11 @@ $\epsilon = 0.002$ for $\epsilon$-nearest neighbors.}
 \section{Discussion}
 
 We have developed a theory of prediction extrapolation for generative classifiers,
-under the assumption of exchangeable classes.  However, empirical results indicate
-that our methods generalize beyond generative classifiers.
+under the assumption of exchangeable classes.  The equivalence between
+the expected $t$-class accuracy and the $t-1$th moment of the conditional accuracy distribution
+allows a variety of methods to be applied to the problem.  
+
+Empirical results indicate that our methods generalize beyond generative classifiers.
 A possible explanation is that many non-generative classifiers are \emph{asymptotically generative},
 meaning that $\mathcal{M}_i^{(t)}$, the $i$th margin for the $t$th classification problem in the sequence,
 converges to a function of $\hat{F}_i$ and $y$ with probability one:
@@ -588,20 +606,14 @@ But the scoring function $\mathcal{Q}$ appearing in the definition of an asympto
 \emph{need not be specified} by the user: 
 it can (and usually does) depend on the unknown meta-distribution $\mathbb{F}$.
 One can show that one-vs-one, one-vs-all, and $\epsilon$-nearest neighbors satisfy the definition \eqref{eq:agen}
-after assuming some additional continuity conditions; however, the definition \eqref{eq:agen} does not
-suffice to extend the key result in theorem 3.1.  Finding appropriate conditions to obtain a useful
+after assuming some additional continuity conditions; however, the definition \eqref{eq:agen} is too weak
+to extend the result in theorem 3.1.  Finding appropriate conditions to obtain a useful
 definition of an \emph{asymptotically generative} classifier is the subject of current work.
 
 The assumption of exchangeability greatly limits the scope of application for our methods.
- Many multi-class classification problems
-have a hierarchical structure, where the initial label set $\mathcal{Z}_1$ corresponds to a coarse-grained partition of the instances, and an expanded label set $\mathcal{Z}_2$ corresponds to a refinement of the partition induced by $\mathcal{Z}_1$:
-for instance, $\mathcal{Z}_1$ consists of the categories $\{\text{animal}, \text{vegetable}, \text{mineral}\}$,
-while $\mathcal{Z}_2$ consists of subcategories 
-$\{\text{mammal}, \text{bird}, \text{insect}, \text{reptile}, \text{fungus}, \text{tree}, \text{flower}, \text{rock}, \text{metal}\}$.
-Not only is $\mathcal{Z}_2$ not a superset of $\mathcal{Z}_1$, but the marginal distributions within $\mathcal{Z}_2$ are necessarily more concentrated than the marginals of $\mathcal{Z}_1$.
-Many non-hierarchical classification problems are also excluded by the requirement of exchangeability.
-Consider the problem of annotating spoken words: the set $\mathcal{Z}_1$ might consist of data from the 100 most common words, while the set $\mathcal{Z}_2$ consists of data from the 1000 most common words.
-Exchangeability is violated because the words $z \in \mathcal{Z}$ are not equiprobable, but rather follow a long-tail law.
+Many multi-class classification problems
+have a hierarchical structure (Deng 2010), or have classes distributed according to
+non-uniform distributions (e.g. power laws) (Garfield 2005); in either case, exchangeability is violated.
 It would be interesting to extend our theory to the hierarchical setting, or to handle non-hierarchical settings
 with non-uniform prior class probabilities, but again we leave the subject for future work.
 
@@ -631,6 +643,9 @@ J. L. (2011). Encoding and decoding in fMRI. \emph{Neuroimage}, 56(2),
 of statistical learning.} Vol. 1. Springer, Berlin: Springer series in
 statistics, 2008.
 
+[X] Deng, J., Berg, A. C., Li, K., \& Fei-Fei, L. (2010). What does classifying more than 10,000 image categories tell us? Lecture Notes in Computer Science, 6315 LNCS(PART 5), 71?84. 
+
+[X] Garfield, Sheila, Stefan Wermter, and Siobhan Devlin. ``Spoken language classification using hybrid classifier combination." International Journal of Hybrid Intelligent Systems 2.1 (2005): 13-33.
 \end{document}
 
 
@@ -669,4 +684,10 @@ there exists a measure $\alpha$ on $[0, \infty)$ such that
 \[
 \E[\text{acc}^{(t)}] = \int_{\mathbb{R}^{+}} e^{\kappa t} d\alpha(\kappa).\]
 }
+
+
+The estimator $\hat{p}^{UN}_t$
+is unbiased for the accuracy under minimal assumptions, but is undefined for $t \geq k$.
+Extending $\hat{p}^{UN}_t$ using exponential extrapolation, we obtain a biased estimator $\hat{p}^{EXP}_t$ for $t > k$,
+but one which still relies on minimal assumptions.
 
