@@ -116,7 +116,7 @@ are sampled exchangeably, and under the assumption that
 the classifier is generative (e.g. QDA or Naive Bayes), we show that the expected accuracy
 when the classifier is trained on $k$ classes is the $k-1$st moment
 of a \emph{conditional accuracy distribution}, which can be estimated from data.
-This provides the theoretical foundation for developing estimation approaches based on pseudolikelihood, 
+This provides the theoretical foundation for performance extrapolation based on pseudolikelihood, 
 unbiased estimation, and high-dimensional asymptotics.
 We find empirically that some of the methods work well even for non-generative classifiers.
 \end{abstract}
@@ -419,7 +419,7 @@ V_{i,j} = \sum_{\ell\neq i} I(\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y^{(i, 
 \]
 which coincides with the definition \eqref{eq:veq} in the special case that $\mathcal{M}$ is generative.
 
-At a high level, we have a hierarchical model where $U$ is drawn from a distribution $nu$ on $[0, 1]$
+At a high level, we have a hierarchical model where $U$ is drawn from a distribution $\nu$ on $[0, 1]$
 and then $V_{i, j} \sim \text{Binomial}(k, U)$;
 
 Let us assume that $U$ has a density $\eta(u)$: then the marginal distribution of $V_{i, j}$ can be written
