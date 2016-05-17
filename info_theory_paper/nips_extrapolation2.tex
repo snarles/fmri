@@ -480,6 +480,25 @@ Then define
 
 \subsection{Maximum pseudolikelihood}
 
+\begin{figure}
+\centering
+\begin{tabular}{ccrl}
+Estimated density $\hat{\eta}$ &Estimated moment $\E[U^t]$ & \\
+\multirow{5}{*}{\includegraphics[scale = 0.5, clip=true, trim=0.2in 0.6in 0 0.7in]{../extrapolation/gu_est.pdf}} &
+\multirow{5}{*}{\includegraphics[scale = 0.5, clip=true, trim=0.2in 0.6in 0 0.7in]{../extrapolation/gu_est_moments.pdf}} & & \\
+& & \crule[black]{0.2cm}{0.2cm} & Truth\\
+& & & \\
+& & \crule[blue]{0.2cm}{0.2cm} & MPLE \\
+& & & \\
+& & \crule[red]{0.2cm}{0.2cm} & CONS \\
+& & & \\
+& & & \\
+& & & \\
+$u$& $t$& & \\
+\end{tabular}
+\caption{Maximum pseudolikelihood (MPLE) versus constrained pseudolikelihood (CONS).}
+\end{figure}
+
 The pseudolikelihood is defined as
 \begin{equation}\label{eq:psuedo}
 \ell(\eta) = \sum_{i=1}^k \sum_{j=1}^{m} \log\left(\int u^{V_{i, j}} (1-u)^{k - V_{i, j}} \eta(u) du\right),
@@ -498,7 +517,7 @@ and if we define the plug-in estimator
 \]
 $\hat{p}_t^{MPLE}$ can vary over a large range, depending on which $\hat{\eta} \in \argmax_{\eta} \ell_t(\eta)$
 is selected.
-These shortcomings motivate the adoption of additional constraints on the estimator $\hat{\eta}.$
+These shortcomings motivate the adoption of additional constraints on the estimator $\hat{\eta}$.
 
 Theorem 3.4. motivates the \emph{monotonicity constraint} that $\frac{d\hat{\eta}}{du} > 0$.
 A second constraint is to restrict the $k$th moment of $\hat{\eta}$ to match the unbiased estimate.
@@ -510,6 +529,8 @@ $\hat{\eta}_{CON}$, which is obtained by solving
 By discretizing $\eta$, all of the above maximization problems can be solved using a general-purpose convex solver\footnote{
 We found that the CVX discipline convex programming language, using the ECOS second-order cone programming solver,
 succeeds in optimizing the problems where the dimension of the discretized $\eta$ is as large as 10,000 (Hong 2014, Domahidi 2013.)}.
+As seen in Figure 1, the added constraints can improve estimation of $\eta$ and thus improve moment estimation.
+
 
 \subsection{High-dimensional asymptotics}
 
@@ -538,7 +559,7 @@ the Bayes classifier, we naturally obtain the following estimator
 
 We applied the methods described in Section 4 to predict the 400-class accuracy of multinomial
 logistic regression, SVM, and $\epsilon$-nearest neighbors\footnote{$k$-nearest neighbors with $k = \epsilon n$ for fixed $\epsilon > 0$} on a Telegu character classification task,
-using 20-class data with 100 examples per class.  The results are displayed in Figure 1.
+using 20-class data with 100 examples per class.  The results are displayed in Figure 2.
 
 Taking the test accuracy on 400 classes (using 50 test examples per class) as a proxy for $\text{acc}^{(400)}$,
 we compare the performance of the three extrapolation methods.
