@@ -538,21 +538,21 @@ Under a number of conditions on the distribution $\mathbb{F}$, including (but no
 Anon 2016 relate the accuracy $p_t$ of the Bayes classifier to the mutual information between the label $z$ and
 the response $y$:
 \[
-p_t = 1-\pi_t(\sqrt{2I(Z; Y)}).
+p_t = \bar{\pi}_t(\sqrt{2I(Z; Y)}).
 \]
 where
 \[
-\pi_k = \pi_k(c) = 1 - \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
+\bar{\pi}_k(c) = \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
 \]
 While our goal is not to estimate the mutual information, we note that the results of Anon 2016
 imply a relationship between $p_k$ and $p_K$ for the Bayes error under the high-dimensional regime:
 \[
-p_K = 1-\pi_K\left(\pi_k^{-1}(1-p_k)\right).
+p_K = \bar{\pi}_K\left(\bar{\pi}_k^{-1}(p_k)\right).
 \]
 Therefore, under the high-dimensional conditions of Anon 2016 and assuming that the classifier approximates
 the Bayes classifier, we naturally obtain the following estimator
 \[
-\hat{p}_t^{HD} = 1-\pi_K\left(\pi_k^{-1}(1-\hat{p}_k^{UN})\right).
+\hat{p}_t^{HD} = \bar{\pi}_K\left(\bar{\pi}_k^{-1}(\hat{p}_k^{UN})\right).
 \]
 
 \section{Results}
