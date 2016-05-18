@@ -157,39 +157,28 @@ review.
 
 However, the sample complexity for nonparametric estimation grows
 exponentially with the dimension, rendering such methods ineffective
-in applications with high-dimensional data [5].  One such
-application includes multivariate pattern analysis (MVPA), an area of
-neuroscience research pioneered by Haxby [6], which studies how
-entire regions of the human brain respond to stimuli, using function
-magnetic resonance imaging (fMRI) data; in MVPA studies, the input $X$
-could be a natural image parameterized by $p = 10000$ image features,
+in applications with high-dimensional data [5].  In multivariate pattern analysis [6],
+ the input $X$ could be a natural image parameterized by $p = 10000$ image features,
 while the output $Y$ is a $q=20000$-dimensional vector of brain
 activation features obtained from the fMRI scan.  In problems of such
 dimensionality, one can tractably estimate mutual information by
 assuming a multivariate Gaussian model: however, this approach
 essentially assumes a linear relationship between the input and
-output, and hence fails to quantify nonlinear dependencies.  Rather
-than assuming a full parametric generative model, one can empirically
+output, and hence fails to quantify nonlinear dependencies.  
+
+Rather than assuming a full parametric generative model, one can empirically
 select a good \emph{discriminative} model by using machine learning.
 Treves [7] first proposed using the empirical mutual information of
 the classification matrix in order to obtain a lower bound of the
 mutual information $I(X; Y)$; this confusion-matrix-based lower bound
 has subsequently enjoyed widespread use in the MVPA literature
-[8].  But even earlier that this, the idea of linking
+[8].  Even earlier that this, the idea of linking
 classification performance to mutual information can be found in the
-beginnings of information theory: after all, Shannon's original
-motivation was to characterize the minimum achievable error
-probability of a noisy communication channel.  More explicitly, Fano's
-inequality provides a lower bound on mutual information in relation to
-the optimal prediction error, or Bayes error.  Therefore, one can
-construct an estimator based on Fano's inequality, $\hat{I}_{Fano}$.
-In either case, any method which derives an estimate of mutual
-information from classification performance may be considered a
-\emph{discriminative} estimation procedure, in contrast to the
-\emph{parametric} and \emph{nonparametric} classes of estimation
-procedures.
+beginnings of information theory.
+Fano's inequality provides a lower bound on mutual information in relation to
+the optimal prediction error, or Bayes error.  
 
-We derive a new discriminative estimator by exploiting an assumption on the
+We derive a new classification-based estimator of mutual information by exploiting an assumption on the
 random sampling of the classes (described in section 1.1) and also
 a universality property that arises in
 high-dimensions.  This universality phenomenon allows us to establish
@@ -207,7 +196,7 @@ The function $\pi_k$ is given by
 \pi_k(c) = 1 - \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
 \]
 This formula is not new to the information theory literature: it
-appears as the error rate of an orthogonal constellation [13].  What
+appears as the error rate of an orthogonal constellation [9].  What
 is surprising is that the same formula can be used to approximate the
 error rate in much more general class of classification
 problems\footnote{An intuitive explanation for this fact is that
@@ -245,7 +234,7 @@ While $\hat{I}_{Fano}$ is bounded from above by $\log(k)$ (dotted line), $\hat{I
 
 The estimator we propose is
 \[
-\hat{I}_{HD}(M) = \frac{1}{2}(\pi_{k}^{-1}(\hat{e}_{gen, \alpha}))^2,
+\hat{I}_{HD} = \frac{1}{2}(\pi_{k}^{-1}(\hat{e}_{gen, \alpha}))^2,
 \]
 obtained by inverting the relation \eqref{abepi}, then substituting
 an estimate of generalization error $\hat{e}_{gen, \alpha}$ for the $e_{ABE, k}$.  As such,
@@ -259,8 +248,25 @@ number of classes $k$.
 In this paper, we argue for the advantages of our method in comparison to alternative discriminative estimators
 under the assumption that the discriminative model approximates the Bayes rule.
 While this is an unrealistic assumption, it simplifies the theoretical discussion, and allows us to clearly
-discuss the principles behind our method.  We outline our framework in the following section.
+discuss the principles behind our method.  
 
+The organization of the paper is as follows.
+We outline our framework in Section 2.1.
+In section 2.2 we present our key result, which links the asymptotic average Bayes error
+to the mutual information, under an asymptotic setting intended to capture the
+notion of high dimensionality\footnote{Namely, one where the number of classes
+is fixed, and where the information $I(X; Y)$ remains fixed, while the
+dimensionality of the input $X$ and output $Y$ both grow to infinity.
+We make a number of additional regularity conditions to rule out
+scenarios where $(X, Y)$ is really less ``high-dimensional'' than it
+appears, since most of the variation is captured a low-dimensional
+manifold.  }. In section 2.3 we apply this result to
+derive our proposed estimator, $\hat{I}_{HD}$ (where HD stands for
+``high-dimensional.'')  Section 3 presents simulation results, and
+section 4 concludes.  All proofs are given in the supplement.
+
+
+\section{Theory}
 
 \subsection{Setting}
 
@@ -302,7 +308,7 @@ e_{gen}(f) = \frac{1}{k} \sum_{i=1}^k\Pr[f(Y) \neq Z|X = X^{(i)}].
 \end{equation}
 In an exemplar-based classification, there is no need to
 specify an arbitrary partition on the input space (as is the case in category-based classification),
-but now the $k$ classes will now be \emph{randomly} defined.  One consequence is that
+but note that the $k$ classes are \emph{randomly} defined.  One consequence is that
 the Bayes error $e_{Bayes}$ is a random variable: when the sampling
 produces $k$ similar exemplars, $e_{Bayes}$ will be higher, and when
 the sampling produces well-separated exemplars $e_{Bayes}$ may be
@@ -314,9 +320,7 @@ e_{ABE, k} = \E_{X^{(1)},\hdots, X^{(k)}}[e_{Bayes}],
 where the expectation is taken over the joint distribution of
 $X^{(1)},\hdots, X^{(k)} \stackrel{iid}{\sim} G$.
 
-Unless expert knowledge is available, it is usually necessary to
-choose the function $f$ in a data-dependent way in order to obtain a
-reasonable classification rule.  We use the terminology
+We use the terminology
 \emph{classifier} to refer to any algorithm which takes data as input,
 and produces a classification rule $f$ as output.  Mathematically
 speaking, the classifier is a functional which maps a set of
@@ -330,13 +334,9 @@ two independent sets: one set to train the classifier, and one to
 evaluate the performance.  The reason that such a splitting is
 necessary is because using the same data to test and train a
 classifier introduces significant bias into the empirical
-classification error [10].  One creates a
-\emph{training set} consisting of $r_1$ repeats per class, $ S_{train}
-= \{(x^{(i)}, y^{(i),j})\}_{i=1, j=1}^{k, r_1}, $ and a \emph{test
-  set} consisting of the remaining $r_2 = r - r_1$ repeats, $ S_{test}
-= \{(x^{(i)}, y^{(i),j})\}_{i=1, j=r_1}^{k, r}.  $ The classification
-rule is obtained via $ f = \mathcal{F}(S_{train}), $ and the
-performance of the classifier is evaluated by predicting the classes
+classification error [10].  The classification
+rule is obtained via $ f = \mathcal{F}(S_{train}), $ where $S_{train}$ is the training set,
+ and the performance of the classifier is evaluated by predicting the classes
 of the test set.  The results of this test are summarized by a $k
 \times k$ \emph{confusion matrix} $M$ with $ M_{ij} = \sum_{\ell=r_1 +
   1}^r I(f(y^{(i), r}) = j).  $ The $i, j$th entry of $M$ counts how
@@ -359,25 +359,6 @@ derived from using Fano's inequality, and (2) the empirical
 information of the confusion matrix, $\hat{I}_{CM}$, as introduced by Treves [7].
 We discuss these estimators in section 3.
 
-In section 2 we present an asymptotic setting intended to capture the
-notion of high dimensionality; namely, one where the number of classes
-is fixed, and where the information $I(X; Y)$ remains fixed, while the
-dimensionality of the input $X$ and output $Y$ both grow to infinity.
-We make a number of additional regularity conditions to rule out
-scenarios where $(X, Y)$ is really less ``high-dimensional'' than it
-appears, since most of the variation is captured a low-dimensional
-manifold\footnote{In situations where $(X, Y)$ lie on a manifold, one
-  could effectively estimate mutual information by would be to
-  combining dimensionality reduction with nonparametric information
-  estimation [12]. }.  In section 2.1 we
-present our key result, which links the asymptotic average Bayes error
-to the mutual information; in section 2.2 we apply this result to
-derive our proposed estimator, $\hat{I}_{HD}$ (where HD stands for
-``high-dimensional.'')  Section 3 presents simulation results, and
-section 4 concludes.  All proofs are given in the supplement.
-
-
-\section{Theory}
 
 \subsection{Universality result}
 
@@ -457,7 +438,8 @@ for $d = 1,2,\hdots$.  Further assume that
 \item[A2.] There exists a sequence of scaling constants $a_{ij}^{[d]}$
 and $b_{ij}^{[d]}$ such that the random vector $(a_{ij}\ell_{ij}^{[d]} +
 b_{ij}^{[d]})_{i, j = 1,\hdots, k}$ converges in distribution to a
-multivariate normal distribution.
+multivariate normal distribution,
+where $\ell_{ij} = \log p(y^{(i)}|x^{(i)})$ for independent $y^{(i)} \sim p(y|x^{(i)})$.
 \item[A3.] Define \[
 u^{[d]}(x, y) = \log p^{[d]}(x, y) - \log p^{[d]}(x) - \log p^{[d]}(y).
 \]
@@ -526,7 +508,7 @@ Y_i|X = x \sim \text{Bernoulli}(x^T B_i)
 \]
 where $B$ is a $p \times q$ matrix.  One application of this model
 might be modeling neural spike count data $Y$ arising in response to
-environmental stimuli $X$ [14].  We choose the naive Bayes for the
+environmental stimuli $X$ [12].  We choose the naive Bayes for the
 classifier $\mathcal{F}$: it is consistent for estimating the Bayes
 rule. 
 
@@ -534,7 +516,7 @@ rule.
 \begin{center}
 \begin{tabular}{ccrl}
 &\multirow{10}{*}{\includegraphics[scale = 0.5, clip=true, trim=0.4in 0.5in 0 0.5 in]{../info_theory_sims/fig4b.pdf}}&&\\
-&  $I(X; Y)$& &\\
+&  Sampling distribution of $\hat{I}$& &\\
 & & &\\
 & & \crule[color3]{0.2cm}{0.2cm} &$\hat{I}_{HD}$\\
 & & \crule[black]{0.2cm}{0.2cm} &$\hat{I}_{MLE}$\\
@@ -544,6 +526,7 @@ $\hat{I}$& & \crule[color1]{0.2cm}{0.2cm} &$\hat{I}_{CM}$\\
 & & &\\
 & & &\\
 & & &\\
+& $I(X; Y)$& &\\
 \end{tabular}
 \end{center}
 \caption{Sampling distributions of $\hat{I}$ for data generated from the multiple-response logistic model.  $p = q = 10$; $k= 20$; $B = sI_{10}$, where $s \in [0, \sqrt{200}]$; and  $r = 1000$.}
@@ -647,7 +630,11 @@ a stratified sampling design can be practically implemented.
 The assumption of high dimensionality is not easy to check:
 having a high-dimension response $Y$ does not suffice, since even then $Y$ could still
 lie close to a low-dimensional manifold.  In such cases, $\hat{I}_{HD}$ could either overestimate or underestimate the mutual information.
-One useful diagnostic is to subsample within the classes collected
+In situations where $(X, Y)$ lie on a manifold, one
+  could effectively estimate mutual information by would be to
+  combining dimensionality reduction with nonparametric information
+  estimation [13]. 
+  We suggest the following diagnostic to determine if our method is appropriate: subsample within the classes collected
 and check that $\hat{I}_{HD}$ does not systematically increase or decrease with the number of classes $k$.
 
 The assumption of approximating the Bayes rule is impractical to check, 
@@ -656,14 +643,14 @@ Hence, while the present paper studies the `best-case' scenario where the model 
 it is even more important to understand the robustness of our method in the more realistic case
 where the model is misspecified.  We leave this question to future work.
 
-%As it stands, a number of adjustments can be made to $\hat{I}_{HD}$ to
-%improve its performance in special cases.  One can employ more
-%sophisticated methods to estimate $e_{ABE, k}$: for example,
-%extrapolating from learning curves [15].  Furthermore,
-%depending on the risk function, one may debias or shrink the estimate
-%$\hat{I}_{HD}$ to achieve a more favorable bias-variance tradeoff.
+Even given a classifier which consistently estimates the Bayes error,
+the estimator $\hat{I}_{HD}$ can still be improved.  One can employ more
+sophisticated methods to estimate $e_{ABE, k}$: for example,
+extrapolating from learning curves [14].  Furthermore,
+depending on the risk function, one may debias or shrink the estimate
+$\hat{I}_{HD}$ to achieve a more favorable bias-variance tradeoff.
 
-All of these three assumptions are met in our simulation experiment, 
+All of the necessary assumptions are met in our simulation experiment, 
 hence our proposed estimator is seen to dramatically outperform existing estimators. It remains to assess the utility
 of our estimation procedure in a real-world example, where both the high-dimensional assumption and the model specification assumption are likely to be violated.  In a forthcoming
 work, we apply our framework to evaluate visual encoding models in
@@ -678,58 +665,53 @@ human fMRI data.
 
 \small
 
-[1] De Campos, Luis M. ``A scoring function for learning Bayesian networks
+[1] De Campos, Luis M. (2006). ``A scoring function for learning Bayesian networks
 based on mutual information and conditional independence tests." \emph{The
-Journal of Machine Learning Research 7} (2006): 2149-2187.
+Journal of Machine Learning Research 7} : 2149-2187.
 
-[2] Borst, A. \& Theunissen, F. E. ``Information theory and neural coding''
-\emph{Nature Neurosci.}, vol. 2, pp. 947?957, Nov. 1999.
+[2] Borst, A. \& Theunissen, F. E. (1999). ``Information theory and neural coding''
+\emph{Nature Neurosci.}, vol. 2, pp. 947-957.
 
-[3] Linsker, Ralph. ``An application of the principle of maximum
+[3] Linsker, R. (1989). ``An application of the principle of maximum
 information preservation to linear systems." \emph{Advances in neural
-information processing systems.} 1989.
+information processing systems.} 
 
-[4] Speed, Terry. "A correlation for the 21st century." \emph{Science}
-334.6062 (2011): 1502-1503.
+[4] Speed, T. "A correlation for the 21st century."  (2011). \emph{Science}
+334.6062: 1502-1503.
 
 [5] Beirlant, J., Dudewicz, E. J., Gy\:{o}rfi, L., \& der Meulen,
 E. C. (1997). ``Nonparametric Entropy Estimation: An
 Overview.'' \emph{International Journal of Mathematical and Statistical
-Sciences}, 6, 17–40. doi:10.1.1.87.5281
+Sciences}, 6, 17-40.
 
-[6] Haxby, James V., et al. "Distributed and overlapping representations of faces and objects in ventral temporal cortex." \emph{Science} 293.5539 (2001): 2425-2430.
+[6] Haxby, James V., et al.  (2001). "Distributed and overlapping representations of faces and objects in ventral temporal cortex." \emph{Science} 293.5539: 2425-2430.
 
 [7] Treves, A. (1997). ``On the perceptual structure of face space.'' \emph{Bio Systems}, 40(1-2), 189?96. 
 
 [8] Quiroga, Q. R., \& Panzeri, S. (2009). Extracting information from neuronal populations: information theory and decoding approaches. \emph{Nature Reviews. Neuroscience}, 10(3), 173?185.
 
-[9] Naselaris, T., Kay, K. N., Nishimoto, S., \& Gallant,
-J. L. (2011). Encoding and decoding in fMRI. \emph{Neuroimage}, 56(2),
-400-410.
+[9] Tse, D., \& Viswanath, P. (2005). \emph{Fundamentals of wireless
+communication.} Cambridge university press, 
 
-[10] Friedman, J., Hastie, T., \& Tibshirani, R. \emph{The elements
+[10] Friedman, J., Hastie, T., \& Tibshirani, R. (2008). \emph{The elements
 of statistical learning.} Vol. 1. Springer, Berlin: Springer series in
-statistics, 2008.
+statistics.
 
-[11] Gastpar, M.  Gill, P.  Huth, A. \& Theunissen, F. ``Anthropic
+[11] Gastpar, M.  Gill, P.  Huth, A. \& Theunissen, F. (2010). ``Anthropic
 Correction of Information Estimates and Its Application to Neural
-Coding.'' \emph{IEEE Trans. Info. Theory}, Vol 56 No 2, 2010.
+Coding.'' \emph{IEEE Trans. Info. Theory}, Vol 56 No 2.
 
-[12] Theunissen, F. E. \& Miller, J.P. ``Representation of sensory
+[12] Banerjee, A., Dean, H. L.,  \& Pesaran, B. (2011). "Parametric
+models to relate spike train and LFP dynamics with neural information
+processing." \emph{Frontiers in computational neuroscience} 6: 51-51.
+
+[13] Theunissen, F. E. \& Miller, J.P. (1991). ``Representation of sensory
 information in the cricket cercal sensory system. II. information
 theoretic calculation of system accuracy and optimal tuning-curve
 widths of four primary interneurons,'' \emph{J. Neurophysiol.}, vol. 66,
-no. 5, pp. 1690-1703, 1991.
+no. 5, pp. 1690-1703.
 
-[13] Tse, D., \& Viswanath, P. \emph{Fundamentals of wireless
-communication.} Cambridge university press, 2005.
-
-[14] Banerjee, A., Dean, H. L.,  \& Pesaran, B. "Parametric
-models to relate spike train and LFP dynamics with neural information
-processing." \emph{Frontiers in computational neuroscience} 6 (2011): 51-51.
-
-[15] Cortes, C., et al. "Learning curves: Asymptotic values and rate of convergence." \emph{Advances in Neural Information Processing Systems.} 1994.
-
+[14] Cortes, C., et al. "Learning curves: Asymptotic values and rate of convergence." (1994). \emph{Advances in Neural Information Processing Systems.}
 
 
 
