@@ -128,8 +128,8 @@ and $z$ are unknown labels, which lie in a countable label set $\mathcal{Z}$.  T
 predicting the label of a new data point; generally, the classification rule $h: \mathcal{Y} \to \mathcal{Z}$
 is learned from previously observed data points.  In many applications of multi-class classification,
 such as face recognition or image recognition, the space of potential labels is practically infinite.
-In such a setting, one might consider a sequence of classification problems on finite label subsets $\mathcal{Z}_1 \subset \cdots \subset \mathcal{Z}_K$, where in the $i$th problem, one constructs the classification rule $h^{(i)}:\mathcal{Y} \to \mathcal{Z}_i$.
-Supposing that $(Z, Y)$ have a joint distribution, define the accuracy for the $i$th problem as
+In such a setting, one might consider a sequence of classification problems on finite label subsets $\mathcal{Z}_1 \subset \cdots \subset \mathcal{Z}_K$, where in the $i$-th problem, one constructs the classification rule $h^{(i)}:\mathcal{Y} \to \mathcal{Z}_i$.
+Supposing that $(Z, Y)$ have a joint distribution, define the accuracy for the $i$-th problem as
 \[
 \text{acc}^{(i)} = \Pr[h^{(i)}(Y) = Z|Z \in \mathcal{Z}_i].
 \]
@@ -212,10 +212,10 @@ where the probabilities are taken over $Y \sim F_i$.
 In order to construct the classification rule $h^{(t)}$, we need data from the classes $F_1,\hdots, F_t$.
 In most instances of multi-class classification, one observes independent observations from each $F_i$
 which are used to construct the classifier.  Since the order of the observations
-does not generally matter, a sufficient statistic for the training data for the $t$th classification problem
+does not generally matter, a sufficient statistic for the training data for the $t$-th classification problem
 is the collection of empirical distributions
 $\hat{F}_1^{(t)},\hdots,\hat{F}_t^{(t)}$ for each class.
-Henceforth, we make the simplifying assumption that the training data for the $i$th class remains fixed
+Henceforth, we make the simplifying assumption that the training data for the $i$-th class remains fixed
 from $t =i, i+1,\hdots$, so we drop the superscript on $\hat{F}_i^{(t)}$.
 Write $\hat{\mathbb{F}}(F)$ for the conditional distribution of $\hat{F}_i$ given  $F_i = F$;
 also write $\hat{\mathbb{F}}$ for the marginal distribution of $\hat{F}$ when $F \sim \mathbb{F}.$
@@ -231,9 +231,7 @@ The functional formulation of a classifier echoes the functional formulation of 
 we define a classifier as a collection of mappings
 $\mathcal{M}_i: \mathcal{P}(\mathcal{Y})^k \times \mathcal{Y} \to \mathbb{R}$ called \emph{margin functions.}
 Intuitively speaking, each margin function \emph{learns a model} from the first $k$ arguments, which are
-the empirical marginals of the $k$ classes, $\hat{F}_1,\hdots, \hat{F}_k$.  The classifier learns a model
-from the marginals $\hat{F}_1,\hdots, \hat{F}_k$ to assign a \emph{margin} or \emph{score} to the
-\emph{query point} $y \in \mathcal{Y}$.  A higher score $\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y)$ indicates a higher estimated probability that $y$ belongs to the $k$th class.  
+the empirical marginals of the $k$ classes, $\hat{F}_1,\hdots, \hat{F}_k$;  for each class, the classifier assigns a \emph{margin} or \emph{score} to the \emph{query point} $y \in \mathcal{Y}$.  A higher score $\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y)$ indicates a higher estimated probability that $y$ belongs to the $k$-th class.  
 Therefore, the classification rule corresponding to a classifier $\mathcal{M}_i$ assigns
 a class with maximum margin to $y$:
 \[
@@ -243,21 +241,21 @@ For some classifiers, the margin function $\mathcal{M}_i$ is especially simple
 in that $\mathcal{M}_i$ is only a function of $\hat{F}_i$ and $y$.
 Furthermore, due to symmetry, in such cases one can write
 \[
-\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y) = \mathcal{Q}(\hat{F}_i, y)
+\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y) = \mathcal{Q}(\hat{F}_i, y),
 \]
 where $\mathcal{Q}$ is called a \emph{single-class margin} (or simply \emph{margin}),
 and we say that $\mathcal{M}$ is a \emph{generative classifier}.
 Quadratic discriminant analysis and Naive Bayes [6] are two examples of
 generative classifiers\footnote{For QDA, the margin is given by
 \[
-\mathcal{Q}_{QDA}(\hat{F}, y) = -(y - \mu(\hat{F}))^T \Sigma(\hat{F})^{-1} (y-\mu(\hat{F})) - \log\det(\Sigma(\hat{F}))
+\mathcal{Q}_{QDA}(\hat{F}, y) = -(y - \mu(\hat{F}))^T \Sigma(\hat{F})^{-1} (y-\mu(\hat{F})) - \log\det(\Sigma(\hat{F})),
 \]
 where $\mu(F) = \int y dF(y)$ and $\Sigma(F) = \int (y-\mu(F))(y-\mu(F))^T dF(y)$.
 In Naive Bayes, the margin is
 \[
-\mathcal{Q}_{NB}(\hat{F},  y) = \sum_{i=1}^n \log \hat{f}_i(y_i)
+\mathcal{Q}_{NB}(\hat{F},  y) = \sum_{i=1}^n \log \hat{f}_i(y_i),
 \]
-where $\hat{f}_i$ is a density estimate for the $i$th component of
+where $\hat{f}_i$ is a density estimate for the $i$-th component of
 $\hat{F}$.}.
 
 
@@ -269,7 +267,7 @@ under the exchangeable sampling assumption, as we see in Section 3.
 \section{Performance extrapolation for generative classifiers}
 
 Let us specialize to the case of a generative classifier, with scoring rule $\mathcal{Q}$.
-Consider estimating the expected accuracy at time $t$, 
+Consider estimating the expected accuracy for the $t$-th classification problem,
 \begin{equation}\label{eq:pt}
 p_t \stackrel{def}{=} \E[\text{acc}^{(t)}].\end{equation}
 In the case of a generative classifier, we have
@@ -328,7 +326,7 @@ $\Box$
 
 Theorem 3.1 tells us that the problem of extrapolation can be
 approached by attempting to estimate the conditional accuracy
-distribution.  The $(t-1)$th moment of $U$ gives us $p_t$, which will
+distribution.  The $(t-1)$-th moment of $U$ gives us $p_t$, which will
 in turn be a good estimate of $\text{acc}^{(t)}$.
 
 While $U = u(\hat{F}, Y)$ is not directly observed, we can obtain unbiased estimates of $u(\hat{F}_i, y)$
@@ -491,7 +489,7 @@ However, since $\hat{p}_t^{UN}$ is undefined for $k \geq t$, we can use exponent
 to define an extended estimator $\hat{p}_t^{EXP}$ for $k > t$.
 Let $\hat{\alpha}$ be a measure defined by solving the optimization problem
 \[
-\text{minimize} \sum_{t=2}^{k} \left(\hat{p}_t^{UN} - \int_0^\infty \exp[-t\kappa] d\alpha(\kappa)\right)^2
+\text{minimize} \sum_{t=2}^{k} \left(\hat{p}_t^{UN} - \int_0^\infty \exp[-t\kappa] d\alpha(\kappa)\right)^2.
 \]
 After discretizing the measure $\hat{\alpha}$, we obtain a convex optimization problem
 which can be solved using non-negative least squares [9].
@@ -521,7 +519,8 @@ Estimated density $\hat{\eta}$ &Estimated moment $\E[U^t]$ & \\
 & & & \\
 $u$& $t$& & \\
 \end{tabular}
-\caption{Maximum pseudolikelihood (MPLE) versus constrained pseudolikelihood (CONS).}
+\caption{Maximum pseudolikelihood (MPLE) versus constrained pseudolikelihood (CONS).
+Adding constraints improves the estimation of the density $\eta(u)$, as well as moment estimation.}
 \end{figure}
 
 The pseudolikelihood is defined as
@@ -545,7 +544,7 @@ is selected.
 These shortcomings motivate the adoption of additional constraints on the estimator $\hat{\eta}$.
 
 Theorem 3.4. motivates the \emph{monotonicity constraint} that $\frac{d\hat{\eta}}{du} > 0$.
-A second constraint is to restrict the $k$th moment of $\hat{\eta}$ to match the unbiased estimate.
+A second constraint is to restrict the $k$-th moment of $\hat{\eta}$ to match the unbiased estimate.
 The addition of these constraints yields the constrained PMLE
 $\hat{\eta}_{CON}$, which is obtained by solving
 \[
@@ -624,7 +623,7 @@ $\epsilon = 0.002$ for $\epsilon$-nearest neighbors.}
 
 We have developed a theory of prediction extrapolation for generative classifiers,
 under the assumption of exchangeable classes.  The equivalence between
-the expected $t$-class accuracy and the $t-1$th moment of the conditional accuracy distribution
+the expected $t$-class accuracy and the $t-1$-th moment of the conditional accuracy distribution
 allows a variety of methods to be applied to the problem.  We develop two novel extrapolation methods,
 and also propose a new application of the mutual information estimator [4] as a third method for
 prediction extrapolation.
