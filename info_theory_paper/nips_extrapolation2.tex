@@ -226,32 +226,32 @@ Meanwhile, $\hat{\mathbb{F}}$ is the meta-distribution of the empirical distribu
 
 \subsection{Multiclass classification}
 
-Extending the formalism of Tewari and Bartlett [5]\footnote{We borrow their terminology of \emph{margin functions}, but introduce the notion of a classifier as a multiple-argument functional on empirical distributions.  
-The functional formulation of a classifier echoes the functional formulation of estimators common in the statistical literature.},
+Extending the formalism of Tewari and Bartlett [5]\footnote{As in their framework,
+we define a classifier as a vector-valued function.  However, we introduce the notion of a classifier as a multiple-argument functional on empirical distributions, which echoes the functional formulation of estimators common in the statistical literature.},
 we define a classifier as a collection of mappings
-$\mathcal{M}_i: \mathcal{P}(\mathcal{Y})^k \times \mathcal{Y} \to \mathbb{R}$ called \emph{margin functions.}
-Intuitively speaking, each margin function \emph{learns a model} from the first $k$ arguments, which are
-the empirical marginals of the $k$ classes, $\hat{F}_1,\hdots, \hat{F}_k$;  for each class, the classifier assigns a \emph{margin} or \emph{score} to the \emph{query point} $y \in \mathcal{Y}$.  A higher score $\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y)$ indicates a higher estimated probability that $y$ belongs to the $k$-th class.  
+$\mathcal{M}_i: \mathcal{P}(\mathcal{Y})^k \times \mathcal{Y} \to \mathbb{R}$ called \emph{classification functions.}
+Intuitively speaking, each classification function \emph{learns a model} from the first $k$ arguments, which are
+the empirical marginals of the $k$ classes, $\hat{F}_1,\hdots, \hat{F}_k$.  For each class, the classifier assigns a \emph{classification score} to the \emph{query point} $y \in \mathcal{Y}$.  A higher score $\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y)$ indicates a higher estimated probability that $y$ belongs to the $k$-th class.  
 Therefore, the classification rule corresponding to a classifier $\mathcal{M}_i$ assigns
-a class with maximum margin to $y$:
+a class with maximum classification score to $y$:
 \[
 h(y) = \argmax_{i \in \{1,\hdots, k\}} \mathcal{M}_i(y).
 \]
-For some classifiers, the margin function $\mathcal{M}_i$ is especially simple
+For some classifiers, the classification functions $\mathcal{M}_i$ are especially simple
 in that $\mathcal{M}_i$ is only a function of $\hat{F}_i$ and $y$.
 Furthermore, due to symmetry, in such cases one can write
 \[
 \mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y) = \mathcal{Q}(\hat{F}_i, y),
 \]
-where $\mathcal{Q}$ is called a \emph{single-class margin} (or simply \emph{margin}),
+where $\mathcal{Q}$ is called a \emph{single-class classification function} (or simply \emph{classification function}),
 and we say that $\mathcal{M}$ is a \emph{generative classifier}.
 Quadratic discriminant analysis and Naive Bayes [6] are two examples of
-generative classifiers\footnote{For QDA, the margin is given by
+generative classifiers\footnote{For QDA, the classification function is given by
 \[
 \mathcal{Q}_{QDA}(\hat{F}, y) = -(y - \mu(\hat{F}))^T \Sigma(\hat{F})^{-1} (y-\mu(\hat{F})) - \log\det(\Sigma(\hat{F})),
 \]
 where $\mu(F) = \int y dF(y)$ and $\Sigma(F) = \int (y-\mu(F))(y-\mu(F))^T dF(y)$.
-In Naive Bayes, the margin is
+In Naive Bayes, the classification function is
 \[
 \mathcal{Q}_{NB}(\hat{F},  y) = \sum_{i=1}^n \log \hat{f}_i(y_i),
 \]
@@ -266,7 +266,7 @@ under the exchangeable sampling assumption, as we see in Section 3.
 
 \section{Performance extrapolation for generative classifiers}
 
-Let us specialize to the case of a generative classifier, with margin $\mathcal{Q}$.
+Let us specialize to the case of a generative classifier, with classification function $\mathcal{Q}$.
 Consider estimating the expected accuracy for the $t$-th classification problem,
 \begin{equation}\label{eq:pt}
 p_t \stackrel{def}{=} \E[\text{acc}^{(t)}].\end{equation}
@@ -292,7 +292,7 @@ distribution is that the expected generalization error $p_t$ can be
 written in terms of its moments.
 
 \noindent\textbf{Theorem 3.1.} \emph{
-Let $\mathcal{Q}$ be a single-distribution margin, and let $\mathbb{F}$, $\hat{\mathbb{F}}(F)$ be a distribution on $\mathcal{P}(\mathcal{Y}).$
+Let $\mathcal{Q}$ be a single-distribution classification function, and let $\mathbb{F}$, $\hat{\mathbb{F}}(F)$ be a distribution on $\mathcal{P}(\mathcal{Y}).$
 Further assume that
 $\hat{\mathbb{F}}$ and $\mathcal{Q}$ jointly satisfy the
 \emph{tie-breaking} property:
@@ -369,7 +369,7 @@ $\mathcal{Q}$ such that $\nu = \nu'$, even if one makes the \emph{perfect sampli
 \noindent\textbf{Theorem 3.3.} \emph{ Let $U$ be defined as in Theorem
   3.1, and let $\nu$ denote the law of $U$.  Then, for any probability
   distribution $\nu'$ on $[0,1]$, one can construct a
-  meta-distribution $\mathbb{F}$ and a margin $\mathcal{Q}$ such
+  meta-distribution $\mathbb{F}$ and a classification function $\mathcal{Q}$ such
   that $\nu = \nu'$ under perfect sampling (that is, $\hat{F} = F$.)  }
 
 \textbf{Proof.}  
@@ -635,10 +635,10 @@ However, an important caveat is that the classifier must already attain close to
 on the smaller subset of classes.  If the classifier is initially far from the Bayes classifier,
 and then becomes more accurate as more classes are added, our theory could underestimate the
 accuracy on the larger subset.  This is a non-issue for generative classifiers when the training data per class is fixed,
-since a generative classifier approximates the Bayes rule if and only if the single-class margin approximates the
-Bayes optimal single-class margin.  On the other hand, for classifiers with built-in \emph{model selection}
-or \emph{representation learning}, it is expected that the individual class margins become more accurate,
-in the sense that they better approximate a monotonic function of the class margins of the Bayes classifier,
+since a generative classifier approximates the Bayes rule if and only if the single-class classification function approximates the
+Bayes optimal single-class classification function.  On the other hand, for classifiers with built-in \emph{model selection}
+or \emph{representation learning}, it is expected that the classification functions become more accurate,
+in the sense that they better approximate a monotonic function of the Bayes classification functions,
 as data from more classes is added.
 
 
@@ -706,7 +706,7 @@ $\mathcal{M}_i$ converges to calibrated $\mathcal{Q}$: these additional conditio
 with probability one for all $\epsilon > 0$.  Then we say that $\mathcal{M}$ is uniformly asymptotically generative.}
 
 \textbf{Theorem 2.3}\emph{
-Let $\mathcal{Q}$ be the margin of a uniformly generative classifier, and 
+Let $\mathcal{Q}$ be the classification function of a uniformly generative classifier, and 
 assume that $F_1,\hdots, F_k \stackrel{iid}{\sim} \mathbb{F}$ and $\hat{F}_i \sim \hat{\mathbb{F}}(F_i)$ independently,
 following the notation of section 2.
 Further assume that $\mathcal{Q}$ and $\mathbb{F}$ satisfy the tie-breaking property \eqref{eq:tie}.
