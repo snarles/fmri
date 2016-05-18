@@ -137,7 +137,7 @@ Using data from only $\mathcal{Z}_k$, can one predict the accuracy achieved on t
 
 A practical instance of performance extrapolation occurs in neuroimaging studies, where the number of classes $k$ is
 limited by experimental considerations.
-Kay et al. (2008) obtained fMRI brain scans which record how a single subject's visual cortex responds to natural images.
+Kay et al. [1] obtained fMRI brain scans which record how a single subject's visual cortex responds to natural images.
 The label set $\mathcal{Z}$ corresponds to the space of all grayscale photographs of natural images,
 and the set $\mathcal{Z}_1$ is a subset of 1750 photographs used in the experiment.
 They construct a classifier which achieves over 0.75 accuracy for classifying the 1750 photographs;
@@ -156,18 +156,37 @@ The condition of exchangeability ensures that the separability of random subsets
 by looking at the empirical distributions in $\mathcal{Z}_k$, and therefore that some estimate of the achievable
 accuracy on $\mathcal{Z}_K$ can be obtained.
 
-In addition to the assumption of exchangeability, we restrict the set of classifiers considered.
+The assumption of exchangeability greatly limits the scope of application for our methods.
+Many multi-class classification problems
+have a hierarchical structure [2], or have classes distributed according to
+non-uniform discrete distributions, e.g. power laws [3]; in either case, exchangeability is violated.
+It would be interesting to extend our theory to the hierarchical setting, or to handle non-hierarchical settings
+with non-uniform prior class probabilities, but again we leave the subject for future work.
+
+In addition to the assumption of exchangeability, we consider a restricted set of classifiers.
 We focus on \emph{generative classifiers}, which are classifiers that work by training
 a model separately on each class.  This convenient property 
-allows us to characterize the accuracy of the classifier by selectively conditioning on one class at a time:
-in section 3, we use this technique to reveal an equivalence between 
+allows us to characterize the accuracy of the classifier by selectively conditioning on one class at a time.
+In section 3, we use this technique to reveal an equivalence between 
 the expected accuracies of $\mathcal{Z}_k$ to moments of a common distribution.
 This moment equivalence result allows standard approaches in statistics, such as U-statistics and
 nonparametric pseudolikelilood, to be directly applied to the extrapolation problem, as we discuss in section 4.
 In non-generative classifiers, the classification rule has a joint dependence on the entire set of classes,
 and cannot be analyzed by conditioning on individual classes.
-Nevertheless, in Section 5, we see that our methods achieve similarly accurate extrapolation for both
-generative and non-generative classifiers in real data examples.
+We confirmed that our methods work well for generative classifiers in simulations, which we have omitted from
+the paper.  Since generative classifiers are rarely used in large classification problems,
+we felt that a more interesting demonstration would be to apply our methods to extrapolate the performance
+of multinomial logistic regression, support vector machines, and $k$-nearest neighbors--three commonly used
+non-generative classifiers.  In Section 5, we see that our methods achieve accurate extrapolation
+for these three non-generative classifiers.  A possible reason for this fact is that since the Bayes classifier
+(the optimal classifier as implemented by an oracle) is generative, our theory must also apply
+to any classifier which adequately approximates the Bayes classifier.  We discuss this idea further in Section 6.
+
+To our knowledge, we are the first to formalize the problem of prediction extrapolation.
+We introduce three methods for prediction extrapolation: the method of extended unbiased estimation
+and the constrained pseudolikelihood method are novel.  The third method, based
+on asymptotics, is a new application of a recently proposed method 
+for estimating mutual information [4].
 
 \section{Setting}
 
@@ -207,7 +226,7 @@ Meanwhile, $\hat{\mathbb{F}}$ is the meta-distribution of the empirical distribu
 
 \subsection{Multiclass classification}
 
-Extending the formalism of Tewari and Bartlett (2007)\footnote{We borrow their terminology of \emph{margin functions}, but introduce the notion of a classifier as a multiple-argument functional on empirical distributions.  
+Extending the formalism of Tewari and Bartlett [5]\footnote{We borrow their terminology of \emph{margin functions}, but introduce the notion of a classifier as a multiple-argument functional on empirical distributions.  
 The functional formulation of a classifier echoes the functional formulation of estimators common in the statistical literature.},
 we define a classifier as a collection of mappings
 $\mathcal{M}_i: \mathcal{P}(\mathcal{Y})^k \times \mathcal{Y} \to \mathbb{R}$ called \emph{margin functions.}
@@ -226,7 +245,7 @@ Furthermore, due to symmetry, in such cases one can write
 \mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y) = \mathcal{Q}(\hat{F}_i, y)
 \]
 where $\mathcal{Q}$ is called a \emph{single-class margin} (or simply \emph{margin}.)
-Quadratic discriminant analysis and Naive Bayes are two examples of
+Quadratic discriminant analysis and Naive Bayes [6] are two examples of
 generative classifiers\footnote{For QDA, the margin is given by
 \[
 \mathcal{Q}_{QDA}(\hat{F}, y) = -(y - \mu(\hat{F}))^T \Sigma(\hat{F})^{-1} (y-\mu(\hat{F})) - \log\det(\Sigma(\hat{F}))
@@ -240,21 +259,20 @@ where $\hat{f}_i$ is a density estimate for the $i$th component of
 $\hat{F}$.}.
 
 For notational convenience, we assume that ties occur with probability
-zero: that is, $\hat{\mathbb{F}}$ and $\mathcal{Q}$ jointly satisfy the
-\emph{tie-breaking} property:
-\begin{equation}\label{eq:tie}
-\Pr[\mathcal{Q}(\hat{F}, y) = \mathcal{Q}(\hat{F}', y)] = 0
-\end{equation}
-for all $y \in \mathcal{Y}$, where $\mathbb{F}, \mathbb{F}' \stackrel{iid}{\sim} \hat{\mathbb{F}}$.
-Note that the tie-breaking property implies that $\mathbb{F}$ contains no atoms.
+zero: that is, Note that the tie-breaking property implies that $\mathbb{F}$ contains no atoms.
 The \emph{generative} property allows us to prove strong results about the accuracy of the classifier
 under the exchangeable sampling assumption, as we see in Section 3.
 
 \section{Performance extrapolation for generative classifiers}
 
 Let us specialize to the case of a generative classifier, with scoring rule $\mathcal{Q}$.
-Consider estimating the expected accuracy at time $t$, \[p_t
-\stackrel{def}{=} \E[\text{acc}^{(t)}].\]
+Consider estimating the expected accuracy at time $t$, 
+\begin{equation}\label{eq:pt}
+p_t \stackrel{def}{=} \E[\text{acc}^{(t)}].\end{equation}
+In the case of a generative classifier, we have
+\[
+p_k = \E[acc^{(k)}] = \E\left[\frac{1}{k}\sum_{i=1}^k \Pr_{Y \sim F_i}[\mathcal{Q}(\hat{F}_i, Y) > \max_{j \neq i}\mathcal{Q}(\hat{F}_j, Y)]\right].
+\]
 Define the \emph{conditional accuracy} function $u(\hat{F}, y)$ which maps a
 distribution $\hat{F}$ on $\mathcal{Y}$ and a \emph{test} observation $y$ to
 a real number in $[0,1]$.  The conditional accuracy gives the
@@ -274,16 +292,20 @@ written in terms of its moments.
 
 \noindent\textbf{Theorem 3.1.} \emph{
 Let $\mathcal{Q}$ be a single-distribution margin, and let $\mathbb{F}$, $\hat{F}(F)$ be a distribution on $\mathcal{P}(\mathcal{Y}).$
+Further assume that
+$\hat{\mathbb{F}}$ and $\mathcal{Q}$ jointly satisfy the
+\emph{tie-breaking} property:
+\begin{equation}\label{eq:tie}
+\Pr[\mathcal{Q}(\hat{F}, y) = \mathcal{Q}(\hat{F}', y)] = 0
+\end{equation}
+for all $y \in \mathcal{Y}$, where $\mathbb{F}, \mathbb{F}' \stackrel{iid}{\sim} \hat{\mathbb{F}}$.
 Let $U$ be defined as the random variable
 \[
 U = u(\hat{F}, Y)
 \]
 for $F \sim \mathbb{F}$, $Y \sim F$, and $\hat{F} \sim \hat{\mathbb{F}}(F)$ with $Y \perp \hat{F}$.
-Recall the definition
-\[
-p_k = \E[acc^{(k)}] = \E\left[\frac{1}{k}\sum_{i=1}^k \Pr_{Y \sim F_i}[\mathcal{Q}(\hat{F}_i, Y) > \max_{j \neq i}\mathcal{Q}(\hat{F}_j, Y)]\right].
-\]
-Then \[p_k = \E[U^{k-1}].\]
+Then \[p_k = \E[U^{k-1}],\]
+where $p_k$ is the expected accuracy as defined by \eqref{eq:pt}.
 }
 
 \noindent\textbf{Proof.}  
@@ -434,7 +456,7 @@ dependence structure between variables is unknown, the
 \emph{pseudolikelihood} is defined as the product of the marginal
 distributions.  For certain problems in time series analysis and
 spatial statistics, the maximum psuedolikelihood estimator (MPLE) is
-proved to be consistent (Arnold 1991).  We discuss psuedolikelihood-based
+proved to be consistent [7].  We discuss psuedolikelihood-based
 approaches in Section 4.2.  Thirdly, we note that the high-dimensional
 theory of Anon 2006 can be applied for prediction accuracy, which we discuss in Section 4.3.
 
@@ -443,7 +465,7 @@ theory of Anon 2006 can be applied for prediction accuracy, which we discuss in 
 If $V \sim \text{Binomial}(k, U)$, then an unbiased estimator of $U^t$ exists
 if and only if $0 \leq t \leq k$.
 
-The theory of U-statistics provides the minimal variance unbiased estimator for $U^t$:
+The theory of U-statistics [8] provides the minimal variance unbiased estimator for $U^t$:
 \[
 U^t = \E\left[\begin{pmatrix}
 V \\ t
@@ -469,7 +491,7 @@ Let $\hat{\alpha}$ be a measure defined by solving the optimization problem
 \text{minimize} \sum_{t=2}^{k} \left(\hat{p}_t^{UN} - \int_0^\infty \exp[-t\kappa] d\alpha(\kappa)\right)^2
 \]
 After discretizing the measure $\hat{\alpha}$, we obtain a convex optimization problem
-which can be solved using non-negative least squares (Lawson 1974).
+which can be solved using non-negative least squares [9].
 Then define
 \[
 \hat{p}_t^{EXP} = \begin{cases}
@@ -528,14 +550,14 @@ $\hat{\eta}_{CON}$, which is obtained by solving
 \]
 By discretizing $\eta$, all of the above maximization problems can be solved using a general-purpose convex solver\footnote{
 We found that the CVX discipline convex programming language, using the ECOS second-order cone programming solver,
-succeeds in optimizing the problems where the dimension of the discretized $\eta$ is as large as 10,000 (Hong 2014, Domahidi 2013.)}.
+succeeds in optimizing the problems where the dimension of the discretized $\eta$ is as large as 10,000 [10, 11].}.
 As seen in Figure 1, the added constraints can improve estimation of $\eta$ and thus improve moment estimation.
 
 
 \subsection{High-dimensional asymptotics}
 
 Under a number of conditions on the distribution $\mathbb{F}$, including (but not limited to) having a large dimension $p$,
-Anon 2016 relate the accuracy $p_t$ of the Bayes classifier to the mutual information between the label $z$ and
+Anon et al. [4] relate the accuracy $p_t$ of the Bayes classifier to the mutual information between the label $z$ and
 the response $y$:
 \[
 p_t = \bar{\pi}_t(\sqrt{2I(Z; Y)}).
@@ -549,7 +571,7 @@ imply a relationship between $p_k$ and $p_K$ for the Bayes error under the high-
 \[
 p_K = \bar{\pi}_K\left(\bar{\pi}_k^{-1}(p_k)\right).
 \]
-Therefore, under the high-dimensional conditions of Anon 2016 and assuming that the classifier approximates
+Therefore, under the high-dimensional conditions of [4] and assuming that the classifier approximates
 the Bayes classifier, we naturally obtain the following estimator
 \[
 \hat{p}_t^{HD} = \bar{\pi}_K\left(\bar{\pi}_k^{-1}(\hat{p}_k^{UN})\right).
@@ -558,7 +580,7 @@ the Bayes classifier, we naturally obtain the following estimator
 \section{Results}
 
 We applied the methods described in Section 4 to predict the 400-class accuracy of multinomial
-logistic regression, SVM, and $\epsilon$-nearest neighbors\footnote{$k$-nearest neighbors with $k = \epsilon n$ for fixed $\epsilon > 0$} on a Telegu character classification task,
+logistic regression, SVM [6], and $\epsilon$-nearest neighbors\footnote{$k$-nearest neighbors with $k = \epsilon n$ for fixed $\epsilon > 0$} on a Telegu character classification task [12],
 using 20-class data with 100 examples per class.  The results are displayed in Figure 2.
 
 Taking the test accuracy on 400 classes (using 50 test examples per class) as a proxy for $\text{acc}^{(400)}$,
@@ -573,11 +595,6 @@ Nevertheless, it performs well on the multinomial logistic and SVM classifiers.
 That said, all three classifiers studied are non-generative, hence violating an assumption common to both the $\hat{p}^{EXP}$
 and $\hat{p}^{CON}$ estimators: therefore, it is doubtful if the theory developed so far can do much to explain
 the relative performance of these methods.  
-
-While $\hat{p}^{HD}$ does not explicitly require the classifier to be generative,
-the assumption that the classifier approximates the Bayes rule is arguably a stronger assumption.
-It is notably, however, that $\hat{p}^{HD}$ performs best for multinomial logistic regression,
-which has the highest accuracy and therefore might be the best approximator of the Bayes classifier among the three classifiers studied.
 
 \begin{figure}
 \centering
@@ -605,34 +622,23 @@ $\epsilon = 0.002$ for $\epsilon$-nearest neighbors.}
 We have developed a theory of prediction extrapolation for generative classifiers,
 under the assumption of exchangeable classes.  The equivalence between
 the expected $t$-class accuracy and the $t-1$th moment of the conditional accuracy distribution
-allows a variety of methods to be applied to the problem.  
+allows a variety of methods to be applied to the problem.  We develop two novel extrapolation methods,
+and also propose a new application of the mutual information estimator [4] as a third method for
+prediction extrapolation.
 
 Empirical results indicate that our methods generalize beyond generative classifiers.
-A possible explanation is that many non-generative classifiers are \emph{asymptotically generative},
-meaning that $\mathcal{M}_i^{(t)}$, the $i$th margin for the $t$th classification problem in the sequence,
-converges to a function of $\hat{F}_i$ and $y$ with probability one:
-\begin{equation}\label{eq:agen}
-\lim_{t \to \infty} \mathcal{M}_i^{(t)}(\hat{F}_1,\hdots, \hat{F}_t, y) = \mathcal{Q}(\hat{F}_i, y) \text{ w.h.p. }
-\end{equation}
-While asymptotically generative classifiers can be decomposed in a similar manner as generative classifiers,
-they need not share the same practical \emph{limitations} as generative classifiers.
-A generative classifier requires the user to specify the scoring function $\mathcal{Q}$ in advance:
-this practically requires some prior knowledge about the marginal distributions of the classes,
-e.g. that the marginal distributions are approximately multivariate Gaussian.
-But the scoring function $\mathcal{Q}$ appearing in the definition of an asymptotically generative classifier
-\emph{need not be specified} by the user: 
-it can (and usually does) depend on the unknown meta-distribution $\mathbb{F}$.
-One can show that one-vs-one, one-vs-all, and $\epsilon$-nearest neighbors satisfy the definition \eqref{eq:agen}
-after assuming some additional continuity conditions; however, the definition \eqref{eq:agen} is too weak
-to extend the result in theorem 3.1.  Finding appropriate conditions to obtain a useful
-definition of an \emph{asymptotically generative} classifier is the subject of current work.
+A possible explanation is that since the Bayes classifier is generative,
+any classifier which approximates the Bayes classifier is also `approximately generative.'
+However, an important caveat is that the classifier must already attain close to the Bayes accuracy
+on the smaller subset of classes.  If the classifier is initially far from the Bayes classifier,
+and then becomes more accurate as more classes are added, our theory could underestimate the
+accuracy on the larger subset.  This is a non-issue for generative classifiers when the training data per class is fixed,
+since a generative classifier approximates the Bayes rule if and only if the single-class margin approximates the
+Bayes optimal single-class margin.  On the other hand, for classifiers with built-in \emph{model selection}
+or \emph{representation learning}, it is expected that the individual class margins become more accurate,
+in the sense that they better approximate a monotonic function of the class margins of the Bayes classifier,
+as data from more classes is added.
 
-The assumption of exchangeability greatly limits the scope of application for our methods.
-Many multi-class classification problems
-have a hierarchical structure (Deng 2010), or have classes distributed according to
-non-uniform discrete distributions (e.g. power laws) (Garfield 2005); in either case, exchangeability is violated.
-It would be interesting to extend our theory to the hierarchical setting, or to handle non-hierarchical settings
-with non-uniform prior class probabilities, but again we leave the subject for future work.
 
 %\subsubsection*{Acknowledgments}
 
@@ -642,29 +648,36 @@ with non-uniform prior class probabilities, but again we leave the subject for f
 
 \small
 
-[X] Anonymous, A. ``Estimating mutual information in high dimensions via classification error.''  Submitted to NIPS 2016.
+[1] Kay, K. N., Naselaris, T., Prenger, R. J., \& Gallant, J. L. (2008). ``Identifying natural images from human brain activity.'' 
+\emph{Nature}, 452(March), 352-355.
 
-[X] Ng, Andrew Y., and Michael I. Jordan. "On Discriminative vs. Generative classifiers: A comparison of logistic regression and naive Bayes." (2002).
+[2] Deng, J., Berg, A. C., Li, K., \& Fei-Fei, L. (2010). ``What does classifying more than 10,000 image categories tell us?'' \emph{Lecture Notes in Computer Science}, 6315 LNCS(PART 5), 71-84. 
 
-[X] Arnold, Barry C., and David Strauss. ``Pseudolikelihood estimation: some examples." Sankhya: The Indian Journal of Statistics, Series B (1991): 233-243.
+[3] Garfield, S., Stefan W., \& Devlin, S. (2005). ``Spoken language classification using hybrid classifier combination." 
+\emph{International Journal of Hybrid Intelligent Systems} 2.1: 13-33.
 
-[X] Lawson, Charles L., and Richard J. Hanson. Solving least squares problems. Vol. 161. Englewood Cliffs, NJ: Prentice-hall, 1974.
+[4] Anonymous, A. (2016). ``Estimating mutual information in high dimensions via classification error.''  Submitted to 
+\emph{NIPS 2016.}
 
-[X] Hong, Jenny, Karanveer Mohan, and David Zeng. ``CVX. jl: A Convex Modeling Environment in Julia." (2014).
+[5] Tewari, A., \& Bartlett, P. L. (2007). ``On the Consistency of Multiclass Classification Methods.''
+\emph{Journal of Machine Learning Research}, 8, 1007-1025.
 
-[X] Domahidi, Alexander, Eric Chu, and Stephen Boyd. "ECOS: An SOCP solver for embedded systems." Control Conference (ECC), 2013 European. IEEE, 2013.
-
-[X] Naselaris, T., Kay, K. N., Nishimoto, S., \& Gallant,
-J. L. (2011). Encoding and decoding in fMRI. \emph{Neuroimage}, 56(2),
-400-410.
-
-[X] Friedman, Jerome, Trevor Hastie, and Robert Tibshirani. \emph{The elements
+[6] Friedman, J., Trevor H., \& Tibshirani, R. (2008). \emph{The elements
 of statistical learning.} Vol. 1. Springer, Berlin: Springer series in
-statistics, 2008.
+statistics.
 
-[X] Deng, J., Berg, A. C., Li, K., \& Fei-Fei, L. (2010). What does classifying more than 10,000 image categories tell us? Lecture Notes in Computer Science, 6315 LNCS(PART 5), 71?84. 
+[7] Arnold, Barry C., \& Strauss, D.  (1991). ``Pseudolikelihood estimation: some examples." \emph{Sankhya: The Indian Journal of Statistics, Series B}: 233-243.
 
-[X] Garfield, Sheila, Stefan Wermter, and Siobhan Devlin. ``Spoken language classification using hybrid classifier combination." International Journal of Hybrid Intelligent Systems 2.1 (2005): 13-33.
+[8] Cox, D.R., \& Hinkley, D.V. (1974). \emph{Theoretical statistics.} Chapman and Hall. ISBN 0-412-12420-3
+
+[9] Lawson, C. L., \& Hanson, R. J. (1974). \emph{Solving least squares problems.} Vol. 161. Englewood Cliffs, NJ: Prentice-hall.
+
+[10] Hong, J., Mohan, K. \& Zeng, D. (2014). ``CVX. jl: A Convex Modeling Environment in Julia."
+
+[11] Domahidi, A., Chu, E., \& Boyd, S. (2013). "ECOS: An SOCP solver for embedded systems." \emph{Control Conference (ECC), 2013 European. IEEE.}
+
+[12] Achanta, R., \& Hastie, T. (2015) "Telugu OCR Framework using Deep Learning." arXiv preprint arXiv:1509.05962 .
+
 \end{document}
 
 
