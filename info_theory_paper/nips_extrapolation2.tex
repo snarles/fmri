@@ -266,7 +266,7 @@ under the exchangeable sampling assumption, as we see in Section 3.
 
 \section{Performance extrapolation for generative classifiers}
 
-Let us specialize to the case of a generative classifier, with scoring rule $\mathcal{Q}$.
+Let us specialize to the case of a generative classifier, with margin $\mathcal{Q}$.
 Consider estimating the expected accuracy for the $t$-th classification problem,
 \begin{equation}\label{eq:pt}
 p_t \stackrel{def}{=} \E[\text{acc}^{(t)}].\end{equation}
@@ -369,7 +369,7 @@ $\mathcal{Q}$ such that $\nu = \nu'$, even if one makes the \emph{perfect sampli
 \noindent\textbf{Theorem 3.3.} \emph{ Let $U$ be defined as in Theorem
   3.1, and let $\nu$ denote the law of $U$.  Then, for any probability
   distribution $\nu'$ on $[0,1]$, one can construct a
-  meta-distribution $\mathbb{F}$ and a scoring rule $\mathcal{Q}$ such
+  meta-distribution $\mathbb{F}$ and a margin $\mathcal{Q}$ such
   that $\nu = \nu'$ under perfect sampling (that is, $\hat{F} = F$.)  }
 
 \textbf{Proof.}  
@@ -644,7 +644,7 @@ as data from more classes is added.
 
 %\subsubsection*{Acknowledgments}
 
-%CZ is supported by an NSF graduate research fellowship.
+%We thank John Duchi, Steve Mussmann, Qingyun Sun, Jonathan Taylor, Trevor Hastie, Robert Tibshirani for useful discussion.  CZ is supported by an NSF graduate research fellowship.
 
 \section*{References}
 
@@ -706,7 +706,7 @@ $\mathcal{M}_i$ converges to calibrated $\mathcal{Q}$: these additional conditio
 with probability one for all $\epsilon > 0$.  Then we say that $\mathcal{M}$ is uniformly asymptotically generative.}
 
 \textbf{Theorem 2.3}\emph{
-Let $\mathcal{Q}$ be the scoring function of a uniformly generative classifier, and 
+Let $\mathcal{Q}$ be the margin of a uniformly generative classifier, and 
 assume that $F_1,\hdots, F_k \stackrel{iid}{\sim} \mathbb{F}$ and $\hat{F}_i \sim \hat{\mathbb{F}}(F_i)$ independently,
 following the notation of section 2.
 Further assume that $\mathcal{Q}$ and $\mathbb{F}$ satisfy the tie-breaking property \eqref{eq:tie}.
