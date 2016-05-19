@@ -32,123 +32,37 @@
 \newcommand{\Cor}{\text{Cor}}
 
 \section{Proofs}
-
-\textbf{Theorem 2.1.} \emph{(i) an OVO recognition systems equipped with a continuous binary classifier is separable; (ii) an OVA recognition systems equipped with a continuous binary scoring rule is separable;
-(iii) a kNN recognition system with fixed neighborhood size $\alpha \in (0, 1)$ is separable; (iv) multinomial logistic regression recognition systems are separable; (v) LDA recognition systems are separable.}
-
-\noindent\textbf{Proof.}  \newline
-
 \noindent\textbf{Theorem 3.1.} \emph{
+Let $\mathcal{Q}$ be a single-distribution classification function, and let $\mathbb{F}$, $\hat{\mathbb{F}}(F)$ be a distribution on $\mathcal{P}(\mathcal{Y}).$
+Further assume that
+$\hat{\mathbb{F}}$ and $\mathcal{Q}$ jointly satisfy the
+\emph{tie-breaking} property:
+\begin{equation}\label{eq:tie}
+\Pr[\mathcal{Q}(\hat{F}, y) = \mathcal{Q}(\hat{F}', y)] = 0
+\end{equation}
+for all $y \in \mathcal{Y}$, where $\hat{F}, \hat{F}' \stackrel{iid}{\sim} \hat{\mathbb{F}}$.
 Let $U$ be defined as the random variable
-\[U = u(F, Y)\]
-for $X, Y$ drawn from $p(x, y) = p(x) p(y|x)$,
-and $\hat{F}(X) = \frac{1}{r_1}\sum_{j=1}^{r_1} \delta{Y^j}$ with $Y^i \stackrel{iid}{\sim} p(y|X)$
-Then $p_k = \E[U^{k-1}]$.
+$U = u(\hat{F}, Y)$
+for $F \sim \mathbb{F}$, $Y \sim F$, and $\hat{F} \sim \hat{\mathbb{F}}(F)$ with $Y \perp \hat{F}$.
+Then \[p_k = \E[U^{k-1}],\]
+where $p_k$ is the expected accuracy as defined by \eqref{eq:pt}.
 }
 
+
 \noindent\textbf{Proof.}  
-Write $q^{(i)}(y) = \mathcal{Q}(\hat{F}_i, 0, y)$, and let $Y^{(i), *} \sim p(y|X^{(i)}$ for $i = 1,\hdots, k$.
-Note that by using conditioning and
+Write $q^{(i)}(y) = \mathcal{Q}(\hat{F}_i, y)$.
+By using conditioning and
 conditional independence, $p_k$ can be written
 \begin{align*}
-p_k &= \E\left[ \frac{1}{k}\sum_{i=1}^k  \Pr[q^{(i)}(Y^{(i), *}) > \max_{j\neq i} q^{(j)}(Y^{(i), *})] \right]
-\\&= \E\left[ \Pr[q^{(1)}(Y^{(1), *}) > \max_{j\neq 1} q^{(j)}(Y^{(1), *})] \right]
-\\&= \E[\Pr[q^{(1)}(Y^{(1), *}) > \max_{j\neq 1} q^{(j)}(Y^{(1), *})|Y^{(1), *}, \hat{F}_1]]
-\\&= \E[\Pr[\cap_{j > 1} q^{(1)}(Y^{(1), *}) > q^{(j)}(Y^{(1), *})|Y^{(1), *}, \hat{F}_1]]
-\\&= \E[\prod_{j > 1}\Pr[q^{(1)}(Y^{(1), *}) > q^{(j)}(Y^{(1), *})|Y^{(1), *}, \hat{F}_1]]
-\\&= \E[\Pr[q^{(1)}(Y^{(1), *}) > q^{(2)}(Y^{(1), *})|Y^{(1), *}, \hat{F}_1]^{k-1}]
-\\&= \E[u(\hat{F}_1, Y^{(1), *})^{k-1}] = \E[U^{k-1}].
+p_k &= \E\left[ \frac{1}{k}\sum_{i=1}^k  \Pr_{F_i}[q^{(i)}(Y) > \max_{j\neq i} q^{(j)}(Y)] \right]
+\\&= \E\left[ \Pr_{F_1}[q^{(1)}(Y) > \max_{j\neq 1} q^{(j)}(Y)] \right]
+\\&= \E_{F_1}[\Pr[q^{(1)}(Y) > \max_{j\neq 1} q^{(j)}(Y)|\hat{F}_1, Y]]
+\\&= \E_{F_1}[\Pr[\cap_{j > 1} q^{(1)}(Y) > q^{(j)}(Y)|\hat{F}_1, Y]]
+\\&= \E_{F_1}[\prod_{j > 1}\Pr[q^{(1)}(Y) > q^{(j)}(Y)|\hat{F}_1, Y]]
+\\&= \E_{F_1}[\Pr[q^{(1)}(Y) > q^{(2)}(Y)|\hat{F}_1, Y]^{k-1}]
+\\&= \E_{F_1}[u(\hat{F}_1, Y)^{k-1}] = \E[U^{k-1}].
 \end{align*}
-$\Box$\newline
-
-
-
-\noindent\textbf{Theorem 3.2.} \emph{ Let $U$ be defined as in Theorem
-  3.1, and let $\nu$ denote the law of $U$.  Then, for any probability
-  distribution $\nu'$ on $[0,1]$, one can construct a joint
-  distribution $p(x, y)$ and a scoring rule $\mathcal{Q}$ such that 
-  $\nu = \nu'$.
-}
-
-\noindent\textbf{Proof.}  
-Let $X$ and $Y$ have the degenerate joint distribution $X= Y \sim Unif[0, 1]$.
-Let $G$ be the cdf of $\nu$, $G(x) = \int_0^x d\nu(x)$, and let $H(u) = \sup_x \{G(x) \leq u\}/$.
-Define $\mathcal{Q}$ by
-\[
-\mathcal{Q}(F, 0, y) = \begin{cases}
-0 &\text{ if }\mu(F) > y + H(y)\\
-0 & \text{ if }y + H(y) > 1 \text{ and }\mu(F) \in [H(y) - y, y]\\
-1 + \mu(F) - y &\text{ if } \mu(F) \in [y, y + H(y)]\\
-1 + y + \mu(F) &\text{ if }\mu(F) + H(y) > 1 \text{ and }\mu(F) \in [0, H(y) - y]. 
-\end{cases}
-\]
-One can verify that $u(\hat{F}(X), X) = H(X).$  Therefore, the cdf of $U$ is equal to $G$, as needed. $\Box$\newline
-
-
-
-\noindent\textbf{Theorem 3.3.} \emph{ Let $U$ be defined as in Theorem
-  2.2, and let $\nu$ denote the law of $U$.  Suppose $(X, Y)$ has a density $p(x, y)$ with respect to 
-  Lebesgue measure on $\mathcal{X} \times \mathcal{Y}$,
-  and with probability one, $\mathcal{Q}(y, 0, \hat{F}(X))$ satisfies the property of monotonicity
-  \[
-  p(y|x) > p(y'|x) \text{ implies } \mathcal{Q}(\hat{F}(X), 0, y) > \mathcal{Q}(\hat{F}(X), 0, y')
-  \]
-  and the property of tie-breaking, %\eqref{eq:tie}
-  then $\mu$ has a density $\eta(u)$ on $[0, 1]$ which is monotonic in $u$.
-}
-
-\noindent\textbf{Proof.}
-Choose $0 < u < v < 1$ and $0 < \delta < \min(u, 1-v, v-u)$.
-For $x \in \mathcal{X}$, define the set 
-\[
-\underline{J}_x = \{y \in \mathcal{Y}: \int_\mathcal{Y} I(p(y|x) > p(w|x))p(w|x) dw \in [u - \delta, u + \delta]\}
-\]
-and
-\[
-\bar{J}_x = \{y \in \mathcal{Y}: \int_\mathcal{Y} I(p(y|x) > p(w|x))p(w|x) dw \in [v - \delta, v + \delta]\}
-\]
-One can verify that for all $x \in \mathcal{X}$,
-\[
-\int_{\underline{J}_x} p(y|x) dy \leq \int_{\bar{J}_x} p(y|x) dy.
-\]
-Yet, since
-\[
-\Pr[U \in [u-\delta, u + \delta]] = \Pr[\cup_\mathcal{X} x \times \underline{J}_x]
-\]
-\[
-\Pr[U \in [v-\delta, v + \delta]] = \Pr[\cup_\mathcal{X} x \times \underline{J}_x].
-\]
-we obtain
-\[
-\Pr[U \in [u-\delta, u + \delta]] \leq \Pr[U \in [v - \delta, v + \delta]].
-\]
-Taking $\delta \to 0$, we conclude the theorem. $\Box$\newline
-
-
-
-\noindent\textbf{Theorem 4.1.}\emph{
-For given $p(x, y)$ and scoring rule $\mathcal{Q}$, assume that $U$ as defined in Theorem 3.1 has a density $\eta(u)$
-and that $\mathcal{Q}$ satisfies the tie-breaking property.
-Define
-\[
-V_{i, j} = \sum_{i=1}^k I(q^{(i)}(y^{(i), j}) > q^{(j)}(y^{(i), j})).
-\]
-Then
-\[
-V_{i, j} \sim \text{Binomial}(k, u(\hat{F}_i, y^{(i), j})).
-\]}
-
-\noindent\textbf{Proof.}\newline
-
-\noindent\textbf{Theorem 4.2.}
-\emph{
-For given $p(x, y)$ and scoring rule $\mathcal{Q}$, assume that $U$ as defined in Theorem 3.1 has a density $\eta(u)$
-and that $\mathcal{Q}$ satisfies the tie-breaking property, and also that $r_2 \geq 1$.
-For $t = 1, 2, \hdots, $, let $\hat{\eta}_t$ be any MPLE for $\ell_t$.
-As $k_t \to \infty$, $\hat{\eta}_t$ weakly converges to $\eta$.}
-
-\noindent\textbf{Proof.}\newline
-
+$\Box$
 \end{document}
 
 

@@ -159,7 +159,7 @@ accuracy on $\mathcal{Z}_K$ can be obtained.
 
 The assumption of exchangeability greatly limits the scope of application for our methods.
 Many multi-class classification problems
-have a hierarchical structure [2], or have classes distributed according to
+have a hierarchical structure [2], or have class labels distributed according to
 non-uniform discrete distributions, e.g. power laws [3]; in either case, exchangeability is violated.
 It would be interesting to extend our theory to the hierarchical setting, or to handle non-hierarchical settings
 with non-uniform prior class probabilities, but again we leave the subject for future work.
@@ -180,7 +180,7 @@ we applied our methods to a variety of generative and non-generative classifiers
 in simulations and in one OCR dataset.  Our methods have varying success on generative and non-generative classifiers,
 but seem to work badly for neural networks.
 
-\subsection{Contribution}
+\noindent\emph{Our contribution.}
 
 To our knowledge, we are the first to formalize the problem of prediction extrapolation.
 We introduce three methods for prediction extrapolation: the method of extended unbiased estimation
@@ -196,14 +196,14 @@ Instead of requiring $\mathcal{Z}_k$ to be a random subset of $\mathcal{Z}$ as w
 $\mathcal{Z}=\mathbb{N}$ and $\mathcal{Z}_k = \{1,\hdots, k\}$.
 We fix the size of $\mathcal{Z}_k$ without losing generality, since any monotonic sequence of 
 finite subsets can be embedded in a sequence with $|\mathcal{Z}_k| = k$.
-In addition, rather than randomizing the labels, we will randomize the marginal distribution of each label;
+In addition, rather than randomizing the labels, we will randomize the marginal distribution $p(y|z)$ of each label;
 Towards that end, let $\mathcal{Y} \subset \mathbb{R}^p$ be a space of feature vectors, and
 let $\mathcal{P}(\mathcal{Y})$ be a measurable space of probability distributions on $\mathcal{Y}$.
-Let $\mathcal{F}$ be a probability measure on $\mathcal{P}$,
+Let $\mathbb{F}$ be a probability measure on $\mathcal{P}$,
 and let $F_1, F_2,\hdots$ be an infinite sequence of i.i.d. draws from $\mathbb{F}$.
 We refer to $\mathbb{F}$, a probability measure on probability measures, as a \emph{meta-distribution}.
 The distributions $F_1,\hdots, F_k$ are the marginal distributions of the first $k$ classes.
-We therefore rewrite the accuracy as
+Further assuming that the labels are equiprobable, we rewrite the accuracy as
 \[
 \text{acc}^{(t)} = \frac{1}{t}\sum_{i=1}^t \Pr_{F_i}[h^{(t)}(Y) = i].
 \]
@@ -221,7 +221,7 @@ Write $\hat{\mathbb{F}}(F)$ for the conditional distribution of $\hat{F}_i$ give
 also write $\hat{\mathbb{F}}$ for the marginal distribution of $\hat{F}$ when $F \sim \mathbb{F}.$
 As an example, suppose every class has the number of training examples $r \in \mathbb{N}$; then $\hat{F}$
 is the empirical distribution of $r$ i.i.d. observations from $F$, and $\hat{\mathbb{F}}(F)$ is the \emph{empirical meta-distribution} of $\hat{F}$.
-Meanwhile, $\hat{\mathbb{F}}$ is the meta-distribution of the empirical distribution of $r$ i.i.d. draws from a random $F \sim \mathbb{F}$.
+Meanwhile, $\hat{\mathbb{F}}$ is the true meta-distribution of the empirical distribution of $r$ i.i.d. draws from a random $F \sim \mathbb{F}$.
 
 
 \subsection{Multiclass classification}
@@ -231,7 +231,7 @@ we define a classifier as a vector-valued function.  However, we introduce the n
 we define a classifier as a collection of mappings
 $\mathcal{M}_i: \mathcal{P}(\mathcal{Y})^k \times \mathcal{Y} \to \mathbb{R}$ called \emph{classification functions.}
 Intuitively speaking, each classification function \emph{learns a model} from the first $k$ arguments, which are
-the empirical marginals of the $k$ classes, $\hat{F}_1,\hdots, \hat{F}_k$.  For each class, the classifier assigns a \emph{classification score} to the \emph{query point} $y \in \mathcal{Y}$.  A higher score $\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y)$ indicates a higher estimated probability that $y$ belongs to the $k$-th class.  
+the empirical marginals of the $k$ classes, $\hat{F}_1,\hdots, \hat{F}_k$.  For each class, the classifier assigns a real-valued \emph{classification score} to the \emph{query point} $y \in \mathcal{Y}$.  A higher score $\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y)$ indicates a higher estimated probability that $y$ belongs to the $k$-th class.  
 Therefore, the classification rule corresponding to a classifier $\mathcal{M}_i$ assigns
 a class with maximum classification score to $y$:
 \[
@@ -257,19 +257,15 @@ In Naive Bayes, the classification function is
 \]
 where $\hat{f}_i$ is a density estimate for the $i$-th component of
 $\hat{F}$.}.
-
-
-For notational convenience, we assume that ties occur with probability
-zero: that is, Note that the tie-breaking property implies that $\mathbb{F}$ contains no atoms.
 The \emph{generative} property allows us to prove strong results about the accuracy of the classifier
 under the exchangeable sampling assumption, as we see in Section 3.
 
 \section{Performance extrapolation for generative classifiers}
 
 Let us specialize to the case of a generative classifier, with classification function $\mathcal{Q}$.
-Consider estimating the expected accuracy for the $t$-th classification problem,
+Consider estimating the expected accuracy for the $k$-th classification problem,
 \begin{equation}\label{eq:pt}
-p_t \stackrel{def}{=} \E[\text{acc}^{(t)}].\end{equation}
+p_k \stackrel{def}{=} \E[\text{acc}^{(k)}].\end{equation}
 In the case of a generative classifier, we have
 \[
 p_k = \E[acc^{(k)}] = \E\left[\frac{1}{k}\sum_{i=1}^k \Pr_{Y \sim F_i}[\mathcal{Q}(\hat{F}_i, Y) > \max_{j \neq i}\mathcal{Q}(\hat{F}_j, Y)]\right].
@@ -280,15 +276,15 @@ a real number in $[0,1]$.  The conditional accuracy gives the
 probability that for independently drawn $\hat{F}'$ from $\hat{\mathbb{F}}$, that
 $\mathcal{Q}(\hat{F}, y)$ will be greater than $\mathcal{Q}(\hat{F}', y)$:
 \[
-u(\hat{F}, y) = \Pr_{\hat{F} \sim \hat{\mathbb{F}}}[\mathcal{Q}(\hat{F}, y) > \mathcal{Q}(\hat{F}', y)].
+u(\hat{F}, y) = \Pr_{\hat{F}' \sim \hat{\mathbb{F}}}[\mathcal{Q}(\hat{F}, y) > \mathcal{Q}(\hat{F}', y)].
 \]
 Define the \emph{conditional accuracy} distribution $\nu$ as the law
 of $u(\hat{F}, Y)$ where $\hat{F}$ and $Y$ are generated as follows:
-(i) a true distribution $F$ is drawn from $\mathbb{F}$; (ii) the query $Y$ is drawn from $F$, 
-and (iii) the empirical distribution $\hat{F}$ is drawn from $\hat{\mathbb{F}}(F)$ 
-(e.g., the distribution of the empirical distribution of $r$ i.i.d. observations drawn from $F$),
-with $Y$ independent of $\hat{F}$.  The significance of the conditional accuracy
-distribution is that the expected generalization error $p_t$ can be
+(i) a true distribution $F$ is drawn from $\mathbb{F}$; 
+(ii) the empirical distribution $\hat{F}$ is drawn from $\hat{\mathbb{F}}(F)$ (i.e., the training data for the class),
+(iii) the query $Y$ is drawn from $F$, with $Y$ independent of $\hat{F}$ (i.e. a single test data point from the same class.)
+The significance of the conditional accuracy
+distribution is that the expected accuracy $p_t$ can be
 written in terms of its moments.
 
 \noindent\textbf{Theorem 3.1.} \emph{
@@ -299,30 +295,30 @@ $\hat{\mathbb{F}}$ and $\mathcal{Q}$ jointly satisfy the
 \begin{equation}\label{eq:tie}
 \Pr[\mathcal{Q}(\hat{F}, y) = \mathcal{Q}(\hat{F}', y)] = 0
 \end{equation}
-for all $y \in \mathcal{Y}$, where $\mathbb{F}, \mathbb{F}' \stackrel{iid}{\sim} \hat{\mathbb{F}}$.
+for all $y \in \mathcal{Y}$, where $\hat{F}, \hat{F}' \stackrel{iid}{\sim} \hat{\mathbb{F}}$.
 Let $U$ be defined as the random variable
-\[
-U = u(\hat{F}, Y)
-\]
+$U = u(\hat{F}, Y)$
 for $F \sim \mathbb{F}$, $Y \sim F$, and $\hat{F} \sim \hat{\mathbb{F}}(F)$ with $Y \perp \hat{F}$.
 Then \[p_k = \E[U^{k-1}],\]
 where $p_k$ is the expected accuracy as defined by \eqref{eq:pt}.
 }
 
-\noindent\textbf{Proof.}  
-Write $q^{(i)}(y) = \mathcal{Q}(\hat{F}_i, y)$.
-By using conditioning and
-conditional independence, $p_k$ can be written
-\begin{align*}
-p_k &= \E\left[ \frac{1}{k}\sum_{i=1}^k  \Pr_{F_i}[q^{(i)}(Y) > \max_{j\neq i} q^{(j)}(Y)] \right]
-\\&= \E\left[ \Pr_{F_1}[q^{(1)}(Y) > \max_{j\neq 1} q^{(j)}(Y)] \right]
-\\&= \E_{F_1}[\Pr[q^{(1)}(Y) > \max_{j\neq 1} q^{(j)}(Y)|\hat{F}_1, Y]]
-\\&= \E_{F_1}[\Pr[\cap_{j > 1} q^{(1)}(Y) > q^{(j)}(Y)|\hat{F}_1, Y]]
-\\&= \E_{F_1}[\prod_{j > 1}\Pr[q^{(1)}(Y) > q^{(j)}(Y)|\hat{F}_1, Y]]
-\\&= \E_{F_1}[\Pr[q^{(1)}(Y) > q^{(2)}(Y)|\hat{F}_1, Y]^{k-1}]
-\\&= \E_{F_1}[u(\hat{F}_1, Y)^{k-1}] = \E[U^{k-1}].
-\end{align*}
-$\Box$
+(Proof is included in the supplement.)
+
+%\noindent\textbf{Proof.}  
+%Write $q^{(i)}(y) = \mathcal{Q}(\hat{F}_i, y)$.
+%By using conditioning and
+%conditional independence, $p_k$ can be written
+%\begin{align*}
+%p_k &= \E\left[ \frac{1}{k}\sum_{i=1}^k  \Pr_{F_i}[q^{(i)}(Y) > \max_{j\neq i} q^{(j)}(Y)] %\right]
+%\\&= \E\left[ \Pr_{F_1}[q^{(1)}(Y) > \max_{j\neq 1} q^{(j)}(Y)] \right]
+%\\&= \E_{F_1}[\Pr[q^{(1)}(Y) > \max_{j\neq 1} q^{(j)}(Y)|\hat{F}_1, Y]]
+%\\&= \E_{F_1}[\Pr[\cap_{j > 1} q^{(1)}(Y) > q^{(j)}(Y)|\hat{F}_1, Y]]
+%\\&= \E_{F_1}[\prod_{j > 1}\Pr[q^{(1)}(Y) > q^{(j)}(Y)|\hat{F}_1, Y]]
+%\\&= \E_{F_1}[\Pr[q^{(1)}(Y) > q^{(2)}(Y)|\hat{F}_1, Y]^{k-1}]
+%\\&= \E_{F_1}[u(\hat{F}_1, Y)^{k-1}] = \E[U^{k-1}].
+%\end{align*}
+%$\Box$
 
 Theorem 3.1 tells us that the problem of extrapolation can be
 approached by attempting to estimate the conditional accuracy
@@ -351,18 +347,18 @@ In section 4, we will use this result to estimate the moments of $U$.
 Meanwhile, since $U$ is a random variable on $[0, 1]$, we also conclude that $p_t$ follows a \emph{mixed exponential decay}.
 Let $\alpha$ be the law of $-\log(U)$.
 Then from change-of-variables $\kappa =-\log(u)$, we get
-\[\E[\text{acc}^{(t)}] = \E[U^{t-1}] = 
+\[p_t = \E[U^{t-1}] = 
 \int_0^1 u^{t-1} d\nu(u) = \int_0^1 e^{t\log(u)} \frac{1}{u}d\nu(u) = 
 \int_{\mathbb{R}^{+}} e^{-\kappa t} d\alpha(\kappa).\]
-This fact immediately suggests the technique of fitting an mixture of exponentials to the test error at $t =2,3,\hdots, k$:
+This fact immediately suggests the technique of fitting a mixture of exponentials to the test accuracy at $t =2,3,\hdots, k$:
 we explore this idea further in Section 4.1.
 
 \subsection{Properties of the conditional accuracy distribution}
 
-The conditional error distribution $\nu$ is determined by $\mathbb{F}$
+The conditional accuracy distribution $\nu$ is determined by $\mathbb{F}$
 and $\mathcal{Q}$.  What can we say about the the conditional accuracy
 distribution without making any assumptions on either $\mathbb{F}$ or
-$\mathcal{Q}$?  The answer is: not much--for an arbitrary probability
+$\mathcal{Q}$?  The answer is: not much.  For an arbitrary probability
 measure $\nu'$ on $[0,1]$, one can construct $\mathbb{F}$ and
 $\mathcal{Q}$ such that $\nu = \nu'$, even if one makes the \emph{perfect sampling assumption} that $\hat{F}=F.$
 
@@ -370,7 +366,7 @@ $\mathcal{Q}$ such that $\nu = \nu'$, even if one makes the \emph{perfect sampli
   3.1, and let $\nu$ denote the law of $U$.  Then, for any probability
   distribution $\nu'$ on $[0,1]$, one can construct a
   meta-distribution $\mathbb{F}$ and a classification function $\mathcal{Q}$ such
-  that $\nu = \nu'$ under perfect sampling (that is, $\hat{F} = F$.)  }
+  that the conditional accuracy $U$ has distribution $\nu'$ under perfect sampling (that is, $\hat{F} = F$.)  }
 
 \textbf{Proof.}  
 Let $G$ be the cdf of $\nu$, $G(x) = \int_0^x d\nu(x)$, and let $H(u) = \sup_x \{G(x) \leq u\}$.
@@ -392,7 +388,7 @@ the classifier approximates a \emph{Bayes classifier.}
 Assuming that $F$ is absolutely continuous with respect to Lebesgue measure $\Lambda$ with probability one,
 a Bayes classifier results from assuming perfect sampling ($\hat{F} = F$) and taking
 $\mathcal{Q}(\hat{F}, y) = \frac{dF}{d\Lambda}(y)$.
-Theorem 3.4. states that for a Bayes classifier, $\nu$ has a density $\eta(u)$ which is monotonically increasing.
+Theorem 3.4. states that for a Bayes classifier, the measure $\nu$ has a density $\eta(u)$ which is monotonically increasing.
 Since a `good' classifier approximates the Bayes classifier, we intuitively expect that a monotonically
 increasing density $\eta$ is a good model for the conditional accuracy distribution of a `good' classifier.
 
@@ -456,10 +452,10 @@ problems where the marginal distributions are known, but the
 dependence structure between variables is unknown, the
 \emph{pseudolikelihood} is defined as the product of the marginal
 distributions.  For certain problems in time series analysis and
-spatial statistics, the maximum psuedolikelihood estimator (MPLE) is
-proved to be consistent [7].  We discuss psuedolikelihood-based
+spatial statistics, the maximum pseudolikelihood estimator (MPLE) is
+proved to be consistent [7].  We discuss pseudolikelihood-based
 approaches in Section 4.2.  Thirdly, we note that the high-dimensional
-theory of Anon 2006 can be applied for prediction accuracy, which we discuss in Section 4.3.
+theory of Anon 2016 [4] can be applied for prediction accuracy, which we discuss in Section 4.3.
 
 \subsection{Extensions of unbiased estimation}
 
@@ -489,7 +485,7 @@ However, since $\hat{p}_t^{UN}$ is undefined for $k \geq t$, we can use exponent
 to define an extended estimator $\hat{p}_t^{EXP}$ for $k > t$.
 Let $\hat{\alpha}$ be a measure defined by solving the optimization problem
 \[
-\text{minimize} \sum_{t=2}^{k} \left(\hat{p}_t^{UN} - \int_0^\infty \exp[-t\kappa] d\alpha(\kappa)\right)^2.
+\text{minimize}_{\alpha} \sum_{t=2}^{k} \left(\hat{p}_t^{UN} - \int_0^\infty \exp[-t\kappa] d\alpha(\kappa)\right)^2.
 \]
 After discretizing the measure $\hat{\alpha}$, we obtain a convex optimization problem
 which can be solved using non-negative least squares [9].
@@ -523,7 +519,7 @@ $u$& $t$& & \\
 Adding constraints improves the estimation of the density $\eta(u)$, as well as moment estimation.}
 \end{figure}
 
-The pseudolikelihood is defined as
+The (log) pseudolikelihood is defined as
 \begin{equation}\label{eq:psuedo}
 \ell(\eta) = \sum_{i=1}^k \sum_{j=1}^{m} \log\left(\int u^{V_{i, j}} (1-u)^{k - V_{i, j}} \eta(u) du\right),
 \end{equation}
@@ -551,15 +547,16 @@ $\hat{\eta}_{CON}$, which is obtained by solving
 \text{maximize }\ell(\eta) \text{ subject to }\int u^{k-1} \eta(u) du = \hat{p}_k^{UN}\text{ and }\frac{d\hat{\eta}}{du} > 0.
 \]
 By discretizing $\eta$, all of the above maximization problems can be solved using a general-purpose convex solver\footnote{
-We found that the CVX discipline convex programming language, using the ECOS second-order cone programming solver,
+We found that the disciplined convex programming language CVX, using the ECOS second-order cone programming solver,
 succeeds in optimizing the problems where the dimension of the discretized $\eta$ is as large as 10,000 [10, 11].}.
-As seen in Figure 1, the added constraints can improve estimation of $\eta$ and thus improve moment estimation.
+While the added constraints do not guarantee a unique solution,
+they improve estimation of $\eta$ and thus improve moment estimation (Figure 1.)
 
 
 \subsection{High-dimensional asymptotics}
 
 Under a number of conditions on the distribution $\mathbb{F}$, including (but not limited to) having a large dimension $p$,
-Anon et al. [4] relate the accuracy $p_t$ of the Bayes classifier to the mutual information between the label $z$ and
+Anon [4] relate the accuracy $p_t$ of the Bayes classifier to the mutual information between the label $z$ and
 the response $y$:
 \[
 p_t = \bar{\pi}_t(\sqrt{2I(Z; Y)}).
@@ -569,7 +566,7 @@ where
 \bar{\pi}_k(c) = \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
 \]
 While our goal is not to estimate the mutual information, we note that the results of Anon 2016
-imply a relationship between $p_k$ and $p_K$ for the Bayes error under the high-dimensional regime:
+imply a relationship between $p_k$ and $p_K$ for the Bayes accuracy under the high-dimensional regime:
 \[
 p_K = \bar{\pi}_K\left(\bar{\pi}_k^{-1}(p_k)\right).
 \]
@@ -582,7 +579,7 @@ the Bayes classifier, we naturally obtain the following estimator
 \section{Results}
 
 We applied the methods described in Section 4 on a simulated gaussian mixture (Figure 2)
-and on a Telegu character classification task [12] (Figure 3.)
+and on a Telugu character classification task [12] (Table 1.)
 
 For the simulated gaussian mixture, we vary the size of the initial subset from $k=3$ classes to $k=K=50$ classes,
 and extrapolate the performance for gaussian mixture model, multinomial logistic, and one-layer neural network (with 10 units).
@@ -596,7 +593,7 @@ is more variable than constrained pseudolikelihood $\hat{p}^{CONS}$ and high-dim
 Additional simulation results can be found in the supplement.
 
 In the character classification task, we predict the 400-class accuracy of naive Bayes, multinomial
-logistic regression, SVM [6], $\epsilon$-nearest neighbors\footnote{$k$-nearest neighbors with $k = \epsilon n$ for fixed $\epsilon > 0$}, and deep neural networks\footnote{The network architecture is as follows: 48 x 48 binary input image, (mc3) a 3x3 convolutional layer with m output maps, (MP2) a 2x2 max-pooling layer, and (400SM) a softmax output layer on 400 classes.} using 20-class data with 100 examples per class (Figure 3).
+logistic regression, SVM [6], $\epsilon$-nearest neighbors\footnote{$k$-nearest neighbors with $k = \epsilon n$ for fixed $\epsilon > 0$}, and deep neural networks\footnote{The network architecture is as follows: 48 x 48 binary input image, (mc3) a 3x3 convolutional layer with m output maps, (MP2) a 2x2 max-pooling layer, and (400SM) a softmax output layer on 400 classes.} using 20-class data with 103 training examples per class (Table 1).
 Taking the test accuracy on 400 classes (using 50 test examples per class) as a proxy for $\text{acc}^{(400)}$,
 we compare the performance of the three extrapolation methods; as a benchmark,
 also consider using the test accuracy on 20 classes as an estimate.
@@ -627,19 +624,34 @@ $k$ &$k$& $k$& & \\
 \caption{Predictions for $\text{acc}^{(50)}$ as $k$, the size of the subset, is varied.  Our methods work better for QDA and Logistic than Neural Net; overall, $\hat{p}^{EXP}$ has higher variability than $\hat{p}^{CONS}$ and $\hat{p}^{HD}$.}
 \end{figure}
 
-\begin{figure}
+\begin{table}
 \centering
 \begin{tabular}{|c||c|c|c|c|c|}\hline
-Classifier & Test $\text{acc}^{(20)}$ & Test $\text{acc}^{(400)}$ & $\hat{p}^{EXP}_{400}$ & $\hat{p}^{CON}_{400}$ & $\hat{p}^{HD}_{400}$\\ \hline
+Classifier & Test $\text{acc}^{(20)}$ & Test $\text{acc}^{(400)}$ & $\hat{p}^{EXP}_{400}$ & $\hat{p}^{CONS}_{400}$ & $\hat{p}^{HD}_{400}$\\ \hline
 Naive Bayes & 0.947 & 0.601 & 0.884 & \textbf{0.679} & 0.769 \\ \hline
 Logistic & 0.922 & 0.711 & 0.844 & \textbf{0.721} & 0.686 \\ \hline
 SVM & 0.860 & 0.545 & 0.737 & 0.575 & \textbf{0.546} \\ \hline
 $\epsilon$-NN & 0.964 & 0.591 & 0.895 & \textbf{0.608} & 0.839\\ \hline
 Deep neural net & \textbf{0.995} & 0.986 & 0.973 & (*) & 0.983\\ \hline
 \end{tabular}
-\caption{Performance extrapolation: predicting the error on 400 classes using data from 20 classes on a Telugu character dataset. (*) indicates failure to converge.
+\caption{Performance extrapolation: predicting the accuracy on 400 classes using data from 20 classes on a Telugu character dataset. (*) indicates failure to converge.
 $\epsilon = 0.002$ for $\epsilon$-nearest neighbors.}
-\end{figure}
+\end{table}
+
+\section{Discussion}
+
+Empirical results indicate that our methods generalize beyond generative classifiers.
+A possible explanation is that since the Bayes classifier is generative,
+any classifier which approximates the Bayes classifier is also `approximately generative.'
+However, an important caveat is that the classifier must already attain close to the Bayes accuracy
+on the smaller subset of classes.  If the classifier is initially far from the Bayes classifier,
+and then becomes more accurate as more classes are added, our theory could underestimate the
+accuracy on the larger subset.  This is a non-issue for generative classifiers when the training data per class is fixed,
+since a generative classifier approximates the Bayes rule if and only if the single-class classification function approximates the
+Bayes optimal single-class classification function.  On the other hand, for classifiers with built-in \emph{model selection}
+or \emph{representation learning}, it is expected that the classification functions become more accurate,
+in the sense that they better approximate a monotonic function of the Bayes classification functions,
+as data from more classes is added.
 
 %\begin{figure}
 %\centering
@@ -672,7 +684,7 @@ $\epsilon = 0.002$ for $\epsilon$-nearest neighbors.}
 [5] Tewari, A., \& Bartlett, P. L. (2007). ``On the Consistency of Multiclass Classification Methods.''
 \emph{Journal of Machine Learning Research}, 8, 1007-1025.
 
-[6] Friedman, J., Trevor H., \& Tibshirani, R. (2008). \emph{The elements
+[6] Hastie, T., Tibshirani, R., \& Friedman, J., (2008). \emph{The elements
 of statistical learning.} Vol. 1. Springer, Berlin: Springer series in
 statistics.
 
@@ -690,46 +702,4 @@ statistics.
 
 \end{document}
 
-
-
-
-
-
-
-
-
-Ideally, we could extend Theorem 2.2 for asymptotic generative classifiers, but a stronger condition is needed.
-Note that under the tie-breaking assumption, one can always take $\mathcal{Q}$ in \eqref{eq:agen} so that
-\[
-\Pr[\mathcal{Q}(\hat{F}, y) < u] = u\text{ for }u \in [0,1],
-\]
-for all $y \in \mathcal{Y}$: we refer to such $\mathcal{Q}$ as \emph{calibrated.}
-We define a \emph{uniformly asymptotic generative} classifier by adding conditions on the worst-case rate that
-$\mathcal{M}_i$ converges to calibrated $\mathcal{Q}$: these additional conditions are sufficient for the generalization of Theorem 2.3.  We now give the definition and the theorem.
-
-\textbf{Definition 2.1.}  \emph{(Uniformly asymptotically generative) Suppose classifier $\mathcal{M}$ satisfies \eqref{eq:agen} for calibrated $\mathcal{Q}$, and furthermore that
-\[
-\lim_{t \to \infty} \sup_{i \leq t} \frac{1}{t}\sum_{j=1}^t \Pr_{F_j}[\mathcal{M}(\hat{F}_1,\hdots, \hat{F}_t, Y) - \mathcal{Q}(\hat{F}_i, Y)| > \epsilon] \to 0
-\]
-with probability one for all $\epsilon > 0$.  Then we say that $\mathcal{M}$ is uniformly asymptotically generative.}
-
-\textbf{Theorem 2.3}\emph{
-Let $\mathcal{Q}$ be the classification function of a uniformly generative classifier, and 
-assume that $F_1,\hdots, F_k \stackrel{iid}{\sim} \mathbb{F}$ and $\hat{F}_i \sim \hat{\mathbb{F}}(F_i)$ independently,
-following the notation of section 2.
-Further assume that $\mathcal{Q}$ and $\mathbb{F}$ satisfy the tie-breaking property \eqref{eq:tie}.
-Then, recalling the definition of accuracy,
-\[
-\text{acc}^{(t)} = \frac{1}{t}\sum_{i=1}^t \Pr_{Y \sim F_i}[\mathcal{M}_i(\hat{F}_1,\hdots,\hat{F}_t, Y) > \argmax_{i > j} \mathcal{M}_j(\hat{F}_1,\hdots, \hat{F}_t, Y)],
-\]
-there exists a measure $\alpha$ on $[0, \infty)$ such that
-\[
-\E[\text{acc}^{(t)}] = \int_{\mathbb{R}^{+}} e^{\kappa t} d\alpha(\kappa).\]
-}
-
-
-The estimator $\hat{p}^{UN}_t$
-is unbiased for the accuracy under minimal assumptions, but is undefined for $t \geq k$.
-Extending $\hat{p}^{UN}_t$ using exponential extrapolation, we obtain a biased estimator $\hat{p}^{EXP}_t$ for $t > k$,
-but one which still relies on minimal assumptions.
 
