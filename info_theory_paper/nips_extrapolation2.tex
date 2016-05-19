@@ -176,11 +176,9 @@ and cannot be analyzed by conditioning on individual classes.
 We confirmed that our methods work well for generative classifiers in simulations, which we have omitted from
 the paper.  Since generative classifiers are rarely used in large classification problems,
 we felt that a more interesting demonstration would be to apply our methods to extrapolate the performance
-of multinomial logistic regression, support vector machines, and $k$-nearest neighbors--three commonly used
-non-generative classifiers.  In Section 5, we see that our methods achieve accurate extrapolation
-for these three non-generative classifiers.  A possible reason for this fact is that since the Bayes classifier
-(the optimal classifier as implemented by an oracle) is generative, our theory must also apply
-to any classifier which adequately approximates the Bayes classifier.  We discuss this idea further in Section 6.
+of multinomial logistic regression, support vector machines, $k$-nearest neighbors, and deep neural networks--
+four commonly used non-generative classifiers.  We apply our methods to extrapolate the performance at 400 classes
+from 20-class data for an OCR dataset, and obtain promising results.  Section 6 concludes.
 
 To our knowledge, we are the first to formalize the problem of prediction extrapolation.
 We introduce three methods for prediction extrapolation: the method of extended unbiased estimation
@@ -582,21 +580,24 @@ the Bayes classifier, we naturally obtain the following estimator
 \section{Results}
 
 We applied the methods described in Section 4 to predict the 400-class accuracy of multinomial
-logistic regression, SVM [6], and $\epsilon$-nearest neighbors\footnote{$k$-nearest neighbors with $k = \epsilon n$ for fixed $\epsilon > 0$} on a Telegu character classification task [12],
-using 20-class data with 100 examples per class.  The results are displayed in Figure 2.
-
+logistic regression, SVM [6], $\epsilon$-nearest neighbors\footnote{$k$-nearest neighbors with $k = \epsilon n$ for fixed $\epsilon > 0$}, and deep neural networks on a Telegu character classification task [12],
+using 20-class data with 100 examples per class (Figure 2).
 Taking the test accuracy on 400 classes (using 50 test examples per class) as a proxy for $\text{acc}^{(400)}$,
-we compare the performance of the three extrapolation methods.
+we compare the performance of the three extrapolation methods; as a benchmark,
+also consider using the test accuracy on 20 classes as an estimate.
 The exponential extrapolation method makes use of the fewest theoretical assumptions,
-but performs badly on all three problems.  Meanwhile, constrained PMLE makes an extra assumption
+but performs well only for the deep neural network.  Meanwhile, constrained PMLE makes an extra assumption
 in the monotonicity of $\eta(u)$, which is true if the classifier is sufficiently close to the Bayes classifier,
-and achieves the best and most consistent results.  The high-dimensional estimator $\hat{p}^{HD}$ is
+and achieves accurate extrapolation for three out of four classifiers: logistic, SVM, and $\epsilon$-NN.  
+For the deep neural network, the optimization is unstable, yielding estimates ranging from 0.345 to 0.907
+depending on level of discretization and the solver used.
+The high-dimensional estimator $\hat{p}^{HD}$ is
 the most assumption-heavy; in addition to assuming approximation to the Bayes classifier,
 it also requires $Y$ to be high-dimensional, and to satisfy a number of other technical conditions (Anon 2016).
-Nevertheless, it performs well on the multinomial logistic and SVM classifiers.
-That said, all three classifiers studied are non-generative, hence violating an assumption common to both the $\hat{p}^{EXP}$
-and $\hat{p}^{CON}$ estimators: therefore, it is doubtful if the theory developed so far can do much to explain
-the relative performance of these methods.  
+Nevertheless, it performs well on the multinomial logistic, SVM, and deep neural network classifiers.
+All three methods beat the benchmark (taking the test accuracy at 20) for the first three classifiers,
+but the benchmark is the best estimator for the deep neural network.  This suggests that our methods could
+be improved for high-accuracy cases.
 
 \begin{figure}
 \centering
@@ -604,20 +605,12 @@ the relative performance of these methods.
 Classifier & Test $\text{acc}^{(20)}$ & Test $\text{acc}^{(400)}$ & $\hat{p}^{EXP}_{400}$ & $\hat{p}^{CON}_{400}$ & $\hat{p}^{HD}_{400}$\\ \hline
 Logistic & 0.922 & 0.711 & 0.844 & \textbf{0.721} & 0.686 \\ \hline
 SVM & 0.860 & 0.545 & 0.737 & 0.575 & \textbf{0.546} \\ \hline
-$\epsilon$-NN & 0.880 & 0.591 & 0.903 & \textbf{0.608} & 0.839\\ \hline
+$\epsilon$-NN & 0.964 & 0.591 & 0.895 & \textbf{0.608} & 0.839\\ \hline
+Deep neural net & \textbf{0.995} & 0.986 & 0.973 & (*) & 0.983\\ \hline
 \end{tabular}
-\caption{Performance extrapolation: predicting the error on 400 classes using data from 20 classes on a Telugu character dataset.
+\caption{Performance extrapolation: predicting the error on 400 classes using data from 20 classes on a Telugu character dataset. (*) indicates unstable optimization.
 $\epsilon = 0.002$ for $\epsilon$-nearest neighbors.}
 \end{figure}
-
-
-%\begin{figure}
-%\centering
-%\includegraphics[scale = 0.6]{cifar_example.pdf}
-%\caption{Extrapolation classification performance for CIFAR data.  (This simulation needs to be fixed later.)
-%PMLE: maximum psuedolikelihood. MCPMLE: Moment-constrained max psuedolikelihood.  Info: Zheng and Benjamini's info-%theoretic method.
-%Unbiased: U-statistic (cannot be used to extrapolate.) }
-%\end{figure}
 
 \section{Discussion}
 
@@ -628,20 +621,26 @@ allows a variety of methods to be applied to the problem.  We develop two novel 
 and also propose a new application of the mutual information estimator [4] as a third method for
 prediction extrapolation.
 
-Empirical results indicate that our methods generalize beyond generative classifiers.
+The results of our experiment reveal some shortcomings in our methods, but also
+suggest that the performance of non-generative classifiers can be accurately predicted.
 A possible explanation is that since the Bayes classifier is generative,
-any classifier which approximates the Bayes classifier is also `approximately generative.'
-However, an important caveat is that the classifier must already attain close to the Bayes accuracy
-on the smaller subset of classes.  If the classifier is initially far from the Bayes classifier,
-and then becomes more accurate as more classes are added, our theory could underestimate the
-accuracy on the larger subset.  This is a non-issue for generative classifiers when the training data per class is fixed,
-since a generative classifier approximates the Bayes rule if and only if the single-class classification function approximates the
-Bayes optimal single-class classification function.  On the other hand, for classifiers with built-in \emph{model selection}
-or \emph{representation learning}, it is expected that the classification functions become more accurate,
-in the sense that they better approximate a monotonic function of the Bayes classification functions,
-as data from more classes is added.
+any classifier which approximates the Bayes classifier is also `approximately generative.' 
+We can test this hypothesis by checking that our methods work
+more reliably in cases where the a good classifier is selected and where the training data per class is large.
 
+Our results are still too preliminary for us to recommend the use of any of these estimators in practice.
+Theoretically, it still remains to derive confidence bounds for the generative case;
+practically, additional experiments are needed to establish the reliability of these estimators
+in specific applications.  There also remains plenty of room for new and improved estimators in this area:
+for instance, a fixing the instability of the constrained pseudolikelihood estimator when the test accuracy is high.
 
+%\begin{figure}
+%\centering
+%\includegraphics[scale = 0.6]{cifar_example.pdf}
+%\caption{Extrapolation classification performance for CIFAR data.  (This simulation needs to be fixed later.)
+%PMLE: maximum psuedolikelihood. MCPMLE: Moment-constrained max psuedolikelihood.  Info: Zheng and Benjamini's info-%theoretic method.
+%Unbiased: U-statistic (cannot be used to extrapolate.) }
+%\end{figure}
 
 
 %\subsubsection*{Acknowledgments}
