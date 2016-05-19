@@ -95,7 +95,7 @@ Compute the statistics $V_{ij}$ needed for prediction extrapolation, and compute
 
 ```{r}
 get_vij <- function(pred, Z2) {
-  rankconv <- t(apply(pred, 1, function(v) rank(v, ties.method = "random")))
+  rankconv <- t(apply(pred, 1, function(v) rank(v, ties.method = "random"))) - 1
   Z2_sub <- Z2[1:nrow(pred)]
   Vs <- rankconv[cbind(1:nrow(pred), Z2_sub)]
   Vs
@@ -103,9 +103,9 @@ get_vij <- function(pred, Z2) {
 
 V_subs <- lapply(preds_sub, get_vij, Z2 =synth_data$Z2)
 lapply(preds_sub, function(v) table(get_vij(v, synth_data$Z2)))
-acc_sub <- lapply(preds_sub, function(v) mean(get_vij(v, synth_data$Z2) == k))
+acc_sub <- lapply(preds_sub, function(v) mean(get_vij(v, synth_data$Z2) == (k - 1)))
 unlist(acc_sub)
-acc_full <- lapply(preds_full, function(v) mean(get_vij(v, synth_data$Z2) == K))
+acc_full <- lapply(preds_full, function(v) mean(get_vij(v, synth_data$Z2) == (K - 1)))
 unlist(acc_full)
 ```
 
@@ -133,7 +133,7 @@ binmom <- function(succ, tot, k) {
   choose(succ, k)/choose(tot, k)
 }
 expmix_binmom <- function(Vs, k, K, plot = FALSE) {
-  momks <- sapply(1:k, function(x) mean(binmom(Vs, k, x - 1)))
+  momks <- sapply(1:k, function(x) mean(binmom(Vs, k -1, x - 1)))
   res <- fit_expmix(-seq(0, 5, 0.01), 1:k, momks)
   if (plot) {
     plot(1:max(K), res$f(1:max(K)), type = "l", ylim = c(0, 1))
@@ -161,8 +161,8 @@ fit_pm_models <- function(Ys, k, us = seq(0, 1, 0.02), gu_init = rep(1/length(us
                           K = k) {
   Ys <- as.numeric(Ys)
   (ws <- sapply(0:k, function(i) sum(Ys == i)))
-  (momK <- mean(binmom(Ys, k, k)))
-  usk <- us^k
+  (momK <- mean(binmom(Ys, k - 1, k - 1)))
+  usk <- us^(k-1)
   binprobs <- matrix(0, k + 1, length(us))
   for (i in 1:length(us)) binprobs[, i] <- dbinom(0:k, k, us[i])
   of_gu <- function(gu) {
@@ -323,8 +323,8 @@ build_extrapolation_table <- function(synth_data, k, K) {
   preds_full <- pred_submodel(synth_data$Ytr, synth_data$Yte, 
                             synth_data$Z1, synth_data$Z2, K)
   V_subs <- lapply(preds_sub, get_vij, Z2 =synth_data$Z2)
-  acc_sub <- sapply(preds_sub, function(v) mean(get_vij(v, synth_data$Z2) == k))
-  acc_full <- sapply(preds_full, function(v) mean(get_vij(v, synth_data$Z2) == K))
+  acc_sub <- sapply(preds_sub, function(v) mean(get_vij(v, synth_data$Z2) == (k - 1)))
+  acc_full <- sapply(preds_full, function(v) mean(get_vij(v, synth_data$Z2) == (K - 1)))
   tab[, "acc_full"] <- acc_full
   tab[, "acc_sub"] <- acc_sub
   tab[, "exp"] <- sapply(V_subs, expmix_binmom, k = k, K = K)

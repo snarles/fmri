@@ -199,18 +199,15 @@ pred_submodel &lt;- function(Ytr, Yte, Z1, Z2, k) {
 }
 
 preds_sub &lt;- pred_submodel(synth_data$Ytr, synth_data$Yte, 
-                           synth_data$Z1, synth_data$Z2, k)</code></pre>
-<pre><code>## Warning: from glmnet Fortran code (error code -95); Convergence for 95th
-## lambda value not reached after maxit=100000 iterations; solutions for
-## larger lambdas returned</code></pre>
-<pre class="r"><code>preds_full &lt;- pred_submodel(synth_data$Ytr, synth_data$Yte, 
+                           synth_data$Z1, synth_data$Z2, k)
+preds_full &lt;- pred_submodel(synth_data$Ytr, synth_data$Yte, 
                             synth_data$Z1, synth_data$Z2, K)</code></pre>
 </div>
 <div id="get-vij" class="section level2">
 <h2>Get Vij</h2>
 <p>Compute the statistics <span class="math inline">\(V_{ij}\)</span> needed for prediction extrapolation, and compute sub/full accuracies.</p>
 <pre class="r"><code>get_vij &lt;- function(pred, Z2) {
-  rankconv &lt;- t(apply(pred, 1, function(v) rank(v, ties.method = &quot;random&quot;)))
+  rankconv &lt;- t(apply(pred, 1, function(v) rank(v, ties.method = &quot;random&quot;))) - 1
   Z2_sub &lt;- Z2[1:nrow(pred)]
   Vs &lt;- rankconv[cbind(1:nrow(pred), Z2_sub)]
   Vs
@@ -220,38 +217,36 @@ V_subs &lt;- lapply(preds_sub, get_vij, Z2 =synth_data$Z2)
 lapply(preds_sub, function(v) table(get_vij(v, synth_data$Z2)))</code></pre>
 <pre><code>## $pred_gmm
 ## 
-##  13  14  15  16  17  18  19  20 
-##   2   1   3   5   8  16  46 319 
+##  12  14  15  16  17  18  19 
+##   1   3   5  12  18  58 303 
 ## 
 ## $pred_qda
 ## 
-##   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18 
-##   1   2   5   3   1   2   3   3   2   1   4   8   5   5   5   8  14  26 
-##  19  20 
-##  64 238 
+##   2   3   4   5   6   7   9  10  11  12  13  14  15  16  17  18  19 
+##   1   1   2   1   1   1   6   5   5   7  10  11  15  31  33  70 200 
 ## 
 ## $pred_glmnet
 ## 
-##   8   9  10  11  12  13  14  15  16  17  18  19  20 
-##   1   1   2   2   4   3   4   6   7  13  23  57 277 
+##   7   8   9  10  11  12  13  14  15  16  17  18  19 
+##   1   1   2   1   5   1   4   4   5  11  25  69 271 
 ## 
 ## $pred_enn
 ## 
-##  10  12  13  14  15  16  17  18  19  20 
-##   1   3   2   4   2   7  10  16  38 317 
+##   8  10  12  13  14  15  16  17  18  19 
+##   1   2   4   4   4  14  10  24  62 275 
 ## 
 ## $pred_nnet
 ## 
-##   2   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20 
-##   1   2   2   2   1   1   1   1   8   3   9   8  14  19  34  64 230</code></pre>
-<pre class="r"><code>acc_sub &lt;- lapply(preds_sub, function(v) mean(get_vij(v, synth_data$Z2) == k))
+##   3   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19 
+##   1   4   1   4   5   2   2   6   4  12  12  21  23  36  56 211</code></pre>
+<pre class="r"><code>acc_sub &lt;- lapply(preds_sub, function(v) mean(get_vij(v, synth_data$Z2) == (k - 1)))
 unlist(acc_sub)</code></pre>
 <pre><code>##    pred_gmm    pred_qda pred_glmnet    pred_enn   pred_nnet 
-##      0.7975      0.5950      0.6925      0.7925      0.5750</code></pre>
-<pre class="r"><code>acc_full &lt;- lapply(preds_full, function(v) mean(get_vij(v, synth_data$Z2) == K))
+##      0.7575      0.5000      0.6775      0.6875      0.5275</code></pre>
+<pre class="r"><code>acc_full &lt;- lapply(preds_full, function(v) mean(get_vij(v, synth_data$Z2) == (K - 1)))
 unlist(acc_full)</code></pre>
 <pre><code>##    pred_gmm    pred_qda pred_glmnet    pred_enn   pred_nnet 
-##       0.620       0.417       0.573       0.584       0.503</code></pre>
+##       0.630       0.383       0.590       0.604       0.495</code></pre>
 </div>
 <div id="exponential-extrapolation" class="section level2">
 <h2>Exponential extrapolation</h2>
@@ -276,7 +271,7 @@ binmom &lt;- function(succ, tot, k) {
   choose(succ, k)/choose(tot, k)
 }
 expmix_binmom &lt;- function(Vs, k, K, plot = FALSE) {
-  momks &lt;- sapply(1:k, function(x) mean(binmom(Vs, k, x - 1)))
+  momks &lt;- sapply(1:k, function(x) mean(binmom(Vs, k -1, x - 1)))
   res &lt;- fit_expmix(-seq(0, 5, 0.01), 1:k, momks)
   if (plot) {
     plot(1:max(K), res$f(1:max(K)), type = &quot;l&quot;, ylim = c(0, 1))
@@ -285,15 +280,15 @@ expmix_binmom &lt;- function(Vs, k, K, plot = FALSE) {
   res$f(K)
 }
 c(expmix_binmom(V_subs$pred_gmm, k, K), acc_full$pred_gmm)</code></pre>
-<pre><code>## [1] 0.6868864 0.6200000</code></pre>
+<pre><code>## [1] 0.5893481 0.6300000</code></pre>
 <pre class="r"><code>c(expmix_binmom(V_subs$pred_qda, k, K), acc_full$pred_qda)</code></pre>
-<pre><code>## [1] 0.4397308 0.4170000</code></pre>
+<pre><code>## [1] 0.3224499 0.3830000</code></pre>
 <pre class="r"><code>c(expmix_binmom(V_subs$pred_glmnet, k, K), acc_full$pred_glmnet)</code></pre>
-<pre><code>## [1] 0.5601963 0.5730000</code></pre>
+<pre><code>## [1] 0.5085619 0.5900000</code></pre>
 <pre class="r"><code>c(expmix_binmom(V_subs$pred_enn, k, K), acc_full$pred_enn)</code></pre>
-<pre><code>## [1] 0.7016442 0.5840000</code></pre>
+<pre><code>## [1] 0.5348675 0.6040000</code></pre>
 <pre class="r"><code>c(expmix_binmom(V_subs$pred_nnet, k, K), acc_full$pred_nnet)</code></pre>
-<pre><code>## [1] 0.4456891 0.5030000</code></pre>
+<pre><code>## [1] 0.4261939 0.4950000</code></pre>
 </div>
 <div id="pseudolikelihood" class="section level2">
 <h2>Pseudolikelihood</h2>
@@ -305,8 +300,8 @@ fit_pm_models &lt;- function(Ys, k, us = seq(0, 1, 0.02), gu_init = rep(1/length
                           K = k) {
   Ys &lt;- as.numeric(Ys)
   (ws &lt;- sapply(0:k, function(i) sum(Ys == i)))
-  (momK &lt;- mean(binmom(Ys, k, k)))
-  usk &lt;- us^k
+  (momK &lt;- mean(binmom(Ys, k - 1, k - 1)))
+  usk &lt;- us^(k-1)
   binprobs &lt;- matrix(0, k + 1, length(us))
   for (i in 1:length(us)) binprobs[, i] &lt;- dbinom(0:k, k, us[i])
   of_gu &lt;- function(gu) {
@@ -402,24 +397,24 @@ fit_pm_models &lt;- function(Ys, k, us = seq(0, 1, 0.02), gu_init = rep(1/length
 
 pmle_gmm &lt;- fit_pm_models(V_subs$pred_gmm, k, us, K = K)
 c(true = acc_full$pred_gmm, unlist(pmle_gmm[5:8]))</code></pre>
-<pre><code>##      true  mple_est   mom_est  mono_est    mm_est 
-## 0.6200000 0.6863563 0.6863578 0.6859800 0.6859274</code></pre>
+<pre><code>##       true   mple_est    mom_est   mono_est     mm_est 
+## 0.63000000 0.03551845 0.54651552 0.03098945 0.57602920</code></pre>
 <pre class="r"><code>pmle_qda &lt;- fit_pm_models(V_subs$pred_qda, k, us, K = K)
 c(true = acc_full$pred_qda, unlist(pmle_qda[5:8]))</code></pre>
-<pre><code>##      true  mple_est   mom_est  mono_est    mm_est 
-## 0.4170000 0.4488741 0.4488987 0.4064449 0.4543653</code></pre>
+<pre><code>##       true   mple_est    mom_est   mono_est     mm_est 
+## 0.38300000 0.01151813 0.24141417 0.10712073 0.29016531</code></pre>
 <pre class="r"><code>pmle_glmnet &lt;- fit_pm_models(V_subs$pred_glmnet, k, us, K = K)
 c(true = acc_full$pred_glmnet, unlist(pmle_glmnet[5:8]))</code></pre>
-<pre><code>##      true  mple_est   mom_est  mono_est    mm_est 
-## 0.5730000 0.5609106 0.5609106 0.6133224 0.5874026</code></pre>
+<pre><code>##       true   mple_est    mom_est   mono_est     mm_est 
+## 0.59000000 0.02158243 0.42709501 0.03098945 0.47102245</code></pre>
 <pre class="r"><code>pmle_enn &lt;- fit_pm_models(V_subs$pred_enn, k, us, K = K)
 c(true = acc_full$pred_enn, unlist(pmle_enn[5:8]))</code></pre>
-<pre><code>##      true  mple_est   mom_est  mono_est    mm_est 
-## 0.5840000 0.7043815 0.7071565 0.7086428 0.7085357</code></pre>
+<pre><code>##       true   mple_est    mom_est   mono_est     mm_est 
+## 0.60400000 0.02297476 0.43623682 0.03098945 0.48664740</code></pre>
 <pre class="r"><code>pmle_nnet &lt;- fit_pm_models(V_subs$pred_nnet, k, us, K = K)
 c(true = acc_full$pred_nnet, unlist(pmle_nnet[5:8]))</code></pre>
-<pre><code>##      true  mple_est   mom_est  mono_est    mm_est 
-## 0.5030000 0.4416132 0.4416132 0.2781500 0.4621713</code></pre>
+<pre><code>##       true   mple_est    mom_est   mono_est     mm_est 
+## 0.49500000 0.01344954 0.26682531 0.13046145 0.33732096</code></pre>
 </div>
 <div id="high-dimensional-asymptotics" class="section level2">
 <h2>High-dimensional asymptotics</h2>
@@ -452,10 +447,10 @@ extrapolate_hd &lt;- function(acck, k, K) {
 
 sapply(acc_sub, extrapolate_hd, k = k, K = K)</code></pre>
 <pre><code>##    pred_gmm    pred_qda pred_glmnet    pred_enn   pred_nnet 
-##   0.6896945   0.4518003   0.5601668   0.6833001   0.4302490</code></pre>
+##   0.6370327   0.3601287   0.5458248   0.5530054   0.3877789</code></pre>
 <pre class="r"><code>unlist(acc_full)</code></pre>
 <pre><code>##    pred_gmm    pred_qda pred_glmnet    pred_enn   pred_nnet 
-##       0.620       0.417       0.573       0.584       0.503</code></pre>
+##       0.630       0.383       0.590       0.604       0.495</code></pre>
 </div>
 <div id="build-table" class="section level2">
 <h2>Build table</h2>
@@ -473,8 +468,8 @@ build_extrapolation_table &lt;- function(synth_data, k, K) {
   preds_full &lt;- pred_submodel(synth_data$Ytr, synth_data$Yte, 
                             synth_data$Z1, synth_data$Z2, K)
   V_subs &lt;- lapply(preds_sub, get_vij, Z2 =synth_data$Z2)
-  acc_sub &lt;- sapply(preds_sub, function(v) mean(get_vij(v, synth_data$Z2) == k))
-  acc_full &lt;- sapply(preds_full, function(v) mean(get_vij(v, synth_data$Z2) == K))
+  acc_sub &lt;- sapply(preds_sub, function(v) mean(get_vij(v, synth_data$Z2) == (k - 1)))
+  acc_full &lt;- sapply(preds_full, function(v) mean(get_vij(v, synth_data$Z2) == (K - 1)))
   tab[, &quot;acc_full&quot;] &lt;- acc_full
   tab[, &quot;acc_sub&quot;] &lt;- acc_sub
   tab[, &quot;exp&quot;] &lt;- sapply(V_subs, expmix_binmom, k = k, K = K)
@@ -494,48 +489,48 @@ build_extrapolation_table &lt;- function(synth_data, k, K) {
 <pre class="r"><code>## high noise
 synth_data &lt;- gen.data(p = 10, sigma = 3, K = 50, r1 = 20, r2 = 30)
 build_extrapolation_table(synth_data, k = 20, K = 50)</code></pre>
-<pre><code>##          acc_sub   acc_full        exp        pmle   pmle_mom  pmle_mono
-## gmm    0.1766667 0.09400000 0.08258487 0.084731147 0.07747563 0.12788863
-## qda    0.1050000 0.04933333 0.03473649 0.041742296 0.04095450 0.03098945
-## glmnet 0.1700000 0.08600000 0.10932801 0.003303968 0.10888889 0.03098945
-## enn    0.1366667 0.05600000 0.06111619 0.067158554 0.06631165 0.06430257
-## nnet   0.1050000 0.06800000 0.03804608 0.039496619 0.03944212 0.03098945
+<pre><code>##          acc_sub   acc_full        exp         pmle   pmle_mom  pmle_mono
+## gmm    0.2050000 0.09800000 0.09508230 0.0021620503 0.06346643 0.03098945
+## qda    0.1250000 0.05666667 0.08473500 0.0006800516 0.03848636 0.03098945
+## glmnet 0.1900000 0.09333333 0.09348126 0.0014105723 0.05984712 0.03098945
+## enn    0.1516667 0.07400000 0.09108530 0.0007040623 0.04566405 0.05587846
+## nnet   0.1233333 0.07733333 0.04934708 0.0006184623 0.04499259 0.04861940
 ##           pmle_mm         hd
-## gmm    0.09849399 0.09460280
-## qda    0.05811211 0.04991413
-## glmnet 0.09452919 0.08853156
-## enn    0.07424343 0.06710993
-## nnet   0.05743066 0.04991413</code></pre>
+## gmm    0.11167272 0.11463271
+## qda    0.06607235 0.06019360
+## glmnet 0.10161142 0.10427227
+## enn    0.07990312 0.07726179
+## nnet   0.06467659 0.06019360</code></pre>
 <pre class="r"><code>## low noise
 synth_data &lt;- gen.data(p = 10, sigma = 0.5, K = 50, r1 = 20, r2 = 30)
 build_extrapolation_table(synth_data, k = 20, K = 50)</code></pre>
-<pre><code>##          acc_sub  acc_full       exp      pmle  pmle_mom pmle_mono
-## gmm    0.9816667 0.9780000 0.9612762 0.9653402 0.9653402 0.9653402
-## qda    0.9283333 0.8753333 0.8828785 0.8799421 0.8829240 0.8818215
-## glmnet 0.9616667 0.9393333 0.9262864 0.9314415 0.9314434 0.9328329
-## enn    0.9816667 0.9720000 0.9647199 0.9653403 0.9653402 0.9653529
-## nnet   0.8433333 0.8513333 0.7655550 0.7874292 0.7695887 0.1277764
+<pre><code>##          acc_sub  acc_full       exp       pmle  pmle_mom  pmle_mono
+## gmm    0.9850000 0.9820000 0.9758202 0.04822418 0.9704382 0.26294357
+## qda    0.8883333 0.8573333 0.8351186 0.04741848 0.7835500 0.03098945
+## glmnet 0.9566667 0.9513333 0.9267394 0.04822418 0.9143357 0.26294357
+## enn    0.9683333 0.9740000 0.9304755 0.04822418 0.9375743 0.26294357
+## nnet   0.8650000 0.7860000 0.7596413 0.04730613 0.7392244 0.24201815
 ##          pmle_mm        hd
-## gmm    0.9653402 0.9637276
-## qda    0.8645764 0.8729813
-## glmnet 0.9317203 0.9279160
-## enn    0.9653402 0.9637276
-## nnet   0.7618610 0.7501820</code></pre>
+## gmm    0.9704299 0.9701820
+## qda    0.7870464 0.8133798
+## glmnet 0.9145464 0.9203284
+## enn    0.9375743 0.9392982
+## nnet   0.7568171 0.7831407</code></pre>
 <pre class="r"><code>## very low noise
 synth_data &lt;- gen.data(p = 10, sigma = 0.3, K = 50, r1 = 20, r2 = 30)
 build_extrapolation_table(synth_data, k = 20, K = 50)</code></pre>
-<pre><code>##          acc_sub  acc_full       exp      pmle  pmle_mom pmle_mono
-## gmm    0.9983333 0.9993333 0.9964797 0.9968491 0.9968491 0.9968491
-## qda    0.9783333 0.9786667 0.9702795 0.9701440 0.9701440 0.9703922
-## glmnet 1.0000000 0.9973333 1.0000000 1.0000000 1.0000000 1.0000000
-## enn    0.9983333 0.9993333 0.9964797 0.9968491 0.9968491 0.9968491
-## nnet   0.9733333 0.9220000 0.9556760 0.9583008 0.9583010 0.7594853
+<pre><code>##          acc_sub  acc_full       exp       pmle  pmle_mom pmle_mono
+## gmm    1.0000000 0.9993333 1.0000000 0.04822418 1.0000000 0.2629436
+## qda    0.9916667 0.9813333 0.9838733 0.04822418 0.9835721 0.2629436
+## glmnet 0.9950000 0.9960000 0.9916444 0.04822418 0.9901433 0.2629436
+## enn    1.0000000 0.9993333 1.0000000 0.04822418 1.0000000 0.2629436
+## nnet   0.9683333 0.9153333 0.9429881 0.04822418 0.9376264 0.2629436
 ##          pmle_mm        hd
-## gmm    0.9968491 0.9963411
-## qda    0.9703923 0.9577650
-## glmnet 1.0000000 1.0000000
-## enn    0.9968491 0.9963411
-## nnet   0.9586660 0.9492059</code></pre>
+## gmm    0.9999957 1.0000000
+## qda    0.9835722 0.9826077
+## glmnet 0.9901432 0.9893390
+## enn    0.9999957 1.0000000
+## nnet   0.9376922 0.9392982</code></pre>
 </div>
 
 
