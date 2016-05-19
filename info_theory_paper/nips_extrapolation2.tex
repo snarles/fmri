@@ -360,7 +360,7 @@ and $\mathcal{Q}$.  What can we say about the the conditional accuracy
 distribution without making any assumptions on either $\mathbb{F}$ or
 $\mathcal{Q}$?  The answer is: not much.  For an arbitrary probability
 measure $\nu'$ on $[0,1]$, one can construct $\mathbb{F}$ and
-$\mathcal{Q}$ such that $\nu = \nu'$, even if one makes the \emph{perfect sampling assumption} that $\hat{F}=F.$
+$\mathcal{Q}$ such that the conditional accuracy $U$ has the distribution $\nu'$, even if one makes the \emph{perfect sampling assumption} that $\hat{F}=F.$
 
 \noindent\textbf{Theorem 3.3.} \emph{ Let $U$ be defined as in Theorem
   3.1, and let $\nu$ denote the law of $U$.  Then, for any probability
@@ -652,6 +652,12 @@ Bayes optimal single-class classification function.  On the other hand, for clas
 or \emph{representation learning}, it is expected that the classification functions become more accurate,
 in the sense that they better approximate a monotonic function of the Bayes classification functions,
 as data from more classes is added.
+
+Our results are still too preliminary for us to recommend the use of any of these estimators in practice.
+Theoretically, it still remains to derive confidence bounds for the generative case;
+practically, additional experiments are needed to establish the reliability of these estimators
+in specific applications.  There also remains plenty of room for new and improved estimators in this area:
+for instance, fixing the instability of the constrained pseudolikelihood estimator when the test accuracy is high.
 
 %\begin{figure}
 %\centering
