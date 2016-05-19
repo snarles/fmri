@@ -118,7 +118,8 @@ when the classifier is trained on $k$ classes is the $k-1$st moment
 of a \emph{conditional accuracy distribution}, which can be estimated from data.
 This provides the theoretical foundation for performance extrapolation based on pseudolikelihood, 
 unbiased estimation, and high-dimensional asymptotics.
-We find empirically that some of the methods work well even for non-generative classifiers.
+We investigate the robustness of our methods to non-generative classifiers
+in simulations and one optical character recognition example.
 \end{abstract}
 
 \section{Introduction}
@@ -173,12 +174,11 @@ This moment equivalence result allows standard approaches in statistics, such as
 nonparametric pseudolikelilood, to be directly applied to the extrapolation problem, as we discuss in section 4.
 In non-generative classifiers, the classification rule has a joint dependence on the entire set of classes,
 and cannot be analyzed by conditioning on individual classes.
-We confirmed that our methods work well for generative classifiers in simulations, which we have omitted from
-the paper.  Since generative classifiers are rarely used in large classification problems,
-we felt that a more interesting demonstration would be to apply our methods to extrapolate the performance
-of multinomial logistic regression, support vector machines, $k$-nearest neighbors, and deep neural networks--
-four commonly used non-generative classifiers.  We apply our methods to extrapolate the performance at 400 classes
-from 20-class data for an OCR dataset, and obtain promising results.  Section 6 concludes.
+In section 5, we empirically study the performance of our classifiers.
+Since generative classifiers only comprise a minority of the classifiers used in practice,
+we applied our methods to a variety of generative and non-generative classifiers
+in simulations and in one OCR dataset.  We find that our methods perform similarly well for generative 
+and non-generative classifiers alike, but work poorly when the test accuracy is too high.  Section 6 concludes.
 
 To our knowledge, we are the first to formalize the problem of prediction extrapolation.
 We introduce three methods for prediction extrapolation: the method of extended unbiased estimation
@@ -579,7 +579,7 @@ the Bayes classifier, we naturally obtain the following estimator
 
 \section{Results}
 
-We applied the methods described in Section 4 to predict the 400-class accuracy of multinomial
+We applied the methods described in Section 4 to predict the 400-class accuracy of naive Bayes, multinomial
 logistic regression, SVM [6], $\epsilon$-nearest neighbors\footnote{$k$-nearest neighbors with $k = \epsilon n$ for fixed $\epsilon > 0$}, and deep neural networks on a Telegu character classification task [12],
 using 20-class data with 100 examples per class (Figure 2).
 Taking the test accuracy on 400 classes (using 50 test examples per class) as a proxy for $\text{acc}^{(400)}$,
@@ -595,14 +595,21 @@ The high-dimensional estimator $\hat{p}^{HD}$ is
 the most assumption-heavy; in addition to assuming approximation to the Bayes classifier,
 it also requires $Y$ to be high-dimensional, and to satisfy a number of other technical conditions (Anon 2016).
 Nevertheless, it performs well on the multinomial logistic, SVM, and deep neural network classifiers.
-All three methods beat the benchmark (taking the test accuracy at 20) for the first three classifiers,
-but the benchmark is the best estimator for the deep neural network.  This suggests that our methods could
-be improved for high-accuracy cases.
+All three methods beat the benchmark (taking the test accuracy at 20) for the first four classifiers,
+but the benchmark is the best estimator for the deep neural network.  
+Meanwhile, despite the fact that naive Bayes is generative, and therefore satisfies the assumptions of the theory,
+all three methods perform poorly in extrapolating its performance to 400 classes.
+Naive Bayes and deep neural networks are on opposite ends of the complexity scale
+in terms of classification methods, but what they share in common in this experiment is a relatively high accuracy on
+the initial 20 classes.
+Our synthetic data simulations, included in the supplement, also demonstrate that our methods
+perform poorly for high-accuracy cases, but can otherwise perform well even for non-generative classifiers.
 
 \begin{figure}
 \centering
 \begin{tabular}{|c||c|c|c|c|c|}\hline
 Classifier & Test $\text{acc}^{(20)}$ & Test $\text{acc}^{(400)}$ & $\hat{p}^{EXP}_{400}$ & $\hat{p}^{CON}_{400}$ & $\hat{p}^{HD}_{400}$\\ \hline
+Naive Bayes & 0.947 & 0.601 & 0.884 & \textbf{0.679} & 0.769 \\ \hline
 Logistic & 0.922 & 0.711 & 0.844 & \textbf{0.721} & 0.686 \\ \hline
 SVM & 0.860 & 0.545 & 0.737 & 0.575 & \textbf{0.546} \\ \hline
 $\epsilon$-NN & 0.964 & 0.591 & 0.895 & \textbf{0.608} & 0.839\\ \hline
@@ -623,11 +630,6 @@ prediction extrapolation.
 
 The results of our experiment reveal some shortcomings in our methods, but also
 suggest that the performance of non-generative classifiers can be accurately predicted.
-A possible explanation is that since the Bayes classifier is generative,
-any classifier which approximates the Bayes classifier is also `approximately generative.' 
-We can test this hypothesis by checking that our methods work
-more reliably in cases where the a good classifier is selected and where the training data per class is large.
-
 Our results are still too preliminary for us to recommend the use of any of these estimators in practice.
 Theoretically, it still remains to derive confidence bounds for the generative case;
 practically, additional experiments are needed to establish the reliability of these estimators
