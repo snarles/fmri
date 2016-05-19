@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Source code
+
 ## Generate data
 
 Create synthetic data from Gaussian mixture model.
@@ -16,9 +18,9 @@ Create synthetic data from Gaussian mixture model.
 ```{r}
 library(pracma)
 p <- 10
-sigma <- 0.5 # noise around cluster
+sigma <- 1 # noise around cluster
 k <- 20 # initial number of classes
-K <- 100 # final number of classes
+K <- 50 # final number of classes
 r1 <- 20 # number of training repeats
 r2 <- 20 # number of test repeats
 mus <- randn(K, p) # cluster centroids
@@ -49,7 +51,7 @@ pred_submodel <- function(k) {
   Z2_sub <- Z2[1:(k * r2)]
   ## gmm
   mu_hat <- t(sapply(1:k, function(i) {
-    colMeans(Ytr_sub[1:r1 + (i-1) * r1, ])
+    colMeans(Ytr_sub[Z1_sub == i, ])
   }))
   dist_gmm <- pdist2(mu_hat, Yte_sub)
   pred_gmm <- -t(dist_gmm)
@@ -62,7 +64,8 @@ pred_submodel <- function(k) {
   ## eps-NN
   df_train <- data.frame(Z = as.factor(Z1_sub), Y = Ytr_sub)
   df_test <- data.frame(Z = as.factor(Z2_sub * 0 + 1), Y = Yte_sub)
-  res_enn <- kknn::kknn(Z ~ ., train = df_train, test = df_test, k = floor(epsilon_nn * k * r1))
+  res_enn <- kknn::kknn(Z ~ ., train = df_train, test = df_test, 
+                        k = floor(epsilon_nn * k * r1))
   pred_enn <- res_enn$prob
   ## nnet
   res_nnet <- nnet(Z ~ ., data = df_train, size = 10)
@@ -71,6 +74,60 @@ pred_submodel <- function(k) {
        pred_enn = pred_enn, pred_nnet = pred_nnet)
 }
 
+preds_sub <- pred_submodel(k)
+preds_full <- pred_submodel(K)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Get Vij
+
+Compute the statistics $V_{ij}$ needed for prediction extrapolation.
+
+```{r}
+get_vij <- function(pred) {
+  rankconv <- t(apply(pred, 1, function(v) rank(v, ties.method = "random")))
+  k <- nrow(pred)/r2
+  Z2_sub <- Z2[1:nrow(pred)]
+  Vs <- rankconv[cbind(1:nrow(pred), Z2_sub)]
+  Vs
+}
+
+V_subs <- lapply(preds_sub, get_vij)
+lapply(preds_sub, function(v) table(get_vij(v)))
+(acc_sub <- lapply(preds_sub, function(v) mean(get_vij(v) == k)))
+(acc_full <- lapply(preds_full, function(v) mean(get_vij(v) == K)))
+```
+
+## Exponential extrapolation
+
+```{r}
+library(nnls)
+expmix <- function(ws, as, xs) {
+  as.numeric(ws %*% exp(t(t(as)) %*%  t(xs)))
+}
+expbasis <- function(as, xs) {
+  t(exp(t(t(as)) %*%  t(xs)))
+}
+fit_expmix <- function(as, xs, y) {
+  X <- expbasis(as, xs)
+  res <- nnls(X, y)
+  sol <- res$x
+  sol[sol < 1e-10] <- 0
+  fit_a <- as[sol > 0]
+  fit_w <- sol[sol > 0]
+  ff <- function(xs) expmix(fit_w, fit_a, xs)
+  list(a = fit_a, w = fit_w, f = ff)
+}
+binmom <- function(succ, tot, k) {
+  choose(succ, k)/choose(tot, k)
+}
+expmix_binmom <- function(Vs, k, K, plot = FALSE) {
+  momks <- sapply(1:k, function(x) mean(binmom(Vs, k, x - 1)))
+  res <- fit_expmix(-seq(0, 5, 0.01), 1:k, momks)
+  if (plot) plot(1:max(K), res$f(1:max(K)), type = "l"); points(1:k, momks)
+  res$f(K)
+}
+c(expmix_binmom(V_subs$pred_gmm, k, K, TRUE), acc_full$pred_gmm)
+c(expmix_binmom(V_subs$pred_qda, k, K, TRUE), acc_full$pred_qda)
+c(expmix_binmom(V_subs$pred_glmnet, k, K, TRUE), acc_full$pred_glmnet)
+c(expmix_binmom(V_subs$pred_nnet, k, K, TRUE), acc_full$pred_nnet)
+```
