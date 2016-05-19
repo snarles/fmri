@@ -582,7 +582,7 @@ We applied the methods described in Section 4 on a simulated gaussian mixture (F
 and on a Telugu character classification task [12] (Table 1.)
 
 For the simulated gaussian mixture, we vary the size of the initial subset from $k=3$ classes to $k=K=50$ classes,
-and extrapolate the performance for gaussian mixture model, multinomial logistic, and one-layer neural network (with 10 units).
+and extrapolate the performance for gaussian mixture model, multinomial logistic, and one-layer neural network (with 10 sigmoidal units.)
 Figure 3 shows how the predicted $K$-class accuracy changes as $k$ is varied.
 We see that the predicted accuracy curves for QDA and Logistic have similar behavior,
 even though QDA is generative and multinomial logistic is not.  All three methods perform better on QDA and logistic classifiers
@@ -593,7 +593,9 @@ is more variable than constrained pseudolikelihood $\hat{p}^{CONS}$ and high-dim
 Additional simulation results can be found in the supplement.
 
 In the character classification task, we predict the 400-class accuracy of naive Bayes, multinomial
-logistic regression, SVM [6], $\epsilon$-nearest neighbors\footnote{$k$-nearest neighbors with $k = \epsilon n$ for fixed $\epsilon > 0$}, and deep neural networks\footnote{The network architecture is as follows: 48 x 48 binary input image, (mc3) a 3x3 convolutional layer with m output maps, (MP2) a 2x2 max-pooling layer, and (400SM) a softmax output layer on 400 classes.} using 20-class data with 103 training examples per class (Table 1).
+logistic regression, SVM [6], $\epsilon$-nearest neighbors\footnote{$k$-nearest neighbors with $k = \epsilon n$ for fixed $\epsilon > 0$}, and deep neural networks\footnote{The network architecture is as follows: 
+{\tt 48x48-4C3-MP2-6C3-8C3-MP2-32C3-50C3-MP2-200C3-SM.}
+48x48 binary input image, $m$C3 is a 3x3 convolutional layer with $m$ output maps, MP2 is a 2x2 max-pooling layer, and SM is a softmax output layer on 20 or 400 classes.} using 20-class data with 103 training examples per class (Table 1).
 Taking the test accuracy on 400 classes (using 50 test examples per class) as a proxy for $\text{acc}^{(400)}$,
 we compare the performance of the three extrapolation methods; as a benchmark,
 also consider using the test accuracy on 20 classes as an estimate.
