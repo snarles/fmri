@@ -597,7 +597,7 @@ logistic regression, SVM [6], $\epsilon$-nearest neighbors\footnote{$k$-nearest 
 Taking the test accuracy on 400 classes (using 50 test examples per class) as a proxy for $\text{acc}^{(400)}$,
 we compare the performance of the three extrapolation methods; as a benchmark,
 also consider using the test accuracy on 20 classes as an estimate.
-The exponential extrapolation method performs well only for the deep neural network.  Meanwhile, constrained PMLE achieves accurate extrapolation for three out of four classifiers: logistic, SVM, and $\epsilon$-NN,
+The exponential extrapolation method performs well only for the deep neural network.  Meanwhile, constrained PMLE achieves accurate extrapolation for two out of four classifiers: logistic and SVM
 but failed to converge for the the deep neural network (due to the high test accuracy).
 The high-dimensional estimator $\hat{p}^{HD}$  performs well on the multinomial logistic, SVM, and deep neural network classifiers.  All three methods beat the benchmark (taking the test accuracy at 20) for the first four classifiers;
 however, the benchmark is the best estimator for the deep neural network,
@@ -628,11 +628,11 @@ $k$ &$k$& $k$& & \\
 \centering
 \begin{tabular}{|c||c|c|c|c|c|}\hline
 Classifier & Test $\text{acc}^{(20)}$ & Test $\text{acc}^{(400)}$ & $\hat{p}^{EXP}_{400}$ & $\hat{p}^{CONS}_{400}$ & $\hat{p}^{HD}_{400}$\\ \hline
-Naive Bayes & 0.947 & 0.601 & 0.884 & \textbf{0.679} & 0.769 \\ \hline
-Logistic & 0.922 & 0.711 & 0.844 & \textbf{0.721} & 0.686 \\ \hline
-SVM & 0.860 & 0.545 & 0.737 & 0.575 & \textbf{0.546} \\ \hline
-$\epsilon$-NN & 0.964 & 0.591 & 0.895 & \textbf{0.608} & 0.839\\ \hline
-Deep neural net & \textbf{0.995} & 0.986 & 0.973 & (*) & 0.983\\ \hline
+Naive Bayes & 0.947 & 0.601 & 0.884 & \textbf{0.659} & 0.769 \\ \hline
+Logistic & 0.922 & 0.711 & 0.844 & \textbf{0.682} & 0.686 \\ \hline
+SVM & 0.860 & 0.545 & 0.737 & 0.473 & \textbf{0.546} \\ \hline
+$\epsilon$-NN & 0.964 & 0.591 & 0.895 & \textbf{0.395} & 0.839\\ \hline
+Deep neural net & \textbf{0.995} & 0.986 & 0.973 & (*) & 0.957\\ \hline
 \end{tabular}
 \caption{Performance extrapolation: predicting the accuracy on 400 classes using data from 20 classes on a Telugu character dataset. (*) indicates failure to converge.
 $\epsilon = 0.002$ for $\epsilon$-nearest neighbors.}
