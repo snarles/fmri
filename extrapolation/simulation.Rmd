@@ -1,0 +1,76 @@
+---
+title: "Prediction Extrapolation"
+author: "Charles Zheng"
+date: "May 19, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Generate data
+
+Create synthetic data from Gaussian mixture model.
+
+```{r}
+library(pracma)
+p <- 10
+sigma <- 0.5 # noise around cluster
+k <- 20 # initial number of classes
+K <- 100 # final number of classes
+r1 <- 20 # number of training repeats
+r2 <- 20 # number of test repeats
+mus <- randn(K, p) # cluster centroids
+Z1 <- rep(1:K, each = r1)
+Z2 <- rep(1:K, each = r2)
+Ytr <- mus[Z1, ] + sigma * randn(K * r1, p) # final training data
+Yte <- mus[Z2, ] + sigma * randn(K * r2, p) # final test data
+```
+
+## Train models
+
+Train Gaussian mixture model (equivalent to naive Bayes),
+quadratic discriminant analysis,
+multinomial logistic regression, $\epsilon$-nearest neighbors,
+and single-layer neural network.
+
+```{r}
+library(glmnet)
+library(MASS)
+library(kknn)
+library(nnet)
+epsilon_nn <- 0.1 # epsilon for epsilon-NN
+## get log probs for first k classes 
+pred_submodel <- function(k) {
+  Ytr_sub <- Ytr[1:(k * r1), ] # subset training data
+  Yte_sub <- Ytr[1:(k * r2), ] # subset test data
+  Z1_sub <- Z1[1:(k * r1)]
+  Z2_sub <- Z2[1:(k * r2)]
+  ## gmm
+  mu_hat <- t(sapply(1:k, function(i) {
+    colMeans(Ytr_sub[1:r1 + (i-1) * r1, ])
+  }))
+  dist_gmm <- pdist2(mu_hat, Yte_sub)
+  pred_gmm <- -t(dist_gmm)
+  ## QDA
+  res_qda <- qda(x = Ytr_sub, grouping = Z1_sub)
+  pred_qda <- predict(res_qda, Yte_sub)$posterior
+  ## multinomial logistic
+  res_glmnet <- glmnet(Ytr_sub, Z1_sub, family = "multinomial")
+  pred_glmnet <- predict(res_glmnet, Yte_sub, s = 0)[, , 1]
+  ## eps-NN
+  df_train <- data.frame(Z = as.factor(Z1_sub), Y = Ytr_sub)
+  df_test <- data.frame(Z = as.factor(Z2_sub * 0 + 1), Y = Yte_sub)
+  res_enn <- kknn::kknn(Z ~ ., train = df_train, test = df_test, k = floor(epsilon_nn * k * r1))
+  pred_enn <- res_enn$prob
+  ## nnet
+  res_nnet <- nnet(Z ~ ., data = df_train, size = 10)
+  pred_nnet <- predict(res_nnet, df_test)
+  list(pred_gmm = pred_gmm, pred_qda = pred_qda, pred_glmnet = pred_glmnet,
+       pred_enn = pred_enn, pred_nnet = pred_nnet)
+}
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
