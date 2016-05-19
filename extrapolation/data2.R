@@ -58,6 +58,10 @@ pmat <- knnprobs$knn_415154_probs_25
 ac0 <- 1 - 0.0140
 pmat <- read.table("~/github/predict_test_error/train_tel/sub_sub_runs/deepslim_010855_20.logprobs")
 
+ac0 <- 0.601
+pmat <- read.table("~/github/predict_test_error/naive/tel400_logprobs/naive_tel400_20.logprobs")
+
+
 dim(pmat)
 ksub <- 20
 
@@ -70,7 +74,7 @@ Ys <- sub_us
 cm2 <- momk_mle_est(Ys, ksub, pseq, lbda = 0.001, mpen = 10000)
 # cm2[3]
 # c(sum(cm2$ps^ksub * cm2$gu), mean(binmom(sub_us, ksub, ksub)))
-acck <- mean(binmom(sub_us, ksub, ksub - 1))
+(acck <- mean(binmom(sub_us, ksub, ksub - 1)))
 (ihat <- Ihat_LI(1 - acck, ksub, upper = 20))
 
 
