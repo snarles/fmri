@@ -1,33 +1,5 @@
----
-title: "Prediction Extrapolation"
-author: "Charles Zheng"
-date: "May 19, 2016"
-output: html_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-# Run this code
-
-Use Rstudio: `https://www.rstudio.com`.
-Go to `https://github.com/snarles/fmri/blob/master/extrapolation/simulation.Rmd`.
-
-# Source code
-
 ## Generate data
-
-Create synthetic data from Gaussian mixture model.
-
-```{r}
 library(pracma)
-p <- 10
-sigma <- 1 # noise around cluster
-k <- 20 # initial number of classes
-K <- 50 # final number of classes
-r1 <- 20 # number of training repeats
-r2 <- 20 # number of test repeats
 gen.data <- function(p, sigma, K, r1, r2) {
   mus <- randn(K, p) # cluster centroids
   Z1 <- rep(1:K, each = r1)
@@ -36,17 +8,9 @@ gen.data <- function(p, sigma, K, r1, r2) {
   Yte <- mus[Z2, ] + sigma * randn(K * r2, p) # final test data
   list(Ytr = Ytr, Yte = Yte, Z1 = Z1, Z2 = Z2)  
 }
-synth_data <- gen.data(p, sigma, K, r1, r2)
-```
 
 ## Train models
 
-Train Gaussian mixture model (equivalent to naive Bayes),
-quadratic discriminant analysis,
-multinomial logistic regression, $\epsilon$-nearest neighbors,
-and single-layer neural network.
-
-```{r}
 library(glmnet)
 library(MASS)
 library(kknn)
@@ -83,17 +47,8 @@ pred_submodel <- function(Ytr, Yte, Z1, Z2, k) {
        pred_enn = pred_enn, pred_nnet = pred_nnet)
 }
 
-preds_sub <- pred_submodel(synth_data$Ytr, synth_data$Yte, 
-                           synth_data$Z1, synth_data$Z2, k)
-preds_full <- pred_submodel(synth_data$Ytr, synth_data$Yte, 
-                            synth_data$Z1, synth_data$Z2, K)
-```
-
 ## Get Vij
 
-Compute the statistics $V_{ij}$ needed for prediction extrapolation, and compute sub/full accuracies.
-
-```{r}
 get_vij <- function(pred, Z2) {
   rankconv <- t(apply(pred, 1, function(v) rank(v, ties.method = "random")))
   Z2_sub <- Z2[1:nrow(pred)]
@@ -101,17 +56,8 @@ get_vij <- function(pred, Z2) {
   Vs
 }
 
-V_subs <- lapply(preds_sub, get_vij, Z2 =synth_data$Z2)
-lapply(preds_sub, function(v) table(get_vij(v, synth_data$Z2)))
-acc_sub <- lapply(preds_sub, function(v) mean(get_vij(v, synth_data$Z2) == k))
-unlist(acc_sub)
-acc_full <- lapply(preds_full, function(v) mean(get_vij(v, synth_data$Z2) == K))
-unlist(acc_full)
-```
-
 ## Exponential extrapolation
 
-```{r}
 library(nnls)
 expmix <- function(ws, as, xs) {
   as.numeric(ws %*% exp(t(t(as)) %*%  t(xs)))
@@ -141,19 +87,9 @@ expmix_binmom <- function(Vs, k, K, plot = FALSE) {
   }
   res$f(K)
 }
-c(expmix_binmom(V_subs$pred_gmm, k, K), acc_full$pred_gmm)
-c(expmix_binmom(V_subs$pred_qda, k, K), acc_full$pred_qda)
-c(expmix_binmom(V_subs$pred_glmnet, k, K), acc_full$pred_glmnet)
-c(expmix_binmom(V_subs$pred_enn, k, K), acc_full$pred_enn)
-c(expmix_binmom(V_subs$pred_nnet, k, K), acc_full$pred_nnet)
-```
 
 ## Pseudolikelihood
 
-Fit MPLE (mple), MPLE + monotonic constraint (mono), MPLE + moment constraint (mom),
-or MPLE + both constraints (mm).
-
-```{r}
 library(nloptr)
 us = seq(0, 1, 0.02) # change the discretization level
 
@@ -256,25 +192,8 @@ fit_pm_models <- function(Ys, k, us = seq(0, 1, 0.02), gu_init = rep(1/length(us
        mm_est = sum(gu_mm * us^(K  - 1)))
 }
 
-pmle_gmm <- fit_pm_models(V_subs$pred_gmm, k, us, K = K)
-c(true = acc_full$pred_gmm, unlist(pmle_gmm[5:8]))
-
-pmle_qda <- fit_pm_models(V_subs$pred_qda, k, us, K = K)
-c(true = acc_full$pred_qda, unlist(pmle_qda[5:8]))
-
-pmle_glmnet <- fit_pm_models(V_subs$pred_glmnet, k, us, K = K)
-c(true = acc_full$pred_glmnet, unlist(pmle_glmnet[5:8]))
-
-pmle_enn <- fit_pm_models(V_subs$pred_enn, k, us, K = K)
-c(true = acc_full$pred_enn, unlist(pmle_enn[5:8]))
-
-pmle_nnet <- fit_pm_models(V_subs$pred_nnet, k, us, K = K)
-c(true = acc_full$pred_nnet, unlist(pmle_nnet[5:8]))
-```
-
 ## High-dimensional asymptotics
 
-```{r}
 meanexp <- function (v) 
 {
     vm <- max(v)
@@ -302,13 +221,8 @@ extrapolate_hd <- function(acck, k, K) {
   1-piK(inv_piK(1-acck, k), K)
 }
 
-sapply(acc_sub, extrapolate_hd, k = k, K = K)
-unlist(acc_full)
-```
-
 ## Build table
 
-```{r}
 extrapolation_methods <- c("acc_sub", "acc_full", "exp", 
                            "pmle", "pmle_mom", "pmle_mono", "pmle_mm",
                            "hd")
@@ -336,20 +250,4 @@ build_extrapolation_table <- function(synth_data, k, K) {
   tab[, "hd"] <- sapply(acc_sub, extrapolate_hd, k = k, K = K)
   tab
 }
-```
 
-# Simulations
-
-Results for different noise levels.
-
-```{r}
-## high noise
-synth_data <- gen.data(p = 10, sigma = 3, K = 50, r1 = 20, r2 = 30)
-build_extrapolation_table(synth_data, k = 20, K = 50)
-## low noise
-synth_data <- gen.data(p = 10, sigma = 0.5, K = 50, r1 = 20, r2 = 30)
-build_extrapolation_table(synth_data, k = 20, K = 50)
-## very low noise
-synth_data <- gen.data(p = 10, sigma = 0.3, K = 50, r1 = 20, r2 = 30)
-build_extrapolation_table(synth_data, k = 20, K = 50)
-```
