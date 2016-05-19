@@ -177,8 +177,10 @@ and cannot be analyzed by conditioning on individual classes.
 In section 5, we empirically study the performance of our classifiers.
 Since generative classifiers only comprise a minority of the classifiers used in practice,
 we applied our methods to a variety of generative and non-generative classifiers
-in simulations and in one OCR dataset.  We find that our methods perform similarly well for generative 
-and non-generative classifiers alike, but work poorly when the test accuracy is too high.  Section 6 concludes.
+in simulations and in one OCR dataset.  Our methods have varying success on generative and non-generative classifiers,
+but seem to work badly for neural networks.
+
+\subsection{Contribution}
 
 To our knowledge, we are the first to formalize the problem of prediction extrapolation.
 We introduce three methods for prediction extrapolation: the method of extended unbiased estimation
@@ -579,31 +581,51 @@ the Bayes classifier, we naturally obtain the following estimator
 
 \section{Results}
 
-We applied the methods described in Section 4 to predict the 400-class accuracy of naive Bayes, multinomial
-logistic regression, SVM [6], $\epsilon$-nearest neighbors\footnote{$k$-nearest neighbors with $k = \epsilon n$ for fixed $\epsilon > 0$}, and deep neural networks on a Telegu character classification task [12],
-using 20-class data with 100 examples per class (Figure 2).
+We applied the methods described in Section 4 on a simulated gaussian mixture (Figure 2)
+and on a Telegu character classification task [12] (Figure 3.)
+
+For the simulated gaussian mixture, we vary the size of the initial subset from $k=3$ classes to $k=K=50$ classes,
+and extrapolate the performance for gaussian mixture model, multinomial logistic, and one-layer neural network (with 10 units).
+Figure 3 shows how the predicted $K$-class accuracy changes as $k$ is varied.
+We see that the predicted accuracy curves for QDA and Logistic have similar behavior,
+even though QDA is generative and multinomial logistic is not.  All three methods perform better on QDA and logistic classifiers
+than on the neural network: in fact, for the neural network, the test accuracy of the initial set, $\text{acc}^{(k)}$,
+becomes a better estimator of $\text{acc}^{(K)}$ than the three proposed methods for most of the curve.
+We also see that the exponential extrapolation method, $\hat{p}^{EXP}$,
+is more variable than constrained pseudolikelihood $\hat{p}^{CONS}$ and high-dimensional estimator $\hat{p}^{HD}$.
+Additional simulation results can be found in the supplement.
+
+In the character classification task, we predict the 400-class accuracy of naive Bayes, multinomial
+logistic regression, SVM [6], $\epsilon$-nearest neighbors\footnote{$k$-nearest neighbors with $k = \epsilon n$ for fixed $\epsilon > 0$}, and deep neural networks\footnote{The network architecture is as follows: 48 x 48 binary input image, (mc3) a 3x3 convolutional layer with m output maps, (MP2) a 2x2 max-pooling layer, and (400SM) a softmax output layer on 400 classes.} using 20-class data with 100 examples per class (Figure 3).
 Taking the test accuracy on 400 classes (using 50 test examples per class) as a proxy for $\text{acc}^{(400)}$,
 we compare the performance of the three extrapolation methods; as a benchmark,
 also consider using the test accuracy on 20 classes as an estimate.
-The exponential extrapolation method makes use of the fewest theoretical assumptions,
-but performs well only for the deep neural network.  Meanwhile, constrained PMLE makes an extra assumption
-in the monotonicity of $\eta(u)$, which is true if the classifier is sufficiently close to the Bayes classifier,
-and achieves accurate extrapolation for three out of four classifiers: logistic, SVM, and $\epsilon$-NN.  
-For the deep neural network, the optimization is unstable, yielding estimates ranging from 0.345 to 0.907
-depending on level of discretization and the solver used.
-The high-dimensional estimator $\hat{p}^{HD}$ is
-the most assumption-heavy; in addition to assuming approximation to the Bayes classifier,
-it also requires $Y$ to be high-dimensional, and to satisfy a number of other technical conditions (Anon 2016).
-Nevertheless, it performs well on the multinomial logistic, SVM, and deep neural network classifiers.
-All three methods beat the benchmark (taking the test accuracy at 20) for the first four classifiers,
-but the benchmark is the best estimator for the deep neural network.  
-Meanwhile, despite the fact that naive Bayes is generative, and therefore satisfies the assumptions of the theory,
-all three methods perform poorly in extrapolating its performance to 400 classes.
-Naive Bayes and deep neural networks are on opposite ends of the complexity scale
-in terms of classification methods, but what they share in common in this experiment is a relatively high accuracy on
-the initial 20 classes.
-Our synthetic data simulations, included in the supplement, also demonstrate that our methods
-perform poorly for high-accuracy cases, but can otherwise perform well even for non-generative classifiers.
+The exponential extrapolation method performs well only for the deep neural network.  Meanwhile, constrained PMLE achieves accurate extrapolation for three out of four classifiers: logistic, SVM, and $\epsilon$-NN,
+but failed to converge for the the deep neural network (due to the high test accuracy).
+The high-dimensional estimator $\hat{p}^{HD}$  performs well on the multinomial logistic, SVM, and deep neural network classifiers.  All three methods beat the benchmark (taking the test accuracy at 20) for the first four classifiers;
+however, the benchmark is the best estimator for the deep neural network,
+similarly to what we observe in the simulation (albeit with a shallow network rather than a deep network.)
+
+\begin{figure}
+\centering
+\begin{tabular}{cccrl}
+QDA & Logistic & Neural Net & \\
+\multirow{5}{*}{\includegraphics[scale = 0.5, clip=true, trim=0.2in 0.6in 0.2in 0.7in]{../extrapolation/sim_qda.pdf}} &
+\multirow{5}{*}{\includegraphics[scale = 0.5, clip=true, trim=0.75in 0.6in 0.2in 0.7in]{../extrapolation/sim_glmnet.pdf}} & 
+\multirow{5}{*}{\includegraphics[scale = 0.5, clip=true, trim=0.75in 0.6in 0.2in 0.7in]{../extrapolation/sim_nnet.pdf}} & 
+& \\
+&& & &\\
+&& &  \crule[black]{0.2cm}{0.2cm} & $\text{acc}^{(k)}$ \\
+&& & \crule[green]{0.2cm}{0.2cm} & $\hat{p}^{EXP}$ \\
+&& & \crule[red]{0.2cm}{0.2cm} & $\hat{p}^{CONS}$ \\
+&& & \crule[blue]{0.2cm}{0.2cm} & $\hat{p}^{HD}$ \\
+&& & & \\
+&& & & \\
+&& & & \\
+$k$ &$k$& $k$& & \\
+\end{tabular}
+\caption{Predictions for $\text{acc}^{(50)}$ as $k$, the size of the subset, is varied.  Our methods work better for QDA and Logistic than Neural Net; overall, $\hat{p}^{EXP}$ has higher variability than $\hat{p}^{CONS}$ and $\hat{p}^{HD}$.}
+\end{figure}
 
 \begin{figure}
 \centering
@@ -615,26 +637,9 @@ SVM & 0.860 & 0.545 & 0.737 & 0.575 & \textbf{0.546} \\ \hline
 $\epsilon$-NN & 0.964 & 0.591 & 0.895 & \textbf{0.608} & 0.839\\ \hline
 Deep neural net & \textbf{0.995} & 0.986 & 0.973 & (*) & 0.983\\ \hline
 \end{tabular}
-\caption{Performance extrapolation: predicting the error on 400 classes using data from 20 classes on a Telugu character dataset. (*) indicates unstable optimization.
+\caption{Performance extrapolation: predicting the error on 400 classes using data from 20 classes on a Telugu character dataset. (*) indicates failure to converge.
 $\epsilon = 0.002$ for $\epsilon$-nearest neighbors.}
 \end{figure}
-
-\section{Discussion}
-
-We have developed a theory of prediction extrapolation for generative classifiers,
-under the assumption of exchangeable classes.  The equivalence between
-the expected $t$-class accuracy and the $t-1$-th moment of the conditional accuracy distribution
-allows a variety of methods to be applied to the problem.  We develop two novel extrapolation methods,
-and also propose a new application of the mutual information estimator [4] as a third method for
-prediction extrapolation.
-
-The results of our experiment reveal some shortcomings in our methods, but also
-suggest that the performance of non-generative classifiers can be accurately predicted.
-Our results are still too preliminary for us to recommend the use of any of these estimators in practice.
-Theoretically, it still remains to derive confidence bounds for the generative case;
-practically, additional experiments are needed to establish the reliability of these estimators
-in specific applications.  There also remains plenty of room for new and improved estimators in this area:
-for instance, a fixing the instability of the constrained pseudolikelihood estimator when the test accuracy is high.
 
 %\begin{figure}
 %\centering
@@ -648,7 +653,7 @@ for instance, a fixing the instability of the constrained pseudolikelihood estim
 %\subsubsection*{Acknowledgments}
 
 %We thank John Duchi, Steve Mussmann, Qingyun Sun, Jonathan Taylor, Trevor Hastie, Robert Tibshirani for useful discussion.  CZ is supported by an NSF graduate research fellowship.
-
+\newpage
 \section*{References}
 
 \small
