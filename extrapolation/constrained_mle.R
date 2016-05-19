@@ -106,7 +106,7 @@ momk_cons_est <- function(ppmat, k, ps = seq(0, 1, 1/(2 * k)), lbda = 0.1, mpen 
 
 expmix_binmom <- function(ppmat, k, K) {
   Ys <- as.numeric(ppmat)
-  momks <- sapply(1:k, function(x) mean(binmom(Ys, k, x)))
+  momks <- sapply(1:k, function(x) mean(binmom(Ys, k, x - 1)))
   res <- fit_expmix(-seq(0, 5, 0.01), 1:k, momks)
   # plot(1:max(K), res$f(1:max(K)), type = "l"); points(1:k, momks)
   res$f(K)

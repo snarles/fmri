@@ -3,6 +3,8 @@ source("extrapolation/constrained_mle.R")
 source("extrapolation/mle_theory.R")
 source("extrapolation/moment_mle.R")
 source("extrapolation/bayes_binom.R")
+# source("extrapolation/psuedolikelihood.R")
+
 
 getUs <- function(pmat, ncl, ny) {
   rankconv <- (apply(pmat, 2, rank) - 0.5)/nrow(pmat)
@@ -53,6 +55,8 @@ pmat <- knnprobs$knn_415154_probs_15
 (ac0 <- err_knn400[err_knn400$k==500, "te"])
 pmat <- knnprobs$knn_415154_probs_25
 
+ac0 <- 1 - 0.0140
+pmat <- read.table("~/github/predict_test_error/train_tel/sub_sub_runs/deepslim_010855_20.logprobs")
 
 dim(pmat)
 ksub <- 20
@@ -67,7 +71,9 @@ cm2 <- momk_mle_est(Ys, ksub, pseq, lbda = 0.001, mpen = 10000)
 # cm2[3]
 # c(sum(cm2$ps^ksub * cm2$gu), mean(binmom(sub_us, ksub, ksub)))
 acck <- mean(binmom(sub_us, ksub, ksub - 1))
-(ihat <- Ihat_LI(1 - acck, ksub))
+(ihat <- Ihat_LI(1 - acck, ksub, upper = 20))
+
+
 
 K <- 400
 (ah_m <- est_moment(mle_est, K-1))
@@ -77,3 +83,9 @@ K <- 400
 (ah_i <- 1 - lineId::piK(sqrt(2 * ihat), K))
 
 list(ac0 = ac0, ah_m = ah_m, ah_c = ah_c, ah_bm = ah_bm, ah_i = ah_i)
+
+
+res <- fit_pm_models(Ys, ksub, us = seq(0.999, 1, 1e-5))
+sum(res$gu_mm * seq(0.999, 1, 1e-5)^(19))
+plot(res$gu_mm)
+sum(res$gu_mm * seq(0.999, 1, 1e-5)^(399))
