@@ -108,17 +108,9 @@ of assumption or prior.  One approach is to assume a parametric joint
 distribution on $(X, Y)$, but in many applications, such a strong
 modeling assumption cannot be justified.  Alternatively, one can
 estimate the mutual information based the performance of a classifier
-trained on the data.  Existing methods include using the empirical
-mutual information of the confusion matrix of the classifier, as well
-as an estimator based on Fano's inequality.  However, both of these
-methods all produce an estimate which is bounded by $\log(k)$, where
-$k$ is the number of classes.  This presents a substantial limitation
-for classification-based approaches, since the number of repeats per
-class must be large for the classifier to work well, hence limiting
-the number of classes $k$ that can be defined. In this paper, we
+trained on the data. In this paper, we
 construct a novel classification-based estimator of mutual information
-which overcomes these limitations.  Our estimator is based on
-high-dimensional asymptotics: we show that in a particular limiting
+based on high-dimensional asymptotics. We show that in a particular limiting
 regime, the mutual information is an invertible function of the
 expected $k$-class Bayes error.  While the theory is based on a
 large-sample, high-dimensional limit, we demonstrate through
