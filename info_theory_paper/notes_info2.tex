@@ -1,0 +1,178 @@
+\title{Upper bounds for average Bayes accuracy in terms of mutual information}
+\author{Charles Zheng and Yuval Benjamini}
+\date{\today}
+
+\documentclass[12pt]{article} 
+
+% packages with special commands
+\usepackage{amssymb, amsmath}
+\usepackage{epsfig}
+\usepackage{array}
+\usepackage{ifthen}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{csquotes}
+\definecolor{grey}{rgb}{0.5,0.5,0.5}
+
+\begin{document}
+\maketitle
+
+\newcommand{\tr}{\text{tr}}
+\newcommand{\E}{\textbf{E}}
+\newcommand{\diag}{\text{diag}}
+\newcommand{\argmax}{\text{argmax}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\argmin}{\text{argmin}}
+\newcommand{\Vol}{\text{Vol}}
+\newcommand{\comm}[1]{}
+
+These are preliminary notes.
+
+\section{Introduction}
+
+Suppose $X$ and $Y$ are continuous random variables (or vectors) which have a joint distribution with density $p(x, y)$.
+Let $p(x) = \int p(x,y) dy$ and $p(y) = \int p(x,y) dx$ denote the respective marginal distributions,
+and $p(y|x) = p(x,y)/p(x)$ denote the conditional distribution.
+
+Mutual information is defined
+\[
+\text{I}[p(x, y)] = \int p(x, y) \log \frac{p(x, y)}{p(x)p(y)} dx dy.
+\]
+
+$\text{ABE}_k$, or $k$-class Average Bayes accuracy is defined as follows.  Let $X_1,...,X_K$ be iid from $p(x)$,
+and draw $Z$ uniformly from $1,..,k$.  Draw $Y \sim p(y|X_Z)$.
+Then, the average Bayes accuracy is defined as
+\[
+\text{ABA}_k[p(x, y)] = \sup_f \Pr[f(x_1,...,x_k, y) = Z] 
+\]
+where the supremum is taken over all functions $f$.  A function $f$ which achieves the supremum is
+\[
+f_{Bayes}(x_1,...,x_k, y) = \text{argmax}_{z \in \{1,...,k\}} p(y|x_z),
+\]
+where an arbitrary rule can be employed to break ties.
+Such a function $f_{Bayes}$ is called a \emph{Bayes classification rule}.
+It follows that $\text{ABA}_k$ is given explicitly by
+\[
+\text{ABA}_k = \frac{1}{k} \int \left[\prod_{i=1}^k p(x_i) dx_i \right] \int dy \frac{\sum_{i=1}^k p(y|x_i)^2}{\sum_{i=1}^k p(y|x_i)}.
+\]
+
+\section{Problem formulation}
+
+Let $\mathcal{P}$ denote the collection of all joint densities $p(x, y)$ on finite-dimensional Euclidean space.
+For $\iota \in [0,\infty)$ define $C_k(\iota)$ to be the largest $k$-class average Bayes error attained by any distribution $p(x,y)$ with mutual information not exceeding $\iota$:
+\[
+C_k(\iota) = \sup_{p \in \mathcal{P}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)].
+\]
+A priori, $C_k(\iota)$ exists since $\text{ABA}_k$ is bounded between
+0 and 1.  Furthermore, $C_k$ is nondecreasing since the domain of the
+supremum is monotonically increasing with $\iota$.
+
+It follows that for any density $p(x,
+y)$, we have
+\[
+\text{ABA}_k[p(x,y)] \leq C_k(\text{I}[p(x,y)]).
+\]
+Hence $C_k$ provides an upper bound for average Bayes error in terms of mutual information.
+
+Conversely we have
+\[
+\text{I}[p(x,y)] \geq C^{-1}_k(\text{ABA}_k[p(x,y)])
+\]
+so that $C^{-1}_k$ provides a lower bound for mutual information in terms of average Bayes error.
+
+On the other hand, there is no nontrivial \emph{lower} bound for average Bayes error in terms of mutual information,
+nor upper bound for mutual information in terms of average Bayes error, since
+\[
+\inf_{p \in \mathcal{P}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)] = \frac{1}{k}.
+\]
+regardless of $\iota$.
+
+The goal of this work is to attempt to compute or approximate the functions $C_k$ and $C_k^{-1}$.
+
+\section{Special case}
+
+We work out the special case where $p(x,y)$ lies on the unit square, and $p(x)$ and $p(y)$ are both the uniform distribution.
+In this case, the mutual information $\text{I}[p(x,y)]$ is equal to the joint entropy $\text{H}[p(x,y)]$.
+
+To be continued.
+
+\section{General case}
+
+We claim that the constants $C_k^{unif}(\iota)$ obtained for the special case also apply for the general case, i.e.
+\[
+C_k(\iota) = C_k^{unif}(\iota).
+\]
+
+We make use of the following Lemma:
+
+\textbf{Lemma.} \emph{
+Suppose $X$, $Y$, $W$, $Z$ are continuous random variables, and that $W\perp Y|Z$, $Z \perp X|Y$, and $W \perp Z|(X,Y)$.
+Then,
+\[
+\text{I}[p(x, y)] = \text{I}[p((x,w), (y,z))]
+\]
+and
+\[
+\text{ABA}_k[p(x, y)] = \text{ABA}_k[p((x,w), (y,z))].
+\]
+}
+
+\textbf{Proof.}
+Due to conditional independence relationships, we have
+\[
+p((x,w), (y,z)) = p(x,y)p(w|x)p(z|y).
+\]
+
+It follows that
+\begin{align*}
+\text{I}[p((x,w), (y,z))] &= \int dx dw dy dz  \ p(x,y)p(w|x)p(z|w) \log \frac{p((x,w), (y,z))}{p(x,w)p(y,z)}
+\\&= \int dx dw dy dz \ p(x,y)p(w|x)p(z|w) \log \frac{p(x, y)p(w|x)p(z|y)}{p(x)p(y)p(w|x)p(z|y)}
+\\&= \int dx dw dy dz \ p(x,y)p(w|x)p(z|w) \log \frac{p(x, y)}{p(x)p(y)}
+\\&= \int dx dy \ p(x,y) \log \frac{p(x, y)}{p(x)p(y)} = \text{I}[p(x,y)].
+\end{align*}
+
+Also,
+\begin{align*}
+\text{ABA}_k[p((x,w),(y,z))] 
+&= \int \left[\prod_{i=1}^k p(x_i, w_i) dx_i dw_i \right] \int dy dz \frac{\sum_{i=1}^k p(y, z|x_i, w_i)^2}{\sum_{i=1}^k p(y, z|x_i, w_i)}
+\\&= \int \left[\prod_{i=1}^k p(x_i, w_i) dx_i dw_i \right] \int dy \frac{\sum_{i=1}^k p(y|x_i)^2}{\sum_{i=1}^k p(y|x_i)} \int p(z|y) dz
+\\&= \int \left[\prod_{i=1}^k p(x_i) dx_i \right] \left[\prod_{i=1}^k \int dw_i p(w_i|x_i)\right]\int dy \frac{\sum_{i=1}^k p(y|x_i)^2}{\sum_{i=1}^k p(y|x_i)}
+\\&= \int \left[\prod_{i=1}^k p(x_i) dx_i \right]\int dy \frac{\sum_{i=1}^k p(y|x_i)^2}{\sum_{i=1}^k p(y|x_i)} = \text{ABA}_k[p(x,y)].
+\end{align*}
+
+$\Box$
+
+Next, we use the fact that for any $p(x,y)$ and $\epsilon > 0$, there exists a discrete distribution $p_\epsilon(\tilde{x}, \tilde{y})$ such that
+\[
+|\text{I}[p(x,y)] - \text{I}[p_\epsilon(\tilde{x}, \tilde{y})]| < \epsilon,
+\]
+where for discrete distributions, one defines
+\[
+\text{I}[p(x,y)] = \sum_x \sum_y p(x,y) \log \frac{p(x,y)}{p(x)p(y)}.
+\]
+
+We require the additional condition that the marginals of the discrete distribution are close to uniform: that is, for some $\delta > 0$, we have
+\[
+\sup_{x, x': p_\epsilon(x) > 0\text{ and }p_\epsilon(x') > 0} \frac{p_\epsilon(x)}{p_\epsilon(x')} \leq 1 + \delta.
+\]
+and likewise
+\[
+\sup_{y, y': p_\epsilon(y) > 0\text{ and }p_\epsilon(y') > 0} \frac{p_\epsilon(y)}{p_\epsilon(y')} \leq 1 + \delta.
+\]
+
+To construct the discretization with the required properties, choose a regular rectangular grid $\Lambda$ over the domain of $p(x,y)$
+sufficiently fine so that partitioning $X,Y$ into grid cells, we have
+\[
+|\text{I}[p(x,y)] - \text{I}[\tilde{p}(\tilde{x}, \tilde{y})]| < \epsilon.
+\]
+[NOTE: to be written more clearly]
+Next, define 
+
+
+\end{document}
+
+
+
