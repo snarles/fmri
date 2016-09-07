@@ -121,7 +121,7 @@ and
 \]
 where
 \[
-H[g] = -\int g(x) \log g(x)
+H[g] = -\int g(x) x \log x dx
 \]
 and
 \[
@@ -148,20 +148,21 @@ $\Box$
 Hence, we can obtain an upper bound on $C_k$ via properties of the set $D$.
 It suffices to determine the upper envelope, which can be determined by solving the continuous optimization problems
 \[
-\text{maximize} \int z_0^\infty g(z) G^{k-1}(z) dz
+\text{maximize } k^{-1}\int_0^\infty (1- G^k(z)) dz
 \]
 subject to the constraints
 \begin{itemize}
 \item $g: [0,\infty) \to [0,\infty)$.
 \item $\int_0^\infty g(z) dz = 1.$
 \item $\int_0^\infty z g(z) dz = 1.$
-\item $\int_0^\infty g(z) \log g(z) \leq \alpha.$
+\item $\int_0^\infty z \log z g(z) \leq \alpha.$
 \end{itemize}
 We can let $\mathcal{G}_\alpha$ denote the set of densities $g$ satisfying the constraints; it is evident that $\mathcal{G}_\alpha$ is convex.
-Meanwhile, the objective function, which can also be written
+However, the objective function, which can also be written
 \[
-\int_0^\infty z g(z) \left(\int_0^z g(t) dt\right)^{k-1} dz
+k^{-1}\int_0^\infty 1 - \left(\int_0^z g(t) dt\right)^k dz = \int_0^\infty z g(z) \left(\int_0^z g(t) dt\right)^{k-1} dz
 \]
+is not convex.
 
 \section{General case}
 
