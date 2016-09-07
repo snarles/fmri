@@ -56,7 +56,7 @@ where an arbitrary rule can be employed to break ties.
 Such a function $f_{Bayes}$ is called a \emph{Bayes classification rule}.
 It follows that $\text{ABA}_k$ is given explicitly by
 \[
-\text{ABA}_k = \frac{1}{k} \int \left[\prod_{i=1}^k p(x_i) dx_i \right] \int dy \frac{\sum_{i=1}^k p(y|x_i)^2}{\sum_{i=1}^k p(y|x_i)}.
+\text{ABA}_k = \frac{1}{k} \int \left[\prod_{i=1}^k p(x_i) dx_i \right] \int dy \max_i p(y|x_i).
 \]
 
 \section{Problem formulation}
@@ -95,9 +95,73 @@ The goal of this work is to attempt to compute or approximate the functions $C_k
 \section{Special case}
 
 We work out the special case where $p(x,y)$ lies on the unit square, and $p(x)$ and $p(y)$ are both the uniform distribution.
-In this case, the mutual information $\text{I}[p(x,y)]$ is equal to the joint entropy $\text{H}[p(x,y)]$.
+Let $\mathcal{P}^{unif}$ denote the set of such distributions, and 
+\[
+C_k^{unif}(\iota) = \sup_{p(x, y) \in \mathcal{P}^{unif}: \text{I}[p] \leq \iota} \text{ABA}_k[p]. 
+\]
 
-To be continued.
+
+In this case, letting $X_1,...,X_k \sim \text{Unif}[0,1]$, and $Y \sim \text{Unif}[0,1]$ define $Z_i(y) = p(y|X_i)$.
+We have $\E[Z(y)] = 1$ and,
+\[
+\text{I}[p(x,y)] = \E[Z(Y) \log Z(Y)]
+\]
+while
+\[
+\text{ABA}_k[p(x,y)] = k^{-1}\E[\max_i Z_i(Y)].
+\]
+
+Letting $g_y$ be the density of $Z(y)$, we have
+\[
+\text{I}[p(x,y)] = \E[-H[g_y]]
+\]
+and
+\[
+\text{ABA}_k[p(x,y)] = \E[\psi_k[g_y]]
+\]
+where
+\[
+H[g] = -\int g(x) \log g(x)
+\]
+and
+\[
+\psi_k[g] = \int x g(x) G(x)^{k-1} dx
+\]
+for $G(x) = \int_0^x g(t) dt.$
+Additionally $g_y$ satisfies the constraint $\int x g(x) dx= 1$ since $\E[Z(y)] = 1$.
+
+Define the set $D = \{(\alpha, \beta)\}$ as the set of possible values of $(-H[g], \psi_k[g])$ taken over all distributions $g$ supported on $[0,
+\infty)$ with $\int x g(x) dx = 1$.  Next, let $\mathcal{C}(D)$ denote the convex hull of $D$.
+It follows that $(\text{I}[p], \text{ABA}_k[p]) \in \mathcal{C}(D)$ since the pair is obtained via a convex average of points $(-H[g_y], \psi_k[g])$.
+
+We trivally obtain the following theorem.
+
+\textbf{Theorem.}
+\emph{
+Let $d_k(\iota) = \sup \{\beta: (\iota, \beta) \in \mathcal{C}(D)\}$.  Then
+\[
+C_k(\iota) \leq d_k(\iota).
+\]
+}
+$\Box$
+
+Hence, we can obtain an upper bound on $C_k$ via properties of the set $D$.
+It suffices to determine the upper envelope, which can be determined by solving the continuous optimization problems
+\[
+\text{maximize} \int z_0^\infty g(z) G^{k-1}(z) dz
+\]
+subject to the constraints
+\begin{itemize}
+\item $g: [0,\infty) \to [0,\infty)$.
+\item $\int_0^\infty g(z) dz = 1.$
+\item $\int_0^\infty z g(z) dz = 1.$
+\item $\int_0^\infty g(z) \log g(z) \leq \alpha.$
+\end{itemize}
+We can let $\mathcal{G}_\alpha$ denote the set of densities $g$ satisfying the constraints; it is evident that $\mathcal{G}_\alpha$ is convex.
+Meanwhile, the objective function, which can also be written
+\[
+\int_0^\infty z g(z) \left(\int_0^z g(t) dt\right)^{k-1} dz
+\]
 
 \section{General case}
 
@@ -137,10 +201,10 @@ It follows that
 Also,
 \begin{align*}
 \text{ABA}_k[p((x,w),(y,z))] 
-&= \int \left[\prod_{i=1}^k p(x_i, w_i) dx_i dw_i \right] \int dy dz \frac{\sum_{i=1}^k p(y, z|x_i, w_i)^2}{\sum_{i=1}^k p(y, z|x_i, w_i)}
-\\&= \int \left[\prod_{i=1}^k p(x_i, w_i) dx_i dw_i \right] \int dy \frac{\sum_{i=1}^k p(y|x_i)^2}{\sum_{i=1}^k p(y|x_i)} \int p(z|y) dz
-\\&= \int \left[\prod_{i=1}^k p(x_i) dx_i \right] \left[\prod_{i=1}^k \int dw_i p(w_i|x_i)\right]\int dy \frac{\sum_{i=1}^k p(y|x_i)^2}{\sum_{i=1}^k p(y|x_i)}
-\\&= \int \left[\prod_{i=1}^k p(x_i) dx_i \right]\int dy \frac{\sum_{i=1}^k p(y|x_i)^2}{\sum_{i=1}^k p(y|x_i)} = \text{ABA}_k[p(x,y)].
+&= \int \left[\prod_{i=1}^k p(x_i, w_i) dx_i dw_i \right] \int dy dz \ \max_i p(y,z|x_i, w_i).
+\\&= \int \left[\prod_{i=1}^k p(x_i, w_i) dx_i dw_i \right] \int dy \ \max_i p(y|x_i) \int dz \ p(z|y).
+\\&= \int \left[\prod_{i=1}^k p(x_i) dx_i \right] \left[\prod_{i=1}^k \int dw_i p(w_i|x_i)\right] \int dy \ \max_i p(y|x_i)
+\\&= \text{ABA}_k[p(x,y)].
 \end{align*}
 
 $\Box$
