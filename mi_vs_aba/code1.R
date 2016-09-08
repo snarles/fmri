@@ -17,6 +17,12 @@ mi_mat <- function(mat) {
   as.numeric(sum(mat * log(mat/pxy)))
 }
 
+## E[Z(Y) log (Z(Y))]
+mi_mat2 <- function(mat) {
+  mat <- mat * ncol(mat) * nrow(mat)
+  mean(mat * log(mat))
+}
+
 aba_mat_naive <- function(mat, k=2, nits = 1e3) {
   px <- rowSums(mat)
   trials <- sapply(1:nits, function(i) {
@@ -30,7 +36,7 @@ aba_mat_naive <- function(mat, k=2, nits = 1e3) {
 
 library(AlgDesign)
 
-aba_mat <- function(mat, k, ntr = 100) {
+aba_mat_meh <- function(mat, k, ntr = 100, nits = 1e3) {
   p <- nrow(mat)
   # dat <- gen.factorial(levels = p, nVars = k, factors = "all")
   # desT <- optFederov(~., dat, nTrials = ntr)
@@ -46,6 +52,38 @@ aba_mat <- function(mat, k, ntr = 100) {
   mean(trials)
 }
 
+## (1/k) E[max_i Z_i(Y)]
+aba_mat <- function(mat, k, ntr = 100, nits = 1e3) {
+  ## convert to continuous dist
+  mat2 <- mat * nrow(mat) * ncol(mat)
+  
+  emaxs <- sapply(1:ncol(mat2), function(i) {
+    vals <- mat2[, i]
+    distr <- data.frame(support = sort(vals), pmf = 1/length(vals))
+    expected_max(distr, k)
+  })
+  mean(emaxs)/k
+}
+
+pmf_max_k <- function(distr, k) {
+  data.frame(support = distr$support, pmf = diff(c(0, cumsum(distr$pmf)^k)))
+}
+
+## takes a distribution (a data frame with support and pmf) and compute E[max_k]
+expected_max <- function(distr, k, naive = FALSE) {
+  if (naive) {
+    lala <- sapply(1:10000, function(i) {
+      bleh <- sample(distr$support, k, TRUE, distr$pmf)
+      max(bleh)
+    })
+    return(mean(lala))
+  }
+  distr_k <- pmf_max_k(distr, k)
+  tmax <- max(distr_k$support)
+  tmax - sum(distr_k$pmf * (tmax - distr_k$support))
+}
+
+
 library(pracma)
 p <- 20
 mat <- exp(randn(p)) + 10 * eye(p)
@@ -53,5 +91,6 @@ mat <- colnorm(mat, nits = 20)
 rowSums(mat)
 
 mi_mat(mat)
-aba_mat(mat, k = 3, ntr = 1000)
-aba_mat_naive(mat, k = 3, nits = 1e4)
+mi_mat2(mat)
+aba_mat(mat, k = 2, ntr = 1000)
+aba_mat_naive(mat, k = 2, nits = 1e4)
