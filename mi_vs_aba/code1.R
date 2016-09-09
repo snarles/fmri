@@ -36,27 +36,29 @@ aba_mat_naive <- function(mat, k=2, nits = 1e3) {
 
 library(AlgDesign)
 
-aba_mat_meh <- function(mat, k, ntr = 100, nits = 1e3) {
+aba_mat_trials <- function(mat, k, ntr = 100, rtrials = TRUE) {
   p <- nrow(mat)
   # dat <- gen.factorial(levels = p, nVars = k, factors = "all")
   # desT <- optFederov(~., dat, nTrials = ntr)
   # dd <- desT$design
   # table(as.character(as.matrix(dd)))
   px <- rowSums(mat)
-  trials <- sapply(1:nits, function(i) {
+  trials <- sapply(1:ntr, function(i) {
     inds <- sample(1:nrow(mat), k, replace = TRUE, prob = px)
     mat2 <- mat[inds, ]
     mat2 <- 1/k * mat2/rowSums(mat2)
     sum(apply(mat2, 2, max))
   })
+  if (rtrials) {
+    return(trials)
+  }
   mean(trials)
 }
 
 ## (1/k) E[max_i Z_i(Y)]
-aba_mat <- function(mat, k, ntr = 100, nits = 1e3) {
+aba_mat <- function(mat, k) {
   ## convert to continuous dist
   mat2 <- mat * nrow(mat) * ncol(mat)
-  
   emaxs <- sapply(1:ncol(mat2), function(i) {
     vals <- mat2[, i]
     distr <- data.frame(support = sort(vals), pmf = 1/length(vals))
