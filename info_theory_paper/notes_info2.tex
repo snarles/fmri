@@ -102,22 +102,22 @@ C_k^{unif}(\iota) = \sup_{p(x, y) \in \mathcal{P}^{unif}: \text{I}[p] \leq \iota
 
 
 In this case, letting $X_1,...,X_k \sim \text{Unif}[0,1]$, and $Y \sim \text{Unif}[0,1]$ define $Z_i(y) = p(y|X_i)$.
-We have $\E[Z(y)] = 1$ and,
+We have $\E(Z(y)) = 1$ and,
 \[
-\text{I}[p(x,y)] = \E[Z(Y) \log Z(Y)]
+\text{I}[p(x,y)] = \E(Z(Y) \log Z(Y))
 \]
 while
 \[
-\text{ABA}_k[p(x,y)] = k^{-1}\E[\max_i Z_i(Y)].
+\text{ABA}_k[p(x,y)] = k^{-1}\E(\max_i Z_i(Y)).
 \]
 
 Letting $g_y$ be the density of $Z(y)$, we have
 \[
-\text{I}[p(x,y)] = \E[-H[g_y]]
+\text{I}[p(x,y)] = \E(-H[g_Y])
 \]
 and
 \[
-\text{ABA}_k[p(x,y)] = \E[\psi_k[g_y]]
+\text{ABA}_k[p(x,y)] = \E(\psi_k[g_Y])
 \]
 where
 \[
@@ -134,35 +134,72 @@ Define the set $D = \{(\alpha, \beta)\}$ as the set of possible values of $(-H[g
 \infty)$ with $\int x g(x) dx = 1$.  Next, let $\mathcal{C}(D)$ denote the convex hull of $D$.
 It follows that $(\text{I}[p], \text{ABA}_k[p]) \in \mathcal{C}(D)$ since the pair is obtained via a convex average of points $(-H[g_y], \psi_k[g])$.
 
-We trivally obtain the following theorem.
-
-\textbf{Theorem.}
-\emph{
-Let $d_k(\iota) = \sup \{\beta: (\iota, \beta) \in \mathcal{C}(D)\}$.  Then
+Define the upper envelope of $D$ as the curve
 \[
-C_k(\iota) \leq d_k(\iota).
+d_k(\alpha) = \sup\{\beta: (\alpha, \beta) \in D\}.
 \]
-}
-$\Box$
 
-Hence, we can obtain an upper bound on $C_k$ via properties of the set $D$.
-It suffices to determine the upper envelope, which can be determined by solving the continuous optimization problems
+We make the claim (to be shown in the following section) that $d_k(\alpha)$ is convex in $\alpha$.
+As a result, the upper envelope of $D$ is also the upper envelope of $\mathcal{C}(D)$.
+This in turn implies that $C_k^{unif}(\iota) = d_k(\iota)$.
+We establish these results, along with a open-form expression for $C_k^{unif}$, in the following section.
+
+\subsection{Variational methods}
+
+Consider the quantile function $Q(t) = G^{-1}(t).$  $Q(t)$ must be a continuous function from $[0,1]$ to $[0,\infty).$
+We can rewrite the moment constraint $\E[g]=1$ as
 \[
-\text{maximize } k^{-1}\int_0^\infty (1- G^k(z)) dz
+\int_0^1 Q(t) dt = 1.
 \]
-subject to the constraints
+Meanwhile, $\beta = \psi_k[g]$ takes the form
+\[
+\beta = \int_0^1 Q(t) x^{k-1} dt.
+\]
+and $\alpha = -H[g]$ takes the form
+\[
+\alpha = \int_0^1 Q(t) \log Q(t) dt.
+\]
+To find the upper envelope, it will be useful to write the Langrangian
+\begin{align*}
+\mathcal{L}[g] &= \lambda \int_0^1 Q(t) dt + \mu \int_0^1 Q(t) x^{k-1} dt + \lambda \int_0^1 Q(t) \log Q(t) dt
+\\&= \int_0^1 Q(t) (\lambda + \mu x^{k-1} + \nu \log Q(t)) dt.
+\end{align*}
+
+In order for a quantile function $Q(t)$ to be on the upper envelope, it must be a local maximum of $-H$ with respect to small perturbations.  Therefore, consider the functional derivative
+\[
+D[\xi] = \lim_{\epsilon \to 0} \frac{\mathcal{L}[g + \epsilon \xi] - \mathcal{L}[g]}{\epsilon}.
+\]
+We have
+\[
+D[\xi] = \int_0^1 \xi(t) (\lambda + \nu  + \mu x^{k-1} + \nu \log Q(t)) dt.
+\]
+
+Now consider the following three cases:
 \begin{itemize}
-\item $g: [0,\infty) \to [0,\infty)$.
-\item $\int_0^\infty g(z) dz = 1.$
-\item $\int_0^\infty z g(z) dz = 1.$
-\item $\int_0^\infty z \log z g(z) \leq \alpha.$
+\item $Q(t)$ is strictly monotonic, i.e. $Q'(t) > 0.$
+\item $Q(t)$ is differentiable but not strongly monotonic: 
+\item $Q(t)$ is not strongly monotonic: there exist intervals $A_i = [a_i, b_i)$ such that $Q(t)$ is constant on $A_i$,
+and isolated points $t_i$ where $Q'(t_i) = 0.$
 \end{itemize}
-We can let $\mathcal{G}_\alpha$ denote the set of densities $g$ satisfying the constraints; it is evident that $\mathcal{G}_\alpha$ is convex.
-However, the objective function, which can also be written
+
+\emph{Strictly monotonic case.}  Because $Q$ is defined on a closed interval,
+strict monotonicity further implies the property of \emph{strong monotonicity} where 
+$\inf_[0,1] Q'(t) > 0.$  Therefore, for any differentiable perturbation $\xi(t)$ with $\sup |\xi'(t)| <\infty$,
+and further imposing that $\xi(0) \geq 0$ in the case that $Q(0) = 0$,
+there exists some $\epsilon >0$ such that $(Q + \epsilon \xi)(t)$ is still a valid quantile function.
+Therefore, in order for $Q(t)$ to be a local maximum, we must have
 \[
-k^{-1}\int_0^\infty 1 - \left(\int_0^z g(t) dt\right)^k dz = \int_0^\infty z g(z) \left(\int_0^z g(t) dt\right)^{k-1} dz
+0 = \lambda + \nu  + \mu x^{k-1} + \nu \log Q(t)
 \]
-is not convex.
+for $t \in [0,1]$.  This implies that
+\[
+Q(t) = c_0 e^{-c_1 x^{k-1}}
+\]
+for some $c_0, c_1 \geq 0$.
+
+\emph{Other cases.}   (TODO) We have to show that these cannot be local maxima.
+
+
 
 \section{General case}
 
