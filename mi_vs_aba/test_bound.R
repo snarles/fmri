@@ -1,0 +1,15 @@
+source("mi_vs_aba/alpha_vs_beta.R")
+source("mi_vs_aba/code1.R")
+
+library(pracma)
+p <- 200
+mat <- exp(randn(p)) + 1000 * eye(p)
+mat <- colnorm(mat, nits = 20)
+#rowSums(mat)
+
+#mi_mat(mat)
+mi_mat2(mat)
+k <- 6
+(aba <- aba_mat(mat, k, ntr = 1000))
+#aba_mat_naive(mat, k = 2, nits = 1e4)
+find_par_aba(aba, k)

@@ -84,13 +84,4 @@ expected_max <- function(distr, k, naive = FALSE) {
 }
 
 
-library(pracma)
-p <- 20
-mat <- exp(randn(p)) + 10 * eye(p)
-mat <- colnorm(mat, nits = 20)
-rowSums(mat)
 
-mi_mat(mat)
-mi_mat2(mat)
-aba_mat(mat, k = 2, ntr = 1000)
-aba_mat_naive(mat, k = 2, nits = 1e4)

@@ -25,6 +25,33 @@ qs_par <- function(d, l.out = 100) {
   normalize_qs(exp( - d * xs))
 }
 
+aba_par <- function(d, k, l.out, inds = 3) {
+  xs <- seq(0, 1, length.out = l.out)
+  get_q_ints(normalize_qs(exp( - d * xs)), k)[inds]
+}
+
+find_par_aba <- function(aba, k, l.out = 1000, init = 2, nits = 20, info = TRUE) {
+  lb <- 0
+  ub <- init
+  while(aba_par(ub, k, l.out) < aba) {
+    ub <- ub * 2
+  }
+  for (i in 1:nits) {
+    d <- (lb + ub)/2
+    if (aba_par(d, k, l.out) < aba) {
+      lb <- d
+    }
+    if (aba_par(d, k, l.out) > aba) {
+      ub <- d
+    }
+  }
+  if (info) {
+    d <- (lb + ub)/2
+    return(list(d = d, res = aba_par(d, k, l.out, 2:3)))
+  }
+  (lb + ub)/2
+}
+
 # pts <- sapply(1:10000, function(i) {
 #   qs <- rbeta(reso, runif(1) * 5, runif(1) * 5)
 #   qs <- normalize_qs(qs)
