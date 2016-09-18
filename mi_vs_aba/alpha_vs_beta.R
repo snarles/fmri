@@ -51,20 +51,25 @@ find_par_aba <- function(aba, k, l.out = 1000, init = 2, nits = 20, info = TRUE)
 }
 
 
-k <- 5
-reso <- 1000
-
-pts <- sapply(1:10000, function(i) {
-  qs <- rbeta(reso, runif(1) * 10, runif(1) * 10)
-  qs <- normalize_qs(qs)
-  get_q_ints(qs, k)
-})
-
-pts2 <- sapply(1000 * (1:10000/10000), function(x) {
-  qs <- qs_par(x, k, reso)
-  get_q_ints(qs, k)
-})
-
-plot(t(pts)[, -1], pch= ".")
-lines(t(pts2)[, -1], col = "red")
+# k <- 5
+# reso <- 1000
+# 
+# pts <- sapply(1:10000, function(i) {
+#   qs <- rbeta(reso, runif(1) * 10, runif(1) * 10)
+#   qs <- normalize_qs(qs)
+#   get_q_ints(qs, k)
+# })
+# 
+# pts2 <- sapply(1000 * (1:10000/10000), function(x) {
+#   qs <- qs_par(x, k, reso)
+#   get_q_ints(qs, k)
+# })
+# 
+# plot(t(pts)[, -1], pch= ".")
+# lines(t(pts2)[, -1], col = "red")
+# 
+# plot(qs_par(d = 2, k = 3), type = "l")
+# plot(qs_par(d = 2, k = 4), type = "l")
+# plot(qs_par(d = 2, k = 4), type = "l")
+# plot(qs_par(d = 10, k = 4), type = "l")
 
