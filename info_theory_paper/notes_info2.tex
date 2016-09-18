@@ -61,8 +61,11 @@ It follows that $\text{ABA}_k$ is given explicitly by
 
 \section{Problem formulation}
 
-Let $\mathcal{P}$ denote the collection of all joint densities $p(x, y)$ on finite-dimensional Euclidean space.
-For $\iota \in [0,\infty)$ define $C_k(\iota)$ to be the largest $k$-class average Bayes error attained by any distribution $p(x,y)$ with mutual information not exceeding $\iota$:
+Let $\mathcal{P}$ denote the collection of all joint densities $p(x,
+y)$ on finite-dimensional Euclidean space.  For $\iota \in [0,\infty)$
+define $C_k(\iota)$ to be the largest $k$-class average Bayes error
+attained by any distribution $p(x,y)$ with mutual information not
+exceeding $\iota$:
 \[
 C_k(\iota) = \sup_{p \in \mathcal{P}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)].
 \]
@@ -100,6 +103,154 @@ Let $\mathcal{P}^{unif}$ denote the set of such distributions, and
 C_k^{unif}(\iota) = \sup_{p(x, y) \in \mathcal{P}^{unif}: \text{I}[p] \leq \iota} \text{ABA}_k[p]. 
 \]
 
+We prove the following result:
+
+\textbf{Theorem.} \emph{
+For any $\iota > 0$, there exists $c \geq 0$ such that defining
+\[
+Q_c(t) = \frac{\exp[ct^{k-1}]}{\int_0^1 \exp[ct^{k-1}]},
+\]
+we have
+\[
+\int_0^1 Q_c(t) \log Q_c(t) dt = \iota.
+\]
+Then,
+\[
+C_k^{unif} = \int_0^1 Q_c(t) t^{k-1} dt.
+\]
+}
+
+The proof depends on the following lemma.
+
+\textbf{Lemma.} \emph{
+For any measure $G$ on $[0, \infty]$,
+let $G^k$ denote the measure defined by
+\[
+G^k(A) = G(A)^k,
+\]
+and define
+\[
+E[G] = \int x dG(x).
+\]
+\[
+H[G] = -\int x \log x dG(x)
+\]
+and
+\[
+\psi_k[G] = \int x d(G^k)(x).
+\]
+Then, for any $\iota > 0$, there exists $c \geq 0$ such that defining
+$Q_c(t)$ as in Theorem 1, we have
+\[
+\int_0^1 Q_c(t) \log Q_c(t) dt = \iota.
+\]
+Then,
+\[
+\sup_{G: E[G] = 1, -H[G] \leq \iota} \psi_k[G] = \int_0^1 Q_c(t) t^{k-1} dt.
+\]
+Furthermore, the supremum is attained by a measure $G$ that has cdf
+equal to $Q_c^{-1}$, and thus has a density $g$ with respect to
+Lesbegue measure.  }
+
+\textbf{Proof of Lemma.} (This will appear in the appendix of the paper.)
+
+Consider the quantile function $Q(t) = \inf_{x \in [0,1]}: G([0, x]) \geq t.$
+$Q(t)$ must be a monotonically increasing function from $[0,1]$ to $[0,\infty).$
+
+We have
+\[
+E[G] = \int_0^1 Q(t) dt
+\]
+\[
+\psi_k[G] = \int_0^1 Q(t) x^{k-1} dt.
+\]
+and
+\[
+-H[G] = \int_0^1 Q(t) \log Q(t) dt.
+\]
+
+For any given $\iota$, let $P_\iota$ denote the class of probability
+distributions $G$ on $[0, \infty]$ such that $E[G]=1$ and
+$-H[G] \leq \iota.$  From Markov's inequality, for any $G \in P_\iota$
+we have
+\[
+G([x, \infty]) \leq x^{-1}
+\]
+for any $x \geq 0$, hence $P_\iota$ is tight.  From tightness, we
+conclude that $P_\iota$ is closed under limits with respect to weak
+convergence.  Hence, since $\psi_k$ is a continuous function, there
+exists a distribution $G^* \in P_\iota$ which attains the supremum
+\[\sup_{G \in P_\iota} \psi_k[G].\]
+Let $\mathcal{Q}_\iota$ denote the collection of quantile functions of
+distributions in $P_\iota.$ Then, $\mathcal{Q}_\iota$ consists of monotonic functions
+$Q: [0,1] \to [0, \infty]$ which
+satisfy
+\[
+\int_0^1 Q(t) dt = 1,
+\]
+and
+\[
+\int_0^1 Q(t) \log Q(t) dt \leq \iota.
+\]
+Let $\mathcal{Q}$ denote the collection of \emph{all} quantile functions from measures on $[0,\infty]$.
+And letting $Q^*$ be the quantile function for $G^*$, we have that
+$Q^*$ attains the supremum
+\[
+\sup_{Q \in \mathcal{Q}_\iota} \int_0^1 Q(t) t^{k-1} dt.
+\]
+Therefore, there exist Lagrange multipliers
+$\lambda \geq 0$ and $\nu \leq 0$ such that defining
+\[
+\mathcal{L}[Q] = \int_0^1 Q(t) (1 + \lambda \log Q(t) + \nu t^{k-1}) dt,
+\]
+$Q^*$ attains the supremum of $\mathcal{L}[Q]$ over \emph{all} quantile functions,
+\[
+\mathcal{L}[Q^*] = \sup_{Q \in \mathcal{Q}}\mathcal{L}[Q].
+\]
+We now claim that for such $\lambda$ and $\nu$, we have
+\[
+1 + \lambda + \lambda \log Q(t) + \nu t^{k-1} = 0.
+\]
+
+Consider a perturbation function $\xi: [0,1] \to \mathbb{R}$.
+We have
+\[
+\mathcal{L}[Q + \xi] \approx \mathcal{L}[Q] + \int_0^1 \xi(t) (1 + \lambda + \lambda \log Q(t) + \nu t^{k-1}) dt
+\]
+for small $\xi$.
+Define 
+\[
+\xi^+_{Q, a,b}(t) = I\{t \in [a,b]\} (Q(b) - Q(t))
+\]
+and
+\[
+\xi^-_{Q, a,b}(t) = I\{t \in [a,b]\} (Q(a) - Q(t)).
+\],
+for $0 \leq a \leq b \leq 1.$ Observe that for any $Q \in \mathcal{Q}$
+and $\epsilon \in [0, 1]$ and $0 \leq a \leq b \leq 1$, we have $Q
++ \epsilon \xi^+_{Q, a, b} \in \mathcal{Q}$ and $Q
++ \epsilon \xi^-_{Q, a, b} \in \mathcal{Q}$.
+
+
+
+
+
+\emph{Remark.}
+More specifically, the supremum is attained by a distribution with
+density $p_\iota(x, y)$ where
+\[
+p_\iota(x, y) = \begin{cases}
+g_\iota(y - x) & \text{ for } x\geq y\\
+g_\iota(1 + y - x) & \text{ for } x < y
+\end{cases}
+\]
+where
+\[
+g_\iota(x) = \frac{d}{dx}G_\iota(x)
+\]
+and $G_\iota$ is the inverse of $Q_c$.
+
+
 
 In this case, letting $X_1,...,X_k \sim \text{Unif}[0,1]$, and $Y \sim \text{Unif}[0,1]$ define $Z_i(y) = p(y|X_i)$.
 We have $\E(Z(y)) = 1$ and,
@@ -130,7 +281,9 @@ and
 for $G(x) = \int_0^x g(t) dt.$
 Additionally $g_y$ satisfies the constraint $\int x g(x) dx= 1$ since $\E[Z(y)] = 1$.
 
-Define the set $D = \{(\alpha, \beta)\}$ as the set of possible values of $(-H[g], \psi_k[g])$ taken over all distributions $g$ supported on $[0,
+Define the set $D = \{(\alpha, \beta)\}$ as the set of possible values
+of $(-H[g], \psi_k[g])$ taken over all distributions $g$ supported on
+$[0,
 \infty)$ with $\int x g(x) dx = 1$.  Next, let $\mathcal{C}(D)$ denote the convex hull of $D$.
 It follows that $(\text{I}[p], \text{ABA}_k[p]) \in \mathcal{C}(D)$ since the pair is obtained via a convex average of points $(-H[g_y], \psi_k[g])$.
 
