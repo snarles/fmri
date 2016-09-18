@@ -7,8 +7,6 @@
 # sum(qs * seq(0, 1, length.out = length(qs))^(k-1))/length(qs)
 # mean(sapply(1:1000, function(i) max(sample(qs, k, TRUE))))/k
 
-k <- 6
-reso <- 1000
 
 get_q_ints <- function(qs, k) {
   qs <- sort(qs)
@@ -20,14 +18,14 @@ normalize_qs <- function(qs) {
   sort(qs)/sum(qs) * length(qs)
 }
 
-qs_par <- function(d, l.out = 100) {
+qs_par <- function(d, k, l.out = 100) {
   xs <- seq(0, 1, length.out = l.out)
-  normalize_qs(exp( - d * xs))
+  normalize_qs(exp( d * xs^(k-1)))
 }
 
 aba_par <- function(d, k, l.out, inds = 3) {
   xs <- seq(0, 1, length.out = l.out)
-  get_q_ints(normalize_qs(exp( - d * xs)), k)[inds]
+  get_q_ints(normalize_qs(exp( d * xs^(k-1))), k)[inds]
 }
 
 find_par_aba <- function(aba, k, l.out = 1000, init = 2, nits = 20, info = TRUE) {
@@ -52,17 +50,21 @@ find_par_aba <- function(aba, k, l.out = 1000, init = 2, nits = 20, info = TRUE)
   (lb + ub)/2
 }
 
-# pts <- sapply(1:10000, function(i) {
-#   qs <- rbeta(reso, runif(1) * 5, runif(1) * 5)
-#   qs <- normalize_qs(qs)
-#   get_q_ints(qs)
-# })
-# 
-# pts2 <- sapply(1000 * (1:10000/10000), function(x) {
-#   qs <- qs_par(x, reso)
-#   get_q_ints(qs)
-# })
-# 
-# plot(t(pts2)[, -1], pch= ".")
-# lines(t(pts2)[, -1], col = "red")
+
+k <- 5
+reso <- 1000
+
+pts <- sapply(1:10000, function(i) {
+  qs <- rbeta(reso, runif(1) * 10, runif(1) * 10)
+  qs <- normalize_qs(qs)
+  get_q_ints(qs, k)
+})
+
+pts2 <- sapply(1000 * (1:10000/10000), function(x) {
+  qs <- qs_par(x, k, reso)
+  get_q_ints(qs, k)
+})
+
+plot(t(pts)[, -1], pch= ".")
+lines(t(pts2)[, -1], col = "red")
 
