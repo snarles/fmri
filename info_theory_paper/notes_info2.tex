@@ -203,9 +203,9 @@ $\lambda \geq 0$ and $\nu \leq 0$ such that defining
 \[
 \mathcal{L}[Q] = \int_0^1 Q(t) (1 + \lambda \log Q(t) + \nu t^{k-1}) dt,
 \]
-$Q^*$ attains the supremum of $\mathcal{L}[Q]$ over \emph{all} quantile functions,
+$Q^*$ attains the infimum of $\mathcal{L}[Q]$ over \emph{all} quantile functions,
 \[
-\mathcal{L}[Q^*] = \sup_{Q \in \mathcal{Q}}\mathcal{L}[Q].
+\mathcal{L}[Q^*] = \inf_{Q \in \mathcal{Q}}\mathcal{L}[Q].
 \]
 We now claim that for such $\lambda$ and $\nu$, we have
 \[
@@ -218,20 +218,72 @@ We have
 \mathcal{L}[Q + \xi] \approx \mathcal{L}[Q] + \int_0^1 \xi(t) (1 + \lambda + \lambda \log Q(t) + \nu t^{k-1}) dt
 \]
 for small $\xi$.
-Define 
+Define
 \[
-\xi^+_{Q, a,b}(t) = I\{t \in [a,b]\} (Q(b) - Q(t))
+\nabla Q^*(t) = (1 + \lambda + \lambda \log Q^*(t) + \nu t^{k-1}).
+\]
+The function $\nabla Q^*(t)$ is a \emph{functional derivative} of the Lagrangian.
+Note that if we were able to show that $\nabla Q^*(t) = 0$, as we might naively expect,
+this immediately yields
+\begin{equation}\label{eq:Qstareq}
+Q^*(t) = \exp[-1 - \lambda -\log \lambda - \nu t^{k-1}].
+\end{equation}
+However, the reason why we cannot simply assume $\nabla Q^*(t) = 0$ is
+because the optimization occurs on a constrained space.  We will
+ultimately show that this is the case (up to sets of neglible
+measure), but some delicacy is needed.
+
+Let $B$ denote the set of points $t$ such that $\nabla Q^*(t) \neq 0$.
+We would like to show that $B$ is of measure zero, which would
+yield \eqref{eq:Qstareq} up to neglible sets.  What needs to be done
+is to show that $\nabla Q^*(t) = 0$ on a set of non-zero measure
+results in a contradiction.  One can verify that for any $t$ such that
+$\nabla Q^*(t) \neq 0$, one of the following four cases must apply.
+\begin{itemize}
+\item \emph{Case 1:} $\nabla Q^*(t) \neq 0$ on an isolated point; i.e. for all neigborhoods $N_t$ of $t$, $B \cap N_t$ is a set of measure zero.
+\item \emph{Case 2:} $\nabla Q^*(t) \neq 0$ and there does not exist an interval such that
+$[a, b] \ni t$ is $\nabla Q^*(t)$ strictly positive or negative on the
+interval, but there does exist a neighborhood $N_t$ of $t$ such that $B \cap N_t$ has nonzero measure.
+\item \emph{Case 3:}  $\nabla Q^*(t) \neq 0$ and there exists an interval
+ $[a, b] \ni t$ with $Q^*(a) < Q^*(b)$ such that $\nabla Q^*(t)$ is
+ either strictly positive or negative on $[a,b]$.
+\item \emph{Case 4:} $\nabla Q^*(t) \neq 0$ and there exists an interval
+ $[a, b] \ni t$ with $Q^*(a) = Q^*(b)$ such that $\nabla Q^*(t)$ is
+ either strictly positive or negative on $[a,b]$.
+\end{itemize}
+The set of all points $t$ where case 1 applies is necessarily of zero
+measure.  Therefore if $B$ is non-negligible, there must exist $t$
+falling in one of the three other cases must occur.  But we will show that 
+each of cases 2 through 4 result in a contradiction.
+
+\emph{Case 3.}
+Define
+\[
+\xi^+(t) = I\{t \in [a,b]\} (Q(b) - Q(t))
 \]
 and
 \[
-\xi^-_{Q, a,b}(t) = I\{t \in [a,b]\} (Q(a) - Q(t)).
+\xi^-(t) = I\{t \in [a,b]\} (Q(a) - Q(t)).
 \],
-for $0 \leq a \leq b \leq 1.$ Observe that for any $Q \in \mathcal{Q}$
-and $\epsilon \in [0, 1]$ and $0 \leq a \leq b \leq 1$, we have $Q
-+ \epsilon \xi^+_{Q, a, b} \in \mathcal{Q}$ and $Q
-+ \epsilon \xi^-_{Q, a, b} \in \mathcal{Q}$.
+Observe that $Q + \epsilon \xi^+ \in \mathcal{Q}$ and $Q
++ \epsilon \xi^- \in \mathcal{Q}$ for any $\epsilon \in [0,1]$.  Now,
+if $\nabla Q^*(t)$ is strictly positive on $[a,b]$, then for some
+$\epsilon > 0$ we would have $\mathcal{L}[Q^* + \epsilon \xi^-]
+< \mathcal{L}[Q^*]$, a contradiction.  A similar argument with $\xi^+$
+shows that $\nabla Q^*(t)$ cannot be stricly negative on $[a, b]$
+either.
 
-
+\emph{Case 4.}
+Without loss of generality, let $a$ and $b$ be the endpoints of the
+largest interval containing $t$ such that $Q^*(t)$ is constant on $(a,
+b)$.  Now, since $\nabla Q^*(t) \neq 0$ on a set of nonzero measure
+within $[a, b]$, it must be the case that there exists some $u \in [a,
+b]$ such that
+\[
+\int_a^u \nabla Q^*(t) dt \neq 0.
+\]
+If $\int_a^u \nabla Q^*(t) dt > 0$, then define $\xi^+(t) = -I\{t \in
+(a, u)\}$ (to be contd.)
 
 
 
