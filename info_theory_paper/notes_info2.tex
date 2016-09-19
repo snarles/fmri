@@ -106,13 +106,13 @@ C_k^{unif}(\iota) = \sup_{p(x, y) \in \mathcal{P}^{unif}: \text{I}[p] \leq \iota
 We prove the following result:
 
 \textbf{Theorem.} \emph{
-For any $\iota > 0$, there exists $c \geq 0$ such that defining
+For any $\iota > 0$, there exists $c_\iota \geq 0$ such that defining
 \[
 Q_c(t) = \frac{\exp[ct^{k-1}]}{\int_0^1 \exp[ct^{k-1}]},
 \]
 we have
 \[
-\int_0^1 Q_c(t) \log Q_c(t) dt = \iota.
+\int_0^1 Q_{c_\iota}(t) \log Q_{c_\iota}(t) dt = \iota.
 \]
 Then,
 \[
@@ -120,9 +120,9 @@ C_k^{unif} = \int_0^1 Q_c(t) t^{k-1} dt.
 \]
 }
 
-The proof depends on the following lemma.
+The proof depends on the following two lemmas.
 
-\textbf{Lemma.} \emph{
+\textbf{Lemma 1.} \emph{
 For any measure $G$ on $[0, \infty]$,
 let $G^k$ denote the measure defined by
 \[
@@ -139,20 +139,23 @@ and
 \[
 \psi_k[G] = \int x d(G^k)(x).
 \]
-Then, for any $\iota > 0$, there exists $c \geq 0$ such that defining
-$Q_c(t)$ as in Theorem 1, we have
+Then, defining $Q_c$ and $c_\iota$ as in Theorem 1, we have
 \[
-\int_0^1 Q_c(t) \log Q_c(t) dt = \iota.
-\]
-Then,
-\[
-\sup_{G: E[G] = 1, -H[G] \leq \iota} \psi_k[G] = \int_0^1 Q_c(t) t^{k-1} dt.
+\sup_{G: E[G] = 1, -H[G] \leq \iota} \psi_k[G] = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
 \]
 Furthermore, the supremum is attained by a measure $G$ that has cdf
 equal to $Q_c^{-1}$, and thus has a density $g$ with respect to
 Lesbegue measure.  }
 
-\textbf{Proof of Lemma.} (This will appear in the appendix of the paper.)
+\textbf{Lemma 2.} \emph{
+The map
+\[
+\iota \to \int_0^1 Q_{c_\iota}(t) t^{k-1} dt
+\]
+is concave in $\iota > 0$.
+}
+
+\textbf{Proof of Lemma 1.} (This will appear in the appendix of the paper.)
 
 Consider the quantile function $Q(t) = \inf_{x \in [0,1]}: G([0, x]) \geq t.$
 $Q(t)$ must be a monotonically increasing function from $[0,1]$ to $[0,\infty).$
