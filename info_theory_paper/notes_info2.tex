@@ -28,6 +28,9 @@
 \newcommand{\argmin}{\text{argmin}}
 \newcommand{\Vol}{\text{Vol}}
 \newcommand{\comm}[1]{}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
 
 These are preliminary notes.
 
@@ -46,7 +49,7 @@ $\text{ABE}_k$, or $k$-class Average Bayes accuracy is defined as follows.  Let 
 and draw $Z$ uniformly from $1,..,k$.  Draw $Y \sim p(y|X_Z)$.
 Then, the average Bayes accuracy is defined as
 \[
-\text{ABA}_k[p(x, y)] = \sup_f \Pr[f(x_1,...,x_k, y) = Z] 
+\text{ABA}_k[p(x, y)] = \sup_f \Pr[f(X_1,...,X_k, Y) = Z] 
 \]
 where the supremum is taken over all functions $f$.  A function $f$ which achieves the supremum is
 \[
@@ -56,8 +59,54 @@ where an arbitrary rule can be employed to break ties.
 Such a function $f_{Bayes}$ is called a \emph{Bayes classification rule}.
 It follows that $\text{ABA}_k$ is given explicitly by
 \[
+\text{ABA}_k = \frac{1}{k} \int \left[\prod_{i=1}^k p(x_i) dx_i \right] \int dy \max_i p(y|x_i),
+\]
+as stated in the following theorem.
+
+\begin{theorem}
+For a joint distribution $p(x, y)$, define
+\[
+\text{ABA}_k[p(x, y)] = \sup_f \Pr[f(x_1,...,x_k, y) = Z] 
+\]
+where $X_1,...,X_K$ are iid from $p(x)$, $Z$ is uniform from $1,..,k$, and $Y \sim p(y|X_Z)$,
+and the supremum is taken over all functions $f: \mathcal{X}^k\times \mathcal{Y} \to \{1,...,k\}$.
+Then,
+\[
 \text{ABA}_k = \frac{1}{k} \int \left[\prod_{i=1}^k p(x_i) dx_i \right] \int dy \max_i p(y|x_i).
 \]
+\end{theorem}
+
+\noindent\textbf{Proof.}
+First, we claim that the supremum is attained by choosing
+\[
+f(x_1,...,x_k, y) = \text{argmax}_{z \in \{1,...,k\}} p(y|x_z).
+\]
+To show this claim, write
+\[
+\sup_f \Pr[f(X_1,...,X_k, Y) = Z] = \sup_f \frac{1}{k}\int p_X(x_1)\hdots p_X(x_k) p(y|x_{f(x_1,...,x_k, y)}) dx_1\hdots dx_k dy
+\]
+We see that maximizing $\Pr[f(X_1,...,X_k, Y) = Z]$ over functions $f$
+additively decomposes into infinitely many subproblems, where in each
+subproblem we are given $\{x_1,...,x_k,
+y\} \in \mathcal{X}^k \times \mathcal{Y}$, and our goal is to choose
+$f(x_1,...,x_k, y)$ from the set $\{1,...,k\}$ in order to maximize
+the quantity $p(y|x_{f(x_1,...,x_k, y)})$.  In each subproblem,
+the maximum is attained by setting $f(x_1,...,x_k,y) = \text{argmax}_z
+p(y|x_z)$--and the resulting function $f$ attains the supremum to the
+functional optimization problem.  This proves the claim.
+
+We therefore have
+\[
+p(y|x_{f(x_1,...,x_k, y)}) = \max_{i=1}^k p(y|x_i).
+\]
+
+Therefore, we can write
+\begin{align*}
+\text{ABA}_k[p(x, y)] &= \sup_f \Pr[f(X_1,...,X_k, Y) = Z]
+\\&=  \frac{1}{k} \int p_X(x_1)\hdots p_X(x_k) p(y|x_{f(x_1,...,x_k, y)})  dx_1\hdots dx_k dy.
+\\&=  \frac{1}{k} \int p_X(x_1)\hdots p_X(x_k) \max_{i=1}^k p(y|x_i)  dx_1\hdots dx_k dy.
+\end{align*}
+
 
 \section{Problem formulation}
 
@@ -116,7 +165,7 @@ we have
 \]
 Then,
 \[
-C_k^{unif} = \int_0^1 Q_c(t) t^{k-1} dt.
+C_k^{unif} = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
 \]
 }
 
@@ -157,7 +206,7 @@ is concave in $\iota > 0$.
 
 \textbf{Proof of Lemma 1.} (This will appear in the appendix of the paper.)
 
-Consider the quantile function $Q(t) = \inf_{x \in [0,1]}: G([0, x]) \geq t.$
+Consider the quantile function $Q(t) = \inf_{x \in [0,1]}: G((-\infty, x]) \geq t.$
 $Q(t)$ must be a monotonically increasing function from $[0,1]$ to $[0,\infty).$
 
 We have
