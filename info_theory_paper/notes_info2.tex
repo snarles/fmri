@@ -144,6 +144,10 @@ regardless of $\iota$.
 
 The goal of this work is to attempt to compute or approximate the functions $C_k$ and $C_k^{-1}$.
 
+\subsection{Notation}
+
+$|\cdot|$ denotes set cardinality.
+
 \section{Special case}
 
 We work out the special case where $p(x,y)$ lies on the unit square, and $p(x)$ and $p(y)$ are both the uniform distribution.
@@ -169,9 +173,9 @@ C_k^{unif} = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
 \]
 \end{theorem}
 
-The proof depends on the following three lemmas.
+The proof depends on the following lemmas.
 
-\begin{lemma}
+\begin{lemma}\label{lemma:technical1}
 Let $f(t)$ be an increasing function from $[a, b] \to \mathbb{R}$, where $a < b$,
 and let $g(t)$ be a bounded continuous function from $[a, b] \to \mathbb{R}$.
 Define the set
@@ -182,17 +186,23 @@ Then, we can write $A$ as a countable union of intervals
 \[
 A = \bigcup_{i=1}^\infty A_i
 \]
-where $A_i$ are mutually disjoint intervals of the form
-\begin{itemize}
-\item $[a_i, b_i]$,
-\item $(a_i, b_i]$,
-\item $[a_i, b_i)$,
-\item or $(a_i, b_i)$
-\end{itemize}
-with $a_i < b_i$, and for each $i$, either $f(t) > g(t)$ for all $t \in A_i$ or $f(t) < g(t)$ for all $t \in A_i$.
+where $A_i$ are mutually disjoint intervals, with $\inf A_i < \sup
+A_i$, and for each $i$, either $f(t) > g(t)$ for all $t \in A_i$ or
+$f(t) < g(t)$ for all $t \in A_i$.
 \end{lemma}
 
-\begin{lemma}
+\begin{lemma}\label{lemma:technical2}
+Let $f(t)$ be a measurable function from $[a,b] \to \mathbb{R}$, where $a < b.$
+Then there exists sets $\mathcal{B}_0$ and $\mathcal{B}_1$, satisfying the following properties:
+\begin{itemize}
+\item  $\mathcal{B} = \mathcal{B}_0 \cup \mathcal{B}_1$ is countable partition of $[a,b]$,
+\item  $f(t)$ is constant on all $B \in \mathcal{B}_0$, but not constant on any proper superinterval $B' \supset B$, and
+\item $B \in \mathcal{B}_1$ contains no positive-length subinterval where $f(t)$ is constant.
+\end{itemize}
+\end{lemma}
+
+
+\begin{lemma}\label{lemma:variational}
 For any measure $G$ on $[0, \infty]$,
 let $G^k$ denote the measure defined by
 \[
@@ -227,14 +237,15 @@ The map
 is concave in $\iota > 0$.
 \end{lemma}
 
-\textbf{Proof of Lemma 3.2.} (This will appear in the appendix of the paper.)
+\textbf{Proof of Lemma \ref{lemma:technical1}.} (This will appear in the appendix of the paper.)
 
 The function $h(t) = f(t) - g(t)$ is measurable, since all increasing
 functions are measurable.  Define $A^+ = \{t: f(t) > g(t)\}$ and $A^-
 = \{t: f(t) < g(t)\}$.  Since $A^+$ and $A^-$ are measurable subsets
-of $\mathbb{R}$, they both admit countable partitions $\mathcal{A}^+$ and
-$\mathcal{A}^-$ respectively consisting of open, closed, or half-open
-intervals.  Define
+of $\mathbb{R}$, they both admit countable partitions consisting of open, closed, or half-open
+intervals.  Let $\mathcal{H}^+$ be the collection of all partitions of $A^+$ consisting of such intervals.
+There exists a least refined partition $\mathcal{A}^+$ within $\mathcal{H}^+$.
+Define $\mathcal{A}^-$ analogously, and let
 \[
 \mathcal{A} = \mathcal{A}^+ \cup \mathcal{A}^-
 \]
@@ -242,19 +253,92 @@ and enumerate the elements
 \[
 \mathcal{A} = \{A_i\}_{i=1}^\infty.
 \]
-It remains to show that there are not isolated points in $\mathcal{A}$.
+
+We claim that the partitions $\mathcal{A}^+$ and $\mathcal{A}^-$ have
+the the property that for all $t \in A^\pm$, ther interval
+$I \in \mathcal{A}^\pm$ containing $t$ has endpoints $l \leq u$
+defined by
+\[
+l = \inf_{x \in [a,b]} \{x: \text{Sign}(h([x, t])) = \{\text{Sign}(h(t))\} \}
+\]
+and
+\[
+u = \sup_{x \in a[,b]} \{x: \text{Sign}(h([t, x])) = \{\text{Sign}(h(t))\}\}.
+\]
+We prove the claim for the partition $\mathcal{A}^+$.  Take $t \in
+A^+$ and define $l$ and $u$ as above.  It is clear that $(l, u) \in
+A^+$, and furthermore, there is no $l' < l$ and $u' > u$ such that
+$(l', x) \in A^+$ or $(x, u') \in A^+$ for any $x \in I$.  Let
+$\mathcal{H}$ be any other partition of $A^+$.  Some disjoint union of
+intervals $H_i \in \mathcal{H}$ necessarily covers $I$ for $i =
+1,...$, and we can further require that none of the $H_i$ are disjoint
+with $I$.  Since each $H_i$ has nonempty intersection with $I$, and
+$I$ is an interval, this implies that $\cup_i H_i$ is also an
+interval.  Let $l'' \leq u''$ be the endpoints of $\cup_i H_i$ Since
+$I \subseteq \cup_i H_i$, we have $l'' \leq l \leq u \leq u''$.
+However, since also $I \in A^+$, we must have $l \leq l'' \leq
+u'' \leq u$.  This implies that $l''=l$ and $u''=u$.  Since $\cup_i
+H_i = I$, and this holds for any $I \in \mathcal{A}^+$, we conclude
+that $\mathcal{H}$ is a refinement of $\mathcal{A}^+$. The proof of
+the claim for $\mathcal{A}^-$ is similar.
+
+It remains to show that there are not isolated points in
+$\mathcal{A}$, i.e. that for all $I \in \mathcal{A}$ with endpoints
+$l \leq u$, we have $l < u$.  Take $I \in \mathcal{A}$ with endpoints
+$l \leq u$ and let $t = \frac{l+u}{2}$.  By definition, we have
+$h(t) \neq 0$.  Consider the two cases $h(t) > 0$ and $h(t) < 0$.
+
+If $h(t) > 0$, then $t' = g^{-1}(h(t)) > t$, and for all $x \in [t,
+t']$ we have $h(x) > 0$.  Therefore, it follows from definition that
+$[t, t'] \in I$, and since $l \leq t < t' \leq u$, this implies that
+$l < u$.  The case $h(t) < 0$ is handled similarly. $\Box$
+
+
+\textbf{Proof of Lemma \ref{lemma:technical2}.} (This will appear in the appendix of the paper.)
+To construct the interval, define
+\[
+l(t) = \inf \{x \in [0,1]: f([x,t]) = \{f(t)\}\}
+\]
+\[
+u(t) = \sup \{x \in [0,1]: f([t,x]) = \{f(t)\}\},
+\]
+Let $B_0$ be the set of all $t$ such that $l(t) < u(t)$,
+and let $B_1$ be the set of all $t$ such that $l(t) = t = u(t)$.
+For all $t \in B_0$, define
+\[
+I(t) = (l(t), u(t)) \cup \{x \in \{l(t), u(t)\}: f(x) = f(t)\}.
+\]
+Then we claim
+\[
+\mathcal{B}_0 = \{I(t): t \in B_0\}
+\]
+is a countable partition of $B_0$.  The claim follows since the
+members of $\mathcal{B}_0$ are disjoint intervals of nonzero length,
+and $B_0$ has finite length.  Meanwhile, let $\mathcal{B}_1$ be a
+countable partition of $B_1$ into intervals.
+
+It follows from definition that for any $B \in B_0$, that $f$ is not
+constant on any proper superinterval $B' \supset B$.
+
+Next, we show that for all $I \in \mathcal{B}_1$, $I$ does not contain
+a subinterval $I'$ of nonzero length such that $f$ is constant on
+$I'$.  Suppose to the contrary, we could find such an interval $I$ and
+subinterval $I'$.  Then for any $t \in I'$, we have $t \in B_0$.
+However, this implies that $t \notin B_1$, a contradiction.
+
+Therefore, letting $\mathcal{B} = \mathcal{B}_0 \cup \mathcal{B}_1$
+yields the desired partition of $[a,b]$.
 
 
 
-  $\Box$ 
 
 
+\textbf{Proof of Lemma \ref{lemma:variational}.} (This will appear in the appendix of the paper.)
 
-
-\textbf{Proof of Lemma 3.3.} (This will appear in the appendix of the paper.)
-
-Consider the quantile function $Q(t) = \inf_{x \in [0,1]}: G((-\infty, x]) \geq t.$
-$Q(t)$ must be a monotonically increasing function from $[0,1]$ to $[0,\infty).$
+Consider the quantile function $Q(t) = \inf_{x \in [0,1]}: G((-\infty,
+x]) \geq t.$ $Q(t)$ must be a monotonically increasing function from
+$[0,1]$ to $[0,\infty).$ Let $\mathcal{Q}$ denote the collection of
+all such quantile functions.
 
 We have
 \[
@@ -270,7 +354,7 @@ I[G] = \int_0^1 Q(t) \log Q(t) dt.
 
 For any given $\iota$, let $P_\iota$ denote the class of probability
 distributions $G$ on $[0, \infty]$ such that $E[G]=1$ and
-$-H[G] \leq \iota.$  From Markov's inequality, for any $G \in P_\iota$
+$I[G] \leq \iota.$  From Markov's inequality, for any $G \in P_\iota$
 we have
 \[
 G([x, \infty]) \leq x^{-1}
@@ -341,61 +425,72 @@ Therefore, as
 \nabla Q^*(t) = f^+(t) - g(t),
 \]
 we see that $\nabla Q^*(t)$ is a difference between two increasing
-functions.
+functions.  Therefore, we can apply Lemma \ref{lemma:technical1} to
+conclude that there exists a countable partition $\mathcal{A}$ of the
+set $A: \{t \in [0,1]: \nabla Q^*(t) \neq 0\}$ into intervals such
+that for all $J \in \mathcal{A}$, $|\text{Sign}(\nabla Q^*(J))| = 1$
+and $\inf J < \sup I$ .  Applying Lemma \ref{lemma:technical2} we get
+a countable partition $\mathcal{B}$ of $[0,1]$ so that each element
+$J \in \mathcal{B}$ is an interval, and that either $\nabla Q^*(t)$ is
+constant on $J$, or $J$ contains no positive-length subinterval where
+$\nabla Q^*(t)$ is constant.
 
+Now let $\mathcal{D}$ be the refinement of $\mathcal{A}$ obtained by
+considering all intersections of sets in $\mathcal{A}$ with sets in
+$\mathcal{B}$:
+\[
+\mathcal{D} = \{J \cap L: J \in \mathcal{A}, L \in \mathcal{B}\}.
+\]
+It follows that $\mathcal{D}$ is a countable partition of the set $A$,
+that each element $D \in \mathcal{D}$ is an interval, with the two
+properties that that $\nabla Q^*(t)$ has the same sign throughout $D$,
+and also $Q^*(t)$ is either constant on $D$, or $D$ contains no
+positive-length subinterval where $Q^*(t)$ is constant.
+Subdivide $\mathcal{D}$ into three disjoint collections:
+\[
+\mathcal{D}_1 = \{J \in \mathcal{D}: |J| = 1\}
+\]
+\[
+\mathcal{D}_2 = \{J \in \mathcal{D}\setminus \mathcal{D}_1: |Q^*(J)| = 1\}
+\]
+\[
+\mathcal{D}_3 = \{J \in \mathcal{D}: \sup Q^*(J) > \inf Q^*(J)\}
+\]
+That is, $\mathcal{D}_1$ is the set of zero-length intervals in $\mathcal{D}$,
+$\mathcal{D}_2$ is the set of positive-length intervals in $\mathcal{D}$ where $Q^*$ is constant,
+and $\mathcal{D}_3$ is the set of positive-length intervals in $\mathcal{D}$ where $Q^*$ is not constant.
+Let $D_i$ be the union of the sets in $\mathcal{D}_i$ for $i = 1,2,3$.
 
+The rest of the proof proceeds as follows.  First, we show that for
+all $t \in D_3$, we have $\nabla Q^*(t) = 0$.  Second, we show that
+for all $t \in D_2$, we have $\nabla Q^*(t) = 0$.  Finally, since
+$D_3$ is a set of zero measure, this allows us to conclude that the
+$Q^*(t) = 0$ on all but a set of zero measure.  Since sets of zero
+measure don't affect the integral, we conclude there exists a global
+optimal solution with $\nabla Q^*(t) = 0$.
 
-
-
-
-Let $B$ denote the set of points $t$ such that $\nabla Q^*(t) \neq 0$.
-We would like to show that $B$ is of measure zero, which would
-yield \eqref{eq:Qstareq} up to neglible sets.  What needs to be done
-is to show that $\nabla Q^*(t) = 0$ on a set of non-zero measure
-results in a contradiction.  One can verify that for any $t$ such that
-$\nabla Q^*(t) \neq 0$, one of the following four cases must apply.
-\begin{itemize}
-\item \emph{Case 1:} $\nabla Q^*(t) \neq 0$ on an isolated point; i.e. for all neigborhoods $N_t$ of $t$, $B \cap N_t$ is a set of measure zero.
-\item \emph{Case 2:} $\nabla Q^*(t) \neq 0$ and there does not exist an interval such that
-$[a, b] \ni t$ is $\nabla Q^*(t)$ strictly positive or negative on the
-interval, but there does exist a neighborhood $N_t$ of $t$ such that $B \cap N_t$ has nonzero measure.
-\item \emph{Case 3:}  $\nabla Q^*(t) \neq 0$ and there exists an interval
- $[a, b] \ni t$ with $Q^*(a) < Q^*(b)$ such that $\nabla Q^*(t)$ is
- either strictly positive or negative on $[a,b]$.
-\item \emph{Case 4:} $\nabla Q^*(t) \neq 0$ and there exists an interval
- $[a, b] \ni t$ with $Q^*(a) = Q^*(b)$ such that $\nabla Q^*(t)$ is
- either strictly positive or negative on $[a,b]$.
-\end{itemize}
-The set of all points $t$ where case 1 applies is necessarily of zero
-measure.  Therefore if $B$ is non-negligible, there must exist $t$
-falling in one of the three other cases must occur.  But we will show that 
-each of cases 2 through 4 result in a contradiction.
-
-\emph{Case 2.}
-
-
-Let $N_t$ be a neighborhood of $t$ such that $B \cap N_t$ has nonzero
-measure.  Let $S$ denote the set of points where 
-
-
-\emph{Case 3.}
+Consider the case $t \in D$ for $D \in \mathcal{D}_3$.
+Let $a = \inf D$ and $b = \sup D$.
 Define
 \[
-\xi^+(t) = I\{t \in [a,b]\} (Q(b) - Q(t))
+\xi^+ = I\{t \in D\} (Q(b) - Q(t))
 \]
 and
 \[
-\xi^-(t) = I\{t \in [a,b]\} (Q(a) - Q(t)).
-\],
+\xi^- = I\{t \in D\} (Q(a) - Q(t)).
+\]
 Observe that $Q + \epsilon \xi^+ \in \mathcal{Q}$ and $Q
 + \epsilon \xi^- \in \mathcal{Q}$ for any $\epsilon \in [0,1]$.  Now,
-if $\nabla Q^*(t)$ is strictly positive on $[a,b]$, then for some
+if $\nabla Q^*(t)$ is strictly positive on $D$, then for some
 $\epsilon > 0$ we would have $\mathcal{L}[Q^* + \epsilon \xi^-]
 < \mathcal{L}[Q^*]$, a contradiction.  A similar argument with $\xi^+$
-shows that $\nabla Q^*(t)$ cannot be stricly negative on $[a, b]$
-either.
+shows that $\nabla Q^*(t)$ cannot be stricly negative on $D$ either.
+From this pertubation argument, we conclude that $\nabla Q^*(t) = 0$.
+Since this argument applies for all $t \in D_3$, we know that $\nabla Q^*(D_3) = \{0\}$.
 
-\emph{Case 4.}
+
+
+
 Without loss of generality, let $a$ and $b$ be the endpoints of the
 largest interval containing $t$ such that $Q^*(t)$ is constant on $(a,
 b)$.  Now, since $\nabla Q^*(t) \neq 0$ on a set of nonzero measure
