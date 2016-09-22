@@ -154,7 +154,7 @@ C_k^{unif}(\iota) = \sup_{p(x, y) \in \mathcal{P}^{unif}: \text{I}[p] \leq \iota
 
 We prove the following result:
 
-\textbf{Theorem.} \emph{
+\begin{theorem}
 For any $\iota > 0$, there exists $c_\iota \geq 0$ such that defining
 \[
 Q_c(t) = \frac{\exp[ct^{k-1}]}{\int_0^1 \exp[ct^{k-1}]},
@@ -167,11 +167,11 @@ Then,
 \[
 C_k^{unif} = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
 \]
-}
+\end{theorem}
 
 The proof depends on the following two lemmas.
 
-\textbf{Lemma 1.} \emph{
+\begin{lemma}
 For any measure $G$ on $[0, \infty]$,
 let $G^k$ denote the measure defined by
 \[
@@ -182,7 +182,7 @@ and define
 E[G] = \int x dG(x).
 \]
 \[
-H[G] = -\int x \log x dG(x)
+I[G] = \int x \log x dG(x)
 \]
 and
 \[
@@ -190,21 +190,23 @@ and
 \]
 Then, defining $Q_c$ and $c_\iota$ as in Theorem 1, we have
 \[
-\sup_{G: E[G] = 1, -H[G] \leq \iota} \psi_k[G] = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
+\sup_{G: E[G] = 1, I[G] \leq \iota} \psi_k[G] = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
 \]
 Furthermore, the supremum is attained by a measure $G$ that has cdf
 equal to $Q_c^{-1}$, and thus has a density $g$ with respect to
-Lesbegue measure.  }
+Lesbegue measure.
+\end{lemma}
 
-\textbf{Lemma 2.} \emph{
+
+\begin{lemma}
 The map
 \[
 \iota \to \int_0^1 Q_{c_\iota}(t) t^{k-1} dt
 \]
 is concave in $\iota > 0$.
-}
+\end{lemma}
 
-\textbf{Proof of Lemma 1.} (This will appear in the appendix of the paper.)
+\textbf{Proof of Lemma 3.2.} (This will appear in the appendix of the paper.)
 
 Consider the quantile function $Q(t) = \inf_{x \in [0,1]}: G((-\infty, x]) \geq t.$
 $Q(t)$ must be a monotonically increasing function from $[0,1]$ to $[0,\infty).$
@@ -218,7 +220,7 @@ E[G] = \int_0^1 Q(t) dt
 \]
 and
 \[
--H[G] = \int_0^1 Q(t) \log Q(t) dt.
+I[G] = \int_0^1 Q(t) \log Q(t) dt.
 \]
 
 For any given $\iota$, let $P_\iota$ denote the class of probability
@@ -238,22 +240,22 @@ distributions in $P_\iota.$ Then, $\mathcal{Q}_\iota$ consists of monotonic func
 $Q: [0,1] \to [0, \infty]$ which
 satisfy
 \[
-\int_0^1 Q(t) dt = 1,
+E[Q] = \int_0^1 Q(t) dt = 1,
 \]
 and
 \[
-\int_0^1 Q(t) \log Q(t) dt \leq \iota.
+I[Q] = \int_0^1 Q(t) \log Q(t) dt \leq \iota.
 \]
 Let $\mathcal{Q}$ denote the collection of \emph{all} quantile functions from measures on $[0,\infty]$.
 And letting $Q^*$ be the quantile function for $G^*$, we have that
 $Q^*$ attains the supremum
 \[
-\sup_{Q \in \mathcal{Q}_\iota} \int_0^1 Q(t) t^{k-1} dt.
+\sup_{Q \in \mathcal{Q}_\iota} \phi_k[Q] = \sup_{Q \in \mathcal{Q}_\iota} \int_0^1 Q(t) t^{k-1} dt.
 \]
 Therefore, there exist Lagrange multipliers
 $\lambda \geq 0$ and $\nu \leq 0$ such that defining
 \[
-\mathcal{L}[Q] = \int_0^1 Q(t) (1 + \lambda \log Q(t) + \nu t^{k-1}) dt,
+\mathcal{L}[Q] = E[Q] + \lambda \phi_k[Q] + \nu I[Q] = \int_0^1 Q(t) (1 + \lambda \log Q(t) + \nu t^{k-1}) dt,
 \]
 $Q^*$ attains the infimum of $\mathcal{L}[Q]$ over \emph{all} quantile functions,
 \[
@@ -278,12 +280,28 @@ The function $\nabla Q^*(t)$ is a \emph{functional derivative} of the Lagrangian
 Note that if we were able to show that $\nabla Q^*(t) = 0$, as we might naively expect,
 this immediately yields
 \begin{equation}\label{eq:Qstareq}
-Q^*(t) = \exp[-1 - \lambda -\log \lambda - \nu t^{k-1}].
+Q^*(t) = \exp[-\lambda^{-1} - 1 - \nu\lambda^{-1} t^{k-1}].
 \end{equation}
 However, the reason why we cannot simply assume $\nabla Q^*(t) = 0$ is
 because the optimization occurs on a constrained space.  We will
 ultimately show that this is the case (up to sets of neglible
 measure), but some delicacy is needed.
+
+
+First let us establish some properties of $\nabla Q^*(t)$.  
+If we define $f(t) = 1+ \lambda + \lambda Q^*(t)$
+and $g(t) = \nu t^{k-1}$, then $f$ is increasing while $g$ is continuous and stricly increasing.
+Therefore, as
+\[
+\nabla Q^*(t) = f^+(t) - g(t),
+\]
+we see that $\nabla Q^*(t)$ is a difference between two increasing
+functions.
+
+
+
+
+
 
 Let $B$ denote the set of points $t$ such that $\nabla Q^*(t) \neq 0$.
 We would like to show that $B$ is of measure zero, which would
@@ -307,6 +325,13 @@ The set of all points $t$ where case 1 applies is necessarily of zero
 measure.  Therefore if $B$ is non-negligible, there must exist $t$
 falling in one of the three other cases must occur.  But we will show that 
 each of cases 2 through 4 result in a contradiction.
+
+\emph{Case 2.}
+
+
+Let $N_t$ be a neighborhood of $t$ such that $B \cap N_t$ has nonzero
+measure.  Let $S$ denote the set of points where 
+
 
 \emph{Case 3.}
 Define
