@@ -229,49 +229,24 @@ is concave in $\iota > 0$.
 
 \textbf{Proof of Lemma 3.2.} (This will appear in the appendix of the paper.)
 
-Since $f(t)$ is increasing, there are countably many points of discontinuity: let $D$ denote the set of points of discontinuity
+The function $h(t) = f(t) - g(t)$ is measurable, since all increasing
+functions are measurable.  Define $A^+ = \{t: f(t) > g(t)\}$ and $A^-
+= \{t: f(t) < g(t)\}$.  Since $A^+$ and $A^-$ are measurable subsets
+of $\mathbb{R}$, they both admit countable partitions $\mathcal{A}^+$ and
+$\mathcal{A}^-$ respectively consisting of open, closed, or half-open
+intervals.  Define
 \[
-D = \{t: \lim_{u \to t^-} f(t) \neq \lim_{u \to t^+} f(t)\}.
+\mathcal{A} = \mathcal{A}^+ \cup \mathcal{A}^-
 \]
-
-For any $t \in [a,b]$, define
+and enumerate the elements
 \[
-l(t) = \sup \{x \in D: x \leq t\} \cup \{a\}
+\mathcal{A} = \{A_i\}_{i=1}^\infty.
 \]
-and
-\[
-u(t) = \inf \{x \in D: x \geq t\} \cup \{b\}.
-\]
-Let $I_0 = (l(t), u(t))$.
-If $l(t) \in D$, and $l(t)$ is a point of right-continuity, then let $I_1 = \{l(t)\}$; otherwise, let $I_1 = \emptyset$.
-If $u(t) \in D$, and $u(t)$ is a point of left-continuity, then let $I_2 = \{u(t)\}$; otherwise, let $I_2 = \emptyset$.
-Define $I(t) = I_0 \cup I_1 \cup I_2$.
+It remains to show that there are not isolated points in $\mathcal{A}$.
 
-The function $f(t)$ is continuous on the interval $I(t)$. Furthermore,
-if one considers the family of sets $\mathcal{I} = \{I(t): t \in
-[a,b]\}$, one can check that $\mathcal{I}$ is a countable partition of the interval
-$[a,b]$.
 
-Suppose $f(t) \neq g(t)$.  Then, since $h(t) = f(t) - g(t)$ is
-continuous on $\mathcal{I}(t)$, by the mean-value theorem, we can find $a(t) \in \overline{\mathcal{I}(t)}$ and $b(t) \in \overline{\mathcal{I}(t)}$
-such that:
-\begin{itemize}
-\item $a(t) \leq b(t)$,
-\item $\text{Sign}(h(u)) = \text{Sign}(h(t))$ for all $u \in (a(t), b(t))$,
-\item either $\lim_{u \to a(t)^+} h(u) = 0$ or $a(t) = \inf \mathcal{I}(t)$,
-\item either $\lim_{u \to b(t)^-} h(u) = 0$ or $b(t) = \sup \mathcal{I}(t)$.
-\end{itemize}
 
-We claim that for all $t \in A$, $a(t) < b(t)$.  Since $h(t) > 0$, 
-
-Define $S_0 = (a(t), b(t))$.
-If $h(a(t)) \neq 0$, $a(t) = \inf \mathcal{I}(t)$ and $a(t) \in \mathcal{I}(t)$, let $S_1 = \{a(t)\}$; otherwise, let $S_1 = \emptyset$.
-If $h(b(t)) \neq 0$, $b(t) = \sup \mathcal{I}(t)$ and $b(t) \in \mathcal{I}(t)$, let $S_2 = \{b(t)\}$; otherwise, let $S_2 = \emptyset$.
-Define $A(t) = S_0 \cup S_1 \cup S_2$.
-Now if one considers the family of sets $\mathcal{A} = \{A(t): t \in A\}$,
-one can check that $\mathcal{A}$ is a countable partition of the interval $[a,b]$.
-Furthermore, for each $A \in \mathcal{A}$, by definition we either have $f(t) < g(t)$ for all $t \in A$,  or $f(t)> g(t)$ for all $t \in A$.
-Writing $\mathcal{A} = \{A_i\}_{i=1}^\infty$, we complete the proof.  $\Box$ 
+  $\Box$ 
 
 
 
