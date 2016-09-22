@@ -169,7 +169,28 @@ C_k^{unif} = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
 \]
 \end{theorem}
 
-The proof depends on the following two lemmas.
+The proof depends on the following three lemmas.
+
+\begin{lemma}
+Let $f(t)$ be an increasing function from $[a, b] \to \mathbb{R}$, where $a < b$,
+and let $g(t)$ be a bounded continuous function from $[a, b] \to \mathbb{R}$.
+Define the set
+\[
+A = \{t: f(t) \neq g(t)\}.
+\]
+Then, we can write $A$ as a countable union of intervals
+\[
+A = \bigcup_{i=1}^\infty A_i
+\]
+where $A_i$ are mutually disjoint intervals of the form
+\begin{itemize}
+\item $[a_i, b_i]$,
+\item $(a_i, b_i]$,
+\item $[a_i, b_i)$,
+\item or $(a_i, b_i)$
+\end{itemize}
+with $a_i < b_i$, and for each $i$, either $f(t) > g(t)$ for all $t \in A_i$ or $f(t) < g(t)$ for all $t \in A_i$.
+\end{lemma}
 
 \begin{lemma}
 For any measure $G$ on $[0, \infty]$,
@@ -207,6 +228,55 @@ is concave in $\iota > 0$.
 \end{lemma}
 
 \textbf{Proof of Lemma 3.2.} (This will appear in the appendix of the paper.)
+
+Since $f(t)$ is increasing, there are countably many points of discontinuity: let $D$ denote the set of points of discontinuity
+\[
+D = \{t: \lim_{u \to t^-} f(t) \neq \lim_{u \to t^+} f(t)\}.
+\]
+
+For any $t \in [a,b]$, define
+\[
+l(t) = \sup \{x \in D: x \leq t\} \cup \{a\}
+\]
+and
+\[
+u(t) = \inf \{x \in D: x \geq t\} \cup \{b\}.
+\]
+Let $I_0 = (l(t), u(t))$.
+If $l(t) \in D$, and $l(t)$ is a point of right-continuity, then let $I_1 = \{l(t)\}$; otherwise, let $I_1 = \emptyset$.
+If $u(t) \in D$, and $u(t)$ is a point of left-continuity, then let $I_2 = \{u(t)\}$; otherwise, let $I_2 = \emptyset$.
+Define $I(t) = I_0 \cup I_1 \cup I_2$.
+
+The function $f(t)$ is continuous on the interval $I(t)$. Furthermore,
+if one considers the family of sets $\mathcal{I} = \{I(t): t \in
+[a,b]\}$, one can check that $\mathcal{I}$ is a countable partition of the interval
+$[a,b]$.
+
+Suppose $f(t) \neq g(t)$.  Then, since $h(t) = f(t) - g(t)$ is
+continuous on $\mathcal{I}(t)$, by the mean-value theorem, we can find $a(t) \in \overline{\mathcal{I}(t)}$ and $b(t) \in \overline{\mathcal{I}(t)}$
+such that:
+\begin{itemize}
+\item $a(t) \leq b(t)$,
+\item $\text{Sign}(h(u)) = \text{Sign}(h(t))$ for all $u \in (a(t), b(t))$,
+\item either $\lim_{u \to a(t)^+} h(u) = 0$ or $a(t) = \inf \mathcal{I}(t)$,
+\item either $\lim_{u \to b(t)^-} h(u) = 0$ or $b(t) = \sup \mathcal{I}(t)$.
+\end{itemize}
+
+We claim that for all $t \in A$, $a(t) < b(t)$.  Since $h(t) > 0$, 
+
+Define $S_0 = (a(t), b(t))$.
+If $h(a(t)) \neq 0$, $a(t) = \inf \mathcal{I}(t)$ and $a(t) \in \mathcal{I}(t)$, let $S_1 = \{a(t)\}$; otherwise, let $S_1 = \emptyset$.
+If $h(b(t)) \neq 0$, $b(t) = \sup \mathcal{I}(t)$ and $b(t) \in \mathcal{I}(t)$, let $S_2 = \{b(t)\}$; otherwise, let $S_2 = \emptyset$.
+Define $A(t) = S_0 \cup S_1 \cup S_2$.
+Now if one considers the family of sets $\mathcal{A} = \{A(t): t \in A\}$,
+one can check that $\mathcal{A}$ is a countable partition of the interval $[a,b]$.
+Furthermore, for each $A \in \mathcal{A}$, by definition we either have $f(t) < g(t)$ for all $t \in A$,  or $f(t)> g(t)$ for all $t \in A$.
+Writing $\mathcal{A} = \{A_i\}_{i=1}^\infty$, we complete the proof.  $\Box$ 
+
+
+
+
+\textbf{Proof of Lemma 3.3.} (This will appear in the appendix of the paper.)
 
 Consider the quantile function $Q(t) = \inf_{x \in [0,1]}: G((-\infty, x]) \geq t.$
 $Q(t)$ must be a monotonically increasing function from $[0,1]$ to $[0,\infty).$
