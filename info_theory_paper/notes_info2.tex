@@ -376,9 +376,9 @@ I[Q] = \int_0^1 Q(t) \log Q(t) dt \leq \iota.
 Let $\mathcal{Q}$ denote the collection of \emph{all} quantile functions from measures on $[0,\infty]$.
 And letting $Q^*$ be the quantile function for $G^*$, we have that
 $Q^*$ attains the supremum
-\[
+\begin{equation}\label{eq:constrained_optim}
 \sup_{Q \in \mathcal{Q}_\iota} \phi_k[Q] = \sup_{Q \in \mathcal{Q}_\iota} \int_0^1 Q(t) t^{k-1} dt.
-\]
+\end{equation}
 Therefore, there exist Lagrange multipliers
 $\lambda \geq 0$ and $\nu \leq 0$ such that defining
 \[
@@ -395,55 +395,60 @@ We now claim that for such $\lambda$ and $\nu$, we have
 
 Consider a perturbation function $\xi: [0,1] \to \mathbb{R}$.
 We have
-\[
+\begin{equation}\label{eq:Lperturb}
 \mathcal{L}[Q + \xi] \approx \mathcal{L}[Q] + \int_0^1 \xi(t) (1 + \lambda + \lambda \log Q(t) + \nu t^{k-1}) dt
-\]
+\end{equation}
 for small $\xi$.
 Define
-\[
-\nabla Q^*(t) = (1 + \lambda + \lambda \log Q^*(t) + \nu t^{k-1}).
-\]
-The function $\nabla Q^*(t)$ is a \emph{functional derivative} of the Lagrangian.
-Note that if we were able to show that $\nabla Q^*(t) = 0$, as we might naively expect,
+\begin{equation}\label{eq:nablaQ}
+\nabla \mathcal{L}_{Q^*}(t) = 1 + \lambda + \lambda \log Q^*(t) + \nu t^{k-1}.
+\end{equation}
+The function $\nabla \mathcal{L}_{Q^*}(t)$ is a \emph{functional derivative} of the Lagrangian.
+Note that if we were able to show that $\nabla \mathcal{L}_{Q^*}(t) = 0$,
 this immediately yields
 \begin{equation}\label{eq:Qstareq}
 Q^*(t) = \exp[-\lambda^{-1} - 1 - \nu\lambda^{-1} t^{k-1}].
 \end{equation}
-However, the reason why we cannot simply assume $\nabla Q^*(t) = 0$ is
-because the optimization occurs on a constrained space.  We will
-ultimately show that this is the case (up to sets of neglible
-measure), but some delicacy is needed.
+At this point, we know that the right-hand side of \eqref{eq:Qstareq}
+gives a stationary point of $\mathcal{L}$, but we cannot be sure that
+it gives the global minimzer.  The reason is because the optimization
+occurs on a constrained space.  We will show that \eqref{eq:Qstareq}
+indeed gives the global minimizer $Q^*$, but we do so by showing that
+the set of points $t$ where $\nabla \mathcal{L}_{Q^*}(t) \neq 0$ is of
+zero measure.  Since sets of zero measure don't affect the integrals
+defining the optimization problem \eqref{eq:constrained_optim}, we
+conclude there exists a global optimal solution with
+$\nabla \mathcal{L}_{Q^*}(t) = 0$ everywhere, which is therefore given
+explicitly by \eqref{eq:Qstareq} for some $\lambda > 0$, $\nu < 0.$
 
 The rest of the proof proceeds as follows.  We will use
 Lemmas \ref{lemma:technical1} and \ref{lemma:technical2} to define a
 decomposition $A = D_0 \cup D_1 \cup D_2$, where $D_2$ is of measure
-zero.  First, we show that for all $t \in D_0$, we have $\nabla Q^*(t)
-= 0$.  Second, we show that for all $t \in D_1$, we have $\nabla
-Q^*(t) = 0$.  Finally, since $D_2$ is a set of zero measure, this
-allows us to conclude that the $Q^*(t) = 0$ on all but a set of zero
-measure.  Since sets of zero measure don't affect the integral, we
-conclude there exists a global optimal solution with $\nabla Q^*(t) =
-0$.
+zero.  First, we show that assuming the existence of $t \in D_0$
+yields a contradiction, and hence $D_0 = \emptyset$.  Then, again
+using argument from contradiction we establish that $D_1 = \emptyset$.
+Finally, since $D_2$ is a set of zero measure, this allows us to
+conclude that the $Q^*(t) = 0$ on all but a set of zero measure.
 
 We will now apply the Lemmas to obtain the necessary ingredients for
-constructing the sets $D_i$.  Since $\nabla Q^*(t)$ is a difference
+constructing the sets $D_i$.  Since $\nabla \mathcal{L}_{Q^*}(t)$ is a difference
 between an increasing function and a continuous stricly increasing
 function, we can apply Lemma \ref{lemma:technical1} to conclude that
 there exists a countable partition $\mathcal{A}$ of the set
-$A: \{t \in [0,1]: \nabla Q^*(t) \neq 0\}$ into intervals such that
+$A: \{t \in [0,1]: \nabla \mathcal{L}_{Q^*}(t) \neq 0\}$ into intervals such that
 for all $J \in \mathcal{A}$, $|\text{Sign}(\nabla Q^*(J))| = 1$ and
 $\inf J < \sup I$ .  Applying Lemma \ref{lemma:technical2} we get a
 countable partition $\mathcal{B} = \mathcal{B}_0 \cup \mathcal{B}_1$
 of $[0,1]$ so that each element $J \in \mathcal{B}_0$ is an interval
-such that $\nabla Q^*(t)$ is constant on $J$, and furthermore is not
+such that $\nabla \mathcal{L}_{Q^*}(t)$ is constant on $J$, and furthermore is not
 properly contained in any interval with the same property, and each
 element $J \in \mathcal{B}_1$ is an interval, such that $J$ contains
-no positive-length subinterval where $\nabla Q^*(t)$ is constant.
+no positive-length subinterval where $\nabla \mathcal{L}_{Q^*}(t)$ is constant.
 Also define $B_i$ as the union of the sets in $\mathcal{B}_i$ for $i =
 0,1$.
 
 Note that $B_0$ is necessarily a subset of $A$.  That is because if
-$\nabla Q^*(t) = 0$ on any interval $J$, then that $Q^*(t)$ is
+$\nabla \mathcal{L}_{Q^*}(t) = 0$ on any interval $J$, then that $Q^*(t)$ is
 necessarily not constant on the interval.  
 
 We will construct a new countable partition of $A$, called $\mathcal{D}$.
@@ -473,7 +478,7 @@ $\mathcal{D}$ are disjoint.  Furthermore, as we mentioned earlier, the
 set $D_2$ is indeed of zero measure, since it consists of countably
 many isolated points.
 
-Now we will show that for $t \in D_0$, we have $\nabla Q^*(t) = 0$.
+Now we will show that the existence of $t \in D_0$ implies a contradiction.
 Take $t \in D$ for $D \in \mathcal{D}_0$, and let $a = \inf D$ and $b
 = \sup D$.  Define
 \[
@@ -485,58 +490,97 @@ and
 \]
 Observe that $Q + \epsilon \xi^+ \in \mathcal{Q}$ and $Q
 + \epsilon \xi^- \in \mathcal{Q}$ for any $\epsilon \in [0,1]$.  Now,
-if $\nabla Q^*(t)$ is strictly positive on $D$, then for some
+if $\nabla \mathcal{L}_{Q^*}(t)$ is strictly positive on $D$, then for some
 $\epsilon > 0$ we would have $\mathcal{L}[Q^* + \epsilon \xi^-]
 < \mathcal{L}[Q^*]$, a contradiction.  A similar argument with $\xi^+$
-shows that $\nabla Q^*(t)$ cannot be strictly negative on $D$ either.
-From this pertubation argument, we conclude that $\nabla Q^*(t) = 0$.
-Since this argument applies for all $t \in D_0$, we know that $\nabla
-Q^*(D_0) = \{0\}$.
+shows that $\nabla \mathcal{L}_{Q^*}(t)$ cannot be strictly negative on $D$ either.
+From this pertubation argument, we conclude that $\nabla \mathcal{L}_{Q^*}(t) = 0$.
+Since this argument applies for all $t \in D_0$, we conclude that $D_0
+= \emptyset$: therefore, on the set $[0,1] \setminus (D_1 \cup D_2)$,
+we have $\nabla \mathcal{L}_{Q^*}(t) = 0.$
 
 The following observation is needed for the next stage of the proof.
 If we look at the function $Q^*(t)$, then up so sets of neglible
 measure, it is given by the expression \eqref{eq:Qstareq} on the set
-$D_0$, and it is piecewise constant in between.  But
+$[0,1]\setminus D_1$, and it is piecewise constant in-between.  But
 since \eqref{eq:Qstareq} gives a strictly increasing function, and
 since $Q^*$ is increasing, this implies that $Q^*$ is discontinuous at
-the boundary between $D_0$ and $D_1$.
+the boundary of $D_1$.
 
-Now we are prepared to show that $\nabla Q^*(t) = 0$ for $t \in D_1$.
+Now we are prepared to show that $\nabla \mathcal{L}_{Q^*}(t) = 0$ for $t \in D_1$.
 Take $t \in D$ for $D \in \mathcal{D}_1$, and let $a = \inf D$ and $b
 = \sup D$.  From the previous argument, there is a discontinuity at
 both $a$ and $b$, so that $\lim_{u \to a^-} Q(u) < Q(t) < \lim_{u \to
-b^+} Q(u)$.  Therefore, for any $\xi(t)$ which is increasing on
-$(a,b)$ and zero elsewhere, there exists $\epsilon > 0$ such that
-$\nabla Q^* + \epsilon \xi \in \mathcal{Q}.$ It remains to find such a
-perturbation $\xi$ such that $\mathcal{L}[Q + \epsilon \xi] < \mathcal{L}[Q]$.
+b^+} Q(u)$.  Therefore, for any $\xi(t)$ which is increasing on $D$
+and zero elsewhere, there exists $\epsilon > 0$ such that $\nabla Q^*
++ \epsilon \xi \in \mathcal{Q}.$ It remains to find such a
+perturbation $\xi$ such that $\mathcal{L}[Q + \epsilon \xi]
+< \mathcal{L}[Q]$.
 
-Define $F(t) = \int_a^t \nabla Q^*(u) du$ for $t \in [a, b]$.  Since
-$\nabla Q^*(t) \neq 0$ on all but a zero-measure set within $[a, b]$,
-$F(t)$ cannot be constant, and falls into the following three cases:
+Also, since by definition $\nabla \mathcal{L}_{Q^*}(t)$ is constant on $D$, follows from\eqref{eq:nablaQ} that
+$\nabla Q^*$ is strictly decreasing, and thus either
 \begin{itemize}
-\item Case 1: $F(b) \neq 0$
-\item Case 2: $F(b) = 0$, and $F(t) < 0$ for some $t \in (a,b)$
-\item Case 3: $F(b) = 0$, and $F(t) \geq 0$ for all $t \in (a,b)$.
+\item Case 1: $\nabla \mathcal{L}_{Q^*}(t) \geq 0$ on $D$,
+\item Case 2: $\nabla \mathcal{L}_{Q^*}(t) \leq 0$ on $D$, or
+\item Case 3: $\nabla \mathcal{L}_{Q^*}(t) \geq 0$ for all $t \in D \cap [a, t_0]$ and $\nabla \mathcal{L}_{Q^*}(t) \leq 0$ for all $t \in D \cap [t_0, b]$.
 \end{itemize}
-We will construct a suitable perturbation $\xi$ for all three cases.
+
+Depending on the case, we construct a suitable perturbation $\xi$:
 \begin{itemize}
-\item Case 1: Construct $\xi(t) = -\text{Sign}(F(b))I\{t \in (a,b)\}$.
-\item Case 2: Find $t_0$ such that $F(t_0) < 0$.  Construct
+\item Case 1: Construct $\xi(t) = -I\{t \in D\}$.
+\item Case 2: Construct $\xi(t) = I\{t \in D\}$
+\item Case 2: Construct
 \[
 \xi(t) = \begin{cases}
--1 & \text{ for }t \in (a, t_0]\\
-0 & \text{ otherwise }
+-1 & \text{ for }t \in D \cap [a, t_0],\\
+0 & \text{ otherwise. }
 \end{cases}
 \]
-\item Case 3: 
 \end{itemize}
 In all three cases, given the corresponding construction for $\xi(t)$ we get
 \[
-\int_0^1 \xi(t) \nabla Q^*(t) dt
+\int_0^1 \xi(t) \nabla \mathcal{L}_{Q^*}(t) dt < 0.
+\]
+Therefore, from \eqref{eq:Lperturb}, there exists some $\epsilon > 0$
+such that $\mathcal{L}[Q + \epsilon \xi] < \mathcal{L}[Q]$, a
+contradiction.  Again, since the contradiction applies for all $t \in
+D_1$, we conclude that $D_1 = \emptyset$.
+
+By now we have established that a global optimum
+for \eqref{eq:constrained_optim} exists, and is given
+by \eqref{eq:Qstareq} for some $\lambda > 0$, $\nu < 0$.  It remains
+to determine the values of $\lambda$ and $\nu$.
+
+Reparameterize $\alpha = \exp[-1-\lambda^{-1}]$ and $\beta = -\nu\lambda t^{k-1}$.
+Therefore,
+\[
+Q^*(t) = \alpha \exp[\beta t^{k-1}]
+\]
+for $\alpha > 0$, $\beta > 0$.  There is a one-to-one mapping from
+$(\alpha, \beta) \in (0, \infty)^2$ to $(\lambda, \nu) \in
+(0,\infty) \times (-\infty, 0)$.
+
+Now, from the constraint
+\[
+1 = E[Q^*] = \int_0^1 \alpha \exp[\beta t^{k-1}] dt.
+\]
+we conclude that
+\[
+\alpha = \frac{1}{\int_0^1 \exp[\beta t^{k-1}] dt.}
+\]
+Therefore, we have reduced the set of possible solutions $Q^*$ to a one-parameter family,
+\[
+Q^*(t) = \frac{\exp[\beta t^{k-1}]}{Z(\beta)}.
+\]
+where
+\[
+Z(\beta) = \int_0^1 \exp[\beta t^{k-1}] dt.
 \]
 
-
-
+Next, consider that
+\[
+I[Q^*] = \int_0^1 Q^*(t) \log Q^*(t) = \frac{\beta}{Z(\beta)} \int_0^1 \exp[\beta t^{k-1}] t^{k-1} dt - \log Z(\beta).
+\]
 
 \emph{Remark.}
 More specifically, the supremum is attained by a distribution with
