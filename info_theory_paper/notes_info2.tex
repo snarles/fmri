@@ -201,6 +201,25 @@ Then there exists sets $\mathcal{B}_0$ and $\mathcal{B}_1$, satisfying the follo
 \end{itemize}
 \end{lemma}
 
+\begin{lemma}\label{lemma:mono_entropy}
+Define an exponential family on $[0,1]$ by the density function
+\[
+q_\beta(t) = \exp[\beta t^{k-1} - \log Z(\beta)]
+\]
+where
+\[
+Z(\beta) = \int_0^1 \exp[\beta t^{k-1}] dt.
+\]
+Then, the negative entropy
+\[
+I(\beta) = \int_0^1 q_\beta(t) \log q_\beta(t) dt
+\]
+is decreasing in $\beta$ on the interval $(-\infty, 0]$.
+and increasing on the interval $[0, \infty)$.
+
+Furthermore, for any $\iota \in (0,\infty)$, there exist two solutions
+to $I(\beta) = \iota$: one positive and one negative.
+\end{lemma}
 
 \begin{lemma}\label{lemma:variational}
 For any measure $G$ on $[0, \infty]$,
@@ -331,6 +350,58 @@ letting $\mathcal{B} = \mathcal{B}_0 \cup \mathcal{B}_1$
 yields the desired partition of $[a,b]$. $\Box$.
 
 
+\textbf{Proof of Lemma \ref{lemma:mono_entropy}.}
+
+Define $\beta(\mu)$ as the solution to
+\[
+\mu = \int_0^1 t q_\beta(t) dt.
+\]
+By [Wainwright and Jordan 2008], the function $\beta(\mu)$ is
+well-defined.  Furthermore, since the sufficient statistic $t^{k-1}$
+is increasing in $t$, it follows that $\beta(\mu)$ is increasing.
+
+Define the negative entropy as a function of $\mu$,
+\[
+N(\mu) = \int_0^1 q_{\beta(\mu)}(t) \log q_{\beta(\mu)}(t) dt.
+\]
+
+By Theorem 3.4 of [Wainwright and Jordan 2008], $N(\mu)$ is convex in
+$\mu$.  We claim that the derivative of $N(\mu) = 0$ at $\mu
+= \frac{1}{2}$.  This implies that $N(\mu)$ is decreasing in $\mu$ for
+$\mu \leq \frac{1}{2}$ and increasing for $\mu \geq \frac{1}{2}$.
+Since $I(\beta(\mu)) = N(\mu)$, $\beta$ is increasing in $\mu$, and
+$\beta(\frac{1}{2}) = 0$, this implies that $I(\beta)$ is decreasing
+in $\beta$ for $\beta \leq 0$ and increasing for $\beta \geq 0$.
+
+We will now prove the claim.  Write
+\[
+\frac{d}{d\mu} N(\mu)\bigg|_{\mu = 1/2} = \frac{d}{d\beta} I(\beta(\mu)) \bigg|_{\beta = 0} \frac{d\beta}{d\mu} \bigg|_{\mu = 1/2}.
+\]
+We have
+\[
+\frac{d}{d\beta} I(\beta) = \beta \int q_\beta t^{k-1} dt - \log Z(\beta).
+\]
+Meanwhile, $Z(0) = 1$ so $\log Z(0) = 0$.  Therefore,
+\[
+\frac{d}{d\beta} I(\beta) \bigg|_{\beta = 0} = 0.
+\]
+This implies that $\frac{d}{d\mu} N(\mu) |_{\mu = 1/2} = 0$, as needed.  
+
+For the final statement of the lemma, note that $I(0) = 0$ since $q_0$ is the uniform distribution.
+Meanwhile, since $q_\beta$ tends to a point mass as either $\beta \to \infty$ or $\beta \to -\infty$,
+we have 
+\[
+\lim_{\beta \to \infty} I(\beta) = \lim_{\beta \to -\infty} I(\beta) = \infty.
+\]
+And, as we can check that $I(\beta)$ is continuous in $\beta$, this means that
+\[
+I((-\infty, 0]) = I([0,\infty)) = [0, \infty)
+\]
+by the mean-value theorem.  Combining this fact with the monotonicity
+of $I(\beta)$ restricted to either the positive and negative half-line
+yields the fact that for any $\iota > 0$, there exists $\beta_1 < 0
+< \beta_2$ such that $I(\beta_1) = I(\beta_2) = \iota$.  $\Box$.
+
 \textbf{Proof of Lemma \ref{lemma:variational}.} (This will appear in the appendix of the paper.)
 
 Consider the quantile function $Q(t) = \inf_{x \in [0,1]}: G((-\infty,
@@ -380,7 +451,7 @@ $Q^*$ attains the supremum
 \sup_{Q \in \mathcal{Q}_\iota} \phi_k[Q] = \sup_{Q \in \mathcal{Q}_\iota} \int_0^1 Q(t) t^{k-1} dt.
 \end{equation}
 Therefore, there exist Lagrange multipliers
-$\lambda \geq 0$ and $\nu \leq 0$ such that defining
+$\lambda \geq 0$ and $\nu < 0$ such that defining
 \[
 \mathcal{L}[Q] = E[Q] + \lambda \phi_k[Q] + \nu I[Q] = \int_0^1 Q(t) (1 + \lambda \log Q(t) + \nu t^{k-1}) dt,
 \]
@@ -548,7 +619,7 @@ D_1$, we conclude that $D_1 = \emptyset$.
 
 By now we have established that a global optimum
 for \eqref{eq:constrained_optim} exists, and is given
-by \eqref{eq:Qstareq} for some $\lambda > 0$, $\nu < 0$.  It remains
+by \eqref{eq:Qstareq} for some $\lambda \geq 0$, $\nu < 0$.  It remains
 to determine the values of $\lambda$ and $\nu$.
 
 Reparameterize $\alpha = \exp[-1-\lambda^{-1}]$ and $\beta = -\nu\lambda t^{k-1}$.
@@ -577,10 +648,15 @@ where
 Z(\beta) = \int_0^1 \exp[\beta t^{k-1}] dt.
 \]
 
-Next, consider that
+Next, note that
 \[
-I[Q^*] = \int_0^1 Q^*(t) \log Q^*(t) = \frac{\beta}{Z(\beta)} \int_0^1 \exp[\beta t^{k-1}] t^{k-1} dt - \log Z(\beta).
+I[Q^*] = \int_0^1 Q^*(t) \log Q^*(t) = \beta \mu_\beta - \log Z(\beta),
 \]
+as a function of $\beta$, is completely characterized by Lemma \ref{lemma:mono_entropy}.
+Therefore, we know that for any $\iota > 0$, there is a unique $\beta > 0$
+so that $I[Q^*] = \iota.$
+
+
 
 \emph{Remark.}
 More specifically, the supremum is attained by a distribution with
