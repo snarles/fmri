@@ -488,7 +488,7 @@ Observe that $Q + \epsilon \xi^+ \in \mathcal{Q}$ and $Q
 if $\nabla Q^*(t)$ is strictly positive on $D$, then for some
 $\epsilon > 0$ we would have $\mathcal{L}[Q^* + \epsilon \xi^-]
 < \mathcal{L}[Q^*]$, a contradiction.  A similar argument with $\xi^+$
-shows that $\nabla Q^*(t)$ cannot be stricly negative on $D$ either.
+shows that $\nabla Q^*(t)$ cannot be strictly negative on $D$ either.
 From this pertubation argument, we conclude that $\nabla Q^*(t) = 0$.
 Since this argument applies for all $t \in D_0$, we know that $\nabla
 Q^*(D_0) = \{0\}$.
@@ -503,14 +503,38 @@ the boundary between $D_0$ and $D_1$.
 
 Now we are prepared to show that $\nabla Q^*(t) = 0$ for $t \in D_1$.
 Take $t \in D$ for $D \in \mathcal{D}_1$, and let $a = \inf D$ and $b
-= \sup D$.  Now, since $\nabla Q^*(t) \neq 0$ on all but a
-zero-measure set within $(a, b)$, it must be the case that there
-exists some $u \in [a, b]$ such that
+= \sup D$.  From the previous argument, there is a discontinuity at
+both $a$ and $b$, so that $\lim_{u \to a^-} Q(u) < Q(t) < \lim_{u \to
+b^+} Q(u)$.  Therefore, for any $\xi(t)$ which is increasing on
+$(a,b)$ and zero elsewhere, there exists $\epsilon > 0$ such that
+$\nabla Q^* + \epsilon \xi \in \mathcal{Q}.$ It remains to find such a
+perturbation $\xi$ such that $\mathcal{L}[Q + \epsilon \xi] < \mathcal{L}[Q]$.
+
+Define $F(t) = \int_a^t \nabla Q^*(u) du$ for $t \in [a, b]$.  Since
+$\nabla Q^*(t) \neq 0$ on all but a zero-measure set within $[a, b]$,
+$F(t)$ cannot be constant, and falls into the following three cases:
+\begin{itemize}
+\item Case 1: $F(b) \neq 0$
+\item Case 2: $F(b) = 0$, and $F(t) < 0$ for some $t \in (a,b)$
+\item Case 3: $F(b) = 0$, and $F(t) \geq 0$ for all $t \in (a,b)$.
+\end{itemize}
+We will construct a suitable perturbation $\xi$ for all three cases.
+\begin{itemize}
+\item Case 1: Construct $\xi(t) = -\text{Sign}(F(b))I\{t \in (a,b)\}$.
+\item Case 2: Find $t_0$ such that $F(t_0) < 0$.  Construct
 \[
-\int_a^u \nabla Q^*(t) dt \neq 0.
+\xi(t) = \begin{cases}
+-1 & \text{ for }t \in (a, t_0]\\
+0 & \text{ otherwise }
+\end{cases}
 \]
-If $\int_a^u \nabla Q^*(t) dt > 0$, then define $\xi^+(t) = -I\{t \in
-(a, u)\}$ (to be contd.)
+\item Case 3: 
+\end{itemize}
+In all three cases, given the corresponding construction for $\xi(t)$ we get
+\[
+\int_0^1 \xi(t) \nabla Q^*(t) dt
+\]
+
 
 
 
