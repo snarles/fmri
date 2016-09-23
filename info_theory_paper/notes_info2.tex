@@ -158,7 +158,7 @@ C_k^{unif}(\iota) = \sup_{p(x, y) \in \mathcal{P}^{unif}: \text{I}[p] \leq \iota
 
 We prove the following result:
 
-\begin{theorem}
+\begin{theorem}\label{theorem:Cunif}
 For any $\iota > 0$, there exists $c_\iota \geq 0$ such that defining
 \[
 Q_c(t) = \frac{\exp[ct^{k-1}]}{\int_0^1 \exp[ct^{k-1}]},
@@ -169,7 +169,7 @@ we have
 \]
 Then,
 \[
-C_k^{unif} = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
+C_k^{unif}(\iota) = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
 \]
 \end{theorem}
 
@@ -248,7 +248,7 @@ Lesbegue measure.
 \end{lemma}
 
 
-\begin{lemma}
+\begin{lemma}\label{lemma:concave}
 The map
 \[
 \iota \to \int_0^1 Q_{c_\iota}(t) t^{k-1} dt
@@ -451,34 +451,30 @@ $Q^*$ attains the supremum
 \sup_{Q \in \mathcal{Q}_\iota} \phi_k[Q] = \sup_{Q \in \mathcal{Q}_\iota} \int_0^1 Q(t) t^{k-1} dt.
 \end{equation}
 Therefore, there exist Lagrange multipliers
-$\lambda \geq 0$ and $\nu < 0$ such that defining
+$\lambda \geq 0$ and $\nu \geq 0$ such that defining
 \[
-\mathcal{L}[Q] = E[Q] + \lambda \phi_k[Q] + \nu I[Q] = \int_0^1 Q(t) (1 + \lambda \log Q(t) + \nu t^{k-1}) dt,
+\mathcal{L}[Q] = -\phi_k[Q] + \lambda E[Q] + \nu I[Q]= \int_0^1 Q(t) (-t^{k-1} + \lambda + \nu \log Q(t)) dt,
 \]
 $Q^*$ attains the infimum of $\mathcal{L}[Q]$ over \emph{all} quantile functions,
 \[
 \mathcal{L}[Q^*] = \inf_{Q \in \mathcal{Q}}\mathcal{L}[Q].
 \]
-We now claim that for such $\lambda$ and $\nu$, we have
-\[
-1 + \lambda + \lambda \log Q(t) + \nu t^{k-1} = 0.
-\]
-
-Consider a perturbation function $\xi: [0,1] \to \mathbb{R}$.
-We have
+The global minimizer $Q^*$ is also necessarily a stationary point:
+that is, for any perturbation function $\xi: [0,1] \to \mathbb{R}$
+such that $Q^* + \xi \in \mathcal{Q}$, we have $\mathcal{L}[Q^*]\leq \mathcal{L}[Q^* + \xi]$.
+For sufficiently small $\xi$, we have
 \begin{equation}\label{eq:Lperturb}
-\mathcal{L}[Q + \xi] \approx \mathcal{L}[Q] + \int_0^1 \xi(t) (1 + \lambda + \lambda \log Q(t) + \nu t^{k-1}) dt
+\mathcal{L}[Q + \xi] \approx \mathcal{L}[Q] + \int_0^1 \xi(t) (-t^{k-1} + \lambda + \nu + \nu \log Q(t)) dt.
 \end{equation}
-for small $\xi$.
 Define
 \begin{equation}\label{eq:nablaQ}
-\nabla \mathcal{L}_{Q^*}(t) = 1 + \lambda + \lambda \log Q^*(t) + \nu t^{k-1}.
+\nabla \mathcal{L}_{Q^*}(t) = -t^{k-1} + \lambda + \nu + \nu \log Q(t).
 \end{equation}
 The function $\nabla \mathcal{L}_{Q^*}(t)$ is a \emph{functional derivative} of the Lagrangian.
 Note that if we were able to show that $\nabla \mathcal{L}_{Q^*}(t) = 0$,
 this immediately yields
 \begin{equation}\label{eq:Qstareq}
-Q^*(t) = \exp[-\lambda^{-1} - 1 - \nu\lambda^{-1} t^{k-1}].
+Q^*(t) = \exp[-1 -\lambda\nu^{-1} + \nu^{-1}  t^{k-1}].
 \end{equation}
 At this point, we know that the right-hand side of \eqref{eq:Qstareq}
 gives a stationary point of $\mathcal{L}$, but we cannot be sure that
@@ -490,7 +486,29 @@ zero measure.  Since sets of zero measure don't affect the integrals
 defining the optimization problem \eqref{eq:constrained_optim}, we
 conclude there exists a global optimal solution with
 $\nabla \mathcal{L}_{Q^*}(t) = 0$ everywhere, which is therefore given
-explicitly by \eqref{eq:Qstareq} for some $\lambda > 0$, $\nu < 0.$
+explicitly by \eqref{eq:Qstareq} for some $\lambda \in \mathbb{R}$, $\nu \geq 0.$
+
+We will need the following result: that for $\iota
+> 0$, any solution to \eqref{eq:constrained_optim} satisfies
+$\phi_k[Q] < 1$.  This follows from the fact that
+\[
+E[Q] - \phi_k[Q] = \int_0^1 (1-t^{k-1}) Q(t) dt,
+\]
+where the term $(1-t^{k-1})$ is negative, except for the one point $t
+= 1$.  Therefore, in order for $\phi_k[Q] = 1 = E[Q]$, we must have
+$Q(t) = 0$ for $t < 1$.  However, this yields a contradiction since
+$Q(t) = 0$ for $t < 1$ implies that $E[Q] = 0$, a violation of the
+hard constraint $E[Q] = 1$.
+
+Let us establish that $\nu > 0$: in other words, the constraint $I[Q]
+= \iota$ is tight.  Suppose to the contrary, that for
+some $\iota > 0$, the global optimum $Q^*$ minimizes a Lagrangian with
+$\nu = 0$.  Let $\phi^* = \phi_k[Q^*] < 1.$ However, if we define
+$Q_\kappa(t) = I\{t \geq 1 - \frac{1}{\kappa}\} \kappa$, we have
+$E[Q_\kappa] = 1$, and also for some sufficiently large $\kappa > 0$,
+$\phi_k[Q_\kappa] > \phi^*$.  But since the Lagrangian lacks a term
+corresponding to $I[Q]$, we conclude that $\mathcal{L}[Q_\kappa]
+< \mathcal{L}[Q^*]$, a contradiction.
 
 The rest of the proof proceeds as follows.  We will use
 Lemmas \ref{lemma:technical1} and \ref{lemma:technical2} to define a
@@ -619,17 +637,17 @@ D_1$, we conclude that $D_1 = \emptyset$.
 
 By now we have established that a global optimum
 for \eqref{eq:constrained_optim} exists, and is given
-by \eqref{eq:Qstareq} for some $\lambda \geq 0$, $\nu < 0$.  It remains
+by \eqref{eq:Qstareq} for some $\lambda \in \mathbb{R}$, $\nu > 0$.  It remains
 to determine the values of $\lambda$ and $\nu$.
 
-Reparameterize $\alpha = \exp[-1-\lambda^{-1}]$ and $\beta = -\nu\lambda t^{k-1}$.
+Reparameterize $\alpha = \exp[-1-\lambda\nu^{-1}]$ and $\beta = \nu^{-1}$.
 Therefore,
 \[
 Q^*(t) = \alpha \exp[\beta t^{k-1}]
 \]
 for $\alpha > 0$, $\beta > 0$.  There is a one-to-one mapping from
 $(\alpha, \beta) \in (0, \infty)^2$ to $(\lambda, \nu) \in
-(0,\infty) \times (-\infty, 0)$.
+\mathbb{R} \times (0,\infty)$.
 
 Now, from the constraint
 \[
@@ -653,14 +671,28 @@ Next, note that
 I[Q^*] = \int_0^1 Q^*(t) \log Q^*(t) = \beta \mu_\beta - \log Z(\beta),
 \]
 as a function of $\beta$, is completely characterized by Lemma \ref{lemma:mono_entropy}.
-Therefore, we know that for any $\iota > 0$, there is a unique $\beta > 0$
-so that $I[Q^*] = \iota.$
+Let us define $c_\iota$ as the unique positive solution to the equation
+\[
+c_\iota \mu_{c_\iota} - \log Z(c_\iota) = \iota
+\]
+given by Lemma \ref{lemma:mono_entropy}.
+We therefore have
+\[
+Q^*(t) = \frac{\exp[c_\iota t^{k-1}]}{\int_0^1 \exp[c_\iota t^{k-1}]},
+\]
+as needed. $\Box$
 
 
 
-\emph{Remark.}
-More specifically, the supremum is attained by a distribution with
-density $p_\iota(x, y)$ where
+
+\textbf{Proof of theorem \ref{theorem:Cunif}}
+
+Define $f(\iota) = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt$: our goal is to
+establish that $C^{unif}_k(\iota) = f(\iota)$.  Note that $f(\iota)$
+is the same function which appears in Lemma \ref{lemma:concave} and
+the same bound as established in Lemma \ref{lemma:variational}.
+
+Define the density $p_\iota(x, y)$ where
 \[
 p_\iota(x, y) = \begin{cases}
 g_\iota(y - x) & \text{ for } x\geq y\\
@@ -673,9 +705,20 @@ g_\iota(x) = \frac{d}{dx}G_\iota(x)
 \]
 and $G_\iota$ is the inverse of $Q_c$.
 
+One can verify that $\text{I}[p_\iota] = \iota$, and 
+\[
+\text{ABA}_k[p] = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
+\]
 
+This establishes that
+\[
+C^{unif}_k(\iota) \geq \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
+\]
+It remains to show that for all $p \in \mathcal{P}^{unif}$ with
+$\text{I}[p] \leq \iota$, that $\text{ABA}_k[p] \leq \text{ABA}_k[p_\iota]$.
 
-In this case, letting $X_1,...,X_k \sim \text{Unif}[0,1]$, and $Y \sim \text{Unif}[0,1]$ define $Z_i(y) = p(y|X_i)$.
+Take $p \in \mathcal{P}^{unif}$ such that $\text{I}[p] \leq \iota$.
+Letting $X_1,...,X_k \sim \text{Unif}[0,1]$, and $Y \sim \text{Unif}[0,1]$ define $Z_i(y) = p(y|X_i)$.
 We have $\E(Z(y)) = 1$ and,
 \[
 \text{I}[p(x,y)] = \E(Z(Y) \log Z(Y))
@@ -685,97 +728,35 @@ while
 \text{ABA}_k[p(x,y)] = k^{-1}\E(\max_i Z_i(Y)).
 \]
 
-Letting $g_y$ be the density of $Z(y)$, we have
+Letting $G_y$ be the distribution of $Z(y)$, we have
 \[
-\text{I}[p(x,y)] = \E(-H[g_Y])
+E[G_y] = 1
 \]
-and
 \[
-\text{ABA}_k[p(x,y)] = \E(\psi_k[g_Y])
+\text{I}[p(x,y)] = \E(I[G_Y])
 \]
-where
 \[
-H[g] = -\int g(x) x \log x dx
+\text{ABA}_k[p(x,y)] = \E(\psi_k[G_Y])
 \]
-and
-\[
-\psi_k[g] = \int x g(x) G(x)^{k-1} dx
-\]
-for $G(x) = \int_0^x g(t) dt.$
-Additionally $g_y$ satisfies the constraint $\int x g(x) dx= 1$ since $\E[Z(y)] = 1$.
+where the expectation is taken over $Y \sim \text{Unif}[0,1]$ and
+where $E[G]$, $I[G]$, and $\psi_k[G]$ are defined as in
+Lemma \ref{lemma:variational}.
 
-Define the set $D = \{(\alpha, \beta)\}$ as the set of possible values
-of $(-H[g], \psi_k[g])$ taken over all distributions $g$ supported on
-$[0,
-\infty)$ with $\int x g(x) dx = 1$.  Next, let $\mathcal{C}(D)$ denote the convex hull of $D$.
-It follows that $(\text{I}[p], \text{ABA}_k[p]) \in \mathcal{C}(D)$ since the pair is obtained via a convex average of points $(-H[g_y], \psi_k[g])$.
-
-Define the upper envelope of $D$ as the curve
-\[
-d_k(\alpha) = \sup\{\beta: (\alpha, \beta) \in D\}.
-\]
-
-We make the claim (to be shown in the following section) that $d_k(\alpha)$ is convex in $\alpha$.
-As a result, the upper envelope of $D$ is also the upper envelope of $\mathcal{C}(D)$.
-This in turn implies that $C_k^{unif}(\iota) = d_k(\iota)$.
-We establish these results, along with a open-form expression for $C_k^{unif}$, in the following section.
-
-\subsection{Variational methods}
-
-Consider the quantile function $Q(t) = G^{-1}(t).$  $Q(t)$ must be a continuous function from $[0,1]$ to $[0,\infty).$
-We can rewrite the moment constraint $\E[g]=1$ as
-\[
-\int_0^1 Q(t) dt = 1.
-\]
-Meanwhile, $\beta = \psi_k[g]$ takes the form
-\[
-\beta = \int_0^1 Q(t) x^{k-1} dt.
-\]
-and $\alpha = -H[g]$ takes the form
-\[
-\alpha = \int_0^1 Q(t) \log Q(t) dt.
-\]
-To find the upper envelope, it will be useful to write the Langrangian
-\begin{align*}
-\mathcal{L}[g] &= \lambda \int_0^1 Q(t) dt + \mu \int_0^1 Q(t) x^{k-1} dt + \lambda \int_0^1 Q(t) \log Q(t) dt
-\\&= \int_0^1 Q(t) (\lambda + \mu x^{k-1} + \nu \log Q(t)) dt.
-\end{align*}
-
-In order for a quantile function $Q(t)$ to be on the upper envelope, it must be a local maximum of $-H$ with respect to small perturbations.  Therefore, consider the functional derivative
-\[
-D[\xi] = \lim_{\epsilon \to 0} \frac{\mathcal{L}[g + \epsilon \xi] - \mathcal{L}[g]}{\epsilon}.
-\]
+Define the random variable $J = I[G_Y]$.
 We have
+\begin{align*}
+\text{ABA}_k[p(x,y)] &= \E(\psi_k[G_Y])
+\\&= \int_0^1 \psi_k[G_y] dy
+\\&\leq \int_0^1 \left(\sup_{G: I[G] \leq I[G_y]} \psi_k[G]\right) dy
+\\&= \int_0^1 f(I[G_y]) dy = \E[f(J)].
+\end{align*}
+Now, since $f$ is concave by Lemma \ref{lemma:concave},
+we can apply Jensen's inequality to conclude that
 \[
-D[\xi] = \int_0^1 \xi(t) (\lambda + \nu  + \mu x^{k-1} + \nu \log Q(t)) dt.
+\text{ABA}_k[p(x,y)] = \E[f(J)] \leq f(\E[J]) = f(\iota),
 \]
-
-Now consider the following three cases:
-\begin{itemize}
-\item $Q(t)$ is strictly monotonic, i.e. $Q'(t) > 0.$
-\item $Q(t)$ is differentiable but not strongly monotonic: 
-\item $Q(t)$ is not strongly monotonic: there exist intervals $A_i = [a_i, b_i)$ such that $Q(t)$ is constant on $A_i$,
-and isolated points $t_i$ where $Q'(t_i) = 0.$
-\end{itemize}
-
-\emph{Strictly monotonic case.}  Because $Q$ is defined on a closed interval,
-strict monotonicity further implies the property of \emph{strong monotonicity} where 
-$\inf_[0,1] Q'(t) > 0.$  Therefore, for any differentiable perturbation $\xi(t)$ with $\sup |\xi'(t)| <\infty$,
-and further imposing that $\xi(0) \geq 0$ in the case that $Q(0) = 0$,
-there exists some $\epsilon >0$ such that $(Q + \epsilon \xi)(t)$ is still a valid quantile function.
-Therefore, in order for $Q(t)$ to be a local maximum, we must have
-\[
-0 = \lambda + \nu  + \mu x^{k-1} + \nu \log Q(t)
-\]
-for $t \in [0,1]$.  This implies that
-\[
-Q(t) = c_0 e^{-c_1 x^{k-1}}
-\]
-for some $c_0, c_1 \geq 0$.
-
-\emph{Other cases.}   (TODO) We have to show that these cannot be local maxima.
-
-
+which completes the proof. $\Box$
+\end{document}
 
 \section{General case}
 
