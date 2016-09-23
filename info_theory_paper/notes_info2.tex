@@ -314,11 +314,11 @@ Then we claim
 \]
 is a countable partition of $B_0$.  The claim follows since the
 members of $\mathcal{B}_0$ are disjoint intervals of nonzero length,
-and $B_0$ has finite length.  Meanwhile, let $\mathcal{B}_1$ be a
-countable partition of $B_1$ into intervals.
-
-It follows from definition that for any $B \in B_0$, that $f$ is not
+and $B_0$ has finite length.    It follows from definition that for any $B \in B_0$, that $f$ is not
 constant on any proper superinterval $B' \supset B$.
+
+Meanwhile, let $\mathcal{B}_1$ be a countable partition of $B_1$ into
+intervals.
 
 Next, we show that for all $I \in \mathcal{B}_1$, $I$ does not contain
 a subinterval $I'$ of nonzero length such that $f$ is constant on
@@ -326,11 +326,9 @@ $I'$.  Suppose to the contrary, we could find such an interval $I$ and
 subinterval $I'$.  Then for any $t \in I'$, we have $t \in B_0$.
 However, this implies that $t \notin B_1$, a contradiction.
 
-Therefore, letting $\mathcal{B} = \mathcal{B}_0 \cup \mathcal{B}_1$
-yields the desired partition of $[a,b]$.
-
-
-
+Since $t \in [a,b]$ belongs to either $B_0$ or $B_1$,
+letting $\mathcal{B} = \mathcal{B}_0 \cup \mathcal{B}_1$
+yields the desired partition of $[a,b]$. $\Box$.
 
 
 \textbf{Proof of Lemma \ref{lemma:variational}.} (This will appear in the appendix of the paper.)
@@ -416,68 +414,74 @@ because the optimization occurs on a constrained space.  We will
 ultimately show that this is the case (up to sets of neglible
 measure), but some delicacy is needed.
 
+The rest of the proof proceeds as follows.  We will use
+Lemmas \ref{lemma:technical1} and \ref{lemma:technical2} to define a
+decomposition $A = D_0 \cup D_1 \cup D_2$, where $D_2$ is of measure
+zero.  First, we show that for all $t \in D_0$, we have $\nabla Q^*(t)
+= 0$.  Second, we show that for all $t \in D_1$, we have $\nabla
+Q^*(t) = 0$.  Finally, since $D_2$ is a set of zero measure, this
+allows us to conclude that the $Q^*(t) = 0$ on all but a set of zero
+measure.  Since sets of zero measure don't affect the integral, we
+conclude there exists a global optimal solution with $\nabla Q^*(t) =
+0$.
 
-First let us establish some properties of $\nabla Q^*(t)$.  
-If we define $f(t) = 1+ \lambda + \lambda Q^*(t)$
-and $g(t) = \nu t^{k-1}$, then $f$ is increasing while $g$ is continuous and stricly increasing.
-Therefore, as
-\[
-\nabla Q^*(t) = f^+(t) - g(t),
-\]
-we see that $\nabla Q^*(t)$ is a difference between two increasing
-functions.  Therefore, we can apply Lemma \ref{lemma:technical1} to
-conclude that there exists a countable partition $\mathcal{A}$ of the
-set $A: \{t \in [0,1]: \nabla Q^*(t) \neq 0\}$ into intervals such
-that for all $J \in \mathcal{A}$, $|\text{Sign}(\nabla Q^*(J))| = 1$
-and $\inf J < \sup I$ .  Applying Lemma \ref{lemma:technical2} we get
-a countable partition $\mathcal{B}$ of $[0,1]$ so that each element
-$J \in \mathcal{B}$ is an interval, and that either $\nabla Q^*(t)$ is
-constant on $J$, or $J$ contains no positive-length subinterval where
-$\nabla Q^*(t)$ is constant.
+We will now apply the Lemmas to obtain the necessary ingredients for
+constructing the sets $D_i$.  Since $\nabla Q^*(t)$ is a difference
+between an increasing function and a continuous stricly increasing
+function, we can apply Lemma \ref{lemma:technical1} to conclude that
+there exists a countable partition $\mathcal{A}$ of the set
+$A: \{t \in [0,1]: \nabla Q^*(t) \neq 0\}$ into intervals such that
+for all $J \in \mathcal{A}$, $|\text{Sign}(\nabla Q^*(J))| = 1$ and
+$\inf J < \sup I$ .  Applying Lemma \ref{lemma:technical2} we get a
+countable partition $\mathcal{B} = \mathcal{B}_0 \cup \mathcal{B}_1$
+of $[0,1]$ so that each element $J \in \mathcal{B}_0$ is an interval
+such that $\nabla Q^*(t)$ is constant on $J$, and furthermore is not
+properly contained in any interval with the same property, and each
+element $J \in \mathcal{B}_1$ is an interval, such that $J$ contains
+no positive-length subinterval where $\nabla Q^*(t)$ is constant.
+Also define $B_i$ as the union of the sets in $\mathcal{B}_i$ for $i =
+0,1$.
 
-Now let $\mathcal{D}$ be the refinement of $\mathcal{A}$ obtained by
-considering all intersections of sets in $\mathcal{A}$ with sets in
-$\mathcal{B}$:
-\[
-\mathcal{D} = \{J \cap L: J \in \mathcal{A}, L \in \mathcal{B}\}.
-\]
-It follows that $\mathcal{D}$ is a countable partition of the set $A$,
-that each element $D \in \mathcal{D}$ is an interval, with the two
-properties that that $\nabla Q^*(t)$ has the same sign throughout $D$,
-and also $Q^*(t)$ is either constant on $D$, or $D$ contains no
-positive-length subinterval where $Q^*(t)$ is constant.
-Subdivide $\mathcal{D}$ into three disjoint collections:
-\[
-\mathcal{D}_1 = \{J \in \mathcal{D}: |J| = 1\}
-\]
-\[
-\mathcal{D}_2 = \{J \in \mathcal{D}\setminus \mathcal{D}_1: |Q^*(J)| = 1\}
-\]
-\[
-\mathcal{D}_3 = \{J \in \mathcal{D}: \sup Q^*(J) > \inf Q^*(J)\}
-\]
-That is, $\mathcal{D}_1$ is the set of zero-length intervals in $\mathcal{D}$,
-$\mathcal{D}_2$ is the set of positive-length intervals in $\mathcal{D}$ where $Q^*$ is constant,
-and $\mathcal{D}_3$ is the set of positive-length intervals in $\mathcal{D}$ where $Q^*$ is not constant.
-Let $D_i$ be the union of the sets in $\mathcal{D}_i$ for $i = 1,2,3$.
+Note that $B_0$ is necessarily a subset of $A$.  That is because if
+$\nabla Q^*(t) = 0$ on any interval $J$, then that $Q^*(t)$ is
+necessarily not constant on the interval.  
 
-The rest of the proof proceeds as follows.  First, we show that for
-all $t \in D_3$, we have $\nabla Q^*(t) = 0$.  Second, we show that
-for all $t \in D_2$, we have $\nabla Q^*(t) = 0$.  Finally, since
-$D_3$ is a set of zero measure, this allows us to conclude that the
-$Q^*(t) = 0$ on all but a set of zero measure.  Since sets of zero
-measure don't affect the integral, we conclude there exists a global
-optimal solution with $\nabla Q^*(t) = 0$.
+We will construct a new countable partition of $A$, called $\mathcal{D}$.
+The partition $\mathcal{D}$ is constructed by taking the union of three families of intervals,
+\[
+\mathcal{D} = \mathcal{D}_0 \cup \mathcal{D}_1 \cup \mathcal{D}_2.
+\]
+Define $D_i$ to be the union of intervals in $\mathcal{D}_i$ for $i = 0,1,2$.
 
-Consider the case $t \in D$ for $D \in \mathcal{D}_3$.
-Let $a = \inf D$ and $b = \sup D$.
+Define $\mathcal{D}_0 = \mathcal{B}_0$,
+Define a countable partition $\mathcal{D}_1$ by
+\[
+\mathcal{D}_1 = \{J \cap L: J \in \mathcal{A}, L \in \mathcal{B}_1, \text{ and } |L| > 1\},
+\]
+in order words, $\mathcal{D}_1$ consists of positive-length intervals where $\nabla
+Q^*(t)$ is entirely positive or negative and is not constant.
 Define
 \[
-\xi^+ = I\{t \in D\} (Q(b) - Q(t))
+\mathcal{D}_2 = \{J \in \mathcal{B}_1: J \subset A \text{ and } |J| = 1 \},
+\]
+i.e. $\mathcal{D}_2$ consists of isolated points in $A$.
+
+One verifies that $\mathcal{D}$ is indeed a partition of $A$ by
+checking that $D_0 = B_0$, $D_1 \cup D_2 = B_1 \cap A$, so that
+$D_0 \cup D_2 \cup D_2 = A$: it is also easy to check that elements of
+$\mathcal{D}$ are disjoint.  Furthermore, as we mentioned earlier, the
+set $D_2$ is indeed of zero measure, since it consists of countably
+many isolated points.
+
+Now we will show that for $t \in D_0$, we have $\nabla Q^*(t) = 0$.
+Take $t \in D$ for $D \in \mathcal{D}_0$, and let $a = \inf D$ and $b
+= \sup D$.  Define
+\[
+\xi^+ = I\{t \in D\} (Q^*(b) - Q^*(t))
 \]
 and
 \[
-\xi^- = I\{t \in D\} (Q(a) - Q(t)).
+\xi^- = I\{t \in D\} (Q^*(a) - Q^*(t)).
 \]
 Observe that $Q + \epsilon \xi^+ \in \mathcal{Q}$ and $Q
 + \epsilon \xi^- \in \mathcal{Q}$ for any $\epsilon \in [0,1]$.  Now,
@@ -486,16 +490,22 @@ $\epsilon > 0$ we would have $\mathcal{L}[Q^* + \epsilon \xi^-]
 < \mathcal{L}[Q^*]$, a contradiction.  A similar argument with $\xi^+$
 shows that $\nabla Q^*(t)$ cannot be stricly negative on $D$ either.
 From this pertubation argument, we conclude that $\nabla Q^*(t) = 0$.
-Since this argument applies for all $t \in D_3$, we know that $\nabla Q^*(D_3) = \{0\}$.
+Since this argument applies for all $t \in D_0$, we know that $\nabla
+Q^*(D_0) = \{0\}$.
 
+The following observation is needed for the next stage of the proof.
+If we look at the function $Q^*(t)$, then up so sets of neglible
+measure, it is given by the expression \eqref{eq:Qstareq} on the set
+$D_0$, and it is piecewise constant in between.  But
+since \eqref{eq:Qstareq} gives a strictly increasing function, and
+since $Q^*$ is increasing, this implies that $Q^*$ is discontinuous at
+the boundary between $D_0$ and $D_1$.
 
-
-
-Without loss of generality, let $a$ and $b$ be the endpoints of the
-largest interval containing $t$ such that $Q^*(t)$ is constant on $(a,
-b)$.  Now, since $\nabla Q^*(t) \neq 0$ on a set of nonzero measure
-within $[a, b]$, it must be the case that there exists some $u \in [a,
-b]$ such that
+Now we are prepared to show that $\nabla Q^*(t) = 0$ for $t \in D_1$.
+Take $t \in D$ for $D \in \mathcal{D}_1$, and let $a = \inf D$ and $b
+= \sup D$.  Now, since $\nabla Q^*(t) \neq 0$ on all but a
+zero-measure set within $(a, b)$, it must be the case that there
+exists some $u \in [a, b]$ such that
 \[
 \int_a^u \nabla Q^*(t) dt \neq 0.
 \]
