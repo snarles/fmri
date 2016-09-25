@@ -178,7 +178,7 @@ reduced space.
 Let $p(x, y)$ be a density supported on
 $\mathcal{X} \times \mathcal{Y}$, where $\mathcal{X}$ is a subset of
 $\mathbb{R}^{d_1}$ and $\mathcal{Y}$ is a subset of
-$\mathcal{R}^{d_2}$, and such that $p(x)$ is uniform on $\mathcal{X}$
+$\mathbb{R}^{d_2}$, and such that $p(x)$ is uniform on $\mathcal{X}$
 and $p(y)$ is uniform on $\mathcal{Y}$.
 
 Now let $\mathcal{P}^{unif}$ denote the set of such distributions:
@@ -186,7 +186,7 @@ in other words, $\mathcal{P}^{unif}$ is the space of joint densities in Euclidea
 with uniform marginals over the marginal supports.
 In this section, we prove that
 \[
-C_k(\iota) \inf_{p \in \mathcal{P}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)] = 
+C_k(\iota) =\inf_{p \in \mathcal{P}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)] = 
 \inf_{p \in \mathcal{P}^{unif}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)],
 \]
 thus reducing the problem of optimizing over the space of all
@@ -276,8 +276,9 @@ $f_\infty$ the Bayes $k$-class classifier for $p(x, y)$: recall that by definiti
 \]
 Define
 \[
-\epsilon_i = 1-\int_{x, y \in \mathcal{X}_i \times \mathcal{Y}_i} p(x, y) dx dy.
+\epsilon_i = \Pr_p[(X_1,...,X_k, Y)\notin \mathcal{X}_i^k \times \mathcal{Y}_i];
 \]
+by continuity of probability we have $\lim_i \epsilon_i \to 0$.
 We claim that
 \[
 |\text{ABA}_k[\tilde{p}_i] - \text{ABA}_k[p]| \leq \epsilon_i.
