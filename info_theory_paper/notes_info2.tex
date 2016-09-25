@@ -29,6 +29,7 @@
 \newcommand{\Vol}{\text{Vol}}
 \newcommand{\comm}[1]{}
 \newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}{Proposition}[section]
 \newtheorem{corollary}{Corollary}[theorem]
 \newtheorem{lemma}[theorem]{Lemma}
 
@@ -148,15 +149,10 @@ The goal of this work is to attempt to compute or approximate the functions $C_k
 
 $|\cdot|$ denotes set cardinality.
 
-\section{Special case}
+\section{Theory}
 
-We work out the special case where $p(x,y)$ lies on the unit square, and $p(x)$ and $p(y)$ are both the uniform distribution.
-Let $\mathcal{P}^{unif}$ denote the set of such distributions, and 
-\[
-C_k^{unif}(\iota) = \sup_{p(x, y) \in \mathcal{P}^{unif}: \text{I}[p] \leq \iota} \text{ABA}_k[p]. 
-\]
-
-We prove the following result:
+In this section we determine the value of $C_k(\iota)$,
+leading to the following result.
 
 \begin{theorem}\label{theorem:Cunif}
 For any $\iota > 0$, there exists $c_\iota \geq 0$ such that defining
@@ -169,10 +165,240 @@ we have
 \]
 Then,
 \[
-C_k^{unif}(\iota) = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
+C_k(\iota) = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
 \]
 \end{theorem}
 
+We obtain this result by first reducing the problem to the case of
+densities with uniform marginals, then doing the optimization over the
+reduced space.
+
+\subsection{Reduction}
+
+Let $p(x, y)$ be a density supported on
+$\mathcal{X} \times \mathcal{Y}$, where $\mathcal{X}$ is a subset of
+$\mathbb{R}^{d_1}$ and $\mathcal{Y}$ is a subset of
+$\mathcal{R}^{d_2}$, and such that $p(x)$ is uniform on $\mathcal{X}$
+and $p(y)$ is uniform on $\mathcal{Y}$.
+
+Now let $\mathcal{P}^{unif}$ denote the set of such distributions:
+in other words, $\mathcal{P}^{unif}$ is the space of joint densities in Euclidean space
+with uniform marginals over the marginal supports.
+In this section, we prove that
+\[
+C_k(\iota) \inf_{p \in \mathcal{P}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)] = 
+\inf_{p \in \mathcal{P}^{unif}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)],
+\]
+thus reducing the problem of optimizing over the space of all
+densities to the problem of optimizing over densities with uniform
+marginals.
+
+Also define $\mathcal{P}^{bounded}$ to be the space of all densities $p(x, y)$ with finite-volume support.
+Since uniform distributions can only be defined over sets of finite volume, we have
+\[
+\mathcal{P}^{unif} \subset \mathcal{P}^{bounded} \subset \mathcal{P}.
+\]
+
+Therefore, it is necessary to first show that
+\[
+\inf_{p \in \mathcal{P}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)] = 
+\inf_{p \in \mathcal{P}^{bounded}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)].
+\]
+
+This is accomplished via the following lemma.
+
+\begin{lemma}\label{lemma:truncation} (Truncation).
+Let $p(x, y)$ be a density on
+$\mathbb{R}^{d_x} \times \mathbb{R}^{d_y}$.  For all $\epsilon > 0$,
+there exists a subset $\mathcal{X} \subset \mathbb{R}^{d_x}$ with
+finite volume with respect to $d_x$-dimensional Lesbegue measure, and
+a subset $\mathcal{Y} \subset \mathbb{R}^{d_y}$ with finite volume
+with respect to $d_y$-dimensional Lesbegue measure, such that defining
+\[
+\tilde{p}(x, y) = \frac{I\{(x,y) \in \mathcal{X}\times \mathcal{Y}\} }{\int_{\mathcal{X} \times \mathcal{Y}} p(x,y) dx dy} p(x,y),
+\]
+we have
+\[
+|\text{I}[p] - \text{I}[\tilde{p}]| < \epsilon
+\]
+and
+\[
+|\text{ABA}_k[p] - \text{ABA}_k[\tilde{p}]| < \epsilon.
+\]
+\end{lemma}
+
+\textbf{Proof.}
+Recall the definition of the Shannon entropy $H$:
+\[
+\text{H}[p(x)] = - \int p(x) \log p(x) dx.
+\]
+It is a well-known in information theory that
+\[
+\text{I}[p(x, y)] = \text{H}[p(x)] + \text{H}[p(y)] - \text{H}[p(x, y)].
+\]
+There exists a sequence $(\mathcal{X}_i, \mathcal{Y}_i)_{i=1}^\infty$
+where $(\mathcal{X}_i)_{i=1}^\infty$ is an increasing sequence of finite-volume subsets of $\mathbb{R}^{d_x}$
+and $(\mathcal{Y}_i)_{i=1}^\infty$ is an increasing sequence of finite-volume subsets of $\mathbb{R}^{d_y}$,
+and $\lim_{i \to \infty} \mathcal{X}_i = \mathbb{R}^{d_x}$, $\lim_{i \to \infty} \mathcal{Y}_j$.
+Define
+\[
+\tilde{p}_i(x, y) = \frac{I\{(x,y) \in \mathcal{X}_i\times \mathcal{Y}_i\} }{\int_{\mathcal{X}_i \times \mathcal{Y}_i} p(x,y) dx dy} p(x,y)
+\]
+Note that $\tilde{p}_i$ gives the conditional distribution of $(X, Y)$
+conditional on $(X, Y) \in \mathcal{X}_i \times \mathcal{Y}_i$. 
+Furthermore, it is convenient to define $\tilde{p}_\infty = p$.
+We can find some $i_1$, such that for all $i \geq i_1$, we have
+\[
+\left|\int_{x \notin \mathcal{X}_i} p(x) \log p(x) dx\right| < \frac{\epsilon}{6}
+\]
+\[
+\left|\int_{y \notin \mathcal{Y}_i} p(y) \log p(y) dy\right| < \frac{\epsilon}{6}
+\]
+\[
+\left|\int_{(x,y) \notin \mathcal{X}_i \times \mathcal{Y}_i} p(x, y) \log p(x, y) dx dy\right| < \frac{\epsilon}{6}
+\]
+and also such that
+\[
+-\log \left[\int_{x, y \in \mathcal{X}_i \times \mathcal{Y}_i} p(x, y) dx dy\right] < \frac{\epsilon}{2}
+\]
+Then, it follows that
+\[
+|\text{I}[p] - \text{I}[\tilde{p}_i]| < \epsilon
+\]
+for all $i \geq i_1$.
+
+Now we turn to the analysis of average Bayes error.
+Let $f_i$ denote the Bayes $k$-class classifier for $\tilde{p}_i(x, y)$
+and
+$f_\infty$ the Bayes $k$-class classifier for $p(x, y)$: recall that by definition,
+\[
+\text{ABA}_k[\tilde{p}_i] = \Pr_{\tilde{p}_i}[f_i(X_1,...,X_k, Y) = Z]
+\]
+Define
+\[
+\epsilon_i = 1-\int_{x, y \in \mathcal{X}_i \times \mathcal{Y}_i} p(x, y) dx dy.
+\]
+We claim that
+\[
+|\text{ABA}_k[\tilde{p}_i] - \text{ABA}_k[p]| \leq \epsilon_i.
+\]
+Given the claim, the proof is completed by finding $i > i_1$ such that $\epsilon_i < \epsilon$,
+and defining $\mathcal{X} = \mathcal{X}_i$, $\mathcal{Y} = \mathcal{Y}_i$.
+
+Consider using $f_i$ to obtain a classification rule for $p(x, y)$:
+define
+\[
+\tilde{f}_i = \begin{cases}f_i(x_1,...,x_k, y) & \text{ when } (x_1,...,x_k, y) \in \mathcal{X}_i^k \times \mathcal{Y}\\
+0 & \text{ otherwise.} 
+\end{cases}
+\]
+We have
+\begin{align*}
+\text{ABA}_k[p] =& \sup_f \Pr_p[f(X_1,...,X_k, Y) = Z]
+\\ \geq& 
+\\=& (1-\epsilon_i)\Pr_p[f_i(X_1,...,X_k, Y) = Z|(X_1,...,X_k, Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i]
+\\&+ \epsilon_i \Pr_p[f_i(X_1,...,X_k, Y) = Z|(X_1,...,X_k, Y)\notin \mathcal{X}_i^k \times \mathcal{Y}_i]
+\\=& (1-\epsilon_i)\Pr_{\tilde{p}}[f_i(X_1,...,X_k, Y) = Z]
++ \epsilon_i 0
+\\=& (1-\epsilon_i) \text{ABA}_k[\tilde{p}_i] \geq \text{ABA}_k[\tilde{p}_i] - \epsilon_i.
+\end{align*}
+In other words, when $\tilde{p}_i$ is close to $p$, the Bayes
+classification rule for $\tilde{p}_i$ obtains close to the Bayes rate
+when the data is generated under $p$.
+
+Now consider the reverse scenario of using $f_p$ to perform
+classification under $\tilde{p}_i$.  This is equivalent to generating
+data under $p(x, y)$, performing classification using $f$, then only
+evaluating classification accuracy conditional on $(X_1,...,X_k,
+Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i$.  Therefore,
+
+\begin{align*}
+\text{ABA}_k[\tilde{p}_i] =& \sup_f \Pr_{\tilde{p}_i}[f(X_1,...,X_k, Y) = Z]
+\\\geq &  \Pr_{\tilde{p}_i}[f_p(X_1,...,X_k, Y) = Z]
+\\=& \Pr_p[f_p(X_1,...,X_k, Y) = Z| (X_1,...,X_k, Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i]
+\\=& \frac{1}{1-\epsilon_i} \Pr_p[I\{(X_1,...,X_k, Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i\} \text{ and }f_p(X_1,...,X_k, Y) = Z]
+\\\geq & \frac{1}{1-\epsilon_i} \left(1 - \Pr_p[I\{(X_1,...,X_k, Y)\notin \mathcal{X}_i^k \times \mathcal{Y}_i\}] - \Pr_p[f_p(X_1,...,X_k, Y) \neq Z]]\right)
+\\&= \frac{\text{ABA}_k[p] - \epsilon_i}{1-\epsilon_i} \geq \text{ABA}_k[p] - \epsilon_i.
+\end{align*}
+In other words, when $\tilde{p}_i$ is close to $p$, the Bayes
+classification rule for $p$ obtains close to the Bayes rate when the
+data is generated under $\tilde{p}_i$.
+
+Combining the two directions gives $|\text{ABA}_k[\tilde{p}_i]
+- \text{ABA}_k[p]| \leq \epsilon_i$, as claimed. $\Box$
+
+One can go from bounded-volume sets to uniform distributions by adding
+auxillary variables.  To illustrate the intution, consider a density
+$p(x)$ on a set of bounded volume, $\mathcal{X}$.  Introduce a
+variable $W$ such that conditional on $X = x$, we have $w$ uniform on
+$[0, p(x)]$.  It follows that the joint density $p(x, w) = 1$ and is
+supported on a set $\mathcal{X}' = \mathcal{X} \times [0,\infty]$.
+Furthermore, $\mathcal{X}'$ is of bounded volume (in fact, of volume 1) since
+\[
+\int_{\mathcal{X}'} dx = \int_{\mathcal{X}'} p(x, w) dx = 1.
+\]
+
+Therefore, to accomplish the reduction from $\mathcal{P}$ to
+$\mathcal{P}^{unif}$, we start with a density
+$p(x,y) \in \mathcal{P}$, and using Lemma \ref{lemma:truncation},
+find a suitable finite-volume truncation $\tilde{p}(x, y).$ Finally,
+we introduce auxillary variables $w$ and $z$ so that the expanded
+joint distribution $p(x, w, y, z)$ has uniform marginals $p(x, w)$ and
+$p(y, z)$.  However, we still need to check that the introduction of
+auxillary variables preserves the mutual information and average Bayes
+error; this is the content of the next lemma.
+
+\begin{lemma}
+Suppose $X$, $Y$, $W$, $Z$ are continuous random variables, and that
+$W\perp Y|Z$, $Z \perp X|Y$, and $W \perp Z|(X,Y)$.  Then,
+\[
+\text{I}[p(x, y)] = \text{I}[p((x,w), (y,z))]
+\]
+\end{lemma}
+\textbf{Proof.}
+Due to conditional independence relationships, we have
+\[
+p((x,w), (y,z)) = p(x,y)p(w|x)p(z|y).
+\]
+
+It follows that
+\begin{align*}
+\text{I}[p((x,w), (y,z))] &= \int dx dw dy dz  \ p(x,y)p(w|x)p(z|w) \log \frac{p((x,w), (y,z))}{p(x,w)p(y,z)}
+\\&= \int dx dw dy dz \ p(x,y)p(w|x)p(z|w) \log \frac{p(x, y)p(w|x)p(z|y)}{p(x)p(y)p(w|x)p(z|y)}
+\\&= \int dx dw dy dz \ p(x,y)p(w|x)p(z|w) \log \frac{p(x, y)}{p(x)p(y)}
+\\&= \int dx dy \ p(x,y) \log \frac{p(x, y)}{p(x)p(y)} = \text{I}[p(x,y)].
+\end{align*}
+
+Also,
+\begin{align*}
+\text{ABA}_k[p((x,w),(y,z))] 
+&= \int \left[\prod_{i=1}^k p(x_i, w_i) dx_i dw_i \right] \int dy dz \ \max_i p(y,z|x_i, w_i).
+\\&= \int \left[\prod_{i=1}^k p(x_i, w_i) dx_i dw_i \right] \int dy \ \max_i p(y|x_i) \int dz \ p(z|y).
+\\&= \int \left[\prod_{i=1}^k p(x_i) dx_i \right] \left[\prod_{i=1}^k \int dw_i p(w_i|x_i)\right] \int dy \ \max_i p(y|x_i)
+\\&= \text{ABA}_k[p(x,y)].
+\end{align*}
+
+$\Box$
+
+
+Combining these lemmas gives the needed reduction, given by the following theorem.
+
+\begin{theorem}\label{theorem:reduction} (Reduction.)
+\[
+\inf_{p \in \mathcal{P}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)] = 
+\inf_{p \in \mathcal{P}^{unif}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)].
+\]
+\end{theorem}
+
+The proof is trivial given the previous two lemmas.
+
+\subsection{Optimization}
+
+Having reduced the problem to an optimization over $\mathcal{P}^{unif}$,
+in this section we use variational calculus to find the global optimum to the optimization problem
+\[
+\text{maximize}_{p \in \mathcal{P}^{unif}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)]
+\]
 The proof depends on the following lemmas.
 
 \begin{lemma}\label{lemma:technical1}
@@ -687,8 +913,14 @@ as needed. $\Box$
 
 \textbf{Proof of theorem \ref{theorem:Cunif}}
 
+Using Theorem \ref{theorem:reduction}, we have
+\[
+C_k(\iota) = \inf_{p \in \mathcal{P}^{unif}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)].
+\]
+
 Define $f(\iota) = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt$: our goal is to
-establish that $C^{unif}_k(\iota) = f(\iota)$.  Note that $f(\iota)$
+establish that $C_k(\iota) = f(\iota)$.  
+Note that $f(\iota)$
 is the same function which appears in Lemma \ref{lemma:concave} and
 the same bound as established in Lemma \ref{lemma:variational}.
 
@@ -712,7 +944,7 @@ One can verify that $\text{I}[p_\iota] = \iota$, and
 
 This establishes that
 \[
-C^{unif}_k(\iota) \geq \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
+C_k(\iota) \geq \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
 \]
 It remains to show that for all $p \in \mathcal{P}^{unif}$ with
 $\text{I}[p] \leq \iota$, that $\text{ABA}_k[p] \leq \text{ABA}_k[p_\iota]$.
@@ -757,81 +989,5 @@ we can apply Jensen's inequality to conclude that
 \]
 which completes the proof. $\Box$
 \end{document}
-
-\section{General case}
-
-We claim that the constants $C_k^{unif}(\iota)$ obtained for the special case also apply for the general case, i.e.
-\[
-C_k(\iota) = C_k^{unif}(\iota).
-\]
-
-We make use of the following Lemma:
-
-\textbf{Lemma.} \emph{
-Suppose $X$, $Y$, $W$, $Z$ are continuous random variables, and that $W\perp Y|Z$, $Z \perp X|Y$, and $W \perp Z|(X,Y)$.
-Then,
-\[
-\text{I}[p(x, y)] = \text{I}[p((x,w), (y,z))]
-\]
-and
-\[
-\text{ABA}_k[p(x, y)] = \text{ABA}_k[p((x,w), (y,z))].
-\]
-}
-
-\textbf{Proof.}
-Due to conditional independence relationships, we have
-\[
-p((x,w), (y,z)) = p(x,y)p(w|x)p(z|y).
-\]
-
-It follows that
-\begin{align*}
-\text{I}[p((x,w), (y,z))] &= \int dx dw dy dz  \ p(x,y)p(w|x)p(z|w) \log \frac{p((x,w), (y,z))}{p(x,w)p(y,z)}
-\\&= \int dx dw dy dz \ p(x,y)p(w|x)p(z|w) \log \frac{p(x, y)p(w|x)p(z|y)}{p(x)p(y)p(w|x)p(z|y)}
-\\&= \int dx dw dy dz \ p(x,y)p(w|x)p(z|w) \log \frac{p(x, y)}{p(x)p(y)}
-\\&= \int dx dy \ p(x,y) \log \frac{p(x, y)}{p(x)p(y)} = \text{I}[p(x,y)].
-\end{align*}
-
-Also,
-\begin{align*}
-\text{ABA}_k[p((x,w),(y,z))] 
-&= \int \left[\prod_{i=1}^k p(x_i, w_i) dx_i dw_i \right] \int dy dz \ \max_i p(y,z|x_i, w_i).
-\\&= \int \left[\prod_{i=1}^k p(x_i, w_i) dx_i dw_i \right] \int dy \ \max_i p(y|x_i) \int dz \ p(z|y).
-\\&= \int \left[\prod_{i=1}^k p(x_i) dx_i \right] \left[\prod_{i=1}^k \int dw_i p(w_i|x_i)\right] \int dy \ \max_i p(y|x_i)
-\\&= \text{ABA}_k[p(x,y)].
-\end{align*}
-
-$\Box$
-
-Next, we use the fact that for any $p(x,y)$ and $\epsilon > 0$, there exists a discrete distribution $p_\epsilon(\tilde{x}, \tilde{y})$ such that
-\[
-|\text{I}[p(x,y)] - \text{I}[p_\epsilon(\tilde{x}, \tilde{y})]| < \epsilon,
-\]
-where for discrete distributions, one defines
-\[
-\text{I}[p(x,y)] = \sum_x \sum_y p(x,y) \log \frac{p(x,y)}{p(x)p(y)}.
-\]
-
-We require the additional condition that the marginals of the discrete distribution are close to uniform: that is, for some $\delta > 0$, we have
-\[
-\sup_{x, x': p_\epsilon(x) > 0\text{ and }p_\epsilon(x') > 0} \frac{p_\epsilon(x)}{p_\epsilon(x')} \leq 1 + \delta.
-\]
-and likewise
-\[
-\sup_{y, y': p_\epsilon(y) > 0\text{ and }p_\epsilon(y') > 0} \frac{p_\epsilon(y)}{p_\epsilon(y')} \leq 1 + \delta.
-\]
-
-To construct the discretization with the required properties, choose a regular rectangular grid $\Lambda$ over the domain of $p(x,y)$
-sufficiently fine so that partitioning $X,Y$ into grid cells, we have
-\[
-|\text{I}[p(x,y)] - \text{I}[\tilde{p}(\tilde{x}, \tilde{y})]| < \epsilon.
-\]
-[NOTE: to be written more clearly]
-Next, define 
-
-
-\end{document}
-
 
 
