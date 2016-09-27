@@ -11,7 +11,7 @@ generate_mat <- function(ny, nt, shape1 = 1) {
 compute_moments <- function(mat, k, mc.reps = 100) {
   maxstat <- sapply(1:mc.reps, function(i) {
     aa <- mat[sample(nrow(mat), k, replace = TRUE), ]
-    lala <- apply(aa, 2, max)
+    lala <- apply(aa, 2, max)/k
     sum(lala)
   })
   c(mean(maxstat), sd(maxstat))
@@ -30,9 +30,15 @@ mats <- lapply(1:1000, function(i) {
   generate_mat(ny, nt, exp(3 * rnorm(1)))
 })
 
-
-for (k in 2:10) {
+allmoms <- list()
+for (k in 2:20) {
   moms <- do.call(rbind, lapply(mats, compute_moments, k = k))
+  allmoms <- c(allmoms, list(moms))
   plot(moms, pch = ".")
   title(k)
+}
+
+plot(do.call(rbind, allmoms), pch = ".", col = "white")
+for (i in 1:length(allmoms)) {
+  points(allmoms[[i]], col = rainbow(length(allmoms))[i], pch = ".", cex = 2)
 }
