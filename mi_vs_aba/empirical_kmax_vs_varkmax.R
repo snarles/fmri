@@ -40,5 +40,8 @@ for (k in 2:20) {
 
 plot(do.call(rbind, allmoms), pch = ".", col = "white")
 for (i in 1:length(allmoms)) {
-  points(allmoms[[i]], col = rainbow(length(allmoms))[i], pch = ".", cex = 2)
+  points(allmoms[[i]], col = rainbow(length(allmoms))[i], pch = ".", cex = i/5)
 }
+
+maxes <- sapply(allmoms, function(j) max(j[, 2], na.rm = TRUE))
+plot(maxes)
