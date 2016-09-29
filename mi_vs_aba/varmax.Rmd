@@ -1,0 +1,147 @@
+---
+title: "kmax_var"
+author: "Charles Zheng"
+date: "September 28, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Source 
+
+```{r}
+compute_moments <- function(d, alpha, k, mc.reps = 1e4) {
+  maxstat <- sapply(1:mc.reps, function(i) {
+    aa <- matrix(rgamma(d * k, alpha), k, d)
+    rs <- rowSums(aa)
+    aa[cbind(which(rs == 0), sample(d, sum(rs == 0), replace = TRUE))] <- 1
+    rs <- rowSums(aa)
+    aa <- aa/rowSums(aa)
+    lala <- apply(aa, 2, max)/k
+    sum(lala)
+  })
+  c(mean(maxstat), sd(maxstat))
+}
+```
+
+## k = 2
+
+```{r}
+k <- 2
+d <- 2
+compute_moments(d, 2, k)
+compute_moments(d, 0.5, k)
+compute_moments(d, 0.1, k)
+compute_moments(d, 1e-2, k)
+compute_moments(d, 1e-3, k)
+compute_moments(d, 1e-4, k)
+compute_moments(d, 1e-5, k)
+
+d <- 3
+compute_moments(d, 2, k)
+compute_moments(d, 0.5, k)
+compute_moments(d, 0.1, k)
+compute_moments(d, 1e-2, k)
+compute_moments(d, 1e-3, k)
+compute_moments(d, 1e-4, k)
+compute_moments(d, 1e-5, k)
+
+d <- 4
+compute_moments(d, 1e-1, k)
+compute_moments(d, 1e-2, k)
+compute_moments(d, 1e-5, k)
+
+d <- 5
+compute_moments(d, 1e-1, k)
+compute_moments(d, 1e-2, k)
+compute_moments(d, 1e-5, k)
+
+d <- 10
+compute_moments(d, 1e-1, k)
+compute_moments(d, 1e-2, k)
+compute_moments(d, 1e-5, k)
+```
+
+## k = 3
+
+```{r}
+k <- 3
+d <- 2
+compute_moments(d, 2, k)
+compute_moments(d, 0.5, k)
+compute_moments(d, 0.1, k)
+compute_moments(d, 1e-2, k)
+compute_moments(d, 1e-3, k)
+compute_moments(d, 1e-4, k)
+compute_moments(d, 1e-5, k)
+
+d <- 3
+compute_moments(d, 2, k)
+compute_moments(d, 0.5, k)
+compute_moments(d, 0.1, k)
+compute_moments(d, 1e-2, k)
+compute_moments(d, 1e-3, k)
+compute_moments(d, 1e-4, k)
+compute_moments(d, 1e-5, k)
+
+d <- 4
+compute_moments(d, 1e-1, k)
+compute_moments(d, 1e-2, k)
+compute_moments(d, 1e-5, k)
+
+d <- 5
+compute_moments(d, 1e-1, k)
+compute_moments(d, 1e-2, k)
+compute_moments(d, 1e-5, k)
+
+d <- 10
+compute_moments(d, 1e-1, k)
+compute_moments(d, 1e-2, k)
+compute_moments(d, 1e-5, k)
+```
+
+
+## k = 4
+
+```{r}
+k <- 4
+d <- 2
+compute_moments(d, 2, k)
+compute_moments(d, 0.5, k)
+compute_moments(d, 0.1, k)
+compute_moments(d, 1e-2, k)
+compute_moments(d, 1e-3, k)
+compute_moments(d, 1e-4, k)
+compute_moments(d, 1e-5, k)
+
+d <- 3
+compute_moments(d, 2, k)
+compute_moments(d, 0.5, k)
+compute_moments(d, 0.1, k)
+compute_moments(d, 1e-2, k)
+compute_moments(d, 1e-3, k)
+compute_moments(d, 1e-4, k)
+compute_moments(d, 1e-5, k)
+
+d <- 4
+compute_moments(d, 1e-1, k)
+compute_moments(d, 1e-2, k)
+compute_moments(d, 1e-5, k)
+
+d <- 5
+compute_moments(d, 1e-1, k)
+compute_moments(d, 1e-2, k)
+compute_moments(d, 1e-5, k)
+
+d <- 6
+compute_moments(d, 1e-1, k)
+compute_moments(d, 1e-2, k)
+compute_moments(d, 1e-5, k)
+
+d <- 10
+compute_moments(d, 1e-1, k)
+compute_moments(d, 1e-2, k)
+compute_moments(d, 1e-5, k)
+```
