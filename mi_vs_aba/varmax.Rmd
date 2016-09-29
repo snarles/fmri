@@ -30,76 +30,20 @@ compute_moments <- function(d, alpha, k, mc.reps = 1e4) {
 
 ```{r}
 k <- 2
-d <- 2
-compute_moments(d, 2, k)
-compute_moments(d, 0.5, k)
-compute_moments(d, 0.1, k)
-compute_moments(d, 1e-2, k)
-compute_moments(d, 1e-3, k)
-compute_moments(d, 1e-4, k)
-compute_moments(d, 1e-5, k)
-
-d <- 3
-compute_moments(d, 2, k)
-compute_moments(d, 0.5, k)
-compute_moments(d, 0.1, k)
-compute_moments(d, 1e-2, k)
-compute_moments(d, 1e-3, k)
-compute_moments(d, 1e-4, k)
-compute_moments(d, 1e-5, k)
-
-d <- 4
-compute_moments(d, 1e-1, k)
-compute_moments(d, 1e-2, k)
-compute_moments(d, 1e-5, k)
-
-d <- 5
-compute_moments(d, 1e-1, k)
-compute_moments(d, 1e-2, k)
-compute_moments(d, 1e-5, k)
-
-d <- 10
-compute_moments(d, 1e-1, k)
-compute_moments(d, 1e-2, k)
-compute_moments(d, 1e-5, k)
+compute_moments(2, 1e-5, k)
+compute_moments(3, 1e-5, k)
+compute_moments(4, 1e-5, k)
+compute_moments(5, 1e-5, k)
 ```
 
 ## k = 3
 
 ```{r}
 k <- 3
-d <- 2
-compute_moments(d, 2, k)
-compute_moments(d, 0.5, k)
-compute_moments(d, 0.1, k)
-compute_moments(d, 1e-2, k)
-compute_moments(d, 1e-3, k)
-compute_moments(d, 1e-4, k)
-compute_moments(d, 1e-5, k)
-
-d <- 3
-compute_moments(d, 2, k)
-compute_moments(d, 0.5, k)
-compute_moments(d, 0.1, k)
-compute_moments(d, 1e-2, k)
-compute_moments(d, 1e-3, k)
-compute_moments(d, 1e-4, k)
-compute_moments(d, 1e-5, k)
-
-d <- 4
-compute_moments(d, 1e-1, k)
-compute_moments(d, 1e-2, k)
-compute_moments(d, 1e-5, k)
-
-d <- 5
-compute_moments(d, 1e-1, k)
-compute_moments(d, 1e-2, k)
-compute_moments(d, 1e-5, k)
-
-d <- 10
-compute_moments(d, 1e-1, k)
-compute_moments(d, 1e-2, k)
-compute_moments(d, 1e-5, k)
+compute_moments(2, 1e-5, k)
+compute_moments(3, 1e-5, k)
+compute_moments(4, 1e-5, k)
+compute_moments(5, 1e-5, k)
 ```
 
 
@@ -107,41 +51,71 @@ compute_moments(d, 1e-5, k)
 
 ```{r}
 k <- 4
-d <- 2
-compute_moments(d, 2, k)
-compute_moments(d, 0.5, k)
-compute_moments(d, 0.1, k)
-compute_moments(d, 1e-2, k)
-compute_moments(d, 1e-3, k)
-compute_moments(d, 1e-4, k)
-compute_moments(d, 1e-5, k)
-
-d <- 3
-compute_moments(d, 2, k)
-compute_moments(d, 0.5, k)
-compute_moments(d, 0.1, k)
-compute_moments(d, 1e-2, k)
-compute_moments(d, 1e-3, k)
-compute_moments(d, 1e-4, k)
-compute_moments(d, 1e-5, k)
-
-d <- 4
-compute_moments(d, 1e-1, k)
-compute_moments(d, 1e-2, k)
-compute_moments(d, 1e-5, k)
-
-d <- 5
-compute_moments(d, 1e-1, k)
-compute_moments(d, 1e-2, k)
-compute_moments(d, 1e-5, k)
-
-d <- 6
-compute_moments(d, 1e-1, k)
-compute_moments(d, 1e-2, k)
-compute_moments(d, 1e-5, k)
-
-d <- 10
-compute_moments(d, 1e-1, k)
-compute_moments(d, 1e-2, k)
-compute_moments(d, 1e-5, k)
+compute_moments(2, 1e-5, k)
+compute_moments(3, 1e-5, k)
+compute_moments(4, 1e-5, k)
+compute_moments(5, 1e-5, k)
+compute_moments(6, 1e-5, k)
 ```
+
+## k = 5
+
+```{r}
+k <- 5
+compute_moments(2, 1e-5, k)
+compute_moments(3, 1e-5, k)
+compute_moments(4, 1e-5, k)
+compute_moments(5, 1e-5, k)
+compute_moments(6, 1e-5, k)
+compute_moments(7, 1e-5, k)
+compute_moments(8, 1e-5, k)
+compute_moments(9, 1e-5, k)
+compute_moments(10, 1e-5, k)
+```
+
+## k = 6
+
+```{r}
+k <- 6
+compute_moments(2, 1e-5, k)
+compute_moments(3, 1e-5, k)
+compute_moments(4, 1e-5, k)
+compute_moments(5, 1e-5, k)
+compute_moments(6, 1e-5, k)
+compute_moments(7, 1e-5, k)
+compute_moments(8, 1e-5, k)
+compute_moments(9, 1e-5, k)
+compute_moments(10, 1e-5, k)
+```
+
+## k = 7
+
+```{r}
+k <- 7
+compute_moments(6, 1e-5, k)
+compute_moments(7, 1e-5, k)
+compute_moments(8, 1e-5, k)
+compute_moments(9, 1e-5, k)
+compute_moments(10, 1e-5, k)
+compute_moments(11, 1e-5, k)
+compute_moments(12, 1e-5, k)
+compute_moments(13, 1e-5, k)
+compute_moments(14, 1e-5, k)
+compute_moments(15, 1e-5, k)
+```
+
+## k = 8
+
+```{r}
+k <- 8
+compute_moments(8, 1e-5, k)
+compute_moments(9, 1e-5, k)
+compute_moments(10, 1e-5, k)
+compute_moments(11, 1e-5, k)
+compute_moments(12, 1e-5, k)
+compute_moments(13, 1e-5, k)
+compute_moments(14, 1e-5, k)
+compute_moments(15, 1e-5, k)
+```
+
+
