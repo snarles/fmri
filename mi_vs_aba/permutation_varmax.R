@@ -30,6 +30,7 @@ compute_weights <- function(d, k, mc.reps = 1e4) {
     }
   }
   wmat <- wmat/sum(wmat)
+  wmat <- wmat - wts %*% t(wts)
   return(list(wts = wts, wmat = wmat))
 }
 
@@ -37,8 +38,7 @@ compute_moments <- function(v, wtz) {
   v <- sort(v, decreasing = FALSE)
   mu <- sum(v * wtz$wts)
   mu2 <- t(v) %*% wtz$wmat %*% v
-  va <- mu2 - mu^2
-  c(mu = mu, sig = sqrt(va))
+  c(mu = mu, sig = sqrt(mu2))
 }
 
 compute_moments_naive <- function(v, k, mc.reps = 1e4) {
@@ -51,16 +51,16 @@ compute_moments_naive <- function(v, k, mc.reps = 1e4) {
   c(mu = mean(lal2), sig = sd(lal2))
 }
 
-compute_weights(4, 3, mc.reps = 1e2)
-compute_weights(4, 3, mc.reps = 1e4)
-compute_weights(4, 3, mc.reps = Inf)
-
-v <- runif(3)
-v <- v/sum(v)
-
-k <- 3
-wtz <- compute_weights(d = length(v), k, mc.reps = 1e4)
-
-compute_moments_naive(v, k)
-compute_moments(v, wtz)
+# compute_weights(4, 3, mc.reps = 1e2)
+# compute_weights(4, 3, mc.reps = 1e4)
+# compute_weights(4, 3, mc.reps = Inf)
+# 
+# v <- runif(3)
+# v <- v/sum(v)
+# 
+# k <- 3
+# wtz <- compute_weights(d = length(v), k, mc.reps = 1e4)
+# 
+# compute_moments_naive(v, k)
+# compute_moments(v, wtz)
 
