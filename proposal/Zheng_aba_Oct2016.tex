@@ -248,11 +248,20 @@ Possible goals for statistical methodology (which currently don't exist):
 \item The achieved classification accuracy is an estimate of \emph{generalization accuracy}...
 \item which in turn lower bounds on the generalization error of the best classifier, the \emph{Bayes accuracy}.
 \item But the Bayes accuracy varies depending on the stimuli set $\bX^{(1)},\hdots, \bX^{(K)}$!
+\[
+\text{BA}(X_1,...,X_k)
+\]
 \end{itemize}
+Define \emph{average Bayes accuracy} as the expected Bayes accuracy
+\[
+\text{ABA}_k = \E[\text{BA}(X_1,...,X_k)]
+\]
+where expectation is taken over sampling $X_1,..,X_k$ from $p(x)$.
 \end{frame}
 
 \begin{frame}
 \frametitle{Average Bayes accuracy}
+\includegraphics[scale = 0.45, clip = true, trim = 0in 1in 0.5in 1in]{ta_to_aba.png}
 \end{frame}
 
 \begin{frame}
@@ -356,15 +365,21 @@ since the prior class probabilities are uniform.
 \end{frame}
 
 \begin{frame}
-\frametitle{An identity} Let's go over the result more slowly.
-Suppose $k = 3$.  For the following one-dimensional example, we have
-plotted $p(y|x_i)$ for $i = \{1,2,3\}$.
-
+\frametitle{Intuition behind identity}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{center}
+\includegraphics[scale = 0.35, clip = true, trim = 1.2in 1.3in 0in 1in]{var_ba.png}
+\end{center}   
+\end{column}
+\begin{column}{0.5\textwidth}  %%<--- here
 \begin{align*}
-\text{BA}(x_1,x_2,x_3) &= \sum_i \Pr[x_i]\Pr[\text{zone} i| Y \sim p(y|x_i)]
+\text{BA}&(x_1,x_2,x_3) \\&= \sum_i \Pr[x_i]\Pr_{Y \sim p(y|x_i)}[Y \in \text{zone }i]
 \\&= \sum_i \frac{1}{k} \text{Area under curve $i$ in zone $i$}
-\\&= \frac{1}{k} \text{Area under } \max_{i=1}^k p(y|x_i)
+\\&\ \ \ = \frac{1}{k} \text{Area under } \max_{i=1}^k p(y|x_i)
 \end{align*}
+\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}
