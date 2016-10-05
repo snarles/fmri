@@ -273,13 +273,13 @@ Recall that
 
 Converting a LCB for $\text{BA}_k$ to an LCB on $\text{ABA}_k$ boils down to the following problem:
 \vspace{0.2in}
+
 \emph{What is the variability of }$\text{BA}_k$?
+\vspace{0.2in}
+
+We will discuss this later in the talk!
 \end{frame}
 
-\begin{frame}
-\frametitle{Concentration of Bayes accuracy}
-We have both theoretical and empirical results on $\text{Var}[\text{BA}_k]$.
-\end{frame}
 
 \begin{frame}
 \frametitle{Motivation 2: Generalizing to similar designs}
@@ -310,6 +310,154 @@ about $X$ (or vice versa) in a nonlinear way.
 \frametitle{Mutual information}
 \end{frame}
 
+\section{Variability of Bayes accuracy}
+
+\begin{frame}
+\sectionpage
+\end{frame}
+
+\begin{frame}
+\frametitle{Definitions}
+\begin{itemize}
+\item Suppose $(X, Y)$ have a joint density $p(x, y)$,
+\item The Bayes accuracy is a function of the stimuli set $x_1,...,x_k$,
+\[
+\text{BA}(x_1,...,x_k)
+\]
+\item Draw $Z \sim \{1,...,k\}$, and draw $Y \sim p(y|x_z)$.
+\item Let $f$ (the \emph{classifier}) that associates a label $\{1,...,k\}$ to each possible value of $y$:
+\[
+f: \mathcal{Y} \to \{1,...,k\}
+\]
+\item Define
+\[
+\text{BA}(x_1,...,x_k) = \sup_f \Pr[f(Y) = Z| x_1,...,x_k]
+\]
+where the probability is over the joint distribution $(Y, Z)$ defined above.
+Notice we condition on the particular stimuli set $x_1,...,x_k$.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{An identity}
+\begin{itemize}
+\item It is a well-known result from Bayesian inference that the optimal classifier $f$ is defined as
+\[
+f(y) = \text{argmax}_{i=1}^k p(y|x_i),
+\]
+since the prior class probabilities are uniform.
+\item Therefore,
+\begin{align*}
+\text{BA}(x_1,...,x_k) &= \Pr[\text{argmax}_{i=1}^k p(y|x_i) = Z| x_1,...,x_k] 
+\\&= \frac{1}{k}\int \max_{i=1}^k p(y|x_i) dy.
+\end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{An identity} Let's go over the result more slowly.
+Suppose $k = 3$.  For the following one-dimensional example, we have
+plotted $p(y|x_i)$ for $i = \{1,2,3\}$.
+
+\begin{align*}
+\text{BA}(x_1,x_2,x_3) &= \sum_i \Pr[x_i]\Pr[\text{zone} i| Y \sim p(y|x_i)]
+\\&= \sum_i \frac{1}{k} \text{Area under curve $i$ in zone $i$}
+\\&= \frac{1}{k} \text{Area under } \max_{i=1}^k p(y|x_i)
+\end{align*}
+\end{frame}
+
+\begin{frame}
+\frametitle{Efron-Stein lemma}
+\begin{itemize}
+\item We have
+\[
+\text{ABA}_k = \E[\text{BA}(X_1,...,X_k)]
+\]
+where the expectation is over the independent sampling of $X_1,...,X_k$ from $p(x)$.
+\item According to the Efron-Stein lemma,
+\[
+\text{Var}[\text{BA}(X_1,...,X_k)] \leq \sum_{i=1}^k \E[\text{Var}[\text{BA}|X_1,...,X_{i-1}, X_{i+1}, ..., X_k]].
+\]
+which is the same as
+\[
+\text{Var}[\text{BA}(X_1,...,X_k)] \leq k \E[\text{Var}[\text{BA}|X_1,...,X_{k-1}]].
+\]
+\item The term $\text{Var}[\text{BA}|X_1,...,X_{k-1}]$ is the variance of $\text{BA}(X_1,...,X_k)$
+conditional on fixing the first $k-1$ curves $p(y|x_1),...,p(y|x_{k-1})$ and allowing the final curve $p(y|X_k)$ to vary randomly.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Efron-Stein lemma}
+\begin{itemize}
+\item 
+\[
+\text{Var}[\text{BA}(X_1,...,X_k)] \leq k \E[\text{Var}[BA|X_1,...,X_{k-1}]].
+\]
+\item Note the following trivial results
+\[
+-p(y|x_k) + \max_{i=1}^k p(y|x_i)\leq \max_{i=1}^{k-1} p(y|x_i) \leq \max_{i=1}^k p(y|x_i)
+\]
+\item This implies
+\[
+\text{BA}(X_1,...,X_k) - \frac{1}{k} \leq \frac{k-1}{k}\text{BA}(X_1,...,X_{k-1}) \leq \text{BA}(X_1,...,X_k).
+\]
+i.e. conditional on $(X_1,...,X_{k-1})$, $\text{BA}_k$ is supported on an interval of size $1/k$.
+\item Therefore,
+\[
+\text{Var}[\text{BA}|X_1,...,X_{k-1}] \leq \frac{1}{4k^2}
+\]
+since $\frac{1}{4c^2}$ is the maximal variance for any r.v. with support of length $c$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Variance bound}
+Therefore, Efron-Stein bound gives
+\[
+\text{sd}[\text{BA}_k] \leq \frac{1}{2\sqrt{k}}
+\]
+Compare this with empirical results (searching for worst-case distributions):
+\begin{tabular}{c||c|c|c|c|c|c|c}
+k & 2 & 3 & 4 & 5 & 6 & 7 & 8\\\hline
+$\frac{1}{2\sqrt{k}}$ & 0.25 & 0.194 & 0.167 & 0.150 & 0.136 & 0.126 & 0.118\\\hline
+Worst-case sd & 0.353 & 0.289 & 0.250 & 0.223 & 0.204 & 0.189 & 0.177
+\end{tabular}
+\end{frame}
+
+\begin{frame}
+\frametitle{Improving the variance bound?}
+\begin{itemize}
+\item All of the worst-case distributions found so far have the
+  following simple form:
+\[
+\mathcal{Y} = \mathcal{X} = \{1,...,d\} \text{ for some } d
+\]
+\[
+p(y|x) = I\{x = y\}
+\]
+Can we prove this rigorously?
+\item Recalling that
+\[
+\text{BA}(X_1,...,X_k) - \frac{1}{k} \leq \frac{k-1}{k}\text{BA}(X_1,...,X_{k-1}) \leq \text{BA}(X_1,...,X_k).
+\]
+it is worth noting that distributions of this type actually
+concentrate on the two endpoints of the bound, thus in some sense
+``maximizing'' the variance.
+%\item Distributions of this type actually maximize the variance
+%\[\text{Var}[\text{BA}|X_1,...,X_{k-1}]\]
+%given a constraint on $\E[BA|X_1,...,X_{k-1}]$,
+%since 
+%\[
+%\text{BA}(X_1,...,X_k) = \begin{cases}
+%\frac{k-1}{k}\text{BA}(X_1,..,X_{k-1}) & \text{ if }X_k \in \{X_1,..,X_{k-1}\}\\
+%\frac{k-1}{k}\text{BA}(X_1,..,X_{k-1}) + \frac{1}{k} & \text{ otherwise}
+%\end{cases}
+%\]
+\end{itemize}
+\end{frame}
+
 \section{Inferring mutual information from classification accuracy}
 
 \begin{frame}
@@ -329,18 +477,20 @@ about $X$ (or vice versa) in a nonlinear way.
 \begin{itemize}
 \item Step 1: Apply machine learning to obtain \emph{test accuracy} $\text{TA}_k$
 \item Step 2: Use $\text{TA}_k$ to infer the generalization accuracy $\text{GA}_k$
-\[
-\text{GA}_k \geq \text{TA}_k - z_\alpha \sqrt{\frac{\text{TA}_k(1-\text{TA}_k)}{n_{test}}} \text{ with probability } \geq 1-\alpha
-\]
+%\[
+%\text{GA}_k \geq \text{TA}_k - z_\alpha \sqrt{\frac{\text{TA}_k(1-\text{TA}_k)}{n_{test}}} \text{ with probability } \geq 1-\alpha
+%\]
 \item Step 3: The generalization accuracy is a lower bound on the Bayes accuracy,
 \[
 \text{GA}_k \leq \text{BA}_k
 \]
-\item Step 4: Use $\text{BA}_k$ to infer the average Bayes accuracy
-\[
-\text{ABA}_k \geq \text{BA}_k - \frac{1}{2\sqrt{\alpha k}}  \text{ with probability } \geq 1-\alpha
-\]
+\item Step 4: Use $\text{BA}_k$ to infer the average Bayes accuracy $\text{ABA}_k$
+%\[
+%\text{ABA}_k \geq \text{BA}_k - \frac{1}{2\sqrt{\alpha k}}  \text{ with probability } \geq 1-\alpha
+%\]
+\item Step 5: Obtain a lower bound on $I(X; Y)$ from $\text{ABA}_k$!
 \end{itemize}
+We already know how to do steps 1-4; now we discuss step 5.
 \end{frame}
 
 
