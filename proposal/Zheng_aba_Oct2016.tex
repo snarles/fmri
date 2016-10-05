@@ -573,9 +573,160 @@ The only remaining question is:
 Does $\text{ABA}_k$ close to 1 imply $\text{I}$ large?
 \vspace{0.2in}
 
-The answer is yes and provides the desired lower bound.
+The answer is yes and provides the desired lower bound.  In fact,
+\[
+\text{ABA}_k \to 1
+\]
+implies
+\[
+\text{I}[p(x, y)] \to \infty.
+\]
 \end{frame}
 
+\begin{frame}
+\frametitle{Problem formulation} Take $\iota > 0$, and fix $k \in
+\{2,3,...\}$.  Let $p(x, y)$ be a joint density (where $(X, Y)$
+could be random vectors of any dimensionality.)  Supposing
+\[
+\text{I}[p(x, y)] \leq \iota,
+\]
+then can we bound
+\[
+\text{ABA}_k[p(x, y)]?
+\]
+
+In other words, does there exist a constant
+\[
+C_k(\iota) = \sup_{p(x, y): \text{I}[p(x, y)] < \iota} \text{ABA}_k[p(x, y)]?
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Step 1: Reduction}
+Let $\mathcal{P}^{unif}$ be the class of densities $p(x, y)$ on the unit square, with uniform marginals
+\[
+p(x) = 1,\ \ p(y) = 1.
+\]
+We can show that if $C_k(\iota)$ exists, then we need only to search through distributions in $\mathcal{P}^{unif}$ to compute it:
+\[
+C_k(\iota) = \sup_{p(x, y) \in \mathcal{P}^{unif}: \text{I}[p(x, y)] < \iota} \text{ABA}_k[p(x, y)].
+\]
+We omit the proof.
+\end{frame}
+
+\begin{frame}
+\frametitle{Step 1: Reduction}
+Reduction simplifies the formulas.  For $p(x, y) \in \mathcal{P}^{unif}$,
+\[
+\text{I}[p(x, y)] = \int p(x, y) \log p(x, y) dx dy,
+\]
+and
+\[
+\text{ABA}_k[p(x, y)] = \frac{1}{k}\int \max_{i=1}^k p(x_i, y) dx_1 \cdots dx_k dy.
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Step 2: Conditioning}
+Due to uniform marginals $p(x, y) = p(x|y) = p(y|x)$.  Therefore,
+\[
+\text{I}[p(x, y)] = \int p(x|y) \log p(x|y) dx dy,
+\]
+and
+\[
+\text{ABA}_k[p(x, y)] = \frac{1}{k}\int \max_{i=1}^k p(x_i|y) dx_1 \cdots dx_k dy.
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Step 2: Conditioning}
+Write both functionals as an nested integral, with the outer integration over $y$
+\[
+\text{I}[p(x, y)] = \int \left[\int p(x|y) \log p(x|y) dx\right] dy,
+\]
+and
+\[
+\text{ABA}_k[p(x, y)] = \frac{1}{k}\int \left[\int \max_{i=1}^k p(x_i|y) dx_1 \cdots dx_k\right] dy.
+\]
+Notice that in both cases, the inner integral is a functional of $p(x|y)$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Step 2: Conditioning}
+Name the functionals, as \emph{conditional information}
+\[
+\text{I}[p(x, y)] = \int \underbrace{\left[\int p(x|y) \log p(x|y) dx\right]}_{\text{CI}[p(x|y)]} dy,
+\]
+and \emph{conditional accuracy}
+\[
+\text{ABA}_k[p(x, y)] = \frac{1}{k}\int \underbrace{\left[\int \max_{i=1}^k p(x_i|y) dx_1 \cdots dx_k\right]}_{\text{CA}_k[p(x|y)]} dy.
+\]
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Step 2: conditioning}
+Conditional information and conditional accuracies are functionals of one-dimensional densities.
+\[
+\text{CI}[q(x)] = \int \log q(x) dx,
+\]
+\[
+\text{CA}_k[q(x)] = \frac{1}{k}\int \max_{i=1}^k q(x_i) dx_1 \cdots dx_k.
+\]
+And, we have
+\[
+\text{I}[p(x, y)] = \int \text{CI}[p(x|y)]dy = \E[\text{CI}[p(x|Y)]],
+\]
+and
+\[
+\text{ABA}_k[p(x, y)] = \int \text{CA}_k[p(x|y)]dy = \E[\text{CA}_k[p(x|Y)]].
+\]
+for $Y \sim \text{Unif}[0,1]$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Step 3: convexity}
+\begin{itemize}
+\item Given $p(x, y) \in \mathcal{P}^{unif}$, define a map $\phi: [0,1] \to \mathbb{R}^2$
+by
+\[
+\phi(y) = (\text{CI}[p(x|y)], \text{CA}_k[p(x|y)]).
+\]
+We are mapping observations $y$ to their associated conditional information and accuracy.
+\item Consider the image of $\phi$:
+\[
+\text{Im}(\phi) = \{(\text{CI}[p(x|y)], \text{CA}_k[p(x|y)]): y \in [0,1]\}
+\]
+\item We have $(\text{I}[p(x, y)], \text{ABA}_k[p(x, y)]) = \E[\phi(y)]$.
+\item Therefore,
+\[
+(\text{I}[p(x, y)], \text{ABA}_k[p(x, y)]) \in \mathcal{C}(\text{Im}(\phi)),
+\]
+the convex hull of the image of $\phi$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Step 3: convexity}
+\begin{itemize}
+\item Let $\mathcal{P}^1$ denote the set of all densities $q(x)$ on $[0,1]$. Define the set $S$ as
+\[
+S: \{(\text{CI}[q(x)], \text{CA}_k[q(x)]): q \in \mathcal{P}^1\}
+\]
+\item Since all conditional densities $p(x|y) \in \mathcal{P}^1$, we have
+\[
+\text{Im}(\phi) \subset S,
+\]
+and therefore
+\[
+\mathcal{C}(\text{Im}(\phi)) \subset \mathcal{C}(S).
+\]
+\item Therefore,
+\[
+(\text{I}[p(x, y)], \text{ABA}_k[p(x, y)]) \in \mathcal{C}(S).
+\]
+\end{itemize}
+\end{frame}
 
 \begin{frame}
 \frametitle{References}
