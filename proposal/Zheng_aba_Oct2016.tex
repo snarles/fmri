@@ -534,12 +534,46 @@ And when $X \perp Y$, the best classifier does not better than random guessing.
 
 \begin{frame}
 \frametitle{Does $\text{I}$ large imply $\text{ABA}_k$ close to 1?}
-Answer is no, since we could have a joint distribution which is
-\emph{super-concentrated} in a small region, and relatively flat
-otherwise.
+Answer is \textbf{no}... per the following counterexample.
+\begin{columns}
+\begin{column}{0.5\textwidth}
 \begin{center}
 \includegraphics[scale = 0.3]{witch_hat_func.png}
 \end{center}
+\end{column}
+\begin{column}{0.5\textwidth}
+\[
+X \in [0,1],\ Y \in [0,1]
+\]
+\[
+p(x, y) \propto (1- \alpha) + \alpha \left( \frac{e^{-\frac{x^2 + y^2}{2\sigma^2}}}{2\pi\sigma^2} \right)
+\]
+\[
+\text{I}[p(x, y)] \approx \alpha(\frac{1}{2}\log \frac{1}{\sigma^2} - 1- \log (2\pi))
+\]
+\end{column}
+\end{columns}
+Taking $\alpha \to 0$ and $\sigma^2 \leq e^{-\frac{1}{\alpha^2}}$, we get 
+\[\text{I}[p(x, y)] \to \infty,\ \ \text{ABA}_k[p(x, y)] \to \frac{1}{k}.\]
+This also answers ``\emph{Does $\text{ABA}_k$ close to $1/k$ imply $\text{I}$ close to 0?''} (Also no.)
+\end{frame}
+
+\begin{frame}
+\frametitle{Natural questions}
+
+\begin{itemize}
+\item Does $\text{ABA}_k$ close to $1/k$ imply $\text{I}$ close to 0? \textbf{No}. (counterexample)
+\item Does $\text{I}$ large imply $\text{ABA}_k$ close to 1?  \textbf{No}. (counterexample)
+\item Does $\text{I}$ close to $0$ imply $\text{ABA}_k$ close to $1/k$? \textbf{Yes}.
+\end{itemize}
+
+The only remaining question is:
+\vspace{0.2in}
+
+Does $\text{ABA}_k$ close to 1 imply $\text{I}$ large?
+\vspace{0.2in}
+
+The answer is yes and provides the desired lower bound.
 \end{frame}
 
 
