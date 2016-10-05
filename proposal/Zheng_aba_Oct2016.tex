@@ -915,15 +915,111 @@ where note that additional constraint
 \]
 \end{frame}
 
+\begin{frame}
+\frametitle{Step 4: Compute the upper envelope}
+Switch to Langrangian form
+\[
+\text{minimize}_{Q(t) \in \mathcal{Q}}\ \mathcal{L}[Q(t)]
+\]
+where
+\[
+\mathcal{L}[Q(t)] = -\text{CA}_k[Q(t)] + \nu \text{CI}[Q(t)] + \lambda \text{E}[Q(t)]
+\]
+for some $\nu > 0$, $\lambda \in \mathbb{R}$.
+
+Then we can compute the functional derivative,
+\[
+\nabla \mathcal{L}[Q](t) = -t^{k-1} + \lambda + \nu + \nu \log Q(t).
+\]
+\end{frame}
 
 \begin{frame}
-\frametitle{References}
+\frametitle{Step 5: Variational magic!}
+Suppose we set the functional derivative to 0,
+\[
+0 = \nabla \mathcal{L}[Q](t) = -t^{k-1} + \lambda + \nu + \nu \log Q(t).
+\]
+Then we conclude that $Q(t)$ takes the form
+\[
+Q(t) = \alpha e^{\beta t^{k-1}}
+\]
+for some $\alpha > 0$, $\beta > 0$.
+
+From the constraint $\int Q(t) = 1$, we get
+\[
+Q_\beta(t) = \frac{e^{\beta t^{k-1}}}{\int e^{\beta t^{k-1}} dt}.
+\]
+
+As we vary $\beta \in [0,\infty)$, the points $(\text{CI}[Q_\beta(t)], \text{CA}[Q_\beta(t)])$ trace out the upper envelope!
+\end{frame}
+
+\begin{frame}
+\frametitle{Result}
+\textbf{Theorem}.
+For any $\iota > 0$, there exists $\beta_\iota \geq 0$ such that defining
+\[
+Q_\beta(t) = \frac{\exp[\beta t^{k-1}]}{\int_0^1 \exp[\beta t^{k-1}]},
+\]
+we have
+\[
+\int_0^1 Q_{\beta_\iota}(t) \log Q_{\beta_\iota}(t) dt = \iota.
+\]
+Then,
+\[
+C_k(\iota) = \int_0^1 Q_{\beta_\iota}(t) t^{k-1} dt.
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Technical sidenote}
+But wait a second... can we simply assume that
+\begin{enumerate}
+\item There even exists a $Q(t) \in \mathcal{Q}$ that attains the supremum?
+\item That given such a $Q(t)$ exists, that the functional derivative is equal to zero?
+\end{enumerate}
+Indeed, some technical arguments are needed for both points.
+\end{frame}
+
+\begin{frame}
+\frametitle{Technical sidenote}
+\textbf{Does there exists a $Q(t) \in \mathcal{Q}$ that attains the constrained supremum?}
+
 \begin{itemize}
-\item Cover and Thomas.  Elements of information theory.
-\item Muirhead.  Aspects of multivariate statistical theory.
-\item van der Vaart.  Asymptotic statistics.
+\item First define $\mathcal{Q}'$ as the space of distributions with $\text{E}[Q(t)] \leq 1$.
+\item If we view it as a family of probability measures, the family is tight.
+\item Therefore it is closed with respect to weak convergence
+\item Noting that $\text{CA}_k$ and $\text{CI}$ are continuous with
+  respect to weak convergence, this establishes that there does exist
+  $Q^*(t)$ which attains the constrained supremum
 \end{itemize}
 \end{frame}
+
+
+\begin{frame}
+\frametitle{Technical sidenote}
+\textbf{For the optimal $Q(t)$, how do we know $\nabla \mathcal{L}[Q](t) = 0$?}
+
+\begin{itemize}
+\item Since $\mathcal{Q}$ has a monotonicity constraint, we cannot simply take for granted that
+\[
+\nabla \mathcal{L}[Q^*](t) = 0
+\]
+\item However, we can show that assuming 
+\[
+\nabla \mathcal{L}[Q^*](t) \neq 0
+\]
+on a set of positive measure results in a contradiction.
+\item The contradiction is achieved by constructing a suitable
+  perturbation $\xi$ which is ``localized'' around a region where
+  $\mathcal{L}[Q^*](t)\neq 0$, such that $Q^* + \epsilon \xi \in
+  \mathcal{Q}$ and also so that $\int \xi(t) \nabla
+  \mathcal{L}[Q^*](t) dt < 0$.  This implies that for $\epsilon$
+  sufficiently small, $\mathcal{L}[Q^* + \epsilon \xi] <
+  \mathcal{L}[Q^*]$--a contradiction, since we assumed that $Q^*$ was
+  optimal.
+\end{itemize}
+\end{frame}
+
 
 \end{document}
 
