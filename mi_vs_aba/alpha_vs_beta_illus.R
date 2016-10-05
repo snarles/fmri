@@ -27,8 +27,16 @@ get_q_ints <- function(qs, k, naive = FALSE, mc.reps = 1e4) {
 
 
 ## dimension of pmf
-d <- 5; k <- 2
+d <- 100; k <- 3
 pmf <- runif(d); qs <- sort(pmf/sum(pmf) * d)
 qs
 get_q_ints(qs, k, TRUE)
 get_q_ints(qs, k)
+
+## run a lot of points
+library(pracma)
+pmfs <- rand(1e5, d)
+pmfs <- pmfs/rowSums(pmfs) * d
+qs <- apply(pmfs, 1, sort)
+lala <- apply(qs, 2, get_q_ints, k = k)
+plot(lala[2, ], lala[3, ], pch = ".")
