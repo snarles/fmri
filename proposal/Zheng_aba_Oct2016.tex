@@ -242,8 +242,7 @@ Possible goals for statistical methodology (which currently don't exist):
 \end{frame}
 
 \begin{frame}
-\frametitle{Motivation 1: Generalizing to identical replicate}
-\emph{ What can be inferred from the classification accuracy?}
+\frametitle{Motivation 1: What can be inferred from the classification accuracy?}
 \begin{itemize}
 \item The achieved classification accuracy is an estimate of \emph{generalization accuracy}...
 \item which in turn lower bounds on the generalization error of the best classifier, the \emph{Bayes accuracy}.
@@ -294,7 +293,7 @@ We will discuss this later in the talk!
 \frametitle{Motivation 2: Generalizing to similar designs}
 Define $\text{ABA}_k$ as the average Bayes accuracy for $k$ classes.
 
-Can we predict $\text{ABA}_{100}$ given data from 30 classes?  See Z., Achanta and Benjamnini (2016).
+Can we predict $\text{ABA}_{100}$ given data from 30 classes?  See Z., Achanta and Benjamini (2016).
 \begin{figure}
 \centering
 \includegraphics[scale = 0.4]{../info_theory_paper/cifar_example.pdf}
@@ -436,8 +435,8 @@ Therefore, Efron-Stein bound gives
 Compare this with empirical results (searching for worst-case distributions):
 \begin{tabular}{c||c|c|c|c|c|c|c}
 k & 2 & 3 & 4 & 5 & 6 & 7 & 8\\\hline
-$\frac{1}{2\sqrt{k}}$ & 0.25 & 0.194 & 0.167 & 0.150 & 0.136 & 0.126 & 0.118\\\hline
-Worst-case sd & 0.353 & 0.289 & 0.250 & 0.223 & 0.204 & 0.189 & 0.177
+$\frac{1}{2\sqrt{k}}$ & 0.353 & 0.289 & 0.250 & 0.223 & 0.204 & 0.189 & 0.177\\\hline
+Worst-case sd & 0.25 & 0.194 & 0.167 & 0.150 & 0.136 & 0.126 & 0.118
 \end{tabular}
 \end{frame}
 
@@ -450,7 +449,7 @@ Worst-case sd & 0.353 & 0.289 & 0.250 & 0.223 & 0.204 & 0.189 & 0.177
 \mathcal{Y} = \mathcal{X} = \{1,...,d\} \text{ for some } d
 \]
 \[
-p(y|x) = I\{x = y\}
+p(y|x) = \frac{1}{d}I\{x = y\}
 \]
 Can we prove this rigorously?
 \item Recalling that
@@ -489,26 +488,56 @@ concentrate on the two endpoints of the bound, thus in some sense
 
 \begin{frame}
 \frametitle{Outline}
+\begin{columns}
+\begin{column}{0.5\textwidth}
 \begin{itemize}
 \item Step 1: Apply machine learning to obtain \emph{test accuracy} $\text{TA}_k$
-\item Step 2: Use $\text{TA}_k$ to infer the generalization accuracy $\text{GA}_k$
-%\[
-%\text{GA}_k \geq \text{TA}_k - z_\alpha \sqrt{\frac{\text{TA}_k(1-\text{TA}_k)}{n_{test}}} \text{ with probability } \geq 1-\alpha
-%\]
-\item Step 3: The generalization accuracy is a lower bound on the Bayes accuracy,
-\[
-\text{GA}_k \leq \text{BA}_k
-\]
-\item Step 4: Use $\text{BA}_k$ to infer the average Bayes accuracy $\text{ABA}_k$
-%\[
-%\text{ABA}_k \geq \text{BA}_k - \frac{1}{2\sqrt{\alpha k}}  \text{ with probability } \geq 1-\alpha
-%\]
-\item Step 5: Obtain a lower bound on $I(X; Y)$ from $\text{ABA}_k$!
+\item Step 2: Infer $\text{ABA}_k$ from $\text{TA}_k$
+\item Step 3: Obtain a lower bound on $I(X; Y)$ from $\text{ABA}_k$!
 \end{itemize}
-We already know how to do steps 1-4; now we discuss step 5.
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{center}
+\includegraphics[scale = 0.3, clip = true, trim = 0in 1in 5.5in 1in]{ta_to_aba.png}
+\end{center}   
+\end{column}
+\end{columns}
+We already know how to do steps 1 and 2; now we discuss step 3.
 \end{frame}
 
+\begin{frame}
+\frametitle{Comparison of ABA and I}
+Average Bayes accuracy $\text{ABA}_k[p(x, y)]$ and mutual information $\text{I}[p(x, y)]$ are both \emph{functionals} of $p(x, y)$.
+\[
+\text{ABA}_k[p(x, y)] = \frac{1}{k} \int p_X(x_1)\hdots p_X(x_k) \max_{i=1}^k p(y|x_i)  dx_1\hdots dx_k dy.
+\]
+\[
+\text{I}[p(x, y)] = \int p(x, y) \log \frac{p(x, y)}{p(x)p(y)} dx dy.
+\]
+\end{frame}
 
+\begin{frame}
+\frametitle{Natural questions}
+\begin{itemize}
+\item Does $\text{ABA}_k$ close to 1 imply $\text{I}$ large?
+\item Does $\text{ABA}_k$ close to $1/k$ imply $\text{I}$ close to 0?
+\item Does $\text{I}$ large imply $\text{ABA}_k$ close to 1?
+\item Does $\text{I}$ close to $0$ imply $\text{ABA}_k$ close to $1/k$?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Does $\text{I}$ close to $0$ imply $\text{ABA}_k$ close to $1/k$?}
+Answer is yes, since $\text{I}[p(x, y)] = 0$ implies that $X$ is independent of $Y$.
+And when $X \perp Y$, the best classifier does not better than random guessing.
+\end{frame}
+
+\begin{frame}
+\frametitle{Does $\text{I}$ large imply $\text{ABA}_k$ close to 1?}
+Answer is no, since we could have a joint distribution which is
+\emph{super-concentrated} in a small region, and relatively flat
+otherwise.
+\end{frame}
 
 
 \begin{frame}
