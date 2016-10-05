@@ -646,7 +646,7 @@ Write both functionals as an nested integral, with the outer integration over $y
 \]
 and
 \[
-\text{ABA}_k[p(x, y)] = \frac{1}{k}\int \left[\int \max_{i=1}^k p(x_i|y) dx_1 \cdots dx_k\right] dy.
+\text{ABA}_k[p(x, y)] =\int \left[\frac{1}{k} \int \max_{i=1}^k p(x_i|y) dx_1 \cdots dx_k\right] dy.
 \]
 Notice that in both cases, the inner integral is a functional of $p(x|y)$.
 \end{frame}
@@ -659,7 +659,7 @@ Name the functionals, as \emph{conditional information}
 \]
 and \emph{conditional accuracy}
 \[
-\text{ABA}_k[p(x, y)] = \frac{1}{k}\int \underbrace{\left[\int \max_{i=1}^k p(x_i|y) dx_1 \cdots dx_k\right]}_{\text{CA}_k[p(x|y)]} dy.
+\text{ABA}_k[p(x, y)] = \int \underbrace{\left[\int\frac{1}{k} \max_{i=1}^k p(x_i|y) dx_1 \cdots dx_k\right]}_{\text{CA}_k[p(x|y)]} dy.
 \]
 \end{frame}
 
@@ -668,7 +668,7 @@ and \emph{conditional accuracy}
 \frametitle{Step 2: conditioning}
 Conditional information and conditional accuracies are functionals of one-dimensional densities.
 \[
-\text{CI}[q(x)] = \int \log q(x) dx,
+\text{CI}[q(x)] = \int q(x) \log q(x) dx,
 \]
 \[
 \text{CA}_k[q(x)] = \frac{1}{k}\int \max_{i=1}^k q(x_i) dx_1 \cdots dx_k.
