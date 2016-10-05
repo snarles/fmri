@@ -729,6 +729,194 @@ and therefore
 \end{frame}
 
 \begin{frame}
+\frametitle{Skipping ahead}
+It turns out that for any $k \in \{2,3,...\}$, that the set $S$ is already convex, so $\mathcal{C}(S) = S$.
+\begin{center}
+\includegraphics[scale = 0.3]{S_plot_5.pdf}
+\end{center}
+
+The \emph{upper envelope} of $S$ can be viewed as a function of
+$\iota$ (the conditional information).  In fact, this is exactly the lower bound we are seeking.
+\[
+C_k(\iota) = \max \{\beta: (\iota, \beta) \in S\} = \sup_{q(x) \in \mathcal{P}^1: \text{CI}[q(x)] = \iota}\text{CA}_k[q(x)].
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Step 4: Compute the upper envelope}
+We can prove that
+\[
+C_k(\iota) = \sup_{q(x) \in \mathcal{P}^1: \text{CI}[q(x)] = \iota}\text{CA}_k[q(x)].
+\]
+Therefore, it remains to solve the optimization problem
+\[
+\text{maximize}_{q(x) \in \mathcal{P}^1}\ \text{CA}_k[q(x)] \text{ subject to }\text{CI}[q(x)] = \iota.
+\]
+
+This is accomplished using \emph{calculus of variations}.
+\end{frame}
+
+\begin{frame}
+\frametitle{Functional derivatives}
+\begin{itemize}
+\item Functional derivatives are essential to variational calculus.
+\item Let $\mathcal{F}$ be a \emph{Hilbert space} of functions with domain $\mathcal{X}$ and range $\mathbb{R}$.
+\item Suppose $F$ is a functional which maps functions $f$ to the real line.
+Then the functional derivative $\nabla F[f]$ at $f$ is a function in the space $\mathcal{F}$ such that
+\[
+\lim_{\epsilon \to 0}\frac{F(f + \epsilon \xi) - F(f)}{\epsilon} = \int_{\mathcal{X}} \nabla F[f](x) \xi(x) dx.
+\]
+for all $\xi \in \mathcal{F}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Functional derivatives}
+\begin{itemize}
+\item Taylor explansions are a useful trick for computing functional derivatives
+\item We can compute the functional derivative of $\text{CI}[q(x)]$ by writing
+\begin{align*}
+\text{CI}[q(x) + \epsilon \xi(x)] &= \int (q(x) + \epsilon \xi(x)) \log (q(x) + \epsilon \xi(x)) dx
+\\&\approx  \int (q(x) + \epsilon \xi(x)) (\log q(x) + \frac{\epsilon \xi(x)}{q(x)}) dx
+\\&\approx  \text{CI}[q(x)] + \int q(x) \frac{\epsilon \xi(x)}{q(x)} + \epsilon \xi(x) \log q(x) dx
+\end{align*}
+\item Hence
+\[
+\nabla \text{CI}[q](x) = 1 + \log q(x).
+\]
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Functional derivatives}
+\begin{itemize}
+\item Unfortunately, the functional derivative of $\text{CA}_k$ is not easy to work with...
+\[
+\text{CA}_k[q(x) + \epsilon \xi(x)] = \int \max_{i=1}^k (q(x_i) + \epsilon \xi(x_i))  dx_1\cdots dx_k = ??
+\]
+\item This will pose an obstacle to applying variational methods, so we use a \emph{reparameterization trick}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Reparameterization trick}
+\begin{itemize}
+\item For any $q(x) \in \mathcal{P}^1$, define a corresponding function $Q: [0, 1] \to [0,\infty)$ as follows:
+\item If $q(x)$ is already monotonic, then $Q(x) = q(x)$.
+\item Otherwise, $Q(t)$ ``sorts'' $q(x)$,
+\[
+Q(t) = sup \{u: \int I\{q(x) \leq u\}dx \leq t\}.
+\]
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Reparameterization trick}
+\begin{itemize}
+\item We call $Q(t)$ the \emph{quantile function} corresponding to
+  $q(x)$ since $Q(t)$ is a monotonically increasing function from
+  $[0,1]$ to $[0,\infty)$.
+\item We have $\int_0^1 Q(t) dt = 1$, since $\int_0^1 q(t) dt = 1$.
+\item We can rewrite the functionals $\text{CI}$ and $\text{CA}_k$ in terms of $Q$
+\[
+\text{CI}[Q(t)] = \int_0^1 Q(t) \log Q(t) dt.
+\]
+This is basically the same formula as $\text{CA}[q(x)]$.
+\item What is more surprising,
+\[
+\text{CA}_k[Q(t)] = \int_0^1 Q(t) t^{k-1} dt.
+\]
+This allows us to obtain a simple expression for the functional derivative $\nabla \text{CA}_k[Q]$!
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{How does it work?}
+\begin{itemize}
+\item We will show that
+\[
+\text{CA}_k[q(x)] = \frac{1}{k}\int \max_{i=1}^k q(x_i) dx_1 \cdots dx_k = \int_0^1 Q(t) t^{k-1} dt = \text{CA}_k[Q(t)].
+\]
+\item Given $q(x) \in \mathcal{P}^1$, define an \emph{order function} $\sigma(t)$
+such that $\sigma$ is a piecewise differentiable bijection from $[0,1]$ to $[0,1]$, and so that
+\[
+\int I\{\sigma(t) < u\} dt = u
+\]
+for all $u \in [0,1]$,
+and with the property that
+\[
+q(\sigma(t)) < q(\sigma(t')).
+\]
+if and only if
+\[
+t < t'.
+\]
+\item One can check that $Q(t) = q(\sigma(t))$ for any function $\sigma$ satisfying these properties.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{How does it work?}
+\begin{itemize}
+\item Due to change-of-variables formula, defining
+\[T = \sigma^{-1}(X),\]
+we have $T \sim \text{Unif}[0,1]$.
+\item If $x_i = \sigma(t_i)$ for $i = 1,\hdots, k$, then
+\[
+\max_{i=1}^k q(x_i) = \max_{i=1}^k q(\sigma(t_i)) = q(\sigma\left(\max_{i=1}^k t_i\right))
+\]
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{How does it work?}
+\begin{itemize}
+\item Combining the two results,
+\begin{align*}
+\text{CA}_k[q(x)] &= \frac{1}{k}\int \max_{i=1}^k q(x_i) dx_1 \cdots dx_k 
+\\&= \frac{1}{k}\int \max_{i=1}^k q(\sigma(\max_{i=1}^k t_i)) dt_1 \cdots dt_k.
+\end{align*}
+\item Note that the above integral can be written as
+\[
+\text{CA}_k[q(x)] = \frac{1}{k}\E[q(\sigma(\max_{i=1}^k T_i))]
+\]
+for $T_i$ independently $\text{Unif}[0,1]$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{How does it work?}
+\begin{itemize}
+\item Hence, letting $M = \max_{i=1}^k T_i$, the density of $M$ is
+\[
+f(m) = k m^{k-1},
+\]
+and we get
+\begin{align*}
+\text{CA}_k[q(x)] &= \frac{1}{k}\E[q(\sigma(M))]
+\\&= \frac{1}{k}\E[\max_{i=1}^k Q(M)]
+\\&= \int_0^1 Q(m) m^{k-1}dm  = \text{CA}_k[Q]
+\end{align*}
+as needed.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Step 4: Compute the upper envelope}
+Let $\mathcal{Q}$ denote the space of quantile functions 
+\[\mathcal{Q} = \{Q(t): [0,1] \to [0,\infty)\text{ and }Q(t)\text{ increasing }\}.\]
+We now have the reparameterized problem
+\[
+\text{maximize}_{Q(t) \in \mathcal{Q}}\ \text{CA}_k[Q(t)] \text{ subject to }\text{CI}[Q(t)] = \iota\text{ and }\text{E}[Q(t)] = 1
+\]
+where note that additional constraint
+\[
+\text{E}[Q(t)] \stackrel{def}{=} \int_0^1 Q(t) dt = 1.
+\]
+\end{frame}
+
+
+\begin{frame}
 \frametitle{References}
 \begin{itemize}
 \item Cover and Thomas.  Elements of information theory.
