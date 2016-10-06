@@ -1,4 +1,5 @@
 library(png)
+library(pracma)
 
 ## loading pics
 
@@ -13,10 +14,13 @@ plot(NA, NA, xlim = c(0, 1), ylim = c(0, 1))
 rasterImage(br, 0, 0, 1, 1)
 locator(1)
 
+## ((col - 47)/28)^2 + ((row - 50)/38)^2
+
 ## generation of patterns
 
-
-
+mtrx <- zeros(100, 100)
+rc <- cbind(as.numeric(row(mtrx)), as.numeric(col(mtrx)))
+dm <- distmat(rc, rc)
 
 ## drawing pics
 
