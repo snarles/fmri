@@ -1,11 +1,24 @@
 library(png)
 
-
+## loading pics
 
 icons <- list()
 icons[[1]] <- readPNG("diagram/k_pic1.png")
 icons[[2]] <- readPNG("diagram/k_pic2.png")
 br <- readPNG("diagram/brain100.png")
+
+## figure out that ellipse
+
+plot(NA, NA, xlim = c(0, 1), ylim = c(0, 1))
+rasterImage(br, 0, 0, 1, 1)
+locator(1)
+
+## generation of patterns
+
+
+
+
+## drawing pics
 
 cols <- c("red", "blue")
 (alter <- rep(1:2, 5))
