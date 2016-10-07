@@ -136,6 +136,194 @@
 \section{Introduction}
 
 \begin{frame}
+\frametitle{Dependence, distance, and information}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{center}
+\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_1a.pdf}
+\end{center}
+\begin{itemize}
+\item $X$ is independent of $Y$: 
+\[X \perp Y\]
+\item $X$ and $Y$ have no mutual information:
+\[
+I(X; Y) = 0
+\]
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Dependence, distance, and information}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{center}
+\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_1a.pdf}
+\end{center}
+\begin{itemize}
+\item $X$ is independent of $Y$: 
+\[X \perp Y\]
+\item $X$ and $Y$ have no mutual information:
+\[
+I(X; Y) = 0
+\]
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{center}
+Classifying $\text{Sign}(X)$ from $Y$
+
+\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.9in 0.1in 0.2in]{../diagram/ddi_1b.pdf}
+
+\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_1c.pdf}
+\end{center}
+$KL(Y|X > 0, Y|X < 0) = 0.$
+
+Bayes accuracy = 0.5.
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Dependence, distance, and information}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{center}
+\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_2a.pdf}
+\end{center}
+\begin{itemize}
+\item $X$ is dependent of $Y$: 
+\[\text{Cor}(X, Y) = 0.8.\]
+\item $X$ and $Y$ have mutual information:
+\[
+I(X; Y) = 0.51.
+\]
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Dependence, distance, and information}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{center}
+\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_2a.pdf}
+\end{center}
+\begin{itemize}
+\item $X$ is dependent of $Y$: 
+\[\text{Cor}(X, Y) = 0.5.\]
+\item $X$ and $Y$ have mutual information:
+\[
+I(X; Y) = 0.51.
+\]
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{center}
+Classifying $\text{Sign}(X)$ from $Y$
+
+\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.9in 0.1in 0.2in]{../diagram/ddi_2b.pdf}
+
+\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_2c.pdf}
+\end{center}
+$KL(Y|X > 0, Y|X < 0) = 1.64$
+
+Bayes accuracy = 0.795.
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Bayes accuracy}
+\begin{itemize}
+\item Discrete $Y \in \{1,...,k\}$, continuous or discrete $X$.
+\item A classifier is a function $f$ mapping $x$ to a label in $\{1,..,k\}$
+\item Generalization accuracy of the classifier:
+\[
+\text{GA}(f) = \Pr[Y = f(x)]
+\]
+\item Bayes accuracy:
+\[
+\text{BA} = \sup_f \Pr[Y = f(x)] = \Pr[Y = \text{argmax}_{i=1} p(X|Y=i)]
+\]
+\item Since random guessing is correct with probability $1/k$,
+\[
+\text{BA} \in [1/k, 1]
+\]
+(if $Y$ is uniformly distributed)
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Mutual information}
+\begin{itemize}
+\item Invented by Claude Shannon; central to \emph{information theory}.
+\item Given $(X, Y)$ with joint density $p(x, y)$,
+\[
+I(X; Y) = \int p(x, y) \log\frac{p(x, y)}{p(x) p(y)} dx dy
+\]
+where $p(x)$ and $p(y)$ are marginal densities.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Mutual information}
+\begin{center}
+\includegraphics[scale = 0.2]{kinney.png}
+\end{center}
+\begin{itemize}
+\item $I(X;Y) \in [0,\infty]$.  (0 if $X \perp Y$, $\infty$ if $X=Y$ and $X$ continuous.)
+\item Symmetry: $I(X;Y) = I(Y; X)$.
+\item Data-processing inequality
+\[I(X; Y) \geq I(\phi(X); \psi(Y))\]
+equality for $\phi$, $\psi$ bijections
+\item Additivity.  If $(X_1,Y_1) \perp (X_2, Y_2)$, then
+\[
+I((X_1, X_2); (Y_1, Y2)) = I(X_1; Y_1) + I(X_2; Y_2).
+\]
+%\item Relation to KL divergence
+%\[\mathbb{D}(p(x, y)||p(x)p(y)) = I(X; Y).\]
+\end{itemize}
+\tiny{Image credit Kinney et al. 2014.}
+\end{frame}
+
+\begin{frame}
+\frametitle{Informativity of predictor sets}
+
+Consider predicting binary $Y$ with:
+\begin{itemize}
+\item $X_1$ only
+\item $X_1$ and $X_2$
+\item $X_1, ..., X_k$
+\end{itemize}
+
+\begin{center}
+\includegraphics[scale = 0.6, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/informativity1.pdf}
+\includegraphics[scale = 0.6, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/informativity2.pdf}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Mutual information vs Bayes accuracy}
+\begin{itemize}
+\item Both are measures of ``informativity''.
+\item Due to its properties, mutual information is easier to interpret.
+\item Both are intractable to estimate in high dimensions.
+\item However, Bayes accuracy has a tractable \emph{lower bound}: the generalization error of \emph{any} classifier.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
 \frametitle{Studying the neural code}
 \begin{center}
 \includegraphics[scale = 0.3]{k08_step1.png}
@@ -144,59 +332,31 @@ Present the subject with visual stimuli, pictures of faces and houses.
 Record the subject's brain activity in the fMRI scanner.
 \end{frame}
 
-
-
+%\includepdf[pages=1]{Zheng_proposal.pdf}
+{
+\setbeamercolor{background canvas}{bg=}
+\includepdf[pages=1]{searchlight_slide.pdf}
+% from Razaida
+}
 
 \begin{frame}
-\frametitle{Studying the neural code: data}
+\frametitle{Searchlight analysis}
 \begin{center}
-\includegraphics[scale = 0.2]{quiroga.png}
+\includegraphics[scale = 0.5]{searchlight_windowsize.png}
 \end{center}
-\begin{itemize}
-\item  Let $\mathcal{X}$ define a class of stimuli (faces, objects, sounds.)
-\item Stimulus $\bX = (X_1,\hdots, X_p)$, where $X_i$ are features (e.g. pixels.)
-\item Present $\bX$ to the subject, record the subject's brain activity using EEG, MEG, fMRI, or calcium imaging.
-\item Recorded response $\bY = (Y_1,\hdots, Y_q)$, where $Y_i$ are single-cell responses, or recorded activities in different brain region. 
-\end{itemize}
-\tiny{Image credits: Quiroga et al. (2009).}
+Produces a map of ``informative'' regions of the brain (as measured by generalization accuracy).
 \end{frame}
 
 \begin{frame}
-\frametitle{Experimental design}
+\frametitle{Formalizing the searchlight map}
 \begin{itemize}
-\item How to make inferences about the population of stimuli in
-  $\mathcal{X}$ using finitely many examples?
-\item \emph{Randomization.}  Select $\bX^{(1)},\hdots,
-  \bX^{(K)}$ randomly from some distribution $p(\bx)$ (e.g. an image
-  database).  Record $r$ responses from each stimulus.
+\item Population of inference: hypothetical (stimulus, brain scan) pairs obtained from a \emph{fixed} subject.
+\item Further, suppose the $k$ stimuli are uniformly distributed.
+\item \emph{Generalization accuracy} is not a \emph{population parameter}, because it varies depending on training data and classifier used.
+\item \emph{Bayes accuracy} is a well-defined population parameter.
+\item Generalization accuracy (GA) provides a \emph{lower bound} to Bayes accuracy (BA).
+\item Under mild conditions $GA \to BA$ as we take the limit of infinite training data.
 \end{itemize}
-\begin{center}
-\begin{tikzpicture}[node distance = 2mm and 20mm]
-\tikzstyle{main} = [circle, minimum size = 12mm, thick, draw = black!80]
-\tikzstyle{main0} = [circle, minimum size = 2mm, thick, draw = white!100]
-\tikzstyle{param} = [rectangle, minimum size = 13mm, thick, draw = black!80]
-\tikzstyle{connect} = [-latex, thick]
-\tikzstyle{box} = [rectangle, draw = black!100]
-  \node[param, fill = black!50] (px) {$p(\bx)$};
-  \node[main, right=of px] (x2) {\small{$\bX^{(2)}$}};
-  \node[main, above=of x2] (x1) {\small{$\bX^{(1)}$}};
-  \node[main0, below=of x2] (xdots) {$\vdots$};
-  \node[main, below=of xdots] (x3) {\small{$\bX^{(K)}$}};
-  \node[main, right=of x1] (y11) {\small{$\bY^{(1,1)}$}};
-  \node[main, right=of x2] (y21) {\small{$\bY^{(2,j)}$}};
-  \node[main, right=of x3] (y31) {\small{$\bY^{(K,j)}$}};
-\begin{scope}[node distance = 3mm and 2mm]
-  \node[main0, right=of y11] (y12) {$\cdots$};
-  \node[main0, right=of y21] (y22) {$\cdots$};
-  \node[main0, right=of y31] (y32) {$\cdots$};
-  \node[main, right=of y12] (y13) {\small{$\bY^{(1,r)}$}};
-  \node[main, right=of y22] (y23) {\small{$\bY^{(2,r)}$}};
-  \node[main, right=of y32] (y33) {\small{$\bY^{(K,r)}$}};
-\end{scope}
-\path (px) edge [connect] (x1) (px) edge [connect] (x2) (px) edge [connect] (x3)
-      (x1) edge [connect] (y11) (x2) edge [connect] (y21) (x3) edge [connect] (y31);
-\end{tikzpicture}
-\end{center}
 \end{frame}
 
 \begin{frame}
@@ -314,9 +474,6 @@ The answer is yes, and the solution was provided by Claude Shannon.
 about $X$ (or vice versa) in a nonlinear way.
 \end{frame}
 
-\begin{frame}
-\frametitle{Mutual information}
-\end{frame}
 
 \section{Variability of Bayes accuracy}
 
