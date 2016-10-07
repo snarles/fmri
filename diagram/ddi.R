@@ -21,15 +21,23 @@ plot2 <- function(rho) {
   #layout(matrix(1:2), 2, 1)
   set.seed(0)
   mat <- matrix(c(1, rho, rho, 1), 2, 2)
-  xy <- mvrnorm(2000, mu = c(0, 0), Sigma = mat)
+  xy <- mvrnorm(1e5, mu = c(0, 0), Sigma = mat)
   x <- xy[, 1]
   y <- xy[, 2]
   bks <- seq(-4, 4, by = 0.2)
-  hist(y[x >= 0], breaks = bks, xlim = c(-4, 4), col = col1, main = "Y|X>0", xlab = "x", ylim = c(0, 150))
-  #hist(x[x <= 0 & y >= 0], breaks = bks, xlim = c(-4, 4), col = col2, add = TRUE)
-  hist(y[x <= 0], breaks = bks, xlim = c(-4, 4), col = col2, main = "Y|X<0", xlab = "x", ylim = c(0, 150))
-  #hist(x[x <= 0 & y <= 0], breaks = bks, xlim = c(-4, 4), col = col2, add = TRUE)
-  print(list(acc = mean(x * y >= 0)))
+  d1 <- density(y[x > 0], adjust = 3)
+  d2 <- density(y[x < 0], adjust = 3)
+  plot(NA, NA, xlim = c(-4, 4), ylim = c(0, 0.7), xlab = "X", ylab = "density",
+       main = "Y|X > 0")
+  lines(d1, col = "red", lwd = 2)
+  plot(NA, NA, xlim = c(-4, 4), ylim = c(0, 0.7), xlab = "X", ylab = "density",
+       main = "Y|X < 0")
+  lines(d2, col = "blue", lwd = 2)
+  # hist(y[x >= 0], breaks = bks, xlim = c(-4, 4), col = col1, main = "Y|X>0", xlab = "x", ylim = c(0, 150))
+  # #hist(x[x <= 0 & y >= 0], breaks = bks, xlim = c(-4, 4), col = col2, add = TRUE)
+  # hist(y[x <= 0], breaks = bks, xlim = c(-4, 4), col = col2, main = "Y|X<0", xlab = "x", ylim = c(0, 150))
+  # #hist(x[x <= 0 & y <= 0], breaks = bks, xlim = c(-4, 4), col = col2, add = TRUE)
+  #print(list(acc = mean(x * y >= 0)))
 }
 
 rho <- 0.9
@@ -43,7 +51,8 @@ classific <- function(rho) {
   res <- glm(z ~ poly(y, degree = 3), family = "binomial")
   plot(y[order(y)], res$fitted.values[order(y)], type = "o")
   fv <- res$fitted.values
-  mean(pmax(fv, 1-fv))
+  print(mean(pmax(fv, 1-fv)))
+  print(mean(x * y > 0))
 }
 
 library(imputeTS)
@@ -94,3 +103,9 @@ classific(0.2)
 classific(0.3)
 classific(0.4)
 classific(0.8)
+library(mvtnorm)
+
+rho <- 0.8
+mat <- matrix(c(1, rho, rho, 1), 2, 2)
+res <- pmvnorm(lower = c(0, 0), sigma = mat)
+res * 2
