@@ -603,7 +603,9 @@ C_k(\iota) = \sup_{p(x, y): \text{I}[p(x, y)] < \iota} \text{ABA}_k[p(x, y)]?
 
 Yes we can, and this is what the resulting function $C_k(\iota)$ looks like:
 \begin{center}
-\includegraphics[scale = 0.3]{S_plot_5.pdf}
+\includegraphics[scale = 0.34]{ck_2.pdf}
+\includegraphics[scale = 0.34]{ck_3.pdf}
+\includegraphics[scale = 0.34]{ck_4.pdf}
 \end{center}
 As information increases, the maximal average Bayes accuracy goes to 1.
 
@@ -646,13 +648,13 @@ The information and average Bayes error can be written in terms of $q(x)$.
 \begin{frame}
 \frametitle{Simplified formulae}
 
-With some abuse of notation, rewrite information and average Bayes error as functionals of $q(x)$.
+Overloading the notation and ``redefine'' information and average Bayes error as functionals of $q(x)$.
 
 \[
-\text{I}[q(x)] = \int_0^1 q(x) \log q(x) dx
+\text{I}[q(x)] \stackrel{def}{=} \int_0^1 q(x) \log q(x) dx
 \]
 \[
-\text{ABA}_k[q(x)] = \frac{1}{k}\int_{[0, 1]^k} \max_{i=1}^k q(x_i) dx_1 \cdots dx_k
+\text{ABA}_k[q(x)] \stackrel{def}{=} \frac{1}{k}\int_{[0, 1]^k} \max_{i=1}^k q(x_i) dx_1 \cdots dx_k
 \]
 
 \end{frame}
@@ -766,7 +768,7 @@ Suppose we set the functional derivative to 0,
 \[
 0 = \nabla \mathcal{L}[q](t) = -t^{k-1} + \lambda + \nu + \nu \log q(t).
 \]
-Then we conclude that the otpimal $q^*(t)$ takes the form
+Then we conclude that the optimal $q^*(t)$ takes the form
 \[
 q^*(t) = \alpha e^{\beta t^{k-1}}
 \]
