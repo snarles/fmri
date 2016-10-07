@@ -25,14 +25,26 @@ plot2 <- function(rho) {
   x <- xy[, 1]
   y <- xy[, 2]
   bks <- seq(-4, 4, by = 0.2)
-  hist(x[x >= 0 & y >= 0], breaks = bks, xlim = c(-4, 4), col = col1, main = "X|Y>0", xlab = "x", ylim = c(0, 150))
-  hist(x[x <= 0 & y >= 0], breaks = bks, xlim = c(-4, 4), col = col2, add = TRUE)
-  hist(x[x >= 0 & y <= 0], breaks = bks, xlim = c(-4, 4), col = col1, main = "X|Y<0", xlab = "x", ylim = c(0, 150))
-  hist(x[x <= 0 & y <= 0], breaks = bks, xlim = c(-4, 4), col = col2, add = TRUE)
+  hist(y[x >= 0], breaks = bks, xlim = c(-4, 4), col = col1, main = "Y|X>0", xlab = "x", ylim = c(0, 150))
+  #hist(x[x <= 0 & y >= 0], breaks = bks, xlim = c(-4, 4), col = col2, add = TRUE)
+  hist(y[x <= 0], breaks = bks, xlim = c(-4, 4), col = col2, main = "Y|X<0", xlab = "x", ylim = c(0, 150))
+  #hist(x[x <= 0 & y <= 0], breaks = bks, xlim = c(-4, 4), col = col2, add = TRUE)
   print(list(acc = mean(x * y >= 0)))
 }
 
 rho <- 0.9
+
+classific <- function(rho) {
+  mat <- matrix(c(1, rho, rho, 1), 2, 2)
+  xy <- mvrnorm(1e5, mu = c(0, 0), Sigma = mat)
+  x <- xy[, 1]
+  y <- xy[, 2]
+  z <- (x >= 0)
+  res <- glm(z ~ poly(y, degree = 3), family = "binomial")
+  plot(y[order(y)], res$fitted.values[order(y)], type = "o")
+  fv <- res$fitted.values
+  mean(pmax(fv, 1-fv))
+}
 
 library(imputeTS)
 
@@ -75,3 +87,10 @@ rhos <- seq(0, 0.95, by = 0.05)
 kls <- sapply(rhos, kldiv)
 layout(1)
 plot(rhos, kls, type = "l")
+
+classific(0)
+classific(0.1)
+classific(0.2)
+classific(0.3)
+classific(0.4)
+classific(0.8)
