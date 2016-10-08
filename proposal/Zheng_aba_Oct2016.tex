@@ -434,22 +434,16 @@ But it would be more interesting to be able to make inferences from the data abo
 \includegraphics[scale = 0.5]{imagenet_sub.png} &
 \includegraphics[scale = 0.3]{smbrain2.png}
 \end{tabular}
+
+\vspace{0.2in}
+4. Train a classifier
+
+\vspace{0.2in}
+5. Estimate generalization accuracy (which is lower bound for the \emph{random} Bayes accuracy $\text{BA}_k$)
 \end{frame}
 
 \begin{frame}
-\frametitle{Randomized classification: gaussian example}
-\begin{center}
-\begin{tabular}{ccc}
-Experiment 1 & Experiment 2 & Experiment 3\\
-\includegraphics[scale = 0.2, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1a.png} &
-\includegraphics[scale = 0.2, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1b.png} &
-\includegraphics[scale = 0.2, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1c.png}
-\end{tabular}
-\end{center}
-\end{frame}
-
-\begin{frame}
-\frametitle{Randomized classification: gaussian example}
+\frametitle{Average Bayes error}
 \begin{center}
 \begin{tabular}{c|c|c|c}
 & Experiment 1 & Experiment 2 & Experiment 3\\\hline
@@ -475,6 +469,52 @@ Bayes accuracy & 0.55 & 0.65 & 0.52 \\
 \includegraphics[scale = 0.45, clip = true, trim = 0in 1in 0.5in 1in]{ta_to_aba.png}
 \end{frame}
 
+
+
+\begin{frame}
+\frametitle{Two measures of informativity: ABA and mutual information}
+Both are:
+\begin{itemize}
+\item measures of informativity between $X$ and $Y$
+\item invariant to bijective transformations of either $X$ or $Y$
+\item defined with reference to a \emph{population} of stimuli and either a single subject or population of subjects
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Comparison of ABA and mutual information}
+$\text{ABA}_k$ advantages:
+\begin{itemize}
+\item intuitive to understand ``classification performance''.
+\item easy to average over a \emph{population} of subjects.
+\item closer to what you can measure: (generalization accuracy).
+\end{itemize}
+$\text{ABA}_k$ disadvantages:
+\begin{itemize}
+\item Not symmetric with respect to $X$ and $Y$.  Have to choose one as predictor and one as response.
+\item Dependent on $k$, the number of classes.
+\item Problem of \emph{saturation}.  If $k$ is too large,
+  $\text{ABA}_k$ gets close to chance accuracy.  If $k$ is too large,
+  $\text{ABA}_k$ gets close to 1.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Comparison of ABA and mutual information}
+Mutual information advantages:
+\begin{itemize}
+\item already has a tradition of usage in neuroscience.
+\item symmetric between $X$ and $Y$: $X$ is equally informative of $Y$ as $Y$ is of $X$.
+\item doesn't depend on $k$, the number of stimuli.
+\item additional theoretical properties like independent additivity.
+\end{itemize}
+Mutual information disadvantages:
+\begin{itemize}
+\item not robust: $I(X; Y)$ becomes unbounded if $p(x,y)$ contains singularities.
+\item does it make sense to take the average mutual information across subjects?
+\end{itemize}
+\end{frame}
+
 \begin{frame}
 \frametitle{Outline of the talk}
 Suppose we have data from \emph{randomized classification}
@@ -488,16 +528,11 @@ Suppose we have data from \emph{randomized classification}
 \end{frame}
 
 
-
-
-
-
 \section{Inference of average Bayes accuracy}
 
 \begin{frame}
 \sectionpage
 \end{frame}
-
 
 \begin{frame}
 \frametitle{Inferring average Bayes accuracy}
@@ -521,6 +556,7 @@ Converting a lower confidence bound (LCB) for $\text{BA}_k$ to an LCB on $\text{
 \emph{What is the variability of }$\text{BA}_k$?
 \vspace{0.2in}
 \end{frame}
+
 %\begin{frame}
 %\frametitle{Definitions}
 %\begin{itemize}
@@ -580,54 +616,54 @@ since the prior class probabilities are uniform.
 
 
 
-\begin{frame}
-\frametitle{Efron-Stein lemma}
-\begin{itemize}
-\item We have
-\[
-\text{ABA}_k = \E[\text{BA}(X_1,...,X_k)]
-\]
-where the expectation is over the independent sampling of $X_1,...,X_k$ from $p(x)$.
-\item According to the Efron-Stein lemma,
-\[
-\text{Var}[\text{BA}(X_1,...,X_k)] \leq \sum_{i=1}^k \E[\text{Var}[\text{BA}|X_1,...,X_{i-1}, X_{i+1}, ..., X_k]].
-\]
-which is the same as
-\[
-\text{Var}[\text{BA}(X_1,...,X_k)] \leq k \E[\text{Var}[\text{BA}|X_1,...,X_{k-1}]].
-\]
-\item The term $\text{Var}[\text{BA}|X_1,...,X_{k-1}]$ is the variance of $\text{BA}(X_1,...,X_k)$
-conditional on fixing the first $k-1$ curves $p(y|x_1),...,p(y|x_{k-1})$ and allowing the final curve $p(y|X_k)$ to vary randomly.
-\end{itemize}
-\end{frame}
+%\begin{frame}
+%\frametitle{Efron-Stein lemma}
+%\begin{itemize}
+%\item We have
+%\[
+%\text{ABA}_k = \E[\text{BA}(X_1,...,X_k)]
+%\]
+%where the expectation is over the independent sampling of $X_1,...,X_k$ from $p(x)$.
+%\item According to the Efron-Stein lemma,
+%\[
+%\text{Var}[\text{BA}(X_1,...,X_k)] \leq \sum_{i=1}^k \E[\text{Var}[\text{BA}|X_1,...,X_{i-1}, X_{i+1}, ..., X_k]].
+%\]
+%which is the same as
+%\[
+%\text{Var}[\text{BA}(X_1,...,X_k)] \leq k \E[\text{Var}[\text{BA}|X_1,...,X_{k-1}]].
+%\]
+%\item The term $\text{Var}[\text{BA}|X_1,...,X_{k-1}]$ is the variance of $\text{BA}(X_1,...,X_k)$
+%conditional on fixing the first $k-1$ curves $p(y|x_1),...,p(y|x_{k-1})$ and allowing the final curve $p(y|X_k)$ to vary randomly.
+%\end{itemize}
+%\end{frame}
 
-\begin{frame}
-\frametitle{Efron-Stein lemma}
-\begin{itemize}
-\item 
-\[
-\text{Var}[\text{BA}(X_1,...,X_k)] \leq k \E[\text{Var}[BA|X_1,...,X_{k-1}]].
-\]
-\item Note the following trivial results
-\[
--p(y|x_k) + \max_{i=1}^k p(y|x_i)\leq \max_{i=1}^{k-1} p(y|x_i) \leq \max_{i=1}^k p(y|x_i)
-\]
-\item This implies
-\[
-\text{BA}(X_1,...,X_k) - \frac{1}{k} \leq \frac{k-1}{k}\text{BA}(X_1,...,X_{k-1}) \leq \text{BA}(X_1,...,X_k).
-\]
-i.e. conditional on $(X_1,...,X_{k-1})$, $\text{BA}_k$ is supported on an interval of size $1/k$.
-\item Therefore,
-\[
-\text{Var}[\text{BA}|X_1,...,X_{k-1}] \leq \frac{1}{4k^2}
-\]
-since $\frac{1}{4c^2}$ is the maximal variance for any r.v. with support of length $c$.
-\end{itemize}
-\end{frame}
+%\begin{frame}
+%\frametitle{Efron-Stein lemma}
+%\begin{itemize}
+%\item 
+%\[
+%\text{Var}[\text{BA}(X_1,...,X_k)] \leq k \E[\text{Var}[BA|X_1,...,X_{k-1}]].
+%\]
+%\item Note the following trivial results
+%\[
+%-p(y|x_k) + \max_{i=1}^k p(y|x_i)\leq \max_{i=1}^{k-1} p(y|x_i) \leq \max_{i=1}^k p(y|x_i)
+%\]
+%\item This implies
+%\[
+%\text{BA}(X_1,...,X_k) - \frac{1}{k} \leq \frac{k-1}{k}\text{BA}(X_1,...,X_{k-1}) \leq \text{BA}(X_1,...,X_k).
+%\]
+%i.e. conditional on $(X_1,...,X_{k-1})$, $\text{BA}_k$ is supported on an interval of size $1/k$.
+%\item Therefore,
+%\[
+%\text{Var}[\text{BA}|X_1,...,X_{k-1}] \leq \frac{1}{4k^2}
+%\]
+%since $\frac{1}{4c^2}$ is the maximal variance for any r.v. with support of length $c$.
+%\end{itemize}
+%\end{frame}
 
 \begin{frame}
 \frametitle{Variance bound}
-Therefore, Efron-Stein bound gives
+From the Efron-Stein lemma, we get
 \[
 \text{sd}[\text{BA}_k] \leq \frac{1}{2\sqrt{k}}
 \]
@@ -640,24 +676,83 @@ Worst-case sd & 0.25 & 0.194 & 0.167 & 0.150 & 0.136 & 0.126 & 0.118
 \end{frame}
 
 \begin{frame}
+\frametitle{Intuition for variance bound}
+Write
+\[
+f(y, x_1, ..., x_k) = \text{argmax}_{i=1}^k p(y|x_i)
+\]
+so that
+\[
+\text{BA}(x_1,...,x_k) = \Pr[f(y, X_1,...,X_k) = Z| X_1 = x_1,...,X_k = x_k].
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Intuition for variance bound}
+We expect the variance to be order $1/k$, because the Bayes accuracy is an average of individual class accuracies
+\[
+\text{BA}_k(X_1,...,X_k) = \frac{1}{k}\sum_{i=1}^k \Pr[f(X_1, X_2, ..., X_k, y) = Z| Z= i]
+\]
+The $i$th term,
+\[
+\Pr[f(X_1, X_2, ..., X_k, y) = Z| Z= i]
+\]
+is ``almost'' independent of the $j$th term when $k$ is large.
+Hence, since $\text{BA}_k$ is an average of $k$ ``almost-indpendent'' terms, it should have variance $\approx \frac{1}{k}.$
+\end{frame}
+
+\begin{frame}
 \frametitle{Improving the variance bound?}
 \begin{itemize}
-\item All of the worst-case distributions found so far have the
-  following simple form:
+\item All of the worst-case distributions take the form
 \[
 \mathcal{Y} = \mathcal{X} = \{1,...,d\} \text{ for some } d
 \]
 \[
 p(y|x) = \frac{1}{d}I\{x = y\}
 \]
-Can we prove this rigorously?
-\item Recalling that
+\item Sampling $k$ items from $d$ with replacement; $\text{BA}_k$ is the number of unique items divided by $k$.
+\item According to Birthday paradox, 
+\[\text{ABA}_k \approx (1-e^{-d/k})\]
+and 
 \[
-\text{BA}(X_1,...,X_k) - \frac{1}{k} \leq \frac{k-1}{k}\text{BA}(X_1,...,X_{k-1}) \leq \text{BA}(X_1,...,X_k).
+\text{Var}(\text{BA}_k) \approx \frac{1}{d}e^{-d/k}(1-e^{-d/k})
 \]
-it is worth noting that distributions of this type actually
-concentrate on the two endpoints of the bound, thus in some sense
-``maximizing'' the variance.
+\item ``Discreteness'' of the distribution seems to maximize variance?
+\item If we could prove that this is indeed the worst case, then we have a better constant for variance bound.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Recap: inferring average Bayes error}
+\begin{enumerate}
+\item \emph{Experimental design}: draw $k$ stimuli $X_1,...,X_k$ iid from $p(x)$.  Then collect data $(X_i, Y_i^j)$.
+\item \emph{Supervised learning}: train a classifier and obtain a test accuracy $\text{TA}_k$.
+\item \emph{Generalization accuracy}: if $n_{test}$ is the size of the test set,
+\[
+\underline{\text{GA}_k} = \text{TA}_k - \frac{z_{\alpha/2}\sqrt{\text{TA}_k (1-\text{TA}_k)}}{\sqrt{n_{test}}}
+\]
+ is a lower confidence bound for $\text{GA}_k$
+\item \emph{Bayes accuracy}:
+\[
+\underline{\text{BA}}_k =  \underline{\text{GA}}_k
+\]
+is a lower confidence bound for $\text{BA}_k$
+\item \emph{Average Bayes accuracy}
+\[
+\underline{\text{ABA}}_k =  \underline{\text{BA}}_k - \frac{1}{2\sqrt{\alpha k}}
+\]
+is a lower confidence bound for $\text{ABA}_k$.
+\end{enumerate}
+\end{frame}
+
+%\item Recalling that
+%\[
+%\text{BA}(X_1,...,X_k) - \frac{1}{k} \leq \frac{k-1}{k}\text{BA}(X_1,...,X_{k-1}) \leq \text{BA}(X_1,...,X_k).
+%\]
+%it is worth noting that distributions of this type actually
+%concentrate on the two endpoints of the bound, thus in some sense
+%``maximizing'' the variance.
 %\item Distributions of this type actually maximize the variance
 %\[\text{Var}[\text{BA}|X_1,...,X_{k-1}]\]
 %given a constraint on $\E[BA|X_1,...,X_{k-1}]$,
@@ -668,8 +763,8 @@ concentrate on the two endpoints of the bound, thus in some sense
 %\frac{k-1}{k}\text{BA}(X_1,..,X_{k-1}) + \frac{1}{k} & \text{ otherwise}
 %\end{cases}
 %\]
-\end{itemize}
-\end{frame}
+%\end{itemize}
+%\end{frame}
 
 \section{Inferring mutual information}
 
@@ -682,9 +777,9 @@ concentrate on the two endpoints of the bound, thus in some sense
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \begin{itemize}
-\item Step 1: Apply machine learning to obtain \emph{test accuracy} $\text{TA}_k$
-\item Step 2: Infer $\text{ABA}_k$ from $\text{TA}_k$
-\item Step 3: Obtain a lower bound on $I(X; Y)$ from $\text{ABA}_k$!
+\item Step 1: Apply machine learning to obtain \emph{test accuracy} $\text{TA}_k$.
+\item Step 2: Obtain lower confidence bound $\underline{\text{ABA}_k}$.
+\item Step 3: Obtain a lower confidence bound on $I(X; Y)$ from $\underline{\text{ABA}_k}$.
 \end{itemize}
 \end{column}
 \begin{column}{0.5\textwidth}
@@ -693,7 +788,7 @@ concentrate on the two endpoints of the bound, thus in some sense
 \end{center}   
 \end{column}
 \end{columns}
-We already know how to do steps 1 and 2; now we discuss step 3.
+We just discussed how to do steps 1 and 2; now we discuss step 3.
 \end{frame}
 
 \begin{frame}
@@ -815,16 +910,29 @@ Yes we can, and this is what the resulting function $C_k(\iota)$ looks like:
 \end{center}
 As information increases, the maximal average Bayes accuracy goes to 1.
 
-We find these curves using \emph{variational calculus}.
+%We find these curves using \emph{variational calculus}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Reduced Problem}
+Rather than show the whole proof, we consider a simplified problem to illustrate the methods.
+\begin{center}
+\includegraphics[scale = 0.5]{../diagram/qxplot.png}
+\end{center}
+
+Actually, the simplified problem is equivalent to the full problem and we get the same answer (but this is non-trivial).
 \end{frame}
 
 \begin{frame}
 \frametitle{Reduced Problem}
 
-Consider a special class of densities with the following properties:
+\begin{center}
+\includegraphics[scale = 0.4]{../diagram/qxplot.png}
+\end{center}
+
 \begin{itemize}
-\item $p(x, y)$ is on the unit square
-\item The marginal distributions of $x$ and $y$ are both uniform
+\item $p(x, y)$ on unit square with uniform marginals.
 \item The conditional distributions $p(x|y)$ are just ``shifted'' copies of a common density, $q(x)$, on $[0,1]$
 \[
 p(x|y) = q(x - y + I\{x < y\})
@@ -832,9 +940,7 @@ p(x|y) = q(x - y + I\{x < y\})
 \item Furthermore, $q(x)$ is increasing in $x$.
 \end{itemize}
 
-We claim (but will not show) that this special class of densities
-achieves the maximal average Bayes error.  Therefore, it suffices to
-search over this special class of densities to compute $C_k(\iota)$.
+
 \end{frame}
 
 \begin{frame}
@@ -1026,6 +1132,16 @@ Then,
 \[
 C_k(\iota) = \int_0^1 q_{\beta_\iota}(t) t^{k-1} dt.
 \]
+\end{frame}
+
+\begin{frame}
+\frametitle{The end}
+\begin{center}
+\includegraphics[scale = 1]{c_ambrosino.jpg}
+
+
+{\tiny(credit C. Ambrosino)}
+\end{center}
 \end{frame}
 
 \end{document}
