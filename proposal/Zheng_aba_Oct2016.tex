@@ -470,66 +470,34 @@ Bayes accuracy & 0.55 & 0.65 & 0.52 \\
 
 
 
-
-
-%\begin{frame}
-%\frametitle{Formalizing the searchlight map}
-%\begin{itemize}
-%\item Population of inference: hypothetical (stimulus, brain scan) pairs obtained from a \emph{fixed} subject.
-%\item Further, suppose the $k$ stimuli are uniformly distributed.
-%\item \emph{Generalization accuracy} is not a \emph{population parameter}, because it varies depending on training data and classifier used.
-%\item \emph{Bayes accuracy} is a well-defined population parameter.
-%\item Generalization accuracy (GA) provides a \emph{lower bound} to Bayes accuracy (BA).
-%\item Under mild conditions $GA \to BA$ as we take the limit of infinite training data.
-%\end{itemize}
-%\end{frame}
-
-\begin{frame}
-\frametitle{Analyzing the data using machine learning}
-\begin{itemize}
-\item Now we have data consisting of (stimulus, reponse) pairs.
-\item Can we classify the response using the stimulus?  What is the confusion matrix?
-\end{itemize}
-\end{frame}
-
-
-
-\begin{frame}
-\frametitle{Motivation for my research}
-Ultimately, the goal of these experiments is to understand the
-  dependence between $X$ (stimulus) and $Y$ (the brain response). 
-
-Possible goals for statistical methodology (which currently don't exist):
-\begin{enumerate}
-\item What can be inferred from the classification accuracy?
-\item Can we predict what the result (classification accuracy) would be in a similar (but possibly larger or smaller) experiment?
-\item Can we \emph{summarize} the total information content contained
-  in $Y$ about $X$?
-\item Can we \emph{decompose} the total information contained in $Y$ about $X$?  (Something like a nonlinear ANOVA decomposition?)
-\end{enumerate}
-\end{frame}
-
-\begin{frame}
-\frametitle{Motivation 1: What can be inferred from the classification accuracy?}
-\begin{itemize}
-\item The achieved classification accuracy is an estimate of \emph{generalization accuracy}...
-\item which in turn lower bounds on the generalization error of the best classifier, the \emph{Bayes accuracy}.
-\item But the Bayes accuracy varies depending on the stimuli set $\bX^{(1)},\hdots, \bX^{(K)}$!
-\[
-\text{BA}(X_1,...,X_k)
-\]
-\end{itemize}
-Define \emph{average Bayes accuracy} as the expected Bayes accuracy
-\[
-\text{ABA}_k = \E[\text{BA}(X_1,...,X_k)]
-\]
-where expectation is taken over sampling $X_1,..,X_k$ from $p(x)$.
-\end{frame}
-
 \begin{frame}
 \frametitle{Average Bayes accuracy}
 \includegraphics[scale = 0.45, clip = true, trim = 0in 1in 0.5in 1in]{ta_to_aba.png}
 \end{frame}
+
+\begin{frame}
+\frametitle{Outline of the talk}
+Suppose we have data from \emph{randomized classification}
+\begin{enumerate}
+\item Can we infer $k$-class average Bayes error?
+\item Can we infer mutual information?
+\end{enumerate}
+\begin{center}
+\includegraphics[scale = 0.3]{searchlight_windowsize.png}
+\end{center}
+\end{frame}
+
+
+
+
+
+
+\section{Inference of average Bayes accuracy}
+
+\begin{frame}
+\sectionpage
+\end{frame}
+
 
 \begin{frame}
 \frametitle{Inferring average Bayes accuracy}
@@ -547,69 +515,33 @@ Recall that
 \text{ABA}_k = \textbf{E}[\text{BA}_k]
 \]
 
-Converting a LCB for $\text{BA}_k$ to an LCB on $\text{ABA}_k$ boils down to the following problem:
+Converting a lower confidence bound (LCB) for $\text{BA}_k$ to an LCB on $\text{ABA}_k$ boils down to the following problem:
 \vspace{0.2in}
 
 \emph{What is the variability of }$\text{BA}_k$?
 \vspace{0.2in}
-
-We will discuss this later in the talk!
 \end{frame}
-
-
-\begin{frame}
-\frametitle{Motivation 2: Generalizing to similar designs}
-Define $\text{ABA}_k$ as the average Bayes accuracy for $k$ classes.
-
-Can we predict $\text{ABA}_{100}$ given data from 30 classes?  See Z., Achanta and Benjamini (2016).
-\begin{figure}
-\centering
-\includegraphics[scale = 0.4]{../info_theory_paper/cifar_example.pdf}
-\end{figure}
-\end{frame}
-
-\begin{frame}
-\frametitle{Motivation 3 and 4: Quantifying and decomposing information}
-\emph{Can we \emph{summarize} the total information content contained
-  in $Y$ about $X$?
-
-Can we \emph{decompose} the total information contained in $Y$ about $X$?}
-\vspace{0.5in}
-
-
-The answer is yes, and the solution was provided by Claude Shannon.
-\emph{Mutual information} measures the information contained in $Y$
-about $X$ (or vice versa) in a nonlinear way.
-\end{frame}
-
-
-\section{Variability of Bayes accuracy}
-
-\begin{frame}
-\sectionpage
-\end{frame}
-
-\begin{frame}
-\frametitle{Definitions}
-\begin{itemize}
-\item Suppose $(X, Y)$ have a joint density $p(x, y)$,
-\item The Bayes accuracy is a function of the stimuli set $x_1,...,x_k$,
-\[
-\text{BA}(x_1,...,x_k)
-\]
-\item Draw $Z \sim \{1,...,k\}$, and draw $Y \sim p(y|x_z)$.
-\item Let $f$ (the \emph{classifier}) that associates a label $\{1,...,k\}$ to each possible value of $y$:
-\[
-f: \mathcal{Y} \to \{1,...,k\}
-\]
-\item Define
-\[
-\text{BA}(x_1,...,x_k) = \sup_f \Pr[f(Y) = Z| x_1,...,x_k]
-\]
-where the probability is over the joint distribution $(Y, Z)$ defined above.
-Notice we condition on the particular stimuli set $x_1,...,x_k$.
-\end{itemize}
-\end{frame}
+%\begin{frame}
+%\frametitle{Definitions}
+%\begin{itemize}
+%\item Suppose $(X, Y)$ have a joint density $p(x, y)$,
+%\item The Bayes accuracy is a function of the stimuli set $x_1,...,x_k$,
+%\[
+%\text{BA}(x_1,...,x_k)
+%\]
+%\item Draw $Z \sim \{1,...,k\}$, and draw $Y \sim p(y|x_z)$.
+%\item Let $f$ (the \emph{classifier}) that associates a label $\{1,...,k\}$ to each possible value of $y$:
+%\[
+%f: \mathcal{Y} \to \{1,...,k\}
+%\]
+%\item Define
+%\[
+%\text{BA}(x_1,...,x_k) = \sup_f \Pr[f(Y) = Z| x_1,...,x_k]
+%\]
+%where the probability is over the joint distribution $(Y, Z)$ defined above.
+%Notice we condition on the particular stimuli set $x_1,...,x_k$.
+%\end{itemize}
+%\end{frame}
 
 
 \begin{frame}
@@ -645,6 +577,8 @@ since the prior class probabilities are uniform.
 \end{column}
 \end{columns}
 \end{frame}
+
+
 
 \begin{frame}
 \frametitle{Efron-Stein lemma}
@@ -737,18 +671,10 @@ concentrate on the two endpoints of the bound, thus in some sense
 \end{itemize}
 \end{frame}
 
-\section{Inferring mutual information from classification accuracy}
+\section{Inferring mutual information}
 
 \begin{frame}
 \sectionpage
-\end{frame}
-
-\begin{frame}
-\frametitle{Outline}
-\begin{itemize}
-\item We observe $(X, Y)$ pairs from the random-stimulus repeated-sampling design.
-\item Goal is to infer $I(X; Y)$, also written $\text{I}[p(x, y)]$.
-\end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -768,6 +694,21 @@ concentrate on the two endpoints of the bound, thus in some sense
 \end{column}
 \end{columns}
 We already know how to do steps 1 and 2; now we discuss step 3.
+\end{frame}
+
+\begin{frame}
+\frametitle{Related work}
+\begin{itemize}
+\item Classically, \emph{Fano's inequality} obtains a lower bound for
+  mutual information from \emph{Bayes accuracy}.  (We do the same, but
+  for \emph{average Bayes error}).
+\item Treves (1997) proposes using the \emph{confusion matrix}
+  obtained from classification to estimate mutual information.  This
+  has been a popular approach; see Quiroga (2009).
+\item Gastpar et al (2010) develop \emph{nonparametric} estimators of
+  mutual information for the randomized classification setup (but does
+  not involve using supervised learning.)
+\end{itemize}
 \end{frame}
 
 \begin{frame}
