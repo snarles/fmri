@@ -348,16 +348,141 @@ Produces a map of ``informative'' regions of the brain (as measured by generaliz
 \end{frame}
 
 \begin{frame}
-\frametitle{Formalizing the searchlight map}
+\frametitle{Fixed classification task}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{tabular}{cc}
+\includegraphics[scale = 0.5]{img1.png} &
+\includegraphics[scale = 0.5]{img2.png} \\
+\includegraphics[scale = 0.5]{img3.png} &
+\end{tabular}
+\end{column}
+\begin{column}{0.4\textwidth}
+\includegraphics[scale = 0.5]{smbrain1.png}
+\end{column}
+\end{columns}
 \begin{itemize}
-\item Population of inference: hypothetical (stimulus, brain scan) pairs obtained from a \emph{fixed} subject.
-\item Further, suppose the $k$ stimuli are uniformly distributed.
-\item \emph{Generalization accuracy} is not a \emph{population parameter}, because it varies depending on training data and classifier used.
-\item \emph{Bayes accuracy} is a well-defined population parameter.
-\item Generalization accuracy (GA) provides a \emph{lower bound} to Bayes accuracy (BA).
-\item Under mild conditions $GA \to BA$ as we take the limit of infinite training data.
+\item Experimenter chooses $k$ stimuli.
+\item Generalization accuracy depends on size of training set, classifier, and choice of stimuli.
 \end{itemize}
 \end{frame}
+
+\begin{frame}
+\frametitle{Fixed classification task}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{tabular}{cc}
+\includegraphics[scale = 0.5]{img5.png} &
+\includegraphics[scale = 0.5]{img6.png} \\
+\includegraphics[scale = 0.5]{img7.png} &
+\includegraphics[scale = 0.5]{img8.png}
+\end{tabular}
+\end{column}
+\begin{column}{0.4\textwidth}
+\includegraphics[scale = 0.5]{smbrain2.png}
+\end{column}
+\end{columns}
+\begin{itemize}
+\item Different stimuli sets not only lead to different generalization accuracy maps, but also different \emph{Bayes accuracy}.
+\item Results are incomparable, even in the large-sample limit.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Generalizing beyond the design}
+
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{center}
+\includegraphics[scale = 1]{imagenet_sub.png}
+\end{center}
+\end{column}
+\begin{column}{0.4\textwidth}
+\includegraphics[scale = 0.5]{smbrain2.png}
+\end{column}
+\end{columns}
+
+Scientists are not innately interested in the Bayes accuracy of a \emph{particular} stimuli set, which is often chosen arbitrarily...
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Generalizing beyond the design}
+
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{center}
+\includegraphics[scale = 0.1]{imagenet.jpg}
+\end{center}
+\end{column}
+\begin{column}{0.4\textwidth}
+\includegraphics[scale = 0.5]{smbrain2.png}
+\end{column}
+\end{columns}
+\vspace{0.2in}
+But it would be more interesting to be able to make inferences from the data about a \emph{larger} class of stimuli...
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Randomized classification}
+\begin{tabular}{c|c|c}
+1. Population of stimuli $p(x)$ & 
+2. Subsample $k$ stimuli &
+3. Data\\
+\includegraphics[scale = 0.05]{imagenet.jpg} &
+\includegraphics[scale = 0.5]{imagenet_sub.png} &
+\includegraphics[scale = 0.3]{smbrain2.png}
+\end{tabular}
+\end{frame}
+
+\begin{frame}
+\frametitle{Randomized classification: gaussian example}
+\begin{center}
+\begin{tabular}{ccc}
+Experiment 1 & Experiment 2 & Experiment 3\\
+\includegraphics[scale = 0.2, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1a.png} &
+\includegraphics[scale = 0.2, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1b.png} &
+\includegraphics[scale = 0.2, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1c.png}
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Randomized classification: gaussian example}
+\begin{center}
+\begin{tabular}{c|c|c|c}
+& Experiment 1 & Experiment 2 & Experiment 3\\\hline
+&\includegraphics[scale = 0.15, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1a.png} &
+\includegraphics[scale = 0.15, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1b.png} &
+\includegraphics[scale = 0.15, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1c.png}\\\hline
+Bayes accuracy & 0.55 & 0.65 & 0.52 \\
+\end{tabular}
+\end{center}
+\begin{itemize}
+\item Bayes accuracy depends on the stimuli drawn.
+\item Therefore, define $k$-class \emph{average Bayes error} as the expected Bayes error for $X_1,..,X_k \stackrel{iid}{\sim} p(x)$.
+\[
+\text{ABA}_k = \E[BA(X_1,...,X_k)]
+\]
+\end{itemize}
+\end{frame}
+
+
+
+
+
+%\begin{frame}
+%\frametitle{Formalizing the searchlight map}
+%\begin{itemize}
+%\item Population of inference: hypothetical (stimulus, brain scan) pairs obtained from a \emph{fixed} subject.
+%\item Further, suppose the $k$ stimuli are uniformly distributed.
+%\item \emph{Generalization accuracy} is not a \emph{population parameter}, because it varies depending on training data and classifier used.
+%\item \emph{Bayes accuracy} is a well-defined population parameter.
+%\item Generalization accuracy (GA) provides a \emph{lower bound} to Bayes accuracy (BA).
+%\item Under mild conditions $GA \to BA$ as we take the limit of infinite training data.
+%\end{itemize}
+%\end{frame}
 
 \begin{frame}
 \frametitle{Analyzing the data using machine learning}
@@ -367,23 +492,6 @@ Produces a map of ``informative'' regions of the brain (as measured by generaliz
 \end{itemize}
 \end{frame}
 
-\begin{frame}
-\frametitle{Gaussian example}
-To help think about these problems, consider a concrete example:
-\begin{itemize}
-\item Let $\bX \sim N(0, I_d)$ and 
-$\bY|\bX \sim N(\bX,\sigma^2 I_d)$.
-\item We draw stimuli $\bx^{(1)}, \hdots, \bx^{(K)} \sim N(0, I_d)$ i.i.d.
-\item For each stimulus $\bx^{(i)}$, we draw observations $\by^{(i, j)} = \bx^{(i)} + \epsilon^{(i, j)}$, where $\epsilon^{(i, j)} \sim N(0, \sigma^2 I_d)$.
-\end{itemize}
-\begin{center}
-\begin{tabular}{ccc}
-\includegraphics[scale = 0.2, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1a.png} &
-\includegraphics[scale = 0.2, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1b.png} &
-\includegraphics[scale = 0.2, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1c.png}
-\end{tabular}
-\end{center}
-\end{frame}
 
 
 \begin{frame}
