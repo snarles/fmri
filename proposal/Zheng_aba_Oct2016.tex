@@ -1152,6 +1152,37 @@ C_k(\iota) = \int_0^1 q_{\beta_\iota}(t) t^{k-1} dt.
 
 
 \begin{frame}
+\frametitle{Fun fact: ``variational'' proof of Fano's inequality}
+$X \sim \text{Unif}\{1,...,k\}$, $Y$ continuous.
+\[
+\text{I}(X; Y) = (k+1)\log(k) + \frac{1}{k}\sum_x \int p(y|x) \log p(y|x) dy,
+\]
+\[
+\text{BA} = \frac{1}{k} \int \max_x p(y|x) dy.
+\]
+reduces to
+\[
+\text{maximize}_{q_i \geq 0}\ \max_{i=1}^k q_i\]
+\[ \text{ s.t. }\sum_{i=1}^k q_i =  1\text{ and }\log(k) + \sum_{i=1}^k q_i \log q_i\leq \iota.
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Fun fact: ``variational'' proof of Fano's inequality}
+Optimum takes the form
+\[
+q_1 = \beta,\ q_2 =\cdots=q_k = (1-\beta)/(k-1).
+\]
+where $\text{BA} = \beta$.
+Hence,
+\begin{align*}
+\text{I}(X; Y) &\leq \iota = \log(k) + \beta \log(\beta) + (1-\beta)\log((1-\beta)/(k-1))
+\\&= \log(k)-H(\text{BA}) - (1-\text{BA})\log(k-1),
+\end{align*}
+which is Fano's inequality.
+\end{frame}
+
+\begin{frame}
 \frametitle{The end}
 \begin{center}
 \includegraphics[scale = 1]{c_ambrosino.jpg}
