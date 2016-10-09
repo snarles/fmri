@@ -135,70 +135,69 @@
 
 \section{Introduction}
 
+%\begin{frame}
+%\frametitle{Dependence, distance, and information}
+%\begin{columns}
+%\begin{column}{0.5\textwidth}
+%\begin{center}
+%\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_1a.pdf}
+%\end{center}
+%\begin{itemize}
+%\item $X$ is independent of $Y$: 
+%\[X \perp Y\]
+%\item $X$ and $Y$ have no mutual information:
+%\[
+%I(X; Y) = 0
+%\]
+%\end{itemize}
+%\end{column}
+%\begin{column}{0.5\textwidth}
+%\end{column}
+%\end{columns}
+%\end{frame}
+
+
+
+%\begin{frame}
+%\frametitle{Dependence, distance, and information}
+%\begin{columns}
+%\begin{column}{0.5\textwidth}
+%\begin{center}
+%\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_1a.pdf}
+%\end{center}
+%\begin{itemize}
+%\item $X$ is independent of $Y$: 
+%\[X \perp Y\]
+%\item $X$ and $Y$ have no mutual information:
+%\[
+%I(X; Y) = 0
+%\]
+%\end{itemize}
+%\end{column}
+%\begin{column}{0.5\textwidth}
+%\begin{center}
+%Classifying $\text{Sign}(X)$ from $Y$
+
+%\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.9in 0.1in 0.2in]{../diagram/ddi_1b.pdf}
+
+%\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_1c.pdf}
+%\end{center}
+%$KL(Y|X > 0, Y|X < 0) = 0.$
+
+%Bayes accuracy = 0.5.
+%\end{column}
+%\end{columns}
+%\end{frame}
+
 \begin{frame}
-\frametitle{Dependence, distance, and information}
-\begin{columns}
-\begin{column}{0.5\textwidth}
-\begin{center}
-\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_1a.pdf}
-\end{center}
-\begin{itemize}
-\item $X$ is independent of $Y$: 
-\[X \perp Y\]
-\item $X$ and $Y$ have no mutual information:
-\[
-I(X; Y) = 0
-\]
-\end{itemize}
-\end{column}
-\begin{column}{0.5\textwidth}
-\end{column}
-\end{columns}
-\end{frame}
-
-
-
-\begin{frame}
-\frametitle{Dependence, distance, and information}
-\begin{columns}
-\begin{column}{0.5\textwidth}
-\begin{center}
-\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_1a.pdf}
-\end{center}
-\begin{itemize}
-\item $X$ is independent of $Y$: 
-\[X \perp Y\]
-\item $X$ and $Y$ have no mutual information:
-\[
-I(X; Y) = 0
-\]
-\end{itemize}
-\end{column}
-\begin{column}{0.5\textwidth}
-\begin{center}
-Classifying $\text{Sign}(X)$ from $Y$
-
-\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.9in 0.1in 0.2in]{../diagram/ddi_1b.pdf}
-
-\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_1c.pdf}
-\end{center}
-$KL(Y|X > 0, Y|X < 0) = 0.$
-
-Bayes accuracy = 0.5.
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}
-\frametitle{Dependence, distance, and information}
+\frametitle{Dependence, information}
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \begin{center}
 \includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_2a.pdf}
 \end{center}
 \begin{itemize}
-\item $X$ is dependent of $Y$: 
-\[\text{Cor}(X, Y) = 0.8.\]
+\item $X$ is dependent of $Y$.
 \item $X$ and $Y$ have mutual information:
 \[
 I(X; Y) = 0.51.
@@ -211,15 +210,14 @@ I(X; Y) = 0.51.
 \end{frame}
 
 \begin{frame}
-\frametitle{Dependence, distance, and information}
+\frametitle{Dependence, information, and classification}
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \begin{center}
 \includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_2a.pdf}
 \end{center}
 \begin{itemize}
-\item $X$ is dependent of $Y$: 
-\[\text{Cor}(X, Y) = 0.5.\]
+\item $X$ is dependent of $Y$.
 \item $X$ and $Y$ have mutual information:
 \[
 I(X; Y) = 0.51.
@@ -234,7 +232,6 @@ Classifying $\text{Sign}(X)$ from $Y$
 
 \includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_2c.pdf}
 \end{center}
-$KL(Y|X > 0, Y|X < 0) = 1.64$
 
 Bayes accuracy = 0.795.
 \end{column}
@@ -347,6 +344,12 @@ Record the subject's brain activity in the fMRI scanner.
 Produces a map of ``informative'' regions of the brain (as measured by generalization accuracy).
 \end{frame}
 
+{
+\setbeamercolor{background canvas}{bg=}
+\includepdf[pages=1-2]{drawings_einstein.pdf}
+% from Razaida
+}
+
 \begin{frame}
 \frametitle{Fixed classification task}
 \begin{columns}
@@ -362,8 +365,7 @@ Produces a map of ``informative'' regions of the brain (as measured by generaliz
 \end{column}
 \end{columns}
 \begin{itemize}
-\item Experimenter chooses $k$ stimuli.
-\item Generalization accuracy depends on size of training set, classifier, and choice of stimuli.
+\item Different stimuli sets lead to different \emph{Bayes accuracy}.
 \end{itemize}
 \end{frame}
 
@@ -383,7 +385,7 @@ Produces a map of ``informative'' regions of the brain (as measured by generaliz
 \end{column}
 \end{columns}
 \begin{itemize}
-\item Different stimuli sets not only lead to different generalization accuracy maps, but also different \emph{Bayes accuracy}.
+\item Different stimuli sets lead to different \emph{Bayes accuracy}.
 \item Results are incomparable, even in the large-sample limit.
 \end{itemize}
 \end{frame}
@@ -424,6 +426,12 @@ But it would be more interesting to be able to make inferences from the data abo
 
 \end{frame}
 
+\section{Randomized classification and Average Bayes error}
+
+\begin{frame}
+\sectionpage
+\end{frame}
+
 \begin{frame}
 \frametitle{Randomized classification}
 \begin{tabular}{c|c|c}
@@ -462,14 +470,150 @@ Bayes accuracy & 0.55 & 0.65 & 0.52 \\
 \end{itemize}
 \end{frame}
 
-
-
 \begin{frame}
 \frametitle{Average Bayes accuracy}
 \includegraphics[scale = 0.45, clip = true, trim = 0in 1in 0.5in 1in]{ta_to_aba.png}
 \end{frame}
 
+\begin{frame}
+\frametitle{Inferring average Bayes accuracy}
 
+\begin{itemize}
+\item $\text{BA}_k \stackrel{def}{=} \text{BA}(X_1,..,X_k)$ is a good proxy for $\text{ABA}_k$, if
+\[
+\text{Var}[\text{BA}(X_1,...,X_k)]
+\]
+is small..
+\item \emph{Theoretical result}. Maximal variability is of order $1/k$.
+\item Therefore, it is feasbile to get a good idea of $\text{ABA}_k$ by choosing a sufficiently large sample size $k$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Two intuitions for variability result}
+Why does variability decrease with $k$?
+\begin{itemize}
+\item 1. Bayes accuracy behaves like an average of $k$ i.i.d random variables. (Also gives correct $1/k$ rate.)
+\item 2. Bayes accuracy behaves like a max of $k$ i.i.d. random variables.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Intuition 1: averaging}
+\begin{center}
+\begin{tabular}{c|c|c|c}
+& Experiment 1 & Experiment 2 & Experiment 3\\\hline
+&\includegraphics[scale = 0.15, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1a.png} &
+\includegraphics[scale = 0.15, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1b.png} &
+\includegraphics[scale = 0.15, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1c.png}\\\hline
+Bayes accuracy & 0.55 & 0.65 & 0.52 \\
+\end{tabular}
+\end{center}
+Average of $k$ gaussian probability integrals... (which are asympt. uncorrelated.)
+\end{frame}
+
+\begin{frame}
+\frametitle{Intuition 2: An identity}
+\begin{itemize}
+\item It is a well-known result from Bayesian inference that the optimal classifier $f$ is defined as
+\[
+f(y) = \text{argmax}_{i=1}^k p(y|x_i),
+\]
+since the prior class probabilities are uniform.
+\item Therefore,
+\begin{align*}
+\text{BA}(x_1,...,x_k) &= \Pr[\text{argmax}_{i=1}^k p(y|x_i) = Z| x_1,...,x_k] 
+\\&= \frac{1}{k}\int \max_{i=1}^k p(y|x_i) dy.
+\end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Intuition behind identity}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{center}
+\includegraphics[scale = 0.35, clip = true, trim = 1.2in 1.3in 0in 1in]{var_ba.png}
+\end{center}   
+\end{column}
+\begin{column}{0.5\textwidth}  %%<--- here
+\begin{align*}
+\text{BA}&(x_1,x_2,x_3) \\&= \sum_i \Pr[x_i]\Pr_{Y \sim p(y|x_i)}[Y \in \text{zone }i]
+\\&= \sum_i \frac{1}{k} \text{Area under curve $i$ in zone $i$}
+\\&\ \ \ = \frac{1}{k} \text{Area under } \max_{i=1}^k p(y|x_i)
+\end{align*}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Variability of Bayes accuracy}
+
+\emph{Theoretical result}. In the max formulation of $\text{BA}_k$, we
+can apply Efron-Stein inequality to get
+\[
+\text{sd}[\text{BA}_k] \leq \frac{1}{2\sqrt{k}}
+\]
+\vspace{0.2in}
+\emph{Empirical results}. (searching for worst-case stimuli).
+\begin{tabular}{c||c|c|c|c|c|c|c}
+k & 2 & 3 & 4 & 5 & 6 & 7 & 8\\\hline
+$\frac{1}{2\sqrt{k}}$ & 0.353 & 0.289 & 0.250 & 0.223 & 0.204 & 0.189 & 0.177\\\hline
+Worst-case sd & 0.25 & 0.194 & 0.167 & 0.150 & 0.136 & 0.126 & 0.118
+\end{tabular}
+\end{frame}
+
+\begin{frame}
+\frametitle{Improving the variance bound?}
+\begin{itemize}
+\item All of the worst-case distributions take the form
+\[
+\mathcal{Y} = \mathcal{X} = \{1,...,d\} \text{ for some } d
+\]
+\[
+p(y|x) = \frac{1}{d}I\{x = y\}
+\]
+\item Sampling $k$ items from $d$ with replacement; $\text{BA}_k$ is the number of unique items divided by $k$.
+\item According to Birthday paradox, 
+\[\text{ABA}_k \approx (1-e^{-d/k})\]
+and 
+\[
+\text{Var}(\text{BA}_k) \approx \frac{1}{d}e^{-d/k}(1-e^{-d/k})
+\]
+\item ``Discreteness'' of the distribution seems to maximize variance?
+\item If we could prove that this is indeed the worst case, then we have a better constant for variance bound.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Inferring average Bayes error}
+For now, return to the world of finite data...
+\begin{enumerate}
+\item \emph{Experimental design}: draw $k$ stimuli $X_1,...,X_k$ iid from $p(x)$.  Then collect data $(X_i, Y_i^j)$.
+\item \emph{Supervised learning}: train a classifier and obtain a test accuracy $\text{TA}_k$.
+\item \emph{Generalization accuracy}: if $n_{test}$ is the size of the test set,
+\[
+\underline{\text{GA}_k} = \text{TA}_k - \frac{z_{\alpha/2}\sqrt{\text{TA}_k (1-\text{TA}_k)}}{\sqrt{n_{test}}}
+\]
+ is a lower confidence bound for $\text{GA}_k$
+\item \emph{Bayes accuracy}:
+\[
+\underline{\text{BA}}_k =  \underline{\text{GA}}_k
+\]
+is a lower confidence bound for $\text{BA}_k$
+\item \emph{Average Bayes accuracy}
+\[
+\underline{\text{ABA}}_k =  \underline{\text{BA}}_k - \frac{1}{2\sqrt{\alpha k}}
+\]
+is a lower confidence bound for $\text{ABA}_k$.
+\end{enumerate}
+\end{frame}
+
+\section{Relationship between mutual information and average Bayes accuracy}
+
+\begin{frame}
+\sectionpage
+\end{frame}
 
 \begin{frame}
 \frametitle{Two measures of informativity: ABA and mutual information}
@@ -516,46 +660,26 @@ Mutual information disadvantages:
 \end{frame}
 
 \begin{frame}
-\frametitle{Outline of the talk}
-Suppose we have data from \emph{randomized classification}
-\begin{enumerate}
-\item Can we infer $k$-class average Bayes error?
-\item Can we infer mutual information?
-\end{enumerate}
-\begin{center}
-\includegraphics[scale = 0.3]{searchlight_windowsize.png}
-\end{center}
-\end{frame}
-
-
-\section{Inference of average Bayes accuracy}
-
-\begin{frame}
-\sectionpage
+\frametitle{Question} Given that mutual information and average Bayes
+error have complementary advantages and disadvantages, can we
+``convert'' one to the other?
 \end{frame}
 
 \begin{frame}
-\frametitle{Inferring average Bayes accuracy}
+\frametitle{Related work}
 \begin{itemize}
-\item We cannot observe either $\text{ABA}_k$, or even $\text{BA}_k$.
-\item However, we can obtain a \emph{lower confidence bound} for $\text{BA}_k$, since the generalization accuracy is an \emph{underestimate} of $\text{BA}_k$
-\item But we actually want a lower confidence bound for $\text{ABA}_k$!
+\item Classically, \emph{Fano's inequality} obtains a lower bound for
+  mutual information from \emph{Bayes accuracy}.  (We do the same, but
+  for \emph{average Bayes error}).
+\item Treves (1997) proposes using the \emph{confusion matrix}
+  obtained from classification to estimate mutual information.  This
+  has been a popular approach; see Quiroga (2009).
+\item Gastpar et al (2010) develop \emph{nonparametric} estimators of
+  mutual information for the randomized classification setup (but does
+  not involve using supervised learning.)
 \end{itemize}
 \end{frame}
 
-\begin{frame}
-\frametitle{Concentration of Bayes accuracy}
-Recall that
-\[
-\text{ABA}_k = \textbf{E}[\text{BA}_k]
-\]
-
-Converting a lower confidence bound (LCB) for $\text{BA}_k$ to an LCB on $\text{ABA}_k$ boils down to the following problem:
-\vspace{0.2in}
-
-\emph{What is the variability of }$\text{BA}_k$?
-\vspace{0.2in}
-\end{frame}
 
 %\begin{frame}
 %\frametitle{Definitions}
@@ -580,39 +704,7 @@ Converting a lower confidence bound (LCB) for $\text{BA}_k$ to an LCB on $\text{
 %\end{frame}
 
 
-\begin{frame}
-\frametitle{An identity}
-\begin{itemize}
-\item It is a well-known result from Bayesian inference that the optimal classifier $f$ is defined as
-\[
-f(y) = \text{argmax}_{i=1}^k p(y|x_i),
-\]
-since the prior class probabilities are uniform.
-\item Therefore,
-\begin{align*}
-\text{BA}(x_1,...,x_k) &= \Pr[\text{argmax}_{i=1}^k p(y|x_i) = Z| x_1,...,x_k] 
-\\&= \frac{1}{k}\int \max_{i=1}^k p(y|x_i) dy.
-\end{align*}
-\end{itemize}
-\end{frame}
 
-\begin{frame}
-\frametitle{Intuition behind identity}
-\begin{columns}
-\begin{column}{0.5\textwidth}
-\begin{center}
-\includegraphics[scale = 0.35, clip = true, trim = 1.2in 1.3in 0in 1in]{var_ba.png}
-\end{center}   
-\end{column}
-\begin{column}{0.5\textwidth}  %%<--- here
-\begin{align*}
-\text{BA}&(x_1,x_2,x_3) \\&= \sum_i \Pr[x_i]\Pr_{Y \sim p(y|x_i)}[Y \in \text{zone }i]
-\\&= \sum_i \frac{1}{k} \text{Area under curve $i$ in zone $i$}
-\\&\ \ \ = \frac{1}{k} \text{Area under } \max_{i=1}^k p(y|x_i)
-\end{align*}
-\end{column}
-\end{columns}
-\end{frame}
 
 
 
@@ -661,90 +753,36 @@ since the prior class probabilities are uniform.
 %\end{itemize}
 %\end{frame}
 
-\begin{frame}
-\frametitle{Variance bound}
-From the Efron-Stein lemma, we get
-\[
-\text{sd}[\text{BA}_k] \leq \frac{1}{2\sqrt{k}}
-\]
-Compare this with empirical results (searching for worst-case distributions):
-\begin{tabular}{c||c|c|c|c|c|c|c}
-k & 2 & 3 & 4 & 5 & 6 & 7 & 8\\\hline
-$\frac{1}{2\sqrt{k}}$ & 0.353 & 0.289 & 0.250 & 0.223 & 0.204 & 0.189 & 0.177\\\hline
-Worst-case sd & 0.25 & 0.194 & 0.167 & 0.150 & 0.136 & 0.126 & 0.118
-\end{tabular}
-\end{frame}
 
-\begin{frame}
-\frametitle{Intuition for variance bound}
-Write
-\[
-f(y, x_1, ..., x_k) = \text{argmax}_{i=1}^k p(y|x_i)
-\]
-so that
-\[
-\text{BA}(x_1,...,x_k) = \Pr[f(y, X_1,...,X_k) = Z| X_1 = x_1,...,X_k = x_k].
-\]
-\end{frame}
 
-\begin{frame}
-\frametitle{Intuition for variance bound}
-We expect the variance to be order $1/k$, because the Bayes accuracy is an average of individual class accuracies
-\[
-\text{BA}_k(X_1,...,X_k) = \frac{1}{k}\sum_{i=1}^k \Pr[f(X_1, X_2, ..., X_k, y) = Z| Z= i]
-\]
-The $i$th term,
-\[
-\Pr[f(X_1, X_2, ..., X_k, y) = Z| Z= i]
-\]
-is ``almost'' independent of the $j$th term when $k$ is large.
-Hence, since $\text{BA}_k$ is an average of $k$ ``almost-indpendent'' terms, it should have variance $\approx \frac{1}{k}.$
-\end{frame}
+%\begin{frame}
+%\frametitle{Intuition for variance bound}
+%Write
+%\[
+%f(y, x_1, ..., x_k) = \text{argmax}_{i=1}^k p(y|x_i)
+%\]
+%so that
+%\[
+%\text{BA}(x_1,...,x_k) = \Pr[f(y, X_1,...,X_k) = Z| X_1 = x_1,...,X_k = x_k].
+%\]
+%\end{frame}
 
-\begin{frame}
-\frametitle{Improving the variance bound?}
-\begin{itemize}
-\item All of the worst-case distributions take the form
-\[
-\mathcal{Y} = \mathcal{X} = \{1,...,d\} \text{ for some } d
-\]
-\[
-p(y|x) = \frac{1}{d}I\{x = y\}
-\]
-\item Sampling $k$ items from $d$ with replacement; $\text{BA}_k$ is the number of unique items divided by $k$.
-\item According to Birthday paradox, 
-\[\text{ABA}_k \approx (1-e^{-d/k})\]
-and 
-\[
-\text{Var}(\text{BA}_k) \approx \frac{1}{d}e^{-d/k}(1-e^{-d/k})
-\]
-\item ``Discreteness'' of the distribution seems to maximize variance?
-\item If we could prove that this is indeed the worst case, then we have a better constant for variance bound.
-\end{itemize}
-\end{frame}
+%\begin{frame}
+%\frametitle{Intuition for variance bound}
+%We expect the variance to be order $1/k$, because the Bayes accuracy is an average of individual class accuracies
+%\[
+%\text{BA}_k(X_1,...,X_k) = \frac{1}{k}\sum_{i=1}^k \Pr[f(X_1, X_2, ..., X_k, y) = Z| Z= i]
+%\]
+%The $i$th term,
+%\[
+%\Pr[f(X_1, X_2, ..., X_k, y) = Z| Z= i]
+%\]
+%is ``almost'' independent of the $j$th term when $k$ is large.
+%Hence, since $\text{BA}_k$ is an average of $k$ ``almost-indpendent'' terms, it should have variance $\approx \frac{1}{k}.$
+%\end{frame}
 
-\begin{frame}
-\frametitle{Recap: inferring average Bayes error}
-\begin{enumerate}
-\item \emph{Experimental design}: draw $k$ stimuli $X_1,...,X_k$ iid from $p(x)$.  Then collect data $(X_i, Y_i^j)$.
-\item \emph{Supervised learning}: train a classifier and obtain a test accuracy $\text{TA}_k$.
-\item \emph{Generalization accuracy}: if $n_{test}$ is the size of the test set,
-\[
-\underline{\text{GA}_k} = \text{TA}_k - \frac{z_{\alpha/2}\sqrt{\text{TA}_k (1-\text{TA}_k)}}{\sqrt{n_{test}}}
-\]
- is a lower confidence bound for $\text{GA}_k$
-\item \emph{Bayes accuracy}:
-\[
-\underline{\text{BA}}_k =  \underline{\text{GA}}_k
-\]
-is a lower confidence bound for $\text{BA}_k$
-\item \emph{Average Bayes accuracy}
-\[
-\underline{\text{ABA}}_k =  \underline{\text{BA}}_k - \frac{1}{2\sqrt{\alpha k}}
-\]
-is a lower confidence bound for $\text{ABA}_k$.
-\end{enumerate}
-\end{frame}
+
+
 
 %\item Recalling that
 %\[
@@ -766,57 +804,6 @@ is a lower confidence bound for $\text{ABA}_k$.
 %\end{itemize}
 %\end{frame}
 
-\section{Inferring mutual information}
-
-\begin{frame}
-\sectionpage
-\end{frame}
-
-\begin{frame}
-\frametitle{Outline}
-\begin{columns}
-\begin{column}{0.5\textwidth}
-\begin{itemize}
-\item Step 1: Apply machine learning to obtain \emph{test accuracy} $\text{TA}_k$.
-\item Step 2: Obtain lower confidence bound $\underline{\text{ABA}_k}$.
-\item Step 3: Obtain a lower confidence bound on $I(X; Y)$ from $\underline{\text{ABA}_k}$.
-\end{itemize}
-\end{column}
-\begin{column}{0.5\textwidth}
-\begin{center}
-\includegraphics[scale = 0.3, clip = true, trim = 0in 1in 5.5in 1in]{ta_to_aba.png}
-\end{center}   
-\end{column}
-\end{columns}
-We just discussed how to do steps 1 and 2; now we discuss step 3.
-\end{frame}
-
-\begin{frame}
-\frametitle{Related work}
-\begin{itemize}
-\item Classically, \emph{Fano's inequality} obtains a lower bound for
-  mutual information from \emph{Bayes accuracy}.  (We do the same, but
-  for \emph{average Bayes error}).
-\item Treves (1997) proposes using the \emph{confusion matrix}
-  obtained from classification to estimate mutual information.  This
-  has been a popular approach; see Quiroga (2009).
-\item Gastpar et al (2010) develop \emph{nonparametric} estimators of
-  mutual information for the randomized classification setup (but does
-  not involve using supervised learning.)
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Comparison of ABA and I}
-Average Bayes accuracy $\text{ABA}_k[p(x, y)]$ and mutual information $\text{I}[p(x, y)]$ are both \emph{functionals} of $p(x, y)$.
-\[
-\text{ABA}_k[p(x, y)] = \frac{1}{k} \int p_X(x_1)\hdots p_X(x_k) \max_{i=1}^k p(y|x_i)  dx_1\hdots dx_k dy.
-\]
-\[
-\text{I}[p(x, y)] = \int p(x, y) \log \frac{p(x, y)}{p(x)p(y)} dx dy.
-\]
-\end{frame}
-
 \begin{frame}
 \frametitle{Natural questions}
 \begin{itemize}
@@ -825,6 +812,17 @@ Average Bayes accuracy $\text{ABA}_k[p(x, y)]$ and mutual information $\text{I}[
 \item Does $\text{I}$ large imply $\text{ABA}_k$ close to 1?
 \item Does $\text{I}$ close to $0$ imply $\text{ABA}_k$ close to $1/k$?
 \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Functional formulation}
+Average Bayes accuracy $\text{ABA}_k[p(x, y)]$ and mutual information $\text{I}[p(x, y)]$ are both \emph{functionals} of $p(x, y)$.
+\[
+\text{ABA}_k[p(x, y)] = \frac{1}{k} \int p_X(x_1)\hdots p_X(x_k) \max_{i=1}^k p(y|x_i)  dx_1\hdots dx_k dy.
+\]
+\[
+\text{I}[p(x, y)] = \int p(x, y) \log \frac{p(x, y)}{p(x)p(y)} dx dy.
+\]
 \end{frame}
 
 \begin{frame}
@@ -874,7 +872,7 @@ The only remaining question is:
 Does $\text{ABA}_k$ close to 1 imply $\text{I}$ large?
 \vspace{0.2in}
 
-The answer is yes and provides the desired lower bound.  In fact,
+The answer is yes and provides an ``extension'' of Fano's inequality.  Unlike in Fano's inequality,
 \[
 \text{ABA}_k \to 1
 \]
@@ -1133,6 +1131,25 @@ Then,
 C_k(\iota) = \int_0^1 q_{\beta_\iota}(t) t^{k-1} dt.
 \]
 \end{frame}
+
+\begin{frame}
+\frametitle{Conclusion: Inferring mutual information from randomized classification}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item Step 1: Apply machine learning to obtain \emph{test accuracy} $\text{TA}_k$.
+\item Step 2: Obtain lower confidence bound $\underline{\text{ABA}_k}$.
+\item Step 3: Obtain a lower confidence bound on $I(X; Y)$ from $\underline{\text{ABA}_k}$.
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{center}
+\includegraphics[scale = 0.3, clip = true, trim = 0in 1in 5.5in 1in]{ta_to_aba.png}
+\end{center}   
+\end{column}
+\end{columns}
+\end{frame}
+
 
 \begin{frame}
 \frametitle{The end}
