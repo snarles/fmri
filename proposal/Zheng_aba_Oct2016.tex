@@ -451,7 +451,7 @@ But it would be more interesting to be able to make inferences from the data abo
 \end{frame}
 
 \begin{frame}
-\frametitle{Average Bayes error}
+\frametitle{Average Bayes accuracy}
 \begin{center}
 \begin{tabular}{c|c|c|c}
 & Experiment 1 & Experiment 2 & Experiment 3\\\hline
@@ -463,7 +463,7 @@ Bayes accuracy & 0.55 & 0.65 & 0.52 \\
 \end{center}
 \begin{itemize}
 \item Bayes accuracy depends on the stimuli drawn.
-\item Therefore, define $k$-class \emph{average Bayes error} as the expected Bayes error for $X_1,..,X_k \stackrel{iid}{\sim} p(x)$.
+\item Therefore, define $k$-class \emph{average Bayes accuracy} as the expected Bayes accuracy for $X_1,..,X_k \stackrel{iid}{\sim} p(x)$.
 \[
 \text{ABA}_k = \E[BA(X_1,...,X_k)]
 \]
@@ -479,11 +479,15 @@ Bayes accuracy & 0.55 & 0.65 & 0.52 \\
 \frametitle{Inferring average Bayes accuracy}
 
 \begin{itemize}
-\item $\text{BA}_k \stackrel{def}{=} \text{BA}(X_1,..,X_k)$ is a good proxy for $\text{ABA}_k$, if
+\item $\text{BA}_k \stackrel{def}{=} \text{BA}(X_1,..,X_k)$ is unbiased estimate of
+\[
+\text{ABA}_k = \E[BA_k]
+\]
+by definition.
+\item But what is the variance?
 \[
 \text{Var}[\text{BA}(X_1,...,X_k)]
 \]
-is small..
 \item \emph{Theoretical result}. Maximal variability is of order $1/k$.
 \item Therefore, it is feasbile to get a good idea of $\text{ABA}_k$ by choosing a sufficiently large sample size $k$.
 \end{itemize}
