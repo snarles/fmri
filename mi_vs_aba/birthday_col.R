@@ -57,6 +57,14 @@ moments_k <- function(k, dmax, naive = FALSE, mc.reps = 1e4) {
   ans
 }
 
+approx_moments_k <- function(k, dmax) {
+  ans <- matrix(0, dmax, 2)
+  ds <- 1:dmax
+  ans[, 1] <- 1 - exp(-ds/k)
+  ans[, 2] <- sqrt(1/ds * exp(-ds/k) * (1-exp(-ds/k)))
+  ans
+}
+
 # naive_count(3, 4)
 # build_table(3, 4)$ans
 # 
@@ -89,3 +97,8 @@ moments_k <- function(k, dmax, naive = FALSE, mc.reps = 1e4) {
 # moments_k(4, 8, TRUE)
 # 
 # moments_k(5, 10)
+# approx_moments_k(5, 10)
+
+# cbind(moments_k(20, 40), approx_moments_k(20, 40))
+# cbind(moments_k(30, 60), approx_moments_k(30, 60))
+# cbind(moments_k(60, 120), approx_moments_k(60, 120))
