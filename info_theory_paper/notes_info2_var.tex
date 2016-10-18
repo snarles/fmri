@@ -292,9 +292,10 @@ The resulting worst-case variance for given $(d, k)$ is given by
 \[
 \text{Var}^{(d, k)} \approx \frac{1}{d}e^{-d/k}(1-e^{-d/k})
 \]
+for $d \geq k$,
 and therefore we could obtain a variance bound of the form
 \[
-\sup_{p(x, y)}\text{Var}(\text{BA}_k) \approx \max_{d \in {1,...,}}  \frac{1}{d}e^{-d/k}(1-e^{-d/k}).
+\sup_{p(x, y)}\text{Var}(\text{BA}_k) \approx \max_{d \geq k}  \frac{1}{d}e^{-d/k}(1-e^{-d/k}).
 \]
 
 \end{document}
