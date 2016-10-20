@@ -909,7 +909,31 @@ Q^*(t) = \frac{\exp[c_\iota t^{k-1}]}{\int_0^1 \exp[c_\iota t^{k-1}]},
 \]
 as needed. $\Box$
 
+\textbf{Proof of Lemma \ref{lemma:concave}.}
+It is equivalent to show that the inverse function
+\[
+C^{-1}_k(p) = \inf_{G: E[G] = 1, \phi_k[G] = p} I[G]
+\]
+is convex.  Let $p_1, p_2 \in [0,1]$.  Let $G_1$, $G_2$ on $[0,1]$ be
+measures which minimize $I[G_i]$ subject to $E[G_i] = 1$ and
+$\phi_k[G_i] = p_i$.  Define the measure
+\[
+H = \frac{G_1 + G_2}{2}.
+\]
+Since $\phi_k$ is a linear functional,
+\[
+\phi_k[H] = \frac{\phi_k[G_1] + \phi_k[G_2]}{2} = \frac{p_1 + p_2}{2}.
+\]
+But since $I$ is a convex functional,
+\[
+I[H] \leq \frac{I[G_1] + I[G_2]}{2}.
+\]
 
+Therefore,
+\[
+C^{-1}_k\left(\frac{p_1 + p_2}{2}\right) \leq I[H] = \frac{I[G_1] + I[G_2]}{2} = \frac{C^{-1}_k(p_1) + C^{-1}_k(p_2)}{2}.
+\]
+$\Box$.
 
 
 \textbf{Proof of theorem \ref{theorem:Cunif}}
