@@ -10,11 +10,16 @@ for (k in 2:5) {
   #   qs <- normalize_qs(qs)
   #   get_q_ints(qs, k)
   # })
-  
-  pts2 <- sapply(1000 * (1:10000/10000), function(x) {
+  bts <- 1000 * (1:10000/10000)
+  pts2 <- sapply(bts, function(x) {
     qs <- qs_par(x, k, reso)
     get_q_ints(qs, k)
   })
+  #plot(bts, pts2[2, ], type = "l")
+  #plot(sqrt(bts), pts2[2, ], type = "l")
+  plot(log(bts), pts2[2, ], type = "l")
+  plot(bts, pts2[3, ], type = "l")
+  plot(log(bts), pts2[3, ], type = "l")
   
   # plot(t(pts)[, -1], pch= ".")
   # lines(t(pts2)[, -1], col = "red")
