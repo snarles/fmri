@@ -41,7 +41,7 @@ d_cgf_k <- function(bts, k, nterms = 200, a0 = cgf_k(bts, k, nterms)) {
 
 ## compiling a table
 t1 <- proc.time()
-ks <- c(2:10, 2 * (6:20), (7:20)^2, (8:16)^3)
+ks <- c(2:10, 2 * (6:23), (7:100)^2)
 lbs <- seq(-2, 10, by = 0.1)
 ans <- lapply(ks, function(k) {
   cs <- cgf_k(exp(lbs), k, nterms = 1e5)
@@ -52,5 +52,13 @@ ans <- lapply(ks, function(k) {
 proc.time() - t1
 #plot(ans[[18]][, c("lbs", "aba")], type = "l")
 #plot(ans[[18]][, c("lbs", "iota")], type = "l")
+#plot(ans[[2]][, c("iota", "aba")], type = "l", xlim = c(0, 15), ylim = c(0, 1))
+#plot(ans[[18]][, c("iota", "aba")], type = "l", xlim = c(0, 15), ylim = c(0, 1))
+#plot(ans[[30]][, c("iota", "aba")], type = "l", xlim = c(0, 15), ylim = c(0, 1))
+for (i in 1:length(ans)) {
+  plot(ans[[i]][, c("iota", "aba")], type = "l", 
+       xlim = c(0, 15), ylim = c(0, 1), main = ks[i])
+}
+
 ans2 <- do.call(cbind, ans)
 saveRDS(ans2, file = "mi_vs_aba/precomputed.rds")
