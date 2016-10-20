@@ -11,8 +11,7 @@ cgf_k <- function(bts, k, nterms = 200) {
   apply(rawlogterms, 2, logsumexp) - log(k-1)
 }
 
-d_cgf_k <- function(bts, k, nterms = 200) {
-  a0 <- cgf_k(bts, k, nterms)
+d_cgf_k <- function(bts, k, nterms = 200, a0 = cgf_k(bts, k, nterms)) {
   bts <- t(bts)
   js <- 1:nterms
   Bm <- rep(1, length(js)) %*% bts
@@ -40,3 +39,18 @@ d_cgf_k <- function(bts, k, nterms = 200) {
 # cbind(pts2[3, ], d_cgf_k(bts, k))
 # cbind(pts2[2, ], bts * d_cgf_k(bts, k) - cgf_k(bts, k))
 
+## compiling a table
+t1 <- proc.time()
+ks <- c(2:10, 2 * (6:20), (7:20)^2, (8:16)^3)
+lbs <- seq(-2, 10, by = 0.1)
+ans <- lapply(ks, function(k) {
+  cs <- cgf_k(exp(lbs), k, nterms = 1e5)
+  ds <- d_cgf_k(exp(lbs), k, nterms = 1e5, a0 = cs)
+  data.frame(k = rep(k, length(lbs)), lbs = lbs, 
+             iota = exp(lbs) * ds - cs, aba = ds)
+})
+proc.time() - t1
+#plot(ans[[18]][, c("lbs", "aba")], type = "l")
+#plot(ans[[18]][, c("lbs", "iota")], type = "l")
+ans2 <- do.call(cbind, ans)
+saveRDS(ans2, file = "mi_vs_aba/precomputed.rds")
