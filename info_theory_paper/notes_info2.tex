@@ -914,8 +914,9 @@ It is equivalent to show that the inverse function
 \[
 C^{-1}_k(p) = \inf_{G: E[G] = 1, \phi_k[G] = p} I[G]
 \]
-is convex.  Let $p_1, p_2 \in [0,1]$.  Let $G_1$, $G_2$ on $[0,1]$ be
-measures which minimize $I[G_i]$ subject to $E[G_i] = 1$ and
+is convex.  Let $p_1, p_2 \in [0,1]$.  From
+lemma \ref{lemma:variational}, we can find measures $G_1$, $G_2$ on
+$[0,\infty)$ which minimize $I[G_i]$ subject to $E[G_i] = 1$ and
 $\phi_k[G_i] = p_i$.  Define the measure
 \[
 H = \frac{G_1 + G_2}{2}.
@@ -1013,6 +1014,61 @@ we can apply Jensen's inequality to conclude that
 \text{ABA}_k[p(x,y)] = \E[f(J)] \leq f(\E[J]) = f(\iota),
 \]
 which completes the proof. $\Box$
+
+\section*{Appendix}
+
+\subsection{Computation}
+
+Noting that $Q_\beta$ in theorem \ref{theorem:Cunif} defines an exponential family on $[0,1]$, we obtain the following result:
+\[
+C_k(\iota) = \sup_{\beta: \text{I}^{(k)}(\beta) = \iota}\ \text{ABA}^{(k)}(\beta)
+\]
+where
+\[
+\text{I}^{(k)}(\beta) = \beta \dot{\Lambda}^{(k)}(\beta) - \Lambda^{(k)}(\beta)
+\]
+and
+\[
+\text{ABA}^{(k)}(\beta) = \dot(\Lambda)^{(k)}(\beta)
+\]
+for
+\[
+\Lambda^{(k)}(\beta) = \log \int_0^1 \exp[\beta t^{k-1}]dt.
+\]
+
+Therefore, computing $C_k(\iota)$ depends in turn on computing
+$\Lambda^{(k)}(\beta)$ and its first derivative.
+
+The following result provides a rapidly converging power series for
+$\Lambda^{(k)}(\beta)$ and also a limiting result which facilitates
+large-$k$ approximation.
+
+\begin{theorem}
+\[
+\Lambda^{(k)}(\beta) = \log \sum_{j=0}^\infty \frac{\beta^j}{j! (j + \frac{1}{k-1})} - \log(k-1)
+\]
+and therefore,
+\[
+\lim_{k \to \infty} (k-1) (\exp(\Lambda^{(k)}) - 1) = W(\beta),
+\]
+where
+\[
+W(\beta) = \sum_{j=1}^\infty \frac{\beta^j}{j! j}.
+\]
+\end{theorem}
+\textbf{Proof.}
+Write
+\begin{align*}
+(k-1)(e^{\Lambda^{(k)}(\beta)} - 1) &= (k-1)(\int_0^1 \exp(\beta t^{k-1}) dt - 1)
+\\&= (k-1)\left(\int_0^1 \sum_{j=0}^\infty \frac{\beta^j t^{j(k-1)}}{j!} dt - 1\right)
+\\&= (k-1)\left(\sum_{j=0}^\infty \int_0^1 \frac{\beta^j t^{j(k-1)}}{j!} dt - 1\right)
+\\&= (k-1)\left(\sum_{j=0}^\infty \frac{\beta^j}{j!(j(k-1) + 1)} dt - 1\right)
+\\&= \left(\sum_{j=0}^\infty \frac{\beta^j}{j!(j + \frac{1}{k-1})} dt - (k-1)\right)
+\\&= \sum_{j=1}^\infty \frac{\beta^j}{j!(j + \frac{1}{k-1})} dt.
+\end{align*}
+Taking the limit as $k \to \infty$ yields the stated formula for $W(\beta)$. $\Box$
+
+
 \end{document}
 
 
