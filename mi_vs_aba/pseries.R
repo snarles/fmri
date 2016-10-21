@@ -55,10 +55,10 @@ proc.time() - t1
 #plot(ans[[2]][, c("iota", "aba")], type = "l", xlim = c(0, 15), ylim = c(0, 1))
 #plot(ans[[18]][, c("iota", "aba")], type = "l", xlim = c(0, 15), ylim = c(0, 1))
 #plot(ans[[30]][, c("iota", "aba")], type = "l", xlim = c(0, 15), ylim = c(0, 1))
-for (i in 1:length(ans)) {
-  plot(ans[[i]][, c("iota", "aba")], type = "l", 
+for (i in 10 * 1:99) {
+  plot(ans[[i]][, c("iota", "aba")], type = "o", 
        xlim = c(0, 15), ylim = c(0, 1), main = ks[i])
 }
 
-ans2 <- do.call(cbind, ans)
+ans2 <- do.call(rbind, ans)
 saveRDS(ans2, file = "mi_vs_aba/precomputed.rds")
