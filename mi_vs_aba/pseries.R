@@ -41,7 +41,7 @@ d_cgf_k <- function(bts, k, nterms = 200, a0 = cgf_k(bts, k, nterms)) {
 
 ## compiling a table
 t1 <- proc.time()
-ks <- c(2:10, 2 * (6:23), (7:100)^2)
+ks <- c(2:1000)
 lbs <- seq(-2, 10, by = 0.1)
 ans <- lapply(ks, function(k) {
   cs <- cgf_k(exp(lbs), k, nterms = 1e5)
