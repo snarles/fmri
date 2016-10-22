@@ -5,6 +5,15 @@ date: "February 18, 2016"
 output: html_document
 ---
 
+## Libraries
+
+```{r}
+library(MASS)
+library(pracma)
+library(glmnet)
+library(lineId)
+```
+
 ## Prepare data
 ```{r}
 
@@ -12,6 +21,7 @@ output: html_document
 #setwd('Yuval')
 #save(file = 'v1_data.RData',fit_feat, val_feat, v1, SNRv1_corr)
 load('v1_data.RData')
+# load('Yuval/v1_data.RData')
 # fit_feat, val_feat   (features for training and validation data)
 # v1$resp, v1$val      (train, validation responses for v1 voxels )
 # SNRv1_corr           (Explainable variance for 1:1250 v1 voxels)
@@ -144,6 +154,30 @@ bestMatch = function(preds, dataY, score,invCov = diag(length(usevox)), voxind=u
   return(sum(chosen==(1:nrow(dataY)))/nrow(dataY))
 }
 
+matchResults = function(preds, dataY, score,invCov = diag(length(usevox)), voxind=usevox, rankit = TRUE){
+  npoints = nrow(preds)
+  res <- list()
+  for (i in 1:nrow(dataY)){
+    if (score=='MSE'){
+      Yi = matrix(rep(dataY[i,voxind],npoints),nr=npoints,byrow=T)
+      ResYi = Yi - preds
+      res[[i]] = diag(ResYi %*% invCov %*% t(ResYi))
+    }
+    else if (score=='COR'){
+      res[[i]] = -apply(preds,1,cor,dataY[i,voxind])
+    }
+    else if (score=='COV'){
+      res[[i]] = -apply(preds,1,cov,dataY[i,voxind])
+    }
+    if ((i%%20)==0){
+      cat(',')
+    }
+  }
+  res <- do.call(rbind, res)
+  if (rankit) res <- t(apply(res, 1, rank))
+  res
+}
+
 ```
 
 ## Validation (13-repeat) Results:
@@ -160,5 +194,15 @@ bestMatch(testpred,testY[1:120,],'MSE',invCov = ridgeinv)
 
 bestMatch(testpred,testY[1:250,],'COR',invCov = ridgeinv)
 bestMatch(testpred,testY[1:250,],'MSE',invCov = ridgeinv)
+
+
+scores <- matchResults(testpred, testY, 'MSE',invCov = ridgeinv, rankit = FALSE)
+
+(p <- resample_misclassification(-scores, 1:250, 250, replace = FALSE))
+aba_to_mi_lower(250, 1-p)
+Ihat_LI(p, 250)
+(p <- resample_misclassification(-scores, 1:250, 100, replace = FALSE))
+aba_to_mi_lower(100, 1-p)
+Ihat_LI(p, 100)
 
 ```
