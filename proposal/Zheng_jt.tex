@@ -206,13 +206,6 @@
 \hat{f} = \sup_{f \in \mathcal{F}} \frac{1}{n}\sum_{i=1}^n I\{\hat{f}(X^{(i)}_1,...,X^{(i)}_p) = Z^{(i)}\}.
 \]
 \item Generalization accuracy $\text{A}(\hat{f})$ varies depending on data.
-\item Define Bayes accuracy
-\[
-\text{BA} = \sup_f \text{A}(f).
-\]
-\item Under smoothness conditions on $p(x, y)$,
-\[\lim_{n \to \infty} \text{A}(\hat{f}) \to \text{BA}(\hat{f})\]
-for a variety of classifiers, e.g. $k$-nearest neighbors (Fukunaga 2009.)
 \end{itemize}
 \end{frame}
 
@@ -583,7 +576,8 @@ Both are:
 \begin{frame}
 \frametitle{Question} Given that mutual information and average Bayes
 error are both means of measuring ``informativity'', can we
-``convert'' one to the other?
+``convert'' our lower bound for $\text{ABA}_k$ into a lower bound for
+$\text{I}(X; Y)$?
 \end{frame}
 
 \begin{frame}
@@ -725,15 +719,15 @@ error are both means of measuring ``informativity'', can we
 %\end{itemize}
 %\end{frame}
 
-\begin{frame}
-\frametitle{Natural questions}
-\begin{itemize}
-\item Does $\text{ABA}_k$ close to 1 imply $\text{I}$ large?
-\item Does $\text{ABA}_k$ close to $1/k$ imply $\text{I}$ close to 0?
-\item Does $\text{I}$ large imply $\text{ABA}_k$ close to 1?
-\item Does $\text{I}$ close to $0$ imply $\text{ABA}_k$ close to $1/k$?
-\end{itemize}
-\end{frame}
+%\begin{frame}
+%\frametitle{Natural questions}
+%\begin{itemize}
+%\item Does $\text{ABA}_k$ close to 1 imply $\text{I}$ large?
+%\item Does $\text{ABA}_k$ close to $1/k$ imply $\text{I}$ close to 0?
+%\item Does $\text{I}$ large imply $\text{ABA}_k$ close to 1?
+%\item Does $\text{I}$ close to $0$ imply $\text{ABA}_k$ close to $1/k$?
+%\end{itemize}
+%\end{frame}
 
 \begin{frame}
 \frametitle{Functional formulation}
@@ -746,62 +740,37 @@ Average Bayes accuracy $\text{ABA}_k[p(x, y)]$ and mutual information $\text{I}[
 \]
 \end{frame}
 
-\begin{frame}
-\frametitle{Does $\text{I}$ close to $0$ imply $\text{ABA}_k$ close to $1/k$?}
-Answer is yes, since $\text{I}[p(x, y)] = 0$ implies that $X$ is independent of $Y$.
-And when $X \perp Y$, the best classifier does not better than random guessing.
-\end{frame}
+%\begin{frame}
+%\frametitle{Does $\text{I}$ close to $0$ imply $\text{ABA}_k$ close to $1/k$?}
+%Answer is yes, since $\text{I}[p(x, y)] = 0$ implies that $X$ is independent of $Y$.
+%And when $X \perp Y$, the best classifier does not better than random guessing.
+%\end{frame}
 
-\begin{frame}
-\frametitle{Does $\text{I}$ large imply $\text{ABA}_k$ close to 1?}
-Answer is \textbf{no}... per the following counterexample.
-\begin{columns}
-\begin{column}{0.5\textwidth}
-\begin{center}
-\includegraphics[scale = 0.3]{witch_hat_func.png}
-\end{center}
-\end{column}
-\begin{column}{0.5\textwidth}
-\[
-X \in [0,1],\ Y \in [0,1]
-\]
-\[
-p(x, y) \propto (1- \alpha) + \alpha \left( \frac{e^{-\frac{x^2 + y^2}{2\sigma^2}}}{2\pi\sigma^2} \right)
-\]
-\[
-\text{I}[p(x, y)] \approx \alpha(\frac{1}{2}\log \frac{1}{\sigma^2} - 1- \log (2\pi))
-\]
-\end{column}
-\end{columns}
-Taking $\alpha \to 0$ and $\sigma^2 \leq e^{-\frac{1}{\alpha^2}}$, we get 
-\[\text{I}[p(x, y)] \to \infty,\ \ \text{ABA}_k[p(x, y)] \to \frac{1}{k}.\]
-This also answers ``\emph{Does $\text{ABA}_k$ close to $1/k$ imply $\text{I}$ close to 0?''} (Also no.)
-\end{frame}
 
-\begin{frame}
-\frametitle{Natural questions}
+%\begin{frame}
+%\frametitle{Natural questions}
 
-\begin{itemize}
-\item Does $\text{ABA}_k$ close to $1/k$ imply $\text{I}$ close to 0? \textbf{No}. (counterexample)
-\item Does $\text{I}$ large imply $\text{ABA}_k$ close to 1?  \textbf{No}. (counterexample)
-\item Does $\text{I}$ close to $0$ imply $\text{ABA}_k$ close to $1/k$? \textbf{Yes}.
-\end{itemize}
+%\begin{itemize}
+%\item Does $\text{ABA}_k$ close to $1/k$ imply $\text{I}$ close to 0? \textbf{No}. (counterexample)
+%\item Does $\text{I}$ large imply $\text{ABA}_k$ close to 1?  \textbf{No}. (counterexample)
+%\item Does $\text{I}$ close to $0$ imply $\text{ABA}_k$ close to $1/k$? \textbf{Yes}.
+%\end{itemize}
 
-The only remaining question is:
-\vspace{0.2in}
+%The only remaining question is:
+%\vspace{0.2in}
 
-Does $\text{ABA}_k$ close to 1 imply $\text{I}$ large?
-\vspace{0.2in}
+%Does $\text{ABA}_k$ close to 1 imply $\text{I}$ large?
+%\vspace{0.2in}
 
-The answer is yes and provides an ``extension'' of Fano's inequality.  Unlike in Fano's inequality,
-\[
-\text{ABA}_k \to 1
-\]
-implies
-\[
-\text{I}[p(x, y)] \to \infty.
-\]
-\end{frame}
+%The answer is yes and provides an ``extension'' of Fano's inequality.  Unlike in Fano's inequality,
+%\[
+%\text{ABA}_k \to 1
+%\]
+%implies
+%\[
+%\text{I}[p(x, y)] \to \infty.
+%\]
+%\end{frame}
 
 \begin{frame}
 \frametitle{Problem formulation} Take $\iota > 0$, and fix $k \in
@@ -1082,6 +1051,33 @@ C_k(\iota) = \int_0^1 q_{\beta_\iota}(t) t^{k-1} dt.
 \end{frame}
 
 \begin{frame}
+\frametitle{Does $\text{I}$ large imply $\text{ABA}_k$ close to 1?}
+Answer is \textbf{no}... per the following counterexample.
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{center}
+\includegraphics[scale = 0.3]{witch_hat_func.png}
+\end{center}
+\end{column}
+\begin{column}{0.5\textwidth}
+\[
+X \in [0,1],\ Y \in [0,1]
+\]
+\[
+p(x, y) \propto (1- \alpha) + \alpha \left( \frac{e^{-\frac{x^2 + y^2}{2\sigma^2}}}{2\pi\sigma^2} \right)
+\]
+\[
+\text{I}[p(x, y)] \approx \alpha(\frac{1}{2}\log \frac{1}{\sigma^2} - 1- \log (2\pi))
+\]
+\end{column}
+\end{columns}
+Taking $\alpha \to 0$ and $\sigma^2 \leq e^{-\frac{1}{\alpha^2}}$, we get 
+\[\text{I}[p(x, y)] \to \infty,\ \ \text{ABA}_k[p(x, y)] \to \frac{1}{k}.\]
+This also answers ``\emph{Does $\text{ABA}_k$ close to $1/k$ imply $\text{I}$ close to 0?''} (Also no.)
+\end{frame}
+
+
+\begin{frame}
 \frametitle{Fun fact: ``variational'' proof of Fano's inequality}
 $X \sim \text{Unif}\{1,...,k\}$, $Y \sim \text{Unif}[0,1]$.
 \[
@@ -1106,7 +1102,7 @@ q_1 = \beta,\ q_2 =\cdots=q_k = (1-\beta)/(k-1).
 where $\text{BA} = \beta$.
 Hence,
 \begin{align*}
-\text{I}(X; Y) &\leq \iota = \log(k) + \beta \log(\beta) + (1-\beta)\log((1-\beta)/(k-1))
+\text{I}(X; Y) &\geq \iota = \log(k) + \beta \log(\beta) + (1-\beta)\log((1-\beta)/(k-1))
 \\&= \log(k)-H(\text{BA}) - (1-\text{BA})\log(k-1),
 \end{align*}
 which is Fano's inequality.
