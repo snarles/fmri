@@ -138,7 +138,7 @@ for (k in ks) {
   acc <- 1-p
   # ve <- var_est(-scores, k)
   # sqrt(ve)
-  acc_l <- acc - zalpha * sqrt((1-acc)*(acc)/K) - 1/sqrt(4 * K)
+  acc_l <- acc - zalpha * sqrt(.25/K) - 1/sqrt(4 * K)
   ils <- c(ils, aba_to_mi_lower(k, acc_l))
   #res2 <- c(res2, Ihat_LI(p, k))
 }
