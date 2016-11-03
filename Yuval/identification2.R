@@ -110,12 +110,41 @@ matchResults = function(preds, dataY, score,invCov = diag(length(usevox)), voxin
 
 scores <- matchResults(testpred, testY, 'MSE',invCov = ridgeinv, rankit = FALSE)
 
+binom_lcb <- function(acc, nt, alpha = 0.05) {
+  qbinom(alpha, nt, acc, lower.tail = TRUE)/nt
+}
+
+source("mi_vs_aba/var_resample.R")
+
+alpha <- 0.05
+(zalpha <- -qnorm(alpha, lower.tail = TRUE))
+
 (p <- resample_misclassification(-scores, 1:250, 250, replace = FALSE))
-aba_to_mi_lower(250, 1-p)
-Ihat_LI(p, 250)
-(p <- resample_misclassification(-scores, 1:250, 100, replace = FALSE))
-aba_to_mi_lower(100, 1-p)
-Ihat_LI(p, 100)
+acc <- 1-p
+aba_to_mi_lower(250, acc)
+Ihat_LI(1-acc, 250)
+
+(acc_l <- binom_lcb(acc, 250, alpha) - 1/sqrt(4 * 250))
+aba_to_mi_lower(250, acc_l)
+
+k <- 5
+
+ks <- 2:250
+
+ils <- c(); res2 <- c()
+for (k in ks) {
+  K <- 250
+  (p <- resample_misclassification(-scores, 1:250, k, replace = FALSE))
+  acc <- 1-p
+  # ve <- var_est(-scores, k)
+  # sqrt(ve)
+  acc_l <- acc - zalpha * sqrt((1-acc)*(acc)/K) - 1/sqrt(4 * K)
+  ils <- c(ils, aba_to_mi_lower(k, acc_l))
+  #res2 <- c(res2, Ihat_LI(p, k))
+}
+
+plot(ks, ils, type = "o")
+
 
 
 
