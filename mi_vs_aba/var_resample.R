@@ -5,8 +5,8 @@
 library(pracma)
 library(lineId)
 bigK <- 1000
-K <- 50
-k <- 3
+K <- 200
+k <- 4
 
 plikes_pop <- randn(bigK) + 2 * eye(bigK)
 
@@ -59,7 +59,7 @@ Ksamp <- sample(bigK, K)
 plikes <- plikes_pop[Ksamp, Ksamp]
 
 
-bas <- resample_accs(plikes, k)
+bas <- resample_accs(plikes, k, mc.reps = 1e5)
 mean(bas)
 var(bas)/K*k
 
@@ -67,11 +67,18 @@ var(bas)/K*k
 
 Ksamp <- sample(bigK, K)
 plikes <- plikes_pop[Ksamp, Ksamp]
-ol_covs <- sapply(1:k, function(i) cov_accs_overlap(plikes, k, i))
+ol_covs <- sapply(1:k, function(i) cov_accs_overlap(plikes, k, i, 1e5))
 ol_covs
 
-ms <- 1:k
-sum(choose(K, ms) * choose(K - ms, k - ms) * choose(K - ms - k, k - ms) * ol_covs)/(choose(K, k)^2)
+(vif <- ol_covs/var(bas))
+
+ms <- 0:k
+
+p_ols <- choose(K, ms) * choose(K - ms, k - ms) * choose(K - ms - k, k - ms)/(choose(K, k)^2)
+p_ols
+sum(p_ols)
+
+sum(p_ols * c(0, ol_covs))
 
 
 
