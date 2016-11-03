@@ -41,45 +41,59 @@ cov_accs_overlap <- function(plikes, k, ol = 1, mc.reps = 100) {
   cov(res)[1, 2]
 }
 
+var_est <- function(plikes, k, mc.reps = 1e5) {
+  ol_covs <- sapply(1:k, function(i) cov_accs_overlap(plikes, k, i, mc.reps))
+  ol_covs
+  
+  (vif <- ol_covs/var(bas))
+  
+  ms <- 0:k
+  
+  p_ols <- exp(lchoose(K, ms)+lchoose(K - ms, k - ms)+lchoose(K - ms - k, k - ms)-2*(lchoose(K, k)))
+  p_ols
+  sum(p_ols)
+  
+  sum(p_ols * c(0, ol_covs))
+}
 
 ## actual variance
-mc.reps <- 1e4
-aba_hats <- sapply(1:mc.reps, function(i) {
-  Ksamp <- sample(bigK, K)
-  plikes <- plikes_pop[Ksamp, Ksamp]
-  dim(plikes)
-  1 - resample_misclassification(plikes, 1:K, m = k)
-})
-mean(aba_hats)
-var(aba_hats)
-
-## variance based on marginal stuff
-
-Ksamp <- sample(bigK, K)
-plikes <- plikes_pop[Ksamp, Ksamp]
-
-
-bas <- resample_accs(plikes, k, mc.reps = 1e5)
-mean(bas)
-var(bas)/K*k
-
-## variance based on overlap covs
-
-Ksamp <- sample(bigK, K)
-plikes <- plikes_pop[Ksamp, Ksamp]
-ol_covs <- sapply(1:k, function(i) cov_accs_overlap(plikes, k, i, 1e5))
-ol_covs
-
-(vif <- ol_covs/var(bas))
-
-ms <- 0:k
-
-p_ols <- choose(K, ms) * choose(K - ms, k - ms) * choose(K - ms - k, k - ms)/(choose(K, k)^2)
-p_ols
-sum(p_ols)
-
-sum(p_ols * c(0, ol_covs))
-
-
-
-
+# mc.reps <- 1e4
+# aba_hats <- sapply(1:mc.reps, function(i) {
+#   Ksamp <- sample(bigK, K)
+#   plikes <- plikes_pop[Ksamp, Ksamp]
+#   dim(plikes)
+#   1 - resample_misclassification(plikes, 1:K, m = k)
+# })
+# mean(aba_hats)
+# var(aba_hats)
+# 
+# ## variance based on marginal stuff
+# 
+# Ksamp <- sample(bigK, K)
+# plikes <- plikes_pop[Ksamp, Ksamp]
+# 
+# 
+# bas <- resample_accs(plikes, k, mc.reps = 1e5)
+# mean(bas)
+# var(bas)/K*k
+# 
+# ## variance based on overlap covs
+# 
+# Ksamp <- sample(bigK, K)
+# plikes <- plikes_pop[Ksamp, Ksamp]
+# ol_covs <- sapply(1:k, function(i) cov_accs_overlap(plikes, k, i, 1e5))
+# ol_covs
+# 
+# (vif <- ol_covs/var(bas))
+# 
+# ms <- 0:k
+# 
+# p_ols <- exp(lchoose(K, ms)+lchoose(K - ms, k - ms)+lchoose(K - ms - k, k - ms)-2*(lchoose(K, k)))
+# p_ols
+# sum(p_ols)
+# 
+# sum(p_ols * c(0, ol_covs))
+# 
+# 
+# 
+# 
