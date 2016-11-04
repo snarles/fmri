@@ -14,6 +14,10 @@
 \usepackage{graphicx}
 \usepackage{mathtools}
 \usepackage{csquotes}
+\usepackage{chngcntr}
+\usepackage{apptools}
+\AtAppendix{\counterwithin{lemma}{section}}
+
 \definecolor{grey}{rgb}{0.5,0.5,0.5}
 
 \begin{document}
@@ -34,6 +38,12 @@
 \newcommand{\by}{\boldsymbol{y}}
 \newcommand{\bX}{\boldsymbol{X}}
 \newcommand{\bY}{\boldsymbol{Y}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}{Lemma}[section]
+
+
 
 \begin{abstract}
 Multivariate pattern analyses approaches in neuroimaging are
@@ -225,40 +235,43 @@ Functionals of distributions, such as expectation $\E[\cdot]$ or mutual informat
 \[
 \text{I}[p]  \stackrel{D}{=} \text{I}[p(x,y)] = \int p(x, y) \log \frac{p(x,y)}{p(x) p(y)} dx dy
 \]
-or as functionals of random variables: $\E(X), \ \text{H}(X), \ \text{I}(X, Y)$.
-Square brackets are used when the arguments are density functions, and parentheses are used when the arguments are functions of random variables.
+or as functionals of random variables:
+$\E(X), \ \text{H}(X), \ \text{I}(X, Y)$.  Square brackets are used
+when the arguments are density functions, and parentheses are used
+when the arguments are functions of random variables.  $|\cdot|$
+denotes set cardinality.
 
 \subsection{Model}
 
 The following simplified model captures the essence of many
 neuroimaging studies.  Let $\mathcal{X}$ be a space of stimuli,
 represented by $q$-dimensional vectors.  In the design stage of the
-experiment, a set of $k$ stimuli exemplars $\{\bx^{(1)},\hdots, \bx^{(k)}\}$ are
+experiment, a set of $k$ stimuli exemplars $\{x^{(1)},\hdots, x^{(k)}\}$ are
 selected, and assigned into a $T$-length sequence of stimuli $(
-\bx^{(i_1)},\hdots, \bx^{(i_T)} )$ to be presented to the subject.  In the
+x^{(i_1)},\hdots, x^{(i_T)} )$ to be presented to the subject.  In the
 execution of the experiment, an activation pattern or \emph{response}
-$\by^{t}$ is obtained for each of the stimuli presentations $\bx^{(i_t)}$.
-Generally $\by^t$ is a $p$-dimensional vector, representing activity
+$y^{t}$ is obtained for each of the stimuli presentations $x^{(i_t)}$.
+Generally $y^t$ is a $p$-dimensional vector, representing activity
 levels of $p$ disjoint brain regions.  To simplify, assume that each
 of the $k$ stimuli is presented a total of $r$ times in the sequence;
 further assume that the responses to each stimulus presentation are
 conditionally independent, hence the ordering of the sequence does not
-matter.  Henceforth we can let $\by^{(i),j}$ denote the response to the
-$j$th presentation of the stimulus $\bx^{(i)}$.
+matter.  Henceforth we can let $y^{(i),j}$ denote the response to the
+$j$th presentation of the stimulus $x^{(i)}$.
 
-While in many studies, the stimuli exemplars $\bx^{(1)},\hdots,\bx^{(k)}$
+While in many studies, the stimuli exemplars $x^{(1)},\hdots,x^{(k)}$
 are chosen somewhat arbitrarily, more types of inferences can be drawn
 if randomization is employed to choose the stimuli.
 Based on this distinction, we discuss two types of experimental designs:
 \begin{itemize}
 \item[1.] \emph{Fixed stimuli design.}
-The exemplars $\bx^{(1)},\hdots, \bx^{(k)}$ are treated as fixed.
+The exemplars $x^{(1)},\hdots, x^{(k)}$ are treated as fixed.
 \item[2.] \emph{Randomized stimuli design.}
 The experimenter first specifies a space of stimuli $\mathcal{X}$
-and a probability distribution $p(\bx)$ over that space.
+and a probability distribution $p(x)$ over that space.
 Then, $k$ exemplars are drawn i.i.d. from that space,
 \[
-\bX^{(1)},\hdots, \bX^{(k)} \stackrel{iid}{\sim} p(\bx).
+X^{(1)},\hdots, X^{(k)} \stackrel{iid}{\sim} p(x).
 \]
 \end{itemize}
 
@@ -363,21 +376,24 @@ The reason that such a splitting is necessary is because using the
 same data to test and train a classifier introduces significant bias
 into the empirical classification error.
 
-In \emph{data-splitting}, one creates a \emph{training
-set} consisting of $r_1$ repeats per class,
+In \emph{data-splitting}, one creates a \emph{training set} consisting
+of $r_1$ repeats per class,
 \[
 \{(x^{(1)}, y^{(1),1}),\hdots, (x^1,y^{(1), r_1}), \hdots, (x^{(k)}, y^{(k),1}),\hdots, (x^{(m)},y^{(m), r_1})\}
 \]
-and a \emph{test set} consisting of the remaining $r_2 = r - r_1$ repeats.
+and a \emph{test set} consisting of the remaining $r_2 = r - r_1$
+repeats.
 \[
 \{(x^{(1)}, y^{(1), r_1 + 1}),\hdots, (x^{(1)},y^{(1),r}), \hdots, (x^{(k)}, y^{(k), r_1 + 1}),\hdots, (x^{(k)},y^{(k),r_1})\}.
 \]
-One inputs the training data into the classifier to obtain the classification rule $f$,
+One inputs the training data into the classifier to obtain the
+classification rule $f$,
 \[
-f = \mathcal{F}(\{(x^{(1)}, y^{(1),1}),\hdots, (x^{(1)},y^{(1),r_1}), \hdots, (x^{(k)}, y^{(k),1},\hdots, (x^{(k)},y^{(k), r_1})\}).
+f = \mathcal{F}(\{(x^{(1)}, y^{(1),1}),\hdots,
+(x^{(1)},y^{(1),r_1}), \hdots, (x^{(k)}, y^{(k),1},\hdots,
+(x^{(k)},y^{(k), r_1})\}).
 \]
-The test statistic of interest is the test error,
-defined as
+The test statistic of interest is the test error, defined as
 \[
 \widehat{\text{GA}} = \frac{1}{k r_2} \sum_{i=1}^k \sum_{j = r_1 + 1}^r \text{I}(f(y^{(i),j}) \neq i).
 \]
@@ -400,15 +416,16 @@ obtain \emph{confidence intervals} for the estimate.  We discuss such
 a cross-validation in greater detail in section 5.
 
 %% shift focus from sample size to arbitrary choice of classifier
-While tests of the generalization error suffice to establish the
-presence of information, the generalization error is less satisfactory
-as a measure of the information between $X$ and $Y$, because
-$\text{GA}$ depends on the classification rule $f$ obtained--but since the performance of the classifier
-may vary depending on the choice of model ($k$-nearest neighbors, SVM, etc.) and the choice of tuning parameters,
-the quantity $\text{GA}$ is therefore not uniquely defined.
-To resolve the ill-definedness of the generalization accuracy, we define
-the Bayes accuracy, which is simply the \emph{optimal}
-generalization accuracy
+While tests of the generalization accuracy suffice to establish the
+presence of information, the generalization accuracy is less
+satisfactory as a measure of the information between $X$ and $Y$,
+because $\text{GA}$ depends on the classification rule $f$
+obtained--but since the performance of the classifier may vary
+depending on the choice of model ($k$-nearest neighbors, SVM, etc.)
+and the choice of tuning parameters, the quantity $\text{GA}$ is
+therefore not uniquely defined.  To resolve the ill-definedness of the
+generalization accuracy, we define the Bayes accuracy, which is simply
+the \emph{optimal} generalization accuracy
 \[
 \text{BA} = \sup_f \text{GA}(f).
 \]
@@ -433,7 +450,7 @@ need to be able to assume a randomized design.
 \subsection{Randomized stimuli design}
 
 Under the assumption of randomized design, we treat the stimuli
-$x_1,\hdots, x_k$ as independent draws from some distribution $p(x)$.
+$x^{(1)},\hdots, x^{(k)}$ as independent draws from some distribution $p(x)$.
 Defining the joint distribution of the stimulus $X$ and the response
 $Y$ as
 \[
@@ -476,43 +493,546 @@ we present our methodology for inferring mutual information under the
 randomized stimuli design setting.
 
 Before presenting our approach, we first define the notion of average
-Bayes accuracy, which is fundamental to our approach.  The motivation for
-defining average Bayes accuracy is the fact that the quantity $\text{BA}$
-is not a parameter of the joint distribution $p(x, y)$, but rather
-depends on the specific exemplars $x_1,\hdots, x_k$ selected; hence,
-one may write $\text{BA}(x_1,\hdots, x_k)$ to emphasize this
-dependence.  The $k$-class \emph{average} Bayes accuracy, on the other hand, is
+Bayes accuracy, which is fundamental to our approach.  The motivation
+for defining average Bayes accuracy is the fact that the quantity
+$\text{BA}$ is not a parameter of the joint distribution $p(x, y)$,
+but rather depends on the specific exemplars $x_1,\hdots, x_k$
+selected; hence, one may write $\text{BA}(x_1,\hdots, x_k)$ to
+emphasize this dependence.  Explicitly,
+\[
+\text{BA}(x^{(1)},\hdots, x^{(k)}) = \sup_f \sum_{z=1}^k \frac{1}{k} \int_y I\{f(x^{(1)},...,x^{(k)}, y)=z\} p(y|x^{(z)}) dy.
+\]
+% [COMMENT] mention that BA can be inferred from test accuracy?
+
+The $k$-class \emph{average} Bayes accuracy, on the other hand, is
 defined uniquely for any joint distribution,
 \begin{equation}\label{eq:abe}
-\text{ABA}_k[p(x,y)] = \E[\text{BA}(X_1,\hdots, X_k)],
+\text{ABA}_k[p(x,y)] = \sup_f \Pr[f(X^{(1)},...,X^{(k)}, Y) = Z] = \E[\text{BA}(X_1,\hdots, X_k)],
 \end{equation}
 where $X_1,\hdots, X_K$ are drawn i.i.d. from $p(x)$.
-Since we know the Bayes classification rule, we can write the $k$-class average Bayes accuracy explicitly:
+
+%Move to next
+%Since we know the Bayes classification rule, we can write the $k$-class average Bayes accuracy explicitly:
+%\[
+%\text{ABA}_k[p(x,y)] = \frac{1}{k} \int \left[\prod_{i=1}^k p(x_i) dx_i \right] \int dy \max_i p(y|x_i).
+%\]
+Our theoretical contributions will be to obtain (i) an upper bound on
+$\text{Var}[\text{BA}(X_1,\hdots,X_k)]$, enabling inference of
+$\text{ABA}_k$, and (ii) a lower bound on mutual information
+$\text{I}[p(x,y)]$ as a function of average Bayes accuracy
+$\text{ABA}_k[p(x,y)]$ for any continuous joint density function
+$p(x,y)$, and (iii) derivation of data-based lower confidence bounds
+based on these results.
+
+\section{Variance of Average Bayes Accuracy}
+
+\subsection{Identities}
+%Suppose $X$ and $Y$ are continuous random variables (or vectors) which
+%have a joint distribution with density $p(x, y)$.  Let $p(x) = \int
+%p(x,y) dy$ and $p(y) = \int p(x,y) dx$ denote the respective marginal
+%distributions, and $p(y|x) = p(x,y)/p(x)$ denote the conditional
+%distribution.
+%$\text{ABA}_k$, or $k$-class Average Bayes accuracy is defined as
+%follows.  Let $X^{(1)},...,X^{(K)}$ be iid from $p(x)$, and draw $Z$ uniformly
+%from $1,..,k$.  Draw $Y \sim p(y|X^{(Z)})$.  Then, the average Bayes
+%accuracy is defined as
+%\[
+%\text{ABA}_k[p(x, y)] = \sup_f \Pr[f(X^{(1)},...,X^{(k)}, Y) = Z] 
+%\]
+%where the supremum is taken over all functions $f$.  
+%A function $f$ which achieves the supremum is
+%\[
+%f_{Bayes}(x^{(1)},...,x^{(k)}, y) = \text{argmax}_{z \in \{1,...,k\}} p(y|x^{(z)}),
+%\]
+%where an arbitrary rule can be employed to break ties.
+%Such a function $f_{Bayes}$ is called a \emph{Bayes classification rule}.
+%Define
+%\[
+%\text{BA}(x^{(1)},\hdots, x^{(k)}) = \sup_f \sum_{z=1}^k \frac{1}{k} \int_y I\{f(x^{(1)},...,x^{(k)}, y)=z\} p(y|x^{(z)}) dy.
+%\]
+%Therefore,
+%\[
+%\text{ABA}_k[p(x,y)] = \E[\text{BA}(X^{(1)},\hdots,X^{(k)})] = \int \text{BA}(x^{(1)},\hdots,x^{(k)}) \prod_{z=1}^k [ p(x_z) dx^{(z)} ].
+%\]
+%It follows that $\text{ABA}_k$ is given explicitly by
+%\[
+%\text{ABA}_k = \frac{1}{k} \int \left[\prod_{i=1}^k p(x_i) dx_i \right] \int dy \max_i p(y|x_i),
+%\]
+%as stated in the following theorem.
+The following closed-form expressions of $\text{BA}(X^{(1)},\hdots,
+X^{(k)})$ and $\text{ABA}_k$ are extremely useful for deriving
+theoretical results.
+\begin{theorem}
+%For a joint distribution $p(x, y)$, define
+%\[
+%\text{ABA}_k[p(x, y)] = \sup_f \Pr[f(x_1,...,x_k, y) = Z] 
+%\]
+%where $X_1,...,X_K$ are iid from $p(x)$, $Z$ is uniform from $1,..,k$, and $Y \sim p(y|X_Z)$,
+%and the supremum is taken over all functions $f: \mathcal{X}^k\times \mathcal{Y} \to \{1,...,k\}$.
+%Then,
+For joint density $p(x, y)$, we have
 \[
-\text{ABA}_k[p(x,y)] = \frac{1}{k} \int \left[\prod_{i=1}^k p(x_i) dx_i \right] \int dy \max_i p(y|x_i).
+\text{BA}(x^{(1)},\hdots, x^{(k)}) = \frac{1}{k} \int dy \max_i p(y|x_i).
+\]
+and
+\[
+\text{ABA}_k = \frac{1}{k} \int \left[\prod_{i=1}^k p(x^{(i)}) dx^{(i)} \right] \int dy \max_i p(y|x^{(i)}).
+\]
+\end{theorem}
+
+\noindent\textbf{Proof.}
+First, we claim that the supremum in \eqref{eq:abe} is attained by choosing
+\[
+f(x^{(1)},...,x^{(k)}, y) = \text{argmax}_{z \in \{1,...,k\}} p(y|x_z).
+\]
+To show this claim, write
+\[
+\sup_f \Pr[f(X^{(1)},...,X^{(k)}, Y) = Z] = \sup_f \frac{1}{k}\int p_X(x^{(1)})\hdots p_X(x^{(k)}) p(y|x_{f(x^{(1)},...,x^{(k)}, y)}) dx^{(1)}\hdots dx^{(k)} dy
+\]
+We see that maximizing $\Pr[f(X^{(1)},...,X^{(k)}, Y) = Z]$ over functions $f$
+additively decomposes into infinitely many subproblems, where in each
+subproblem we are given $\{x^{(1)},...,x^{(k)},
+y\} \in \mathcal{X}^k \times \mathcal{Y}$, and our goal is to choose
+$f(x^{(1)},...,x^{(k)}, y)$ from the set $\{1,...,k\}$ in order to maximize
+the quantity $p(y|x_{f(x^{(1)},...,x^{(k)}, y)})$.  In each subproblem,
+the maximum is attained by setting $f(x^{(1)},...,x^{(k)},y) = \text{argmax}_z
+p(y|x^{(z)})$--and the resulting function $f$ attains the supremum to the
+functional optimization problem.  This proves the claim.
+
+We therefore have
+\[
+p(y|x_{f(x^{(1)},...,x^{(k)}, y)}) = \max_{i=1}^k p(y|x^{(i)}).
 \]
 
-Our theoretical contributions will be to obtain (i) a lower bound on mutual information $\text{I}[p(x,y)]$ as a function of average Bayes accuracy $\text{ABA}_k[p(x,y)]$ for any continuous joint density function $p(x,y)$, (ii) an asymptotic functional relationship
+Therefore, we can write
+\begin{align*}
+\text{ABA}_k[p(x, y)] &= \sup_f \Pr[f(X^{(1)},...,X^{(k)}, Y) = Z]
+\\&=  \frac{1}{k} \int p_X(x^{(1)})\hdots p_X(x^{(k)}) p(y|x_{f(x^{(1)},...,x^{(k)}, y)})  dx^{(1)}\hdots dx^{(k)} dy.
+\\&=  \frac{1}{k} \int p_X(x^{(1)})\hdots p_X(x^{(k)}) \max_{i=1}^k p(y|x^{(i)})  dx^{(1)}\hdots dx^{(k)} dy.
+\end{align*}
+$\Box$.
+
+\subsection{Variability of Bayes Accuracy}
+We have
 \[
-\text{ABA}_k[p] = \pi_k(\sqrt{2 \text{I}[p]})
+\text{ABA}_k = \E[\text{BA}(X^{(1)},...,X^{(k)})]
 \]
-in a particular limit where the dimensionality of $X$ and $Y$ grow while $\text{I}(X,Y)$ converges to a finite limit,
-and (iii) derivation of data-based lower confidence bounds based on these results.
+where the expectation is over the independent sampling of $X^{(1)},...,X^{(k)}$ from $p(x)$.
 
-\section{Lower bound}
+Therefore, $\text{BA}_k = \text{BA}(X^{(1)},...,X^{(k)})$ is already an
+unbiased estimator of $\text{ABA}_k$.  However, to get confidence
+intervals for $\text{ABA}_k$, we also need to know the variability.
 
-[NOTE: See notes info 2.]
+We have the following upper bound on the variability.
 
-\section{Asymptotic Theory}
+\begin{theorem}
+Given joint density $p(x, y)$, for $X^{(1)},...,X^{(k)} \stackrel{iid}{\sim} p(x)$, we have
+\[
+\text{Var}[\text{BA}(X^{(1)},...,X^{(k)})] \leq \frac{1}{4k}.
+\]
+\end{theorem}
 
-[NOTE: Adapt from NIPS paper.]
+\noindent\textbf{Proof.}
+According to the Efron-Stein lemma,
+\[
+\text{Var}[\text{BA}(X_1,...,X_k)] \leq \sum_{i=1}^k \E[\text{Var}[\text{BA}|X_1,...,X^{(i-1)}, X^{(i+1)}, ..., X_k]].
+\]
+which is the same as
+\[
+\text{Var}[\text{BA}(X_1,...,X_k)] \leq k \E[\text{Var}[\text{BA}|X_1,...,X^{(k-1)}]].
+\]
+The term $\text{Var}[\text{BA}|X_1,...,X_{k-1}]$ is the variance of $\text{BA}(X_1,...,X_k)$
+conditional on fixing the first $k-1$ curves $p(y|x_1),...,p(y|x_{k-1})$ and allowing the final curve $p(y|X_k)$ to vary randomly.
 
-\section{Applications}
+Note the following trivial results
+\[
+-p(y|x_k) + \max_{i=1}^k p(y|x_i)\leq \max_{i=1}^{k-1} p(y|x_i) \leq \max_{i=1}^k p(y|x_i).
+\]
+This implies
+\[
+\text{BA}(X_1,...,X_k) - \frac{1}{k} \leq \frac{k-1}{k}\text{BA}(X_1,...,X_{k-1}) \leq \text{BA}(X_1,...,X_k).
+\]
+i.e. conditional on $(X_1,...,X_{k-1})$, $\text{BA}_k$ is supported on an interval of size $1/k$.
+Therefore,
+\[
+\text{Var}[\text{BA}|X_1,...,X_{k-1}] \leq \frac{1}{4k^2}
+\]
+since $\frac{1}{4c^2}$ is the maximal variance for any r.v. with support of length $c$. $\Box$
+
+\section{Mutual information lower bound}
+
+\subsection{Problem formulation}
+
+Let $\mathcal{P}$ denote the collection of all joint densities $p(x,
+y)$ on finite-dimensional Euclidean space.  For $\iota \in [0,\infty)$
+define $C_k(\iota)$ to be the largest $k$-class average Bayes error
+attained by any distribution $p(x,y)$ with mutual information not
+exceeding $\iota$:
+\[
+C_k(\iota) = \sup_{p \in \mathcal{P}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)].
+\]
+A priori, $C_k(\iota)$ exists since $\text{ABA}_k$ is bounded between
+0 and 1.  Furthermore, $C_k$ is nondecreasing since the domain of the
+supremum is monotonically increasing with $\iota$.
+
+It follows that for any density $p(x,
+y)$, we have
+\[
+\text{ABA}_k[p(x,y)] \leq C_k(\text{I}[p(x,y)]).
+\]
+Hence $C_k$ provides an upper bound for average Bayes error in terms of mutual information.
+
+Conversely we have
+\[
+\text{I}[p(x,y)] \geq C^{-1}_k(\text{ABA}_k[p(x,y)])
+\]
+so that $C^{-1}_k$ provides a lower bound for mutual information in terms of average Bayes error.
+
+On the other hand, there is no nontrivial \emph{lower} bound for average Bayes error in terms of mutual information,
+nor upper bound for mutual information in terms of average Bayes error, since
+\[
+\inf_{p \in \mathcal{P}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)] = \frac{1}{k}.
+\]
+regardless of $\iota$.
+
+The goal of this work is to attempt to compute or approximate the functions $C_k$ and $C_k^{-1}$.
+
+In the following sections we determine the value of $C_k(\iota)$,
+leading to the following result.
+
+\begin{theorem}\label{theorem:Cunif}
+For any $\iota > 0$, there exists $c_\iota \geq 0$ such that defining
+\[
+Q_c(t) = \frac{\exp[ct^{k-1}]}{\int_0^1 \exp[ct^{k-1}]},
+\]
+we have
+\[
+\int_0^1 Q_{c_\iota}(t) \log Q_{c_\iota}(t) dt = \iota.
+\]
+Then,
+\[
+C_k(\iota) = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
+\]
+\end{theorem}
+
+We obtain this result by first reducing the problem to the case of
+densities with uniform marginals, then doing the optimization over the
+reduced space.
+
+\subsection{Reduction}
+
+Let $p(x, y)$ be a density supported on
+$\mathcal{X} \times \mathcal{Y}$, where $\mathcal{X}$ is a subset of
+$\mathbb{R}^{d_1}$ and $\mathcal{Y}$ is a subset of
+$\mathbb{R}^{d_2}$, and such that $p(x)$ is uniform on $\mathcal{X}$
+and $p(y)$ is uniform on $\mathcal{Y}$.
+
+Now let $\mathcal{P}^{unif}$ denote the set of such distributions:
+in other words, $\mathcal{P}^{unif}$ is the space of joint densities in Euclidean space
+with uniform marginals over the marginal supports.
+In this section, we prove that
+\[
+C_k(\iota) =\inf_{p \in \mathcal{P}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)] = 
+\inf_{p \in \mathcal{P}^{unif}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)],
+\]
+thus reducing the problem of optimizing over the space of all
+densities to the problem of optimizing over densities with uniform
+marginals.
+
+Also define $\mathcal{P}^{bounded}$ to be the space of all densities $p(x, y)$ with finite-volume support.
+Since uniform distributions can only be defined over sets of finite volume, we have
+\[
+\mathcal{P}^{unif} \subset \mathcal{P}^{bounded} \subset \mathcal{P}.
+\]
+
+Therefore, it is necessary to first show that
+\[
+\inf_{p \in \mathcal{P}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)] = 
+\inf_{p \in \mathcal{P}^{bounded}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)].
+\]
+
+This is accomplished via the following lemma.
+
+\begin{lemma}\label{lemma:truncation} (Truncation).
+Let $p(x, y)$ be a density on
+$\mathbb{R}^{d_x} \times \mathbb{R}^{d_y}$.  For all $\epsilon > 0$,
+there exists a subset $\mathcal{X} \subset \mathbb{R}^{d_x}$ with
+finite volume with respect to $d_x$-dimensional Lesbegue measure, and
+a subset $\mathcal{Y} \subset \mathbb{R}^{d_y}$ with finite volume
+with respect to $d_y$-dimensional Lesbegue measure, such that defining
+\[
+\tilde{p}(x, y) = \frac{I\{(x,y) \in \mathcal{X}\times \mathcal{Y}\} }{\int_{\mathcal{X} \times \mathcal{Y}} p(x,y) dx dy} p(x,y),
+\]
+we have
+\[
+|\text{I}[p] - \text{I}[\tilde{p}]| < \epsilon
+\]
+and
+\[
+|\text{ABA}_k[p] - \text{ABA}_k[\tilde{p}]| < \epsilon.
+\]
+\end{lemma}
+
+\textbf{Proof.}
+Recall the definition of the Shannon entropy $H$:
+\[
+\text{H}[p(x)] = - \int p(x) \log p(x) dx.
+\]
+It is a well-known in information theory that
+\[
+\text{I}[p(x, y)] = \text{H}[p(x)] + \text{H}[p(y)] - \text{H}[p(x, y)].
+\]
+There exists a sequence $(\mathcal{X}_i, \mathcal{Y}_i)_{i=1}^\infty$
+where $(\mathcal{X}_i)_{i=1}^\infty$ is an increasing sequence of finite-volume subsets of $\mathbb{R}^{d_x}$
+and $(\mathcal{Y}_i)_{i=1}^\infty$ is an increasing sequence of finite-volume subsets of $\mathbb{R}^{d_y}$,
+and $\lim_{i \to \infty} \mathcal{X}_i = \mathbb{R}^{d_x}$, $\lim_{i \to \infty} \mathcal{Y}_j$.
+Define
+\[
+\tilde{p}_i(x, y) = \frac{I\{(x,y) \in \mathcal{X}_i\times \mathcal{Y}_i\} }{\int_{\mathcal{X}_i \times \mathcal{Y}_i} p(x,y) dx dy} p(x,y)
+\]
+Note that $\tilde{p}_i$ gives the conditional distribution of $(X, Y)$
+conditional on $(X, Y) \in \mathcal{X}_i \times \mathcal{Y}_i$. 
+Furthermore, it is convenient to define $\tilde{p}_\infty = p$.
+We can find some $i_1$, such that for all $i \geq i_1$, we have
+\[
+\left|\int_{x \notin \mathcal{X}_i} p(x) \log p(x) dx\right| < \frac{\epsilon}{6}
+\]
+\[
+\left|\int_{y \notin \mathcal{Y}_i} p(y) \log p(y) dy\right| < \frac{\epsilon}{6}
+\]
+\[
+\left|\int_{(x,y) \notin \mathcal{X}_i \times \mathcal{Y}_i} p(x, y) \log p(x, y) dx dy\right| < \frac{\epsilon}{6}
+\]
+and also such that
+\[
+-\log \left[\int_{x, y \in \mathcal{X}_i \times \mathcal{Y}_i} p(x, y) dx dy\right] < \frac{\epsilon}{2}
+\]
+Then, it follows that
+\[
+|\text{I}[p] - \text{I}[\tilde{p}_i]| < \epsilon
+\]
+for all $i \geq i_1$.
+
+Now we turn to the analysis of average Bayes error.
+Let $f_i$ denote the Bayes $k$-class classifier for $\tilde{p}_i(x, y)$
+and
+$f_\infty$ the Bayes $k$-class classifier for $p(x, y)$: recall that by definition,
+\[
+\text{ABA}_k[\tilde{p}_i] = \Pr_{\tilde{p}_i}[f_i(X_1,...,X_k, Y) = Z]
+\]
+Define
+\[
+\epsilon_i = \Pr_p[(X_1,...,X_k, Y)\notin \mathcal{X}_i^k \times \mathcal{Y}_i];
+\]
+by continuity of probability we have $\lim_i \epsilon_i \to 0$.
+We claim that
+\[
+|\text{ABA}_k[\tilde{p}_i] - \text{ABA}_k[p]| \leq \epsilon_i.
+\]
+Given the claim, the proof is completed by finding $i > i_1$ such that $\epsilon_i < \epsilon$,
+and defining $\mathcal{X} = \mathcal{X}_i$, $\mathcal{Y} = \mathcal{Y}_i$.
+
+Consider using $f_i$ to obtain a classification rule for $p(x, y)$:
+define
+\[
+\tilde{f}_i = \begin{cases}f_i(x_1,...,x_k, y) & \text{ when } (x_1,...,x_k, y) \in \mathcal{X}_i^k \times \mathcal{Y}\\
+0 & \text{ otherwise.} 
+\end{cases}
+\]
+We have
+\begin{align*}
+\text{ABA}_k[p] =& \sup_f \Pr_p[f(X_1,...,X_k, Y) = Z]
+\\ \geq& 
+\\=& (1-\epsilon_i)\Pr_p[f_i(X_1,...,X_k, Y) = Z|(X_1,...,X_k, Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i]
+\\&+ \epsilon_i \Pr_p[f_i(X_1,...,X_k, Y) = Z|(X_1,...,X_k, Y)\notin \mathcal{X}_i^k \times \mathcal{Y}_i]
+\\=& (1-\epsilon_i)\Pr_{\tilde{p}}[f_i(X_1,...,X_k, Y) = Z]
++ \epsilon_i 0
+\\=& (1-\epsilon_i) \text{ABA}_k[\tilde{p}_i] \geq \text{ABA}_k[\tilde{p}_i] - \epsilon_i.
+\end{align*}
+In other words, when $\tilde{p}_i$ is close to $p$, the Bayes
+classification rule for $\tilde{p}_i$ obtains close to the Bayes rate
+when the data is generated under $p$.
+
+Now consider the reverse scenario of using $f_p$ to perform
+classification under $\tilde{p}_i$.  This is equivalent to generating
+data under $p(x, y)$, performing classification using $f$, then only
+evaluating classification accuracy conditional on $(X_1,...,X_k,
+Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i$.  Therefore,
+
+\begin{align*}
+\text{ABA}_k[\tilde{p}_i] =& \sup_f \Pr_{\tilde{p}_i}[f(X_1,...,X_k, Y) = Z]
+\\\geq &  \Pr_{\tilde{p}_i}[f_p(X_1,...,X_k, Y) = Z]
+\\=& \Pr_p[f_p(X_1,...,X_k, Y) = Z| (X_1,...,X_k, Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i]
+\\=& \frac{1}{1-\epsilon_i} \Pr_p[I\{(X_1,...,X_k, Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i\} \text{ and }f_p(X_1,...,X_k, Y) = Z]
+\\\geq & \frac{1}{1-\epsilon_i} \left(1 - \Pr_p[I\{(X_1,...,X_k, Y)\notin \mathcal{X}_i^k \times \mathcal{Y}_i\}] - \Pr_p[f_p(X_1,...,X_k, Y) \neq Z]]\right)
+\\&= \frac{\text{ABA}_k[p] - \epsilon_i}{1-\epsilon_i} \geq \text{ABA}_k[p] - \epsilon_i.
+\end{align*}
+In other words, when $\tilde{p}_i$ is close to $p$, the Bayes
+classification rule for $p$ obtains close to the Bayes rate when the
+data is generated under $\tilde{p}_i$.
+
+Combining the two directions gives $|\text{ABA}_k[\tilde{p}_i]
+- \text{ABA}_k[p]| \leq \epsilon_i$, as claimed. $\Box$
+
+One can go from bounded-volume sets to uniform distributions by adding
+auxillary variables.  To illustrate the intution, consider a density
+$p(x)$ on a set of bounded volume, $\mathcal{X}$.  Introduce a
+variable $W$ such that conditional on $X = x$, we have $w$ uniform on
+$[0, p(x)]$.  It follows that the joint density $p(x, w) = 1$ and is
+supported on a set $\mathcal{X}' = \mathcal{X} \times [0,\infty]$.
+Furthermore, $\mathcal{X}'$ is of bounded volume (in fact, of volume 1) since
+\[
+\int_{\mathcal{X}'} dx = \int_{\mathcal{X}'} p(x, w) dx = 1.
+\]
+
+Therefore, to accomplish the reduction from $\mathcal{P}$ to
+$\mathcal{P}^{unif}$, we start with a density
+$p(x,y) \in \mathcal{P}$, and using Lemma \ref{lemma:truncation},
+find a suitable finite-volume truncation $\tilde{p}(x, y).$ Finally,
+we introduce auxillary variables $w$ and $z$ so that the expanded
+joint distribution $p(x, w, y, z)$ has uniform marginals $p(x, w)$ and
+$p(y, z)$.  However, we still need to check that the introduction of
+auxillary variables preserves the mutual information and average Bayes
+error; this is the content of the next lemma.
+
+\begin{lemma}
+Suppose $X$, $Y$, $W$, $Z$ are continuous random variables, and that
+$W\perp Y|Z$, $Z \perp X|Y$, and $W \perp Z|(X,Y)$.  Then,
+\[
+\text{I}[p(x, y)] = \text{I}[p((x,w), (y,z))]
+\]
+\end{lemma}
+\textbf{Proof.}
+Due to conditional independence relationships, we have
+\[
+p((x,w), (y,z)) = p(x,y)p(w|x)p(z|y).
+\]
+
+It follows that
+\begin{align*}
+\text{I}[p((x,w), (y,z))] &= \int dx dw dy dz  \ p(x,y)p(w|x)p(z|w) \log \frac{p((x,w), (y,z))}{p(x,w)p(y,z)}
+\\&= \int dx dw dy dz \ p(x,y)p(w|x)p(z|w) \log \frac{p(x, y)p(w|x)p(z|y)}{p(x)p(y)p(w|x)p(z|y)}
+\\&= \int dx dw dy dz \ p(x,y)p(w|x)p(z|w) \log \frac{p(x, y)}{p(x)p(y)}
+\\&= \int dx dy \ p(x,y) \log \frac{p(x, y)}{p(x)p(y)} = \text{I}[p(x,y)].
+\end{align*}
+
+Also,
+\begin{align*}
+\text{ABA}_k[p((x,w),(y,z))] 
+&= \int \left[\prod_{i=1}^k p(x_i, w_i) dx_i dw_i \right] \int dy dz \ \max_i p(y,z|x_i, w_i).
+\\&= \int \left[\prod_{i=1}^k p(x_i, w_i) dx_i dw_i \right] \int dy \ \max_i p(y|x_i) \int dz \ p(z|y).
+\\&= \int \left[\prod_{i=1}^k p(x_i) dx_i \right] \left[\prod_{i=1}^k \int dw_i p(w_i|x_i)\right] \int dy \ \max_i p(y|x_i)
+\\&= \text{ABA}_k[p(x,y)].
+\end{align*}
+
+$\Box$
+
+
+Combining these lemmas gives the needed reduction, given by the following theorem.
+
+\begin{theorem}\label{theorem:reduction} (Reduction.)
+\[
+\inf_{p \in \mathcal{P}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)] = 
+\inf_{p \in \mathcal{P}^{unif}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)].
+\]
+\end{theorem}
+
+The proof is trivial given the previous two lemmas.
+
+%\subsection{Optimization}
+
+%Having reduced the problem to an optimization over $\mathcal{P}^{unif}$,
+%in this section we use variational calculus to find the global optimum to the optimization problem
+%\[
+%\text{maximize}_{p \in \mathcal{P}^{unif}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)]
+%\]
+
+\subsection{Proof of theorem}
+
+\textbf{Proof of theorem \ref{theorem:Cunif}}
+
+Using Theorem \ref{theorem:reduction}, we have
+\[
+C_k(\iota) = \inf_{p \in \mathcal{P}^{unif}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)].
+\]
+
+Define $f(\iota) = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt$: our goal is to
+establish that $C_k(\iota) = f(\iota)$.  
+Note that $f(\iota)$
+is the same function which appears in Lemma \ref{lemma:concave} and
+the same bound as established in Lemma \ref{lemma:variational}.
+
+Define the density $p_\iota(x, y)$ where
+\[
+p_\iota(x, y) = \begin{cases}
+g_\iota(y - x) & \text{ for } x\geq y\\
+g_\iota(1 + y - x) & \text{ for } x < y
+\end{cases}
+\]
+where
+\[
+g_\iota(x) = \frac{d}{dx}G_\iota(x)
+\]
+and $G_\iota$ is the inverse of $Q_c$.
+
+One can verify that $\text{I}[p_\iota] = \iota$, and 
+\[
+\text{ABA}_k[p] = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
+\]
+
+This establishes that
+\[
+C_k(\iota) \geq \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
+\]
+It remains to show that for all $p \in \mathcal{P}^{unif}$ with
+$\text{I}[p] \leq \iota$, that $\text{ABA}_k[p] \leq \text{ABA}_k[p_\iota]$.
+
+Take $p \in \mathcal{P}^{unif}$ such that $\text{I}[p] \leq \iota$.
+Letting $X_1,...,X_k \sim \text{Unif}[0,1]$, and $Y \sim \text{Unif}[0,1]$ define $Z_i(y) = p(y|X_i)$.
+We have $\E(Z(y)) = 1$ and,
+\[
+\text{I}[p(x,y)] = \E(Z(Y) \log Z(Y))
+\]
+while
+\[
+\text{ABA}_k[p(x,y)] = k^{-1}\E(\max_i Z_i(Y)).
+\]
+
+Letting $G_y$ be the distribution of $Z(y)$, we have
+\[
+E[G_y] = 1
+\]
+\[
+\text{I}[p(x,y)] = \E(I[G_Y])
+\]
+\[
+\text{ABA}_k[p(x,y)] = \E(\psi_k[G_Y])
+\]
+where the expectation is taken over $Y \sim \text{Unif}[0,1]$ and
+where $E[G]$, $I[G]$, and $\psi_k[G]$ are defined as in
+Lemma \ref{lemma:variational}.
+
+Define the random variable $J = I[G_Y]$.
+We have
+\begin{align*}
+\text{ABA}_k[p(x,y)] &= \E(\psi_k[G_Y])
+\\&= \int_0^1 \psi_k[G_y] dy
+\\&\leq \int_0^1 \left(\sup_{G: I[G] \leq I[G_y]} \psi_k[G]\right) dy
+\\&= \int_0^1 f(I[G_y]) dy = \E[f(J)].
+\end{align*}
+Now, since $f$ is concave by Lemma \ref{lemma:concave},
+we can apply Jensen's inequality to conclude that
+\[
+\text{ABA}_k[p(x,y)] = \E[f(J)] \leq f(\E[J]) = f(\iota),
+\]
+which completes the proof. $\Box$
+
+
+\section{Lower confidence bounds}
 
 Having established the theoretical basis of our method, the current
-section is dedicated to discussing applications and practical issues.
-In contrast to the previous section, our focus in this section will be
-methodological rather than theoretical.
+section derives methods for lower confidence bounds in various
+settings.
 
 Within the framework of randomized designs, a number of
 machine-learning-based modeling approaches can be applied to assess
@@ -520,6 +1040,39 @@ informativity.  The most common approaches are based
 on \emph{classification} and \emph{regression}, but a third
 approach, \emph{identification}, combines the strengths of both
 classification and regression.
+
+\subsection{Classification}
+
+Recall the notation used in section 2.1: the $k$ stimuli exemplars are
+denoted $\{x^{(1)},\hdots, x^{(k)}\}$ and the $r$ responses for the
+$i$th class are given by $y^{(i), 1},\hdots, y^{(i), r}$.
+
+Recall that \emph{data-splitting}, one creates a \emph{training
+set} consisting of $r_1$ repeats per class,
+\[
+\{(x^{(1)}, y^{(1),1}),\hdots, (x^1,y^{(1), r_1}), \hdots, (x^{(k)}, y^{(k),1}),\hdots, (x^{(m)},y^{(m), r_1})\}
+\]
+and a \emph{test set} consisting of the remaining $r_2 = r - r_1$ repeats.
+\[
+\{(x^{(1)}, y^{(1), r_1 + 1}),\hdots, (x^{(1)},y^{(1),r}), \hdots, (x^{(k)}, y^{(k), r_1 + 1}),\hdots, (x^{(k)},y^{(k),r_1})\}.
+\]
+One inputs the training data into the classifier to obtain the classification rule $f$,
+\[
+f = \mathcal{F}(\{(x^{(1)}, y^{(1),1}),\hdots, (x^{(1)},y^{(1),r_1}), \hdots, (x^{(k)}, y^{(k),1},\hdots, (x^{(k)},y^{(k), r_1})\}).
+\]
+The test statistic of interest is the test error,
+defined as
+\[
+\widehat{\text{GA}} = \frac{1}{k r_2} \sum_{i=1}^k \sum_{j = r_1 + 1}^r \text{I}(f(y^{(i),j}) \neq i).
+\]
+It follows that $kr_2 \widehat{\text{GA}}$ is a sum of Bernoulli random variables.
+Approximately,
+\[
+kr_2 \widehat{\text{GA}} \sim \text{Binomial}(\text{GA}(f), kr_2)
+\]
+
+
+\subsection{Identification setting}
 
 The different machine-learning-based modeling approaches excel in
 different experimental settings.  Classification-based approaches
@@ -536,139 +1089,16 @@ depends heavily on having a parameterization which captures the
 relevant features of the stimulus--this can be a difficult task when
 studying complex stimuli such as faces or natural images.
 
-While we described the classification
-approach in section 2, we describe the application of our method using
-classifiers in section 4.1.  Then, in section 4.2, we will introduce
-the identification task, and how our method can also be combined with
-the identification-based approach.
-
-
-\subsection{Classification setting}
-
-Recall the notation used in section 2.1: the $k$ stimuli exemplars are
-denoted $\{x^{(1)},\hdots, x^{(k)}\}$ and the $r$ responses for the
-$i$th class are given by $y^{(i), 1},\hdots, y^{(i), r}$.
-
-For a given classifier $\mathcal{F}$, the classification rule $f$ varies randomly depending on the input.
-One can define the average generalization error
-\[
-e_{AGE} = \E[e_{gen}(\mathcal{F}(\{(x^{(1)}, Y^{(1),1}),\hdots, (x^{(1)},Y^{(1),r_1}), \hdots, (x^{(k)}, Y^{(k),1},\hdots, (x^{(k)},Y^{(k), r_1})\}))]
-\]
-where the expectation is taken over the sampling of the training
-data \emph{conditional} on fixing the stimuli $x^{(1)},\hdots,
-x^{(r)}.$ The procedure we suggest for obtaining a confidence interval
-for $\hat{I}(X; Y)$ is to first obtain a confidence interval for the
-average generalization error, $[\underline{e}, \bar{e}]$, then apply
-the inversion formula to construct the interval\footnote{Note that the theory established in section 3.2 does not apply to the
-coverage properties of $C$, since we used a confidence interval for
-$e_{AGE}$ rather than $e_{Bayes}$ to construct the interval.  Despite
-this limitation, the resulting interval $C$ still serves the useful
-purpose of conveying the uncertainty about the inferred information.}
-\[
-C = [\frac{1}{2}(\pi_k^{-1}(\bar{e}))^2, \frac{1}{2}(\pi_k^{-1}(\underline{e}))^2].
-\]
-
-We can use cross-validation to construct such a confidence interval
-$C$.  For a large number of resampling trials $B$, let $S_1,\hdots,
-S_B$ be random subsets of the data such that each $S_i$ consists of
-$r_1$ repeats for each stimulus\footnote{ That is, let $\rho^{i,
-j}(\ell)$ be a random injective mapping from $\{1,\hdots, r_1\}$ to
-$\{1,\hdots, r\}$ for each $i = 1,\hdots, B$ and $j = 1,\hdots, k$.
-The $\rho^{i,j}$ are i.i.d. from the uniform distribution on such
-mappings.  Define $S_i = \{(x^{(j)}, y^{(j), \rho^{i, j}(\ell)})|
-1 \leq \ell\leq r \text{ and }1\leq j \leq k\}$. Meanwhile, define
-$\bar{S}_i = \{(x^{(j)}, y^{(j), \ell})|1\leq j\leq k, 1\leq \ell \leq
-r\}\setminus S_i$. }.  Let $\bar{S}_i$ denote the complement of $S_i$
-in the data.  For each $i = 1,\hdots, B$, construct a classification
-rule $f^{(i)}$ by inputting the set $S_i$ as training data for the
-classifier,
-\[
-f^{(i)} = \mathcal{F}(\{(x, y): (x, y) \in S_i\})
-\]
-Define the $i$th estimate of test error
-as
-\[
-e_i = \frac{1}{kr_2} \sum_{j=1}^{k}\sum_{(x^{(j)}, y) \in \bar{S}_i} I(f(y) \neq j).
-\]
-Order the estimates so that $e_{(1)} \leq e_{(2)} \leq \cdots \leq e_{(B)}$.
-
-
-
-\subsection{Identification setting}
+While we described the classification approach in section 2, we
+describe the application of our method using classifiers in section
+4.1.  Then, in section 4.2, we will introduce the identification task,
+and how our method can also be combined with the identification-based
+approach.
 
 
 \section{Results}
 
 \subsection{Simulation}
-
-Multiple-response logistic regression model
-\[
-X \sim N(0, I_p)
-\]
-\[
-Y \in \{0,1\}^q
-\]
-\[
-Y_i|X = x \sim \text{Bernoulli}(x^T B_i)
-\]
-where $B$ is a $p \times q$ matrix.
-
-\emph{Methods.}
-\begin{itemize}
-\item \text{Nonparametric}: $\hat{I}_0$ naive estimator, $\hat{I}_\alpha$ anthropic correction.
-\item \text{ML-based}: $\hat{I}_{CM}$ confusion matrix, $\hat{I}_F$ Fano, $\hat{I}_{LS}$ low-SNR method.
-\end{itemize}
-
-Sampling distribution of $\hat{I}$ for \small{$\{p = 3$, $B = \frac{4}{\sqrt{3}} I_3$, $K = 20$, $r = 40\}$.}
-
-True parameter $I(X; Y) = 0.800$ \emph{(dotted line.)}
-\begin{center}
-\includegraphics[scale = 0.5, clip = true, trim = 0 0.5in 0 0.5in]{../info_theory_sims/fig1.pdf}
-\end{center}
-Na\"{i}ve estimator performs best!  $\hat{I}_{LS}$ not effective.
-
-Sampling distribution of $\hat{I}$ for \small{$\{p = 50$, $B = \frac{4}{\sqrt{50}} I_{50}$, $K = 20$, $r = 8000\}$.}
-
-True parameter $I(X; Y) = 1.794$ \emph{(dashed line.)}
-\begin{center}
-\includegraphics[scale = 0.5, clip = true, trim = 0 0.5in 0 0.5in]{../info_theory_sims/fig2.pdf}
-\end{center}
-Non-parametric methods extremely biased.
-
-Estimation path of $\hat{I}_{LS}$ and $\hat{I}_\alpha$ as $n$ ranges from $10$ to $8000$.
-
-\small{$\{p = 10$, $B = \frac{4}{\sqrt{10}} I_{10}$, $K = 20\}$.
-True parameter $I(X; Y) = 1.322$ \emph{(dashed line.)}}
-
-\begin{center}
-\includegraphics[scale = 0.4]{../info_theory_sims/fig3.pdf}
-\end{center}
-
-\begin{center}
-\textbf{Estimated $\hat{I}$ vs true $I$.} 
-
-\includegraphics[scale = 0.5, clip=true, trim=0.4in 0.5in 0 0.5in]{../info_theory_sims/fig4.pdf}
-\end{center}
-
-Sampling distribution of $\hat{I}_{LS}$ for \small{$\{p = 10$, $B = \frac{4}{\sqrt{10}} I_{10}$, $N = 80000\}$,
-
-and $K = \{5, 10, 15, 20, \hdots, 80\}$, $r = N/k$.}
-
-True parameter $I(X; Y) = 1.322$ \emph{(dashed line.)}
-\begin{center}
-\includegraphics[scale = 0.6, clip = true, trim = 0 0.5in 0 0.5in]{../info_theory_sims/fig5a.pdf}
-\end{center}
-
-Decreasing variance as $K$ increases. Bias at large and small $K$.
-
-$p = 20$ and $q = 40$, entries of $B$ are iid $N(0, 0.025)$.
-
-$K=20$, $r = 8000$, true $I(X; Y) = 1.86$ \emph{(dashed line.)}
-
-\begin{center}
-\textbf{Sampling distribution of $\hat{I}$.}
-\includegraphics[scale = 0.6, clip = true, trim = 0 0.5in 0 0.5in]{../info_theory_sims/fig6.pdf}
-\end{center}
 
 \subsection{Application to data}
 
@@ -920,6 +1350,541 @@ where \[\text{ABE} \leftrightarrow \text{MI}.\]
 \item In simulations, $\hat{I}_{LS}$ works better than Fano's
   inequality or the confusion matrix approach.
 \end{itemize}
+
+\appendix
+\section{Appendix}
+
+\begin{lemma}\label{lemma:technical1}
+Let $f(t)$ be an increasing function from $[a, b] \to \mathbb{R}$, where $a < b$,
+and let $g(t)$ be a bounded continuous function from $[a, b] \to \mathbb{R}$.
+Define the set
+\[
+A = \{t: f(t) \neq g(t)\}.
+\]
+Then, we can write $A$ as a countable union of intervals
+\[
+A = \bigcup_{i=1}^\infty A_i
+\]
+where $A_i$ are mutually disjoint intervals, with $\inf A_i < \sup
+A_i$, and for each $i$, either $f(t) > g(t)$ for all $t \in A_i$ or
+$f(t) < g(t)$ for all $t \in A_i$.
+\end{lemma}
+
+\textbf{Proof of Lemma \ref{lemma:technical1}.} (This will appear in the appendix of the paper.)
+
+The function $h(t) = f(t) - g(t)$ is measurable, since all increasing
+functions are measurable.  Define $A^+ = \{t: f(t) > g(t)\}$ and $A^-
+= \{t: f(t) < g(t)\}$.  Since $A^+$ and $A^-$ are measurable subsets
+of $\mathbb{R}$, they both admit countable partitions consisting of open, closed, or half-open
+intervals.  Let $\mathcal{H}^+$ be the collection of all partitions of $A^+$ consisting of such intervals.
+There exists a least refined partition $\mathcal{A}^+$ within $\mathcal{H}^+$.
+Define $\mathcal{A}^-$ analogously, and let
+\[
+\mathcal{A} = \mathcal{A}^+ \cup \mathcal{A}^-
+\]
+and enumerate the elements
+\[
+\mathcal{A} = \{A_i\}_{i=1}^\infty.
+\]
+
+We claim that the partitions $\mathcal{A}^+$ and $\mathcal{A}^-$ have
+the the property that for all $t \in A^\pm$, ther interval
+$I \in \mathcal{A}^\pm$ containing $t$ has endpoints $l \leq u$
+defined by
+\[
+l = \inf_{x \in [a,b]} \{x: \text{Sign}(h([x, t])) = \{\text{Sign}(h(t))\} \}
+\]
+and
+\[
+u = \sup_{x \in a[,b]} \{x: \text{Sign}(h([t, x])) = \{\text{Sign}(h(t))\}\}.
+\]
+We prove the claim for the partition $\mathcal{A}^+$.  Take $t \in
+A^+$ and define $l$ and $u$ as above.  It is clear that $(l, u) \in
+A^+$, and furthermore, there is no $l' < l$ and $u' > u$ such that
+$(l', x) \in A^+$ or $(x, u') \in A^+$ for any $x \in I$.  Let
+$\mathcal{H}$ be any other partition of $A^+$.  Some disjoint union of
+intervals $H_i \in \mathcal{H}$ necessarily covers $I$ for $i =
+1,...$, and we can further require that none of the $H_i$ are disjoint
+with $I$.  Since each $H_i$ has nonempty intersection with $I$, and
+$I$ is an interval, this implies that $\cup_i H_i$ is also an
+interval.  Let $l'' \leq u''$ be the endpoints of $\cup_i H_i$ Since
+$I \subseteq \cup_i H_i$, we have $l'' \leq l \leq u \leq u''$.
+However, since also $I \in A^+$, we must have $l \leq l'' \leq
+u'' \leq u$.  This implies that $l''=l$ and $u''=u$.  Since $\cup_i
+H_i = I$, and this holds for any $I \in \mathcal{A}^+$, we conclude
+that $\mathcal{H}$ is a refinement of $\mathcal{A}^+$. The proof of
+the claim for $\mathcal{A}^-$ is similar.
+
+It remains to show that there are not isolated points in
+$\mathcal{A}$, i.e. that for all $I \in \mathcal{A}$ with endpoints
+$l \leq u$, we have $l < u$.  Take $I \in \mathcal{A}$ with endpoints
+$l \leq u$ and let $t = \frac{l+u}{2}$.  By definition, we have
+$h(t) \neq 0$.  Consider the two cases $h(t) > 0$ and $h(t) < 0$.
+
+If $h(t) > 0$, then $t' = g^{-1}(h(t)) > t$, and for all $x \in [t,
+t']$ we have $h(x) > 0$.  Therefore, it follows from definition that
+$[t, t'] \in I$, and since $l \leq t < t' \leq u$, this implies that
+$l < u$.  The case $h(t) < 0$ is handled similarly. $\Box$
+
+\begin{lemma}\label{lemma:technical2}
+Let $f(t)$ be a measurable function from $[a,b] \to \mathbb{R}$, where $a < b.$
+Then there exists sets $\mathcal{B}_0$ and $\mathcal{B}_1$, satisfying the following properties:
+\begin{itemize}
+\item  $\mathcal{B} = \mathcal{B}_0 \cup \mathcal{B}_1$ is countable partition of $[a,b]$,
+\item  $f(t)$ is constant on all $B \in \mathcal{B}_0$, but not constant on any proper superinterval $B' \supset B$, and
+\item $B \in \mathcal{B}_1$ contains no positive-length subinterval where $f(t)$ is constant.
+\end{itemize}
+\end{lemma}
+
+\textbf{Proof of Lemma \ref{lemma:technical2}.} (This will appear in the appendix of the paper.)
+To construct the interval, define
+\[
+l(t) = \inf \{x \in [0,1]: f([x,t]) = \{f(t)\}\}
+\]
+\[
+u(t) = \sup \{x \in [0,1]: f([t,x]) = \{f(t)\}\},
+\]
+Let $B_0$ be the set of all $t$ such that $l(t) < u(t)$,
+and let $B_1$ be the set of all $t$ such that $l(t) = t = u(t)$.
+For all $t \in B_0$, define
+\[
+I(t) = (l(t), u(t)) \cup \{x \in \{l(t), u(t)\}: f(x) = f(t)\}.
+\]
+Then we claim
+\[
+\mathcal{B}_0 = \{I(t): t \in B_0\}
+\]
+is a countable partition of $B_0$.  The claim follows since the
+members of $\mathcal{B}_0$ are disjoint intervals of nonzero length,
+and $B_0$ has finite length.    It follows from definition that for any $B \in B_0$, that $f$ is not
+constant on any proper superinterval $B' \supset B$.
+
+Meanwhile, let $\mathcal{B}_1$ be a countable partition of $B_1$ into
+intervals.
+
+Next, we show that for all $I \in \mathcal{B}_1$, $I$ does not contain
+a subinterval $I'$ of nonzero length such that $f$ is constant on
+$I'$.  Suppose to the contrary, we could find such an interval $I$ and
+subinterval $I'$.  Then for any $t \in I'$, we have $t \in B_0$.
+However, this implies that $t \notin B_1$, a contradiction.
+
+Since $t \in [a,b]$ belongs to either $B_0$ or $B_1$,
+letting $\mathcal{B} = \mathcal{B}_0 \cup \mathcal{B}_1$
+yields the desired partition of $[a,b]$. $\Box$.
+
+\begin{lemma}\label{lemma:mono_entropy}
+Define an exponential family on $[0,1]$ by the density function
+\[
+q_\beta(t) = \exp[\beta t^{k-1} - \log Z(\beta)]
+\]
+where
+\[
+Z(\beta) = \int_0^1 \exp[\beta t^{k-1}] dt.
+\]
+Then, the negative entropy
+\[
+I(\beta) = \int_0^1 q_\beta(t) \log q_\beta(t) dt
+\]
+is decreasing in $\beta$ on the interval $(-\infty, 0]$.
+and increasing on the interval $[0, \infty)$.
+
+Furthermore, for any $\iota \in (0,\infty)$, there exist two solutions
+to $I(\beta) = \iota$: one positive and one negative.
+\end{lemma}
+
+\textbf{Proof of Lemma \ref{lemma:mono_entropy}.}
+
+Define $\beta(\mu)$ as the solution to
+\[
+\mu = \int_0^1 t q_\beta(t) dt.
+\]
+By [Wainwright and Jordan 2008], the function $\beta(\mu)$ is
+well-defined.  Furthermore, since the sufficient statistic $t^{k-1}$
+is increasing in $t$, it follows that $\beta(\mu)$ is increasing.
+
+Define the negative entropy as a function of $\mu$,
+\[
+N(\mu) = \int_0^1 q_{\beta(\mu)}(t) \log q_{\beta(\mu)}(t) dt.
+\]
+
+By Theorem 3.4 of [Wainwright and Jordan 2008], $N(\mu)$ is convex in
+$\mu$.  We claim that the derivative of $N(\mu) = 0$ at $\mu
+= \frac{1}{2}$.  This implies that $N(\mu)$ is decreasing in $\mu$ for
+$\mu \leq \frac{1}{2}$ and increasing for $\mu \geq \frac{1}{2}$.
+Since $I(\beta(\mu)) = N(\mu)$, $\beta$ is increasing in $\mu$, and
+$\beta(\frac{1}{2}) = 0$, this implies that $I(\beta)$ is decreasing
+in $\beta$ for $\beta \leq 0$ and increasing for $\beta \geq 0$.
+
+We will now prove the claim.  Write
+\[
+\frac{d}{d\mu} N(\mu)\bigg|_{\mu = 1/2} = \frac{d}{d\beta} I(\beta(\mu)) \bigg|_{\beta = 0} \frac{d\beta}{d\mu} \bigg|_{\mu = 1/2}.
+\]
+We have
+\[
+\frac{d}{d\beta} I(\beta) = \beta \int q_\beta t^{k-1} dt - \log Z(\beta).
+\]
+Meanwhile, $Z(0) = 1$ so $\log Z(0) = 0$.  Therefore,
+\[
+\frac{d}{d\beta} I(\beta) \bigg|_{\beta = 0} = 0.
+\]
+This implies that $\frac{d}{d\mu} N(\mu) |_{\mu = 1/2} = 0$, as needed.  
+
+For the final statement of the lemma, note that $I(0) = 0$ since $q_0$ is the uniform distribution.
+Meanwhile, since $q_\beta$ tends to a point mass as either $\beta \to \infty$ or $\beta \to -\infty$,
+we have 
+\[
+\lim_{\beta \to \infty} I(\beta) = \lim_{\beta \to -\infty} I(\beta) = \infty.
+\]
+And, as we can check that $I(\beta)$ is continuous in $\beta$, this means that
+\[
+I((-\infty, 0]) = I([0,\infty)) = [0, \infty)
+\]
+by the mean-value theorem.  Combining this fact with the monotonicity
+of $I(\beta)$ restricted to either the positive and negative half-line
+yields the fact that for any $\iota > 0$, there exists $\beta_1 < 0
+< \beta_2$ such that $I(\beta_1) = I(\beta_2) = \iota$.  $\Box$.
+
+\begin{lemma}\label{lemma:variational}
+For any measure $G$ on $[0, \infty]$,
+let $G^k$ denote the measure defined by
+\[
+G^k(A) = G(A)^k,
+\]
+and define
+\[
+E[G] = \int x dG(x).
+\]
+\[
+I[G] = \int x \log x dG(x)
+\]
+and
+\[
+\psi_k[G] = \int x d(G^k)(x).
+\]
+Then, defining $Q_c$ and $c_\iota$ as in Theorem 1, we have
+\[
+\sup_{G: E[G] = 1, I[G] \leq \iota} \psi_k[G] = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
+\]
+Furthermore, the supremum is attained by a measure $G$ that has cdf
+equal to $Q_c^{-1}$, and thus has a density $g$ with respect to
+Lesbegue measure.
+\end{lemma}
+
+\textbf{Proof of Lemma \ref{lemma:variational}.} (This will appear in the appendix of the paper.)
+
+Consider the quantile function $Q(t) = \inf_{x \in [0,1]}: G((-\infty,
+x]) \geq t.$ $Q(t)$ must be a monotonically increasing function from
+$[0,1]$ to $[0,\infty).$ Let $\mathcal{Q}$ denote the collection of
+all such quantile functions.
+
+We have
+\[
+E[G] = \int_0^1 Q(t) dt
+\]
+\[
+\psi_k[G] = \int_0^1 Q(t) x^{k-1} dt.
+\]
+and
+\[
+I[G] = \int_0^1 Q(t) \log Q(t) dt.
+\]
+
+For any given $\iota$, let $P_\iota$ denote the class of probability
+distributions $G$ on $[0, \infty]$ such that $E[G]=1$ and
+$I[G] \leq \iota.$  From Markov's inequality, for any $G \in P_\iota$
+we have
+\[
+G([x, \infty]) \leq x^{-1}
+\]
+for any $x \geq 0$, hence $P_\iota$ is tight.  From tightness, we
+conclude that $P_\iota$ is closed under limits with respect to weak
+convergence.  Hence, since $\psi_k$ is a continuous function, there
+exists a distribution $G^* \in P_\iota$ which attains the supremum
+\[\sup_{G \in P_\iota} \psi_k[G].\]
+Let $\mathcal{Q}_\iota$ denote the collection of quantile functions of
+distributions in $P_\iota.$ Then, $\mathcal{Q}_\iota$ consists of monotonic functions
+$Q: [0,1] \to [0, \infty]$ which
+satisfy
+\[
+E[Q] = \int_0^1 Q(t) dt = 1,
+\]
+and
+\[
+I[Q] = \int_0^1 Q(t) \log Q(t) dt \leq \iota.
+\]
+Let $\mathcal{Q}$ denote the collection of \emph{all} quantile functions from measures on $[0,\infty]$.
+And letting $Q^*$ be the quantile function for $G^*$, we have that
+$Q^*$ attains the supremum
+\begin{equation}\label{eq:constrained_optim}
+\sup_{Q \in \mathcal{Q}_\iota} \phi_k[Q] = \sup_{Q \in \mathcal{Q}_\iota} \int_0^1 Q(t) t^{k-1} dt.
+\end{equation}
+Therefore, there exist Lagrange multipliers
+$\lambda \geq 0$ and $\nu \geq 0$ such that defining
+\[
+\mathcal{L}[Q] = -\phi_k[Q] + \lambda E[Q] + \nu I[Q]= \int_0^1 Q(t) (-t^{k-1} + \lambda + \nu \log Q(t)) dt,
+\]
+$Q^*$ attains the infimum of $\mathcal{L}[Q]$ over \emph{all} quantile functions,
+\[
+\mathcal{L}[Q^*] = \inf_{Q \in \mathcal{Q}}\mathcal{L}[Q].
+\]
+The global minimizer $Q^*$ is also necessarily a stationary point:
+that is, for any perturbation function $\xi: [0,1] \to \mathbb{R}$
+such that $Q^* + \xi \in \mathcal{Q}$, we have $\mathcal{L}[Q^*]\leq \mathcal{L}[Q^* + \xi]$.
+For sufficiently small $\xi$, we have
+\begin{equation}\label{eq:Lperturb}
+\mathcal{L}[Q + \xi] \approx \mathcal{L}[Q] + \int_0^1 \xi(t) (-t^{k-1} + \lambda + \nu + \nu \log Q(t)) dt.
+\end{equation}
+Define
+\begin{equation}\label{eq:nablaQ}
+\nabla \mathcal{L}_{Q^*}(t) = -t^{k-1} + \lambda + \nu + \nu \log Q(t).
+\end{equation}
+The function $\nabla \mathcal{L}_{Q^*}(t)$ is a \emph{functional derivative} of the Lagrangian.
+Note that if we were able to show that $\nabla \mathcal{L}_{Q^*}(t) = 0$,
+this immediately yields
+\begin{equation}\label{eq:Qstareq}
+Q^*(t) = \exp[-1 -\lambda\nu^{-1} + \nu^{-1}  t^{k-1}].
+\end{equation}
+At this point, we know that the right-hand side of \eqref{eq:Qstareq}
+gives a stationary point of $\mathcal{L}$, but we cannot be sure that
+it gives the global minimzer.  The reason is because the optimization
+occurs on a constrained space.  We will show that \eqref{eq:Qstareq}
+indeed gives the global minimizer $Q^*$, but we do so by showing that
+the set of points $t$ where $\nabla \mathcal{L}_{Q^*}(t) \neq 0$ is of
+zero measure.  Since sets of zero measure don't affect the integrals
+defining the optimization problem \eqref{eq:constrained_optim}, we
+conclude there exists a global optimal solution with
+$\nabla \mathcal{L}_{Q^*}(t) = 0$ everywhere, which is therefore given
+explicitly by \eqref{eq:Qstareq} for some $\lambda \in \mathbb{R}$, $\nu \geq 0.$
+
+We will need the following result: that for $\iota
+> 0$, any solution to \eqref{eq:constrained_optim} satisfies
+$\phi_k[Q] < 1$.  This follows from the fact that
+\[
+E[Q] - \phi_k[Q] = \int_0^1 (1-t^{k-1}) Q(t) dt,
+\]
+where the term $(1-t^{k-1})$ is negative, except for the one point $t
+= 1$.  Therefore, in order for $\phi_k[Q] = 1 = E[Q]$, we must have
+$Q(t) = 0$ for $t < 1$.  However, this yields a contradiction since
+$Q(t) = 0$ for $t < 1$ implies that $E[Q] = 0$, a violation of the
+hard constraint $E[Q] = 1$.
+
+Let us establish that $\nu > 0$: in other words, the constraint $I[Q]
+= \iota$ is tight.  Suppose to the contrary, that for
+some $\iota > 0$, the global optimum $Q^*$ minimizes a Lagrangian with
+$\nu = 0$.  Let $\phi^* = \phi_k[Q^*] < 1.$ However, if we define
+$Q_\kappa(t) = I\{t \geq 1 - \frac{1}{\kappa}\} \kappa$, we have
+$E[Q_\kappa] = 1$, and also for some sufficiently large $\kappa > 0$,
+$\phi_k[Q_\kappa] > \phi^*$.  But since the Lagrangian lacks a term
+corresponding to $I[Q]$, we conclude that $\mathcal{L}[Q_\kappa]
+< \mathcal{L}[Q^*]$, a contradiction.
+
+The rest of the proof proceeds as follows.  We will use
+Lemmas \ref{lemma:technical1} and \ref{lemma:technical2} to define a
+decomposition $A = D_0 \cup D_1 \cup D_2$, where $D_2$ is of measure
+zero.  First, we show that assuming the existence of $t \in D_0$
+yields a contradiction, and hence $D_0 = \emptyset$.  Then, again
+using argument from contradiction we establish that $D_1 = \emptyset$.
+Finally, since $D_2$ is a set of zero measure, this allows us to
+conclude that the $Q^*(t) = 0$ on all but a set of zero measure.
+
+We will now apply the Lemmas to obtain the necessary ingredients for
+constructing the sets $D_i$.  Since $\nabla \mathcal{L}_{Q^*}(t)$ is a difference
+between an increasing function and a continuous stricly increasing
+function, we can apply Lemma \ref{lemma:technical1} to conclude that
+there exists a countable partition $\mathcal{A}$ of the set
+$A: \{t \in [0,1]: \nabla \mathcal{L}_{Q^*}(t) \neq 0\}$ into intervals such that
+for all $J \in \mathcal{A}$, $|\text{Sign}(\nabla Q^*(J))| = 1$ and
+$\inf J < \sup I$ .  Applying Lemma \ref{lemma:technical2} we get a
+countable partition $\mathcal{B} = \mathcal{B}_0 \cup \mathcal{B}_1$
+of $[0,1]$ so that each element $J \in \mathcal{B}_0$ is an interval
+such that $\nabla \mathcal{L}_{Q^*}(t)$ is constant on $J$, and furthermore is not
+properly contained in any interval with the same property, and each
+element $J \in \mathcal{B}_1$ is an interval, such that $J$ contains
+no positive-length subinterval where $\nabla \mathcal{L}_{Q^*}(t)$ is constant.
+Also define $B_i$ as the union of the sets in $\mathcal{B}_i$ for $i =
+0,1$.
+
+Note that $B_0$ is necessarily a subset of $A$.  That is because if
+$\nabla \mathcal{L}_{Q^*}(t) = 0$ on any interval $J$, then that $Q^*(t)$ is
+necessarily not constant on the interval.  
+
+We will construct a new countable partition of $A$, called $\mathcal{D}$.
+The partition $\mathcal{D}$ is constructed by taking the union of three families of intervals,
+\[
+\mathcal{D} = \mathcal{D}_0 \cup \mathcal{D}_1 \cup \mathcal{D}_2.
+\]
+Define $D_i$ to be the union of intervals in $\mathcal{D}_i$ for $i = 0,1,2$.
+
+Define $\mathcal{D}_0 = \mathcal{B}_0$,
+Define a countable partition $\mathcal{D}_1$ by
+\[
+\mathcal{D}_1 = \{J \cap L: J \in \mathcal{A}, L \in \mathcal{B}_1, \text{ and } |L| > 1\},
+\]
+in order words, $\mathcal{D}_1$ consists of positive-length intervals where $\nabla
+Q^*(t)$ is entirely positive or negative and is not constant.
+Define
+\[
+\mathcal{D}_2 = \{J \in \mathcal{B}_1: J \subset A \text{ and } |J| = 1 \},
+\]
+i.e. $\mathcal{D}_2$ consists of isolated points in $A$.
+
+One verifies that $\mathcal{D}$ is indeed a partition of $A$ by
+checking that $D_0 = B_0$, $D_1 \cup D_2 = B_1 \cap A$, so that
+$D_0 \cup D_2 \cup D_2 = A$: it is also easy to check that elements of
+$\mathcal{D}$ are disjoint.  Furthermore, as we mentioned earlier, the
+set $D_2$ is indeed of zero measure, since it consists of countably
+many isolated points.
+
+Now we will show that the existence of $t \in D_0$ implies a contradiction.
+Take $t \in D$ for $D \in \mathcal{D}_0$, and let $a = \inf D$ and $b
+= \sup D$.  Define
+\[
+\xi^+ = I\{t \in D\} (Q^*(b) - Q^*(t))
+\]
+and
+\[
+\xi^- = I\{t \in D\} (Q^*(a) - Q^*(t)).
+\]
+Observe that $Q + \epsilon \xi^+ \in \mathcal{Q}$ and $Q
++ \epsilon \xi^- \in \mathcal{Q}$ for any $\epsilon \in [0,1]$.  Now,
+if $\nabla \mathcal{L}_{Q^*}(t)$ is strictly positive on $D$, then for some
+$\epsilon > 0$ we would have $\mathcal{L}[Q^* + \epsilon \xi^-]
+< \mathcal{L}[Q^*]$, a contradiction.  A similar argument with $\xi^+$
+shows that $\nabla \mathcal{L}_{Q^*}(t)$ cannot be strictly negative on $D$ either.
+From this pertubation argument, we conclude that $\nabla \mathcal{L}_{Q^*}(t) = 0$.
+Since this argument applies for all $t \in D_0$, we conclude that $D_0
+= \emptyset$: therefore, on the set $[0,1] \setminus (D_1 \cup D_2)$,
+we have $\nabla \mathcal{L}_{Q^*}(t) = 0.$
+
+The following observation is needed for the next stage of the proof.
+If we look at the function $Q^*(t)$, then up so sets of neglible
+measure, it is given by the expression \eqref{eq:Qstareq} on the set
+$[0,1]\setminus D_1$, and it is piecewise constant in-between.  But
+since \eqref{eq:Qstareq} gives a strictly increasing function, and
+since $Q^*$ is increasing, this implies that $Q^*$ is discontinuous at
+the boundary of $D_1$.
+
+Now we are prepared to show that $\nabla \mathcal{L}_{Q^*}(t) = 0$ for $t \in D_1$.
+Take $t \in D$ for $D \in \mathcal{D}_1$, and let $a = \inf D$ and $b
+= \sup D$.  From the previous argument, there is a discontinuity at
+both $a$ and $b$, so that $\lim_{u \to a^-} Q(u) < Q(t) < \lim_{u \to
+b^+} Q(u)$.  Therefore, for any $\xi(t)$ which is increasing on $D$
+and zero elsewhere, there exists $\epsilon > 0$ such that $\nabla Q^*
++ \epsilon \xi \in \mathcal{Q}.$ It remains to find such a
+perturbation $\xi$ such that $\mathcal{L}[Q + \epsilon \xi]
+< \mathcal{L}[Q]$.
+
+Also, since by definition $\nabla \mathcal{L}_{Q^*}(t)$ is constant on $D$, follows from\eqref{eq:nablaQ} that
+$\nabla Q^*$ is strictly decreasing, and thus either
+\begin{itemize}
+\item Case 1: $\nabla \mathcal{L}_{Q^*}(t) \geq 0$ on $D$,
+\item Case 2: $\nabla \mathcal{L}_{Q^*}(t) \leq 0$ on $D$, or
+\item Case 3: $\nabla \mathcal{L}_{Q^*}(t) \geq 0$ for all $t \in D \cap [a, t_0]$ and $\nabla \mathcal{L}_{Q^*}(t) \leq 0$ for all $t \in D \cap [t_0, b]$.
+\end{itemize}
+
+Depending on the case, we construct a suitable perturbation $\xi$:
+\begin{itemize}
+\item Case 1: Construct $\xi(t) = -I\{t \in D\}$.
+\item Case 2: Construct $\xi(t) = I\{t \in D\}$
+\item Case 2: Construct
+\[
+\xi(t) = \begin{cases}
+-1 & \text{ for }t \in D \cap [a, t_0],\\
+0 & \text{ otherwise. }
+\end{cases}
+\]
+\end{itemize}
+In all three cases, given the corresponding construction for $\xi(t)$ we get
+\[
+\int_0^1 \xi(t) \nabla \mathcal{L}_{Q^*}(t) dt < 0.
+\]
+Therefore, from \eqref{eq:Lperturb}, there exists some $\epsilon > 0$
+such that $\mathcal{L}[Q + \epsilon \xi] < \mathcal{L}[Q]$, a
+contradiction.  Again, since the contradiction applies for all $t \in
+D_1$, we conclude that $D_1 = \emptyset$.
+
+By now we have established that a global optimum
+for \eqref{eq:constrained_optim} exists, and is given
+by \eqref{eq:Qstareq} for some $\lambda \in \mathbb{R}$, $\nu > 0$.  It remains
+to determine the values of $\lambda$ and $\nu$.
+
+Reparameterize $\alpha = \exp[-1-\lambda\nu^{-1}]$ and $\beta = \nu^{-1}$.
+Therefore,
+\[
+Q^*(t) = \alpha \exp[\beta t^{k-1}]
+\]
+for $\alpha > 0$, $\beta > 0$.  There is a one-to-one mapping from
+$(\alpha, \beta) \in (0, \infty)^2$ to $(\lambda, \nu) \in
+\mathbb{R} \times (0,\infty)$.
+
+Now, from the constraint
+\[
+1 = E[Q^*] = \int_0^1 \alpha \exp[\beta t^{k-1}] dt.
+\]
+we conclude that
+\[
+\alpha = \frac{1}{\int_0^1 \exp[\beta t^{k-1}] dt.}
+\]
+Therefore, we have reduced the set of possible solutions $Q^*$ to a one-parameter family,
+\[
+Q^*(t) = \frac{\exp[\beta t^{k-1}]}{Z(\beta)}.
+\]
+where
+\[
+Z(\beta) = \int_0^1 \exp[\beta t^{k-1}] dt.
+\]
+
+Next, note that
+\[
+I[Q^*] = \int_0^1 Q^*(t) \log Q^*(t) = \beta \mu_\beta - \log Z(\beta),
+\]
+as a function of $\beta$, is completely characterized by Lemma \ref{lemma:mono_entropy}.
+Let us define $c_\iota$ as the unique positive solution to the equation
+\[
+c_\iota \mu_{c_\iota} - \log Z(c_\iota) = \iota
+\]
+given by Lemma \ref{lemma:mono_entropy}.
+We therefore have
+\[
+Q^*(t) = \frac{\exp[c_\iota t^{k-1}]}{\int_0^1 \exp[c_\iota t^{k-1}]},
+\]
+as needed. $\Box$
+
+
+\begin{lemma}\label{lemma:concave}
+The map
+\[
+\iota \to \int_0^1 Q_{c_\iota}(t) t^{k-1} dt
+\]
+is concave in $\iota > 0$.
+\end{lemma}
+
+\textbf{Proof of Lemma \ref{lemma:concave}.}
+It is equivalent to show that the inverse function
+\[
+C^{-1}_k(p) = \inf_{G: E[G] = 1, \phi_k[G] = p} I[G]
+\]
+is convex.  Let $p_1, p_2 \in [0,1]$.  From
+lemma \ref{lemma:variational}, we can find measures $G_1$, $G_2$ on
+$[0,\infty)$ which minimize $I[G_i]$ subject to $E[G_i] = 1$ and
+$\phi_k[G_i] = p_i$.  Define the measure
+\[
+H = \frac{G_1 + G_2}{2}.
+\]
+Since $\phi_k$ is a linear functional,
+\[
+\phi_k[H] = \frac{\phi_k[G_1] + \phi_k[G_2]}{2} = \frac{p_1 + p_2}{2}.
+\]
+But since $I$ is a convex functional,
+\[
+I[H] \leq \frac{I[G_1] + I[G_2]}{2}.
+\]
+
+Therefore,
+\[
+C^{-1}_k\left(\frac{p_1 + p_2}{2}\right) \leq I[H] = \frac{I[G_1] + I[G_2]}{2} = \frac{C^{-1}_k(p_1) + C^{-1}_k(p_2)}{2}.
+\]
+$\Box$.
 
 \section{References}
 \begin{itemize}
