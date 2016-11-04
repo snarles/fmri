@@ -148,10 +148,17 @@ names(lbZ) <- names(scoreZ)
 save(lbZ, iestZ, file = "Yuval/lbZ.RData")
 
 lbZ <- lbZ[1:6]
+iestZ <- iestZ[1:6]
 
-
-plot(ks, lbZ[[length(lbZ)]], type = "l")
+plot(ks, lbZ[[length(lbZ)]], type = "l", ylim = c(0, 8))
 for (i in 1:length(lbZ)) {
   lines(ks, lbZ[[i]], col = rainbow(length(lbZ))[i], lwd = 3)
 }
+
+
+plot(ks, iestZ[[length(lbZ)]], type = "l", ylim = c(0, 8))
+for (i in 1:length(lbZ)) {
+  lines(ks,iestZ[[i]], col = rainbow(length(lbZ))[i], lwd = 3)
+}
+
 
