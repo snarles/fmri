@@ -394,9 +394,9 @@ f = \mathcal{F}(\{(x^{(1)}, y^{(1),1}),\hdots,
 (x^{(k)},y^{(k), r_1})\}).
 \]
 The test statistic of interest is the test error, defined as
-\[
+\begin{equation}{eq:ta}
 \widehat{\text{GA}} = \frac{1}{k r_2} \sum_{i=1}^k \sum_{j = r_1 + 1}^r \text{I}(f(y^{(i),j}) \neq i).
-\]
+\end{equation}
 Due to the conditional independence of the training set and test set,
 $\widehat{\text{GA}}$ is an unbiased estimate of $\text{GA}$.  Hence various
 approaches can be used to obtain a threshold $c_\alpha$ such that
@@ -1041,7 +1041,7 @@ on \emph{classification} and \emph{regression}, but a third
 approach, \emph{identification}, combines the strengths of both
 classification and regression.
 
-\subsection{Classification}
+\subsection{Classification without model selection}
 
 Recall the notation used in section 2.1: the $k$ stimuli exemplars are
 denoted $\{x^{(1)},\hdots, x^{(k)}\}$ and the $r$ responses for the
@@ -1065,12 +1065,99 @@ defined as
 \[
 \widehat{\text{GA}} = \frac{1}{k r_2} \sum_{i=1}^k \sum_{j = r_1 + 1}^r \text{I}(f(y^{(i),j}) \neq i).
 \]
-It follows that $kr_2 \widehat{\text{GA}}$ is a sum of Bernoulli random variables.
-Approximately,
+Since $kr_2 \widehat{\text{GA}}$ is a sum of independent binary random
+variables, from Hoeffding's inequality, we have
 \[
-kr_2 \widehat{\text{GA}} \sim \text{Binomial}(\text{GA}(f), kr_2)
+\Pr[\widehat{\text{GA}} > \text{GA} + \frac{t}{kr_2}] \leq 2e^{-2kr_2t^2}.
+\]
+Therefore,
+\[
+\underline{\text{GA}}_\alpha = \widehat{\text{GA}} - \sqrt{\frac{-\log(\alpha/2)}{2kr_2}}
+\]
+is a $(1-\alpha)$ lower confidence bound for $\text{GA}(f)$.
+But, since
+\[
+\text{GA}(f) \leq \text{BA}(x^{(1)},\hdots, x^{(k)}),
+\]
+it follows that $\underline{GA}_\alpha$ is also a $(1-\alpha)$ lower confidence bound for $\text{BA}(x^{(1)},\hdots, x^{(k)})$.
+
+Next, consider the variance bound for $\text{BA}$.  From Chebyshev's inequality,
+\[
+\Pr[|\text{BA}(X^{(1)},\hdots, X^{(k)}) - \text{ABA}_k| > \frac{1}{\sqrt{4\alpha k}}] \leq \alpha.
 \]
 
+Combining these facts, we get the following result.
+
+\begin{theorem}
+The following is a $(1-\alpha)$ lower confidence bound for $\text{ABA}_k$:
+\[
+\underline{\text{ABA}}_k = \widehat{\text{GA}} - \sqrt{\frac{-\log(\alpha/4)}{2kr_2}} - \frac{1}{\sqrt{2\alpha k}}.
+\]
+That is, for all joint densities $p(x, y)$,
+\[
+\Pr[\underline{\text{ABA}}_K > \text{ABA}_k] \leq \alpha.
+\]
+\end{theorem}
+
+\textbf{Proof.}
+Suppose that both $\text{BA}(X^{(1)},\hdots,
+X^{(k)}) \leq \text{ABA}_k + \frac{1}{\sqrt{2\alpha k}}$ and
+$\underline{\text{GA}}_{\alpha/2} \leq \text{GA}.$
+Then it follows that
+\[
+\underline{\text{GA}}_{\alpha/2} \leq \text{BA}(X^{(1)},\hdots,
+X^{(k)}) \leq \text{ABA}_k + \frac{1}{\sqrt{2\alpha k}}
+\]
+and hence
+\[
+\underline{\text{ABA}}_k = \underline{\text{GA}}_{\alpha/2} -  \frac{1}{\sqrt{2\alpha k}} \leq \text{ABA}_k.
+\]
+Therefore, in order for a type I error to occur, either
+$\text{BA}(X^{(1)},\hdots, X^{(k)}) > \text{ABA}_k
++ \frac{1}{\sqrt{2\alpha k}}$ or $\underline{\text{GA}}_{\alpha/2}
+> \text{GA}.$ But each of these two events has probability of at most
+$\alpha/2$, hence the union of the probabilities is at most
+$\alpha$. $\Box$
+
+\subsection{Classification with model selection}
+
+In practice, it is common to evaluate multiple classifiers on the test
+set, ultimately \emph{selecting} the classifier with the best test
+performance.  Due to selection, the test accuracy
+$\widehat{\text{GA}}$ of the selected classifier becomes biased
+upwards with respect to the true generalization
+accuracy. Nevertheless, we can correct for the selection effect using
+the Bonferroni correction.
+
+Suppose the investigator begins with classifiers
+$\mathcal{F}_1,\hdots, \mathcal{F}_\ell$, and obtains corresponding
+classification rules $f_1,\hdots, f_\ell$ via
+\[
+f_i = \mathcal{F}_i(\{(x^{(1)}, y^{(1),1}),\hdots, (x^{(1)},y^{(1),r_1}), \hdots, (x^{(k)}, y^{(k),1},\hdots, (x^{(k)},y^{(k), r_1})\}).
+\]
+for $i = 1,\hdots, \ell$.  Next, they evaluate the test accuracies
+$\widehat{\text{GA}}(f_i)$ according to \eqref{eq:ta}.
+Since $\text{BA}(x^{(1)},\hdots, x^{(k)}) \geq \max_i \text{GA}(f_i)$, we have the following lemma.
+
+\begin{lemma}
+The following is a $(1-\alpha)$ lower confidence bound for $\text{BA}(x^{(1)},\hdots, x^{(k)})$:
+\[
+\underline{BA}_\alpha(x^{(1)},\hdots, x^{(k)}) = \max_{i=1}^\ell \underline{\text{GA}}_{\alpha/\ell}(f_i) = \max_{i=1}^\ell \widehat{\text{GA}}(f_i) - \sqrt{\frac{-\log(\alpha/(2\ell))}{2kr_2}}.
+\]
+\end{lemma}
+
+\textbf{Proof.}
+In order for type I error to occur,
+$\underline{\text{GA}}_{\alpha/\ell}(f_i) \geq \text{BA}(x^{(1)},\hdots,
+x^{(k)}) \geq \text{GA}(f_i)$ for some $i = 1,\hdots, \ell$.  For each
+$i$, the event occurs with probability at most $\alpha/\ell$.
+Therefore, by the union bound, the probability of type I error is at
+most $\alpha$.  $\Box$
+
+It remains to apply the variance bound for Bayes accuracy to obtain a lower confidence bound for $\text{ABA}_k$:
+\[
+\underline{\text{ABA}}_k = \underline{\text{BA}}_{\alpha/2} -  \frac{1}{\sqrt{2\alpha k}}
+\]
 
 \subsection{Identification setting}
 
