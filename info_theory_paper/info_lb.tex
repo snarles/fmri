@@ -64,7 +64,7 @@ obstacle to wider use of mutual information is the difficulty of
 obtaining either estimates or lower confidence bounds for mutual
 information in high-dimensional neuroimaging data.  We propose a new
 lower cofidence bound for mutual information based on the concept of
-"average Bayes error."  Since the error of a classifier can be used to
+``average Bayes accuracy.''  Since the error of a classifier can be used to
 infer an upper bound on the average Bayes error, we develop a lower
 confidence bounds for mutual information based on a new theoretical
 lower bound on mutual information as a function of average Bayes
@@ -221,22 +221,41 @@ of number of classes, $k$. Mutual information provides a
 quantification of information that does not depend on $k$, allowing
 more flexible comparisons and easier interpretation.
 
-\section{Framework}
+The organization of the paper is as follows.
+Section \ref{sec:framework} defines the assumptions behind the data
+generating mechanism, and reviews the key supervised learning concepts
+(classifier, classification rule, generalization accuracy, Bayes
+accuracy.)  In subsection \ref{sec:randomization} we introduce the
+concept of \emph{randomized classification}, which involves the
+introduction of an additional randomization step in the experimental
+design, and which allows us to define the concept of \emph{average
+Bayes accuracy}.  Section \ref{sec:var_aba} develops the necessary
+theory for obtaining lower bounds of average Bayes accuracy, and
+section \ref{sec:aba_to_mi} links average Bayes accuracy to mutual
+information.  These two theoretical developments are combined in
+section \ref{sec:lcb}, which develops lower confidence bounds of
+mutual information in various classification setups
+(e.g. classification with and without model selection.)  We apply our
+methods to simulation and data in section \ref{sec:results}.  The
+paper ends with a discussion section, and an appendix which contains
+most of the proofs.
+
+\section{Framework}\label{sec:framework}
 
 \subsection{Notation}
 
 Functionals of distributions, such as expectation $\E[\cdot]$ or mutual information $\text{I}[\cdot]$, can be written as functionals of density functions:
 \[
-\E[g] \stackrel{D}{=} \E[g(x)] \stackrel{D}{=} \int g(x) dx
+\E[g] \stackrel{D}{=} \E[g(x)] \stackrel{D}{=} \int x g(x) dx
 \]
-\[
-\text{H}[g]  \stackrel{D}{=} \int g(x) \log g(x) dx
-\]
+%\[
+%\text{N}[g]  \stackrel{D}{=} \int g(x) \log g(x) dx
+%\]
 \[
 \text{I}[p]  \stackrel{D}{=} \text{I}[p(x,y)] = \int p(x, y) \log \frac{p(x,y)}{p(x) p(y)} dx dy
 \]
 or as functionals of random variables:
-$\E(X), \ \text{H}(X), \ \text{I}(X, Y)$.  Square brackets are used
+$\E(X), \text{I}(X, Y)$.  Square brackets are used
 when the arguments are density functions, and parentheses are used
 when the arguments are functions of random variables.  $|\cdot|$
 denotes set cardinality.
@@ -394,7 +413,7 @@ f = \mathcal{F}(\{(x^{(1)}, y^{(1),1}),\hdots,
 (x^{(k)},y^{(k), r_1})\}).
 \]
 The test statistic of interest is the test error, defined as
-\begin{equation}{eq:ta}
+\begin{equation}\label{eq:ta}
 \widehat{\text{GA}} = \frac{1}{k r_2} \sum_{i=1}^k \sum_{j = r_1 + 1}^r \text{I}(f(y^{(i),j}) \neq i).
 \end{equation}
 Due to the conditional independence of the training set and test set,
@@ -406,14 +425,6 @@ based on a universal variance bound, or the generalized likelihood
 ratio test.  The hypothesis $H_0$ is then rejected at level $\alpha$
 if $\widehat{\text{GA}} > c_\alpha$.
 
-There is also a way to improve on data-splitting, by
-using \emph{cross-validation}. Essentially, one applies the
-data-splitting approach multiple times, with different training and
-test partitions, and aggregates the results. Cross-validation can be
-used to reduce the variance of the estimated $\text{GA}$ and hence
-improve the power of the test, and it can also be used to
-obtain \emph{confidence intervals} for the estimate.  We discuss such
-a cross-validation in greater detail in section 5.
 
 %% shift focus from sample size to arbitrary choice of classifier
 While tests of the generalization accuracy suffice to establish the
@@ -447,7 +458,7 @@ many cases it is desired to generalize the results to other stimuli
 that were not included in the experiment.  In order to do this, we
 need to be able to assume a randomized design.
 
-\subsection{Randomized stimuli design}
+\subsection{Randomized stimuli design}\label{sec:randomization}
 
 Under the assumption of randomized design, we treat the stimuli
 $x^{(1)},\hdots, x^{(k)}$ as independent draws from some distribution $p(x)$.
@@ -524,7 +535,17 @@ $\text{ABA}_k[p(x,y)]$ for any continuous joint density function
 $p(x,y)$, and (iii) derivation of data-based lower confidence bounds
 based on these results.
 
-\section{Variance of Average Bayes Accuracy}
+\section{Variance of Average Bayes Accuracy}\label{sec:var_aba}
+
+Neither $\text{BA}(x^{(1)},\hdots, x^{(k)})$ nor $\text{ABA}_k$ can be
+directly observed, although we saw in section \ref{sec:framework} that
+the estimated generalization accuracy gives an underestimate of the
+Bayes accuracy.  Bayes accuracy is an unbiased estimator of the
+average Bayes accuracy, so the two quantities are quite closely linked
+when the variance of Bayes accuracy is small.  We will show in this
+section that the variability of Bayes accuracy is bounded by
+$\frac{1}{4k}$, so that when $k$ is large, the Bayes accuracy is a
+good proxy for average Bayes accuracy.
 
 \subsection{Identities}
 %Suppose $X$ and $Y$ are continuous random variables (or vectors) which
@@ -659,9 +680,9 @@ Therefore,
 \]
 since $\frac{1}{4c^2}$ is the maximal variance for any r.v. with support of length $c$. $\Box$
 
-\section{Mutual information lower bound}
+\section{Mutual information lower bound}\label{sec:aba_to_mi}
 
-\subsection{Problem formulation}
+\subsection{Problem formulation and result}
 
 Let $\mathcal{P}$ denote the collection of all joint densities $p(x,
 y)$ on finite-dimensional Euclidean space.  For $\iota \in [0,\infty)$
@@ -1028,7 +1049,7 @@ we can apply Jensen's inequality to conclude that
 which completes the proof. $\Box$
 
 
-\section{Lower confidence bounds}
+\section{Lower confidence bounds}\label{sec:lcb}
 
 Having established the theoretical basis of our method, the current
 section derives methods for lower confidence bounds in various
@@ -1283,7 +1304,7 @@ classification can be treated as a special case of identification,
 where the conditional density $\tilde{p}(y|x)$ is only estimated for
 stimuli $x$ that have been observed in the training set.
 
-\section{Results}
+\section{Results}\label{sec:results}
 
 \subsection{Simulation}
 
@@ -1383,6 +1404,28 @@ data, producing a plot of classification error versus sample size--a
 estimate the Bayes error (Cortes et al. 1994.) However, much work
 remains to develop rigorous methodology for estimating Bayes error,
 and so we leave this first issue for future work.
+
+
+There is a way to improve on data-splitting, by
+using \emph{cross-validation}. Essentially, one applies the
+data-splitting approach multiple times, with different training and
+test partitions, and aggregates the results. In principle,
+cross-validation can be used to reduce the variance of the estimated
+$\text{GA}$ and hence improve the power of the test.  However, since
+the variance properties of cross-validation are not well-known, we
+leave the examination of cross-validation to future work.
+
+As we saw in the results section, the quality of the lower bound
+$\underline{I}$ may depend on choosing the correct $k$ for the
+subsampling-based lower confidence bound of $\text{ABA}_k$.  The
+question of selecting an appropriate $k$ \emph{after} seeing the data
+is embedded in a larger question of \emph{experimental design}.
+Supposing an experiementer only has a fixed budget $N$ of
+observations, which she can split into $K$ classes with $r$ repeats
+each, how should she choose $K$ (and $k$) in order to get the tightest
+lower confidence bound $\underline{I}(X; Y)$?  This is an issue of
+practical importance for neuroimaging researchers, but again we leave
+this issue for future work.
 
 \appendix
 \section{Appendix}
