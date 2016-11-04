@@ -442,7 +442,7 @@ and taking the best generalization accuracy as an estimate of the Bayes
 accuracy.  We give more details of this approach in the Discussion.
 
 This way one can draw inferences about information between the fixed
-ensemble $x_1,...,x_k$ and the brain regions being examined.  But in
+ensemble $x^{(1)},...,x^{(k)}$ and the brain regions being examined.  But in
 many cases it is desired to generalize the results to other stimuli
 that were not included in the experiment.  In order to do this, we
 need to be able to assume a randomized design.
@@ -496,8 +496,8 @@ Before presenting our approach, we first define the notion of average
 Bayes accuracy, which is fundamental to our approach.  The motivation
 for defining average Bayes accuracy is the fact that the quantity
 $\text{BA}$ is not a parameter of the joint distribution $p(x, y)$,
-but rather depends on the specific exemplars $x_1,\hdots, x_k$
-selected; hence, one may write $\text{BA}(x_1,\hdots, x_k)$ to
+but rather depends on the specific exemplars $x^{(1)},\hdots, x^{(k)}$
+selected; hence, one may write $\text{BA}(x^{(1)},\hdots, x^{(k)})$ to
 emphasize this dependence.  Explicitly,
 \[
 \text{BA}(x^{(1)},\hdots, x^{(k)}) = \sup_f \sum_{z=1}^k \frac{1}{k} \int_y I\{f(x^{(1)},...,x^{(k)}, y)=z\} p(y|x^{(z)}) dy.
@@ -507,9 +507,9 @@ emphasize this dependence.  Explicitly,
 The $k$-class \emph{average} Bayes accuracy, on the other hand, is
 defined uniquely for any joint distribution,
 \begin{equation}\label{eq:abe}
-\text{ABA}_k[p(x,y)] = \sup_f \Pr[f(X^{(1)},...,X^{(k)}, Y) = Z] = \E[\text{BA}(X_1,\hdots, X_k)],
+\text{ABA}_k[p(x,y)] = \sup_f \Pr[f(X^{(1)},...,X^{(k)}, Y) = Z] = \E[\text{BA}(X^{(1)},\hdots, X^{(k)})],
 \end{equation}
-where $X_1,\hdots, X_K$ are drawn i.i.d. from $p(x)$.
+where $X^{(1)},\hdots, X^{(k)}$ are drawn i.i.d. from $p(x)$.
 
 %Move to next
 %Since we know the Bayes classification rule, we can write the $k$-class average Bayes accuracy explicitly:
@@ -517,7 +517,7 @@ where $X_1,\hdots, X_K$ are drawn i.i.d. from $p(x)$.
 %\text{ABA}_k[p(x,y)] = \frac{1}{k} \int \left[\prod_{i=1}^k p(x_i) dx_i \right] \int dy \max_i p(y|x_i).
 %\]
 Our theoretical contributions will be to obtain (i) an upper bound on
-$\text{Var}[\text{BA}(X_1,\hdots,X_k)]$, enabling inference of
+$\text{Var}[\text{BA}(X^{(1)},\hdots,X^{(k)})]$, enabling inference of
 $\text{ABA}_k$, and (ii) a lower bound on mutual information
 $\text{I}[p(x,y)]$ as a function of average Bayes accuracy
 $\text{ABA}_k[p(x,y)]$ for any continuous joint density function
@@ -565,9 +565,9 @@ theoretical results.
 \begin{theorem}
 %For a joint distribution $p(x, y)$, define
 %\[
-%\text{ABA}_k[p(x, y)] = \sup_f \Pr[f(x_1,...,x_k, y) = Z] 
+%\text{ABA}_k[p(x, y)] = \sup_f \Pr[f(x^{(1)},...,x^{(k)}, y) = Z] 
 %\]
-%where $X_1,...,X_K$ are iid from $p(x)$, $Z$ is uniform from $1,..,k$, and $Y \sim p(y|X_Z)$,
+%where $X^{(1)},...,X^{(K)}$ are iid from $p(x)$, $Z$ is uniform from $1,..,k$, and $Y \sim p(y|X_Z)$,
 %and the supremum is taken over all functions $f: \mathcal{X}^k\times \mathcal{Y} \to \{1,...,k\}$.
 %Then,
 For joint density $p(x, y)$, we have
@@ -635,27 +635,27 @@ Given joint density $p(x, y)$, for $X^{(1)},...,X^{(k)} \stackrel{iid}{\sim} p(x
 \noindent\textbf{Proof.}
 According to the Efron-Stein lemma,
 \[
-\text{Var}[\text{BA}(X_1,...,X_k)] \leq \sum_{i=1}^k \E[\text{Var}[\text{BA}|X_1,...,X^{(i-1)}, X^{(i+1)}, ..., X_k]].
+\text{Var}[\text{BA}(X^{(1)},...,X^{(k)})] \leq \sum_{i=1}^k \E[\text{Var}[\text{BA}|X^{(1)},...,X^{(i-1)}, X^{(i+1)}, ..., X^{(k)}]].
 \]
 which is the same as
 \[
-\text{Var}[\text{BA}(X_1,...,X_k)] \leq k \E[\text{Var}[\text{BA}|X_1,...,X^{(k-1)}]].
+\text{Var}[\text{BA}(X^{(1)},...,X^{(k)})] \leq k \E[\text{Var}[\text{BA}|X^{(1)},...,X^{(k-1)}]].
 \]
-The term $\text{Var}[\text{BA}|X_1,...,X_{k-1}]$ is the variance of $\text{BA}(X_1,...,X_k)$
-conditional on fixing the first $k-1$ curves $p(y|x_1),...,p(y|x_{k-1})$ and allowing the final curve $p(y|X_k)$ to vary randomly.
+The term $\text{Var}[\text{BA}|X^{(1)},...,X_{k-1}]$ is the variance of $\text{BA}(X^{(1)},...,X^{(k)})$
+conditional on fixing the first $k-1$ curves $p(y|x^{(1)}),...,p(y|x_{k-1})$ and allowing the final curve $p(y|X^{(k)})$ to vary randomly.
 
 Note the following trivial results
 \[
--p(y|x_k) + \max_{i=1}^k p(y|x_i)\leq \max_{i=1}^{k-1} p(y|x_i) \leq \max_{i=1}^k p(y|x_i).
+-p(y|x^{(k)}) + \max_{i=1}^k p(y|x_i)\leq \max_{i=1}^{k-1} p(y|x_i) \leq \max_{i=1}^k p(y|x_i).
 \]
 This implies
 \[
-\text{BA}(X_1,...,X_k) - \frac{1}{k} \leq \frac{k-1}{k}\text{BA}(X_1,...,X_{k-1}) \leq \text{BA}(X_1,...,X_k).
+\text{BA}(X^{(1)},...,X^{(k)}) - \frac{1}{k} \leq \frac{k-1}{k}\text{BA}(X^{(1)},...,X_{k-1}) \leq \text{BA}(X^{(1)},...,X^{(k)}).
 \]
-i.e. conditional on $(X_1,...,X_{k-1})$, $\text{BA}_k$ is supported on an interval of size $1/k$.
+i.e. conditional on $(X^{(1)},...,X_{k-1})$, $\text{BA}_k$ is supported on an interval of size $1/k$.
 Therefore,
 \[
-\text{Var}[\text{BA}|X_1,...,X_{k-1}] \leq \frac{1}{4k^2}
+\text{Var}[\text{BA}|X^{(1)},...,X_{k-1}] \leq \frac{1}{4k^2}
 \]
 since $\frac{1}{4c^2}$ is the maximal variance for any r.v. with support of length $c$. $\Box$
 
@@ -818,11 +818,11 @@ Let $f_i$ denote the Bayes $k$-class classifier for $\tilde{p}_i(x, y)$
 and
 $f_\infty$ the Bayes $k$-class classifier for $p(x, y)$: recall that by definition,
 \[
-\text{ABA}_k[\tilde{p}_i] = \Pr_{\tilde{p}_i}[f_i(X_1,...,X_k, Y) = Z]
+\text{ABA}_k[\tilde{p}_i] = \Pr_{\tilde{p}_i}[f_i(X^{(1)},...,X^{(k)}, Y) = Z]
 \]
 Define
 \[
-\epsilon_i = \Pr_p[(X_1,...,X_k, Y)\notin \mathcal{X}_i^k \times \mathcal{Y}_i];
+\epsilon_i = \Pr_p[(X^{(1)},...,X^{(k)}, Y)\notin \mathcal{X}_i^k \times \mathcal{Y}_i];
 \]
 by continuity of probability we have $\lim_i \epsilon_i \to 0$.
 We claim that
@@ -835,17 +835,17 @@ and defining $\mathcal{X} = \mathcal{X}_i$, $\mathcal{Y} = \mathcal{Y}_i$.
 Consider using $f_i$ to obtain a classification rule for $p(x, y)$:
 define
 \[
-\tilde{f}_i = \begin{cases}f_i(x_1,...,x_k, y) & \text{ when } (x_1,...,x_k, y) \in \mathcal{X}_i^k \times \mathcal{Y}\\
+\tilde{f}_i = \begin{cases}f_i(x^{(1)},...,x^{(k)}, y) & \text{ when } (x^{(1)},...,x^{(k)}, y) \in \mathcal{X}_i^k \times \mathcal{Y}\\
 0 & \text{ otherwise.} 
 \end{cases}
 \]
 We have
 \begin{align*}
-\text{ABA}_k[p] =& \sup_f \Pr_p[f(X_1,...,X_k, Y) = Z]
+\text{ABA}_k[p] =& \sup_f \Pr_p[f(X^{(1)},...,X^{(k)}, Y) = Z]
 \\ \geq& 
-\\=& (1-\epsilon_i)\Pr_p[f_i(X_1,...,X_k, Y) = Z|(X_1,...,X_k, Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i]
-\\&+ \epsilon_i \Pr_p[f_i(X_1,...,X_k, Y) = Z|(X_1,...,X_k, Y)\notin \mathcal{X}_i^k \times \mathcal{Y}_i]
-\\=& (1-\epsilon_i)\Pr_{\tilde{p}}[f_i(X_1,...,X_k, Y) = Z]
+\\=& (1-\epsilon_i)\Pr_p[f_i(X^{(1)},...,X^{(k)}, Y) = Z|(X^{(1)},...,X^{(k)}, Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i]
+\\&+ \epsilon_i \Pr_p[f_i(X^{(1)},...,X^{(k)}, Y) = Z|(X^{(1)},...,X^{(k)}, Y)\notin \mathcal{X}_i^k \times \mathcal{Y}_i]
+\\=& (1-\epsilon_i)\Pr_{\tilde{p}}[f_i(X^{(1)},...,X^{(k)}, Y) = Z]
 + \epsilon_i 0
 \\=& (1-\epsilon_i) \text{ABA}_k[\tilde{p}_i] \geq \text{ABA}_k[\tilde{p}_i] - \epsilon_i.
 \end{align*}
@@ -856,15 +856,15 @@ when the data is generated under $p$.
 Now consider the reverse scenario of using $f_p$ to perform
 classification under $\tilde{p}_i$.  This is equivalent to generating
 data under $p(x, y)$, performing classification using $f$, then only
-evaluating classification accuracy conditional on $(X_1,...,X_k,
+evaluating classification accuracy conditional on $(X^{(1)},...,X^{(k)},
 Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i$.  Therefore,
 
 \begin{align*}
-\text{ABA}_k[\tilde{p}_i] =& \sup_f \Pr_{\tilde{p}_i}[f(X_1,...,X_k, Y) = Z]
-\\\geq &  \Pr_{\tilde{p}_i}[f_p(X_1,...,X_k, Y) = Z]
-\\=& \Pr_p[f_p(X_1,...,X_k, Y) = Z| (X_1,...,X_k, Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i]
-\\=& \frac{1}{1-\epsilon_i} \Pr_p[I\{(X_1,...,X_k, Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i\} \text{ and }f_p(X_1,...,X_k, Y) = Z]
-\\\geq & \frac{1}{1-\epsilon_i} \left(1 - \Pr_p[I\{(X_1,...,X_k, Y)\notin \mathcal{X}_i^k \times \mathcal{Y}_i\}] - \Pr_p[f_p(X_1,...,X_k, Y) \neq Z]]\right)
+\text{ABA}_k[\tilde{p}_i] =& \sup_f \Pr_{\tilde{p}_i}[f(X^{(1)},...,X^{(k)}, Y) = Z]
+\\\geq &  \Pr_{\tilde{p}_i}[f_p(X^{(1)},...,X^{(k)}, Y) = Z]
+\\=& \Pr_p[f_p(X^{(1)},...,X^{(k)}, Y) = Z| (X^{(1)},...,X^{(k)}, Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i]
+\\=& \frac{1}{1-\epsilon_i} \Pr_p[I\{(X^{(1)},...,X^{(k)}, Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i\} \text{ and }f_p(X^{(1)},...,X^{(k)}, Y) = Z]
+\\\geq & \frac{1}{1-\epsilon_i} \left(1 - \Pr_p[I\{(X^{(1)},...,X^{(k)}, Y)\notin \mathcal{X}_i^k \times \mathcal{Y}_i\}] - \Pr_p[f_p(X^{(1)},...,X^{(k)}, Y) \neq Z]]\right)
 \\&= \frac{\text{ABA}_k[p] - \epsilon_i}{1-\epsilon_i} \geq \text{ABA}_k[p] - \epsilon_i.
 \end{align*}
 In other words, when $\tilde{p}_i$ is close to $p$, the Bayes
@@ -988,7 +988,7 @@ It remains to show that for all $p \in \mathcal{P}^{unif}$ with
 $\text{I}[p] \leq \iota$, that $\text{ABA}_k[p] \leq \text{ABA}_k[p_\iota]$.
 
 Take $p \in \mathcal{P}^{unif}$ such that $\text{I}[p] \leq \iota$.
-Letting $X_1,...,X_k \sim \text{Unif}[0,1]$, and $Y \sim \text{Unif}[0,1]$ define $Z_i(y) = p(y|X_i)$.
+Letting $X^{(1)},...,X^{(k)} \sim \text{Unif}[0,1]$, and $Y \sim \text{Unif}[0,1]$ define $Z_i(y) = p(y|X_i)$.
 We have $\E(Z(y)) = 1$ and,
 \[
 \text{I}[p(x,y)] = \E(Z(Y) \log Z(Y))
@@ -1040,6 +1040,13 @@ informativity.  The most common approaches are based
 on \emph{classification} and \emph{regression}, but a third
 approach, \emph{identification}, combines the strengths of both
 classification and regression.
+
+In all of the following applications, we describe how to obtain a
+$(1-\alpha)$ lower confidence bound for $\text{ABA}_k$.  From there,
+one obtains a $(1-\alpha)$ lower confidence bound for $\text{I}$ via
+\[
+\underline{I} = C_k^{-1}(\underline{\text{ABA}_k}).
+\]
 
 \subsection{Classification without model selection}
 
@@ -1159,7 +1166,42 @@ It remains to apply the variance bound for Bayes accuracy to obtain a lower conf
 \underline{\text{ABA}}_k = \underline{\text{BA}}_{\alpha/2} -  \frac{1}{\sqrt{2\alpha k}}
 \]
 
-\subsection{Identification setting}
+\subsection{Subsampled classification}
+
+
+
+Given data for $K$ classes, it is possible to estimate $\text{ABA}_k$
+for $k < K$ via \emph{sub-sampling}.  For notational convenience, we
+assume that model selection is not used in the following.  Suppose the
+$K$ stimuli exemplars are $x^{(1)},\hdots, x^{(k)}$.  Now consider all
+subsets $\{x^{(i_1)},\hdots, x^{(i_k)}\}$ of size $k$ of the
+exemplars.  Index these subsets from $j =
+1,\hdots, \begin{pmatrix}K\\k\end{pmatrix}$; define the functions
+$\pi_j: \{1,\hdots, k\} \to \{1,\hdots, K\}$ so that the $j$th subset
+is $\{x^{\pi_j(1)},\hdots, x^{\pi_j(k)}\}$.  The classification rule
+is obtained by
+\[
+f_j =  \mathcal{F}_i(\{(x^{(\pi_j(1))}, y^{(\pi_j(1)),1}),\hdots, (x^{(\pi_j(1))},y^{(\pi_j(1)),r_1}), \hdots, (x^{(\pi_j(k))}, y^{(\pi_j(k)),1},\hdots, (x^{(\pi_j(k))},y^{(\pi_j(k)), r_1})\}).
+\]
+Therefore, write
+\[
+\widehat{\text{GA}}_j =  \frac{1}{k r_2} \sum_{i=1}^k \sum_{j = r_1 + 1}^r \text{I}(f_j(y^{(\pi_j(i)),j}) \neq i).
+\]
+and
+\[
+\widehat{\text{GA}} = \frac{1}{ \begin{pmatrix}K\\k\end{pmatrix}}\sum_{j=1}^{{K}\choose{k}} \widehat{\text{GA}}_j.
+\]
+A fairly conservative lower confidence bound is
+\[
+\underline{\text{ABA}_k} = \widehat{\text{GA}} - \frac{1 + z_{\alpha/2}}{\sqrt{2\alpha K}}
+\]
+where $z_{\alpha/2}$ is the $\alpha/2$ upper quantile of a normal
+distribution.  It is possible to prove asymptotic coverage by noting
+the asymptotic normality of $\widehat{\text{GA}}$ in the limit
+$r_2 \to \infty$.
+
+\subsection{Identification setting}\label{sec:ident}
+
 
 The different machine-learning-based modeling approaches excel in
 different experimental settings.  Classification-based approaches
@@ -1176,12 +1218,70 @@ depends heavily on having a parameterization which captures the
 relevant features of the stimulus--this can be a difficult task when
 studying complex stimuli such as faces or natural images.
 
-While we described the classification approach in section 2, we
-describe the application of our method using classifiers in section
-4.1.  Then, in section 4.2, we will introduce the identification task,
-and how our method can also be combined with the identification-based
-approach.
+The training data for identification takes the form of $n$ stimulus-response pairs
+$\{(x_i, y_i)\}_{i=1}^n$, which may or may not have stimulus repeats.
+It is assumed that $x_i \stackrel{iid} p(x),$ and $y_i \sim p(y|x_i).$
+The test data takes the same format as a classification task, with $k$ classes and $r$ repeats per class:
+\[
+\{(x^{(1)}, y^{(1), 1}),\hdots, (x^{(1)},y^{(1),r}), \hdots, (x^{(k)}, y^{(k), 1}),\hdots, (x^{(k)},y^{(k),r})\}.
+\]
 
+In identification, one first learns a model for the conditional
+distribution of $y$, $\tilde{p}(y|x)$ from training data.  For
+example, defining data matrices $\bX = (x_1^T, \hdots, x_n^T)$ and
+$\bY = (y_1^T,\hdots, y_n^T)$, one fits the gaussian homoskedastic \emph{regression model}
+\[
+y|x \sim N(B^T x, \Sigma)
+\]
+estimating $B$ using ridge regression,
+\[
+\hat{B} = (\bX^T \bX^T + \lambda_1 I)^{-1} \bX^T \bY,
+\]
+and estimating $\Sigma$ using a shrinkage estimator from the model residuals,
+\[
+\hat{\Sigma} = \frac{1-\lambda_2}{n}(\bY - \bX B)^T(\bY - \bX B) + \lambda_2 I
+\]
+where $\lambda_1$ and $\lambda_2$ are regularization (tuning)
+parameters.
+This yields the estimated conditional density
+\[
+\tilde{p}(y|x) = \frac{1}{(2\pi |\hat{\Sigma}|)^{p/2}} e^{-\frac{1}{2} (y-\hat{B}^T x)^T\Sigma^{-1} (y-\hat{B}^T x)}.
+\]
+
+
+Regardless of what method is used to estimate $\tilde{p}$, the next
+step is to define a family of \emph{classification functions}
+\[
+f_m(x^{(1)},\hdots, x^{(m)}, y) = \argmax_{i=1}^m \tilde{p}(y|x^{(i)})
+\]
+for $m \in \{1,2,\hdots\}$.
+The $m$-class average generalization error for the classification function is defined as
+\[
+\text{AGA}_m(f_m) = \Pr[f_m(X^{(1)},\hdots, X^{(m)}, Y) = Z]
+\]
+where $X^{(1)},\hdots, X^{(m)} \stackrel{iid}{\sim} p(x)$,
+$Z \sim \text{Unif}\{1,\hdots, m\}$, and $Y \sim p(y|X^{(Z)})$.
+From definition \eqref{eq:abe}, we have
+\[
+\text{AGA}_m(f_m) \leq \text{ABA}_m.
+\]
+Therefore, given a lower confidence bound for $\text{AGA}_m(f)$, we
+can obtain a lower confidence bound for $\text{ABA}_m(f)$.  In fact,
+the exact same machinery can be adapted from the classification case
+to yield the needed lower confidence bound, and defining
+\[
+\widehat{\text{GA}} = \frac{1}{k r_2} \sum_{i=1}^k \sum_{j = r_1 + 1}^r \text{I}(f_k(y^{(i),j}) \neq i).
+\]
+the result is that
+\[
+\underline{\text{ABA}}_k = \widehat{\text{GA}} - \sqrt{\frac{-\log(\alpha/4)}{2kr_2}} - \frac{1}{\sqrt{2\alpha k}}.
+\]
+is a $(1-\alpha)$ lower confidence bound for $\text{ABA}_k$, just as
+in the classification case.  That the same construction should work in
+the identification case is not surprising, if one considers that
+classification can be treated as a special case of identification,
+where the conditional density $\tilde{p}(y|x)$ is only estimated for
+stimuli $x$ that have been observed in the training set.
 
 \section{Results}
 
@@ -1198,245 +1298,91 @@ grayscale photographs.  The response data consists of BOLD response in
 regions V1, V2, and V3 from a single subject.  The raw time series were
 processed to yield a single averaged response vector $y^{(i)}$ for each
 stimulus $x^{(i)}$, for $i = 1,\hdots, 1870$.
-The dimensionality of $y^{(i)}$ varies depending on which regions of interest
-we are discussing, and whether we consider a subset of the voxels in those regions.
 Let $v$ denote the dimensionality (number of voxels) of $y$.
+
+%The dimensionality of $y^{(i)}$ varies depending on which regions of interest
+%we are discussing, and whether we consider a subset of the voxels in those regions.
 
 Let $x^{(i)}$ denote the native $128 \times 128$-pixel representation
 of the image (i.e. a $16384$-dimensional vector with entries between 0
 and 1.)  One of the goals of the Kay et al. paper is to evaluate
 competing encoding models.  In the context of the study,
 an \emph{encoding model} is a vector-valued function from the stimulus
-to a $p$-dimensional space,
+to a $q_{\vec{g}}$-dimensional space,
 \[
-\vec{g}(x) = (g_1(x),\hdots, g_{p}(x)).
+\vec{g}(x) = (g_1(x),\hdots, g_{q_{\vec{g}}}(x)).
 \]
 One of the encoding models studied by Kay et al. is the Gabor wavelet pyramid,
 $\vec{g}_{Gabor}$, with $p = 10921$.
-Using a \emph{training} subset of the stimulus-response pairs $(x_i, y_i)$, $i = 1,\hdots, 1750$,
-Kay et al. fit a regularized linear model
+
+Meanwhile, rather than consider the entire brain response $y$, it is
+of scientific interest to consider subsets $S$ of the voxels
+$\{1,\hdots, k\}$.  Therefore, for subset $S = \{s_1,\hdots,
+s_{|S|}\}$, define the projection
 \[
-y^{(i)} \approx B^T \vec{g}(x^{(i)})
+\vec{\Pi}_S(y) = (y_{s_1},\hdots, y_{s_{|S|}}).
 \]
-where $B$ is a $10921 \times v$-dimensional matrix, which is to be fit to the data.
-The resulting model is used to obtain predictions $\hat{y}^{(i)}$ for the remaining validation subset,
-$i = 1751,\hdots, 1870$,
-by
+We also refer to $S$ as a \emph{region-of-interest},
+following the neuroimaging terminology.
+
+Using a \emph{training} subset of the stimulus-response pairs $(x_i, y_i)$, $i = 1,\hdots, 1500$,
+one fits the gaussian linear model
 \[
-\hat{y}^{(i)} = B^T \vec{g}(x^{(i)}).
+\vec{\Pi}_S(y^{(i)}) \sim N(B^T \vec{g}(x^{(i)}), \Sigma)
 \]
-Kay et al. introduced the novel idea of assessing the accuracy of
-these predictions using a \emph{classification}-based metric, rather
-than a usual metric for prediction error such as mean-squared error.
-One treats the 120 validation stimuli $x_{1751},\hdots, x_{1870}$ as distinct classes.
-Next, for each $i = 1751, \hdots, 1870$, one predicts the class of $y^{(i)}$,
-by correlating the observed $y^{(i)}$ with the predictions $\hat{y}^{(j)}$.
-In other words, let $f$ be the mapping from the observed response to the predicted class:
-$f$ is given by
+for a given region of interest $S$ and encoding model $\vec{g}$.
+Here, $\hat{B}$ and $\hat{\Sigma}$ can be estimated as described in
+subsection \ref{sec:ident}, and one correspondingly obtains the
+conditional density model $\tilde{p}(\Pi_S(y)| \vec{g}(x))$ and
+classification rules $f_m$.
+
+The $k$-class average test accuracy for a given encoding model $\vec{g}$, and a given subset of voxels $S$, is
 \[
-f(y) = \argmax_{j =1751}^{1870} \Cor(y, \hat{y}^{(j)}).
-\]
-The test error is
-\[
-e_{test} = \frac{1}{120} \sum_{i=1751}^{1870} I(i \neq f(y^{(i)})).
+\widehat{\text{AGA}}_k(\vec{g}, S) = 
+\frac{1}{{{250}\choose{k}}}\sum_{j=1}^{{250}\choose{k}} 
+\frac{1}{k} \sum_{i=1}^k I(i \neq f_{250}(\vec{g}(x^{(\pi_j(1))}),\hdots, \vec{g}(x^{(\pi_j(k))}), \Pi_S(y^{(\pi_j(i))}))).
 \]
 This test error can be computed using different encoding models
 $\vec{g}$ and different regions of the brain, or different-sized
-subsets of voxels.
-One can therefore get a sense of the differences between encoding models
-or between brain regions by comparing the resulting test errors.
+subsets of voxels.  One can therefore get a sense of the differences
+between encoding models or between brain regions by comparing the
+resulting test errors.  However, the choice of $k$ cannot be readily
+given a scientific interpretation.
 
+Using our methodology, we can obtain lower confidence bounds for the
+mutual information $I(\vec{g}(X), \Pi_S(Y))$ for any given encoding
+model and region of interest.  There is an arbitrary choice of which
+$k$ to use in our procedure, and ideally, the resulting estimated
+lower confidence bound should not depend too much on the choice of
+$k$.  Figure \ref{fig:kaydata1} shows the lower confidence bounds for
+the Kay data.  As long as $k$ is larger then 50, the dependence on $k$
+is minor, with larger $k$ producing better bounds.  However, the
+observed monoticity may not hold in general.  We leave the question of
+how to tune the $k$ parameter for future work.
 
-While differing from a conventional classification task, the Kay et
-al. \emph{identification} task can also be treated using our
-framework.  An \emph{identification rule} (as opposed to a
-classification rule) is defined by a function $f$ which takes arguments
-$\{y, x^{(1)},\hdots, x^{(k)}\}$ where $k$ can be any positive integer.
-The function $f$ returns an integer from 1 to $k$,
-\[
-f(y, x^{(1)},\hdots, x^{(k)}) \in \{1,\hdots, k\}.
-\]
-One can study competing encoding models by constraining identification rules
-to using features provided by the encoding, i.e. only considering functions
-\[
-f(y, \vec{g}(x^{(1)}),\hdots, \vec{g}(x^{(k)})) \in \{1,\hdots, k\}.
-\]
-
-The generalization error for the identification task is defined as
-\[
-e_{gen}(f) = \Pr[f(Y, \vec{g}(x^{(1)}),\hdots, \vec{g}(x^{(k)})) \neq i|Y \sim p(y|x^{(i)})],
-\]
-Now, the Bayes rule will be specific to the encoding model
-\[
-e_{Bayes}(\vec{g}(x^{(1)}),\hdots, \vec{g}(x^{(k)})) = \inf_f \Pr[f(Y, \vec{g}(x^{(1)}),\hdots, \vec{g}(x^{(k)})) \neq i|Y \sim p(y|x^{(i)})].
-\]
-As before, the Bayes identification rule which attains the minimal error can be given explicitly,
-\[
-f_{Bayes}(y, \vec{g}(x^{(1)}),\hdots, \vec{g}(x^{(k)})) = \argmin_{i=1}^k p(y|\vec{g}(x^{(i)})).
-\]
-The average Bayes error can be defined as before, but is specific to the encoding model:
-\[
-e_{ABE}(\vec{g}) = \E[e_{Bayes}(\vec{g}(X^{(1)}),\hdots, \vec{g}(X^{(k)}))]
-\]
-
-Our asymptotic theory links average Bayes error to information and
-is \emph{not specific} to the whether the task is based on
-identification or classification.  Hence, the approximation
-\[
-e_{ABE, k}(\vec{g}) \approx \pi_k(\sqrt{2 I(\vec{g}(X); Y)})
-\]
-still holds in the appropriate regime.
-
-
-However, one adjustment that needs to be made is how to construct
-point estimates or confidence intervals for $e_{ABE}$.
-Here we will limit our discussion to confidence intervals.
-The approach taken is to use cross-validation to construct the confidence interval.
-
-Let $N$ be the total number of stimuli exemplars.  Choose $T < N$ and
-$k < N - T$; $T$ denotes the number of \emph{training} exemplars and
-$k$ controls the number of \emph{test} exemplars.
-
-Set $B$, the number of Monte Carlo simulations, to be a large number.
-Let $\beta \in [0, 1]$ be a Bayesian smoothing parameter (typically $\beta$ is close to 0).
-For each $b = 1,\hdots, B$, define the $b$th sampled test error $e_b$ by:
-\begin{enumerate}
-\item Sample $T$ stimuli exemplars without replacement from the library of $N$ exemplars.
-\item Train an identification rule $f_b$ using the training set pairs $(\vec{g}(x^{(i)}), y^{(i)})$.
-\item Let $S_1,\hdots, S_M$ denote all possible subsets of size $k$ from the remaining $N-T$ exemplars.
-\item For each subset $S_j = \{x^{(i_{j, 1})}, \hdots, x^{(i_{j, k})}\}$, compute the test error $e_{test, b, j}$ via
-\[
-e_{test, b, j} = \frac{1}{k} \sum_{\ell = 1}^k I(i_{j, \ell} \neq f(y^{(i_{j, \ell})}, \vec{g}(x^{(i_{j, 1})}),\hdots, \vec{g}(x^{(i_{j, k})})))
-\]
-\item Set $e_b = \beta\frac{k-1}{k} + (1-\beta) \frac{1}{M} \sum_{j=1}^M e_{test, b, j}$.
-\end{enumerate}
-For most identification rules, $e_b$ can be computed in $O(N^2)$ time
-by using the hypergeometric sampling formula; e.g., see Nishimoto
-(2011) for details.  Setting the parameter $\beta > 0$ is typically
-recommended in order to reduce variance in the procedure.
-
-Now, choosing a level $\alpha$, let $\bar{e}(\vec{g})$ be the $(1-\alpha/2)$th
-quantile and $\underline{e}(\vec{g})$ be the $(\alpha/2)$th quantile of
-$\{e_b\}_{b=1}^B$.  Then one constructs the confidence interval
-\[
-[\frac{1}{2}(\pi_k^{-1}(\bar{e}))^2, \frac{1}{2}(\pi_k^{-1}(\underline{e}))^2].
-\]
-for $I(\vec{g}(X); Y)$.
-
-We computed such confidence intervals for $\vec{g}_{Gabor}$, taking
-$Y$ to be random subsamples of size $\{100, 200, \hdots, 600\}$ voxels
-from V1, and also varying the parameter $k$ within the procedure.
-The confidence intervals are shown in Figure ?.
-
-\begin{figure}
+\begin{figure}[h]
 \centering
-%\includegraphics[scale = 0.7]{gabor_random_Y.pdf}
-\caption{Confidence intervals for $I(\vec{g}_{Gabor}(X); Y)$, where $Y$ are subsamples of size $\{100, 200, \hdots, 600\}$ voxels
-from V1.}
+\includegraphics[scale = 0.7]{../Yuval/lower_bound.pdf}
+\caption{Lower confidence bounds for $\alpha = 0.05$, for the encoding model $\vec{g}_{Gabor}$ and the subsets $S_1,S_3, S_5$.
+The subset $S_i$ is the $100i$ voxels with the highest signal-to-noise
+ratio.  The $x$-axis shows the $k$ used in the procedure, and the $y$
+axis gives the resulting lower confidence bound
+$\underline{I}(\vec{g}_{Gabor}, \Pi_S)$.}\label{fig:kaydata1}
 \end{figure}
 
-Using the same voxel subsamples and parameters $k$, but now using a
-reduced encoding model $\vec{g}_{reduced}$ with $p=681$,
-we computed confidence intervals for
-$I(\vec{g}_{reduced}(X); Y)$.
-
-\begin{figure}
-\centering
-%\includegraphics[scale = 0.7]{reduced_random_Y.pdf}
-\caption{Confidence intervals for $I(\vec{g}_{reduced}(X); Y)$, where $Y$ are subsamples of size $\{100, 200, \hdots, 600\}$ voxels
-from V1.}
-\end{figure}
 
 
 
 \section{Discussion}
 
-Since the Bayes error is the large-sample
-limit of the achieved classification error, a promising approach is to
-perform classification using differently sized subsamples of the
-training data, producing a plot of classification error versus sample
-size--a ``learning curve.'' One can then extrapolate the learning
-curve to estimate the Bayes error (Cortes et al. 1994.)However, much
-work remains to develop rigorous methodology for estimating Bayes
-error, and so we leave this first issue for future work.
-
-We should keep in mind that the definition
-of mutual information depends on the specific class of stimulus that
-is of interest in the experiment.  The Bayes error itself depends on
-the choices made by the experimenter in regards to the stimuli
-exemplar chosen in the experiment, and the decision of how to
-partition those exemplars in the classification task.  For example,
-Nishimoto et al classified segments of a movie clips based on
-activation patterns, but the definition of the classification task,
-and the achievable classification performance, depends not only on the
-particular move clips used in the experiment, but also the choice of
-time interval used to define discrete classes: defining each class to
-be a 1sec segment of movie results in more distinct classes and lower
-classification accuracy than defining each class to be a 4sec segment
-of movie. The Bayes error, and any estimate of mutual information
-based on the Bayes error, would therefore be necessarily dependent on
-the experimental parameters.
-
-
-%% move somewhere
-Estimating $e_{Bayes}$ is much more difficult in practice than
-estimating $e_{gen}$; however, nonparametric estimators of $e_{Bayes}$
-have been proposed in the literature.  Cover (1969) first noted that
-the leave-one-out error of 1-nearest neighbor, $e_{1nn}$,
-asymptotically bounds the Bayes error in the sense that
-\[
-\frac{1}{2}\E[e_{1nn}] \leq e_{Bayes} \leq \E[e_{1nn}].
-\]
-Later, Fukunaga and Kessel (1971) and Fralick and Scott (1971) both
-proposed a consistent estimator of $e_{Bayes}$ using the test error
-from kernel density estimation-based classifiers.  Fukunaga and
-Hostetler 1975 improved on the density estimation approach by
-estimating the generalization error directly, rather than using
-empirical test error (hence reducing variance.)
-
-%% move somewhere
-Nevertheless, the convergence rates of nonparametric methods of Bayes
-risk estimation are too slow to provide much assurance for their use
-in high-dimensional problems.  On the other hand, the empirical
-success of supervised learning approaches seems to justify a certain
-optimism that at least one of the popular black-box methods (random
-forests, neural networks, kernel SVM) can come close to the Bayes
-error rate within realistic sample sizes.  Methods such as random
-forests and neural networks are known to have \emph{universal
-approximation} properties that guarantee consistent recovery of the
-classification rule, given that the model complexity is scaled at an
-appropriate rate as the sample size increases; but methods such as
-kernel SVM have much more restrictive function classes and therefore
-have no guarantee of being able to recover the Bayes error.  Yet, it
-is seen in many learning tasks that the test error is very similar for
-very different classification methods, some universal and some
-non-universal, suggesting that the true signal lies in a
-low-complexity function class which can be adequately approximated
-using a variety of methods.  Empirical evidence for these phenomenon
-are collected in studies on the learning curves of classifers,
-beginning with Cortes 1994, and applied to specific applications by
-Figueroa et al. 2012, Beleites et al. 2013.  We leave further
-discussion of Bayes error estimation for future work; in the
-theoretical portion of the current paper, we will simply leave
-unspecified the method used to estimate Bayes error, and in our
-simulation and real data examples, we will use an ad hoc approach for
-estimating Bayes error from test error for the purpose of
-demonstrating our method.
-
-
-\section{Conclusions}
-
-\begin{itemize}
-\item We derive a relationship between average Bayes error (ABE) and mutual
-  information (MI), motivating a novel estimator $\hat{I}_{LS}$.
-\item Theory based on high dimensional, low SNR limit,
-where \[\text{ABE} \leftrightarrow \text{MI}.\]
-\item In ideal settings for supervised learning, ABE can be estimated
-  effectively and $\hat{I}_{LS}$ can recover MI at much lower sample
-  sizes than nonparametric methods.
-\item In simulations, $\hat{I}_{LS}$ works better than Fano's
-  inequality or the confusion matrix approach.
-\end{itemize}
+Since the Bayes error is the large-sample limit of the achieved
+classification error, a promising approach is to perform
+classification using differently sized subsamples of the training
+data, producing a plot of classification error versus sample size--a
+``learning curve.'' One can then extrapolate the learning curve to
+estimate the Bayes error (Cortes et al. 1994.) However, much work
+remains to develop rigorous methodology for estimating Bayes error,
+and so we leave this first issue for future work.
 
 \appendix
 \section{Appendix}
