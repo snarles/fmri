@@ -150,11 +150,15 @@ save(lbZ, iestZ, file = "Yuval/lbZ.RData")
 lbZ <- lbZ[1:6]
 iestZ <- iestZ[1:6]
 
-plot(ks, lbZ[[length(lbZ)]], type = "l", ylim = c(0, 8))
-for (i in 1:length(lbZ)) {
+plot(ks, lbZ[[length(lbZ)]], type = "l", xlab = "k", ylab = "MI", col = "white")
+for (i in c(1, 3, 5)) {
+  lines(ks, lbZ[[i]], col = "black", lwd = 5)
   lines(ks, lbZ[[i]], col = rainbow(length(lbZ))[i], lwd = 3)
 }
-
+legend(150, 2.5, c("100", "300", "500"), col = "black", 
+       lwd = 5)
+legend(150, 2.5, c("100", "300", "500"), col = rainbow(6)[c(1,3,5)], 
+       lwd = c(3,3,3), bg = NA)
 
 plot(ks, iestZ[[length(lbZ)]], type = "l", ylim = c(0, 8))
 for (i in 1:length(lbZ)) {
