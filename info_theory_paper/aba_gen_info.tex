@@ -1,4 +1,4 @@
-\title{Prediction and information: inference of nonlinear dependence using supervised learning}
+\title{Prediction, information, and inference: with application to neuroimaging}
 \author{Charles Zheng and Yuval Benjamini}
 \date{\today}
 
@@ -57,17 +57,18 @@ for channels consisting of a pair of input and output random
 variables.  The key axioms of an information metric are that (i) it is
 a scalar functional of the joint distribution of the input-output
 pair, (ii) it is zero for independent variables, and positive for
-dependent variables, (iii) it is monotonic with respect to inclusion
-of additional output variables, and (iv) it is invariant to bijective
-transformations of either the input or output.  We show how prediction
-tasks can be used to define a general class of information metrics
-which includes mutual information, as well as a novel information
-metric, \emph{average Bayes accuracy}, which can be considered an
-``idealization'' of classification accuracy.  Furthermore, we consider
-the possibility of developing a general theory of statistical
-inference for this class of information metrics.  Concretely, we
-derive a lower confidence bound for average Bayes accuracy as well as
-a novel lower confidence bound for mutual information.
+dependent variables, (iii) satisfies a
+generalized \emph{data-processing} inequality, where transformations
+of the output can only preserve or reduce the information.  We show
+how prediction tasks can be used to define a general class of
+information metrics which includes mutual information, as well as a
+novel information metric, \emph{average Bayes accuracy}, which can be
+considered an ``idealization'' of classification accuracy.
+Furthermore, we consider the possibility of developing a general
+theory of statistical inference for this class of information metrics.
+Concretely, we derive a lower confidence bound for average Bayes
+accuracy as well as a novel lower confidence bound for mutual
+information.
 \end{abstract}
 
 
@@ -133,8 +134,39 @@ accuracy,) and an inequality between average Bayes accuracy and mutual
 information, which, combined with the preceding result, yields a novel
 lower confidence bound for mutual information.
 
-\subsection{Measures of information}
+\subsection{Organization}
 
+The rest of the paper is organized as follows.  Section \ref{sec:info}
+plays the role of a ``background'' section that gives the basics of
+mutual information and supervised learning as they are used in
+neuroscience, but also introduces our axiomatization of information.
+In section \ref{sec:gen_class}, we further explore some of the themes
+developed in the preceding section relating information, uncertainty,
+and prediction, and introduce a general class of information metrics
+which satisfies our axioms.  We define a new information metric
+belonging to this class, average Bayes accuracy, and we also show how
+mutual information can be considered an ``extended member'' of the
+class.  In section \ref{sec:inference} we develop the basic theory of
+what kinds of inferences about our information metrics are possible
+discuss the kinds of experimental designs and supervised learning
+pipelines which are needed to enable such inference.  Concretely, we
+develop a lower confidence bound for average Bayes accuracy. In
+section \ref{sec:connections} we outline a comparative theory for
+different metrics within our framework: how are the different
+information metrics related?  We discuss the calculus of variations as
+a possible general technique for establishing inequalities between
+different information metrics, and in particular we derive a
+``randomized Fano's inequality'': a lower bound for mutual information
+as a function of average Bayes accuracy.  Combined with our lower
+confidence bound for average Bayes accuracy, this yields a novel lower
+confidence bound for mutual information.  We provide a practical data
+analysis example in section \ref{sec:applications}.  A discussion
+section includes future directions and loose ends are treated, and
+most of the technical proofs and lemmas are found in the appendix.
+
+\section{Measures of information}\label{sec:info}
+
+\subsection{Mutual information and its usage}
 %It is in the context of communication system that Shannon first
 %proposed a quantification of the concept of ``the amount of
 %information that $\bY$ carries about $\bX$'', in the form
@@ -145,57 +177,139 @@ information was quickly recognized by neuroscientists.  Only four
 years after Shannon's seminal paper in information theory (1948),
 McKay and McCullough (1952) inaugurated the application of mutual
 information to neuroscience.  If $\bX$ and $\bY$ have joint density
-$p(\bx, \by)$, then the mutual information is defined as
+$p(\bx, \by)$ with respect to the product measure $\mu_x \times \mu_y$, then the mutual information is defined as
 \[
-I(\bX;\bY) = \int p(\bx, \by) \log \frac{p(\bx, \by)}{p(\bx)p(\by)}dxdy.
+\text{I}(\bX;\bY) = \int p(\bx, \by) \log \frac{p(\bx, \by)}{p(\bx)p(\by)}d\mu(\bx) d\mu(\by).
 \]
-where $p(\bx)$ and $p(\by)$ are the marginal densities.  Since
-then, mutual information has enjoyed a celebrated position in both
-experimental and theoretical neuroscience.  Experimentally, mutual
-information has been used to detect strong dependencies between
-stimulus features and features derived from neural recordings, which
-can be used to draw conclusions about the kinds of stimuli that a
-neural subsystem is designed to detect, or to distinguish between
-signal and noise in the neural output.  Theoretically, the assumption
-that neural systems maximize mutual information between salient
-features of the stimulus and neural output has allowed scientists to
-predict neural codes from signal processing models: for instance, the
-center-surround structure of human retinal neurons matches theoretical
-constructions for the optimal filter based on correlations found in
-natural images [cite].
+where $p(\bx)$ and $p(\by)$ are the marginal densities with respect to
+$\mu_x$ and $\mu_y$\footnote{Note that the mutual information is invariant with respect to change-of-measure.}.  Since then, mutual information has enjoyed a
+celebrated position in both experimental and theoretical neuroscience.
+Experimentally, mutual information has been used to detect strong
+dependencies between stimulus features and features derived from
+neural recordings, which can be used to draw conclusions about the
+kinds of stimuli that a neural subsystem is designed to detect, or to
+distinguish between signal and noise in the neural output.
+Theoretically, the assumption that neural systems maximize mutual
+information between salient features of the stimulus and neural output
+has allowed scientists to predict neural codes from signal processing
+models: for instance, the center-surround structure of human retinal
+neurons matches theoretical constructions for the optimal filter based
+on correlations found in natural images [cite].
 
-However, the dominance of mutual information in neuroscience started
-to wane as new experimental approaches shifted the focus from pairwise
-comparisons to questions of \emph{population coding}.  The extreme
-reductionist approach fails to account for the complex ways in which
-neurons cooperatively encode complex information, and to get a richer
-picture of neural dynamics, it becomes necessary to consider
-multivariate measures of dependence.  Also, the adoption of
-``high-throughput'' recording technologies such as EEG and fMRI
-naturally led in the direction of considering the system-level
-dynamics of the whole brain.  More importantly, the technology for
-studying the relationships between brain structure, function, and
-behavior have enabled a wider population of investigators
-(psychologists and neurologists) to quantitatively examine brain
-activity, but with motivations which tend to be more holistic and
-instrumental (e.g. finding neural correlates of mental disorders) when
-compared to the reductionist orientation of classical neuroscience.
-For both reasons, the demand for multivariate statistical techniques
-in neuroscience has increased dramatically in recent years. While the
-theoretical properties of mutual information extend gracefully to the
-multivariate setting, the difficulty of estimating mutual information
-increases exponentially in the dimension in the absence of strong
-modeling assumptions [cite].  Partially for this reason, alternative
-measures of multivariate dependence started to enjoy increasing usage
-in studies of population coding or in systems-level investigations of
-the brain: these include measures of linear dependence (canonical
-correlation and multivariate $R^2$) and Fisher information.  However,
-while both correlation-based statistics and Fisher information may be
-easier to estimate than mutual information in high-dimensional
-settings, they are both less flexible in terms of capturing nonlinear
-relationships.  Correlation-based statistics can only capture linear
-dependence, and Fisher information requires the assumption of a
-parametric model.
+The mutual information measures the information ``capacity'' of a
+channel consisting of an input $\bX$ and an output $\bY$, and
+satisfies a number of important properties.
+\begin{enumerate}
+\item The channel input $\bX$ and output $\bY$ can be random vectors of arbitrary dimension, and the mutual information remains a scalar functional of the joint distribution $p(\bX, \bY)$.
+\item When $\bX$ and $\bY$ are independent, $\text{I}(\bX; \bY) = 0$; otherwise, $\text{I}(\bX; \bY) > 0$.
+\item The data-processing inequality: for any vector-valued function $\vec{f}$ of the output space,
+\[
+\text{I}(\bX; \vec{f}(\bY)) \leq \text{I}(\bX; \bY).
+\]
+\item Symmetry: $\text{I}(\bX; \bY) = \text{I}(\bY; \bX)$.
+\item Additivity: if $(\bX_1,\bY_1)$ is independent of $(\bX_2, \bY_2)$, then
+\[
+\text{I}((\bX_1,\bY_1); (\bX_2, \bY_2)) = \text{I}(\bX_1; \bY_1) + \text{I}(\bX_2; \bY_2).
+\]
+\end{enumerate}
+Two additional consequences result from the data-processing inequality:
+\begin{itemize}
+\item \emph{Invariance under bijections.} If $\vec{f}$ has an inverse $\vec{f}^{-1}$, then 
+\[
+\text{I}(\bX; \vec{f}(\bY)) \leq \text{I}(\bX; \bY) = \text{I}(\bX; \vec{f}^{-1}(\vec{f}(\bY))) \leq \text{I}(\bX; \vec{f}(\bY)),
+\]
+therefore, $\text{I}(\bX; \vec{f}(\bY)) = \text{I}(\bX; \bY)$.
+\item \emph{Monotonicity with respect to inclusion of outputs.}  Suppose we have an output ensemble $(\bY_1,\bY_2)$.  Then the individual component $\bY_1$ can be obtained as a projection of the ensemble.  By the data-processing inequality, we therefore have
+\[
+\text{I}(\bX; \bY_1) \leq \text{I}(\bX; (\bY_1, \bY_2)).
+\]
+Intuitively, if we observe both $\bY_1$ and $\bY_2$, this can
+only \emph{increase} the information we have about $\bX$ compared to
+the case where we only observe $\bY_1$ by itself.
+\end{itemize}
+And it is the property of \emph{invariance under bijections},
+inclusive of non-linear bijections, which qualifies mutual information
+as a \emph{non-linear measure of dependence.}  Linear measures, such
+as Pearson correlation, are not invariant under bijections.  
+
+%As for
+%the completeness of the five listed properties: as we know, Shannon's
+%mutual information (up to arbitrary scaling factor) is the only
+%functional proposed in the literature which satisfies all five
+%properties.
+Besides the formal definition, there are a number of well-known alternative
+characterizations of mutual information in terms of other
+information-theoretic quantities: the \emph{entropy} $\text{H}$:
+\[
+\text{H}_\mu(\bX) = -\int p(\bX) \log p(\bX) d\mu(\bX),
+\]
+and the \emph{conditional entropy}:
+\[
+\text{H}_\mu(\bX|\bY) = -\int p(\bY) d\mu_y(\bY) \int p(\bX|\bY) \log p(\bX|\bY) d\mu_x(\bX).
+\]
+Some care needs to be taken with entropy and conditional entropy since
+they are not invariant with respect to change-of-measure: hence the
+use of the subscript in the notation $\text{H}_\mu$.  In particular,
+there is a difference between \emph{discrete entropy} (for counting
+measure) and \emph{differential entropy} (for Lesbegue measure.)
+Intutively, entropy measures an observer's uncertainty of the random
+variable $\bX$, supposing the observer has no prior information other
+than the distribution of $\bX$. Conditional entropy measures
+the \emph{expected uncertainty} of $\bX$ supposing the observer
+observes $\bY$.
+
+However, regardless of the base measure, the following identities hold:
+\[
+\text{I}(\bX; \bY) = \text{H}_{\mu_x \times \mu_y}((\bX, \bY)) - \text{H}_{\mu_x}(\bX) - \text{H}_{\mu_y}(\bY).
+\]
+\begin{equation}\label{eq:ce_ident}
+\text{I}(\bX; \bY) = \text{H}_\mu(\bY) - \text{H}_\mu(\bY|\bX).
+\end{equation}
+The second identity \eqref{eq:ce_ident} is noteworthy
+as being practically important for estimation of mutual information.
+Since the entropies in question only depend on the marginal and
+conditional distributions of $\bY$, the problem of estimating
+$\text{I}(\bX; \bY)$ can be reduced from a $\dim(\bX)
++ \dim(\bY)$-dimensional nonparametric estimation problem to a
+$\dim(\bY)$-dimensional problem: hence this identity is a basis of
+several methods of estimation used in neuroscience, such as Gastpar
+(2014).
+
+However, by symmetry, we also have the flipped identity
+\begin{equation}\label{eq:ce_ident2}
+\text{I}(\bX; \bY) = \text{H}_\mu(\bX) - \text{H}_\mu(\bX|\bY).
+\end{equation}
+In neuroscience studies, where $\bX$ is the controlled stimulus, and
+$\bY$ is the neural activity, the two mirror pairs \eqref{eq:ce_ident}
+and \eqref{eq:ce_ident2} have different interpretations.  Rather than
+providing a basis for practical estimation, \eqref{eq:ce_ident2}
+provides an \emph{interpretation} of the mutual information.  Loosely
+speaking, $\text{H}_\mu(\bX)$ is the uncertainty of $\bX$ before
+having observed $\bY$, and $\text{H}_\mu(\bX|\bY)$ is the uncertainty
+of $\bX$ after having observed $\bY$, hence $\text{H}_\mu(\bX)
+- \text{H}_\mu(\bX|\bY)$ is how much the observation of $\bY$
+has \emph{reduced} the uncertainty of $\bX$.  Stated in words,
+\[
+I(\bX; \bY) = \text{average reduction of uncertainty about $\bX$ upon observing $\bY$}.
+\]
+We explore this concept of ``information as reduction of uncertainty''
+much further when we propose our general class of information metrics:
+there, we see that properties (i)-(iii) of the mutual information are
+consequences of this second characterization of mutual information.
+
+But how what is the practical import of these properties of mutual
+information?  Supposing we identify a number of properties as being
+essential for scientific purposes (and others as non-essential), this
+then suggests that alternative measures of information, also
+satisfying the same essential properties, could be just as effective
+for scientific work as mutual information.  And some might have
+additional advantages.
+
+Towards our goal of formulating a general theory of information
+metrics, it is important to evaluate exactly \emph{how important} each
+of the listed properties.
+
+\subsection{Supervised learning}
 
 Machine learning algorithms showed a way forward: a seminal work by
 Haxby (2001) proposed to quantify the information in multiple channels
@@ -253,6 +367,15 @@ rather than a fully generative model.
 %carried by the whole is greater than the sum of the information of
 %each part.
 
+\section{Information, uncertainty and prediction}\label{sec:gen_class}
+
+\section{Statistical inference}\label{sec:inference}
+
+\section{Connections}\label{sec:connections}
+
+\section{Applications}\label{sec:applications}
+
+\section{Discussion}\label{sec:discussion}
 
 \end{document}
 
@@ -265,6 +388,49 @@ rather than a fully generative model.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+However, the dominance of mutual information in neuroscience started
+to wane as new experimental approaches shifted the focus from pairwise
+comparisons to questions of \emph{population coding}.  The extreme
+reductionist approach fails to account for the complex ways in which
+neurons cooperatively encode complex information, and to get a richer
+picture of neural dynamics, it becomes necessary to consider
+multivariate measures of dependence.  Also, the adoption of
+``high-throughput'' recording technologies such as EEG and fMRI
+naturally led in the direction of considering the system-level
+dynamics of the whole brain.  More importantly, the technology for
+studying the relationships between brain structure, function, and
+behavior have enabled a wider population of investigators
+(psychologists and neurologists) to quantitatively examine brain
+activity, but with motivations which tend to be more holistic and
+instrumental (e.g. finding neural correlates of mental disorders) when
+compared to the reductionist orientation of classical neuroscience.
+For both reasons, the demand for multivariate statistical techniques
+in neuroscience has increased dramatically in recent years. While the
+theoretical properties of mutual information extend gracefully to the
+multivariate setting, the difficulty of estimating mutual information
+increases exponentially in the dimension in the absence of strong
+modeling assumptions [cite].  Partially for this reason, alternative
+measures of multivariate dependence started to enjoy increasing usage
+in studies of population coding or in systems-level investigations of
+the brain: these include measures of linear dependence (canonical
+correlation and multivariate $R^2$) and Fisher information.  However,
+while both correlation-based statistics and Fisher information may be
+easier to estimate than mutual information in high-dimensional
+settings, they are both less flexible in terms of capturing nonlinear
+relationships.  Correlation-based statistics can only capture linear
+dependence, and Fisher information requires the assumption of a
+parametric model.
 
 
 
