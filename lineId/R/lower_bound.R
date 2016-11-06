@@ -5,6 +5,7 @@
 #' @param aba average Bayes accuracy
 #' @export
 aba_to_mi_lower <- function(k, aba) {
+  if (aba < 1/k) return(0)
   abas <- iota_aba_table[iota_aba_table$k==k, "aba"]
   a1 <- max(abas[abas < aba])
   a2 <- min(abas[abas > aba])
