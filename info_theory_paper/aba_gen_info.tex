@@ -51,21 +51,25 @@ dependence: mutual information, linear correlation-based statistics,
 Fisher information, and more recently, measures of performance on
 supervised learning tasks such as classification.  We argue that both
 mutual information and classification accuracy capture intuitive
-properties of an ``information metric'' for a channel, and we proceed
-to develop a general axiomatic characterization of information metrics
+properties of an ``information coefficient'' for a channel, and we proceed
+to develop a general axiomatic characterization of information coefficients
 for channels consisting of a pair of input and output random
-variables.  The key axioms of an information metric are that (i) it is
-a scalar functional of the joint distribution of the input-output
-pair, (ii) it is zero for independent variables, and positive for
-dependent variables, (iii) satisfies a
-generalized \emph{data-processing} inequality, where transformations
-of the output can only preserve or reduce the information.  We show
-how prediction tasks can be used to define a general class of
-information metrics which includes mutual information, as well as a
-novel information metric, \emph{average Bayes accuracy}, which can be
+variables.  Arguably, the key properties of an information coefficient are
+that (i) it is a scalar measure of multivariate dependence, and (ii)
+that it satisfies a \emph{stochastic data-processing inequality}: any
+coefficient with such properties can be used for model selection.
+%The key axioms of an information coefficient are that (i) it is
+%a scalar functional of the joint distribution of the input-output
+%pair, (ii) it is zero for independent variables, and positive for
+%dependent variables, (iii) satisfies a
+%generalized \emph{data-processing} inequality, where transformations
+%of the output can only preserve or reduce the information.  
+We show how prediction tasks can be used to define a general class of
+information coefficients which includes mutual information, as well as a
+novel information coefficient, \emph{average Bayes accuracy}, which can be
 considered an ``idealization'' of classification accuracy.
 Furthermore, we consider the possibility of developing a general
-theory of statistical inference for this class of information metrics.
+theory of statistical inference for this class of information coefficients.
 Concretely, we derive a lower confidence bound for average Bayes
 accuracy as well as a novel lower confidence bound for mutual
 information.
@@ -115,21 +119,21 @@ used by the practioners themselves, it is intuitively clear to them
 how classification accuracies can be used to quantify information in
 brain scans.  However, a more thorough examination of the practice
 raises many questions with regards to the use of classification
-accuracy as a metric of information: this is one motivation for the
+accuracy as a coefficient of information: this is one motivation for the
 current work.  But taking a step back, it would seem valuable at this
 historical juncture to examine the intuitive properties of
 ``information'' as a measure of multivariate dependence, and not only
 consider whether classification accuracy can be considered or used to
-derive a new information metric, but whether other such metrics might
+derive a new information coefficient, but whether other such coefficients might
 also exist, and whether a unified theory can be developed to account
 for all of them.  This is the larger purpose of the current work, and
 towards that end we not only propose a general class of information
-metrics which unifies both information-theoretic and
+coefficients which unifies both information-theoretic and
 supervised-learning-based approaches, but with an eye toward practical
 applications, we also examine the question of inferring these
 quantities from data.  An initial result in this direction is the
 derivation of nonparametric lower confidence bounds for average Bayes
-accuracy (a novel information metric closely related to classification
+accuracy (a novel information coefficient closely related to classification
 accuracy,) and an inequality between average Bayes accuracy and mutual
 information, which, combined with the preceding result, yields a novel
 lower confidence bound for mutual information.
@@ -139,34 +143,34 @@ lower confidence bound for mutual information.
 The rest of the paper is organized as follows.  Section \ref{sec:info}
 plays the role of a ``background'' section that gives the basics of
 mutual information and supervised learning as they are used in
-neuroscience, but also introduces our axiomatization of information.
-In section \ref{sec:gen_class}, we further explore some of the themes
-developed in the preceding section relating information, uncertainty,
-and prediction, and introduce a general class of information metrics
-which satisfies our axioms.  We define a new information metric
-belonging to this class, average Bayes accuracy, and we also show how
-mutual information can be considered an ``extended member'' of the
-class.  In section \ref{sec:inference} we develop the basic theory of
-what kinds of inferences about our information metrics are possible
-discuss the kinds of experimental designs and supervised learning
-pipelines which are needed to enable such inference.  Concretely, we
-develop a lower confidence bound for average Bayes accuracy. In
-section \ref{sec:connections} we outline a comparative theory for
-different metrics within our framework: how are the different
-information metrics related?  We discuss the calculus of variations as
-a possible general technique for establishing inequalities between
-different information metrics, and in particular we derive a
-``randomized Fano's inequality'': a lower bound for mutual information
-as a function of average Bayes accuracy.  Combined with our lower
-confidence bound for average Bayes accuracy, this yields a novel lower
-confidence bound for mutual information.  We provide a practical data
-analysis example in section \ref{sec:applications}.  A discussion
-section includes future directions and loose ends are treated, and
-most of the technical proofs and lemmas are found in the appendix.
+neuroscience, as well as practical issues related to estimation.  In
+section \ref{sec:gen_class}, we present an axiomatic characterization
+of information coefficients, and introduce a general class of information
+coefficients which satisfies our axioms.  We define a new information
+coefficient belonging to this class, average Bayes accuracy, and we also
+show how mutual information can be considered an ``extended member''
+of the class.  In section \ref{sec:inference} we develop the basic
+theory of what kinds of inferences about our information coefficients are
+possible discuss the kinds of experimental designs and supervised
+learning pipelines which are needed to enable such inference.
+Concretely, we develop a lower confidence bound for average Bayes
+accuracy. In section \ref{sec:connections} we outline a comparative
+theory for different coefficients within our framework: how are the
+different information coefficients related?  We discuss the calculus of
+variations as a possible general technique for establishing
+inequalities between different information coefficients, and in particular
+we derive a ``randomized Fano's inequality'': a lower bound for mutual
+information as a function of average Bayes accuracy.  Combined with
+our lower confidence bound for average Bayes accuracy, this yields a
+novel lower confidence bound for mutual information.  We provide a
+practical data analysis example in section \ref{sec:applications}.  A
+discussion section includes future directions and loose ends are
+treated, and most of the technical proofs and lemmas are found in the
+appendix.
 
-\section{Measures of information}\label{sec:info}
+\section{Background}\label{sec:info}
 
-\subsection{Mutual information and its usage}
+\subsection{Mutual information and its usage}\label{sec:background_mi}
 %It is in the context of communication system that Shannon first
 %proposed a quantification of the concept of ``the amount of
 %information that $\bY$ carries about $\bX$'', in the form
@@ -207,13 +211,28 @@ satisfies a number of important properties.
 \text{I}(\bX; \vec{f}(\bY)) \leq \text{I}(\bX; \bY).
 \]
 \item Symmetry: $\text{I}(\bX; \bY) = \text{I}(\bY; \bX)$.
-\item Additivity: if $(\bX_1,\bY_1)$ is independent of $(\bX_2, \bY_2)$, then
+\item Independent additivity: if $(\bX_1,\bY_1)$ is independent of $(\bX_2, \bY_2)$, then
 \[
 \text{I}((\bX_1,\bY_1); (\bX_2, \bY_2)) = \text{I}(\bX_1; \bY_1) + \text{I}(\bX_2; \bY_2).
 \]
 \end{enumerate}
-Two additional consequences result from the data-processing inequality:
+Three additional consequences result from the data-processing inequality:
 \begin{itemize}
+\item \emph{Stochastic data-processing inequality}  If $\vec{f}$ is a stochastic function independent of both $\bX$ and $\bY$, then
+\[
+\text{I}(\bX; \vec{f}(\bY)) \leq \text{I}(\bX; \bY).
+\]
+This can be shown as follows: any stochastic function $\vec{f}(\bY)$
+can be expressed as a deterministic function $\vec{g}(\bY, W)$, where
+$W$ is a random variable independent of $\bX$ and $\bY$.
+By independent additivity,
+\[
+\text{I}(\bX; \bY) = \text{I}(\bX; (\bY, W)).
+\]
+Then, by the data-processing inequality,
+\[
+\text{I}(\bX; \bY) = \text{I}(\bX; (\bY, W)) \geq \text{I}(\bX; \vec{g}(\bY, W)) = \text{I}(\bX; \vec{f}(\bY)).
+\]
 \item \emph{Invariance under bijections.} If $\vec{f}$ has an inverse $\vec{f}^{-1}$, then 
 \[
 \text{I}(\bX; \vec{f}(\bY)) \leq \text{I}(\bX; \bY) = \text{I}(\bX; \vec{f}^{-1}(\vec{f}(\bY))) \leq \text{I}(\bX; \vec{f}(\bY)),
@@ -292,24 +311,36 @@ has \emph{reduced} the uncertainty of $\bX$.  Stated in words,
 \[
 \text{I}(\bX; \bY) = \text{average reduction of uncertainty about $\bX$ upon observing $\bY$}.
 \]
-We explore this concept of ``information as reduction of uncertainty''
-much further when we propose our general class of information metrics:
-there, we see that properties (i)-(iii) of the mutual information are
-consequences of this second characterization of mutual information.
 
-But how what is the practical import of these properties of mutual
-information?  Supposing we identify a number of properties as being
-essential for scientific purposes (and others as non-essential), this
-then suggests that alternative measures of information, also
-satisfying the same essential properties, could be just as effective
-for scientific work as mutual information.  And some might have
-additional advantages.
+We list these properties of mutual information in preparation for
+section \ref{sec:axiom_info}, where we prepare a ``minimal'' set of
+properties for an information coefficient, and consider how much of
+the functionality of the mutual information would be preserved by an
+alternative information coefficient satisfying only those minimal
+properties.
 
-Towards our goal of formulating a general theory of information
-metrics, it is important to evaluate exactly \emph{how important} each
-of the listed properties.
+But what, exactly, is the functionality of mutual information in
+neuroscience?  How it is used in practice?  A nice summary of the
+applications of mutual information is provided in the introduction of
+Gastpar (2014).  Taking their list as a starting point, we briefly
+overview the main use-cases of mutual information, and illustrate each
+with a representative example.
+%We explore this concept of ``information as reduction of uncertainty''
+%much further when we propose our general class of information coefficients:
+%there, we see that properties (i)-(iii) of the mutual information are
+%consequences of this second characterization of mutual information.
 
-[to be continued: applications of mutual information]
+%But how what is the practical import of these properties of mutual
+%information?  Supposing we identify a number of properties as being
+%essential for scientific purposes (and others as non-essential), this
+%then suggests that alternative measures of information, also
+%satisfying the same essential properties, could be just as effective
+%for scientific work as mutual information.  And some might have
+%additional advantages.
+
+%Towards our goal of formulating a general theory of information
+%coefficients, it is important to evaluate exactly \emph{how important} each
+%of the listed properties.
 
 \begin{itemize}
 \item Example: Comparison of decoders in Nelken.  
@@ -341,26 +372,123 @@ case of independence.
 \item Section 3, we'll see how Bayes performance can be legitimately considered a measure of information
 \end{itemize}
 
-\subsection{Axiomatic characterization of information}
+\subsection{Connections}
 
-Let $\mathcal{I}(\bX; \bY)$ denote a general measure of information.
+\begin{itemize}
+\item Information theory and decoding. Fano's inequality
+\item Quiroga's method
+\item MVPA people use them interchangeably
+\end{itemize}
+
+\section{Information, uncertainty and prediction}\label{sec:gen_class}
+
+In the previous section, we examined how mutual information and
+supervised learning are used in neuroscience.  By analyzing the
+use-cases of each method side-by-side, and by reviewing the known
+connections between the two methods, we hoped to suggest the notion
+that both mutual information and supervised learning are being
+employed as means of quantifying the same underlying concept.  In this
+section, we propose a reification of this underlying concept of
+``information'', and propose the \emph{minimal} properties needed for
+a functional to be considered an \emph{information coefficient.}  We
+argue that these minimal properties are sufficient to support many of
+the existing use-cases of mutual information and supervised learning
+in neuroscience.
+
+\subsection{Axiomatic characterization of information}\label{sec:axiom_info}
+
+We claim that neuroscientists use both mutual information and
+supervised learning to quantifying a common concept of
+``information.''  Furthermore, we claim that neuroscientists largely
+share a set of common intuitions about information.
+
+\begin{itemize}
+\item \emph{
+Intuition 1: Information is a measure of dependence.}   If $\bX$ and $\bY$ are statistically independent, then
+$\bX$ gives no information about $\bY$, and vice-versa.
+\end{itemize}
+This
+intuition is employed when researchers test the null hypothesis of
+chance accuracy for classification.  If the null is accepted, the
+researcher concludes that there is no information in the predictors
+about the response.
+
+\begin{itemize}
+\item \emph{
+Intuition 2a: Monotonicity with respect to inclusion of outputs.} If $\bY_1$ and $\bY_2$ are ensembles of neurons (or
+individual neurons), then the combined ensemble $(\bY_1, \bY_2)$ has equal or
+more information about $\bX$ than either component by itself.
+\end{itemize}
+
+\begin{itemize}
+\item \emph{
+Intuition 2b: Noise adds no information.} If, in the previous example, $\bY_2$ is independent of
+$\bX$, then $\bY_2$ adds no information to the ensemble.
+\end{itemize}
+
+The third intuition is somewhat less obvious, but nevertheless appears
+as an important justification for the use of mutual information and
+supervised learning.
+
+\begin{itemize}
+\item \emph{Intuition 3:}
+Information can be used as a basis of model selection.  Among multiple
+encoding/decoding models, a more accurate model should tend to have
+greater information relative to less accurate models.  
+\end{itemize}
+
+Given the first two intuitions, we find that an essential property of
+information is that it can be said to `increase'--i.e., there exists
+at least a partial ordering on information.  Furthermore, there should
+exist a minimal element in this ordering, which is the information
+between independent variables--that is, `no information.' However,
+this is fully consonant with either information being quantified as a
+scalar quantity, or as a positive-definite matrix.  Indeed, Fisher
+information could be taken as an example of a matrix-valued
+information coefficient.  However, the problem with matrix-valued
+coefficients is that channels may be incomparable within the partial
+ordering.  Thus, if we consider the third intuition an important
+property of an information coefficient, then it should be scalar to
+enable model comparison.
+
+We find that all of the preceding intuitions follow from the following
+axioms.
+
+\noindent\textbf{Axioms of information}
+
+Let $\mathcal{I}(\bX; \bY)$ denote an \emph{information coefficient}.
+Then,
 \begin{enumerate}
-\item Information is a scalar functional of the joint distribution $p(\bX, \bY)$.
-\item When $\bX$ and $\bY$ are independent, $\mathcal{I}(\bX; \bY) = 0$; otherwise, $\mathcal{I}(\bX; \bY) > 0$.
-\item The data-processing inequality: for any vector-valued function $\vec{f}$ of the output space,
+\item $\mathcal{I}(\bX; \bY)$ is a scalar functional of the joint distribution $p(\bX, \bY)$.
+\item When $\bX$ and $\bY$ are independent, $\mathcal{I}(\bX; \bY) = 0$; otherwise, $\mathcal{I}(\bX; \bY) \geq 0$.
+\item 
+The stochastic data-processing inequality.  If $\vec{f}$ is stochastic
+vector-valued function of the output space indepedent of $(\bX, \bY)$,
+then
 \[
 \mathcal{I}(\bX; \vec{f}(\bY)) \leq \mathcal{I}(\bX; \bY).
 \]
 \end{enumerate}
 
-Mutual information satisfies the property.  Bayes performance
-satisfies it in regression case, but not in identification case due to
-dependence on exemplars.
+Since this minimal list of properties is a subset of the properties of
+mutual information, it is clear that mutual information satisfies the
+axioms.  However, classification accuracy does not satisfy the
+axioms--we will see in section \label{sec:gen_class_sub} how to define
+a proper information coefficient based on supervised learning.
 
-In the next section, we see how both MI and Bayes perf are examples of
-a large class of information measures.
+Now let us check that any information coefficient
+$\mathcal{I}(\bX; \bY)$ necessarily satisfies the intuitions.
+Intuition 1 is satisfied by property (ii).  We gave a general argument
+in \ref{background_mi} how Intuition 2a follows from the
+data-processing inequality.  Intuition 2b follows from the stochastic
+data-processing inequality, taking $\vec{f}(\bY_1) = (\bY_1, \bY_2)$.
 
-\section{Information, uncertainty and prediction}\label{sec:gen_class}
+Now, in order to justify intuition 3, we need to formalize the notion of ``model selection.''
+
+
+\subsection{Axiomatic characterization of supervised learning}
+
+\subsection{A general class of information coefficients}\label{sec:gen_class_sub}
 
 The general idea is to look at reduction of uncertainty.
 
