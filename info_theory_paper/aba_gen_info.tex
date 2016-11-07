@@ -425,10 +425,12 @@ more information about $\bX$ than either component by itself.
 Intuition 2b: Noise adds no information.} If, in the previous example, $\bY_2$ is independent of
 $\bX$, then $\bY_2$ adds no information to the ensemble.
 \end{itemize}
-
-The third intuition is somewhat less obvious, but nevertheless appears
-as an important justification for the use of mutual information and
-supervised learning.
+The non-informativity of noise is vital for the purpose
+of \emph{localizing} information within fMRI voxels (as is done in
+searchlight analysis.)  Since noise voxels fail to improve
+classification performance (and indeed, sometimes harm empirical
+performance,) the optimal searchlight radius will concentrate on
+clusters of signal voxels, and minimize the inclusion of noise voxels.
 
 \begin{itemize}
 \item \emph{Intuition 3:}
@@ -436,6 +438,10 @@ Information can be used as a basis of model selection.  Among multiple
 encoding/decoding models, a more accurate model should tend to have
 greater information relative to less accurate models.  
 \end{itemize}
+Compared to the first two, this third intuition is somewhat less
+obvious, but nevertheless appears as an important use-case for mutual
+information, as seen in the application of mutual information to
+choose encoding models.
 
 Given the first two intuitions, we find that an essential property of
 information is that it can be said to `increase'--i.e., there exists
@@ -483,7 +489,46 @@ in \ref{background_mi} how Intuition 2a follows from the
 data-processing inequality.  Intuition 2b follows from the stochastic
 data-processing inequality, taking $\vec{f}(\bY_1) = (\bY_1, \bY_2)$.
 
-Now, in order to justify intuition 3, we need to formalize the notion of ``model selection.''
+Now, in order to justify intuition 3, we need to formalize the notion
+of ``model selection.''  A complete discussion of model selection
+falls outside the scope of the paper, so we limit the discussions
+to the important special case of selecting an encoding model.
+
+Let $\bX$ be some environmental stimulus, and
+\[
+\bY = \vec{f}(g(\bX))
+\]
+where $\vec{f}$ is a stochastic function independent of $\bX$, and $g$ is
+an \emph{encoding function}, which is known to lie in some class of
+functions $\mathcal{G}$.  The goal of model selection is estimate $g$.
+
+Given multiple competing models $(\hat{S}_1, \hat{g}_1),\hdots,
+(\hat{S}_k, \hat{g}_k)$, we obtain a lower confidence bound on the maximum score,
+\[
+M = \max_{i=1}^k \mathcal{I}(\bY; \hat{g}_i(\bX)).
+\]
+We can then test each individual model for the hypothesis
+$H_i: \mathcal{I}(\bY; \hat{g}_i(\bX)) < M$.  All of the models which
+are rejected are considered `candidate models.'  While a common next
+step is to select a single model from the set of candidates
+(e.g. using a measure of complexity), this is not essential to our
+discussion.  For now, we are only concerned that the model selection
+procedure should at the very least, \emph{not reject}
+the \emph{correct} model $g$ in the circumstance that $g$ is included
+in the initial set of candidate models.  A necessary condition for
+this criterion is that the correct model $g$ maximizes the
+information:
+\begin{equation}\label{eq:model_selection}
+\mathcal{I}(\bY; g(\bX)) = \sup_{g \in \mathcal{G}} \mathcal{I}(\bY; g(\bX)).
+\end{equation}
+
+Indeed, the criterion \eqref{eq:model_selection} follows directly from
+the stochastic data-processing inequality.  After all, given any alternative encoding model $g'$, we have
+\[
+\mathcal{I}(\bY; g(\bX)) = \mathcal{I}(\vec{f}(g(\bX)); g(\bX))
+\]
+
+
 
 
 \subsection{Axiomatic characterization of supervised learning}
