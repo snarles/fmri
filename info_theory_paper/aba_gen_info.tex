@@ -360,7 +360,7 @@ since any measure needs to have a unique ``minimum'' value for the
 case of independence.
 \end{itemize}
 
-\subsection{Supervised learning}
+\subsection{Supervised learning}\label{sec:background_sl}
 
 \begin{itemize}
 \item Supervised learning task is defined using a prediction task.
@@ -656,9 +656,157 @@ the subgraphs $G_1,\hdots, G_m$, and let $(\bu_i, \bv_i) =
 \widehat{\text{Risk}(\vec{f})} = \frac{1}{m}\sum_{i=1}^m C(\vec{v}_i, \vec{f}(\vec{u}_i)).
 \]
 
+Now we revisit the examples of supervised learning given in
+section \ref{sec:background_sl}.
+\begin{itemize}
+\item \emph{Regression.}  
+The task, training and test sampling schemes are all pair-sampling,
+with $n= 1$ for the task sampling scheme.
+\[
+\vec{u}(\bx, \by) = \bx
+\]
+and
+\[
+\vec{v}(\bx, \by) = \by.
+\]
+The cost function for squared-error loss is
+\[
+C(\by, \hat{\by}) = ||\by - \hat{\by}||^2.
+\]
+\item \emph{Classification.}  
+Here, $\bX$ is the class label and $\bY$ is the feature vector. The
+sampling schemes are the same as in regression.  The predictor and
+response are flipped:
+\[
+\vec{u}(\bx, \by) = \bx,
+\]
+\[
+\vec{v}(\bx, \by) = \by.
+\]
+And since $\bX$ is discrete, it becomes reasonable to adopt the zero-one loss
+\[
+C(\bx,  \hat{\bx}) = I\{\bx \neq \hat{\bx}\}.
+\]
+\item \emph{Identification}.  
+Let $k$ be the number of classes in the test set. The sampling schemes
+are pair-sampling, with $k$ pairs for the task sampling scheme.  The
+functions $\vec{u}$ and $\vec{v}$ are stochastic: let $J$ be an
+independent uniform variate drawn from $\{1,\hdots, k\}$.  We have
+\[
+\vec{u}((\bx_1,\by_1),\hdots, (\bx_k, \by_k)) = (\bx_1,\hdots, \bx_k, \by_J).
+\]
+\[
+\vec{v}((\bx_1,\by_1),\hdots, (\bx_k, \by_k)) = J.
+\]
+The cost function $C$ is the zero-one loss.
+\end{itemize}
+
+We give one more example of a supervised learning task, due to its
+connection to information theory.
+\begin{itemize}
+\item \emph{$M, k$-decoding for a random codebook}.  $X, Y$ are discrete random variables. The sampling schemes are pair-sampling, with $Mk$ pairs for the task sampling scheme.
+The functions $\vec{u}$ and $\vec{v}$ are stochastic: let $J$ be an
+independent uniform variate drawn from $\{1,\hdots, M\}$.  We have
+\[
+\vec{u}((x_1,y_1),\hdots, (x_{Mk}, y_{Mk})) = (x_1,\hdots, x_{Mk}, y_{(J-1)k + 1},\hdots, y_{(J-1)k}).
+\]
+\[
+\vec{v}((x_1,y_1),\hdots, (x_k, y_k)) = J.
+\]
+The cost function $C$ is the zero-one loss.
+\end{itemize}
+The prediction task is the classical example of \emph{decoding from a
+random codebook} seen in information theory.  An information channel
+is given by $p(y|x)$ and a source distribution is given by $p(x)$.
+First, one forms a codebook consisting of $M$ random codewords
+$\{\bX_1,\hdots, \bX_M\}$, where each codeword is a length-$M$ vector
+\[
+\bX_i = (X_{(i-1)k+1},\hdots, X_{(i-1)k}).
+\]
+The codebook is shared with both the sender and the reciever.  Next,
+the sender chooses a codeword at random to send over the channel,
+$\bX_J$.  The reciever observes the message
+\[
+\bY = (Y_{(i-1)k+1}, \hdots, Y_{(i-1)k}).
+\]
+Then, the decoding task is for the reciever to guess the index of the
+message, $J$, based on $\bY$.  It is a consequence of a famous result
+in information theory, \emph{the channel-coding theorem}, that taking
+$k \to \infty$ and $M = \exp[k\iota]$, then
+\[
+\lim_{k \to \infty} R_{Bayes} = \begin{cases}
+0 & \text{ if }\iota \leq \text{I}(X; Y),\\
+1 & \text{ otherwise.}
+\end{cases}
+\]
+Later, we make use of this result to relate mutual information to our
+general class of information coefficients.
+
 \subsection{A general class of information coefficients}\label{sec:gen_class_sub}
 
-The general idea is to look at reduction of uncertainty.
+Now that we have the axioms of information and a general definition of
+supervised learning, we can deliver the central concept in the paper:
+a general class of information coefficients based on supervised
+learning.
+
+First, recall the intuitive characterization of information as
+``reduction of uncertainty.''  If we measure uncertainty using Shannon
+entropy $\text{H}(\bX)$, then the resulting information coefficient is
+mutual information $\text{I}(\bX; \bY)$.  Therefore, to generalize
+this definition, we use a \emph{general prediction task} to define
+uncertainty.
+
+Let $\bS$ be a sample drawn from sampling scheme $p_{task}$,
+$C: \mathcal{V} \times \mathcal{V} \to \mathbb{R}$ be a cost function,
+and let $\vec{v}$ be a function, with $\bV = \vec{v}(\bS)$.  Define
+the \emph{unconditional uncertainty} of the task to be
+\[
+\inf_{\hat{\bv}} \E[C(\bv, \hat{\bv})].
+\]
+Note that this is the Bayes risk for the prediction problem in the
+case that $\vec{u}$ is a trivial (constant) function.
+How much is the uncertainty reduced upon seeing $\bU$?
+The \emph{conditional uncertainty} is
+\[
+\inf_{\vec{f}} \E[C(\bv, \vec{f}(\bu))].
+\]
+Therefore, the resulting definition for a putative information coefficient is
+\[
+\mathcal{I}(\bX; \bY) = \inf_{\hat{\bv}} \E[C(\bv, \hat{\bv})] - \inf_{\vec{f}} \E[C(\bv, \vec{f}(\bu))].
+\]
+However, some additional conditions on the prediction task are needed
+to ensure that $\mathcal{I}$ is indeed an information coefficient.
+Firstly, it is clear that $\mathcal{I}$ is a functional of
+$p(\bx, \by)$, and that it must be non-negative.  However, we need to
+find conditions which ensure that $\mathcal{I}(\bX; \bY) = 0$ in the
+case of independence, and to ensure the stochastic data-processing
+inequality.
+
+We say that $(\vec{u}, \vec{v})$ are an \emph{orthogonal pair} if
+$\bX \perp \bY$ implies $\vec{u}(\bS) \perp \vec{v}(\bS)$ for all
+marginal distributions of $\bX$ and $\bY$.  This is clearly met in the
+regression and classification case.  In the identification case, it is
+also met, since if $\bX \perp \bY$ then $\by_J$ is independent of $J$.
+
+
+
+
+
+
+
+
+In the case of classification, we get a information coefficient
+$\mathcal{I}(\bX; \bY)$ and in the case of regression, we get
+$\mathcal{I}(\bY; \bX)$: these are different concepts, since in
+general $\mathcal{I}$ is not symmetric.  The story is much less clear
+for the case of identification due to the complicated structure of the
+prediction task; we will see later that the result can be expressed as
+an information coefficient $\mathcal{I}(\bX; \bY)$ as in
+classification.
+
+
+
+
 
 \begin{itemize}
 \item 
