@@ -38,6 +38,11 @@
 \newcommand{\by}{\boldsymbol{y}}
 \newcommand{\bX}{\boldsymbol{X}}
 \newcommand{\bY}{\boldsymbol{Y}}
+\newcommand{\bS}{\boldsymbol{S}}
+\newcommand{\bu}{\boldsymbol{u}}
+\newcommand{\bv}{\boldsymbol{v}}
+\newcommand{\bU}{\boldsymbol{U}}
+\newcommand{\bV}{\boldsymbol{V}}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{proposition}{Proposition}[section]
 \newtheorem{corollary}{Corollary}[theorem]
@@ -479,13 +484,13 @@ then
 Since this minimal list of properties is a subset of the properties of
 mutual information, it is clear that mutual information satisfies the
 axioms.  However, classification accuracy does not satisfy the
-axioms--we will see in section \label{sec:gen_class_sub} how to define
+axioms--we will see in section \ref{sec:gen_class_sub} how to define
 a proper information coefficient based on supervised learning.
 
 Now let us check that any information coefficient
 $\mathcal{I}(\bX; \bY)$ necessarily satisfies the intuitions.
 Intuition 1 is satisfied by property (ii).  We gave a general argument
-in \ref{background_mi} how Intuition 2a follows from the
+in \ref{sec:background_mi} how Intuition 2a follows from the
 data-processing inequality.  Intuition 2b follows from the stochastic
 data-processing inequality, taking $\vec{f}(\bY_1) = (\bY_1, \bY_2)$.
 
@@ -508,7 +513,7 @@ Given multiple competing models $(\hat{S}_1, \hat{g}_1),\hdots,
 M = \max_{i=1}^k \mathcal{I}(\bY; \hat{g}_i(\bX)).
 \]
 We can then test each individual model for the hypothesis
-$H_i: \mathcal{I}(\bY; \hat{g}_i(\bX)) < M$.  All of the models which
+$H_i: \mathcal{I}(\bY; \hat{g}_i(\bX)) < M$ at level $\alpha/k$.  All of the models which
 are rejected are considered `candidate models.'  While a common next
 step is to select a single model from the set of candidates
 (e.g. using a measure of complexity), this is not essential to our
@@ -522,16 +527,134 @@ information:
 \mathcal{I}(\bY; g(\bX)) = \sup_{g \in \mathcal{G}} \mathcal{I}(\bY; g(\bX)).
 \end{equation}
 
-Indeed, the criterion \eqref{eq:model_selection} follows directly from
-the stochastic data-processing inequality.  After all, given any alternative encoding model $g'$, we have
+Indeed, the criterion \eqref{eq:model_selection} is a consequence of
+the stochastic data-processing inequality.  First observe that letting
+$V = g(\bX)$, we have $\bX$ and $\bY$ conditionally independent given
+$V$.  Therefore, we can write
 \[
-\mathcal{I}(\bY; g(\bX)) = \mathcal{I}(\vec{f}(g(\bX)); g(\bX))
+\bX = \vec{h}(V)
 \]
+where $\vec{h}$ is a stochastic function independent of $V$ and $\bY$.
+It follows from the stochastic data-processing inequality that
+\[
+\mathcal{I}(\bY; \bX) = \mathcal{I}(\bY; \vec{h}(V)) = \mathcal{I}(\bY; V) = \mathcal{I}(\bY; g(\bX)).
+\]
+Now consider an alternative encoding model $\hat{g}$.  From the stochastic data-processing inequality,
+\[
+\mathcal{I}(\bY; \bX) \geq \mathcal{I}(\bY; \hat{g}(\bX)).
+\]
+Therefore,
+\[
+\mathcal{I}(\bY; g(\bX)) \geq \mathcal{I}(\bY; \hat{g}(\bX))
+\]
+as needed.
 
+\subsection{General characterization of supervised learning}
 
+As the central theme of the paper is the link between supervised
+learning and information, we now give an generalized definition of
+supervised learning to complement our axiomatic characterization of
+information, in preparation for the synthesis of the two in
+section \ref{sec:gen_class_sub}.
 
+A \emph{supervised learning problem} is given by a \emph{prediction
+task}, and a \emph{sampling scheme} for training and test data.
 
-\subsection{Axiomatic characterization of supervised learning}
+Let us first define the notion of a sampling scheme.  Given a joint
+density $p(\bx, \by)$, define the marginal densities $p(\bx)$,
+$p(\by)$ and conditional densities $p(\by|\bx)$, $p(\bx|\by)$.
+A \emph{sample} is defined as a vector of observations
+$(\bX_1,\hdots, \bX_{n_X}, \bY_1,\hdots, \bY_{n_Y}).$ The joint
+distribution of the sample is given by a colored graph $G$,
+called the \emph{sampling scheme}.  The graph satisfies the following properties:
+\begin{itemize}
+\item $G$ is bipartite with vertex sets $V_X$ and $V_Y$, directed, and acyclic.
+\item $V_X$ has $n_X$ vertices, labeled $\bX_1,\hdots, \bX_{n_X}$.  All vertices in $V_X$ are colored red.
+\item $V_Y$ has $n_Y$ vertices, labeled $\bY_1,\hdots, \bY_{n_Y}$.  All vertices in $V_X$ are colored blue.
+\end{itemize}
+Let $R_X = \{i\}$ be the set of indices corresponding to vertices in
+$V_X$ without parents, and define $R_Y$ analagously.  Let $E_{XY}
+= \{(i, j)\}$ denote the set of directed edges from $V_X$ to $V_Y$,
+and define $E_{YX}$ analogously.  Then, the distribution of the sample
+is given by
+\[
+p_{samp}(\bx_1,\hdots, \bx_{n_X}, \by_1,\hdots, \by_{n_Y}) 
+= \prod_{i \in V_X} p(\bx_i) \prod_{j \in V_Y} p(\by_j) \prod_{(a, b) \in E_{XY}} p(\by_i|\bx_i) \prod_{(c,d) \in E_{YX}} p(\bx_i|\by_i).
+\]
+And in practice, one can sample from $p_{samp}$ as follows:
+\begin{enumerate}
+\item For all $i \in R_X$, sample $\bx_i$ from $p(\bx_i)$.
+\item For all $i \in R_Y$, sample $\by_i$ from $p(\by_i)$.
+\item Iterate the following until all components have been sampled:
+\begin{itemize}
+\item Define $S_X$ ($S_Y$) to be the set of all vertices in $V_X$ ($V_Y$) that have already been sampled.
+\item For all edges $(i, j)$ in $E_{XY}$ such that $i \in S_X$ and $j \notin S_Y$, sample $\by_j$ from $p(\by_j|\bx_i)$.
+\item For all edges $(i, j)$ in $E_{YX}$ such that $i \in S_Y$ and $j \notin S_X$, sample $\bx_j$ from $p(\bx_j|\by_i)$.
+\end{itemize}
+\end{enumerate}
+
+Two common examples of sampling schemes are as follows.
+\begin{itemize}
+\item 
+\emph{Pair-sampling.}
+The sample consists of i.i.d. pairs $(\bX_i, \bY_i)$ drawn from the joint
+distribution.  The sampling scheme $G$ is a graph where the
+only edges are from $\bX_i$ to $\bY_i$ for $i = 1,\hdots, n$.
+\item
+\emph{Repeated measures.}
+From each $\bX_i$, one draws $r$ conditionally independent responses
+$\bY_i^1,\hdots, \bY_i^r$.  The sampling scheme $G$ is a graph where
+the only edges are from $\bX_i$ to $\bY_i^j$ for $i = 1,\hdots, n$, $j
+= 1,\hdots, r$.
+\end{itemize}
+
+The \emph{prediction task} involves a \emph{prediction sampling
+scheme}, given by a graph $G_{task}$, a pair of \emph{stochastic
+functions} $\vec{u}, \vec{v}$ that have a joint distribution, and
+a \emph{cost function} $C$.  Let $p_{task}$ denote the density
+specified by $G_{task}$, and let $S_{task}$ denote the support of the
+$p_{task}$.  The function $\vec{u}$ specifies the \emph{predictors} of
+the prediction task: 
+\[\vec{u}: S_{task} \to \mathcal{U}.\]
+The function $\vec{v}$ specifies the \emph{prediction target}: 
+\[\vec{v}: S_{task} \to \mathcal{V}.\]
+The cost function $C(\bv, \hat{\bv})$ specifies the \emph{cost} incurred when the true target is $\bv$ and the prediction is $\hat{\bv}$:
+\[C: \mathcal{V} \times \mathcal{V} \to \mathbb{R}.\]
+
+A \emph{predictive model} is a function which predicts the target $\bv$ as a function of the predictors $\bu$:
+\[
+\vec{f}: \mathcal{U} \to \mathcal{V}.
+\]
+The prediction task and joint density $p(\bx,\by)$ jointly define
+a \emph{risk function} for any predictive model $\vec{f}$. Define $\bU
+= \vec{u}(\bS)$ and $\bV = \vec{v}(\bS)$ for $\bS \sim p_{task}$.  Then,
+\[
+\text{Risk}(\vec{f}) = \E[C(\bV, \hat{f}(\bV))].
+\]
+The \emph{Bayes risk} is the infimal risk over all predictive models:
+\[
+\text{R}_{Bayes}[p(\bx,\by)] = \inf_{\vec{f}} \text{Risk}(\vec{f}).
+\]
+In anticipation of the next section, we write $\text{R}_{Bayes}$ as a
+functional of the joint density.
+
+The training data is given by a sampling scheme $G_{train}$, and the
+testing data is given by a sampling scheme $G_{test}$.
+A \emph{learning algorithm} outputs a predictive model $\vec{f}$ given
+the training sample $\bS_{train}$ as input.
+
+The analysis culminates in an unbiased estimate of the risk of the
+learned model, $\text{Risk}(\vec{f})$.  Define a \emph{rooted
+subgraph} $H$ of a graph $G$ as a subgraph where all parentless
+vertices in $H$ are also parentless in $G$.  Then, let $G_1,\hdots,
+G_m$ be the rooted subgraphs of $G_{test}$ that are color-isomorphic
+to $G_{task}$ (i.e. the graph isomorphism preserves vertex color.)
+Let $\bS_1,\hdots, \bS_m$ be the corresponding samples obtained from
+the subgraphs $G_1,\hdots, G_m$, and let $(\bu_i, \bv_i) =
+(\vec{u}(\bS_i), \vec{v}(\bS_i))$ for $i = 1,\hdots, m$.  The U-statistic unbiased estimate of $\text{Risk}(\vec{f})$ is given by
+\[
+\widehat{\text{Risk}(\vec{f})} = \frac{1}{m}\sum_{i=1}^m C(\vec{v}_i, \vec{f}(\vec{u}_i)).
+\]
 
 \subsection{A general class of information coefficients}\label{sec:gen_class_sub}
 
