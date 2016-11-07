@@ -782,18 +782,27 @@ find conditions which ensure that $\mathcal{I}(\bX; \bY) = 0$ in the
 case of independence, and to ensure the stochastic data-processing
 inequality.
 
-We say that $(\vec{u}, \vec{v})$ are an \emph{orthogonal pair} if
+We say that \emph{V,U-orthogonality} holds for $(\vec{u}, \vec{v})$ if
 $\bX \perp \bY$ implies $\vec{u}(\bS) \perp \vec{v}(\bS)$ for all
-marginal distributions of $\bX$ and $\bY$.  A sufficient condition for
-$(\vec{u}, \vec{v})$ to be an \emph{orthogonal pair} is that $\vec{u}$
-and $\vec{v}$ have disjoint arguments.  This is clearly met in the
-regression and classification case.  The sufficient condition is not
-met in the identification case, but $(\vec{u}, \vec{v})$ are still an
-orthogonal pair, since if $\bX \perp \bY$ then $\by_W$ is independent
-of $W$.
+marginal distributions of $\bX$ and $\bY$.  
+%A sufficient condition
+%for V,U-orthogonality is that $\vec{u}$ and $\vec{v}$ have
+%disjoint arguments.  
+This is clearly met in the regression and classification case.  The
+property holds in the identification case as well, since if
+$\bX \perp \bY$ then $\by_W$ is independent of $W$.
 
-A sufficient condition for the data-processing inequality is that
-$\vec{v}$ not have any arguments in $V_Y$.  To show the
+We say that a function $\vec{f}(\bx_1,\hdots, \bx_p)$ is \emph{faithful} with respect to the arguments $\{\bx_1,\hdots, \bx_j\}$
+if for any function $\vec{h}(\bx)$, one can find a function $\vec{g}$ such that
+\[
+\vec{f}(\vec{h}(\bx_1),\hdots, h(\bx_j), \bx_{j+1}, \hdots, \bx_p) = \vec{g}(\vec{f}(\bx_1,\hdots, \bx_p)).
+\]
+A sufficient condition for the data-processing inequality is that:
+\begin{itemize}
+\item \emph{V-compatibility:} $\vec{v}$ not have any arguments in $V_Y$, and also
+\item \emph{U-compatibility:} $\vec{u}$ is faithful with respect to its arguments in $V_Y$.
+\end{itemize}
+To show the
 data-processing inequality, consider the joint distribution of
 $(\bS, \tilde{bS})$, where $\bS$ is drawn from the task sampling
 scheme with the joint distribution $P$ of $(\bX, \bY)$, and
@@ -815,28 +824,78 @@ Because $\vec{v}$ has no arguments in $V_Y$, we have
 \]
 Therefore,
 \[
-\mathcal{I}(\bX; \bY) - \mathcal{I}(\bX; \vec{h}(\bY)) =  \inf_{\vec{f}} \E[C(\bV, \vec{f}(\bU))] -  \inf_{\vec{f}} \E[C(\bV, \vec{f}(\tilde{\bU}))].
+\mathcal{I}(\bX; \bY) - \mathcal{I}(\bX; \vec{h}(\bY)) =  \inf_{\vec{f}} \E[C(\bV, \vec{f}(\tilde{\bU}))] - \inf_{\vec{f}} \E[C(\bV, \vec{f}(\bU))].
 \]
-Now we claim that there exists a function 
+However, due to faithfulness, $\tilde{\bU}$ is a function of $\bU$.  Therefore, for any $\vec{f}$, we can find $\vec{g}$ such that
+\[
+\vec{f}(\tilde{\bU})) = \vec{g}(\bU).
+\]
+This implies that
+\[
+\inf_{\vec{f}} \E[C(\bV, \vec{f}(\bU))] \leq \inf_{\vec{f}} \E[C(\bV, \vec{f}(\tilde{\bU}))].
+\]
+and hence,
+\[
+\mathcal{I}(\bX; \bY) \geq \mathcal{I}(\bX; \vec{h}(\bY)).
+\]
 
+We summarize our findings in the following theorem.
+\begin{theorem}
+Let $(G_{task}, \vec{v}, \vec{u}, C)$ define a prediction task.  Then,
+if $(\vec{v}, \vec{u})$ satisfy V,U-orthogonality, V-compatibility and
+U-compatibility, then
+\[
+\mathcal{I}(\bX; \bY) = \inf_{\hat{\bv}} \E[C(\bV, \hat{\bv})] - \inf_{\vec{f}} \E[C(\bV, \vec{f}(\bU))]
+\]
+defines an information coefficient, where $(\bV, \bU)$ are the targets
+and predictions obtained from a task sample drawn using the joint
+distribution of $(\bX, \bY)$.
+\end{theorem}
+$\Box$.
 
+We call such information coefficients \emph{prediction-based}
+information coefficients.
 
+Both classification and identification satisfy the three sufficient
+conditions of V,U-orthogonality and V/U-compatibility.  Thus,
+classification and identification yield information coefficients of
+the form $\mathcal{I}(\bX; \bY)$.  Regression satisfies
+V,U-orthogonality but violates V/U-compatibility. But, if we switch
+the place of $\bX$ and $\bY$, then V/U compatibility holds.
+Therefore, the Bayes risk of regression can be used to obtain an
+information coefficient of the form $\mathcal{I}(\bY; \bX)$.
 
+We will take a closer look at some of these new information
+coefficients later on.  However, first we show that \emph{mutual
+information} is also a member of the same class.
 
+\subsection{Mutual information as a prediction-based information coefficient}
 
+What is prediction task yields mutual information as the associated
+information coefficient?  It suffices to find a prediction task where
+the Shannon entropy is the Bayes risk.  There is such a prediction
+task: \emph{distribution estimation under logarithmic loss.}
 
-In the case of classification, we get a information coefficient
-$\mathcal{I}(\bX; \bY)$ and in the case of regression, we get
-$\mathcal{I}(\bY; \bX)$: these are different concepts, since in
-general $\mathcal{I}$ is not symmetric.  The story is much less clear
-for the case of identification due to the complicated structure of the
-prediction task; we will see later that the result can be expressed as
-an information coefficient $\mathcal{I}(\bX; \bY)$ as in
-classification.
+Take a discrete random variable $X$ with probability mass function $p(x)$.
+The prediction task is to estimate the mass function $p$.
+The loss is evaluated by drawing a new observation $X \sim p(x)$:
+\[
+L(X, \hat{p}) = -\log \hat{p}(X).
+\]
+Defining the risk as the expected loss, then it is a well-known result
+in information theory and statistics that taking $\hat{p} = p$
+minimizes the risk, and the value of the minimal risk is the discrete
+entropy $\text{H}_{discrete}(X)$. And, if one is allowed to observe
+$Y$ before making the prediction, then the risk becomes
+$\text{H}_{discrete}(X|Y)$.  So the distribution estimation problem is
+exactly what we need.
 
-
-
-
+Using the language of our framework for supervised learning,
+\begin{itemize}
+\item The sampling scheme for the task is to draw a single pair $(X, Y)$.
+\item $\vec{u}(y) = y$.
+\item $\vec{v}(x) = \delta_x$, a vector with the value 1 at $x$ and 0 in other entries.
+\end{itemize}
 
 \begin{itemize}
 \item 
