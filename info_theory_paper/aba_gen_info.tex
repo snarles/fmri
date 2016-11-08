@@ -683,7 +683,7 @@ Y_2$ are needed, as can be seen via the following counterexamples.
 \item 
 Let $X = Y_1 + Y_2$ for $Y_1, Y_2$ i.i.d. $N(0,1)$: then
 $\text{R}_{\text{I}}(Y_1,Y_2|X) = -\infty$.  Hence unconditional
-independent is not sufficient.
+independence is not sufficient.
 \item 
 Let $X=Y_1=Y_2$ for $X \sim \text{Unif}\{0, 1\}$.  Then $Y_1$ and
 $Y_2$ are conditionally independent, but
@@ -700,10 +700,13 @@ p(x, y_1, y_2) = p(x) p(y_1|x) p(y_2|x).
 \]
 Hence,
 \begin{align*}
-\text{I}(X; (Y_1, Y_2)) &= \int p(x, y_1, y_2) \log \frac{p(x, y_1, y_2)}{p(x) p(y_1,y_2)} dx dy_1 dy_2
-\\&= \int p(x, y_1, y_2) \log \frac{p(x) p(y_1|x) p(y_2|x)}{p(x) p(y_1) p(y_2)} dx dy_1 dy_2
-\\&= \int p(x, y_1, y_2) \left[ \log \frac{p(y_1|x)}{p(y_1)} + \log \frac{p(y_2|x)}{p(y_2)} \right] dx dy_1 dy_2
-\\&= \text{I}(X; Y_1) + \text{I}(X; Y_2).
+\text{I}(X; (Y_1, Y_2)) =& \int p(x, y_1, y_2) \log \frac{p(x, y_1, y_2)}{p(x) p(y_1,y_2)} dx dy_1 dy_2
+\\=& \int p(x, y_1, y_2) \log \frac{p(x) p(y_1|x) p(y_2|x)}{p(x) p(y_1) p(y_2)} dx dy_1 dy_2
+\\=& \int p(x, y_1, y_2) \left[ \log \frac{p(y_1|x)}{p(y_1)} + \log \frac{p(y_2|x)}{p(y_2)} \right] dx dy_1 dy_2
+\\=& \int p(x, y_1, y_2) \left[ \log \frac{p(x, y_1)}{p(x)p(y_1)} + \log \frac{p(x,y_2)}{p(x)p(y_2)} \right] dx dy_1 dy_2
+\\=& \int p(x, y_1) \log \frac{p(x, y_1)}{p(x)p(y_1)} dx dy_1 \int p(y_2|x) dy_2 
+\\&+ \int p(x, y_2) \log \frac{p(x,y_2)}{p(x)p(y_2)} dx dy_2 \int p(y_1|x) dy_1
+\\=& \ \text{I}(X; Y_1) + \text{I}(X; Y_2).
 \end{align*}
 
 But do there exist other information coefficients which are compatible
