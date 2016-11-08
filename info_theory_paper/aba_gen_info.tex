@@ -1,4 +1,4 @@
-\title{Prediction, information, and inference: with application to neuroimaging}
+\title{Prediction, information, and inference in neuroimaging}
 \author{Charles Zheng and Yuval Benjamini}
 \date{\today}
 
@@ -188,7 +188,7 @@ McKay and McCullough (1952) inaugurated the application of mutual
 information to neuroscience.  If $\bX$ and $\bY$ have joint density
 $p(\bx, \by)$ with respect to the product measure $\mu_x \times \mu_y$, then the mutual information is defined as
 \[
-\text{I}(\bX;\bY) = \int p(\bx, \by) \log \frac{p(\bx, \by)}{p(\bx)p(\by)}d\mu(\bx) d\mu(\by).
+\text{I}(\bX;\bY) = \int p(\bx, \by) \log \frac{p(\bx, \by)}{p(\bx)p(\by)}d\mu_x(\bx) d\mu_y(\by).
 \]
 where $p(\bx)$ and $p(\by)$ are the marginal densities with respect to
 $\mu_x$ and $\mu_y$\footnote{Note that the mutual information is invariant with respect to change-of-measure.}.  Since then, mutual information has enjoyed a
@@ -253,8 +253,9 @@ the case where we only observe $\bY_1$ by itself.
 \end{itemize}
 And it is the property of \emph{invariance under bijections},
 inclusive of non-linear bijections, which qualifies mutual information
-as a \emph{non-linear measure of dependence.}  Linear measures, such
-as Pearson correlation, are not invariant under bijections.  
+as a \emph{non-linear measure of dependence.}  Linear correlations are
+invariant under scaling and translation, but not invariant
+to \emph{nonlinear} bijections.
 
 %As for
 %the completeness of the five listed properties: as we know, Shannon's
@@ -274,15 +275,15 @@ and the \emph{conditional entropy}:
 Some care needs to be taken with entropy and conditional entropy since
 they are not invariant with respect to change-of-measure: hence the
 use of the subscript in the notation $\text{H}_\mu$.  In particular,
-there is a difference between \emph{discrete entropy} (for counting
-measure) and \emph{differential entropy} (for Lesbegue measure.)
-Intutively, entropy measures an observer's uncertainty of the random
-variable $\bX$, supposing the observer has no prior information other
-than the distribution of $\bX$. Conditional entropy measures
-the \emph{expected uncertainty} of $\bX$ supposing the observer
-observes $\bY$.
+there is a difference between \emph{discrete entropy} (when $\mu$ is
+the counting measure) and \emph{differential entropy} (when $\mu$ is
+$p$-dimensional Lesbegue measure.)  Intutively, entropy measures an
+observer's uncertainty of the random variable $\bX$, supposing the
+observer has no prior information other than the distribution of
+$\bX$. Conditional entropy measures the \emph{expected uncertainty} of
+$\bX$ supposing the observer observes $\bY$.
 
-However, regardless of the base measure, the following identities hold:
+The following identities characterize mutual information in terms of entropy:
 \[
 \text{I}(\bX; \bY) = \text{H}_{\mu_x \times \mu_y}((\bX, \bY)) - \text{H}_{\mu_x}(\bX) - \text{H}_{\mu_y}(\bY).
 \]
@@ -448,6 +449,9 @@ obvious, but nevertheless appears as an important use-case for mutual
 information, as seen in the application of mutual information to
 choose encoding models.
 
+We discuss a fourth intuition, regarding the use of information as a
+means of assessing redundancy, in section \ref{sec:redundancy}.
+
 Given the first two intuitions, we find that an essential property of
 information is that it can be said to `increase'--i.e., there exists
 at least a partial ordering on information.  Furthermore, there should
@@ -462,7 +466,7 @@ ordering.  Thus, if we consider the third intuition an important
 property of an information coefficient, then it should be scalar to
 enable model comparison.
 
-We find that all of the preceding intuitions follow from the following
+We find that the first three intuitions follow from the following
 axioms.
 
 \noindent\textbf{Axioms of information}
@@ -493,11 +497,14 @@ Intuition 1 is satisfied by property (ii).  We gave a general argument
 in \ref{sec:background_mi} how Intuition 2a follows from the
 data-processing inequality.  Intuition 2b follows from the stochastic
 data-processing inequality, taking $\vec{f}(\bY_1) = (\bY_1, \bY_2)$.
-
 Now, in order to justify intuition 3, we need to formalize the notion
-of ``model selection.''  A complete discussion of model selection
-falls outside the scope of the paper, so we limit the discussions
-to the important special case of selecting an encoding model.
+of ``model selection.''
+
+\subsection{Information as a means of model selection}
+
+A complete discussion of model selection falls outside the scope of
+the paper, so we limit the discussions to the important special case
+of selecting an encoding model.
 
 Let $\bX$ be some environmental stimulus, and
 \[
@@ -549,10 +556,161 @@ Therefore,
 \]
 as needed.
 
-\emph{What is lost?} 
-[write about what we lose by reducing conditions compared to mutual
-information.  Therefore, it may still be desirable to be able to
-convert to mutual information.]
+\subsection{Composition of information coefficients}
+
+There are several ways to \emph{transform} or \emph{compose} existing
+information coefficients to form new ones.  
+
+First, \emph{increasing monotonic transformations} of information
+coefficients are information coefficients, as long as the
+transformation maps zero to zero.  
+%In fact, due to this fact it might
+%be more reasonable to think of information coefficients as
+%an \emph{order relation} rather than a real-valued function.
+
+Secondly, positive linear combinations of information coefficients are
+information coefficients.  If $\mathcal{I}_1$ and $\mathcal{I}_2$ are information coefficients, then
+\[
+\mathcal{I} = \alpha \mathcal{I}_1 + \beta \mathcal{I}_2
+\]
+is an information coefficient for $\alpha, \beta > 0$.
+
+Thirdly, products of information coefficients are information coefficients:
+\[
+\mathcal{I} = \mathcal{I}_1 \mathcal{I}_2
+\]
+is an information coefficient if $\mathcal{I}_1,\ \mathcal{I}_2$ both are.
+
+But all three of these transformations are special cases of the same
+rule.  We say that a multivariate real-valued function $f(x_1,\hdots,
+x_n)$ is \emph{increasing}
+ if it is increasing in all of its elements.  Then, if $f$ is a
+nonnegative and increasing real-valued function which takes the value
+zero when any of its arguments are zero, and
+$\mathcal{I}_1,\hdots, \mathcal{I}_n$ are all information
+coefficients,
+\[
+\mathcal{I}(\bX; \bY) = f(\mathcal{I}(\bX, \bY),\hdots, \mathcal{I}(\bX, \bY))
+\]
+is an information coefficient.
+
+All of these transformation properties follow from the fact that the
+axioms of information are all essentially concerned
+with \emph{ordering} properties of the information coefficient.
+Furthermore, the application of \emph{model selection} only requires
+ordering properties. In certain applications, it may be more
+convenient to work with the equivalent \emph{information ordering},
+rather than the information coefficient itself.
+
+However, there is one application where the arithmetic structure of
+the information coefficient matters, which is the quantification of
+redundancy.
+
+\subsection{Quantifying Redundancy}\label{sec:redundancy}
+
+As we saw from Section \ref{sec:background_mi}, a recent new
+application of mutual information is for quantifying redundancy, say
+between neurons $Y_1$ and $Y_2$.  But what, exactly, does it mean for
+two neurons to be \emph{redundant} or \emph{non-redundant}?  What is
+the scientific interpretation?
+
+We have been unable to find an detailed explanation in the literature
+of how to interpret proposed measures of redundancy.  However, we can
+guess from the quantitative definitions what would be a reasonable
+definition of redundancy from first principles.
+
+It is a common intuition [][][] that neurons $Y_1$ and $Y_2$
+are \emph{redundant} with respect to the stimulus $X$ if
+\[
+\text{I}(X; (Y_1, Y_2)) < \text{I}(X; Y_1) + \text{I}(X; Y_2).
+\]
+If, conversely
+\[
+\text{I}(X; (Y_1, Y_2)) > \text{I}(X; Y_1) + \text{I}(X; Y_2).
+\]
+then we say that the neurons $Y_1$ and $Y_2$ have \emph{synergy}
+(negative redundancy.)
+
+Hence, one proposed measure of redundancy between two neurons is
+\begin{equation}\label{eq:redundancy}
+\text{R}(Y_1;Y_2|X) = \text{I}(X; Y_1) + \text{I}(X; Y_2) - \text{I}(X; (Y_1, Y_2)).
+\end{equation}
+There are also extensions of the definition for more than two neurons,
+and variations which employ normalization so that the redundancy is
+bounded.
+
+However, if we only rely on our three axioms of information, which we
+saw are preserved under a large class of monotonic transformations,
+then there is no hope of formulating a generalized measure of
+redundancy.  After all, if we substitute different information
+coefficients in \ref{eq:redundancy}, we could obtain either positive
+or negative values depending on how we choose to scale the information
+coefficient.
+
+%Therefore, what would be ideal is if we could find an additional axiom
+%to impose a standard on what pairs of neurons are to be considered
+%``redundant'' or ``synergistic'' independent of any particular
+%information coefficient (e.g. mutual information.)  Furthermore,
+%respecting the established tradition, it should be the case that
+%mutual information is compatible with this ``axiom of redundancy.''
+Our proposal for addressing this issue is to formulate a new ``axiom
+of redundancy'', that sets a standard for how general measures of
+redundancy should work.  The axiom is as follows.
+
+\begin{itemize}
+\item \emph{Axiom of redundancy.}  
+Given random vectors $\bX, \bY_1, \bY_2$, we say that $\bY_1$ and
+$\bY_2$ are \emph{nonredundant} with respect to $\bX$ if and only if both (i) $\bY_1$ and $\bY_2$ are unconditionally independent:
+\[\bY_1 \perp \bY_2\]
+and (ii) $\bY_1$ and $\bY_2$ are conditionally independent given $\bX_1$
+\[\bY_1 \perp \bY_2 | \bX.\]
+We say that an information metric $\mathcal{I}$ is \emph{compatible} with the axiom of redundancy if and only if
+\[
+\text{R}_{\mathcal{I}}(\bY_1;\bY_2|X) = \mathcal{I}(\bX; (\bY_1, \bY_2)) - \mathcal{I}(\bX; \bY_1) + \mathcal{I}(\bX; \bY_2) = 0.
+\]
+for all triples $(\bX, \bY_1, \bY_2)$ in which $\bY_1$ and $\bY_2$ are
+nonredundant with respect to $\bX$.
+\end{itemize}
+
+We obtained this axiom of redundancy by reasoning backwards: what
+property of $(X, Y_1, Y_2)$ leads to the identity
+\[
+\text{I}(X; (Y_1, Y_2)) = \text{I}(X; Y_1) + \text{I}(X; Y_2)?
+\]
+Both unconditional independence and conditional independence of $Y_1,
+Y_2$ are needed, as can be seen via the following counterexamples.
+\begin{itemize}
+\item 
+Let $X = Y_1 + Y_2$ for $Y_1, Y_2$ i.i.d. $N(0,1)$: then
+$\text{R}_{\text{I}}(Y_1,Y_2|X) = -\infty$.  Hence unconditional
+independent is not sufficient.
+\item 
+Let $X=Y_1=Y_2$ for $X \sim \text{Unif}\{0, 1\}$.  Then $Y_1$ and
+$Y_2$ are conditionally independent, but
+$\text{R}_{\text{I}}(Y_1,Y_2|X) = \log(2)$.  Hence conditional
+independence is not sufficient.
+\end{itemize}
+However, with both conditional independence and independence, we have the factorizations
+\[
+p(y_1,y_2) = p(y_1) p(y_2)
+\]
+and
+\[
+p(x, y_1, y_2) = p(x) p(y_1|x) p(y_2|x).
+\]
+Hence,
+\begin{align*}
+\text{I}(X; (Y_1, Y_2)) &= \int p(x, y_1, y_2) \log \frac{p(x, y_1, y_2)}{p(x) p(y_1,y_2)} dx dy_1 dy_2
+\\&= \int p(x, y_1, y_2) \log \frac{p(x) p(y_1|x) p(y_2|x)}{p(x) p(y_1) p(y_2)} dx dy_1 dy_2
+\\&= \int p(x, y_1, y_2) \left[ \log \frac{p(y_1|x)}{p(y_1)} + \log \frac{p(y_2|x)}{p(y_2)} \right] dx dy_1 dy_2
+\\&= \text{I}(X; Y_1) + \text{I}(X; Y_2).
+\end{align*}
+
+But do there exist other information coefficients which are compatible
+with the axiom of redundancy?  We have not found any so far.  In this
+paper, we will attempt to look for information coefficients which
+are \emph{approximately} compatible, in that
+$\text{R}_{\mathcal{I}} \approx 0$ for nonredundant $\bY_1, \bY_2$.
 
 \subsection{General characterization of supervised learning}
 
@@ -830,8 +988,8 @@ Therefore, the Bayes risk of regression can be used to obtain an
 information coefficient of the form $\mathcal{I}(\bY; \bX)$.
 
 We will take a closer look at some of these new information
-coefficients in section \ref{sec:estimability}.  However, first we show that \emph{mutual
-information} is also a member of the same class.
+coefficients in section \ref{sec:estimability}.  
+However, first we show that \emph{mutual information} is also a member of the same class.
 
 \subsection{Mutual information as a prediction-based information coefficient}
 
