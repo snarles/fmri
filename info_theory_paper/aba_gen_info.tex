@@ -549,6 +549,11 @@ Therefore,
 \]
 as needed.
 
+\emph{What is lost?} 
+[write about what we lose by reducing conditions compared to mutual
+information.  Therefore, it may still be desirable to be able to
+convert to mutual information.]
+
 \subsection{General characterization of supervised learning}
 
 As the central theme of the paper is the link between supervised
@@ -701,47 +706,6 @@ We have
 The cost function $C$ is the zero-one loss.
 \end{itemize}
 
-We give one more example of a supervised learning task, due to its
-connection to information theory.
-\begin{itemize}
-\item \emph{$M, k$-decoding for a random codebook}.  $X, Y$ are discrete random variables. The sampling schemes are pair-sampling, with $Mk$ pairs for the task sampling scheme.
-Let $W$ be an
-independent uniform variate drawn from $\{1,\hdots, M\}$.  We have
-\[
-\vec{u}((x_1,y_1),\hdots, (x_{Mk}, y_{Mk}), W) = (x_1,\hdots, x_{Mk}, y_{(W-1)k + 1},\hdots, y_{(W-1)k}).
-\]
-\[
-\vec{v}(W) = W.
-\]
-The cost function $C$ is the zero-one loss.
-\end{itemize}
-The prediction task is the classical example of \emph{decoding from a
-random codebook} seen in information theory.  An information channel
-is given by $p(y|x)$ and a source distribution is given by $p(x)$.
-First, one forms a codebook consisting of $M$ random codewords
-$\{\bX_1,\hdots, \bX_M\}$, where each codeword is a length-$M$ vector
-\[
-\bX_i = (X_{(i-1)k+1},\hdots, X_{(i-1)k}).
-\]
-The codebook is shared with both the sender and the reciever.  Next,
-the sender chooses a codeword at random to send over the channel,
-$\bX_W$.  The reciever observes the message
-\[
-\bY = (Y_{(W-1)k+1}, \hdots, Y_{(W-1)k}).
-\]
-Then, the decoding task is for the reciever to guess the index of the
-message, $W$, based on $\bY$.  It is a consequence of a famous result
-in information theory, \emph{the channel-coding theorem}, that taking
-$k \to \infty$ and $M = \exp[k\iota]$, then
-\[
-\lim_{k \to \infty} R_{Bayes} = \begin{cases}
-0 & \text{ if }\iota \leq \text{I}(X; Y),\\
-1 & \text{ otherwise.}
-\end{cases}
-\]
-Later, we make use of this result to relate mutual information to our
-general class of information coefficients.
-
 \subsection{A general class of information coefficients}\label{sec:gen_class_sub}
 
 Now that we have the axioms of information and a general definition of
@@ -866,7 +830,7 @@ Therefore, the Bayes risk of regression can be used to obtain an
 information coefficient of the form $\mathcal{I}(\bY; \bX)$.
 
 We will take a closer look at some of these new information
-coefficients later on.  However, first we show that \emph{mutual
+coefficients in section \ref{sec:estimability}.  However, first we show that \emph{mutual
 information} is also a member of the same class.
 
 \subsection{Mutual information as a prediction-based information coefficient}
@@ -895,43 +859,124 @@ Using the language of our framework for supervised learning,
 \item The sampling scheme for the task is to draw a single pair $(X, Y)$.
 \item $\vec{u}(y) = y$.
 \item $\vec{v}(x) = \delta_x$, a vector with the value 1 at $x$ and 0 in other entries.
+\item The cost function is
+\[
+C(\bv, \hat{\bv}) = \sum_{x \in \mathcal{X}} \bv(x) \log \hat{\bv}(x).
+\]
 \end{itemize}
+The information coefficient for the prediction task is $\mathcal{I}(\bX; \bY) = \text{I}(\bX; \bY)$.
+Therefore, mutual information is a prediction-based information coefficient.
 
+However, there is yet another characterization of mutual information
+in terms of prediction-based information coefficients, due to
+consequences of the noisy channel theorem.  Consider the problem
+of \emph{decoding from a random codebook}.  An information channel is
+given by $p(y|x)$ and a source distribution is given by $p(x)$.
+First, one forms a codebook consisting of $M$ random codewords
+$\{\bX_1,\hdots, \bX_M\}$, where each codeword is a length-$M$ vector
+\[
+\bX_i = (X_{(i-1)k+1},\hdots, X_{(i-1)k}).
+\]
+The codebook is shared with both the sender and the reciever.  Next,
+the sender chooses a codeword at random to send over the channel,
+$\bX_W$.  The reciever observes the message
+\[
+\bY = (Y_{(W-1)k+1}, \hdots, Y_{(W-1)k}).
+\]
+Then, the decoding task is for the reciever to guess the index of the
+message, $W$, based on $\bY$.  Let $R_{Bayes}$ be the minimal
+probability of decoding error over all decoding schemes.  The noisy
+channel theorem tells us that if we take $k \to \infty$ and $M
+= \exp[k\iota]$, then
+\[
+\lim_{k \to \infty} R_{Bayes} = \begin{cases}
+0 & \text{ if }\iota \leq \text{I}(X; Y),\\
+1 & \text{ otherwise.}
+\end{cases}
+\]
+Now, observe that decoding from a random codebook is an example of a
+prediction task.  In our framework, we express it as
 \begin{itemize}
-\item 
-Prediction loss is a measure of uncertainty.  Mean-square loss
-corresponds to variance.
-\item 
-Consider two prediction problems: in one case you are given no side
-information, and in the second case you are given $\bY$.  The
-difference in risk between the two problems gives a measure of
-uncertainty reduction.
-\item
-In regression, this gives ``variance explained'' as a measure of
-information.
-\item
-In classification, we get a normalized form of Bayes accuracy.
-\item
-In randomized classification, we get (normalized) average Bayes accuracy.
-\item
-We can prove that any prediction task yields an information measure
-i.e. satisfying the three axioms.
-\item
-If the no-information risk is known in advance, we say the information
-measure is estimable.
-\item
-Mutual information can be characterized this way, but it is not estimable.
-\item
-Mutual information can be derived as a limit of linear combinations of
-normalized ABA, due to channel coding theorem.  Still not estimable
-due to limit property.
+\item \emph{$k, M$-decoding for a random codebook}.  $X, Y$ are discrete random variables. The sampling schemes are pair-sampling, with $Mk$ pairs for the task sampling scheme.
+Let $W$ be an
+independent uniform variate drawn from $\{1,\hdots, M\}$.  We have
+\[
+\vec{u}((x_1,y_1),\hdots, (x_{Mk}, y_{Mk}), W) = (x_1,\hdots, x_{Mk}, y_{(W-1)k + 1},\hdots, y_{(W-1)k}).
+\]
+\[
+\vec{v}(W) = W.
+\]
+The cost function $C$ is the zero-one loss.
 \end{itemize}
+Let $\mathcal{I}_{k, M}(\bX; \bY)$ denote the associated information coefficient.  It follows that
+\[
+\text{I}(\bX; \bY) = \lim_{k \to \infty} \int_0^\infty \mathcal{I}_{k, \lfloor \exp[kx] \rfloor}(\bX; \bY) dx.
+\]
+That is, $\text{I}(\bX; \bY)$ can be expressed as a limit of a linear
+combination of information coefficients.
+
+These two characterization of mutual information as information
+coefficients have implications in estimation, as we will see in the
+following section.
 
 \section{Statistical inference}\label{sec:inference}
 
-\begin{itemize}
-\item Only lower bounds are possible, because...
-\end{itemize}
+\subsection{Estimability}\label{sec:estimability}
+
+Having defined prediction-based information coefficients, what are the
+practical consequences?  Consider the case where the joint
+distribution of $\bX$ and $\bY$ are unknown.  By applying a learning
+algorithm to training data and evaluating on test data, one can obtain
+an unbiased estimate of $\text{Risk}(\vec{f})$.  But in turn,
+$\text{Risk}(\vec{f})$ is an upper bound for $R_{Bayes}$.  
+Now define
+\[
+R_0 = \inf_{\hat{\bv}} \E[C(\bV, \hat{\bv})].
+\]
+Then,
+\[
+\mathcal{I}(\bX; \bY) =  R_0 - R_{Bayes} \geq R_0 - \text{Risk}(\vec{f}).
+\]
+Therefore, as long as we have a good estimate of $R_0$, it follows
+that we can obtain an \emph{underestimate} of $\mathcal{I}(\bX; \bY)$
+from supervised learning,
+\[
+\underline{\mathcal{I}}(\bX; \bY) = \hat{R}_0 - \widehat{\text{Risk}}(\vec{f}).
+\]
+This underestimate can be converted into a $(1-\alpha)$ lower
+confidence bound supposing that we have bounds on the estimation error
+of $\hat{R}_0$ and $\widehat{\text{Risk}}(\vec{f})$.
+
+How about upper bounds of $\mathcal{I}$?  This would require
+estimating $R_{Bayes}$ directly, rather than relying on supervised
+learning.  In the case of $(\bX,\bY)$ discrete, one can apply general
+tools for nonparametric estimation of functionals of discrete
+distributions (Yanjun et al.) to estimate $R_{Bayes}$.  In the general
+case, the outlook is less positive.  In the case of classification,
+regression, and distributional estimation, it is known that nontrivial
+upper bounds for $R_{Bayes}$ are not possible without additional
+assumptions [cite].
+
+Now, let us consider the classification, regresssion, and
+identification information coefficients in greater detail.
+
+\subsection{Prediction-based coefficients}
+
+\subsection{Inference of mutual information}
+
+\subsection{Experimental setups}
+
+
+
+\section{Lower confidence bounds for average Bayes accuracy}
+
+
+
+
+
+
+
+
 
 \section{Connections}\label{sec:connections}
 
