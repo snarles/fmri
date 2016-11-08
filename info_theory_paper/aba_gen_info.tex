@@ -331,27 +331,67 @@ applications of mutual information is provided in the introduction of
 Gastpar (2014).  Taking their list as a starting point, we briefly
 overview the main use-cases of mutual information, and illustrate each
 with a representative example.
-%We explore this concept of ``information as reduction of uncertainty''
-%much further when we propose our general class of information coefficients:
-%there, we see that properties (i)-(iii) of the mutual information are
-%consequences of this second characterization of mutual information.
 
-%But how what is the practical import of these properties of mutual
-%information?  Supposing we identify a number of properties as being
-%essential for scientific purposes (and others as non-essential), this
-%then suggests that alternative measures of information, also
-%satisfying the same essential properties, could be just as effective
-%for scientific work as mutual information.  And some might have
-%additional advantages.
+\subsubsection{Selecting decoding models.}
+Neurons carry information via \emph{spike trains}, which are temporal
+point processes.  In response to stimulus $\bX$, the neuron produces a
+spike train $Y(t)$ where $Y(t) = 1$ indicates a spike at time $t$ and
+$Y(t) = 0$ indicates no spiking, for $t \in [0, T]$.
 
-%Towards our goal of formulating a general theory of information
-%coefficients, it is important to evaluate exactly \emph{how important} each
-%of the listed properties.
+An open question in neuroscience that of how information is encoded in
+the spike train.  Put loosely, what is `signal' in the spike train
+$Y(t)$ and what is `noise'?  Presumably there exists
+some \emph{decoder}--some function $\vec{g}$ of the time series, which
+compresses $Y(t)$ to a small dimension while preserving most of the
+information about $\bX$.
 
+Nelken et. al. (2005) investigated the neural code in the A1 auditory
+cortex of a cat, in response to recorded birdsongs.  The stimulus $\bX
+= (X_1, X_2)$ takes the form of 15 different auditory recordings
+presented in 24 spatial directions: $X_1 \in \{1,\hdots, 15\}$ indexes
+the recording and $X_2 \in \{1,\hdots, 24\}$ indexes the direction of
+presentation.  The response $Y(t)$ takes the form of a spike train.
+
+%First, Nelken et al. found a discretization bin width $\delta t$ which
+%appeared to preserve most of the information in $Y(t)$.  Let $\bY$
+%represent the discretized signal, where
+%\[
+%\bY_i = I\{\max_{t \in [(i-1)\delta t, i \delta t]} Y(t)\}
+%\]
+%for $i = 1,\hdots, \lceil \frac{T}{\delta t}\rceil$.  Making the
+%working assumption that $\text{I}(\bX;
+%Y(t)) \approx \text{I}(\bX; \bY)$, Nelken estimate
+%$\text{I}(\bX; \bY)$ as the information in the spike train.
+
+Nelkin et. al. compare the following \emph{decoders} $\vec{g}$ in terms
+of the information $\text{I}(\bX; \vec{g}(Y(t)))$.
 \begin{itemize}
-\item Example: Comparison of decoders in Nelken.  
-Property (i) is important to enable model comparison.  Property (iii)
-is needed because relationships may be nonlinear.
+\item The total spike count $\vec{g}_1(Y(t)) = \sum_t Y(t)$.
+\item The mean response time $\vec{g}_2(Y(t)) = \frac{1}{\sum_t Y(t)} \sum_t t Y(t)$.
+\item The combination of the two codes: $\vec{g}_{1+2}(Y(t)) = (\vec{g}_1(Y(t)), \vec{g}_2(Y(t)))$.
+\end{itemize}
+The information of each decoder is compared to the full information of
+the signal, $\text{I}(\bX; Y(t))$, which is estimated via binning.
+
+Nelkin et al. find that while the decoder $\vec{g}_1$ reduces the
+mutual information by 20 to 90 percent, the information loss from
+$\vec{g}_2$ is much less, and barely any information at all is lost
+when both decoders are used jointly in $\vec{g}_{1+2}$.  The
+scientific conclusion that can be drawn is that since
+$\text{I}(\bX; \vec{g}_{1+2}(Y(t)))$ is not much smaller than
+$\text{I}(\bX; Y(t))$, the ``signal'' in the spike train is mostly
+captured by the spike counts and response times: beyond that, the
+detailed temporal pattern of spiking is likely to be ``noise.''  Of
+course, an important caveat to their conclusions is
+only \emph{individual} neurons are considered: the analysis did not
+rule out the possibility that the temporal spiking pattern could yield
+information within an \emph{ensemble} of neurons.
+
+
+%\item Example: Comparison of decoders in Nelken.  
+%Property (i) is important to enable model comparison.  Property (iii)
+%is needed because relationships may be nonlinear.
+\begin{itemize}
 \item Example: Redundancy in population code of retina.  
 Property (i)-(iii) and (v) are needed to obtain a meaningful measure
 of redundancy.
@@ -555,6 +595,12 @@ Therefore,
 \mathcal{I}(\bY; g(\bX)) \geq \mathcal{I}(\bY; \hat{g}(\bX))
 \]
 as needed.
+
+For \emph{decoding models}, a similar argument can be carried out, but
+this depends on the existence of a \emph{sufficient statistic} for the
+conditional distribution of $\bY|\bX$.  Details of the argument can be
+found in Nelken et. al. 2005: although their paper only deals with
+mutual information, their argument generalizes to our setting as well.
 
 \subsection{Composition of information coefficients}
 
