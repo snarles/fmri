@@ -136,9 +136,244 @@ classification task?  These assumptions are outlined in section \ref{sec:formula
 \item Important: talking about LOSS functions.  0-1 loss, hierarchical loss functions
 \item Mention multi-label classification, but we don't address it in
   the paper.
+\item Introduce some of the formalism: we can think of a dataset as an empirical joint distribution.
 \end{itemize}
 
-\section{Problem formulation}\label{sec:formulation}
+\section{Framework}\label{sec:formulation}
+
+\subsection{Problem Formulation}
+
+This section lays out the basic framework which is necessary to
+\emph{formulate} the problem.  However, in the rest of the paper, we
+will also adopt some additional assumptions in order to solve the
+problem we pose in this section.
+
+Let $\mathcal{Y}$ be a collection of labels and $\mathcal{X}$ be a
+space of feature vectors.  For each label $y \in \mathcal{Y}$, there
+exists a distribution $F_y$ supported on $\mathcal{X}$.  Also suppose
+that there exists a \emph{cost function} $C(\hat{y}, y)$ which
+measures the cost of incorrectly labelling an instance as $\hat{y}$
+when the correct label is $y$.  Further suppose that $0 \leq C(y, y')
+\leq \infty$ and $C(y, y)=0$ for all $y, y' \in \mathcal{Y}$.
+
+A \emph{classification task} consists of a subset of labels,
+$\mathcal{S} \subset \mathcal{Y}$, and a prior distribution $\pi$ over
+the label subset.  A \emph{classification rule} for the task consists
+of a function $f$ which maps feature vectors $x \in \mathcal{X}$ to
+labels in $\mathcal{S}$:
+\[
+f: \mathcal{X} \to \mathcal{S}.
+\]
+The classification task defines the \emph{risk} of a classification
+rule.  Under the classification task, a label $y$ is drawn from the
+distribution $\pi$.  Then, we draw $x \sim F_y$.  The label assigned
+by the classification rule is $\hat{y} = f(x)$.  The \emph{loss}
+incurred is $C(\hat{y}, y)$.  The \emph{risk} of the classification
+rule is the expected loss under the class distribution $\pi$:
+\[
+\text{Risk}(f) = \E_\pi[C(\hat{y}, y)] = \int_\mathcal{S} d \pi(y) \int_{\mathcal{X}} C(f(x), y) dF_y(x).
+\]
+
+A \emph{classification model} $\mathcal{F}$ is an algorithm or
+procedure for producing classification rules given an empirical
+distributions $\hat{F}_y$ for each $y \in \mathcal{S}$, and a vector
+of prior probabilities $\pi$.  The model maps a distribution $G$ and a
+vector $\pi$ to a classification rule $f$.
+
+We consider \emph{datasets} of size $|\mathcal{S}|r$ for a given
+classification task consisting $r$ i.i.d. observations $x_i^{(y)} \sim
+F_y$ for each $y \in \mathcal{S}$.  Then define 
+\[\hat{F}_y = \frac{1}{r}\sum_{i=1}^r \delta_{x_i^{(y)}}.\]
+The sampling distribution of $\hat{F}_y$ is referred to as the
+size-$r$ sampling distribution $\Pi_{y, r}$.
+
+The $n$-sample \emph{risk} of the classification model $\mathcal{F}$
+is the expected risk of a classification rule $\hat{f} =
+\mathcal{F}(\hat{G})$ for a random dataset of size $n$ for the
+classification task, $\hat{G} \sim \Pi_n$.  That is,
+\[
+\text{Risk}_n(\mathcal{F}; \pi) =
+\int \text{Risk}(\mathcal{F}(\{\hat{F}_y\}_{y \in \mathcal{S}};
+\pi)) \prod_{y \in \mathcal{S}} d\Pi_{y, r}(\hat{F}_y).
+\]
+
+The problem of \emph{performance extrapolation} is as follows.
+Suppose we have two classification tasks: the $i$th classification
+task is specified by label subset $\mathcal{S}_i$, prior distribution
+$\pi_i$.  We observe data from the first classification task
+consisting of a dataset of size $n_1$.  The goal is to estimate the
+$n_2$-sample risk of a $\mathcal{F}$ on the second classification
+task, $\text{Risk}_{n_2}(\mathcal{F}; \pi_2)$.
+
+\subsection{Additional assumptions}
+
+In order to obtain a tractable solution to the problem of performance
+extrapolation, we make a number of special assumptions on the nature
+of the classification tasks, and the classifiers themselves, which
+make the problem much easier.
+
+Firstly, we assume that the label space $\mathcal{Y}$ is a continuum:
+in fact, that $\mathcal{Y}$ is a subset of $d$-dimensional Euclidean
+space. Note this is not such a strong assumption as it might seem,
+since cases where there are $k$ discrete labels can be equivalently
+formulated as continous models where the the continuum can be
+partitioned into $k$ equivalence classes, and in which the cost
+between two label $y, y'$ is a function only of their equivalence
+classes.
+
+With regards to the classification tasks, we assume that there exists
+some prior density $\nu_0$ over $\mathcal{Y}$,
+and that the label subsets $\mathcal{S}_i = \{y^{(1)}, \hdots,
+y^{(k_i)}\}$ are obtained by iid samples with replacement from the density $\nu_0$.
+(An alternative assumption would be that $\mathcal{S}_1 \subset
+\mathcal{S}_2$ with $\mathcal{S}_1$ being a subsample of
+$\mathcal{S}_2$: this assumption can also be addressed, as we wil
+discuss later.)
+
+Next, suppose there exists some other density $\nu_1$ over
+$\mathcal{Y}$, and that the prior probabilities for each
+classification task are given by
+\[
+\pi_i(y) = \frac{\nu_1(y)}{\sum_{y' \in \mathcal{S}_i} \nu_1(y')}.
+\]
+Define $\pi_0$ as the distribution over $\mathcal{Y}$ with density
+proportional to $\nu_0 \nu_1$.  Then the marginal distribution of any
+element of $\mathcal{S}$ is given by $\pi_0$.
+
+We make a strong assumption for the datasets: for both classification
+tasks, the number of repeats per class $r_i$ is the same in both
+classification problems, $r_1 = r_2 = r$.  We discuss the possibility
+of relaxing this condition in the Discussion.
+
+Since the classification tasks are randomly generated, we will aim to
+develop a method for estimating the \emph{average risk}.  In the case
+where the classification tasks are independently generated, the
+average risk is the best predictor (in mean-squared error) for the
+(random) risk.
+
+We make some rather strong assumptions with regards to the
+classifiers.  The classifier $\mathcal{F}$ produces classification
+rules $f$ which depend on \emph{marginal scoring rules}, $m_y$ for $y
+\in \mathcal{S}$.  Each marginal scoring rule $m_i$ is a mapping
+\[
+m_y: \mathcal{X} \to \mathbb{R}.
+\]
+The classification rule chooses the class with the highest marginal score,
+\[
+f(x) = \text{argmax}_{y \in \mathcal{S}} m_y(x).
+\]
+The marginal scoring rules $m_i$, in turn, are generated by a marginal
+model $\mathcal{M}$.  The marginal model converts empirical
+distributions $\hat{F}$ over $\mathcal{X}$, and an (empirical) prior
+class probability, into a marginal scoring function $m: \mathcal{X}
+\times \mathbb{R} \to \mathbb{R}$.  For example, one could take 
+\[m(x,p) = \log(p) + \log(\hat{f}(x)).\]
+where $\hat{f}$ is a density estimate obtained from
+$\hat{F}$.  We call such a classification model $\mathcal{F}$ a
+\emph{marginal classifier}, and such marginal classifiers are
+completely specified by the marginal model $\mathcal{M}.$
+
+Quadratic discriminant analysis and Naive Bayes are two examples of
+marginal classification models.
+%\footnote{For QDA, the classification function is
+%  given by
+%\[
+%\mathcal{Q}_{QDA}(\hat{F}, y) = -(y - \mu(\hat{F}))^T \Sigma(\hat{F})^{-1} (y-\mu(\hat{F})) - \log\det(\Sigma(\hat{F})),
+%\]
+%where $\mu(F) = \int y dF(y)$ and $\Sigma(F) = \int (y-\mu(F))(y-\mu(F))^T dF(y)$.
+%In Naive Bayes, the classification function is
+%\[
+%\mathcal{Q}_{NB}(\hat{F},  y) = \sum_{i=1}^n \log \hat{f}_i(y_i),
+%\]
+%where $\hat{f}_i$ is a density estimate for the $i$-th component of
+%$\hat{F}$.}.
+The \emph{marginal} property allows us to prove strong results about
+the accuracy of the classifier under the exchangeable sampling
+assumption, as we see in Section [].
+
+\section{Performance extrapolation for marginal classification models}
+
+Having outlined our assumption for randomized label subsets, the focus
+of our theory moves towards understanding the $k$-class average risk:
+that is, the expected risk of $\mathcal{F}$ when a random subset
+$\mathcal{S}$ of size $k$ is drawn.
+
+We obtain a method for estimating the risk in the second
+classification task using data from the first.  The insight behind our
+estimation method is obtained via an analysis of the average risk of
+the classification task.
+
+\subsection{Easy special cases}
+
+Let us first mention two easy special cases, which can be handled
+using existing machine learning methodology.
+
+In the special case where $k_1 = k_2 = k$: that is, where the label
+subsets $\mathcal{S}_1$ and $\mathcal{S}_2$ are the same size, it is
+clear to see that any unbiased estimate of the risk of the classifier
+$\mathcal{F}$ for the first classification problem is an unbiased
+estimate of the average $k$-class risk.  Since various methods, such
+as cross-validation can be used to obtain close-to-unbiased estimates
+of the risk in a given classification problem, the problem is
+essentially solved for this special case.
+
+Meanwhile, in the case where $k_2 < k_1$, the problem can be solved by
+repeatedly subsampling label sets of size $k_2$ from $\mathcal{S}_1$
+and averaging unbiased estimates of the risk of each subsampled
+classification task.  Aside from computational issues with respect to
+computing or approximating the average of ${k_1}\choose{k_2}$
+empirical accuracies, the problem is again more or less solved by
+using existing methods.
+
+Therefore, the challenging case is when $k_2 > k_1$: we want to
+predict the performance of the classification model in a setting with
+more labels than we currently see in the training set.
+
+\subsection{Analysis of the average risk}
+
+The average risk is obtained by averaging over four randomizations:
+\begin{enumerate}
+\item Drawing the label subset $\mathcal{S}$.
+\item Drawing the training dataset.
+\item Drawing $Y^*$ from $\mathcal{S}$ according to $\pi$.
+\item Drawing $X^*$ from $F_{X^*}$.
+\end{enumerate}
+
+In other words, one can define a random variable $L$
+\[
+L = C(\mathcal{F}(\{\hat{F}_y\}_{y \in \mathcal{S}}, \pi)(X^*), Y^*)
+\]
+which clearly depends on all of the random quantities $\mathcal{S}, \hat{F}_y, \pi, Y^*, X^*$, and where
+\[
+\text{Average Risk}_k(\mathcal{F}) = \E[L]
+\]
+where the expectation is taken over all four randomization steps.
+
+As we pointed out in the previous section, the challenging case for
+the analysis is the ``undersampled'' regime where we wish to predict
+the loss on a larger label set.  Given data with $k_1$ classes, we
+already have means to estimate the average risk for all $k \leq k_1$,
+so the challenge is to understand how the risk will ``extrapolate'' to
+$k > k_1$.  Hence, the goal of the current analysis is to isolate the
+effect of $k$, the size of the label subset, on the average risk.
+
+We find that we can do this by \emph{conditioning on} the pair $(x^*,
+y^*)$ while \emph{averaging} over the first two steps.
+Define the \emph{conditional risk} $R_k(y^*, x^*)$ as
+\[
+R_k(y^*, x^*) = \E[L|Y^*=y, X^* = x].
+\]
+Let $G$ denote the joint distribution over $(X, Y)$ obtained by
+drawing $Y \sim \pi_0$ and $X \sim F_Y$.  Since $Y^*$ has the marginal
+distribution $\pi_0$, it follows that
+\[
+\text{Average Risk}_k(\mathcal{F}) = \int \int R_k(y^*, x^*) dG(x^*, y^*).
+\]
+What we have done is to rewrite the average risk as the expectation of
+$R_k$, which depends on $k$, according to a measure $G$ which does
+\emph{not} depend on $k$.
+
+
 
 \end{document}
 
