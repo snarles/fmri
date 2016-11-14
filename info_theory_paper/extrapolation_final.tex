@@ -88,23 +88,59 @@ decision-making system, and at this stage errors in the classification
 have real consequences.
 
 The goal of the engineers in the development stage is to choose a
-model that will perform well in the deployment stage.  However, 
+model that will perform well in the deployment stage.  For this
+purpose, it would be ideal if the initial ``training'' data was
+sufficient for obtaining a good estimate of the performance of the
+model in the deployment phase.  However, often there is a mismatch
+between the training set and the population of post-deployment
+instances.  One, the problem of ``concept drift,'' is the issue where
+the training set is sampled from a different population than the
+deployment population: perhaps the deployment population also changes
+over time.  Secondly, the training set may not be large enough to
+adequately estimate the error in the test set.  In \emph{multi-class
+  classification} in particular, there arises a unique problem wherein
+the training set may not include all of the labels that exist in the
+deployment population.  For example:
+\begin{itemize}
+\item
+In the initial set, only three types of cancer have been labelled, but
+the model is to deployed for the purpose of classifying 10 types of cancer.
+\item
+The language model is trained on data taken from 20 different
+languages, but after deployment, more languages will be addded.
+\item
+The face recognition model is initially trained to distinguish 200
+individuals, but after deployment, it will be applied to classify a
+new, much larger set of individuals.
+\end{itemize}
 
-% Wrong directions
-%However, very often it is the case that a much larger amount of data
-%becomes available after the model has already been deployed.  This set
-%of growing \emph{post-deployment} data may be even more valuable than
-%the initial dataset for two reasons: (i) it may come in a much larger
-%quantity, and (ii) it is reflective of actual user behavior ``in the
-%wild'', as opposed to the initial dataset which may have been
-%collected under rather artificial conditions.  And now there is the
-%possibility of \emph{refining} or \emph{retraining} the original
-%machine learning model by using this newly collected data.  This
-%paradigm of continual refinement has been formalized and studied under
-%the concept of \emph{online learning}, and specialized algorithms have
-%been developed for this setting.
-%In this paper, we are not concerned with the problem of developing new
-%algorithms for the online learning setting: rather, we are 
+This is the problem that we address in this paper: suppose we have
+trained a classification model on one classification task (involving a
+small number of classes): can we estimate its performance on a
+\emph{different} classification task, possibly involving a larger
+number of classes?
+
+Of course, a number of specifying assumptions are needed to make sense
+of the problem.  What do we mean by a ``classification model,'' and
+how do we define a model so that it makes sense to consider the same
+model being applied to different classification tasks?  What kind of
+classification tasks are we considering?  And what kind of assumptions
+are needed in linking the smaller classification task to the larger
+classification task?  These assumptions are outlined in section \ref{sec:formulation.}
+
+\subsection{Multi-class classification}
+
+\begin{itemize}
+\item More details about examples like image recognition, face recognition, etc.
+\item Examples of learning algorithms? OVA, OVO
+\item Important: talking about LOSS functions.  0-1 loss, hierarchical loss functions
+\item Mention multi-label classification, but we don't address it in
+  the paper.
+\end{itemize}
+
+\section{Problem formulation}\label{sec:formulation}
+
+\end{document}
 
 
 
