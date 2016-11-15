@@ -45,6 +45,7 @@
 \newtheorem{proposition}{Proposition}[section]
 \newtheorem{corollary}{Corollary}[theorem]
 \newtheorem{lemma}{Lemma}[section]
+\newcommand{\bZ}{\boldsymbol{Z}}
 
 
 \begin{abstract}
@@ -225,6 +226,12 @@ formulated as continous models where the the continuum can be
 partitioned into $k$ equivalence classes, and in which the cost
 between two label $y, y'$ is a function only of their equivalence
 classes.
+
+We work with bounded cost functions.  Without loss of generality,
+assume that
+\[
+\sup_{y, y'\in \mathcal{Y}} C(y, y') \leq 1.
+\]
 
 With regards to the classification tasks, we assume that there exists
 some prior density $\nu_0$ over $\mathcal{Y}$,
@@ -425,12 +432,11 @@ were $y$ and $Y'$, with $Y'$ drawn uniformly from $\pi_0$.
 Note that the random variable $U_x(Y)$ for $Y \sim \pi_0$ is uniformly
 distributed for all $x \in \mathcal{X}$ (hence the name ``U-function'').
 
-And, under the tie-breaking condition, we have
-\[
-R_k(y^*, x^*) = \int U_{x^*}(y)^{k-2} I\{U_{x^*}(y) > U_{x}(y^*)\} C(y, y^*) d\pi_0(y).
-\]
-
-This integral expression can be further re-written in order to isolate the dependence on $k$.
+%And, under the tie-breaking condition, we have
+%\[
+%R_k(y^*, x^*) = \int U_{x^*}(y)^{k-2} I\{U_{x^*}(y) > U_{x}(y^*)\} C(y, y^*) d\pi_0(y).
+%\]
+%This integral expression can be further re-written in order to isolate the dependence on $k$.
 Define the \emph{conditional cost function} $K(y^*, x^*, u)$ by
 \begin{equation}\label{eq:Kfunc}
 K(y^*, x^*, u) = \mathbb{E}[C(Y, y^*)I\{U_{x^*}(Y) > U_{x^*}(y^*)\}|U_{x^*}(y) = u].
@@ -471,7 +477,7 @@ function $\bar{K}(u)$ defined on $u \in [0,1]$.  We have clearly
 isolated the part of the average risk which is independent of $k$--the
 univariate function $\bar{K}(u)$, and the part which is dependent on
 $k$--which is the weighting density $ku^{k-1}$ (which is the
-Beta(1,$k$) density.)
+Beta($k$, 1) density.)
 
 This is the key result behind our estimation method, and we restate it
 in the following theorem.
@@ -556,8 +562,84 @@ However, if we are to apply local polynomial regression to the dataset
 \{(w_i, \hat{U}_{i,j}^\ell, C_i^\ell)\}_{i=1, j=1, \ell=1}^{r_{test}, k_1,k_1},
 \]
 the estimated $\widehat{\bar{K}(u)}$ will be biased, since we have
-\emph{errors in the covariates}.  It is necessary to make use of
-measurement error models.
+\emph{errors in the covariates}.  It is necessary to make use of the
+\emph{covariate adjustment} technique.  Covariate adjustment is
+justified since the error in the covariates is conditionally
+independent of the response given the ture covariates:
+\[
+\hat{U}_{i,j}^\ell \perp C_i^\ell | U_{i, j}^\ell.
+\]
+
+Define
+\[
+\bar{C}_m = \frac{1}{r_{test}}\sum_{j=1}^{r_{test}} \sum_{j=1, i=1, \ell = 1}^{r_{test}, k_1, k_1} C_i^\ell I\{\hat{U}_{ij}^\ell = \frac{m-1}{k_1-1}\}
+\]
+for $m = 1,\hdots, k_1$, and let $\vec{C} = (\bar{C}_1,\hdots,
+\bar{C}_k)$.
+
+We have
+\[
+\E[\bar{C}_m] = \int_0^1 K(u) \frac{k_1!}{(m-1)!(k_2-m)!} u^{m-1} (1-u)^{k_1-m}  du,
+\]
+and the approximate variance upper bound
+\[
+v_m = \Var[\bar{C}_m] \lessapprox \frac{\bar{C}_m (1-\bar{C})_m}{r}.
+\]
+under the assumption that $\sup_{\mathcal{Y}^2} C(y, y') \leq 1$.
+
+Now suppose we adopt a linear model
+\[
+\bar{K}(u) = \sum_{\ell=1}^d \beta_\ell h_\ell(u)
+\]
+where $h_\ell(u)$ are some basis functions.
+If we knew $\beta_\ell$, then we could determine the average risk for any $k$, since
+defining
+\[
+W_\ell = \int_0^1 h_\ell(u) K u^{K-1} du.
+\]
+we have
+\begin{equation}\label{eq:avgrisk_linmod}
+\text{AvRisk}_k(\mathcal{F}) = \int_0^1 \bar{K}(u) k u^{k-1} du = \sum_{\ell=1}^d \beta_\ell W_\ell.
+\end{equation}
+
+
+
+Then it follows that
+defining
+\[
+Z_{m, \ell} = \int_0^1 h_\ell(u) \frac{k!}{(m-1)!(k-m)!} u^{m-1} (1-u)^{k-m} du
+\]
+for $\ell = 1,\hdots, d$, we have
+\[
+\E[\bar{C}_m] = \sum_{\ell = 1}^d \beta_\ell Z_{m, \ell}.
+\]
+Therefore, we can apply linear regression to the dataset
+\[
+\{(v_m, \vec{Z}_m, \bar{C}_m)\}
+\]
+where $\vec{Z}_m = (Z_{m, 1},\hdots, Z_{m, d})$,
+obtaining the coefficient estimate
+\[
+\hat{\beta} = (\bZ^T V^{-1} \bZ)^{-1} \bZ^T V^{-1} \vec{C},
+\]
+where the matrices $\bZ = (Z_{m, \ell})$ and $V =
+\text{diag}(v_1,\hdots, v_k)$.
+
+Now we can consider prediction of the average risk.
+Plugging in the estimates of $\beta$ into \eqref{eq:avgrisk_linmod}, we get the unbiased risk estimate
+\[
+\widehat{AvRisk}_k(\mathcal{F}) = \hat{\beta}^T \vec{W},
+\]
+where $\vec{W} = (W_1,\hdots, W_d)$.
+The variance of the estimate is approximately bounded by
+\[
+\Var[\widehat{AvRisk}_k(\mathcal{F})] \lessapprox \vec{W}^T (\bZ^T V^{-1} \bZ)^{-1} \vec{W}.
+\]
+
+Convergence properties can be considered for specific models.  For
+instance, we examine a polynomial model in the next section.
+
+\subsection{Convergence analysis}
 
 
 
