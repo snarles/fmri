@@ -245,10 +245,9 @@ Define $\pi_0$ as the distribution over $\mathcal{Y}$ with density
 proportional to $\nu_0 \nu_1$.  Then the marginal distribution of any
 element of $\mathcal{S}$ is given by $\pi_0$.
 
-We make a strong assumption for the datasets: for both classification
-tasks, the number of repeats per class $r_i$ is the same in both
-classification problems, $r_1 = r_2 = r$.  We discuss the possibility
-of relaxing this condition in the Discussion.
+Further, let us assume that we have more repeats per class in the
+first classification task than in the second, $r_1 > r_2$.  We discuss
+the possibility of relaxing this condition in the Discussion.
 
 Since the classification tasks are randomly generated, we will aim to
 develop a method for estimating the \emph{average risk}.  In the case
@@ -295,6 +294,17 @@ marginal classification models.
 The \emph{marginal} property allows us to prove strong results about
 the accuracy of the classifier under the exchangeable sampling
 assumption, as we see in Section [].
+
+\subsection{Local polynomial regression}
+
+Explain background.
+
+Introduce the notation $\{(w_i, x_i, y_i)\}_{i=1}^n$: ordered triples
+of weight, predictor and response.
+
+\subsection{Measurement error models}
+
+Explain background.
 
 \section{Performance extrapolation for marginal classification models}
 
@@ -485,6 +495,69 @@ estimating the unknown function $\bar{K}$--which we discuss in the
 following.
 
 \subsection{Estimation}
+
+Now we address the problem of estimating $\text{Average Risk}_{k_2}$
+from data.  Recall that the data consists of $k_1 < k_2$ classes, with
+$r_1$ repeats per class.  The set of class labels is $\mathcal{S}_1 =
+\{y^{(1)},\hdots, y^{(k_1)}\}$.  For each class $i = 1,\hdots, k_1$,
+we have repeats $x_j^{(i)}$ for $j = 1,\hdots, r_1$.
+
+Define $r_{test} = r_1 - r_2$.  Let us take the first $r_{test}$
+repeats per class, and form the \emph{test set} $\{x_j^{(i)}\}_{j=1,
+  i=1}^{r_{test}, k_1}$.  From the remaining $r_2$ repeats, we form the empirical distributions
+\[
+\hat{F}_{y^{(i)}} = \frac{1}{r_2}\sum_{j=r_{test} + 1}^{r_1} \delta_{x_j^{(i)}}.
+\]
+The marginal model $\mathcal{M}$ yields margins for each point in the
+test set for each label in $\mathcal{S}_1$.  Define the margins
+\[
+M_{i, j}^\ell = \mathcal{M}(\hat{F}_{y^{(\ell)}}; \pi_1(y^{(\ell)}))(x_j^{(i)}).
+\]
+The predicted label for each test point is
+\[
+\hat{y}_{i,j} = y^{(\argmax_{\ell \in \{1,\hdots, k\}} M_{i, j}^\ell)}.
+\]
+Therefore, an unbiased estimate of the risk (which is also an unbiased
+estimate of the $k_1$-class average risk) is
+\[
+\text{Test Risk} = \frac{1}{r_{test}}\sum_{i=1}^k \sum_{j=1}^{r_{test}} \eta_1(y^{(i)}) C(\hat{y}_{i, j}, y^{(i)}).
+\]
+
+Now we turn to the question of estimating the function $\bar{K}(u)$.
+Suppose that hypothetically, we could have observed the quantities
+$U_{i, j}^\ell$, defined
+\[
+U_{i, j}^\ell = U_{x_j^{(i)}}(y^{(\ell)}).
+\]
+Also define
+\[
+C_i^\ell = C(y^{(\ell)}, y^{(i)})
+\]
+and
+\[
+w_i = \eta_1(y^{(i)}).
+\]
+Then $\bar{K}(u)$ can be estimated via a local regression for the
+dataset $\{(w_i, U_{i,j}^\ell, C_i^\ell)\}_{i=1, j=1,
+  \ell=1}^{r_{test}, k_1, k_1}$.
+
+However, the issue is that $U_{i,j}^\ell$ are not directly observed, but must be inferred.
+Define
+\[
+\hat{U}_{i,j}^\ell = \frac{\sum_{m \neq \ell} \eta_1(y^{(m)}) I\{M_{i, j}^\ell > M_{i, j}^m\}}{\sum_{m \neq \ell} \eta_1(y^{(m)})}.
+\]
+Marginally, we have
+\[
+(k-1)\hat{U}_{i, j}^\ell \sim \text{Binomial}(k-1, U_{i, j}^\ell).
+\]
+Therefore, $\hat{U}_{i, j}^\ell$ is an unbiased estimate of $U_{i, j}^\ell$.
+However, if we are to apply local polynomial regression to the dataset
+\[
+\{(w_i, \hat{U}_{i,j}^\ell, C_i^\ell)\}_{i=1, j=1, \ell=1}^{r_{test}, k_1,k_1},
+\]
+the estimated $\widehat{\bar{K}(u)}$ will be biased, since we have
+\emph{errors in the covariates}.  It is necessary to make use of
+measurement error models.
 
 
 
