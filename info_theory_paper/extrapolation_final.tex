@@ -641,7 +641,30 @@ instance, we examine a polynomial model in the next section.
 
 \subsection{Convergence analysis}
 
+Let us take a $d$-th order polynomial model
+\[
+\bar{K}(u) = \sum_{\ell = 0}^d \beta_\ell u^d.
+\]
 
+Taking a fairly conservative analysis, we will use the universal variance bound
+\[
+\Var[\bar{C}_m] \leq \frac{1}{4r}
+\]
+which holds given the condition $\sup_{\mathcal{Y}^2} C(y, y') \leq 1.$
+
+We have the explicit formulas
+\[
+W_\ell = \frac{\ell!(K-\ell)!}{K!}
+\]
+and
+\[
+Z_{m, \ell} = \frac{(m+\ell-1)!(k-1)!}{(m-1)!(k+\ell-1)!}.
+\]
+
+The variance of the unbiased estimate of average risk is bounded by
+\[
+\Var[\widehat{AvRisk}_k(\mathcal{F})] \leq \frac{1}{4r} \vec{W}^T (\bZ^T \bZ)^{-1} \vec{W}.
+\]
 
 \end{document}
 
