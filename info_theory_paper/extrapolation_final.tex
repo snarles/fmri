@@ -41,6 +41,11 @@
 \newcommand{\comm}[1]{}
 \newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
 \newcommand{\Cor}{\text{Cor}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}{Lemma}[section]
+
 
 \begin{abstract}
 The difficulty of multi-class classification generally increases with
@@ -366,16 +371,146 @@ R_k(y^*, x^*) = \E[L|Y^*=y, X^* = x].
 Let $G$ denote the joint distribution over $(X, Y)$ obtained by
 drawing $Y \sim \pi_0$ and $X \sim F_Y$.  Since $Y^*$ has the marginal
 distribution $\pi_0$, it follows that
-\[
+\begin{equation}\label{eq:rk_eq}
 \text{Average Risk}_k(\mathcal{F}) = \int \int R_k(y^*, x^*) dG(x^*, y^*).
-\]
+\end{equation}
 What we have done is to rewrite the average risk as the expectation of
 $R_k$, which depends on $k$, according to a measure $G$ which does
 \emph{not} depend on $k$.
 
+However, we will further decompose $R_k$ into $k$-dependent and $k$-independent components.
+
+Additional technical assumptions:
+\begin{itemize}
+\item 
+Scaling property of margins, if $\mathcal{M}(\hat{F}_1, \pi_1)(x) >
+\mathcal{M}(\hat{F}_2, \pi_2)(x)$ then also $\mathcal{M}(\hat{F}_1,
+c\pi_1)(x) > \mathcal{M}(\hat{F}_2, c\pi_2)(x)$.
+\item 
+Tie-breaking condition, for all $x \in \mathcal{X}$,
+$\mathcal{M}(\hat{F}_1, \pi_1)(x) = \mathcal{M}(\hat{F}_2, \pi_2)(x)$
+with zero probability.
+\end{itemize}
+
+Define the U-functions
+\begin{align}\label{eq:ufunc}
+U_x(y) &= \Pr[\mathcal{F}(\hat{F}_y, \pi_0(y))(x) > \mathcal{F}(\hat{F}_Y, \pi_0(Y))(x)]
+\\&= \int_{\mathcal{Y}} 
+I\{
+\mathcal{F}(\hat{F}_y, \pi_0(y))(x) > \mathcal{F}(\hat{F}_{y'}, \pi_0(y'))(x)
+\}
+d\Pi_{y, r}(\hat{F}_y)
+d\Pi_{y', r}(\hat{F}_{y'})
+d\pi_0(y').
+\end{align}
+Under the scaling property of margins, we have
+\[
+U_x(y) =  \Pr[\mathcal{F}(\hat{F}_y, \pi(y))(x) > \mathcal{F}(\hat{F}_Y, \pi(Y))(x)]
+\]
+for the \emph{random} $\pi$ corresponding to $\mathcal{S}$.  Hence,
+$U_x(y)$ gives the probability that an observation $x$ would be
+assigned to class $y$, supposing that the only two choices for labels
+were $y$ and $Y'$, with $Y'$ drawn uniformly from $\pi_0$.
+
+Note that the random variable $U_x(Y)$ for $Y \sim \pi_0$ is uniformly
+distributed for all $x \in \mathcal{X}$ (hence the name ``U-function'').
+
+And, under the tie-breaking condition, we have
+\[
+R_k(y^*, x^*) = \int U_{x^*}(y)^{k-2} I\{U_{x^*}(y) > U_{x}(y^*)\} C(y, y^*) d\pi_0(y).
+\]
+
+This integral expression can be further re-written in order to isolate the dependence on $k$.
+Define the \emph{conditional cost function} $K(y^*, x^*, u)$ by
+\begin{equation}\label{eq:Kfunc}
+K(y^*, x^*, u) = \mathbb{E}[C(Y, y^*)I\{U_{x^*}(Y) > U_{x^*}(y^*)\}|U_{x^*}(y) = u].
+\end{equation}
+The conditional cost function gives the expected cost conditional on
+$x^*, y^*$, and the $U_{x^*}$-value of the incorrect label with the
+largest margin.
+
+Obtaining the conditional risk $R_k(y^*, x^*)$ from the conditional
+cost function requires the following observation.  Let the $(k-1)$
+incorrect labels in $\mathcal{S}$ be denoted by $y^{(1)},\hdots,
+y^{(k-1)}$, and define $U_i = U_{X^*}(y^{(i)})$. Let $U_{max}$ denote the $U_{x^*}$-value of
+the incorrect label: we have
+\[
+U_{max} = \max_{i=1}^{k-1} U_i.
+\]
+Meanwhile, by definition, we have
+\[
+R_k(y^*, x^*) = \E[K(y^*, x^*, U_{max})].
+\]
+But we know the density of $U_{max}$!  Recall that $U_i$ are iid
+uniform, and therefore $U_{max}$ has density $p(u) = ku^{k-1}$.  We
+therefore have
+\[
+R_k(y^*, x^*) = k \int K(y^*, x^*, u) u^{k-1} du.
+\]
+
+Returning to equation \eqref{eq:rk_eq}, we obtain
+\[
+\text{Average Risk}_k(\mathcal{F}) = k \int u^{k-1} du \int K(y^*, x^*, u) dG(x^*, y^*) = k \int u^{k-1} \bar{K}(u) du,
+\]
+where
+\begin{equation}\label{eq:Kbar}
+\bar{K}(u) = \int K(y^*, x^*, u) dG(x^*, y^*).
+\end{equation}
+The average risk is expressed as a weighted integral of a certain
+function $\bar{K}(u)$ defined on $u \in [0,1]$.  We have clearly
+isolated the part of the average risk which is independent of $k$--the
+univariate function $\bar{K}(u)$, and the part which is dependent on
+$k$--which is the weighting density $ku^{k-1}$ (which is the
+Beta(1,$k$) density.)
+
+This is the key result behind our estimation method, and we restate it
+in the following theorem.
+
+\begin{theorem}
+Suppose $\pi$, $\{F_y\}_{y \in \mathcal{Y}}$ and marginal classifier
+$\mathcal{F}$ satisfy the marginal scaling condition tie-breaking
+condition.  Then, under the definitions \eqref{eq:ufunc}, \eqref{eq:Kfunc}, and \eqref{eq:Kbar}, we have
+\[
+\text{Average Risk}_k(\mathcal{F}) = k \int u^{k-1} \bar{K}(u) du.
+\]
+\end{theorem}
+
+The proof is given in the appendix.
+
+Having this theoretical result allows us to understand how the
+expected $k$-class risk scales with $k$ in problems where all the
+relevant densities are known.  However, applying this result in
+practice to estimate $\text{Average Risk}_k$ requires some means of
+estimating the unknown function $\bar{K}$--which we discuss in the
+following.
+
+\subsection{Estimation}
+
 
 
 \end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
