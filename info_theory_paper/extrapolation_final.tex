@@ -665,6 +665,19 @@ The variance of the unbiased estimate of average risk is bounded by
 \[
 \Var[\widehat{AvRisk}_k(\mathcal{F})] \leq \frac{1}{4r} \vec{W}^T (\bZ^T \bZ)^{-1} \vec{W}.
 \]
+The bound depends only on the quantities $r, d, k, K$, and can be
+easily computed numerically.  However, it is easy to see that in the
+$r \to \infty$ limit, consistent estimation results.  It remains to
+understand how the asymptotic performance of our estimation procedure
+depends on the parameters $d, k, K$.
+
+Define
+\[
+\kappa(k, K, d) = \vec{W}^T (\bZ^T \bZ)^{-1} \vec{W}.
+\]
+
+
+
 
 \end{document}
 
