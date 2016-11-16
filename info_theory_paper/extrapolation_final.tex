@@ -248,8 +248,14 @@ classification task are given by
 \[
 \pi_i(y) = \frac{\nu_1(y)}{\sum_{y' \in \mathcal{S}_i} \nu_1(y')}.
 \]
+% NOTE: overloading density/distribution pi_0
 Define $\pi_0$ as the distribution over $\mathcal{Y}$ with density
-proportional to $\nu_0 \nu_1$.  Then the marginal distribution of any
+proportional to $\nu_0 \nu_1$. More precisely, suppose that the density of $\pi$ is written
+\begin{equation}\eqref{eq:pi0_eq}
+\pi_0(y) = \frac{\nu_0(y) \nu_1(y)}{\zeta}
+\end{equation}
+where $\zeta$ is a normalizing constant.
+Then the marginal distribution of any
 element of $\mathcal{S}$ is given by $\pi_0$.
 
 Further, let us assume that we have more repeats per class in the
@@ -486,9 +492,9 @@ in the following theorem.
 Suppose $\pi$, $\{F_y\}_{y \in \mathcal{Y}}$ and marginal classifier
 $\mathcal{F}$ satisfy the marginal scaling condition tie-breaking
 condition.  Then, under the definitions \eqref{eq:ufunc}, \eqref{eq:Kfunc}, and \eqref{eq:Kbar}, we have
-\[
-\text{Average Risk}_k(\mathcal{F}) = k \int u^{k-1} \bar{K}(u) du.
-\]
+\begin{equation}\label{eq:avrisk_identity}
+\text{AvRisk}_k(\mathcal{F}) = k \int u^{k-1} \bar{K}(u) du.
+\end{equation}
 \end{theorem}
 
 The proof is given in the appendix.
@@ -503,14 +509,22 @@ following.
 \subsection{Estimation}
 
 Now we address the problem of estimating $\text{Average Risk}_{k_2}$
-from data.  Recall that the data consists of $k_1 < k_2$ classes, with
+from data.  
+
+First, let us assume a $d$-th order polynomial model
+\[
+\bar{K}(u) = \sum_{\ell = 0}^d \beta_\ell u^\ell.
+\]
+
+Recall that the data consists of $k_1 < k_2$ classes, with
 $r_1$ repeats per class.  The set of class labels is $\mathcal{S}_1 =
 \{y^{(1)},\hdots, y^{(k_1)}\}$.  For each class $i = 1,\hdots, k_1$,
 we have repeats $x_j^{(i)}$ for $j = 1,\hdots, r_1$.
 
 Define $r_{test} = r_1 - r_2$.  Let us take the first $r_{test}$
 repeats per class, and form the \emph{test set} $\{x_j^{(i)}\}_{j=1,
-  i=1}^{r_{test}, k_1}$.  From the remaining $r_2$ repeats, we form the empirical distributions
+  i=1}^{r_{test}, k_1}$.  From the remaining $r_2$ repeats, we form
+the empirical distributions
 \[
 \hat{F}_{y^{(i)}} = \frac{1}{r_2}\sum_{j=r_{test} + 1}^{r_1} \delta_{x_j^{(i)}}.
 \]
@@ -531,44 +545,143 @@ estimate of the $k_1$-class average risk) is
 
 Now we turn to the question of estimating the function $\bar{K}(u)$.
 Suppose that hypothetically, we could have observed the quantities
-$U_{i, j}^\ell$, defined
+$U_{i, j, \ell}$, defined
 \[
-U_{i, j}^\ell = U_{x_j^{(i)}}(y^{(\ell)}).
+U_{i, j, \ell} = U_{x_j^{(i)}}(y^{(\ell)}).
 \]
 Also define
 \[
-C_i^\ell = C(y^{(\ell)}, y^{(i)})
+C_{i,\ell} = C(y^{(\ell)}, y^{(i)})
 \]
 and
 \[
 w_i = \eta_1(y^{(i)}).
 \]
-Then $\bar{K}(u)$ can be estimated via a local regression for the
-dataset $\{(w_i, U_{i,j}^\ell, C_i^\ell)\}_{i=1, j=1,
-  \ell=1}^{r_{test}, k_1, k_1}$.
+Then $\bar{K}(u)$ could be estimated via a $d$-th order polynomial regression
+\[
+\hat{\beta} = \argmin_{\beta} \sum_{i=1,j=1, \ell=1}^{r_{test}, k_1, k_1} w_i \left(C_i^\ell - \sum_{h=0}^d \beta_h U_{i,j, \ell}^d\right)^2
+\]
+for the
+dataset $\{(w_i, U_{i,j, \ell}, C_{i,\ell})\}_{i=1, j=1,
+  \ell=1}^{r_{test}, k_1, k_1}$.  However, this is not possible in
+practice because $U_{i,j,\ell}$ are not directly observed.
 
-However, the issue is that $U_{i,j}^\ell$ are not directly observed, but must be inferred.
-Define
+Instead, we can obtain unbiased estimates via
 \[
-\hat{U}_{i,j}^\ell = \frac{\sum_{m \neq \ell} \eta_1(y^{(m)}) I\{M_{i, j}^\ell > M_{i, j}^m\}}{\sum_{m \neq \ell} \eta_1(y^{(m)})}.
+\hat{U}_{i,j, \ell} = \frac{1}{(k-1)\zeta}\sum_{m \neq \ell} \eta_1(y^{(m)}) I\{M_{i, j}^\ell > M_{i, j}^m\}
 \]
-Marginally, we have
+However, if we were to simply treat $\hat{U}_{i, j, \ell}$ as a proxy
+for the unobserved $U_{i,j,\ell}$, and apply polynomial regression to
+the dataset
 \[
-(k-1)\hat{U}_{i, j}^\ell \sim \text{Binomial}(k-1, U_{i, j}^\ell).
+\{(w_i, \hat{U}_{i,j, \ell}, C_{i, \ell})\}_{i=1, j=1, \ell=1}^{r_{test}, k_1,k_1},
 \]
-Therefore, $\hat{U}_{i, j}^\ell$ is an unbiased estimate of $U_{i, j}^\ell$.
-However, if we are to apply local polynomial regression to the dataset
-\[
-\{(w_i, \hat{U}_{i,j}^\ell, C_i^\ell)\}_{i=1, j=1, \ell=1}^{r_{test}, k_1,k_1},
-\]
-the estimated $\widehat{\bar{K}(u)}$ will be biased, since we have
-\emph{errors in the covariates}.  It is necessary to make use of the
+the estimated $\widehat{\bar{K}(u)}$ would be biased, since we have
+\emph{errors-in-covariates}.  It is necessary to make use of the
 \emph{covariate adjustment} technique.  Covariate adjustment is
 justified since the error in the covariates is conditionally
-independent of the response given the ture covariates:
+independent of the response given the true covariates:
 \[
-\hat{U}_{i,j}^\ell \perp C_i^\ell | U_{i, j}^\ell.
+\hat{U}_{i,j,\ell} \perp C_i^\ell | U_{i, j,\ell}.
 \]
+
+In the naive polynomial regression, the predictors are the powers of
+the unbiased estimates, $\hat{U}_{i,j,\ell}^h$ for $h = 0,\hdots, d$.
+The issue is that while $\hat{U}_{i,j,\ell}$ is unbiased for
+$U_{i,j,\ell}$, the higher powers of $\hat{U}_{i,j,\ell}$ are
+\emph{not} unbiased estimators of the higher powers of $U_{i,j,\ell}$.
+Covariate adjustment in this case amounts to replacing the naive
+estimates $\hat{U}_{i,j,\ell}^h$ with unbiased estimators.
+
+% reconfigure notation to get rid of indicators somehow??
+There exist U-statistic estimators of the higher powers of
+$\hat{U}_{i,j,\ell}^h$.  For instance, for $h=2$, the estimator is
+\[
+\hat{U}_{i,j,\ell}^{(2)} = \frac{1}{\zeta^2 k(k-1)} \sum_{m_1\neq m_2 \neq j} \eta_1(y^{(m_1)}) I\{M_{i, j}^\ell > M_{i, j}^{m_2}\}
+\eta_1(y^{(m_2)}) I\{M_{i, j}^\ell > M_{i, j}^{m_2}\}.
+\]
+In general, the U-statistic is
+\[
+\hat{U}_{i, j, \ell}^{(h)} = \frac{(k-h)!}{\zeta^h k!} \sum_{m_1 \neq \cdots \neq m_h \neq j} \prod_{z=1}^h \eta_1(y^{(m_z)}) I\{M_{i, j}^\ell > M_{i, j}^{m_z}\}.
+\]
+
+In summation, the algorithm is as follows:
+% summary of algorithm
+
+\subsection{Monotonicity assumption}
+
+Assuming that $\bar{K}(u)$ in monotone in $u \in [0,1]$.
+Justification and implications.
+
+\section{Special case: uniform prior and zero-one loss}
+
+For the special case of zero-one loss and uniform prior, the theory
+becomes simplified and additional methods of estimation are possible.
+
+Define
+\[
+\gamma_m = \int_0^1 \bar{K}(u)  \frac{k_1!}{(m-1)!(k_1-m)!} u^{m-1} (1-u)^{k_1-m} du
+\]
+for $m = 1,\hdots, k_1$.
+
+Define the \emph{ranks}
+\[
+R_{i, j, \ell} = (k-1)\hat{U}_{i, j, \ell}.
+\]
+Due to the uniform prior, $R_{ij}^\ell \in \{0,\hdots, k_1-1\}$.
+
+Define
+\[
+C_{ij}^{(h)} = \sum_{\ell=1}^k I\{R_{i, j, \ell} = h - 1\} C_{i, \ell},
+\]
+i.e., the cost incurred for the class with the $h$th smallest rank for
+the observation $x_i^{(\ell)}$.
+
+Note that the test risk for $k_1$ classes can be written as
+\[
+\text{Test Risk}_k = \frac{1}{r_{test}k_1}\sum_{i=1,j=1}^{k_1,r_{test}} C_{ij}^{(k_1)}.
+\]
+
+Since $C_{ij}^\ell$ is now a binary random variable, we have
+\[
+C_{ij}^{(h)} \sim \text{Bernoulli}(\gamma_h).
+\]
+
+If $C_{ij}^{(h)}$ were independent, one could estimate $\gamma_h$ by
+maximizing the log-likelihood
+\begin{equation}\label{eq:pseudolikelihood1}
+\mathcal{L}(\vec{\gamma}) = \sum_{i=1,j=1,h=1}^{k_1, r_{test}, k_1} C_{ij}^{(h)} \log \gamma_h + (1-C_{ij})^{(h)} \log (1-\gamma_h)
+\end{equation}
+
+However, since $C_{ij}^{(h)}$ are not independent, the equation
+\eqref{eq:pseudolikelihood1} is not a likelihood, but a
+\emph{pseudolikelihood}.  Nevertheless, one can attempt to estimate
+$\gamma_h$ using the method.
+
+The basic idea of using pseudolikelihood leads to many different
+practical approaches for estimating the average $k$-class risk.  We tried the following approaches:
+\begin{enumerate}
+\item Estimate unconstrained $\gamma_h$, then find a function
+  $\bar{K}(u)$ which satisfies the moment constraints implied by the
+  estimates $\hat{\gamma}_h$.  Estimate $\text{AvgRisk}_k$ by plugging
+  in the estimated $\hat{K}(u)$ into \eqref{eq:avrisk_identity}.
+\item Let $\hat{K}(u)$ be constrained by the test risk (which is unbiased for the $k_1$-class average risk,)
+\[
+\text{Test Risk}_l = \int_0^1 \hat{K}(u) k_1 u^{k_1 -1} du.
+\]
+Under this moment constraint, estimate $\hat{K}(u)$ using pseudolikelihood.
+%needs to be clarified how pseudolikelihood can be used to estimate either hatKu or gamma
+\item Either of the above two approaches, plus a monotonicity constraint on $\hat{K}(u).$
+\end{enumerate}
+
+
+
+
+\end{document}
+
+
+
+
 
 Define
 \[
@@ -636,15 +749,17 @@ The variance of the estimate is approximately bounded by
 \Var[\widehat{AvRisk}_k(\mathcal{F})] \lessapprox \vec{W}^T (\bZ^T V^{-1} \bZ)^{-1} \vec{W}.
 \]
 
-Convergence properties can be considered for specific models.  For
-instance, we examine a polynomial model in the next section.
+
+
+\end{document}
+
+
+
+
 
 \subsection{Convergence analysis}
 
-Let us take a $d$-th order polynomial model
-\[
-\bar{K}(u) = \sum_{\ell = 0}^d \beta_\ell u^d.
-\]
+
 
 Taking a fairly conservative analysis, we will use the universal variance bound
 \[
@@ -675,12 +790,6 @@ Define
 \[
 \kappa(k, K, d) = \vec{W}^T (\bZ^T \bZ)^{-1} \vec{W}.
 \]
-
-
-
-
-\end{document}
-
 
 
 
@@ -725,74 +834,95 @@ a joint distribution, define the accuracy for the $i$-th problem as
 \]
 Using data from only $\mathcal{Z}_k$, can one predict the accuracy achieved on the larger label set $\mathcal{Z}_K$, with $K> k$?  This is the problem of \emph{performance extrapolation}.
 
-A practical instance of performance extrapolation occurs in neuroimaging studies, where the number of classes $k$ is
-limited by experimental considerations.
-Kay et al. [1] obtained fMRI brain scans which record how a single subject's visual cortex responds to natural images.
-The label set $\mathcal{Z}$ corresponds to the space of all grayscale photographs of natural images,
-and the set $\mathcal{Z}_1$ is a subset of 1750 photographs used in the experiment.
-They construct a classifier which achieves over 0.75 accuracy for classifying the 1750 photographs;
-based on exponential extrapolation, they estimate that it would take on the order of $10^{9.5}$ photographs
-before the accuracy of the model drops below 0.10!  Directly validating this estimate would take immense resources,
-so it would be useful to develop the theory needed to understand how to compute such extrapolations
-in a principled way. 
+A practical instance of performance extrapolation occurs in
+neuroimaging studies, where the number of classes $k$ is limited by
+experimental considerations.  Kay et al. [1] obtained fMRI brain scans
+which record how a single subject's visual cortex responds to natural
+images.  The label set $\mathcal{Z}$ corresponds to the space of all
+grayscale photographs of natural images, and the set $\mathcal{Z}_1$
+is a subset of 1750 photographs used in the experiment.  They
+construct a classifier which achieves over 0.75 accuracy for
+classifying the 1750 photographs; based on exponential extrapolation,
+they estimate that it would take on the order of $10^{9.5}$
+photographs before the accuracy of the model drops below 0.10!
+Directly validating this estimate would take immense resources, so it
+would be useful to develop the theory needed to understand how to
+compute such extrapolations in a principled way.
 
 However, in the fully general setting, it is impossible on construct
-non-trivial bounds on the accuracy achieved on the new classes $\mathcal{Z}_K \setminus \mathcal{Z}_k$
-based only on knowledge of $\mathcal{Z}_k$: after all, $\mathcal{Z}_k$ could consist entirely of well-separated classes
-while the new classes $\mathcal{Z}_K \setminus \mathcal{Z}_k$ consist entirely of highly inseparable classes, or vice-versa.
-Thus, the most important assumption for our theory is that of \emph{exchangeable sampling}.
-The labels in $\mathcal{Z}_i$ are assumed to be an exchangeable sample from $\mathcal{Z}$.
-The condition of exchangeability ensures that the separability of random subsets of $\mathcal{Z}$ can be inferred
-by looking at the empirical distributions in $\mathcal{Z}_k$, and therefore that some estimate of the achievable
-accuracy on $\mathcal{Z}_K$ can be obtained.
+non-trivial bounds on the accuracy achieved on the new classes
+$\mathcal{Z}_K \setminus \mathcal{Z}_k$ based only on knowledge of
+$\mathcal{Z}_k$: after all, $\mathcal{Z}_k$ could consist entirely of
+well-separated classes while the new classes $\mathcal{Z}_K \setminus
+\mathcal{Z}_k$ consist entirely of highly inseparable classes, or
+vice-versa.  Thus, the most important assumption for our theory is
+that of \emph{exchangeable sampling}.  The labels in $\mathcal{Z}_i$
+are assumed to be an exchangeable sample from $\mathcal{Z}$.  The
+condition of exchangeability ensures that the separability of random
+subsets of $\mathcal{Z}$ can be inferred by looking at the empirical
+distributions in $\mathcal{Z}_k$, and therefore that some estimate of
+the achievable accuracy on $\mathcal{Z}_K$ can be obtained.
 
-The assumption of exchangeability greatly limits the scope of application for our methods.
-Many multi-class classification problems
-have a hierarchical structure [2], or have class labels distributed according to
-non-uniform discrete distributions, e.g. power laws [3]; in either case, exchangeability is violated.
-It would be interesting to extend our theory to the hierarchical setting, or to handle non-hierarchical settings
-with non-uniform prior class probabilities, but again we leave the subject for future work.
+The assumption of exchangeability greatly limits the scope of
+application for our methods.  Many multi-class classification problems
+have a hierarchical structure [2], or have class labels distributed
+according to non-uniform discrete distributions, e.g. power laws [3];
+in either case, exchangeability is violated.  It would be interesting
+to extend our theory to the hierarchical setting, or to handle
+non-hierarchical settings with non-uniform prior class probabilities,
+but again we leave the subject for future work.
 
-In addition to the assumption of exchangeability, we consider a restricted set of classifiers.
-We focus on \emph{generative classifiers}, which are classifiers that work by training
-a model separately on each class.  This convenient property 
-allows us to characterize the accuracy of the classifier by selectively conditioning on one class at a time.
-In section 3, we use this technique to reveal an equivalence between 
-the expected accuracies of $\mathcal{Z}_k$ to moments of a common distribution.
-This moment equivalence result allows standard approaches in statistics, such as U-statistics and
-nonparametric pseudolikelilood, to be directly applied to the extrapolation problem, as we discuss in section 4.
-In non-generative classifiers, the classification rule has a joint dependence on the entire set of classes,
-and cannot be analyzed by conditioning on individual classes.
-In section 5, we empirically study the performance of our classifiers.
-Since generative classifiers only comprise a minority of the classifiers used in practice,
-we applied our methods to a variety of generative and non-generative classifiers
-in simulations and in one OCR dataset.  Our methods have varying success on generative and non-generative classifiers,
-but seem to work badly for neural networks.
+In addition to the assumption of exchangeability, we consider a
+restricted set of classifiers.  We focus on \emph{generative
+  classifiers}, which are classifiers that work by training a model
+separately on each class.  This convenient property allows us to
+characterize the accuracy of the classifier by selectively
+conditioning on one class at a time.  In section 3, we use this
+technique to reveal an equivalence between the expected accuracies of
+$\mathcal{Z}_k$ to moments of a common distribution.  This moment
+equivalence result allows standard approaches in statistics, such as
+U-statistics and nonparametric pseudolikelilood, to be directly
+applied to the extrapolation problem, as we discuss in section 4.  In
+non-generative classifiers, the classification rule has a joint
+dependence on the entire set of classes, and cannot be analyzed by
+conditioning on individual classes.  In section 5, we empirically
+study the performance of our classifiers.  Since generative
+classifiers only comprise a minority of the classifiers used in
+practice, we applied our methods to a variety of generative and
+non-generative classifiers in simulations and in one OCR dataset.  Our
+methods have varying success on generative and non-generative
+classifiers, but seem to work badly for neural networks.
 
 \noindent\emph{Our contribution.}
 
-To our knowledge, we are the first to formalize the problem of prediction extrapolation.
-We introduce three methods for prediction extrapolation: the method of extended unbiased estimation
-and the constrained pseudolikelihood method are novel.  The third method, based
-on asymptotics, is a new application of a recently proposed method 
-for estimating mutual information [4].
+To our knowledge, we are the first to formalize the problem of
+prediction extrapolation.  We introduce three methods for prediction
+extrapolation: the method of extended unbiased estimation and the
+constrained pseudolikelihood method are novel.  The third method,
+based on asymptotics, is a new application of a recently proposed
+method for estimating mutual information [4].
 
 \section{Setting}
 
-Having motivated the problem of performance extrapolation,
-we now reformulate the problem for notational and theoretical convenience.
-Instead of requiring $\mathcal{Z}_k$ to be a random subset of $\mathcal{Z}$ as we did in section 1, take
-$\mathcal{Z}=\mathbb{N}$ and $\mathcal{Z}_k = \{1,\hdots, k\}$.
-We fix the size of $\mathcal{Z}_k$ without losing generality, since any monotonic sequence of 
-finite subsets can be embedded in a sequence with $|\mathcal{Z}_k| = k$.
-In addition, rather than randomizing the labels, we will randomize the marginal distribution $p(y|z)$ of each label;
-Towards that end, let $\mathcal{Y} \subset \mathbb{R}^p$ be a space of feature vectors, and
-let $\mathcal{P}(\mathcal{Y})$ be a measurable space of probability distributions on $\mathcal{Y}$.
-Let $\mathbb{F}$ be a probability measure on $\mathcal{P}$,
-and let $F_1, F_2,\hdots$ be an infinite sequence of i.i.d. draws from $\mathbb{F}$.
-We refer to $\mathbb{F}$, a probability measure on probability measures, as a \emph{meta-distribution}.
-The distributions $F_1,\hdots, F_k$ are the marginal distributions of the first $k$ classes.
-Further assuming that the labels are equiprobable, we rewrite the accuracy as
+Having motivated the problem of performance extrapolation, we now
+reformulate the problem for notational and theoretical convenience.
+Instead of requiring $\mathcal{Z}_k$ to be a random subset of
+$\mathcal{Z}$ as we did in section 1, take $\mathcal{Z}=\mathbb{N}$
+and $\mathcal{Z}_k = \{1,\hdots, k\}$.  We fix the size of
+$\mathcal{Z}_k$ without losing generality, since any monotonic
+sequence of finite subsets can be embedded in a sequence with
+$|\mathcal{Z}_k| = k$.  In addition, rather than randomizing the
+labels, we will randomize the marginal distribution $p(y|z)$ of each
+label; Towards that end, let $\mathcal{Y} \subset \mathbb{R}^p$ be a
+space of feature vectors, and let $\mathcal{P}(\mathcal{Y})$ be a
+measurable space of probability distributions on $\mathcal{Y}$.  Let
+$\mathbb{F}$ be a probability measure on $\mathcal{P}$, and let $F_1,
+F_2,\hdots$ be an infinite sequence of i.i.d. draws from $\mathbb{F}$.
+We refer to $\mathbb{F}$, a probability measure on probability
+measures, as a \emph{meta-distribution}.  The distributions
+$F_1,\hdots, F_k$ are the marginal distributions of the first $k$
+classes.  Further assuming that the labels are equiprobable, we
+rewrite the accuracy as
 \[
 \text{acc}^{(t)} = \frac{1}{t}\sum_{i=1}^t \Pr_{F_i}[h^{(t)}(Y) = i].
 \]
@@ -815,14 +945,24 @@ Meanwhile, $\hat{\mathbb{F}}$ is the true meta-distribution of the empirical dis
 
 \subsection{Multiclass classification}
 
-Extending the formalism of Tewari and Bartlett [5]\footnote{As in their framework,
-we define a classifier as a vector-valued function.  However, we introduce the notion of a classifier as a multiple-argument functional on empirical distributions, which echoes the functional formulation of estimators common in the statistical literature.},
-we define a classifier as a collection of mappings
-$\mathcal{M}_i: \mathcal{P}(\mathcal{Y})^k \times \mathcal{Y} \to \mathbb{R}$ called \emph{classification functions.}
-Intuitively speaking, each classification function \emph{learns a model} from the first $k$ arguments, which are
-the empirical marginals of the $k$ classes, $\hat{F}_1,\hdots, \hat{F}_k$.  For each class, the classifier assigns a real-valued \emph{classification score} to the \emph{query point} $y \in \mathcal{Y}$.  A higher score $\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y)$ indicates a higher estimated probability that $y$ belongs to the $k$-th class.  
-Therefore, the classification rule corresponding to a classifier $\mathcal{M}_i$ assigns
-a class with maximum classification score to $y$:
+Extending the formalism of Tewari and Bartlett [5]\footnote{As in
+  their framework, we define a classifier as a vector-valued function.
+  However, we introduce the notion of a classifier as a
+  multiple-argument functional on empirical distributions, which
+  echoes the functional formulation of estimators common in the
+  statistical literature.}, we define a classifier as a collection of
+mappings $\mathcal{M}_i: \mathcal{P}(\mathcal{Y})^k \times \mathcal{Y}
+\to \mathbb{R}$ called \emph{classification functions.}  Intuitively
+speaking, each classification function \emph{learns a model} from the
+first $k$ arguments, which are the empirical marginals of the $k$
+classes, $\hat{F}_1,\hdots, \hat{F}_k$.  For each class, the
+classifier assigns a real-valued \emph{classification score} to the
+\emph{query point} $y \in \mathcal{Y}$.  A higher score
+$\mathcal{M}_i(\hat{F}_1,\hdots, \hat{F}_k, y)$ indicates a higher
+estimated probability that $y$ belongs to the $k$-th class.
+Therefore, the classification rule corresponding to a classifier
+$\mathcal{M}_i$ assigns a class with maximum classification score to
+$y$:
 \[
 h(y) = \argmax_{i \in \{1,\hdots, k\}} \mathcal{M}_i(y).
 \]
