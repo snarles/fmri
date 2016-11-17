@@ -1,5 +1,7 @@
 ## variance of polynomial regression
 
+library(GenSA)
+
 lagwts <- function(xs, x) {
   mat1 <- xs %*% t(rep(1, length(xs)))
   diff <- t(mat1) - mat1
@@ -7,6 +9,20 @@ lagwts <- function(xs, x) {
   diag(diff2) <- 1
   invw <- apply(diff2, 2, prod)
   1/invw
+}
+
+varlag <- function(xs, x) {
+  sum(lagwts(xs, x)^2)
+}
+
+bestvar <- function(d, ulim) {
+  ff <- function(x) { 
+    varlag(x, 1)
+  }
+  res <- 
+    GenSA(par = NULL, lower = rep(0, d+1), upper = rep(ulim, d+1), fn = ff)
+  print(res$value)
+  sort(res$par)
 }
 
 ppdf <- 5 ## number of points per df
