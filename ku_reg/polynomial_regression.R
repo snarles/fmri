@@ -25,9 +25,21 @@ bestvar <- function(d, ulim) {
   sort(res$par)
 }
 
-ppdf <- 5 ## number of points per df
+secmatch <- function(v, ref) {
+  taken <- rep(FALSE, length(ref))
+  inds <- rep(0, length(v))
+  for (i in 1:length(v)) {
+    scores <- abs(v[i] - ref)
+    scores[taken] <- Inf
+    inds[i] <- which.min(scores)[1]
+    taken[which.min(scores)[1]] <- TRUE
+  }
+  inds
+}
+
+d <- 6  ## degree
+ppdf <- 0.5 * d ## number of points per df
 n <- ppdf * (d + 1) ## number of points
-d <- 5  ## degree
 xs <- (1:n)/(n+1)
 xmat <- sapply(0:d, function(k) xs^k)
 xvec <- rep(1, d + 1)
@@ -35,21 +47,48 @@ wvec0 <- (t(xvec) %*% solve(t(xmat) %*% xmat, t(xmat)))[1, ]
 (ols_var <- sum(wvec0^2))
 (t(xvec) %*% solve(t(xmat) %*% xmat, xvec))[1]
 
+###
+## Single best approx
+###
 
-# test of lagwts
-# inds <- sample(1:n, d + 2)
-# w <- lagwts(xs[inds[-1]], xs[inds[1]])
-# sum(w * xs[inds[-1]]^d)
-# xs[inds[1]]^d
+alloc <- bestvar(d, max(xs))
+
+#alloc <- bestvar(d, 1)
+plot(alloc)
+besti <- secmatch(alloc, xs)
+varlag(xs[besti], 1)
 
 
 ####
+##  approximating with disjoint subsets! MODIFIED
+####
+
+mat <- rep(ppdf, ppdf) %*% t(0:d)
+lala <- t(mat + 1:ppdf)
+lala
+lala[d,] <- n-1
+lala[d+1, ] <- n
+ws_mat <- apply(lala, 2, function(v) {
+  ans <- rep(0, n)
+  ans[v] <- lagwts(xs[v], 1)
+  ans
+})
+avw <- rowMeans(ws_mat)
+(var_a <- sum(avw^2))
+vars <- colSums(ws_mat^2)
+vars
+
+list(ols_var = ols_var, var_a = var_a)
+
+####
 ## approximating variance with choose 1 from each partition
-## this is bad!
+## MODIFIED!
 ####
 
 mat <- AlgDesign::gen.factorial(rep(ppdf, d + 1), center = FALSE)
 lala <- t(mat) + (0:d) * ppdf
+lala[d, ] <- n-1
+lala[d+1, ] <- n
 ws_mat <- apply(lala, 2, function(v) {
   ans <- rep(0, n)
   ans[v] <- lagwts(xs[v], 1)
@@ -59,23 +98,7 @@ avw <- rowMeans(ws_mat)
 sum(avw^2)
 vars <- colSums(ws_mat^2)
 sort(vars)[1:100]
-
-####
-##  approximating with disjoint subsets!
-####
-
-mat <- rep(ppdf, ppdf) %*% t(0:d)
-lala <- t(mat + 1:ppdf)
-lala
-ws_mat <- apply(lala, 2, function(v) {
-  ans <- rep(0, n)
-  ans[v] <- lagwts(xs[v], 1)
-  ans
-})
-avw <- rowMeans(ws_mat)
-sum(avw^2)
-vars <- colSums(ws_mat^2)
-vars
+lala[, order(vars)[1:10]]
 
 ####
 ## approximating variance with n choose (d + 1) sums
@@ -107,3 +130,14 @@ varis <- sapply(ncombs, function(k) {
 
 plot(ncombs, varis, type = "l", ylim = c(0, 3 * ols_var))
 abline(h = ols_var, col = "red")
+
+
+####
+##  UNIT TESTS
+####
+
+# test of lagwts
+# inds <- sample(1:n, d + 2)
+# w <- lagwts(xs[inds[-1]], xs[inds[1]])
+# sum(w * xs[inds[-1]]^d)
+# xs[inds[1]]^d
