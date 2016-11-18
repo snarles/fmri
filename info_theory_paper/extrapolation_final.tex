@@ -221,9 +221,27 @@ the \emph{semantic distance} between two labels, rather than the
 strict zero-one loss.
 % semantic distance is not explained
 
-Examples of hierarchical classification 
+The hierarchy of labels is often represented by a tree $T$, where the
+vertices $V$ are the set of labels, and the edges indicate
+superclass-subclass relationships.  One of the earlier examples is
+Chakrabarti (1998), who classified online texts into topic taxonomies.
+One of the taxonomies, reprinted from their paper, is shown in
+Figure \ref{fig:chakra}.
+% sometimes the classes are only the leaves, and sometimes all nodes are classes
 
+\begin{figure}[h]
+\centering
+\includegraphics[scale = 0.4]{chakrabarti_1998.png}
+\caption{A topic taxonomy reprinted from Chakrabarti (1998)}\label{fig:chakra}
+\end{figure}
 
+Cost functions for hierarchical class function are commonly derived
+from graph distances induced by the tree $T$.  For example, one might
+define $C(y', y)$ to be the \emph{graph distance} between $y$ and
+$y'$--that is, the minimal number of edges in the graph for any path
+between $y$ and $y'$.
+
+[examples of multi-class classifiers? LDA, QDA, OVA, OVO?]
 
 \subsection{Potential applications}
 
