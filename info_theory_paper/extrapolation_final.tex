@@ -46,6 +46,8 @@
 \newtheorem{corollary}{Corollary}[theorem]
 \newtheorem{lemma}{Lemma}[section]
 \newcommand{\bZ}{\boldsymbol{Z}}
+\newcommand{\bx}{\boldsymbol{x}}
+\newcommand{\bX}{\boldsymbol{X}}
 
 
 \begin{abstract}
@@ -82,57 +84,186 @@ In face recognition, labeling a photograph of a person with their
 name.
 \end{itemize}
 
+In multi-class classification, one observes pairs $(x, y)$ where
+$y \in \mathcal{Y}$ are class labels, and
+$x \in \mathcal{X} \subset \mathbb{R}^p$ are feature vectors
+(e.g. images of cells.)  The goal is to construct a classification
+rule for predicting the label of a new data point; generally, the
+classification rule $f: \mathcal{X} \to \mathcal{Y}$ is learned from
+previously observed data points.  In many applications of multi-class
+classification, such as face recognition or image recognition, the
+space of potential labels is practically infinite.  In such a setting,
+one might consider a sequence of classification problems on finite
+label subsets $\mathcal{S}_1 \subset \cdots \subset \mathcal{S}_K \subset \mathcal{Y}$,
+where in the $i$-th problem, one constructs the classification rule
+$f^{(i)}:\mathcal{X} \to \mathcal{Y}_i$.  Supposing that $(X, Y)$ have
+a joint distribution, define the misclassification error for the $i$-th problem as
+\[
+\text{Err}^{(i)} = \Pr[f^{(i)}(Y) \neq Z|Z \in \mathcal{Z}_i].
+\]
+Using data from only $\mathcal{Z}_k$, can one predict the
+misclassification error (or some other performance metric) on the
+larger label set $\mathcal{Z}_K$, with $K> k$?  This is the problem
+of \emph{performance extrapolation}.
+
+A practical instance of performance extrapolation occurs in
+neuroimaging studies, where the number of classes $k$ is limited by
+experimental considerations.  Kay et al. [1] obtained fMRI brain scans
+which record how a single subject's visual cortex responds to natural
+images.  The label set $\mathcal{Y}$ corresponds to the space of all
+grayscale photographs of natural images, and the set $\mathcal{S}$ is
+a subset of 1750 photographs used in the experiment.  They construct a
+classifier which achieves over 0.75 accuracy for classifying the 1750
+photographs; based on exponential extrapolation, they estimate that it
+would take on the order of $10^{9.5}$ photographs before the accuracy
+of the model drops below 0.10!  Directly validating this estimate
+would take immense resources, so it would be useful to develop the
+theory needed to understand how to compute such extrapolations in a
+principled way.
+
+However, in the fully general setting, it is impossible on construct
+non-trivial bounds on the accuracy achieved on the new classes
+$\mathcal{S}_K \setminus \mathcal{S}_k$ based only on knowledge of
+$\mathcal{S}_k$: after all, $\mathcal{S}_k$ could consist entirely of
+well-separated classes while the new classes
+$\mathcal{S}_K \setminus \mathcal{S}_k$ consist entirely of highly
+inseparable classes, or vice-versa.  Thus, the most important
+assumption for our theory is that of \emph{exchangeable sampling}.
+The labels in $\mathcal{S}_i$ are assumed to be an exchangeable sample
+from $\mathcal{Y}$.  The condition of exchangeability ensures that the
+separability of random subsets of $\mathcal{Y}$ can be inferred by
+looking at the empirical distributions in $\mathcal{S}_k$, and
+therefore that some estimate of the achievable accuracy on
+$\mathcal{S}_K$ can be obtained.
+
+In addition to the assumption of exchangeability, we consider a
+restricted set of classifiers.  We focus on \emph{marginal
+classifiers}, which are classifiers that work by training a model
+separately on each class.  This convenient property allows us to
+characterize the accuracy of the classifier by selectively
+conditioning on one class at a time.  In section 3, we use this
+technique to reveal that the expected risk for classifying on the
+label set $\mathcal{Y}_k$, for all $k$, is governed by a function
+called the \emph{conditional risk} depends on the true distribution
+and the classifier.  As long as one can recover the conditional risk
+function $\bar{K}(u)$, one can compute the average risk for any number
+of classes.  In non-marginal classifiers, the classification rule
+has a joint dependence on the entire set of classes, and cannot be
+analyzed by conditioning on individual classes.  In section 5, we
+empirically study the performance of our classifiers.  Since
+generative classifiers only comprise a minority of the classifiers
+used in practice, we applied our methods to a variety of generative
+and non-generative classifiers in simulations and in one OCR dataset.
+Our methods have varying success on generative and non-generative
+classifiers, but seem to work badly for neural networks.
+\newline
+
+\noindent\emph{Our contribution.}
+
+To our knowledge, we are the first to formalize the problem of
+prediction extrapolation.  We develop a general theory for prediction
+extrapolation under \emph{general class priors} and under bounded cost
+functions.  In addition, we investigate the special case of zero-one
+loss under uniform priors: we develop a pseudolikelihood-based
+estimation approach for this special case, and evaluate its
+performance in real data examples.
+
+\subsection{Potential applications}
+
 In the most traditional point of view, the actual implementation of
-machine learning models can be divided into two stages:
-\emph{development} and \emph{deployment}.  In the development stage,
-engineers collect an initial dataset for the purpose of ``training'' a
-good model.  Various competing models may be evaluated using a subset
-of the initial dataset.  A final model may be selected on the basis of
-empirical performance.  Then, in the deployment stage, the model is
-``deployed'' in the real world: it is implemented in a larger
-decision-making system, and at this stage errors in the classification
-have real consequences.
+machine learning models in industrial applications can be divided into
+two stages: \emph{development} and \emph{deployment}.  In the
+development stage, engineers collect an initial dataset for the
+purpose of ``training'' a good model.  Various competing models may be
+evaluated using a subset of the initial dataset.  A final model may be
+selected on the basis of empirical performance.  Then, in the
+deployment stage, the model is ``deployed'' in the real world: it is
+implemented in a larger decision-making system, and at this stage
+errors in the classification have real consequences.
 
-The goal of the engineers in the development stage is to choose a
-model that will perform well in the deployment stage.  For this
-purpose, it would be ideal if the initial ``training'' data was
-sufficient for obtaining a good estimate of the performance of the
-model in the deployment phase.  However, often there is a mismatch
-between the training set and the population of post-deployment
-instances.  One, the problem of ``concept drift,'' is the issue where
-the training set is sampled from a different population than the
-deployment population: perhaps the deployment population also changes
-over time.  Secondly, the training set may not be large enough to
-adequately estimate the error in the test set.  In \emph{multi-class
-  classification} in particular, there arises a unique problem wherein
-the training set may not include all of the labels that exist in the
-deployment population.  For example:
-\begin{itemize}
-\item
-In the initial set, only three types of cancer have been labelled, but
-the model is to deployed for the purpose of classifying 10 types of cancer.
-\item
-The language model is trained on data taken from 20 different
-languages, but after deployment, more languages will be addded.
-\item
-The face recognition model is initially trained to distinguish 200
-individuals, but after deployment, it will be applied to classify a
-new, much larger set of individuals.
-\end{itemize}
+Applications of multi-class classification vary in terms of the number
+of classes and the relationship between classes: classes may be
+mutually disjoint or overlapping over examples, and classes may be
+arranged in a hierarchical structure.  Applications involving an
+extremely large number of labels, such as image labelling, fall into
+the recently coined category of \emph{extreme classification.}  A
+common issue in extreme classification applications is the difficulty
+of collecting an initial dataset which contains enough data for all of
+the classes in the label set $\mathcal{Y}$.
 
-This is the problem that we address in this paper: suppose we have
-trained a classification model on one classification task (involving a
-small number of classes): can we estimate its performance on a
-\emph{different} classification task, possibly involving a larger
-number of classes?
+To take a hypothetical (but realistic) example, a researcher might be
+interested in developing a classifier for the purpose of labelling
+images.  She might begin with a list of 10,000 keywords which defines
+the label set $\mathcal{Y}$.  Ideally, she would obtain a dataset by
+running a Google image search on each of the 10,000 keywords, and
+taking 20 images from the $i$th keyword as the training data for the
+$i$th class.  However, initially, she only has the resources to do
+this for a much smaller number of keywords--say 100 keywords.  Yet her
+goal is to develop a new algorithm for multi-class classification
+which works well on the larger set of labels.  Can she get an idea of
+how well here algorithm will work on the full set of classes based on
+an initial ``pilot'' subsample of class labels?
 
-Of course, a number of specifying assumptions are needed to make sense
-of the problem.  What do we mean by a ``classification model,'' and
-how do we define a model so that it makes sense to consider the same
-model being applied to different classification tasks?  What kind of
-classification tasks are we considering?  And what kind of assumptions
-are needed in linking the smaller classification task to the larger
-classification task?  These assumptions are outlined in section \ref{sec:formulation.}
+The story just described can be viewed as a metaphor for typical
+paradigm of machine learning research, where academic researchers,
+working under limited resources, develop novel algorithms and apply
+them to relatively small-scale datasets.  Those same algorithms may
+then be adopted by companies and applied to much larger datasets with
+many more classes.  In this scenario, it would be convenient if one
+could simply assume that performance on the smaller-scale
+classification problems was highly representative of performance on
+larger-scale problems.  However, previous works have shown that such a
+simplistic assumption cannot be justified.  In a paper titled ``What
+does classifying more than 10,000 Image Categories Tell Us,'' Deng and
+co-authors compared the performance of four different classifiers on
+three different scales: a small-scale (1,000-class) problem,
+medium-scale (7,404-class) problem, and large-scale (10,184-class)
+problem (all from ImageNet.)  They found that while the
+nearest-neighbor classifier outperformed the support vector machine
+classifier (SVM) in the small and medium scale, the ranking switched
+in the large scale, where the SVM classifier outperformed
+nearest-neighbor.  As they write in their conclusion, ``we cannot
+always rely on experiments on small datasets to predict performance at
+large scale.''  On the other hand, if more principled and accurate
+approaches can be found for predicting large-scale performance from
+smaller datasets, this would give academic researchers a way to get an
+idea of the large-scale performance of their methods without having to
+collect the data themselves, and it would also give companies a way to
+speed up their iterative development cycles, since performance
+extrapolation can reveal models with bad scaling properties in the
+pilot stages of development.
+
+Outside of industry, there are increasingly many applications of
+multi-class classification in scientific experiments.  As we have
+already seen from the Kay et. al. example, neuroscientists are
+interested in how well the brain activity in various regions of the
+brain can discriminate between different classes of stimuli.  In the
+practical matter of experimental design, there is a tradeoff
+associated with how many classes of stimuli to include in the
+experiment.  If too many classes are used, the $p$-values calculated
+from test performance may rise above the significance cutoff due to
+insufficient sample size for training and testing the classifier, as
+well as an increase in the difficulty of the classification task.
+However, when too few classes are used, while the $p$-values may
+become much stronger, the generalizability of the experiment is
+sacrificed because an overly simplistic classification task fails to
+represent the full complexity of the stimuli being studied.  A better
+understanding of how the difficulty of the classification task scales
+with the number of classes could be useful for scientists seeking the
+best tradeoff between power and generalizability in choosing the
+number of classes in the experimental design.
+
+%Can we find a theoretical explanation for why relative performance on
+%the small scale may fail to reflect relative performance on a large
+%scale?  And can we use this understanding to derive a principled way
+%of predicting large-scale performance from small-scale performance?
+%In this paper, we make an initial foray into this question. 
+While our primary goal is to motivate and formulate the question
+rather than to obtain optimal methods, we are optimistic that good
+methods for performance extrapolation can be found, and that such
+methods could aid the development of classifers in academia and
+industry, as well as help the scientists who use machine learning in
+their analysis pipeline design their experiments more effectively.
 
 \subsection{Multi-class classification}
 
