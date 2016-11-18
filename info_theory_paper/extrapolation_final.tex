@@ -168,28 +168,72 @@ loss under uniform priors: we develop a pseudolikelihood-based
 estimation approach for this special case, and evaluate its
 performance in real data examples.
 
+\subsection{Background: multi-class classification}
+
+In this section we review the key terminology for multi-class
+classification and discuss examples of problems and algorithms which
+we will use throughout the paper to serve as concrete examples.  We
+assume some degree of familiarity with statistical learning: however,
+this section can probably be skipped by the expert.  Meanwhile, those
+new to the field might be aided by having a good introduction to the
+subject at hand, such as (Hastie et al, ESL) or (?? other book.)
+
+While a \emph{binary classification} problem generally refers to a
+class with two labels, $\mathcal{Y} = \{0, 1\}$, problems with three
+or more classes are called \emph{multi-class classification} problems.
+The most famous dataset for illustrating a multi-class classification
+problem is Fisher's iris data (Fisher 1936), where the classification
+task is to assign a flower to one of three iris species based on four
+features: the lengths and widths of the sepals and the lengths and
+widths of the petals.
+
+In classification problems, it is assumed that each observation
+belongs exclusively to a single class.  In contrast,
+in \emph{multi-label} classification, each observation can belong to
+multiple classes at the same time, or none at all.  We do not address
+multi-label classification in this paper: however, we remark that any
+multi-label classification problem can be recoded as a single-label
+classification problem [find a reference so we don't have to explain
+this.]
+
+The performance of a classifier on a problem is evaluated by
+specifying a \emph{cost function.}  If the true class is $y$, but the
+classifier outputs $y'$, the severity of this misclassification is
+quantified by $C(y', y)$.  The most common cost function
+is \emph{zero-one loss}: the cost is zero for correct classifications,
+and the cost is one for all incorrect classifications, i.e. $C(y', y)
+= \delta_{y}(y').$
+% do we need to explain dirac delta?
+
+One setting where alternative cost functions are used is when there
+exists \emph{hierarchical structure} of the label sets.  For example,
+in image recognition, the label ``golden retriever'' may be a member
+of the class ``dog,'' which is in itself another label.  If we work
+under the single-label framework, then a picture of a golden retriever
+might be considered to have the true class of ``golden retriever.''
+While labelling the picture as ``dog'' would be semantically correct,
+we might prefer the more specific label.  But while on a technical
+level we may consider ``dog'' to be the incorrect label for the
+picture, we would not want to overly penalize the assignment of
+``dog'' to the picture.  Therefore, in hierarchichal problems it is
+often appropriate to use a cost function which is reflective of
+the \emph{semantic distance} between two labels, rather than the
+strict zero-one loss.
+% semantic distance is not explained
+
+Examples of hierarchical classification 
+
+
+
 \subsection{Potential applications}
 
-In the most traditional point of view, the actual implementation of
-machine learning models in industrial applications can be divided into
-two stages: \emph{development} and \emph{deployment}.  In the
-development stage, engineers collect an initial dataset for the
-purpose of ``training'' a good model.  Various competing models may be
-evaluated using a subset of the initial dataset.  A final model may be
-selected on the basis of empirical performance.  Then, in the
-deployment stage, the model is ``deployed'' in the real world: it is
-implemented in a larger decision-making system, and at this stage
-errors in the classification have real consequences.
 
-Applications of multi-class classification vary in terms of the number
-of classes and the relationship between classes: classes may be
-mutually disjoint or overlapping over examples, and classes may be
-arranged in a hierarchical structure.  Applications involving an
-extremely large number of labels, such as image labelling, fall into
-the recently coined category of \emph{extreme classification.}  A
-common issue in extreme classification applications is the difficulty
-of collecting an initial dataset which contains enough data for all of
-the classes in the label set $\mathcal{Y}$.
+Applications involving an extremely large number of labels, such as
+image labelling, fall into the recently coined category
+of \emph{extreme classification.}  A common issue in extreme
+classification applications is the difficulty of collecting an initial
+dataset which contains enough data for all of the classes in the label
+set $\mathcal{Y}$.
 
 To take a hypothetical (but realistic) example, a researcher might be
 interested in developing a classifier for the purpose of labelling
@@ -265,16 +309,6 @@ methods could aid the development of classifers in academia and
 industry, as well as help the scientists who use machine learning in
 their analysis pipeline design their experiments more effectively.
 
-\subsection{Multi-class classification}
-
-\begin{itemize}
-\item More details about examples like image recognition, face recognition, etc.
-\item Examples of learning algorithms? OVA, OVO
-\item Important: talking about LOSS functions.  0-1 loss, hierarchical loss functions
-\item Mention multi-label classification, but we don't address it in
-  the paper.
-\item Introduce some of the formalism: we can think of a dataset as an empirical joint distribution.
-\end{itemize}
 
 \section{Framework}\label{sec:formulation}
 
