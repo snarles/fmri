@@ -84,59 +84,144 @@ In face recognition, labeling a photograph of a person with their
 name.
 \end{itemize}
 
-In multi-class classification, one observes pairs $(x, y)$ where
-$y \in \mathcal{Y}$ are class labels, and
-$x \in \mathcal{X} \subset \mathbb{R}^p$ are feature vectors
-(e.g. images of cells.)  The goal is to construct a classification
-rule for predicting the label of a new data point; generally, the
-classification rule $f: \mathcal{X} \to \mathcal{Y}$ is learned from
-previously observed data points.  In many applications of multi-class
-classification, such as face recognition or image recognition, the
-space of potential labels is practically infinite.  In such a setting,
-one might consider a sequence of classification problems on finite
-label subsets $\mathcal{S}_1 \subset \cdots \subset \mathcal{S}_K \subset \mathcal{Y}$,
-where in the $i$-th problem, one constructs the classification rule
-$f^{(i)}:\mathcal{X} \to \mathcal{Y}_i$.  Supposing that $(X, Y)$ have
-a joint distribution, define the misclassification error for the $i$-th problem as
-\[
-\text{Err}^{(i)} = \Pr[f^{(i)}(Y) \neq Z|Z \in \mathcal{Z}_i].
-\]
-Using data from only $\mathcal{Z}_k$, can one predict the
-misclassification error (or some other performance metric) on the
-larger label set $\mathcal{Z}_K$, with $K> k$?  This is the problem
+Applications involving an extremely large number of labels, such as
+image labelling, fall into the recently coined category
+of \emph{extreme classification.}  A common issue in extreme
+classification applications is the difficulty of collecting an initial
+dataset which contains enough data for all of the classes in the label
+set $\mathcal{Y}$.
+
+To take a hypothetical (but realistic) example, a researcher might be
+interested in developing a classifier for the purpose of labelling
+images.  She might begin with a list of 10,000 keywords which defines
+the label set $\mathcal{Y}$.  Ideally, she would obtain a dataset by
+running a Google image search on each of the 10,000 keywords, and
+taking 20 images from the $i$th keyword as the training data for the
+$i$th class.  However, initially, she only has the resources to do
+this for a much smaller number of keywords--say 100 keywords.  Yet her
+goal is to develop a new algorithm for multi-class classification
+which works well on the larger set of labels.  Can she get an idea of
+how well here algorithm will work on the full set of classes based on
+an initial ``pilot'' subsample of class labels?  This is the problem
 of \emph{performance extrapolation}.
 
-A practical instance of performance extrapolation occurs in
-neuroimaging studies, where the number of classes $k$ is limited by
-experimental considerations.  Kay et al. [1] obtained fMRI brain scans
-which record how a single subject's visual cortex responds to natural
-images.  The label set $\mathcal{Y}$ corresponds to the space of all
-grayscale photographs of natural images, and the set $\mathcal{S}$ is
-a subset of 1750 photographs used in the experiment.  They construct a
-classifier which achieves over 0.75 accuracy for classifying the 1750
-photographs; based on exponential extrapolation, they estimate that it
-would take on the order of $10^{9.5}$ photographs before the accuracy
-of the model drops below 0.10!  Directly validating this estimate
-would take immense resources, so it would be useful to develop the
-theory needed to understand how to compute such extrapolations in a
-principled way.
+The story just described can be viewed as a metaphor for typical
+paradigm of machine learning research, where academic researchers,
+working under limited resources, develop novel algorithms and apply
+them to relatively small-scale datasets.  Those same algorithms may
+then be adopted by companies and applied to much larger datasets with
+many more classes.  In this scenario, it would be convenient if one
+could simply assume that performance on the smaller-scale
+classification problems was highly representative of performance on
+larger-scale problems.  However, previous works have shown that such a
+simplistic assumption cannot be justified.  In a paper titled ``What
+does classifying more than 10,000 Image Categories Tell Us,'' Deng and
+co-authors compared the performance of four different classifiers on
+three different scales: a small-scale (1,000-class) problem,
+medium-scale (7,404-class) problem, and large-scale (10,184-class)
+problem (all from ImageNet.)  They found that while the
+nearest-neighbor classifier outperformed the support vector machine
+classifier (SVM) in the small and medium scale, the ranking switched
+in the large scale, where the SVM classifier outperformed
+nearest-neighbor.  As they write in their conclusion, ``we cannot
+always rely on experiments on small datasets to predict performance at
+large scale.''  On the other hand, if more principled and accurate
+approaches can be found for predicting large-scale performance from
+smaller datasets, this would give academic researchers a way to get an
+idea of the large-scale performance of their methods without having to
+collect the data themselves, and it would also give companies a way to
+speed up their iterative development cycles, since performance
+extrapolation can reveal models with bad scaling properties in the
+pilot stages of development.
 
-However, in the fully general setting, it is impossible on construct
+Outside of industry, there are increasingly many applications of
+multi-class classification in scientific experiments.  Neuroscientists
+are interested in how well the brain activity in various regions of
+the brain can discriminate between different classes of stimuli.
+
+Kay et al. [1] obtained fMRI brain scans which record how a single
+subject's visual cortex responds to natural images.  The label set
+$\mathcal{Y}$ corresponds to the space of all grayscale photographs of
+natural images, and the set $\mathcal{S}$ is a subset of 1750
+photographs used in the experiment.  They construct a classifier which
+achieves over 0.75 accuracy for classifying the 1750 classes; based on
+exponential extrapolation, they estimate that it would take on the
+order of $10^{9.5}$ classes before the accuracy of the model drops
+below 0.10!  A theory of performance extrapolation could be useful for
+the purpose of making such extrapolations in a more principled way.
+
+More generally, however, a theory of performance extrapolation could
+be useful for aiding in the design of neuroscience experiments:
+specially with regards to the choice of how many stimuli to use in the
+experiment, where the scientist faces the following tradeoff.  If too
+many classes are used, the $p$-values calculated from test performance
+may rise above the significance cutoff due to insufficient sample size
+for training and testing the classifier, as well as an increase in the
+difficulty of the classification task.  However, when too few classes
+are used, while the $p$-values may become much stronger, the
+generalizability of the experiment is sacrificed because an overly
+simplistic classification task fails to represent the full complexity
+of the stimuli being studied.  A better understanding of how the
+difficulty of the classification task scales with the number of
+classes could be useful for scientists seeking the best tradeoff
+between power and generalizability in choosing the number of classes
+in the experimental design.
+
+%Can we find a theoretical explanation for why relative performance on
+%the small scale may fail to reflect relative performance on a large
+%scale?  And can we use this understanding to derive a principled way
+%of predicting large-scale performance from small-scale performance?
+%In this paper, we make an initial foray into this question. 
+While our primary goal is to motivate and formulate the question
+rather than to obtain optimal methods, we are optimistic that good
+methods for performance extrapolation can be found, and that such
+methods could aid the development of classifers in academia and
+industry, as well as help the scientists who use machine learning in
+their analysis pipeline design their experiments more effectively.
+
+\subsection{Problem statement}
+
+% may have to reconcile sequence notation with later 2 sets notation
+To state the problem more formally, recall that in multi-class
+classification, one observes pairs $(x, y)$ where $y \in \mathcal{Y}$
+are class labels, and $x \in \mathcal{X} \subset \mathbb{R}^p$ are
+feature vectors (e.g. images of cells.)  The goal is to construct a
+classification rule for predicting the label of a new data point;
+generally, the classification rule $f: \mathcal{X} \to \mathcal{Y}$ is
+learned from previously observed data points.  In many applications of
+multi-class classification, such as face recognition or image
+recognition, the space of potential labels is practically infinite.
+In such a setting, one might consider a sequence of classification
+problems on finite label subsets
+$\mathcal{S}_1 \subset \cdots \subset \mathcal{S}_K \subset \mathcal{Y}$,
+where in the $i$-th problem, one constructs the classification rule
+$f^{(i)}:\mathcal{X} \to \mathcal{S}_i$.  Supposing that $(X, Y)$ have
+a joint distribution, define the misclassification error for the
+$i$-th problem as
+\[
+\text{Err}^{(i)} = \Pr[f^{(i)}(X) \neq Y|Y \in \mathcal{S}_i].
+\]
+The problem of prediction extrapolation is the following: using data
+from only $\mathcal{S}_k$, can one predict the misclassification error
+(or some other performance metric) on the larger label set
+$\mathcal{S}_K$, with $K> k$?
+
+In the fully general setting, it is impossible on construct
 non-trivial bounds on the accuracy achieved on the new classes
 $\mathcal{S}_K \setminus \mathcal{S}_k$ based only on knowledge of
 $\mathcal{S}_k$: after all, $\mathcal{S}_k$ could consist entirely of
 well-separated classes while the new classes
 $\mathcal{S}_K \setminus \mathcal{S}_k$ consist entirely of highly
 inseparable classes, or vice-versa.  Thus, the most important
-assumption for our theory is that of \emph{exchangeable sampling}.
-The labels in $\mathcal{S}_i$ are assumed to be an exchangeable sample
-from $\mathcal{Y}$.  The condition of exchangeability ensures that the
+assumption for our theory is that of \emph{i.i.d. sampling}.  The
+labels in $\mathcal{S}_i$ are assumed to be an i.i.d. sample from
+$\mathcal{Y}$.  The condition of i.i.d. sampling ensures that the
 separability of random subsets of $\mathcal{Y}$ can be inferred by
 looking at the empirical distributions in $\mathcal{S}_k$, and
 therefore that some estimate of the achievable accuracy on
 $\mathcal{S}_K$ can be obtained.
 
-In addition to the assumption of exchangeability, we consider a
+In addition to the assumption of i.i.d. sampling, we consider a
 restricted set of classifiers.  We focus on \emph{marginal
 classifiers}, which are classifiers that work by training a model
 separately on each class.  This convenient property allows us to
@@ -147,15 +232,16 @@ label set $\mathcal{Y}_k$, for all $k$, is governed by a function
 called the \emph{conditional risk} depends on the true distribution
 and the classifier.  As long as one can recover the conditional risk
 function $\bar{K}(u)$, one can compute the average risk for any number
-of classes.  In non-marginal classifiers, the classification rule
-has a joint dependence on the entire set of classes, and cannot be
+of classes.  In non-marginal classifiers, the classification rule has
+a joint dependence on the entire set of classes, and cannot be
 analyzed by conditioning on individual classes.  In section 5, we
-empirically study the performance of our classifiers.  Since
-generative classifiers only comprise a minority of the classifiers
-used in practice, we applied our methods to a variety of generative
-and non-generative classifiers in simulations and in one OCR dataset.
-Our methods have varying success on generative and non-generative
-classifiers, but seem to work badly for neural networks.
+empirically study the performance curves of classifiers on sequences
+of classification tasks.  Since marginal classifiers only comprise a
+minority of the classifiers used in practice, we applied our methods
+to a variety of generative and non-generative classifiers in
+simulations and in one OCR dataset.  Our methods have varying success
+on generative and non-generative classifiers, but seem to work badly
+for neural networks.
 \newline
 
 \noindent\emph{Our contribution.}
@@ -221,112 +307,27 @@ the \emph{semantic distance} between two labels, rather than the
 strict zero-one loss.
 % semantic distance is not explained
 
-The hierarchy of labels is often represented by a tree $T$, where the
-vertices $V$ are the set of labels, and the edges indicate
-superclass-subclass relationships.  One of the earlier examples is
-Chakrabarti (1998), who classified online texts into topic taxonomies.
-One of the taxonomies, reprinted from their paper, is shown in
-Figure \ref{fig:chakra}.
+%The hierarchy of labels is often represented by a tree $T$, where the
+%vertices $V$ are the set of labels, and the edges indicate
+%superclass-subclass relationships.  One of the earlier examples is
+%Chakrabarti (1998), who classified online texts into topic taxonomies.
+%One of the taxonomies, reprinted from their paper, is shown in
+%Figure \ref{fig:chakra}.
 % sometimes the classes are only the leaves, and sometimes all nodes are classes
 
-\begin{figure}[h]
-\centering
-\includegraphics[scale = 0.4]{chakrabarti_1998.png}
-\caption{A topic taxonomy reprinted from Chakrabarti (1998)}\label{fig:chakra}
-\end{figure}
+%\begin{figure}[h]
+%\centering
+%\includegraphics[scale = 0.4]{chakrabarti_1998.png}
+%\caption{A topic taxonomy reprinted from Chakrabarti (1998)}\label{fig:chakra}
+%\end{figure}
 
-Cost functions for hierarchical class function are commonly derived
-from graph distances induced by the tree $T$.  For example, one might
-define $C(y', y)$ to be the \emph{graph distance} between $y$ and
-$y'$--that is, the minimal number of edges in the graph for any path
-between $y$ and $y'$.
+%Cost functions for hierarchical class function are commonly derived
+%from graph distances induced by the tree $T$.  For example, one might
+%define $C(y', y)$ to be the \emph{graph distance} between $y$ and
+%$y'$--that is, the minimal number of edges in the graph for any path
+%between $y$ and $y'$.
 
-[examples of multi-class classifiers? LDA, QDA, OVA, OVO?]
-
-\subsection{Potential applications}
-
-
-Applications involving an extremely large number of labels, such as
-image labelling, fall into the recently coined category
-of \emph{extreme classification.}  A common issue in extreme
-classification applications is the difficulty of collecting an initial
-dataset which contains enough data for all of the classes in the label
-set $\mathcal{Y}$.
-
-To take a hypothetical (but realistic) example, a researcher might be
-interested in developing a classifier for the purpose of labelling
-images.  She might begin with a list of 10,000 keywords which defines
-the label set $\mathcal{Y}$.  Ideally, she would obtain a dataset by
-running a Google image search on each of the 10,000 keywords, and
-taking 20 images from the $i$th keyword as the training data for the
-$i$th class.  However, initially, she only has the resources to do
-this for a much smaller number of keywords--say 100 keywords.  Yet her
-goal is to develop a new algorithm for multi-class classification
-which works well on the larger set of labels.  Can she get an idea of
-how well here algorithm will work on the full set of classes based on
-an initial ``pilot'' subsample of class labels?
-
-The story just described can be viewed as a metaphor for typical
-paradigm of machine learning research, where academic researchers,
-working under limited resources, develop novel algorithms and apply
-them to relatively small-scale datasets.  Those same algorithms may
-then be adopted by companies and applied to much larger datasets with
-many more classes.  In this scenario, it would be convenient if one
-could simply assume that performance on the smaller-scale
-classification problems was highly representative of performance on
-larger-scale problems.  However, previous works have shown that such a
-simplistic assumption cannot be justified.  In a paper titled ``What
-does classifying more than 10,000 Image Categories Tell Us,'' Deng and
-co-authors compared the performance of four different classifiers on
-three different scales: a small-scale (1,000-class) problem,
-medium-scale (7,404-class) problem, and large-scale (10,184-class)
-problem (all from ImageNet.)  They found that while the
-nearest-neighbor classifier outperformed the support vector machine
-classifier (SVM) in the small and medium scale, the ranking switched
-in the large scale, where the SVM classifier outperformed
-nearest-neighbor.  As they write in their conclusion, ``we cannot
-always rely on experiments on small datasets to predict performance at
-large scale.''  On the other hand, if more principled and accurate
-approaches can be found for predicting large-scale performance from
-smaller datasets, this would give academic researchers a way to get an
-idea of the large-scale performance of their methods without having to
-collect the data themselves, and it would also give companies a way to
-speed up their iterative development cycles, since performance
-extrapolation can reveal models with bad scaling properties in the
-pilot stages of development.
-
-Outside of industry, there are increasingly many applications of
-multi-class classification in scientific experiments.  As we have
-already seen from the Kay et. al. example, neuroscientists are
-interested in how well the brain activity in various regions of the
-brain can discriminate between different classes of stimuli.  In the
-practical matter of experimental design, there is a tradeoff
-associated with how many classes of stimuli to include in the
-experiment.  If too many classes are used, the $p$-values calculated
-from test performance may rise above the significance cutoff due to
-insufficient sample size for training and testing the classifier, as
-well as an increase in the difficulty of the classification task.
-However, when too few classes are used, while the $p$-values may
-become much stronger, the generalizability of the experiment is
-sacrificed because an overly simplistic classification task fails to
-represent the full complexity of the stimuli being studied.  A better
-understanding of how the difficulty of the classification task scales
-with the number of classes could be useful for scientists seeking the
-best tradeoff between power and generalizability in choosing the
-number of classes in the experimental design.
-
-%Can we find a theoretical explanation for why relative performance on
-%the small scale may fail to reflect relative performance on a large
-%scale?  And can we use this understanding to derive a principled way
-%of predicting large-scale performance from small-scale performance?
-%In this paper, we make an initial foray into this question. 
-While our primary goal is to motivate and formulate the question
-rather than to obtain optimal methods, we are optimistic that good
-methods for performance extrapolation can be found, and that such
-methods could aid the development of classifers in academia and
-industry, as well as help the scientists who use machine learning in
-their analysis pipeline design their experiments more effectively.
-
+%[examples of multi-class classifiers? LDA, QDA, OVA, OVO?]
 
 \section{Framework}\label{sec:formulation}
 
@@ -417,29 +418,20 @@ assume that
 \]
 
 With regards to the classification tasks, we assume that there exists
-some prior density $\nu_0$ over $\mathcal{Y}$,
-and that the label subsets $\mathcal{S}_i = \{y^{(1)}, \hdots,
-y^{(k_i)}\}$ are obtained by iid samples with replacement from the density $\nu_0$.
-(An alternative assumption would be that $\mathcal{S}_1 \subset
+some prior density $\pi_0$ over $\mathcal{Y}$, and that the label
+subsets $\mathcal{S}_i = \{y^{(1)}, \hdots, y^{(k_i)}\}$ are obtained
+by iid samples with replacement from the density $\nu_0$.  (An
+alternative assumption would be that $\mathcal{S}_1 \subset
 \mathcal{S}_2$ with $\mathcal{S}_1$ being a subsample of
 $\mathcal{S}_2$: this assumption can also be addressed, as we wil
 discuss later.)
 
-Next, suppose there exists some other density $\nu_1$ over
-$\mathcal{Y}$, and that the prior probabilities for each
+Next, suppose the prior probabilities for each
 classification task are given by
 \[
-\pi_i(y) = \frac{\nu_1(y)}{\sum_{y' \in \mathcal{S}_i} \nu_1(y')}.
+\pi_i(y) = \frac{\pi_0(y)}{\sum_{y' \in \mathcal{S}_i} \pi_0(y')}.
 \]
 % NOTE: overloading density/distribution pi_0
-Define $\pi_0$ as the distribution over $\mathcal{Y}$ with density
-proportional to $\nu_0 \nu_1$. More precisely, suppose that the density of $\pi$ is written
-\begin{equation}\eqref{eq:pi0_eq}
-\pi_0(y) = \frac{\nu_0(y) \nu_1(y)}{\zeta}
-\end{equation}
-where $\zeta$ is a normalizing constant.
-Then the marginal distribution of any
-element of $\mathcal{S}$ is given by $\pi_0$.
 
 Further, let us assume that we have more repeats per class in the
 first classification task than in the second, $r_1 > r_2$.  We discuss
@@ -723,7 +715,7 @@ The predicted label for each test point is
 Therefore, an unbiased estimate of the risk (which is also an unbiased
 estimate of the $k_1$-class average risk) is
 \[
-\text{Test Risk} = \frac{1}{r_{test}}\sum_{i=1}^k \sum_{j=1}^{r_{test}} \eta_1(y^{(i)}) C(\hat{y}_{i, j}, y^{(i)}).
+\text{Test Risk} = \frac{1}{r_{test}}\sum_{i=1}^k \sum_{j=1}^{r_{test}} \frac{\pi_0(y^{(i)})}{\nu_0(y^{(i)})} C(\hat{y}_{i, j}, y^{(i)}).
 \]
 
 Now we turn to the question of estimating the function $\bar{K}(u)$.
@@ -738,7 +730,7 @@ C_{i,\ell} = C(y^{(\ell)}, y^{(i)})
 \]
 and
 \[
-w_i = \eta_1(y^{(i)}).
+w_i = \frac{\pi_0(y^{(i)})}{\nu_0(y^{(i)})}.
 \]
 Then $\bar{K}(u)$ could be estimated via a $d$-th order polynomial regression
 \[
@@ -751,7 +743,7 @@ practice because $U_{i,j,\ell}$ are not directly observed.
 
 Instead, we can obtain unbiased estimates via
 \[
-\hat{U}_{i,j, \ell} = \frac{1}{(k-1)\zeta}\sum_{m \neq \ell} \eta_1(y^{(m)}) I\{M_{i, j}^\ell > M_{i, j}^m\}
+\hat{U}_{i,j, \ell} = \frac{1}{(k-1)\zeta}\sum_{m \neq \ell}  \frac{\pi_0(y^{(m)})}{\nu_0(y^{(m)})} I\{M_{i, j}^\ell > M_{i, j}^m\}
 \]
 However, if we were to simply treat $\hat{U}_{i, j, \ell}$ as a proxy
 for the unobserved $U_{i,j,\ell}$, and apply polynomial regression to
@@ -780,12 +772,12 @@ estimates $\hat{U}_{i,j,\ell}^h$ with unbiased estimators.
 There exist U-statistic estimators of the higher powers of
 $\hat{U}_{i,j,\ell}^h$.  For instance, for $h=2$, the estimator is
 \[
-\hat{U}_{i,j,\ell}^{(2)} = \frac{1}{\zeta^2 k(k-1)} \sum_{m_1\neq m_2 \neq j} \eta_1(y^{(m_1)}) I\{M_{i, j}^\ell > M_{i, j}^{m_2}\}
-\eta_1(y^{(m_2)}) I\{M_{i, j}^\ell > M_{i, j}^{m_2}\}.
+\hat{U}_{i,j,\ell}^{(2)} = \frac{1}{\zeta^2 k(k-1)} \sum_{m_1\neq m_2 \neq j}  \frac{\pi_0(y^{(m_1)})}{\nu_0(y^{(m_2)})} I\{M_{i, j}^\ell > M_{i, j}^{m_2}\}
+ \frac{\pi_0(y^{(m_2)})}{\nu_0(y^{(m_2)})} I\{M_{i, j}^\ell > M_{i, j}^{m_2}\}.
 \]
 In general, the U-statistic is
 \[
-\hat{U}_{i, j, \ell}^{(h)} = \frac{(k-h)!}{\zeta^h k!} \sum_{m_1 \neq \cdots \neq m_h \neq j} \prod_{z=1}^h \eta_1(y^{(m_z)}) I\{M_{i, j}^\ell > M_{i, j}^{m_z}\}.
+\hat{U}_{i, j, \ell}^{(h)} = \frac{(k-h)!}{\zeta^h k!} \sum_{m_1 \neq \cdots \neq m_h \neq j} \prod_{z=1}^h  \frac{\pi_0(y^{(m_z)})}{\nu_0(y^{(m_z)})} I\{M_{i, j}^\ell > M_{i, j}^{m_z}\}.
 \]
 
 In summation, the algorithm is as follows:
