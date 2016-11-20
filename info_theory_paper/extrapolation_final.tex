@@ -282,7 +282,7 @@ multi-label classification problem can be recoded as a single-label
 classification problem [find a reference so we don't have to explain
 this.]
 
-The performance of a classifier on a problem is evaluated by
+The performance of a classification rule on a problem is evaluated by
 specifying a \emph{cost function.}  If the true class is $y$, but the
 classifier outputs $y'$, the severity of this misclassification is
 quantified by $C(y', y)$.  The most common cost function
@@ -305,6 +305,21 @@ picture, we would not want to overly penalize the assignment of
 often appropriate to use a cost function which is reflective of
 the \emph{semantic distance} between two labels, rather than the
 strict zero-one loss.
+
+In our terminology, a \emph{classification model} is an algorithm
+which learns a \emph{classification rule} from \emph{training data}.
+Examples of multi-class classification models include $k$-nearest
+neighbors, multinomial logistic regression, linear discriminant
+analysis (LDA), quadratic discriminant analysis (QDA), decision trees,
+and random forests, as well as the two `divide and conquer'
+approaches, one-vs-one (OVO) and one-vs-all (OVA) (Friedman et al,
+2008.)
+
+The \emph{generalization risk} is the expected cost over the
+population of label-feature pairs.  Given \emph{test data} sampled
+from the population, it is possible to obtain an unbiased estimate of
+the risk fof a classification rule.
+
 % semantic distance is not explained
 
 %The hierarchy of labels is often represented by a tree $T$, where the
@@ -344,13 +359,16 @@ exists a distribution $F_y$ supported on $\mathcal{X}$.  Also suppose
 that there exists a \emph{cost function} $C(\hat{y}, y)$ which
 measures the cost of incorrectly labelling an instance as $\hat{y}$
 when the correct label is $y$.  Further suppose that $0 \leq C(y, y')
-< \infty$ and $C(y, y)=0$ for all $y, y' \in \mathcal{Y}$.
+< \infty$ and $C(y, y)=0$ for all $y, y' \in \mathcal{Y}$.  (Recall
+that in practice, the cost function is specified by the user to
+reflect the needs of the application.)
 
 A \emph{classification task} consists of a subset of labels,
 $\mathcal{S} \subset \mathcal{Y}$, and a prior distribution $\pi$ over
-the label subset.  A \emph{classification rule} for the task consists
-of a function $f$ which maps feature vectors $x \in \mathcal{X}$ to
-labels in $\mathcal{S}$:
+the label subset.  Write $\mathcal{S}=\{y_1,\hdots, y_k\}$, where $k$
+is the number of classes.  A \emph{classification rule} for the task
+consists of a function $f$ which maps feature vectors
+$x \in \mathcal{X}$ to labels in $\mathcal{S}$:
 \[
 f: \mathcal{X} \to \mathcal{S}.
 \]
@@ -364,20 +382,27 @@ rule is the expected loss under the class distribution $\pi$:
 \text{Risk}(f) = \E_\pi[C(\hat{y}, y)] = \int_\mathcal{S} d \pi(y) \int_{\mathcal{X}} C(f(x), y) dF_y(x).
 \]
 
-
+For label $y \in \mathcal{Y}$, define a sample of size $r$ as a
+sequence of i.i.d. observations $X_1,\hdots, X_r \sim F_y$.
+A sample can either be represented as a vector of points, or as
+an \emph{empirical distribution} $\hat{F}_y$
+\[\hat{F}_y = \frac{1}{r}\sum_{i=1}^r \delta_{x_i^{(y)}}.\]
+Let $\Pi_{y, r}$ denote the sampling distribution of $\hat{F}_y$.
 
 A \emph{classification model} $\mathcal{F}$ is an algorithm or
 procedure for producing classification rules given an empirical
 distributions $\hat{F}_y$ for each $y \in \mathcal{S}$, and a vector
 of prior probabilities $\pi$.  The model maps a distribution $G$ and a
-vector $\pi$ to a classification rule $f$.
+vector $\pi$ to a classification rule $f$ (Figure \ref{fig:classification_rule}.)
 
-We consider \emph{datasets} of size $|\mathcal{S}|r$ for a given
-classification task consisting $r$ i.i.d. observations $x_i^{(y)} \sim
-F_y$ for each $y \in \mathcal{S}$.  Then define 
-\[\hat{F}_y = \frac{1}{r}\sum_{i=1}^r \delta_{x_i^{(y)}}.\]
-The sampling distribution of $\hat{F}_y$ is referred to as the
-size-$r$ sampling distribution $\Pi_{y, r}$.
+We suppose that the \emph{training set}
+$\{\hat{F}_y\}_{y \in \mathcal{S}}$ consists of samples of size
+$r_{train}$ for each $y \in \mathcal{S}$
+(Figure \ref{fig:training_set}.) Additionally, we assume that one has
+access to a \emph{test set} of size $r_{test}$.  Notationally, we
+always represent the training set samples for each class as empirical
+distributions $\hat{F}_y$, while the test set samples are written as
+vectors $(X^{(y)}_1,\hdots, X^{(y)}_{r_{test}})$.
 
 \begin{figure}[h]
 \centering
@@ -397,23 +422,27 @@ size-$r$ sampling distribution $\Pi_{y, r}$.
 \caption{Classification risk}\label{fig:risk}
 \end{figure}
 
-The $n$-sample \emph{risk} of the classification model $\mathcal{F}$
+The $r$-repeat \emph{risk} of the classification model $\mathcal{F}$
 is the expected risk of a classification rule $\hat{f} =
-\mathcal{F}(\hat{G})$ for a random dataset of size $n$ for the
-classification task, $\hat{G} \sim \Pi_n$.  That is,
+\mathcal{F}(\hat{F}_{y_1},\hdots, \hat{F}_{y_k})$ for the
+classification task, $\hat{F}_y \sim \Pi_{y, r}$.  That is,
 \[
-\text{Risk}_n(\mathcal{F}; \pi) =
+\text{Risk}_r(\mathcal{F}; \pi) =
 \int \text{Risk}(\mathcal{F}(\{\hat{F}_y\}_{y \in \mathcal{S}};
 \pi)) \prod_{y \in \mathcal{S}} d\Pi_{y, r}(\hat{F}_y).
 \]
+Figure \ref{fig:risk} illustrates the variables involved in defining
+the risk.
 
 The problem of \emph{performance extrapolation} is as follows.
 Suppose we have two classification tasks: the $i$th classification
 task is specified by label subset $\mathcal{S}_i$, prior distribution
 $\pi_i$.  We observe data from the first classification task
-consisting of a dataset of size $n_1$.  The goal is to estimate the
-$n_2$-sample risk of a $\mathcal{F}$ on the second classification
-task, $\text{Risk}_{n_2}(\mathcal{F}; \pi_2)$.
+consisting of a dataset consisting of a training samples of size
+$r_{train}$ per class, plus an independent test samples of size
+$r_{test}$ per class.  The goal is to estimate the $r_{train}$-sample
+risk of a $\mathcal{F}$ on the second classification task,
+$\text{Risk}_{r_{train}}(\mathcal{F}; \pi_2)$.
 
 \subsection{Additional assumptions}
 
@@ -431,37 +460,65 @@ partitioned into $k$ equivalence classes, and in which the cost
 between two label $y, y'$ is a function only of their equivalence
 classes.
 
-We work with bounded cost functions.  Without loss of generality,
-assume that
+We work with bounded cost functions, since such an assumption
+simplifies the theory, and because unbounded cost functions can be
+analyzed by taking a limit of bounded approximations.  Furthermore,
+without loss of generality, we can assume that
 \[
 \sup_{y, y'\in \mathcal{Y}} C(y, y') \leq 1.
 \]
 
-With regards to the classification tasks, we assume that there exists
-some prior density $\pi_0$ over $\mathcal{Y}$, and that the label
-subsets $\mathcal{S}_i = \{y^{(1)}, \hdots, y^{(k_i)}\}$ are obtained
-by iid samples with replacement from the density $\nu_0$.  (An
-alternative assumption would be that $\mathcal{S}_1 \subset
+With regards to the classification tasks, (i) we assume that there
+exists some prior density $\pi_0$ over $\mathcal{Y}$, and that (ii)
+the label subsets $\mathcal{S}_i = \{y^{(1,i)}, \hdots, y^{(k_i,i)}\}$
+are obtained by iid samples with replacement from the density $\nu_i$.
+We pause to remark on these assumptions.
+\begin{itemize}
+\item[i.]
+The assumption of a prior density, when combined with the assumption
+that $\mathcal{Y}$ is a continuum, implies that the probability of any
+particular $y \in \mathcal{Y}$ is zero.  Therefore, this assumption
+would seem to violate most applications of classification, where the
+labels come from a discrete distribution.  However, any discrete
+classification problem can be recoded as an equivalent continuous
+classification problem.  Note that any discrete space $\mathcal{Y}$
+can be expanded to a continuous space $\tilde{\mathcal{Y}}$ by means
+of augmenting the label $y$ with an uninformative auxillary variable
+$u \in [0,1]$.  By defining the cost function $\tilde{C}((y, u), (y',
+u')) = C(y, y')$ and prior distribution $\tilde{\pi}_0 = \pi \times U$
+where $U$ is the uniform distribution, we obtain an equivalent
+classification problem which satisfies our assumptions.
+\item[ii.(a.)]
+We allow the sampling distribution of classes in the label subset to
+differ from the prior probabilities, because $\pi_0$ reflects the
+population distribution of $Y$ while $\nu_i$ reflects the mechanism
+used to pick classes for the label subset.  In experimental settings,
+$\nu_i$ is under the control of the experimenter, so it need not be
+chosen to be identical to $\pi_0$.
+\item[ii.(b.)]
+Note that here we assumed that the label subsets $\mathcal{S}_1$ and
+$\mathcal{S}_2$ are independent: as a consequence of (i), this means
+that they are disjoint with probability one.  An alternative
+assumption would be that $\mathcal{S}_1 \subset
 \mathcal{S}_2$ with $\mathcal{S}_1$ being a subsample of
-$\mathcal{S}_2$: this assumption can also be addressed, as we wil
-discuss later.)
+$\mathcal{S}_2$: this assumption can also be addressed, as we will
+discuss later.
+\end{itemize}
 
-Next, suppose the prior probabilities for each
-classification task are given by
+Now recall that the prior probabilities $\pi_i$ for each
+classification task are free for the user to define, unlike the
+population distribution $\pi_0$ of class labels which is assumed to
+have an objective existence.  Since the subsampled or `small-scale'
+classification tasks (with label subsets $\mathcal{S}_i$) are
+presumably intended to approximate the `full' classification problem
+(with the label set $\mathcal{Y}$), and since the prior in the full
+problem is $\pi_0$, a sensible choice would be to choose
 \[
 \pi_i(y) = \frac{\pi_0(y)}{\sum_{y' \in \mathcal{S}_i} \pi_0(y')}.
 \]
-% NOTE: overloading density/distribution pi_0
-
-Further, let us assume that we have more repeats per class in the
-first classification task than in the second, $r_1 > r_2$.  We discuss
-the possibility of relaxing this condition in the Discussion.
-
-Since the classification tasks are randomly generated, we will aim to
-develop a method for estimating the \emph{average risk}.  In the case
-where the classification tasks are independently generated, the
-average risk is the best predictor (in mean-squared error) for the
-(random) risk.
+as the prior for the $i$th classification task.  As it turns out, such
+a prior assignment also simplifies the theory, so we will assume that
+$\pi_i$ is defined according to the above.
 
 We make some rather strong assumptions with regards to the
 classifiers.  The classifier $\mathcal{F}$ produces classification
@@ -500,10 +557,53 @@ marginal classification models.
 %where $\hat{f}_i$ is a density estimate for the $i$-th component of
 %$\hat{F}$.}.
 The \emph{marginal} property allows us to prove strong results about
-the accuracy of the classifier under the exchangeable sampling
+the accuracy of the classifier under i.i.d. sampling
 assumption, as we see in Section [].
 
-\subsection{Definition of average risk}
+\subsection{Definition of average risk}\label{sec:average_risk}
+
+Since the classification tasks are randomly generated, the $r$-repeat
+risk becomes a \emph{random variable} which depends on the random
+label subset $\mathcal{S}$.
+
+Therefore, define the $k$-class, $r$-repeat \emph{average risk} of classifier $\mathcal{F}$ with prior weights $\pi$ as
+\[
+\text{AvRisk}_{k, r}(\mathcal{F}; \pi) = \E[\text{Risk}_k(\mathcal{F}); \pi)]
+\]
+where the expectation is taken over the distribution of $\mathcal{S} = (Y^{(1)},\hdots, Y^{(k)})$.
+
+As we can see from Figure \ref{fig:average_risk}, the average risk is obtained by averaging
+over four randomizations:
+\begin{enumerate}
+\item[A1.] Drawing the label subset $\mathcal{S}$.
+\item[A2.] Drawing the training dataset.
+\item[A3.] Drawing $Y^*$ from $\mathcal{S}$ according to $\pi$.
+\item[A4.] Drawing $X^*$ from $F_{X^*}$.
+\end{enumerate}
+
+For the sake of developing a better intuition of the average risk, it
+is helpful to define a random variable called the \emph{loss}, which
+is the cost incurred by a single test instance.  The loss is
+determined by quantities from all four randomization steps: the label
+subset $\mathcal{S} = \{Y^{(1)},\hdots, Y^{(k)}\}$, the training samples
+$\hat{F}_{Y^{(1)}},\hdots, \hat{F}_{Y^{(k)}}$, and the test point $(X^*, Y^*)$.
+Formally, we write
+\[
+L = C(\mathcal{F}(\{\hat{F}_y\}_{y \in \mathcal{S}}; \pi)(X^*), Y^*).
+\]
+Now note that the $k$-class, $r$-repeat average risk is the expected loss,
+\begin{equation}\label{eq:avrisk_EL}
+\text{AvRisk}_{k, r}(\mathcal{F}) = \E[L] = \E[C(\mathcal{F}(\{\hat{F}_y\}_{y \in \mathcal{S}}; \pi)(X^*), Y^*)]
+\end{equation}
+where the expectation is taken over the joint distribution of all the
+quantities $\{Y^{(1)},\hdots,
+Y^{(k)}, \hat{F}_{Y^{(1)}},\hdots, \hat{F}_{Y^{(k)}}, (X^*, Y^*)\}$.
+
+We will aim to develop a method for estimating the \emph{average
+risk}.  In the case where the classification tasks are independently
+generated, the average risk is the best predictor (in mean-squared
+error) for the (random) risk.
+
 
 \begin{figure}[h]
 \centering
@@ -562,24 +662,6 @@ more labels than we currently see in the training set.
 
 \subsection{Analysis of the average risk}
 
-The average risk is obtained by averaging over four randomizations:
-\begin{enumerate}
-\item Drawing the label subset $\mathcal{S}$.
-\item Drawing the training dataset.
-\item Drawing $Y^*$ from $\mathcal{S}$ according to $\pi$.
-\item Drawing $X^*$ from $F_{X^*}$.
-\end{enumerate}
-
-In other words, one can define a random variable $L$
-\[
-L = C(\mathcal{F}(\{\hat{F}_y\}_{y \in \mathcal{S}}, \pi)(X^*), Y^*)
-\]
-which clearly depends on all of the random quantities $\mathcal{S}, \hat{F}_y, \pi, Y^*, X^*$, and where
-\[
-\text{Average Risk}_k(\mathcal{F}) = \E[L]
-\]
-where the expectation is taken over all four randomization steps.
-
 As we pointed out in the previous section, the challenging case for
 the analysis is the ``undersampled'' regime where we wish to predict
 the loss on a larger label set.  Given data with $k_1$ classes, we
@@ -588,12 +670,37 @@ so the challenge is to understand how the risk will ``extrapolate'' to
 $k > k_1$.  Hence, the goal of the current analysis is to isolate the
 effect of $k$, the size of the label subset, on the average risk.
 
-We find that we can do this by \emph{conditioning on} the pair $(x^*,
-y^*)$ while \emph{averaging} over the first two steps.
-Define the \emph{conditional risk} $R_k(y^*, x^*)$ as
+Our strategy is to analyze the average risk \eqref{eq:avrisk_EL} by
+means of \emph{conditioning on} the true label and its training
+sample, $(y^*, \hat{F}_{y^*})$, and the test feature $x^*$
+while \emph{averaging} over all the other random variables.  Define
+the \emph{conditional risk} $R_k(y^*, x^*)$ as
 \[
 R_k(y^*, x^*) = \E[L|Y^*=y, X^* = x].
 \]
+
+Without loss of generality, we can write the label subset $\mathcal{S}
+= \{Y^*, Y^{(1)},\hdots, Y^{(k-1)}\}$.  Note that due to independence,
+$Y^{(1)},\hdots, Y^{(k-1)}$ are still i.i.d. from $\pi_0$ even
+conditioning on $Y^* = y^*.$ Therefore, the conditional risk can be
+obtained via the following alternative order of randomizations:
+\begin{enumerate}
+\item[C0.] 
+Fix $y^*, \hat{F}_y^*,$ and $x^*$.  Note that $M_{y^*}(x^*)
+= \mathcal{M}(\hat{F}_{y^*}; \pi(y^*))(x^*)$ is also fixed.
+\item[C1.]
+Draw the \emph{incorrect labels} $Y^{(1)},\hdots, Y^{(k)}$ i.i.d. from
+$\pi$.  (Note that $Y^{(i)} \neq y^*$ with probability 1 due to the
+continuity assumptions on $\mathcal{Y}$ and $\pi$.)
+\item[C2.]
+
+\end{enumerate}
+
+Compared to four randomization steps listed in
+section \ref{sec:average_risk}, we have essentially conditioned on
+steps A3 and A4 and randomized over steps A1 and A2.
+
+
 Let $G$ denote the joint distribution over $(X, Y)$ obtained by
 drawing $Y \sim \pi_0$ and $X \sim F_Y$.  Since $Y^*$ has the marginal
 distribution $\pi_0$, it follows that
