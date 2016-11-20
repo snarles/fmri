@@ -48,6 +48,7 @@
 \newtheorem{corollary}{Corollary}[theorem]
 \newtheorem{lemma}{Lemma}[section]
 \newcommand{\bZ}{\boldsymbol{Z}}
+\newcommand{\bz}{\boldsymbol{z}}
 \newcommand{\bx}{\boldsymbol{x}}
 \newcommand{\bX}{\boldsymbol{X}}
 
@@ -627,9 +628,7 @@ error) for the (random) risk.
 %Introduce the notation $\{(w_i, x_i, y_i)\}_{i=1}^n$: ordered triples
 %of weight, predictor and response.
 
-%\subsection{Measurement error models}
 
-%Explain background.
 
 \section{Performance extrapolation for marginal classification models}
 
@@ -903,7 +902,7 @@ practice to estimate $\text{Average Risk}_k$ requires some means of
 estimating the unknown function $\bar{K}$--which we discuss in the
 following.
 
-\subsection{Estimation}
+\subsection{Estimation}\label{sec:estimation}
 
 Now we address the problem of estimating $\text{Average Risk}_{k_2}$
 from data.  
@@ -1115,10 +1114,134 @@ Under this moment constraint, estimate $\hat{K}(u)$ using pseudolikelihood.
 
 \appendix
 \section{Appendix}
+\subsection{Measurement error models}
+
+We make use of measurement error regression models in
+section \ref{sec:estimation}: in particular, the regression adjustment
+method.  In this section we focus on the specific measurement error
+models and methods that are used in this work: for an overview of the
+subject, the reader can consult (Caroll, 2005).
+
+In the traditional setting of linear regression, one observes data
+$(\bx_i, y_i)_{i=1}^n$ where the data is generated from the linear model
+\[
+Y_i = \bx_i^T \beta + \epsilon_i
+\]
+for some random noise variables $\epsilon_i$ that satisfy
+$\E[\epsilon_i] = 0$.  However, in measurement error models, we assume
+that $\bX_i$ is not directly observed.  (We write $\bX_i$ instead of
+$\bx_i$, since in some measurement error models the true covariates
+are also assumed to be random.)  Instead, one only has access to a
+corrupted version of the covariates, $\bZ_i$.  We say that $\bZ_i$
+are \emph{noisy measurements} of $\bX_i$.  Depending on the noise
+model for $\bZ_i|\bX_i$, the OLS coefficients for the regression of
+$Y$ on $\bZ$
+\begin{equation}\label{eq:ols}
+\hat{\beta}_{naive} = \argmin_\beta \sum_{i=1}^n (y_i - \bz_i^T \beta)^2
+\end{equation}
+may be a biased estimated of $\beta.$
+
+Suppose we can true the true covariates $\bX_i$ as random variables.
+We say that the measurement error is \emph{nondifferential} if $\bZ_i$
+is conditionally independent of $Y_i$ given $\bX_i$.  In other words,
+the distribution of $Y$ only depends on $(\bX, \bZ)$ through $\bX$.
+For nondifferential measurement error, it is possible to obtain an
+unbiased estimate of $\beta$ by using \emph{regression calibration}.
+
+Regression calibration requires the ability to estimate or exactly
+compute the conditional expectation $\E[\bX_i|\bZ_i].$ For simplicity,
+suppose that there exists a known function $g$ such that $g(\bz)
+= \E[\bX|\bZ = \bz].$ Then, define $\hat{\bx}_i = g(\bz_i)$ for $i =
+1,\hdots, n$.  The calibrated estimate of $\beta$ is
+\begin{equation}\label{eq:rc}
+\hat{\beta}_{rc} = \argmin_\beta \sum_{i=1}^n (y_i - \hat{\bx}_i^T \beta)^2
+\end{equation}
+We can see that the estimate is unbiased by the following identity.
+Observe that
+\begin{align*}
+\E[Y|\hat{\bX}] &= \E[Y|\bZ]
+\\&= \E[\bX^T \beta + \epsilon|\bZ]
+\\&= \E[\bX|\bZ]^T \beta
+\\&= \hat{\bX}^T \beta.
+\end{align*}
+This identity shows that $\beta$ is the population regression
+coefficient of $Y$ on $\hat{\bX}.$ Therefore, applying ordinary least
+squares to the data $(\hat{\bx}_i, y_i)$ will produce an unbiased
+estimate of the population regression coefficient--that is, $\beta.$
+
+In the \emph{Berkson} measurement error model, we have
+\[
+\bx_i = \bz_i + \eta_i
+\]
+where $\eta_i$ are independent error variates such that
+$\eta_i \perp \epsilon_i | \bz_i.$ Thus, in the Berkson model, the
+measurement error is nondifferentiable, and regression calibration can
+be applied to estimate $\beta$.  Furthermore, supposing that
+$\E[\eta_i]=0$, then we can simply take $\hat{\bx} = \bz_i$--in other
+words, the naive OLS estimate is equivalent to the regression
+calibration estimate, and therefore no correction is needed.
+However, suppose we have a \emph{nonlinear additive model} of the form
+\[
+Y_i = \sum_{j=1}^d \beta_j h_j(X_i) + \epsilon_i.
+\]
+Then, even if $\E[X_i|Z_i] = Z_i$, it is not true in general that
+$\E[h_j(X_i)|Z_i] = Z_i$.  Therefore, one needs to construct unbiased
+(or approximately unbiased) estimates $H_{i,j}$ such that
+\[
+\E[H_{i,j}|Z_i] = \E[h_j(X_i)|Z_i]
+\]
+and estimate $\beta$ via
+\[
+\hat{\beta}_{rc} = \argmin_\beta \sum_{i=1}^n \left(y_i - \sum_{j=1}^d \beta_j H_{i, j} \right)^2.
+\]
+
+\subsection{Regression with importance sampling}
+
+This section describes a fairly specialized problem in linear
+regression which we encounter in section \ref{sec:estimation}.
+
+Suppose $\{F_\theta\}$ is a family of bivariate distributions for
+random variates $(\bX, Y)$, with $\bX \in \mathbb{R}^p$ and
+$Y \in \mathbb{R}$, indexed by parameter $\theta \in \Theta.$ Let $G$,
+$H$ be distributions on $\Theta$.  Define $F^*$ as the bivariate
+distribution obtained by mixing over $\theta \sim G$:
+\[
+F^*(A) = \int_\Theta F_\theta(A) dG(\theta)
+\]
+for any measurable set $A \in \mathbb{R}^p \times \mathbb{R}$.  Now
+suppose that $Y$ has a conditional expectation which is linear in
+$\bX$ under $F^*$:
+\[
+\E_{F^*}[Y|\bX] = \bX^T \beta
+\]
+for some $\beta \in \mathbb{R}^p$.
+Equivalently,
+\[
+\int_{A \times \mathbb{R}} y I(\bx \in A) dF^*(\bx, y) = \beta^T \left(\int_{A \times \mathbb{R}} \bx I(\bx \in A) dF^*(\bx, y)\right)
+\]
+for all measurable $A \subset \mathbb{R}^p$.
+
+However, the conditional expectation $\E_{F_\theta}[Y|\bX]$ need not
+be linear in $\bX$ for $\theta \in \Theta$.
+
+Now, suppose we observe data
+triples $(\theta_i, x_i, y_i)$ which are generated as follows:
+\begin{itemize}
+\item Draw $\theta_i \sim H$.
+\item Draw $(X_i, Y_i) \sim F_\theta$.
+\end{itemize}
+Let $\eta$ be a Radon-Nikodym derivative of $H$ with respect to $G$, so that $H = \eta G$.
+Then an unbiased estimate of $\beta$ can be obtained via an importance sampling estimate:
+\[
+\hat{\beta} = \argmin_\beta \sum_{i=1}^n \frac{1}{\eta(\theta_i)} (y_i - \bx_i^T \beta).
+\]
+
+\subsection{Proofs}
 
 \begin{lemma}\label{lemma:U_function}
 Defining $U_{y,\hat{F}_y}(x)$ as in \eqref{eq:U_function}.
 \end{lemma}
+
 
 
 \section*{References}
