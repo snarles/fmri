@@ -389,11 +389,16 @@ an \emph{empirical distribution} $\hat{F}_y$
 \[\hat{F}_y = \frac{1}{r}\sum_{i=1}^r \delta_{x_i^{(y)}}.\]
 Let $\Pi_{y, r}$ denote the sampling distribution of $\hat{F}_y$.
 
-A \emph{classification model} $\mathcal{F}$ is an algorithm or
-procedure for producing classification rules given an empirical
-distributions $\hat{F}_y$ for each $y \in \mathcal{S}$, and a vector
-of prior probabilities $\pi$.  The model maps a distribution $G$ and a
-vector $\pi$ to a classification rule $f$ (Figure \ref{fig:classification_rule}.)
+In the literature, the term \emph{classifier} is used ambiguously to
+refer to either what we call the \emph{classification model} or
+the \emph{classification rule.}  Here, we take a \emph{classification
+model} $\mathcal{F}$ to mean an algorithm or procedure for producing
+classification rules given an empirical distributions $\hat{F}_y$ for
+each $y \in \mathcal{S}$, and a vector of prior probabilities $\pi$.
+The model maps a distribution $G$ and a vector $\pi$ to a
+classification rule $f$ (Figure \ref{fig:classification_rule}.)
+Within this paper, we use the word \emph{classifier} as a shorthand
+for \emph{classification model} when there is no danger of ambiguity.
 
 We suppose that the \emph{training set}
 $\{\hat{F}_y\}_{y \in \mathcal{S}}$ consists of samples of size
@@ -566,11 +571,13 @@ Since the classification tasks are randomly generated, the $r$-repeat
 risk becomes a \emph{random variable} which depends on the random
 label subset $\mathcal{S}$.
 
-Therefore, define the $k$-class, $r$-repeat \emph{average risk} of classifier $\mathcal{F}$ with prior weights $\pi$ as
+Therefore, define the $k$-class, $r$-repeat \emph{average risk} of
+classifier $\mathcal{F}$ with prior weights $\pi$ as
 \[
-\text{AvRisk}_{k, r}(\mathcal{F}; \pi) = \E[\text{Risk}_k(\mathcal{F}); \pi)]
+\text{AvRisk}_{k, r, \nu}(\mathcal{F}; \pi) = \E[\text{Risk}_k(\mathcal{F}); \pi)]
 \]
-where the expectation is taken over the distribution of $\mathcal{S} = (Y^{(1)},\hdots, Y^{(k)})$.
+where the expectation is taken over the distribution of $\mathcal{S} =
+(Y^{(1)},\hdots, Y^{(k)})$ when $Y^{(i)} \stackrel{iid}{\sim} \nu$.
 
 As we can see from Figure \ref{fig:average_risk}, the average risk is obtained by averaging
 over four randomizations:
@@ -593,7 +600,7 @@ L = C(\mathcal{F}(\{\hat{F}_y\}_{y \in \mathcal{S}}; \pi)(X^*), Y^*).
 \]
 Now note that the $k$-class, $r$-repeat average risk is the expected loss,
 \begin{equation}\label{eq:avrisk_EL}
-\text{AvRisk}_{k, r}(\mathcal{F}) = \E[L] = \E[C(\mathcal{F}(\{\hat{F}_y\}_{y \in \mathcal{S}}; \pi)(X^*), Y^*)]
+\text{AvRisk}_{k, r, \nu}(\mathcal{F}) = \E[L] = \E[C(\mathcal{F}(\{\hat{F}_y\}_{y \in \mathcal{S}}; \pi)(X^*), Y^*)].
 \end{equation}
 where the expectation is taken over the joint distribution of all the
 quantities $\{Y^{(1)},\hdots,
@@ -674,10 +681,13 @@ Our strategy is to analyze the average risk \eqref{eq:avrisk_EL} by
 means of \emph{conditioning on} the true label and its training
 sample, $(y^*, \hat{F}_{y^*})$, and the test feature $x^*$
 while \emph{averaging} over all the other random variables.  Define
-the \emph{conditional risk} $R_k(y^*, x^*)$ as
+the \emph{conditional average risk} $\text{CondRisk}_k((y^*, \hat{F}_{y^*}), x^*)$ as
 \[
-R_k(y^*, x^*) = \E[L|Y^*=y, X^* = x].
+\text{CondRisk}_k((y^*, \hat{F}_{y^*}), x^*) = \E[L|Y^*=y^*, X^* = x^*, \hat{F}_{Y^*} = \hat{F}_{y^*}].
 \]
+Figure \ref{fig:conditional_risk} illustrates the variables which are
+fixed under conditioning and the variables which are randomized.
+Compare to figure \ref{fig:average_risk}.
 
 Without loss of generality, we can write the label subset $\mathcal{S}
 = \{Y^*, Y^{(1)},\hdots, Y^{(k-1)}\}$.  Note that due to independence,
@@ -690,26 +700,32 @@ Fix $y^*, \hat{F}_y^*,$ and $x^*$.  Note that $M_{y^*}(x^*)
 = \mathcal{M}(\hat{F}_{y^*}; \pi(y^*))(x^*)$ is also fixed.
 \item[C1.]
 Draw the \emph{incorrect labels} $Y^{(1)},\hdots, Y^{(k)}$ i.i.d. from
-$\pi$.  (Note that $Y^{(i)} \neq y^*$ with probability 1 due to the
-continuity assumptions on $\mathcal{Y}$ and $\pi$.)
+$\nu$.  (Note that $Y^{(i)} \neq y^*$ with probability 1 due to the
+continuity assumptions on $\mathcal{Y}$ and $\nu$.)
 \item[C2.]
-
+Draw the training samples for the incorrect labels
+$\hat{F}_{Y^{(1)}},\hdots, \hat{F}_{Y^{(k-1)}}$.  This determines
+\[
+\hat{Y} = \argmax_{y \in \mathcal{S}} M_y(x^*)
+\]
+and hence
+\[
+L = C(\hat{Y}, y^*).
+\]
 \end{enumerate}
-
 Compared to four randomization steps listed in
 section \ref{sec:average_risk}, we have essentially conditioned on
 steps A3 and A4 and randomized over steps A1 and A2.
 
-
-Let $G$ denote the joint distribution over $(X, Y)$ obtained by
-drawing $Y \sim \pi_0$ and $X \sim F_Y$.  Since $Y^*$ has the marginal
-distribution $\pi_0$, it follows that
-\begin{equation}\label{eq:rk_eq}
-\text{Average Risk}_k(\mathcal{F}) = \int \int R_k(y^*, x^*) dG(x^*, y^*).
-\end{equation}
-What we have done is to rewrite the average risk as the expectation of
-$R_k$, which depends on $k$, according to a measure $G$ which does
-\emph{not} depend on $k$.
+%Let $G$ denote the joint distribution over $(X, Y)$ obtained by
+%drawing $Y \sim \pi_0$ and $X \sim F_Y$.  Since $Y^*$ has the marginal
+%distribution $\pi_0$, it follows that
+%\begin{equation}\label{eq:rk_eq}
+%\text{Average Risk}_k(\mathcal{F}) = \int \int R_k(y^*, x^*) dG(x^*, y^*).
+%\end{equation}
+%What we have done is to rewrite the average risk as the expectation of
+%$R_k$, which depends on $k$, according to a measure $G$ which does
+%\emph{not} depend on $k$.%
 
 \begin{figure}[h]
 \centering
@@ -717,39 +733,52 @@ $R_k$, which depends on $k$, according to a measure $G$ which does
 \caption{Conditional average risk}\label{fig:conditional_risk}
 \end{figure}
 
-However, we will further decompose $R_k$ into $k$-dependent and $k$-independent components.
-
-Additional technical assumptions:
+%However, we will further decompose $R_k$ into $k$-dependent and $k$-independent components.
+Having defined the conditional average risk, we will now further
+decompose it to expose its dependence on $k$.
+We make the following additional technical assumptions:
 \begin{itemize}
 \item 
-Scaling property of margins, if $\mathcal{M}(\hat{F}_1, \pi_1)(x) >
+\emph{Scaling property of margins}: if $\mathcal{M}(\hat{F}_1, \pi_1)(x) >
 \mathcal{M}(\hat{F}_2, \pi_2)(x)$ then also $\mathcal{M}(\hat{F}_1,
 c\pi_1)(x) > \mathcal{M}(\hat{F}_2, c\pi_2)(x)$.
 \item 
-Tie-breaking condition, for all $x \in \mathcal{X}$,
-$\mathcal{M}(\hat{F}_1, \pi_1)(x) = \mathcal{M}(\hat{F}_2, \pi_2)(x)$
-with zero probability.
+\emph{Tie-breaking condition}: for all $x \in \mathcal{X}$,
+$\mathcal{M}(\hat{F}_Y, \pi_1)(x) = \mathcal{M}(\hat{F}_{Y'}, \pi_2)(x)$
+with zero probability for $Y \neq Y'$ drawn from $\nu$.
 \end{itemize}
+The scaling property of margins is satisfied by most of the marginal
+classifiers which are used in practice, and as such we do not consider
+it to be a strong assumption.  Meanwhile, the tie-breaking condition
+is a technical assumption which allows us to neglect the specification
+of a tie-breaking rule in the case that margins are tied.  In
+practice, one can simply break ties randomly, which is mathematically
+equivalent to adding a small amount of random noise $\epsilon$ to the
+function $\mathcal{M}$.
 
-Define the U-functions
+Now, in order to analyze the $k$-class behavior of the conditional
+average risk, we begin by considering the \emph{two-class} situation.
+
+In the two-class situation, we have a true label $y^*$ and one
+incorrect label, $Y$.  Define the \emph{U-function}
+$U_{x^*}(y^*, \hat{F}_{y^*})$ as the \emph{probability of correct
+classification} in the two-class case.
+The classification is correct if the margin
+$M_{y^*}(x^*)$ is greater than the margin $M_Y(x^*)$, and incorrect
+otherwise.  
+Since we are fixing $x^*$ and $(y^*, \hat{F}_{y^*})$, the
+probability of correct classification is obtained by taking an expectation:
 \begin{align}\label{eq:ufunc}
-U_x(y) &= \Pr[\mathcal{F}(\hat{F}_y, \pi_0(y))(x) > \mathcal{F}(\hat{F}_Y, \pi_0(Y))(x)]
+U_{x^*}(y^*, \hat{F}_{y^*}) &= \Pr[M_{y^*}(x^*) > \mathcal{M}(\hat{F}_Y, \pi_0(Y))(x^*)]
 \\&= \int_{\mathcal{Y}} 
 I\{
-\mathcal{F}(\hat{F}_y, \pi_0(y))(x) > \mathcal{F}(\hat{F}_{y'}, \pi_0(y'))(x)
+M_{y^*}(x^*) > \mathcal{M}(\hat{F}_{y}, \pi_0(y))(x)
 \}
 d\Pi_{y, r}(\hat{F}_y)
-d\Pi_{y', r}(\hat{F}_{y'})
-d\pi_0(y').
+d\pi_0(y).
 \end{align}
-Under the scaling property of margins, we have
-\[
-U_x(y) =  \Pr[\mathcal{F}(\hat{F}_y, \pi(y))(x) > \mathcal{F}(\hat{F}_Y, \pi(Y))(x)]
-\]
-for the \emph{random} $\pi$ corresponding to $\mathcal{S}$.  Hence,
-$U_x(y)$ gives the probability that an observation $x$ would be
-assigned to class $y$, supposing that the only two choices for labels
-were $y$ and $Y'$, with $Y'$ drawn uniformly from $\pi_0$.
+See also figure \ref{fig:U_function} for an graphical illustration of
+the definition.
 
 \begin{figure}[h]
 \centering
@@ -757,8 +786,11 @@ were $y$ and $Y'$, with $Y'$ drawn uniformly from $\pi_0$.
 \caption{U-functions}\label{fig:U_function}
 \end{figure}
 
-Note that the random variable $U_x(Y)$ for $Y \sim \pi_0$ is uniformly
-distributed for all $x \in \mathcal{X}$ (hence the name ``U-function'').
+An important property of the U-function, and the basis for its name,
+is that the random variable $U_x(Y, \hat{F}_Y)$ for $Y \sim \nu$ and
+$\hat{F}_Y \sim \Pi_{Y, r}$ is uniformly distributed for all
+$x \in \mathcal{X}$.  This is proved in Lemma
+
 
 %And, under the tie-breaking condition, we have
 %\[
