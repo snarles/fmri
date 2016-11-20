@@ -344,7 +344,7 @@ exists a distribution $F_y$ supported on $\mathcal{X}$.  Also suppose
 that there exists a \emph{cost function} $C(\hat{y}, y)$ which
 measures the cost of incorrectly labelling an instance as $\hat{y}$
 when the correct label is $y$.  Further suppose that $0 \leq C(y, y')
-\leq \infty$ and $C(y, y)=0$ for all $y, y' \in \mathcal{Y}$.
+< \infty$ and $C(y, y)=0$ for all $y, y' \in \mathcal{Y}$.
 
 A \emph{classification task} consists of a subset of labels,
 $\mathcal{S} \subset \mathcal{Y}$, and a prior distribution $\pi$ over
@@ -364,6 +364,8 @@ rule is the expected loss under the class distribution $\pi$:
 \text{Risk}(f) = \E_\pi[C(\hat{y}, y)] = \int_\mathcal{S} d \pi(y) \int_{\mathcal{X}} C(f(x), y) dF_y(x).
 \]
 
+
+
 A \emph{classification model} $\mathcal{F}$ is an algorithm or
 procedure for producing classification rules given an empirical
 distributions $\hat{F}_y$ for each $y \in \mathcal{S}$, and a vector
@@ -376,6 +378,24 @@ F_y$ for each $y \in \mathcal{S}$.  Then define
 \[\hat{F}_y = \frac{1}{r}\sum_{i=1}^r \delta_{x_i^{(y)}}.\]
 The sampling distribution of $\hat{F}_y$ is referred to as the
 size-$r$ sampling distribution $\Pi_{y, r}$.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale = 0.4]{extrapolation_figures/training_set.png}
+\caption{Training set}\label{fig:training_set}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale = 0.4]{extrapolation_figures/classification_rule.png}
+\caption{Classification rule}\label{fig:classification_rule}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale = 0.4]{extrapolation_figures/risk.png}
+\caption{Classification risk}\label{fig:risk}
+\end{figure}
 
 The $n$-sample \emph{risk} of the classification model $\mathcal{F}$
 is the expected risk of a classification rule $\hat{f} =
@@ -483,16 +503,24 @@ The \emph{marginal} property allows us to prove strong results about
 the accuracy of the classifier under the exchangeable sampling
 assumption, as we see in Section [].
 
-\subsection{Local polynomial regression}
+\subsection{Definition of average risk}
 
-Explain background.
+\begin{figure}[h]
+\centering
+\includegraphics[scale = 0.4]{extrapolation_figures/average_risk.png}
+\caption{Average risk}\label{fig:average_risk}
+\end{figure}
 
-Introduce the notation $\{(w_i, x_i, y_i)\}_{i=1}^n$: ordered triples
-of weight, predictor and response.
+%\subsection{Local polynomial regression}
 
-\subsection{Measurement error models}
+%Explain background.
 
-Explain background.
+%Introduce the notation $\{(w_i, x_i, y_i)\}_{i=1}^n$: ordered triples
+%of weight, predictor and response.
+
+%\subsection{Measurement error models}
+
+%Explain background.
 
 \section{Performance extrapolation for marginal classification models}
 
@@ -576,6 +604,12 @@ What we have done is to rewrite the average risk as the expectation of
 $R_k$, which depends on $k$, according to a measure $G$ which does
 \emph{not} depend on $k$.
 
+\begin{figure}[h]
+\centering
+\includegraphics[scale = 0.4]{extrapolation_figures/conditional_risk.png}
+\caption{Conditional average risk}\label{fig:conditional_risk}
+\end{figure}
+
 However, we will further decompose $R_k$ into $k$-dependent and $k$-independent components.
 
 Additional technical assumptions:
@@ -609,6 +643,12 @@ for the \emph{random} $\pi$ corresponding to $\mathcal{S}$.  Hence,
 $U_x(y)$ gives the probability that an observation $x$ would be
 assigned to class $y$, supposing that the only two choices for labels
 were $y$ and $Y'$, with $Y'$ drawn uniformly from $\pi_0$.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale = 0.4]{extrapolation_figures/U_function.png}
+\caption{U-functions}\label{fig:U_function}
+\end{figure}
 
 Note that the random variable $U_x(Y)$ for $Y \sim \pi_0$ is uniformly
 distributed for all $x \in \mathcal{X}$ (hence the name ``U-function'').
