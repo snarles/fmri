@@ -22,16 +22,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.52434117"
-     inkscape:cx="320.89965"
-     inkscape:cy="454.23219"
+     inkscape:zoom="0.26217059"
+     inkscape:cx="355.5037"
+     inkscape:cy="683.09082"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="721"
      inkscape:window-height="796"
-     inkscape:window-x="500"
-     inkscape:window-y="77"
+     inkscape:window-x="313"
+     inkscape:window-y="95"
      inkscape:window-maximized="0" />
   <defs
      id="defs39944" />
@@ -43,7 +43,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -53,7 +53,10 @@
      id="layer1">
     <g
        transform="translate(-160.64753,-201.78832)"
-       id="g2990">
+       id="g2990"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
          id="content"
@@ -74,45 +77,57 @@
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
-       x="-5.4106789"
-       y="33.817314"
+       x="-234.2693"
+       y="60.517487"
        id="text39985"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan39987"
-         x="-5.4106789"
-         y="33.817314">Risk</tspan></text>
+         x="-234.2693"
+         y="60.517487">Risk</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
-       x="114.90775"
-       y="-359.92535"
+       x="13.093437"
+       y="-397.73969"
        id="text39989"
        sodipodi:linespacing="125%"
-       transform="matrix(0,1,-1,0,0,0)"><tspan
+       transform="matrix(0,1,-1,0,0,0)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan39991"
-         x="114.90775"
-         y="-359.92535">Training</tspan></text>
+         x="13.093437"
+         y="-397.73969">Training</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
-       x="111.8743"
-       y="-405.87418"
+       x="13.874298"
+       y="-437.96701"
        id="text39993"
        sodipodi:linespacing="125%"
-       transform="matrix(0,1,-1,0,0,0)"><tspan
+       transform="matrix(0,1,-1,0,0,0)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan39995"
-         x="111.8743"
-         y="-405.87418">Test</tspan></text>
+         x="13.874298"
+         y="-437.96701">Test</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
        x="-232.8024"
        y="657.51263"
        id="text40009"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan40011"
          x="-232.8024"
@@ -127,7 +142,10 @@
        x="-226.94984"
        y="443.32343"
        id="text40015"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan40017"
          x="-226.94984"
@@ -142,7 +160,10 @@
        x="75.022774"
        y="855.01813"
        id="text40021"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan40023"
          x="75.022774"
@@ -155,7 +176,10 @@
        xml:space="preserve"
        id="flowRoot40043"
        style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
-       transform="translate(-353.78948,-556.52089)"><flowRegion
+       transform="translate(-353.78948,-556.52089)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
          id="flowRegion40045"><rect
            id="rect40047"
            width="508.57144"
@@ -167,7 +191,10 @@
        xml:space="preserve"
        id="flowRoot40053"
        style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
-       transform="translate(-316.67988,-114.05455)"><flowRegion
+       transform="translate(-316.67988,-114.05455)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
          id="flowRegion40055"><rect
            id="rect40057"
            width="668.57141"
@@ -179,7 +206,10 @@
        xml:space="preserve"
        id="flowRoot40063"
        style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
-       transform="translate(-1146.0754,329.47248)"><flowRegion
+       transform="translate(-1146.0754,329.47248)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
          id="flowRegion40065"><rect
            id="rect40067"
            width="385.71429"
@@ -191,7 +221,10 @@
        xml:space="preserve"
        id="flowRoot40083"
        style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
-       transform="translate(-601.49476,-837.65273)"><flowRegion
+       transform="translate(-601.49476,-837.65273)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
          id="flowRegion40085"><rect
            id="rect40087"
            width="405.71429"
@@ -201,61 +234,89 @@
          id="flowPara40089">   Test</flowPara><flowPara
          id="flowPara40091"> Label</flowPara></flowRoot>    <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 394.28572,112.36218 0,820"
+       d="m 428.28572,14.36218 0,938.24362"
        id="path40093"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <rect
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="rect40603"
        width="99.709259"
        height="73.626205"
        x="-228.3511"
-       y="194.16602" />
+       y="194.16602"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <rect
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="rect40603-7"
        width="112.98712"
        height="73.257362"
        x="-233.2267"
-       y="413.4389" />
+       y="413.4389"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <rect
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="rect40603-1"
        width="130.99989"
        height="73.197571"
        x="-238.30399"
-       y="629.44708" />
+       y="629.44708"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <rect
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="rect40603-0"
        width="183.13403"
        height="72.589211"
        x="71.654182"
-       y="824.43542" />
+       y="824.43542"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <rect
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="rect40603-7-5"
        width="86.068741"
        height="73.632309"
        x="452.1087"
-       y="324.94977" />
+       y="324.94977"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <rect
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="rect40603-7-6"
        width="112.98712"
        height="73.257362"
        x="443.87161"
-       y="486.77747" />
+       y="486.77747"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <rect
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="rect40603-7-2"
        width="140.67838"
        height="72.917633"
        x="516.24243"
-       y="821.07532" />
+       y="821.07532"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <g
        id="g40716"
-       transform="matrix(0,1,-1,0,416.16916,-347.94471)">
+       transform="matrix(0,1,-1,0,416.16916,-347.94471)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <path
          sodipodi:nodetypes="cscssc"
          inkscape:connector-curvature="0"
@@ -271,7 +332,10 @@
     </g>
     <g
        transform="translate(-318.23105,-114.00127)"
-       id="g7869">
+       id="g7869"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
          id="g7871"
@@ -303,7 +367,10 @@
            id="path7879" /></g>    </g>
     <g
        id="g40813"
-       transform="matrix(0,1,-1,0,670.30525,110.86474)">
+       transform="matrix(0,1,-1,0,670.30525,110.86474)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <path
          inkscape:connector-curvature="0"
          id="path36969"
@@ -322,7 +389,10 @@
     </g>
     <g
        id="g40813-1"
-       transform="matrix(0,1,-1,0,975.60968,110.32146)">
+       transform="matrix(0,1,-1,0,975.60968,110.32146)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <path
          inkscape:connector-curvature="0"
          id="path36969-91"
@@ -341,7 +411,10 @@
     </g>
     <g
        id="g10407"
-       transform="translate(-337.58625,109.73823)">
+       transform="translate(-337.58625,109.73823)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          word-spacing="normal"
          letter-spacing="normal"
@@ -380,7 +453,10 @@
            style="fill:#000000;stroke-width:0" /></g>    </g>
     <g
        id="g40813-3"
-       transform="matrix(0,1,-1,0,670.235,343.9748)">
+       transform="matrix(0,1,-1,0,670.235,343.9748)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <path
          inkscape:connector-curvature="0"
          id="path36969-4"
@@ -399,7 +475,10 @@
     </g>
     <g
        id="g40813-1-6"
-       transform="matrix(0,1,-1,0,975.53938,343.43152)">
+       transform="matrix(0,1,-1,0,975.53938,343.43152)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <path
          inkscape:connector-curvature="0"
          id="path36969-91-0"
@@ -418,7 +497,10 @@
     </g>
     <g
        id="g28435"
-       transform="translate(-383.95229,324.86092)">
+       transform="translate(-383.95229,324.86092)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          word-spacing="normal"
          letter-spacing="normal"
@@ -466,7 +548,10 @@
            style="fill:#000000;stroke-width:0" /></g>    </g>
     <g
        id="g41626"
-       transform="translate(-32.139034,-113.01976)">
+       transform="translate(-32.139034,-113.01976)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          word-spacing="normal"
          letter-spacing="normal"
@@ -498,7 +583,10 @@
            style="fill:#000000;stroke-width:0" /></g>    </g>
     <g
        id="g42731"
-       transform="translate(-40.374183,104.94661)">
+       transform="translate(-40.374183,104.94661)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          word-spacing="normal"
          letter-spacing="normal"
@@ -537,7 +625,10 @@
            style="fill:#000000;stroke-width:0" /></g>    </g>
     <g
        id="g43862"
-       transform="translate(-85.244444,325.13629)">
+       transform="translate(-85.244444,325.13629)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          word-spacing="normal"
          letter-spacing="normal"
@@ -585,7 +676,10 @@
            style="fill:#000000;stroke-width:0" /></g>    </g>
     <g
        transform="translate(-182.1807,-110.35758)"
-       id="g45023">
+       id="g45023"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
          word-spacing="normal"
@@ -613,7 +707,10 @@
            d="m 509.23,418.65 0,0.14 -0.01,0.13 -0.02,0.13 -0.02,0.13 -0.03,0.13 -0.04,0.13 -0.04,0.12 -0.04,0.12 -0.06,0.11 -0.06,0.12 -0.06,0.11 -0.07,0.11 -0.07,0.1 -0.08,0.1 -0.08,0.1 -0.09,0.09 -0.09,0.08 -0.1,0.09 -0.1,0.08 -0.1,0.07 -0.11,0.07 -0.11,0.06 -0.11,0.06 -0.12,0.05 -0.12,0.05 -0.12,0.04 -0.13,0.04 -0.13,0.03 -0.13,0.02 -0.13,0.02 -0.13,0.01 -0.14,0 c -1.43,0 -2.64,-1.18 -2.64,-2.64 0,-1.44 1.21,-2.64 2.64,-2.64 1.46,0 2.64,1.2 2.64,2.64 z" /></g>    </g>
     <g
        transform="translate(-175.29799,110.46292)"
-       id="g45023-5">
+       id="g45023-5"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
          word-spacing="normal"
@@ -641,7 +738,10 @@
            d="m 509.23,418.65 0,0.14 -0.01,0.13 -0.02,0.13 -0.02,0.13 -0.03,0.13 -0.04,0.13 -0.04,0.12 -0.04,0.12 -0.06,0.11 -0.06,0.12 -0.06,0.11 -0.07,0.11 -0.07,0.1 -0.08,0.1 -0.08,0.1 -0.09,0.09 -0.09,0.08 -0.1,0.09 -0.1,0.08 -0.1,0.07 -0.11,0.07 -0.11,0.06 -0.11,0.06 -0.12,0.05 -0.12,0.05 -0.12,0.04 -0.13,0.04 -0.13,0.03 -0.13,0.02 -0.13,0.02 -0.13,0.01 -0.14,0 c -1.43,0 -2.64,-1.18 -2.64,-2.64 0,-1.44 1.21,-2.64 2.64,-2.64 1.46,0 2.64,1.2 2.64,2.64 z" /></g>    </g>
     <g
        transform="translate(-158.66475,324.97427)"
-       id="g45023-2">
+       id="g45023-2"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
          word-spacing="normal"
@@ -669,7 +769,10 @@
            d="m 509.23,418.65 0,0.14 -0.01,0.13 -0.02,0.13 -0.02,0.13 -0.03,0.13 -0.04,0.13 -0.04,0.12 -0.04,0.12 -0.06,0.11 -0.06,0.12 -0.06,0.11 -0.07,0.11 -0.07,0.1 -0.08,0.1 -0.08,0.1 -0.09,0.09 -0.09,0.08 -0.1,0.09 -0.1,0.08 -0.1,0.07 -0.11,0.07 -0.11,0.06 -0.11,0.06 -0.12,0.05 -0.12,0.05 -0.12,0.04 -0.13,0.04 -0.13,0.03 -0.13,0.02 -0.13,0.02 -0.13,0.01 -0.14,0 c -1.43,0 -2.64,-1.18 -2.64,-2.64 0,-1.44 1.21,-2.64 2.64,-2.64 1.46,0 2.64,1.2 2.64,2.64 z" /></g>    </g>
     <g
        id="g40716-8"
-       transform="matrix(0,-1,-1,0,414.83828,1239.4257)">
+       transform="matrix(0,-1,-1,0,414.83828,1239.4257)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <path
          sodipodi:nodetypes="cscssc"
          inkscape:connector-curvature="0"
@@ -685,7 +788,10 @@
     </g>
     <g
        transform="translate(-187.57088,440.83564)"
-       id="g5497">
+       id="g5497"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
          id="g5499"
@@ -720,7 +826,10 @@
            id="path5509" /></g>    </g>
     <g
        id="g16807"
-       transform="translate(282.11811,21.656899)">
+       transform="translate(282.11811,21.656899)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          word-spacing="normal"
          letter-spacing="normal"
@@ -743,82 +852,11 @@
            inkscape:connector-curvature="0"
            style="fill:#000000;stroke-width:0" /></g>    </g>
     <g
-       transform="translate(282.40373,-133.64408)"
-       id="g2990-0">
-      <g
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
-         id="content-1"
-         transform="matrix(1.0629921,0,0,-1.0629921,-186.02362,789.27165)"
-         xml:space="preserve"
-         stroke-miterlimit="10.433"
-         font-style="normal"
-         font-variant="normal"
-         font-weight="normal"
-         font-stretch="normal"
-         font-size-adjust="none"
-         letter-spacing="normal"
-         word-spacing="normal"><path
-           style="fill:#000000;stroke-width:0"
-           inkscape:connector-curvature="0"
-           d="m 461.25,417.11 0.06,0.02 0.07,0.03 0.07,0.04 0.08,0.04 0.08,0.04 0.08,0.05 0.09,0.05 0.09,0.05 0.09,0.06 0.1,0.06 0.1,0.06 0.1,0.07 0.19,0.13 0.2,0.15 0.09,0.07 0.1,0.08 0.09,0.07 0.08,0.08 0.09,0.08 0.07,0.08 0.08,0.07 0.07,0.08 0.06,0.08 0.05,0.07 0.05,0.08 0.04,0.07 0.03,0.07 0.02,0.04 0.01,0.04 0.01,0.03 0,0.03 0.01,0.04 0,0.03 c 0,0.35 -0.31,0.35 -0.61,0.35 -1.69,0 -6.58,-2.14 -6.58,-7.13 0,-3.58 4.05,-7.26 10.13,-7.26 8.1,0 17.53,5.62 17.53,12.4 0,4.74 -4.99,7.02 -9.02,8.81 -3.48,1.6 -5.78,3.64 -5.78,6.49 0,1.05 0.45,2.98 2,4.33 1.48,1.29 4.28,1.45 4.97,1.45 0.56,0 2.64,-0.06 4.8,-1 0.93,-0.45 2.23,-1.05 2.23,-3.19 0,-0.7 -0.05,-0.95 -0.2,-1.5 -0.05,-0.14 -0.1,-0.34 -0.1,-0.5 0,-0.34 0.3,-0.34 0.5,-0.34 0.64,0 1.85,0.5 2.85,1.34 0.64,0.5 1.18,1.14 1.18,3.1 0,2.43 -1.29,3.14 -2.64,3.73 -2.34,1.09 -4.62,1.09 -5.32,1.09 -6.54,0 -14.5,-4.98 -14.5,-10.65 0,-4.19 4.32,-6.19 6.71,-7.24 3.55,-1.59 8.08,-3.87 8.08,-8.06 0,-3.34 -2.44,-7.53 -10.01,-7.53 -5.08,0 -9.18,3.3 -9.18,6.67 0,0.91 0.25,1.8 0.61,2.6 z"
-           id="path2993-2" /></g>    </g>
-    <g
-       id="g45810"
-       transform="matrix(0,1,-1,0,1244.4913,-398.03303)">
-      <path
-         sodipodi:nodetypes="cc"
-         inkscape:connector-curvature="0"
-         id="path36969-2"
-         d="m 629.43869,644.72443 98.78923,0"
-         style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <path
-         sodipodi:nodetypes="cc"
-         inkscape:connector-curvature="0"
-         id="path36991-1"
-         d="m 727.20626,644.34653 -20.50889,-14.0998"
-         style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <path
-         sodipodi:nodetypes="cc"
-         inkscape:connector-curvature="0"
-         id="path36991-6-8"
-         d="m 727.33195,645.09563 -20.50889,14.0998"
-         style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-    </g>
-    <g
-       id="g19122"
-       transform="matrix(0.75,0,0,0.75,388.20456,11.254796)">
-      <g
-         word-spacing="normal"
-         letter-spacing="normal"
-         font-size-adjust="none"
-         font-stretch="normal"
-         font-weight="normal"
-         font-variant="normal"
-         font-style="normal"
-         stroke-miterlimit="10.433"
-         xml:space="preserve"
-         transform="matrix(1.0629921,0,0,-1.0629921,-186.02362,789.27165)"
-         id="g19124"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"><path
-           id="path19126"
-           d="m 485.27,434.54 0.69,0.71 c 1.5,1.5 3.14,3.18 6.53,3.43 0.55,0.05 1,0.05 1,0.96 0,0.39 -0.25,0.59 -0.66,0.59 -1.29,0 -2.73,-0.16 -4.08,-0.16 -1.64,0 -3.39,0.16 -4.98,0.16 -0.3,0 -0.95,0 -0.95,-0.95 0,-0.55 0.5,-0.6 0.75,-0.6 0.34,0 1.79,-0.09 1.79,-1.14 0,-0.86 -1.14,-2.14 -1.34,-2.39 l -11.56,-13.31 -5.49,14.8 c -0.29,0.7 -0.29,0.79 -0.29,0.84 0,1.2 2.43,1.2 2.93,1.2 0.71,0 1.21,0 1.21,1 0,0.55 -0.6,0.55 -0.75,0.55 -1.39,0 -4.88,-0.16 -6.28,-0.16 -1.24,0 -4.33,0.16 -5.58,0.16 -0.3,0 -0.94,0 -0.94,-1 0,-0.55 0.48,-0.55 1.14,-0.55 2.98,0 3.19,-0.45 3.64,-1.68 l 6.13,-16.41 c 0.04,-0.14 0.2,-0.69 0.2,-0.84 0,-0.14 -2,-8.18 -2.25,-9.07 -0.64,-2.73 -0.69,-2.89 -4.69,-2.93 -0.94,0 -1.34,0 -1.34,-1 0,-0.55 0.61,-0.55 0.7,-0.55 1.39,0 4.88,0.16 6.28,0.16 1.39,0 4.99,-0.16 6.38,-0.16 0.34,0 0.93,0 0.93,1 0,0.55 -0.43,0.55 -1.39,0.55 -0.09,0 -1.04,0 -1.89,0.09 -1.04,0.11 -1.34,0.2 -1.34,0.8 0,0.36 0.45,2.09 0.7,3.14 l 1.74,7.03 c 0.25,0.94 0.29,1.09 0.7,1.55 z"
-           inkscape:connector-curvature="0"
-           style="fill:#000000;stroke-width:0" /><path
-           id="path19128"
-           d="m 506.85,432.87 0.27,0.12 0.25,0.11 0.25,0.11 0.23,0.1 0.23,0.1 0.22,0.1 0.22,0.09 0.2,0.09 0.2,0.08 0.19,0.08 0.18,0.08 0.18,0.07 0.17,0.08 0.16,0.06 0.16,0.07 0.15,0.06 0.14,0.06 0.14,0.06 0.14,0.06 0.13,0.05 0.12,0.06 0.12,0.05 0.11,0.05 0.11,0.04 0.11,0.05 0.1,0.04 0.19,0.09 0.18,0.08 0.17,0.08 c 0.67,0.27 0.98,0.41 0.98,1.08 0,0.59 -0.45,1.11 -1.08,1.11 -0.25,0 -0.31,0 -0.73,-0.31 l -4.74,-3.17 0.52,5.15 c 0.08,0.63 0,1.5 -1.05,1.5 -0.42,0 -1.07,-0.28 -1.07,-1.04 0,-0.32 0.14,-1.36 0.17,-1.71 0.08,-0.59 0.31,-3.11 0.39,-3.9 l -4.71,3.17 c -0.35,0.2 -0.45,0.31 -0.76,0.31 -0.64,0 -1.09,-0.52 -1.09,-1.11 0,-0.7 0.42,-0.87 0.73,-1.01 l 5.27,-2.19 c -2.86,-1.27 -4.15,-1.75 -5.02,-2.17 -0.66,-0.29 -0.98,-0.43 -0.98,-1.08 0,-0.6 0.45,-1.11 1.09,-1.11 0.23,0 0.31,0 0.72,0.31 l 4.75,3.17 -0.56,-5.61 c 0,-0.76 0.65,-1.04 1.07,-1.04 0.43,0 1.08,0.28 1.08,1.04 0,0.32 -0.14,1.36 -0.17,1.71 -0.06,0.59 -0.31,3.09 -0.38,3.9 l 4.18,-2.79 c 0.9,-0.69 0.98,-0.69 1.29,-0.69 0.63,0 1.08,0.51 1.08,1.11 0,0.7 -0.42,0.87 -0.73,1.01 z"
-           inkscape:connector-curvature="0"
-           style="fill:#000000;stroke-width:0" /><path
-           id="path19130"
-           d="m 568.29,422.84 0,0.1 0,0.1 -0.01,0.09 0,0.09 -0.01,0.09 -0.01,0.08 -0.01,0.08 -0.01,0.08 -0.02,0.07 -0.01,0.07 -0.02,0.07 -0.02,0.07 -0.01,0.06 -0.02,0.05 -0.03,0.06 -0.02,0.05 -0.02,0.04 -0.03,0.05 -0.02,0.04 -0.03,0.04 -0.03,0.03 -0.03,0.03 -0.03,0.03 -0.03,0.03 -0.03,0.02 -0.03,0.02 -0.03,0.02 -0.04,0.01 -0.03,0.01 -0.04,0.01 -0.03,0 -0.04,0 c -0.25,0 -0.65,-0.34 -0.7,-1.29 -0.2,-4.78 -3.49,-7.52 -6.99,-7.52 -3.12,0 -5.51,2.14 -7.96,4.28 -2.54,2.3 -5.13,4.58 -8.52,4.58 -5.44,0 -8.38,-5.48 -8.38,-10.02 0,-1.59 0.66,-1.59 0.71,-1.59 0.54,0 0.7,1 0.7,1.16 0.19,5.47 3.94,7.67 6.97,7.67 3.14,0 5.53,-2.14 7.97,-4.3 2.55,-2.28 5.14,-4.58 8.51,-4.58 5.44,0 8.38,5.49 8.38,10.02 z"
-           inkscape:connector-curvature="0"
-           style="fill:#000000;stroke-width:0" /><path
-           id="path19132"
-           d="m 598.08,424.78 h 5.63 c -1.64,-7.38 -2.1,-9.52 -2.1,-12.85 0,-0.75 0,-2.09 0.41,-3.79 0.5,-2.19 1.05,-2.49 1.8,-2.49 0.98,0 2.03,0.89 2.03,1.89 0,0.3 0,0.41 -0.3,1.1 -1.44,3.59 -1.44,6.82 -1.44,8.22 0,2.64 0.35,5.34 0.89,7.92 h 5.69 c 0.64,0 2.44,0 2.44,1.7 0,1.19 -1.05,1.19 -2,1.19 h -16.69 c -1.09,0 -2.98,0 -5.17,-2.35 -1.75,-1.93 -3.05,-4.23 -3.05,-4.48 0,-0.05 0,-0.48 0.6,-0.48 0.4,0 0.5,0.18 0.79,0.59 2.46,3.83 5.35,3.83 6.33,3.83 h 2.84 C 595.19,418.76 592.5,412.73 590.41,408.2 590,407.45 590,407.34 590,407 c 0,-0.96 0.8,-1.35 1.46,-1.35 1.5,0 1.89,1.39 2.48,3.24 0.71,2.29 0.71,2.39 1.34,4.89 z"
-           inkscape:connector-curvature="0"
-           style="fill:#000000;stroke-width:0" /></g>    </g>
-    <g
        id="g45810-1"
-       transform="matrix(0,1,-1,0,1243.4846,-222.32803)">
+       transform="matrix(0,1,-1,0,1243.4846,-222.32803)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <path
          sodipodi:nodetypes="cc"
          inkscape:connector-curvature="0"
@@ -839,48 +877,11 @@
          style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
     </g>
     <g
-       transform="matrix(0.75,0,0,0.75,382.50045,190.33935)"
-       id="g18522">
-      <g
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
-         id="g18524"
-         transform="matrix(1.0629921,0,0,-1.0629921,-186.02362,789.27165)"
-         xml:space="preserve"
-         stroke-miterlimit="10.433"
-         font-style="normal"
-         font-variant="normal"
-         font-weight="normal"
-         font-stretch="normal"
-         font-size-adjust="none"
-         letter-spacing="normal"
-         word-spacing="normal"><path
-           style="fill:#000000;stroke-width:0"
-           inkscape:connector-curvature="0"
-           d="m 479.68,426.68 -4.18,9.91 c -0.15,0.41 -0.25,0.59 -0.25,0.64 0,0.31 0.85,1.25 2.94,1.45 0.5,0.05 1,0.1 1,0.96 0,0.59 -0.61,0.59 -0.75,0.59 -2.05,0 -4.19,-0.16 -6.28,-0.16 -1.25,0 -4.33,0.16 -5.58,0.16 -0.29,0 -0.9,0 -0.9,-1 0,-0.55 0.5,-0.55 1.15,-0.55 2.99,0 3.28,-0.5 3.74,-1.59 l 5.87,-13.91 -10.51,-11.31 -0.64,-0.55 c -2.44,-2.64 -4.79,-3.43 -7.33,-3.57 -0.64,-0.05 -1.1,-0.05 -1.1,-1 0,-0.05 0,-0.55 0.66,-0.55 1.48,0 3.12,0.16 4.67,0.16 1.85,0 3.8,-0.16 5.58,-0.16 0.31,0 0.91,0 0.91,1 0,0.5 -0.5,0.55 -0.6,0.55 -0.45,0.04 -2,0.14 -2,1.54 0,0.8 0.75,1.6 1.35,2.24 l 5.07,5.39 4.49,4.87 5.03,-11.9 c 0.2,-0.55 0.25,-0.6 0.25,-0.71 0,-0.39 -0.94,-1.23 -2.89,-1.43 -0.55,-0.05 -0.99,-0.11 -0.99,-0.96 0,-0.59 0.55,-0.59 0.74,-0.59 1.41,0 4.89,0.16 6.28,0.16 1.25,0 4.28,-0.16 5.53,-0.16 0.35,0 0.95,0 0.95,0.95 0,0.6 -0.5,0.6 -0.9,0.6 -3.33,0.04 -3.44,0.2 -4.28,2.18 -1.94,4.64 -5.28,12.41 -6.42,15.39 3.39,3.5 8.6,9.43 10.2,10.82 1.45,1.2 3.34,2.39 6.33,2.54 0.65,0.05 1.09,0.05 1.09,1 0,0.05 0,0.55 -0.64,0.55 -1.5,0 -3.14,-0.16 -4.69,-0.16 -1.84,0 -3.73,0.16 -5.53,0.16 -0.3,0 -0.94,0 -0.94,-1 0,-0.34 0.25,-0.5 0.6,-0.55 0.45,-0.04 2,-0.15 2,-1.54 0,-0.71 -0.55,-1.35 -0.96,-1.8 z"
-           id="path18526" /><path
-           style="fill:#000000;stroke-width:0"
-           inkscape:connector-curvature="0"
-           d="m 512.01,432.87 0.27,0.12 0.25,0.11 0.25,0.11 0.23,0.1 0.23,0.1 0.22,0.1 0.22,0.09 0.2,0.09 0.2,0.08 0.19,0.08 0.18,0.08 0.18,0.07 0.17,0.08 0.16,0.06 0.16,0.07 0.15,0.06 0.14,0.06 0.14,0.06 0.14,0.06 0.13,0.05 0.12,0.06 0.12,0.05 0.11,0.05 0.11,0.04 0.11,0.05 0.1,0.04 0.19,0.09 0.18,0.08 0.17,0.08 c 0.67,0.27 0.98,0.41 0.98,1.08 0,0.59 -0.45,1.11 -1.08,1.11 -0.25,0 -0.31,0 -0.73,-0.31 l -4.74,-3.17 0.52,5.15 c 0.08,0.63 0,1.5 -1.05,1.5 -0.42,0 -1.07,-0.28 -1.07,-1.04 0,-0.32 0.14,-1.36 0.17,-1.71 0.08,-0.59 0.31,-3.11 0.39,-3.9 l -4.71,3.17 c -0.35,0.2 -0.45,0.31 -0.76,0.31 -0.64,0 -1.09,-0.52 -1.09,-1.11 0,-0.7 0.42,-0.87 0.73,-1.01 l 5.27,-2.19 c -2.86,-1.27 -4.15,-1.75 -5.02,-2.17 -0.66,-0.29 -0.98,-0.43 -0.98,-1.08 0,-0.6 0.45,-1.11 1.09,-1.11 0.23,0 0.31,0 0.72,0.31 l 4.75,3.17 -0.56,-5.61 c 0,-0.76 0.65,-1.04 1.07,-1.04 0.43,0 1.08,0.28 1.08,1.04 0,0.32 -0.14,1.36 -0.17,1.71 -0.06,0.59 -0.31,3.09 -0.38,3.9 l 4.18,-2.79 c 0.9,-0.69 0.98,-0.69 1.29,-0.69 0.63,0 1.08,0.51 1.08,1.11 0,0.7 -0.42,0.87 -0.73,1.01 z"
-           id="path18528" /><path
-           style="fill:#000000;stroke-width:0"
-           inkscape:connector-curvature="0"
-           d="m 573.45,422.84 0,0.1 0,0.1 -0.01,0.09 0,0.09 -0.01,0.09 -0.01,0.08 -0.01,0.08 -0.01,0.08 -0.02,0.07 -0.01,0.07 -0.02,0.07 -0.02,0.07 -0.01,0.06 -0.02,0.05 -0.03,0.06 -0.02,0.05 -0.02,0.04 -0.03,0.05 -0.02,0.04 -0.03,0.04 -0.03,0.03 -0.03,0.03 -0.03,0.03 -0.03,0.03 -0.03,0.02 -0.03,0.02 -0.03,0.02 -0.04,0.01 -0.03,0.01 -0.04,0.01 -0.03,0 -0.04,0 c -0.25,0 -0.66,-0.34 -0.7,-1.29 -0.21,-4.78 -3.49,-7.52 -6.99,-7.52 -3.12,0 -5.51,2.14 -7.97,4.28 -2.53,2.3 -5.12,4.58 -8.51,4.58 -5.44,0 -8.37,-5.48 -8.37,-10.02 0,-1.59 0.65,-1.59 0.7,-1.59 0.55,0 0.7,1 0.7,1.16 0.19,5.47 3.94,7.67 6.97,7.67 3.14,0 5.53,-2.14 7.97,-4.3 2.54,-2.28 5.14,-4.58 8.51,-4.58 5.44,0 8.38,5.49 8.38,10.02 z"
-           id="path18530" /><path
-           style="fill:#000000;stroke-width:0"
-           inkscape:connector-curvature="0"
-           d="m 605.13,422.39 h 4.83 c 3.75,0 4.14,-0.8 4.14,-2.24 0,-0.36 0,-0.95 -0.34,-2.44 -0.11,-0.25 -0.16,-0.45 -0.16,-0.56 0,-0.39 0.3,-0.59 0.6,-0.59 0.5,0 0.5,0.15 0.75,1.05 l 2.75,10.81 c 0.14,0.54 0.14,0.65 0.14,0.79 0,0.1 -0.1,0.55 -0.6,0.55 -0.5,0 -0.54,-0.25 -0.75,-1.05 -1.04,-3.87 -2.19,-4.78 -6.42,-4.78 h -4.53 l 3.19,12.66 c 0.43,1.75 0.5,1.94 2.68,1.94 h 6.58 c 6.13,0 7.27,-1.64 7.27,-5.47 0,-1.16 0,-1.35 -0.14,-2.7 -0.11,-0.65 -0.11,-0.74 -0.11,-0.9 0,-0.25 0.15,-0.59 0.61,-0.59 0.54,0 0.59,0.3 0.68,1.25 l 1,8.61 c 0.16,1.34 -0.09,1.34 -1.34,1.34 h -24.41 c -1,0 -1.5,0 -1.5,-1 0,-0.54 0.46,-0.54 1.4,-0.54 1.84,0 3.23,0 3.23,-0.89 0,-0.21 0,-0.3 -0.25,-1.21 l -6.56,-26.34 c -0.5,-1.95 -0.61,-2.34 -4.55,-2.34 -0.84,0 -1.39,0 -1.39,-0.96 0,-0.59 0.59,-0.59 0.75,-0.59 1.44,0 5.12,0.16 6.58,0.16 1.64,0 5.78,-0.16 7.42,-0.16 0.45,0 1.05,0 1.05,0.95 0,0.39 -0.3,0.49 -0.3,0.55 -0.16,0.05 -0.25,0.05 -1.39,0.05 -1.11,0 -1.36,0 -2.59,0.09 -1.46,0.16 -1.6,0.36 -1.6,1 0,0.09 0,0.41 0.19,1.14 z"
-           id="path18532" /><path
-           style="fill:#000000;stroke-width:0"
-           inkscape:connector-curvature="0"
-           d="m 645.7,418.39 0.25,0.25 0.25,0.25 0.13,0.12 0.13,0.12 0.13,0.12 0.13,0.12 0.14,0.11 0.13,0.11 0.14,0.12 0.14,0.1 0.13,0.11 0.14,0.11 0.15,0.1 0.14,0.1 c 1.42,0.97 2.72,1.05 3.17,1.08 0.38,0.03 0.8,0.03 0.8,0.76 0,0.25 -0.21,0.49 -0.49,0.49 -0.87,0 -1.92,-0.14 -2.83,-0.14 -1.1,0 -2.57,0.14 -3.62,0.14 -0.17,0 -0.69,0 -0.69,-0.77 0,-0.45 0.45,-0.48 0.63,-0.48 1.01,-0.08 1.01,-0.45 1.01,-0.67 0,-0.32 -0.22,-0.58 -0.45,-0.91 -0.22,-0.31 -0.39,-0.55 -0.59,-0.77 l -8.72,-9.09 -4.6,10.22 c -0.25,0.48 -0.25,0.55 -0.25,0.59 0,0.63 1.68,0.63 1.89,0.63 0.46,0 0.91,0 0.91,0.76 0,0.04 0,0.49 -0.56,0.49 -1.05,0 -3.63,-0.14 -4.67,-0.14 -0.88,0 -3.1,0.14 -3.97,0.14 -0.28,0 -0.71,-0.11 -0.71,-0.77 0,-0.48 0.46,-0.48 0.96,-0.48 2.01,0 2.15,-0.31 2.5,-1.08 l 5.4,-11.92 -1.57,-6.38 c -0.46,-1.78 -0.49,-1.87 -3.21,-1.92 -0.59,0 -1.05,0 -1.05,-0.73 0,-0.35 0.26,-0.52 0.57,-0.52 0.65,0 1.47,0.11 2.15,0.11 0.68,0 1.68,0.03 2.3,0.03 0.7,0 1.5,-0.03 2.24,-0.03 0.73,0 1.6,-0.11 2.34,-0.11 0.2,0 0.76,0 0.76,0.77 0,0.48 -0.42,0.48 -1.18,0.48 -0.57,0 -0.71,0 -1.33,0.08 -0.66,0.06 -0.77,0.14 -0.77,0.48 0,0.21 0.42,1.88 0.66,2.83 0.28,1.11 1.02,4.14 1.09,4.28 0.13,0.52 0.13,0.6 0.49,0.94 z"
-           id="path18534" /><path
-           style="fill:#000000;stroke-width:0"
-           inkscape:connector-curvature="0"
-           d="m 663.72,415.59 0,0.03 0,0.03 0,0.03 0.01,0.04 0,0.04 0.01,0.04 0,0.05 0.01,0.05 0.01,0.1 0.01,0.12 0.02,0.13 0.01,0.13 0.02,0.15 0.02,0.15 0.02,0.15 0.01,0.16 0.02,0.16 0.02,0.17 0.04,0.33 0.04,0.33 0.02,0.16 0.02,0.16 0.01,0.15 0.02,0.15 0.02,0.14 0.01,0.13 0.01,0.12 0.02,0.11 0,0.05 0.01,0.05 0,0.05 0.01,0.04 0,0.04 0,0.03 0.01,0.04 0,0.03 0,0.02 0,0.02 0,0.02 0,0.01 c 0,0.45 -0.36,0.8 -0.86,0.8 -0.53,0 -0.87,-0.39 -0.87,-0.77 0,-0.25 0.37,-3.41 0.45,-3.94 l -3.87,2.32 c -0.24,0.15 -0.35,0.23 -0.57,0.23 -0.4,0 -0.84,-0.37 -0.84,-0.92 0,-0.41 0.25,-0.66 0.51,-0.75 1.38,-0.55 2.8,-1.05 4.19,-1.52 -1.39,-0.53 -3.69,-1.36 -4.11,-1.53 -0.17,-0.06 -0.59,-0.22 -0.59,-0.76 0,-0.55 0.44,-0.93 0.84,-0.93 0.27,0 1.05,0.47 4.44,2.55 -0.08,-0.53 -0.45,-3.69 -0.45,-3.94 0,-0.37 0.34,-0.78 0.87,-0.78 0.5,0 0.86,0.36 0.86,0.8 0,0.23 -0.39,3.42 -0.43,3.92 l 3.93,-2.37 c 0.17,-0.1 0.27,-0.18 0.5,-0.18 0.39,0 0.85,0.38 0.85,0.93 0,0.39 -0.25,0.64 -0.53,0.75 -1.37,0.54 -2.79,1.04 -4.19,1.51 1.4,0.52 3.69,1.35 4.12,1.52 0.17,0.08 0.6,0.23 0.6,0.78 0,0.55 -0.46,0.92 -0.85,0.92 -0.23,0 -0.33,-0.08 -0.58,-0.23 z"
-           id="path18536" /></g>    </g>
-    <g
        transform="translate(275.36745,189.86366)"
-       id="g16257">
+       id="g16257"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
          id="g16259"
@@ -904,7 +905,10 @@
            id="path16263" /></g>    </g>
     <g
        transform="translate(276.55535,446.73172)"
-       id="g19730">
+       id="g19730"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
          id="g19732"
@@ -930,20 +934,32 @@
        d="m 249.91482,787.8632 311.11708,0"
        id="path36969-7"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="M 560.01024,787.4853 539.50135,773.3855"
        id="path36991-7"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 560.13593,788.2344 -20.50889,14.0998"
        id="path36991-6-7"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <g
        id="g40813-1-6-6"
-       transform="matrix(0,1,-1,0,1267.3632,419.0938)">
+       transform="matrix(0,1,-1,0,1267.3632,419.0938)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <path
          inkscape:connector-curvature="0"
          id="path36969-91-0-1"
@@ -965,22 +981,34 @@
        d="m 626.0031,372.32051 c 184.3592,181.9662 207.78336,349.2783 207.78336,349.2783"
        id="path46052"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 834.30737,720.12306 14.0998,-20.50889"
        id="path36991-1-7-9-0"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 833.55827,720.24875 -14.0998,-20.50889"
        id="path36991-6-8-6-7-8"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <g
        id="g46713"
-       transform="matrix(0.75,0,0,0.75,553.38594,296.36437)">
+       transform="matrix(0.75,0,0,0.75,553.38594,296.36437)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          id="g46715"
          transform="matrix(1.0629921,0,0,-1.0629921,-186.02362,789.27165)"
@@ -1000,7 +1028,10 @@
            style="fill:#000000;stroke-width:0" /></g>    </g>
     <g
        id="g47831"
-       transform="translate(514.38725,444.6557)">
+       transform="translate(514.38725,444.6557)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          word-spacing="normal"
          letter-spacing="normal"
@@ -1022,24 +1053,36 @@
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 640.79096,787.99578 151.25302,0"
        id="path36969-3"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 791.02228,787.61788 -20.5088,-14.0998"
        id="path36991-2"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 791.14798,788.36698 -20.5089,14.0998"
        id="path36991-6-9"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <text
        xml:space="preserve"
        style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
        x="803.3429"
        y="857.92249"
        id="text48467"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan48469"
          x="803.3429"
@@ -1050,7 +1093,10 @@
        width="67.284988"
        height="35.688404"
        x="797.22827"
-       y="831.37177" />
+       y="831.37177"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        sodipodi:type="arc"
        style="fill:none;stroke:#000000;stroke-width:4.863729;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
@@ -1060,88 +1106,16 @@
        sodipodi:rx="51.913116"
        sodipodi:ry="51.913116"
        d="m 431.96841,287.76529 a 51.913116,51.913116 0 1 1 -103.82623,0 51.913116,51.913116 0 1 1 103.82623,0 z"
-       transform="matrix(0.61681068,0,0,0.61681068,596.21055,606.79012)" />
-    <g
-       id="g49197"
-       transform="translate(182.50041,666.89402)">
-      <g
-         word-spacing="normal"
-         letter-spacing="normal"
-         font-size-adjust="none"
-         font-stretch="normal"
-         font-weight="normal"
-         font-variant="normal"
-         font-style="normal"
-         stroke-miterlimit="10.433"
-         xml:space="preserve"
-         transform="matrix(1.0629921,0,0,-1.0629921,-186.02362,789.27165)"
-         id="g49199"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"><path
-           id="path49201"
-           d="m 475.35,440.87 -0.03,0.06 -0.02,0.06 -0.02,0.06 -0.02,0.05 -0.02,0.06 -0.02,0.05 -0.02,0.05 -0.02,0.04 -0.03,0.05 -0.02,0.04 -0.02,0.05 -0.02,0.04 -0.03,0.03 -0.02,0.04 -0.03,0.03 -0.03,0.04 -0.03,0.03 -0.03,0.03 -0.03,0.02 -0.04,0.03 -0.04,0.02 -0.04,0.02 -0.04,0.02 -0.04,0.02 -0.05,0.01 -0.05,0.01 -0.06,0.02 -0.06,0 -0.06,0.01 -0.06,0.01 -0.07,0 -0.04,0 -0.03,0 c -0.8,0 -0.96,-0.3 -1.21,-1 l -10.31,-29.8 c -0.89,-2.53 -2.89,-3.28 -5.58,-3.32 v -1.55 c 1.14,0.05 3.28,0.16 5.08,0.16 1.55,0 4.14,-0.11 5.74,-0.16 v 1.55 c -2.49,0 -3.74,1.25 -3.74,2.53 0,0.15 0.05,0.65 0.1,0.75 l 2.29,6.53 0.55,1.55 5.58,16.18 5.62,-16.18 h -11.2 l -0.55,-1.55 h 12.3 l 2.64,-7.63 c 0.06,-0.2 0.16,-0.5 0.16,-0.68 0,-1.5 -2.8,-1.5 -4.14,-1.5 v -1.55 c 1.79,0.16 5.28,0.16 7.18,0.16 2.14,0 4.42,-0.07 6.52,-0.16 v 1.55 h -0.89 c -3,0 -3.69,0.34 -4.24,1.98 z"
-           inkscape:connector-curvature="0"
-           style="fill:#000000;stroke-width:0" /><path
-           id="path49203"
-           d="m 513.55,422.79 0.05,0.11 0.05,0.12 0.04,0.12 0.06,0.12 0.05,0.13 0.06,0.13 0.07,0.13 0.07,0.14 0.08,0.13 0.08,0.14 0.08,0.14 0.1,0.14 0.1,0.13 0.11,0.14 0.11,0.13 0.13,0.13 0.13,0.12 0.14,0.13 0.15,0.11 0.16,0.12 0.16,0.11 0.18,0.1 0.19,0.09 0.2,0.09 0.22,0.08 0.22,0.07 0.23,0.07 0.25,0.05 0.26,0.05 0.14,0.01 0.14,0.02 0.14,0.01 0.15,0.01 0.15,0.01 0.15,0 v 1.55 c -1.16,-0.1 -2.6,-0.14 -3.74,-0.14 -1.2,0 -3.5,0.09 -4.34,0.14 v -1.55 c 1.84,-0.05 2.39,-1.19 2.39,-2.14 0,-0.44 -0.09,-0.64 -0.3,-1.19 l -5.07,-12.7 -5.58,13.89 c -0.3,0.66 -0.3,0.75 -0.3,0.86 0,1.28 1.94,1.28 2.83,1.28 v 1.55 c -1.49,-0.05 -4.28,-0.14 -5.42,-0.14 -1.35,0 -3.35,0.04 -4.83,0.14 v -1.55 c 3.12,0 3.33,-0.3 3.98,-1.84 l 7.18,-17.67 c 0.29,-0.71 0.39,-0.96 1.04,-0.96 0.64,0 0.85,0.46 1.05,0.96 z"
-           inkscape:connector-curvature="0"
-           style="fill:#000000;stroke-width:0" /><path
-           id="path49205"
-           d="m 540.78,423.14 0.45,0.12 0.45,0.12 0.44,0.14 0.43,0.15 0.42,0.16 0.41,0.17 0.41,0.18 0.39,0.19 0.39,0.19 0.38,0.21 0.36,0.22 0.36,0.22 0.34,0.23 0.33,0.24 0.31,0.25 0.31,0.26 0.28,0.27 0.28,0.27 0.26,0.28 0.24,0.29 0.22,0.29 0.21,0.31 0.2,0.3 0.17,0.32 0.16,0.32 0.13,0.33 0.12,0.33 0.1,0.35 0.07,0.34 0.06,0.35 0.03,0.36 0.01,0.36 c 0,4.78 -5.67,8.97 -13,8.97 h -15.64 v -1.55 h 1.19 c 3.85,0 3.94,-0.54 3.94,-2.34 v -26.25 c 0,-1.8 -0.09,-2.34 -3.94,-2.34 h -1.19 v -1.55 c 1.79,0.16 5.33,0.16 7.27,0.16 1.94,0 5.48,0 7.28,-0.16 v 1.55 h -1.2 c -3.83,0 -3.94,0.54 -3.94,2.34 v 12.59 1.11 12.89 c 0,1.16 0,1.75 1.09,1.91 0.5,0.09 1.96,0.09 2.96,0.09 4.46,0 10.06,-0.2 10.06,-7.42 0,-3.44 -1.2,-7.47 -8.58,-7.47 h -5.53 v -1.11 H 536 c 0.8,0 2.9,0 4.63,-1.68 1.9,-1.8 1.9,-3.35 1.9,-6.68 0,-3.25 0,-5.23 2.04,-7.12 2.04,-1.8 4.78,-2.09 6.28,-2.09 3.89,0 4.73,4.07 4.73,5.48 0,0.3 0,0.84 -0.64,0.84 -0.54,0 -0.54,-0.45 -0.61,-0.79 -0.3,-3.55 -2.03,-4.44 -3.28,-4.44 -2.44,0 -2.84,2.55 -3.55,7.17 l -0.64,3.99 c -0.89,3.18 -3.34,4.84 -6.08,5.78 z"
-           inkscape:connector-curvature="0"
-           style="fill:#000000;stroke-width:0" /><path
-           id="path49207"
-           d="m 564.65,428.21 -6.97,-0.54 v -1.55 c 3.23,0 3.68,-0.3 3.68,-2.73 v -13.41 c 0,-2.23 -0.54,-2.23 -3.89,-2.23 v -1.55 c 1.6,0.05 4.28,0.16 5.49,0.16 1.75,0 3.48,-0.11 5.19,-0.16 v 1.55 c -3.3,0 -3.5,0.25 -3.5,2.18 z"
-           inkscape:connector-curvature="0"
-           style="fill:#000000;stroke-width:0" /><path
-           id="path49209"
-           d="m 564.85,436.89 -0.01,0.14 -0.01,0.15 -0.01,0.14 -0.03,0.14 -0.03,0.13 -0.04,0.13 -0.04,0.13 -0.05,0.12 -0.05,0.12 -0.06,0.12 -0.07,0.11 -0.07,0.1 -0.08,0.1 -0.08,0.1 -0.08,0.1 -0.09,0.08 -0.09,0.09 -0.1,0.08 -0.1,0.07 -0.11,0.07 -0.1,0.07 -0.11,0.06 -0.12,0.05 -0.11,0.05 -0.12,0.04 -0.12,0.04 -0.13,0.03 -0.12,0.03 -0.13,0.02 -0.12,0.01 -0.13,0.01 -0.13,0.01 c -1.55,0 -2.64,-1.35 -2.64,-2.64 0,-1.35 1.09,-2.64 2.64,-2.64 1.39,0 2.64,1.04 2.64,2.64 z"
-           inkscape:connector-curvature="0"
-           style="fill:#000000;stroke-width:0" /><path
-           id="path49211"
-           d="m 579.99,415.87 0.11,-0.02 0.13,-0.02 0.14,-0.03 0.15,-0.04 0.17,-0.04 0.18,-0.04 0.19,-0.05 0.2,-0.06 0.21,-0.06 0.21,-0.07 0.21,-0.08 0.22,-0.08 0.22,-0.1 0.22,-0.1 0.22,-0.11 0.22,-0.12 0.22,-0.14 0.21,-0.14 0.2,-0.15 0.2,-0.16 0.19,-0.18 0.18,-0.19 0.17,-0.2 0.16,-0.21 0.14,-0.22 0.07,-0.12 0.06,-0.12 0.06,-0.13 0.05,-0.12 0.05,-0.14 0.05,-0.13 0.04,-0.14 0.03,-0.14 0.03,-0.15 0.03,-0.15 0.02,-0.16 0.01,-0.15 0.01,-0.17 0.01,-0.16 c 0,-2.53 -1.75,-4.53 -5.63,-4.53 -4.19,0 -5.98,2.84 -6.94,7.07 -0.14,0.64 -0.18,0.85 -0.68,0.85 -0.66,0 -0.66,-0.35 -0.66,-1.25 v -6.58 c 0,-0.84 0,-1.19 0.55,-1.19 0.25,0 0.29,0.05 1.25,1 0.09,0.1 0.09,0.19 1,1.14 2.18,-2.09 4.43,-2.14 5.48,-2.14 5.72,0 8.02,3.35 8.02,6.92 0,2.64 -1.5,4.14 -2.1,4.74 -1.64,1.59 -3.59,2 -5.69,2.39 -2.78,0.55 -6.12,1.2 -6.12,4.09 0,1.74 1.3,3.78 5.58,3.78 5.48,0 5.73,-4.48 5.83,-6.03 0.06,-0.45 0.5,-0.45 0.61,-0.45 0.64,0 0.64,0.25 0.64,1.2 v 5.03 c 0,0.85 0,1.19 -0.55,1.19 -0.25,0 -0.34,0 -1,-0.59 -0.14,-0.21 -0.64,-0.64 -0.84,-0.8 -1.9,1.39 -3.94,1.39 -4.69,1.39 -6.08,0 -7.97,-3.33 -7.97,-6.12 0,-1.74 0.8,-3.14 2.14,-4.24 1.59,-1.29 3,-1.59 6.58,-2.28 z"
-           inkscape:connector-curvature="0"
-           style="fill:#000000;stroke-width:0" /><path
-           id="path49213"
-           d="m 594.59,409.98 0,-0.1 0,-0.1 -0.01,-0.19 -0.01,-0.18 -0.01,-0.17 -0.02,-0.15 -0.02,-0.15 -0.03,-0.13 -0.04,-0.12 -0.04,-0.11 -0.05,-0.11 -0.06,-0.09 -0.06,-0.09 -0.07,-0.08 -0.08,-0.07 -0.09,-0.06 -0.1,-0.05 -0.11,-0.05 -0.12,-0.05 -0.13,-0.03 -0.14,-0.04 -0.15,-0.02 -0.17,-0.03 -0.17,-0.01 -0.1,-0.01 -0.09,-0.01 -0.1,-0.01 -0.1,0 -0.11,-0.01 -0.11,0 -0.11,0 -0.12,-0.01 -0.12,0 -0.12,0 -0.13,0 -0.13,0 -0.14,0 -0.14,0 -0.14,0 -0.15,0 -0.15,0 -0.15,0 v -1.55 c 1.65,0.05 3.98,0.16 5.44,0.16 1.48,0 3.48,-0.07 5.48,-0.16 v 1.55 c -3.34,0 -3.89,0 -3.89,2.23 v 5.14 l 3.19,2.74 c 3.83,-5.29 5.92,-8.07 5.92,-8.97 0,-0.94 -0.84,-1.14 -1.78,-1.14 v -1.55 c 1.39,0.05 4.33,0.16 5.37,0.16 1.44,0 2.89,-0.07 4.33,-0.16 v 1.55 c -1.84,0 -2.94,0 -4.83,2.64 l -6.33,8.92 c -0.04,0.09 -0.29,0.39 -0.29,0.55 0,0.18 3.53,3.18 4.03,3.57 3.14,2.55 5.23,2.64 6.28,2.69 v 1.55 c -1.44,-0.14 -2.09,-0.14 -3.48,-0.14 -1.8,0 -4.89,0.09 -5.58,0.14 v -1.55 c 0.94,-0.05 1.44,-0.59 1.44,-1.23 0,-1 -0.69,-1.6 -1.1,-1.96 l -7.03,-6.07 v 23.92 l -7.17,-0.55 v -1.55 c 3.48,0 3.89,-0.34 3.89,-2.79 z"
-           inkscape:connector-curvature="0"
-           style="fill:#000000;stroke-width:0" /><path
-           id="path49215"
-           d="m 626.51,421.9 0,0.01 0,0 0,0 0,0.01 0.01,0 0,0.01 0,0.01 0,0 0.01,0.01 0,0.01 0,0.01 0.01,0.02 0,0.02 0.01,0.02 0,0.02 0.01,0.02 0.01,0.02 0,0.03 0.01,0.02 0.01,0.05 0.01,0.04 0.01,0.03 0,0.02 0.01,0.02 0,0.02 0.01,0.02 0,0.02 0,0.02 0.01,0.01 0,0.01 0,0.01 0,0 0,0.01 0,0 0.01,0.01 0,0 0,0.01 0,0 0,0 0,0.01 0,0 c 0,0.19 -0.14,0.5 -0.56,0.5 -0.69,0 -3.58,-0.28 -4.46,-0.36 -0.28,-0.03 -0.76,-0.06 -0.76,-0.8 0,-0.48 0.48,-0.48 0.9,-0.48 1.68,0 1.68,-0.25 1.68,-0.53 0,-0.24 -0.08,-0.46 -0.15,-0.77 l -4.92,-19.72 c -0.17,-0.62 -0.17,-0.68 -0.17,-0.76 0,-0.52 0.42,-1.11 1.19,-1.11 0.94,0 1.39,0.69 1.61,1.45 0.06,0.14 1.56,6.28 1.7,6.77 2.47,-0.25 4.45,-1.05 4.45,-2.86 0,-0.17 0,-0.35 -0.06,-0.69 -0.14,-0.53 -0.14,-0.7 -0.14,-1.09 0,-2.47 2.02,-3.58 3.69,-3.58 3.39,0 4.44,5.29 4.44,5.33 0,0.45 -0.46,0.45 -0.57,0.45 -0.48,0 -0.53,-0.17 -0.7,-0.84 -0.41,-1.5 -1.36,-3.97 -3.06,-3.97 -0.94,0 -1.22,0.87 -1.22,1.81 0,0.59 0,0.66 0.2,1.56 0.05,0.11 0.19,0.7 0.19,1.1 0,3.09 -4.19,3.57 -5.66,3.68 1.02,0.63 2.3,1.78 2.89,2.3 1.79,1.67 3.54,3.31 5.47,3.31 0.42,0 0.88,-0.11 1.16,-0.45 -1.5,-0.25 -1.81,-1.42 -1.81,-1.95 0,-0.77 0.59,-1.29 1.39,-1.29 0.95,0 1.98,0.77 1.98,2.22 0,1.16 -0.83,2.44 -2.67,2.44 -1.98,0 -3.8,-1.42 -5.58,-3.06 -1.47,-1.39 -2.61,-2.47 -4.05,-3.06 z"
-           inkscape:connector-curvature="0"
-           style="fill:#000000;stroke-width:0" /><path
-           id="path49217"
-           d="m 644.92,399.32 -0.01,-0.36 -0.01,-0.37 -0.03,-0.38 -0.04,-0.38 -0.03,-0.19 -0.04,-0.2 -0.04,-0.2 -0.04,-0.19 -0.05,-0.2 -0.06,-0.2 -0.06,-0.2 -0.07,-0.2 -0.07,-0.2 -0.08,-0.21 -0.1,-0.2 -0.09,-0.21 -0.11,-0.2 -0.11,-0.21 -0.13,-0.2 -0.13,-0.21 -0.14,-0.21 -0.15,-0.2 -0.17,-0.21 -0.17,-0.21 -0.18,-0.21 -0.19,-0.2 -0.21,-0.21 -0.21,-0.21 c -0.14,-0.14 -0.25,-0.25 -0.25,-0.42 0,-0.25 0.28,-0.49 0.48,-0.49 0.49,0 3.46,2.78 3.46,6.92 0,2.18 -0.85,3.8 -2.44,3.8 -1.16,0 -1.98,-0.9 -1.98,-1.98 0,-1.11 0.79,-2.02 2.01,-2.02 0.84,0 1.39,0.56 1.44,0.56 z"
-           inkscape:connector-curvature="0"
-           style="fill:#000000;stroke-width:0" /><path
-           id="path49219"
-           d="m 657.62,405.79 0.01,0.02 0,0.01 0,0.02 0.01,0.03 0.01,0.03 0,0.03 0.01,0.03 0.01,0.04 0.01,0.04 0.01,0.05 0.01,0.04 0.01,0.06 0.02,0.05 0.01,0.05 0.03,0.12 0.03,0.13 0.04,0.13 0.03,0.15 0.04,0.14 0.04,0.15 0.04,0.15 0.08,0.32 0.08,0.31 0.04,0.15 0.04,0.15 0.03,0.14 0.04,0.14 0.03,0.14 0.04,0.12 0.03,0.12 0.01,0.05 0.02,0.05 0.01,0.05 0.01,0.05 0.01,0.04 0.02,0.04 0.01,0.04 0.01,0.03 0,0.03 0.01,0.03 0.01,0.02 0,0.02 0.01,0.01 0,0.01 c 0.08,0.29 1.08,2.02 2.2,2.86 0.38,0.27 1.32,0.97 2.82,0.97 0.34,0 1.22,-0.03 1.92,-0.48 -1.13,-0.31 -1.53,-1.3 -1.53,-1.92 0,-0.77 0.59,-1.29 1.39,-1.29 0.79,0 1.95,0.66 1.95,2.13 0,1.81 -1.92,2.53 -3.7,2.53 -1.81,0 -3.38,-0.72 -4.91,-2.47 -0.62,2.13 -2.75,2.47 -3.59,2.47 -1.28,0 -2.16,-0.8 -2.72,-1.76 -0.8,-1.36 -1.28,-3.4 -1.28,-3.57 0,-0.45 0.48,-0.45 0.59,-0.45 0.49,0 0.52,0.11 0.77,1.05 0.51,2.12 1.18,3.76 2.54,3.76 0.91,0 1.14,-0.76 1.14,-1.7 0,-0.67 -0.31,-1.95 -0.56,-2.89 -0.23,-0.95 -0.58,-2.38 -0.76,-3.14 l -1.11,-4.47 c -0.14,-0.44 -0.35,-1.31 -0.35,-1.42 0,-0.77 0.63,-1.11 1.19,-1.11 0.52,0 1.22,0.31 1.49,1 0.07,0.22 0.45,1.75 0.67,2.62 z"
-           inkscape:connector-curvature="0"
-           style="fill:#000000;stroke-width:0" /><path
-           id="path49221"
-           d="m 719.68,422.5 0.14,0 0.14,0 0.14,0 0.08,0.01 0.07,0 0.07,0.01 0.07,0.01 0.07,0.01 0.07,0.01 0.07,0.01 0.07,0.02 0.06,0.02 0.06,0.02 0.07,0.02 0.05,0.03 0.06,0.03 0.05,0.04 0.05,0.03 0.05,0.05 0.04,0.04 0.04,0.05 0.02,0.03 0.02,0.03 0.01,0.02 0.02,0.03 0.01,0.03 0.02,0.04 0.01,0.03 0.01,0.04 0.01,0.03 0.01,0.04 0.01,0.04 0,0.04 0.01,0.04 0,0.04 0,0.04 0,0.05 c 0,1 -0.95,1 -1.64,1 h -29.84 c -0.7,0 -1.64,0 -1.64,-1 0,-0.98 0.94,-0.98 1.69,-0.98 z"
-           inkscape:connector-curvature="0"
-           style="fill:#000000;stroke-width:0" /><path
-           id="path49223"
-           d="m 719.72,412.82 0.07,0 0.06,0 0.14,0.01 0.14,0 0.07,0 0.07,0.01 0.07,0.01 0.07,0 0.07,0.01 0.06,0.02 0.07,0.01 0.07,0.02 0.06,0.02 0.06,0.02 0.06,0.02 0.06,0.03 0.05,0.03 0.06,0.04 0.04,0.04 0.05,0.04 0.04,0.05 0.02,0.02 0.02,0.03 0.02,0.02 0.02,0.03 0.02,0.03 0.01,0.03 0.01,0.03 0.02,0.03 0.01,0.04 0.01,0.03 0.01,0.04 0.01,0.04 0.01,0.04 0,0.04 0.01,0.04 0,0.04 0,0.05 0,0.04 c 0,1 -0.95,1 -1.68,1 h -29.75 c -0.75,0 -1.69,0 -1.69,-1 0,-1 0.94,-1 1.64,-1 z"
-           inkscape:connector-curvature="0"
-           style="fill:#000000;stroke-width:0" /><path
-           id="path49225"
-           d="m 750.9,422.93 0.12,0 0.13,0 0.13,0 0.14,0 0.14,0 0.15,0 0.16,-0.01 0.16,0 0.16,-0.01 0.16,-0.01 0.34,-0.02 0.36,-0.03 0.36,-0.05 0.36,-0.05 0.37,-0.07 0.19,-0.04 0.18,-0.05 0.19,-0.04 0.18,-0.06 0.18,-0.06 0.18,-0.06 0.18,-0.06 0.18,-0.08 0.17,-0.08 0.17,-0.08 0.17,-0.09 0.17,-0.09 -0.21,2.04 v 0.05 c 0.8,0.36 1.91,1.09 2.8,2.14 v -4.17 c -1.2,1.34 -2.73,1.98 -2.8,1.98 l 0.21,-2.04 c 2.39,-1.53 2.59,-4.24 2.59,-4.53 0.05,-0.69 0.05,-1.35 0.89,-1.35 0.86,0 0.86,0.7 0.86,1.6 v 13.5 c 0,0.79 0,1.59 -0.86,1.59 -0.84,0 -0.89,-0.75 -0.89,-1.14 -0.3,-6.42 -5.37,-6.78 -7.97,-6.83 v 10.52 c 0,3.34 0.94,3.34 2.14,3.34 h 2.39 c 6.72,0 10.07,-3.44 10.36,-6.88 0.05,-0.4 0.11,-1.15 0.91,-1.15 0.84,0 0.84,0.8 0.84,1.64 v 6.48 c 0,1.55 -0.11,1.64 -1.64,1.64 l -0.11,-1.73 v -2.39 c -0.84,0.94 -1.79,1.73 -2.84,2.39 h 2.84 l 0.11,1.73 h -25.51 c -0.89,0 -1.69,0 -1.69,-0.89 0,-0.84 0.94,-0.84 1.34,-0.84 2.83,0 3.03,-0.41 3.03,-2.84 v -24.97 l 1.75,-0.1 v 25.16 c 0,0.59 0,1.84 -0.4,2.75 h 5.28 c -0.55,-1.16 -0.55,-2.8 -0.55,-3.25 v -24.16 c 0,-1.79 0.36,-2.79 0.55,-3.23 h -5.28 c 0.4,0.89 0.4,2.14 0.4,2.73 l -1.75,0.1 c 0,-2.35 -0.14,-2.83 -2.78,-2.83 -0.75,0 -1.59,0 -1.59,-0.86 0,-0.89 0.8,-0.89 1.69,-0.89 h 26.4 l 0.05,1.75 h -3.49 V 408 c 1.6,0.79 2.94,1.84 3.94,2.73 -0.04,-0.2 -0.4,-2.39 -0.45,-2.78 l -0.05,-1.75 c 0.96,0 1.44,0 1.6,0.7 0.04,0.05 1.43,8.36 1.43,8.61 0,0.55 -0.43,0.91 -0.84,0.91 -0.69,0 -0.89,-0.66 -0.89,-0.71 -0.3,-1.29 -0.8,-3.39 -4.44,-5.53 -2.59,-1.54 -5.12,-2.23 -7.87,-2.23 h -2.74 c -1.2,0 -2.14,0 -2.14,3.33 z"
-           inkscape:connector-curvature="0"
-           style="fill:#000000;stroke-width:0" /><polygon
-           id="polygon49227"
-           points="783.94,395.73 779.11,395.73 779.11,441.57 783.94,441.57 783.94,443.56 777.11,443.56 777.11,393.75 783.94,393.75 "
-           style="fill:#000000;stroke-width:0" /><path
-           id="path49229"
-           d="m 803.67,436.34 0.04,0.16 0.04,0.16 0.04,0.15 0.04,0.15 0.04,0.13 0.05,0.13 0.05,0.13 0.05,0.11 0.06,0.12 0.07,0.1 0.07,0.1 0.08,0.09 0.09,0.09 0.1,0.08 0.11,0.08 0.12,0.07 0.13,0.06 0.15,0.06 0.16,0.06 0.18,0.05 0.09,0.02 0.1,0.02 0.1,0.02 0.11,0.02 0.11,0.02 0.12,0.02 0.12,0.02 0.12,0.01 0.13,0.01 0.14,0.02 0.14,0.01 0.14,0.01 0.15,0.01 0.16,0.01 0.16,0.01 0.17,0.01 0.17,0 0.18,0.01 0.19,0 0.19,0.01 0.19,0 0.21,0 0.21,0 0.21,0 c 1.49,0 1.89,0 1.89,0.96 0,0.59 -0.54,0.59 -0.79,0.59 -1.66,0 -5.74,-0.16 -7.38,-0.16 -1.5,0 -5.14,0.16 -6.62,0.16 -0.36,0 -0.96,0 -0.96,-1 0,-0.55 0.46,-0.55 1.39,-0.55 0.11,0 1.05,0 1.91,-0.09 0.89,-0.11 1.34,-0.16 1.34,-0.8 0,-0.2 -0.06,-0.36 -0.2,-0.95 l -6.67,-26.75 c -0.5,-1.95 -0.61,-2.34 -4.55,-2.34 -0.84,0 -1.34,0 -1.34,-1 0,-0.55 0.45,-0.55 1.34,-0.55 h 23.08 c 1.19,0 1.23,0 1.55,0.84 l 3.92,10.77 c 0.2,0.55 0.2,0.64 0.2,0.7 0,0.19 -0.14,0.55 -0.59,0.55 -0.45,0 -0.5,-0.25 -0.85,-1.05 -1.7,-4.59 -3.89,-10.26 -12.51,-10.26 h -4.67 c -0.71,0 -0.8,0 -1.1,0.04 -0.5,0.05 -0.65,0.1 -0.65,0.5 0,0.14 0,0.25 0.25,1.14 z"
-           inkscape:connector-curvature="0"
-           style="fill:#000000;stroke-width:0" /><polygon
-           id="polygon49231"
-           points="820.08,443.56 820.08,441.57 824.91,441.57 824.91,395.73 820.08,395.73 820.08,393.75 826.91,393.75 826.91,443.56 "
-           style="fill:#000000;stroke-width:0" /></g>    </g>
+       transform="matrix(0.61681068,0,0,0.61681068,596.21055,606.79012)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <g
        id="g45810-7"
-       transform="matrix(0,1,-1,0,1471.9425,243.90242)">
+       transform="matrix(0,1,-1,0,1471.9425,243.90242)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <path
          sodipodi:nodetypes="cc"
          inkscape:connector-curvature="0"
@@ -1162,11 +1136,309 @@
          style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
     </g>
     <rect
-       style="fill:#000000;fill-opacity:0.12328765999999999;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       style="fill:none;stroke:#000000;stroke-width:3.23295641;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:6.46591292, 6.46591292;stroke-dashoffset:0"
        id="rect49479"
-       width="965.39172"
-       height="648.14801"
-       x="-85.288429"
-       y="291.6517" />
+       width="1121.5455"
+       height="647.91504"
+       x="-85.171951"
+       y="291.76819"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       transform="translate(316.58777,682.76157)"
+       id="g49938"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+         id="g49940"
+         transform="matrix(1.0629921,0,0,-1.0629921,-186.02362,789.27165)"
+         xml:space="preserve"
+         stroke-miterlimit="10.433"
+         font-style="normal"
+         font-variant="normal"
+         font-weight="normal"
+         font-stretch="normal"
+         font-size-adjust="none"
+         letter-spacing="normal"
+         word-spacing="normal"><path
+           style="fill:#000000;stroke-width:0"
+           inkscape:connector-curvature="0"
+           d="m 477.19,423.14 0.45,0.12 0.44,0.12 0.44,0.14 0.43,0.15 0.42,0.16 0.42,0.17 0.4,0.18 0.4,0.19 0.39,0.19 0.37,0.21 0.37,0.22 0.35,0.22 0.34,0.23 0.33,0.24 0.32,0.25 0.3,0.26 0.29,0.27 0.27,0.27 0.26,0.28 0.24,0.29 0.23,0.29 0.21,0.31 0.19,0.3 0.18,0.32 0.15,0.32 0.14,0.33 0.12,0.33 0.09,0.35 0.08,0.34 0.06,0.35 0.03,0.36 0.01,0.36 c 0,4.78 -5.67,8.97 -13,8.97 h -15.64 v -1.55 h 1.19 c 3.84,0 3.93,-0.54 3.93,-2.34 v -26.25 c 0,-1.8 -0.09,-2.34 -3.93,-2.34 h -1.19 v -1.55 c 1.78,0.16 5.33,0.16 7.27,0.16 1.93,0 5.48,0 7.28,-0.16 v 1.55 h -1.21 c -3.82,0 -3.93,0.54 -3.93,2.34 v 12.59 1.11 12.89 c 0,1.16 0,1.75 1.09,1.91 0.5,0.09 1.95,0.09 2.95,0.09 4.47,0 10.07,-0.2 10.07,-7.42 0,-3.44 -1.21,-7.47 -8.58,-7.47 h -5.53 v -1.11 h 5.73 c 0.8,0 2.89,0 4.63,-1.68 1.9,-1.8 1.9,-3.35 1.9,-6.68 0,-3.25 0,-5.23 2.03,-7.12 2.05,-1.8 4.78,-2.09 6.28,-2.09 3.89,0 4.74,4.07 4.74,5.48 0,0.3 0,0.84 -0.64,0.84 -0.55,0 -0.55,-0.45 -0.61,-0.79 -0.3,-3.55 -2.03,-4.44 -3.28,-4.44 -2.44,0 -2.85,2.55 -3.55,7.17 l -0.64,3.99 c -0.89,3.18 -3.34,4.84 -6.08,5.78 z"
+           id="path49942" /><path
+           style="fill:#000000;stroke-width:0"
+           inkscape:connector-curvature="0"
+           d="m 501.05,428.21 -6.97,-0.54 v -1.55 c 3.24,0 3.69,-0.3 3.69,-2.73 v -13.41 c 0,-2.23 -0.55,-2.23 -3.89,-2.23 v -1.55 c 1.59,0.05 4.28,0.16 5.48,0.16 1.75,0 3.49,-0.11 5.19,-0.16 v 1.55 c -3.3,0 -3.5,0.25 -3.5,2.18 z"
+           id="path49944" /><path
+           style="fill:#000000;stroke-width:0"
+           inkscape:connector-curvature="0"
+           d="m 501.25,436.89 0,0.14 -0.01,0.15 -0.02,0.14 -0.02,0.14 -0.03,0.13 -0.04,0.13 -0.04,0.13 -0.05,0.12 -0.06,0.12 -0.06,0.12 -0.06,0.11 -0.07,0.1 -0.08,0.1 -0.08,0.1 -0.09,0.1 -0.08,0.08 -0.1,0.09 -0.1,0.08 -0.1,0.07 -0.1,0.07 -0.11,0.07 -0.11,0.06 -0.11,0.05 -0.12,0.05 -0.12,0.04 -0.12,0.04 -0.12,0.03 -0.12,0.03 -0.13,0.02 -0.13,0.01 -0.13,0.01 -0.13,0.01 c -1.54,0 -2.64,-1.35 -2.64,-2.64 0,-1.35 1.1,-2.64 2.64,-2.64 1.39,0 2.64,1.04 2.64,2.64 z"
+           id="path49946" /><path
+           style="fill:#000000;stroke-width:0"
+           inkscape:connector-curvature="0"
+           d="m 516.4,415.87 0.11,-0.02 0.12,-0.02 0.15,-0.03 0.15,-0.04 0.17,-0.04 0.18,-0.04 0.19,-0.05 0.2,-0.06 0.2,-0.06 0.21,-0.07 0.22,-0.08 0.22,-0.08 0.22,-0.1 0.22,-0.1 0.22,-0.11 0.22,-0.12 0.21,-0.14 0.22,-0.14 0.2,-0.15 0.2,-0.16 0.19,-0.18 0.18,-0.19 0.17,-0.2 0.16,-0.21 0.14,-0.22 0.06,-0.12 0.07,-0.12 0.06,-0.13 0.05,-0.12 0.05,-0.14 0.04,-0.13 0.04,-0.14 0.04,-0.14 0.03,-0.15 0.03,-0.15 0.02,-0.16 0.01,-0.15 0.01,-0.17 0,-0.16 c 0,-2.53 -1.75,-4.53 -5.62,-4.53 -4.19,0 -5.99,2.84 -6.94,7.07 -0.14,0.64 -0.19,0.85 -0.69,0.85 -0.65,0 -0.65,-0.35 -0.65,-1.25 v -6.58 c 0,-0.84 0,-1.19 0.54,-1.19 0.25,0 0.3,0.05 1.25,1 0.1,0.1 0.1,0.19 1,1.14 2.19,-2.09 4.44,-2.14 5.49,-2.14 5.72,0 8.01,3.35 8.01,6.92 0,2.64 -1.5,4.14 -2.09,4.74 -1.64,1.59 -3.6,2 -5.69,2.39 -2.78,0.55 -6.12,1.2 -6.12,4.09 0,1.74 1.29,3.78 5.58,3.78 5.48,0 5.73,-4.48 5.82,-6.03 0.06,-0.45 0.5,-0.45 0.61,-0.45 0.64,0 0.64,0.25 0.64,1.2 v 5.03 c 0,0.85 0,1.19 -0.54,1.19 -0.25,0 -0.35,0 -1,-0.59 -0.15,-0.21 -0.65,-0.64 -0.85,-0.8 -1.89,1.39 -3.93,1.39 -4.68,1.39 -6.08,0 -7.97,-3.33 -7.97,-6.12 0,-1.74 0.79,-3.14 2.14,-4.24 1.59,-1.29 3,-1.59 6.58,-2.28 z"
+           id="path49948" /><path
+           style="fill:#000000;stroke-width:0"
+           inkscape:connector-curvature="0"
+           d="m 531,409.98 0,-0.1 -0.01,-0.1 0,-0.19 -0.01,-0.18 -0.01,-0.17 -0.02,-0.15 -0.03,-0.15 -0.03,-0.13 -0.03,-0.12 -0.04,-0.11 -0.05,-0.11 -0.06,-0.09 -0.06,-0.09 -0.08,-0.08 -0.08,-0.07 -0.09,-0.06 -0.1,-0.05 -0.1,-0.05 -0.12,-0.05 -0.13,-0.03 -0.14,-0.04 -0.16,-0.02 -0.16,-0.03 -0.18,-0.01 -0.09,-0.01 -0.1,-0.01 -0.1,-0.01 -0.1,0 -0.1,-0.01 -0.11,0 -0.12,0 -0.11,-0.01 -0.12,0 -0.13,0 -0.13,0 -0.13,0 -0.13,0 -0.14,0 -0.14,0 -0.15,0 -0.15,0 -0.16,0 v -1.55 c 1.66,0.05 3.99,0.16 5.44,0.16 1.49,0 3.49,-0.07 5.49,-0.16 v 1.55 c -3.35,0 -3.89,0 -3.89,2.23 v 5.14 l 3.18,2.74 c 3.83,-5.29 5.93,-8.07 5.93,-8.97 0,-0.94 -0.85,-1.14 -1.78,-1.14 v -1.55 c 1.38,0.05 4.32,0.16 5.37,0.16 1.44,0 2.89,-0.07 4.33,-0.16 v 1.55 c -1.85,0 -2.94,0 -4.83,2.64 l -6.33,8.92 c -0.04,0.09 -0.29,0.39 -0.29,0.55 0,0.18 3.53,3.18 4.03,3.57 3.14,2.55 5.23,2.64 6.28,2.69 v 1.55 c -1.44,-0.14 -2.1,-0.14 -3.49,-0.14 -1.79,0 -4.89,0.09 -5.57,0.14 v -1.55 c 0.93,-0.05 1.43,-0.59 1.43,-1.23 0,-1 -0.68,-1.6 -1.09,-1.96 l -7.03,-6.07 v 23.92 l -7.18,-0.55 v -1.55 c 3.49,0 3.9,-0.34 3.9,-2.79 z"
+           id="path49950" /><path
+           style="fill:#000000;stroke-width:0"
+           inkscape:connector-curvature="0"
+           d="m 600.03,422.5 0.14,0 0.14,0 0.15,0 0.07,0.01 0.07,0 0.07,0.01 0.07,0.01 0.07,0.01 0.07,0.01 0.07,0.01 0.07,0.02 0.06,0.02 0.07,0.02 0.06,0.02 0.06,0.03 0.05,0.03 0.05,0.04 0.05,0.03 0.05,0.05 0.04,0.04 0.04,0.05 0.02,0.03 0.02,0.03 0.02,0.02 0.01,0.03 0.02,0.03 0.01,0.04 0.01,0.03 0.01,0.04 0.01,0.03 0.01,0.04 0.01,0.04 0,0.04 0.01,0.04 0,0.04 0,0.04 0.01,0.05 c 0,1 -0.96,1 -1.65,1 h -29.84 c -0.7,0 -1.64,0 -1.64,-1 0,-0.98 0.94,-0.98 1.69,-0.98 z"
+           id="path49952" /><path
+           style="fill:#000000;stroke-width:0"
+           inkscape:connector-curvature="0"
+           d="m 600.07,412.82 0.07,0 0.07,0 0.13,0.01 0.14,0 0.07,0 0.07,0.01 0.07,0.01 0.07,0 0.07,0.01 0.07,0.02 0.06,0.01 0.07,0.02 0.06,0.02 0.06,0.02 0.06,0.02 0.06,0.03 0.05,0.03 0.06,0.04 0.05,0.04 0.04,0.04 0.05,0.05 0.02,0.02 0.02,0.03 0.01,0.02 0.02,0.03 0.02,0.03 0.01,0.03 0.02,0.03 0.01,0.03 0.01,0.04 0.01,0.03 0.01,0.04 0.01,0.04 0.01,0.04 0,0.04 0.01,0.04 0,0.04 0,0.05 0.01,0.04 c 0,1 -0.96,1 -1.69,1 h -29.75 c -0.75,0 -1.69,0 -1.69,-1 0,-1 0.94,-1 1.64,-1 z"
+           id="path49954" /><path
+           style="fill:#000000;stroke-width:0"
+           inkscape:connector-curvature="0"
+           d="m 631.38,422.93 0.12,0 0.12,0 0.14,0 0.13,0 0.15,0 0.15,0 0.15,-0.01 0.16,0 0.16,-0.01 0.17,-0.01 0.34,-0.02 0.35,-0.03 0.36,-0.05 0.37,-0.05 0.37,-0.07 0.18,-0.04 0.19,-0.05 0.18,-0.04 0.18,-0.06 0.19,-0.06 0.18,-0.06 0.18,-0.06 0.17,-0.08 0.18,-0.08 0.17,-0.08 0.17,-0.09 0.16,-0.09 -0.2,2.04 v 0.05 c 0.79,0.36 1.9,1.09 2.79,2.14 v -4.17 c -1.2,1.34 -2.73,1.98 -2.79,1.98 l 0.2,-2.04 c 2.39,-1.53 2.59,-4.24 2.59,-4.53 0.05,-0.69 0.05,-1.35 0.89,-1.35 0.86,0 0.86,0.7 0.86,1.6 v 13.5 c 0,0.79 0,1.59 -0.86,1.59 -0.84,0 -0.89,-0.75 -0.89,-1.14 -0.29,-6.42 -5.37,-6.78 -7.96,-6.83 v 10.52 c 0,3.34 0.93,3.34 2.14,3.34 h 2.39 c 6.71,0 10.06,-3.44 10.36,-6.88 0.04,-0.4 0.11,-1.15 0.9,-1.15 0.85,0 0.85,0.8 0.85,1.64 v 6.48 c 0,1.55 -0.11,1.64 -1.64,1.64 l -0.11,-1.73 v -2.39 c -0.85,0.94 -1.8,1.73 -2.85,2.39 h 2.85 l 0.11,1.73 h -25.52 c -0.89,0 -1.69,0 -1.69,-0.89 0,-0.84 0.94,-0.84 1.35,-0.84 2.82,0 3.03,-0.41 3.03,-2.84 v -24.97 l 1.75,-0.1 v 25.16 c 0,0.59 0,1.84 -0.41,2.75 h 5.28 c -0.55,-1.16 -0.55,-2.8 -0.55,-3.25 v -24.16 c 0,-1.79 0.36,-2.79 0.55,-3.23 h -5.28 c 0.41,0.89 0.41,2.14 0.41,2.73 l -1.75,0.1 c 0,-2.35 -0.14,-2.83 -2.78,-2.83 -0.75,0 -1.6,0 -1.6,-0.86 0,-0.89 0.8,-0.89 1.69,-0.89 h 26.41 l 0.04,1.75 h -3.48 V 408 c 1.59,0.79 2.94,1.84 3.94,2.73 -0.05,-0.2 -0.41,-2.39 -0.46,-2.78 l -0.04,-1.75 c 0.95,0 1.43,0 1.59,0.7 0.05,0.05 1.44,8.36 1.44,8.61 0,0.55 -0.44,0.91 -0.85,0.91 -0.68,0 -0.89,-0.66 -0.89,-0.71 -0.29,-1.29 -0.79,-3.39 -4.44,-5.53 -2.59,-1.54 -5.12,-2.23 -7.87,-2.23 h -2.73 c -1.21,0 -2.14,0 -2.14,3.33 z"
+           id="path49956" /><polygon
+           style="fill:#000000;stroke-width:0"
+           points="659.58,395.73 659.58,441.57 664.41,441.57 664.41,443.56 657.58,443.56 657.58,393.75 664.41,393.75 664.41,395.73 "
+           id="polygon49958" /><path
+           style="fill:#000000;stroke-width:0"
+           inkscape:connector-curvature="0"
+           d="m 684.15,436.34 0.04,0.16 0.03,0.16 0.04,0.15 0.05,0.15 0.04,0.13 0.04,0.13 0.05,0.13 0.06,0.11 0.05,0.12 0.07,0.1 0.07,0.1 0.08,0.09 0.09,0.09 0.1,0.08 0.11,0.08 0.12,0.07 0.14,0.06 0.14,0.06 0.16,0.06 0.18,0.05 0.09,0.02 0.1,0.02 0.11,0.02 0.1,0.02 0.11,0.02 0.12,0.02 0.12,0.02 0.12,0.01 0.13,0.01 0.14,0.02 0.14,0.01 0.15,0.01 0.15,0.01 0.15,0.01 0.16,0.01 0.17,0.01 0.17,0 0.18,0.01 0.19,0 0.19,0.01 0.2,0 0.2,0 0.21,0 0.22,0 c 1.48,0 1.89,0 1.89,0.96 0,0.59 -0.55,0.59 -0.8,0.59 -1.66,0 -5.74,-0.16 -7.37,-0.16 -1.5,0 -5.15,0.16 -6.63,0.16 -0.36,0 -0.95,0 -0.95,-1 0,-0.55 0.45,-0.55 1.39,-0.55 0.11,0 1.04,0 1.9,-0.09 0.89,-0.11 1.35,-0.16 1.35,-0.8 0,-0.2 -0.06,-0.36 -0.21,-0.95 l -6.67,-26.75 c -0.5,-1.95 -0.61,-2.34 -4.55,-2.34 -0.84,0 -1.34,0 -1.34,-1 0,-0.55 0.46,-0.55 1.34,-0.55 h 23.08 c 1.19,0 1.24,0 1.55,0.84 l 3.92,10.77 c 0.2,0.55 0.2,0.64 0.2,0.7 0,0.19 -0.13,0.55 -0.59,0.55 -0.45,0 -0.5,-0.25 -0.84,-1.05 -1.7,-4.59 -3.89,-10.26 -12.52,-10.26 h -4.67 c -0.7,0 -0.8,0 -1.09,0.04 -0.5,0.05 -0.66,0.1 -0.66,0.5 0,0.14 0,0.25 0.25,1.14 z"
+           id="path49960" /><polygon
+           style="fill:#000000;stroke-width:0"
+           points="700.55,441.57 705.38,441.57 705.38,395.73 700.55,395.73 700.55,393.75 707.38,393.75 707.38,443.56 700.55,443.56 "
+           id="polygon49962" /></g>    </g>
+    <g
+       id="g51943"
+       transform="matrix(0.75,0,0,0.75,-189.04443,72.227428)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         word-spacing="normal"
+         letter-spacing="normal"
+         font-size-adjust="none"
+         font-stretch="normal"
+         font-weight="normal"
+         font-variant="normal"
+         font-style="normal"
+         stroke-miterlimit="10.433"
+         xml:space="preserve"
+         transform="matrix(1.0629921,0,0,-1.0629921,-186.02362,789.27165)"
+         id="g51945"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"><polygon
+           id="polygon51947"
+           points="479.13,450.79 484.87,445.71 485.76,446.6 479.13,453.38 472.46,446.6 473.35,445.71 "
+           style="fill:#000000;stroke-width:0" /><path
+           id="path51949"
+           d="m 470.61,422.39 h 4.83 c 3.75,0 4.14,-0.8 4.14,-2.24 0,-0.36 0,-0.95 -0.34,-2.44 -0.11,-0.25 -0.16,-0.45 -0.16,-0.56 0,-0.39 0.3,-0.59 0.6,-0.59 0.5,0 0.5,0.15 0.75,1.05 l 2.75,10.81 c 0.14,0.54 0.14,0.65 0.14,0.79 0,0.1 -0.1,0.55 -0.6,0.55 -0.5,0 -0.54,-0.25 -0.75,-1.05 -1.04,-3.87 -2.18,-4.78 -6.42,-4.78 h -4.53 l 3.19,12.66 c 0.43,1.75 0.5,1.94 2.68,1.94 h 6.58 c 6.13,0 7.27,-1.64 7.27,-5.47 0,-1.16 0,-1.35 -0.14,-2.7 -0.11,-0.65 -0.11,-0.74 -0.11,-0.9 0,-0.25 0.15,-0.59 0.61,-0.59 0.54,0 0.59,0.3 0.69,1.25 l 1,8.61 c 0.15,1.34 -0.1,1.34 -1.35,1.34 h -24.4 c -1,0 -1.5,0 -1.5,-1 0,-0.54 0.45,-0.54 1.39,-0.54 1.84,0 3.23,0 3.23,-0.89 0,-0.21 0,-0.3 -0.25,-1.21 l -6.56,-26.34 c -0.5,-1.95 -0.61,-2.34 -4.55,-2.34 -0.84,0 -1.39,0 -1.39,-0.96 0,-0.59 0.59,-0.59 0.75,-0.59 1.44,0 5.13,0.16 6.58,0.16 1.64,0 5.78,-0.16 7.42,-0.16 0.45,0 1.05,0 1.05,0.95 0,0.39 -0.3,0.49 -0.3,0.55 -0.16,0.05 -0.25,0.05 -1.39,0.05 -1.11,0 -1.36,0 -2.59,0.09 -1.46,0.16 -1.6,0.36 -1.6,1 0,0.09 0,0.41 0.19,1.14 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /><path
+           id="path51951"
+           d="m 506.93,407.82 0.01,0.02 0.01,0.02 0,0.03 0.01,0.02 0,0.02 0.01,0.02 0.01,0.03 0.01,0.04 0.01,0.03 0.01,0.03 0,0.03 0.01,0.03 0.01,0.03 0,0.02 0.01,0.03 0,0.02 0.01,0.02 0,0.02 0.01,0.02 0,0.02 0,0.02 0,0.02 0.01,0.02 0,0.03 0,0.03 0,0.04 0,0.03 0,0.02 0,0.02 0,0.02 0,0.02 c 0,0.68 -0.56,1.11 -1.15,1.11 -0.38,0 -1.05,-0.18 -1.42,-0.83 -0.11,-0.22 -0.39,-1.33 -0.57,-2.03 l -0.73,-2.89 c -0.2,-0.83 -1.28,-5.22 -1.39,-5.61 -0.03,0 -1.56,-3.04 -4.28,-3.04 -2.38,0 -2.38,2.27 -2.38,2.9 0,1.89 0.8,4.07 1.85,6.76 0.42,1.11 0.59,1.53 0.59,2.13 0,1.67 -1.42,2.95 -3.31,2.95 -3.52,0 -5.08,-4.74 -5.08,-5.33 0,-0.45 0.48,-0.45 0.59,-0.45 0.49,0 0.52,0.17 0.63,0.56 0.87,2.89 2.37,4.25 3.76,4.25 0.6,0 0.86,-0.39 0.86,-1.22 0,-0.8 -0.31,-1.56 -0.48,-2.01 -1.67,-4.25 -2.02,-5.55 -2.02,-7.08 0,-0.6 0,-2.24 1.36,-3.35 1.08,-0.9 2.55,-1.07 3.49,-1.07 1.39,0 2.64,0.51 3.79,1.56 -0.45,-1.92 -0.84,-3.38 -2.29,-5.13 -0.94,-1.07 -2.35,-2.22 -4.19,-2.22 -0.24,0 -1.88,0 -2.61,1.15 1.87,0.2 1.87,1.89 1.87,1.92 0,1.11 -1,1.31 -1.35,1.31 -0.86,0 -2.02,-0.69 -2.02,-2.3 0,-1.76 1.67,-3.06 4.14,-3.06 3.53,0 7.81,2.72 8.89,7.08 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /><path
+           id="path51953"
+           d="m 519.91,422.72 0,0 0,0.01 0,0 0,0 0,0.01 0,0 0.01,0.01 0,0 0,0.01 0,0.01 0.01,0 0,0.01 0,0.01 0.01,0 0,0.01 0.01,0.01 0,0.01 0,0.01 0.01,0 0,0.01 0,0.01 0.01,0.01 0,0.01 0,0.01 0,0.01 0.01,0.01 0,0.01 0,0.01 0,0.01 0,0.02 0,0.01 0,0.01 c 0,0.11 -0.04,0.36 -0.42,0.36 -0.5,0 -6.9,-3.99 -6.9,-12.45 0,-8.46 6.4,-12.47 6.9,-12.47 0.38,0 0.42,0.25 0.42,0.36 0,0.17 -0.1,0.25 -0.2,0.31 -4.4,3.51 -5.2,8.58 -5.2,11.8 0,6.09 2.81,10.1 5.33,11.84 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /><path
+           id="path51955"
+           d="m 532.22,420.19 0,0.05 -0.01,0.06 0,0.05 -0.01,0.05 -0.01,0.06 -0.02,0.05 -0.01,0.05 -0.02,0.04 -0.02,0.05 -0.02,0.05 -0.03,0.04 -0.02,0.04 -0.03,0.05 -0.03,0.04 -0.04,0.03 -0.03,0.04 -0.04,0.04 -0.04,0.03 -0.04,0.03 -0.04,0.03 -0.04,0.03 -0.05,0.02 -0.05,0.03 -0.05,0.02 -0.05,0.02 -0.05,0.01 -0.05,0.02 -0.06,0.01 -0.06,0.01 -0.05,0 -0.06,0.01 -0.07,0 c -0.68,0 -1.51,-0.67 -1.51,-1.48 0,-0.71 0.55,-1.08 1.06,-1.08 0.83,0 1.55,0.75 1.55,1.5 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /><path
+           id="path51957"
+           d="m 533.39,408.23 0,0.02 0,0.02 0,0.01 0,0.01 -0.01,0.02 0,0.01 0,0.01 -0.01,0.02 0,0.01 -0.01,0.01 0,0.01 -0.01,0.01 0,0.01 -0.01,0.01 -0.01,0.01 -0.01,0.01 0,0.01 -0.01,0.01 -0.01,0.01 -0.01,0.01 -0.02,0.01 -0.02,0.01 -0.02,0.02 -0.02,0.01 -0.02,0.01 -0.02,0.01 -0.02,0 -0.03,0.01 -0.02,0 -0.02,0.01 -0.02,0 -0.02,0.01 -0.02,0 -0.02,0 -0.02,0 -0.02,0.01 -0.02,0 -0.02,0 -0.01,0 -0.01,0 -0.02,0 0,0 0,0 c -0.43,0 -0.46,-0.1 -0.6,-0.58 -0.44,-1.36 -1.55,-2.78 -2.8,-2.78 -0.57,0 -0.75,0.39 -0.75,0.94 0,0.53 0.13,0.79 0.33,1.28 0.21,0.48 0.39,0.98 0.52,1.34 0.11,0.22 1.08,2.53 1.42,3.44 0.2,0.5 0.36,0.81 0.36,1.23 0,1.21 -1.16,2.21 -2.72,2.21 -2.62,0 -4.02,-3.19 -4.02,-3.86 0,-0.36 0.41,-0.36 0.54,-0.36 0.42,0 0.43,0.12 0.56,0.5 0.55,1.76 1.75,2.86 2.81,2.86 0.49,0 0.75,-0.27 0.75,-0.94 0,-0.09 0,-0.42 -0.14,-0.91 -0.19,-0.43 -1.3,-3.11 -1.66,-3.95 -0.17,-0.42 -0.17,-0.47 -0.54,-1.31 -0.13,-0.36 -0.27,-0.71 -0.27,-1.13 0,-1.29 1.22,-2.2 2.72,-2.2 2.61,0 4,3.25 4,3.87 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /><path
+           id="path51959"
+           d="m 545.41,410.88 0,0.39 -0.02,0.38 -0.02,0.38 -0.03,0.38 -0.09,0.72 -0.12,0.7 -0.14,0.68 -0.17,0.65 -0.2,0.62 -0.22,0.6 -0.23,0.57 -0.26,0.55 -0.27,0.53 -0.28,0.49 -0.29,0.48 -0.3,0.44 -0.31,0.43 -0.31,0.4 -0.31,0.37 -0.31,0.35 -0.31,0.32 -0.3,0.3 -0.3,0.28 -0.28,0.25 -0.27,0.23 -0.26,0.2 -0.24,0.18 -0.23,0.15 -0.2,0.13 -0.18,0.11 -0.15,0.08 -0.13,0.06 -0.1,0.04 -0.06,0.01 c -0.41,0 -0.41,-0.3 -0.41,-0.36 0,-0.02 0,-0.17 0.16,-0.31 3.73,-2.97 5.23,-7.3 5.23,-11.78 0,-2.26 -0.42,-4.6 -1.28,-6.65 -1.19,-2.82 -2.76,-4.2 -3.98,-5.2 -0.08,-0.05 -0.13,-0.17 -0.13,-0.26 0,-0.05 0,-0.36 0.41,-0.36 0.5,0 6.89,4 6.89,12.47 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /><path
+           id="path51961"
+           d="m 604.05,422.84 0,0.1 -0.01,0.1 0,0.09 -0.01,0.09 0,0.09 -0.01,0.08 -0.01,0.08 -0.02,0.08 -0.01,0.07 -0.01,0.07 -0.02,0.07 -0.02,0.07 -0.02,0.06 -0.02,0.05 -0.02,0.06 -0.02,0.05 -0.02,0.04 -0.03,0.05 -0.02,0.04 -0.03,0.04 -0.03,0.03 -0.03,0.03 -0.03,0.03 -0.03,0.03 -0.03,0.02 -0.03,0.02 -0.04,0.02 -0.03,0.01 -0.03,0.01 -0.04,0.01 -0.03,0 -0.04,0 c -0.25,0 -0.66,-0.34 -0.7,-1.29 -0.21,-4.78 -3.49,-7.52 -6.99,-7.52 -3.12,0 -5.51,2.14 -7.97,4.28 -2.53,2.3 -5.12,4.58 -8.51,4.58 -5.44,0 -8.38,-5.48 -8.38,-10.02 0,-1.59 0.66,-1.59 0.71,-1.59 0.54,0 0.7,1 0.7,1.16 0.19,5.47 3.94,7.67 6.97,7.67 3.14,0 5.53,-2.14 7.97,-4.3 2.54,-2.28 5.14,-4.58 8.51,-4.58 5.44,0 8.38,5.49 8.38,10.02 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /><path
+           id="path51963"
+           d="m 651.3,436.2 0.01,0.16 0,0.16 0,0.15 0.01,0.14 0.01,0.14 0.01,0.13 0.02,0.12 0.02,0.11 0.03,0.11 0.03,0.11 0.05,0.1 0.05,0.09 0.06,0.08 0.06,0.09 0.08,0.07 0.09,0.07 0.1,0.07 0.11,0.06 0.06,0.02 0.07,0.03 0.06,0.03 0.07,0.02 0.08,0.02 0.07,0.03 0.09,0.02 0.08,0.02 0.09,0.01 0.09,0.02 0.1,0.02 0.1,0.01 0.1,0.02 0.11,0.01 0.12,0.01 0.11,0.01 0.13,0.02 0.12,0 0.13,0.01 0.14,0.01 0.14,0.01 0.15,0 0.15,0.01 0.15,0 0.16,0 0.17,0.01 0.17,0 0.18,0 h 1.2 v 1.54 H 622.4 v -1.54 h 1.2 c 3.83,0 3.94,-0.55 3.94,-2.33 v -26.11 c 0,-1.8 -0.11,-2.34 -3.94,-2.34 h -1.2 v -1.55 c 1.75,0.16 5.44,0.16 7.33,0.16 1.89,0 5.62,0 7.37,-0.16 v 1.55 h -1.2 c -3.83,0 -3.94,0.54 -3.94,2.34 v 28.44 h 14.91 v -28.44 c 0,-1.8 -0.11,-2.34 -3.94,-2.34 h -1.2 v -1.55 c 1.75,0.16 5.43,0.16 7.32,0.16 1.9,0 5.63,0 7.38,-0.16 v 1.55 h -1.2 c -3.83,0 -3.93,0.54 -3.93,2.34 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /><path
+           id="path51965"
+           d="m 677.45,407.82 0.01,0.02 0.01,0.02 0,0.03 0.01,0.02 0,0.02 0.01,0.02 0.01,0.03 0.01,0.04 0.01,0.03 0.01,0.03 0,0.03 0.01,0.03 0.01,0.03 0,0.02 0.01,0.03 0,0.02 0.01,0.02 0,0.02 0.01,0.02 0,0.02 0,0.02 0,0.02 0.01,0.02 0,0.03 0,0.03 0,0.04 0,0.03 0,0.02 0,0.02 0,0.02 0,0.02 c 0,0.68 -0.56,1.11 -1.15,1.11 -0.38,0 -1.05,-0.18 -1.42,-0.83 -0.11,-0.22 -0.4,-1.33 -0.57,-2.03 l -0.73,-2.89 c -0.2,-0.83 -1.28,-5.22 -1.39,-5.61 -0.03,0 -1.56,-3.04 -4.28,-3.04 -2.38,0 -2.38,2.27 -2.38,2.9 0,1.89 0.8,4.07 1.85,6.76 0.42,1.11 0.59,1.53 0.59,2.13 0,1.67 -1.42,2.95 -3.31,2.95 -3.52,0 -5.08,-4.74 -5.08,-5.33 0,-0.45 0.48,-0.45 0.59,-0.45 0.49,0 0.52,0.17 0.63,0.56 0.87,2.89 2.37,4.25 3.76,4.25 0.6,0 0.86,-0.39 0.86,-1.22 0,-0.8 -0.31,-1.56 -0.48,-2.01 -1.67,-4.25 -2.02,-5.55 -2.02,-7.08 0,-0.6 0,-2.24 1.36,-3.35 1.08,-0.9 2.55,-1.07 3.49,-1.07 1.39,0 2.64,0.51 3.79,1.56 -0.45,-1.92 -0.84,-3.38 -2.29,-5.13 -0.94,-1.07 -2.35,-2.22 -4.19,-2.22 -0.24,0 -1.88,0 -2.61,1.15 1.87,0.2 1.87,1.89 1.87,1.92 0,1.11 -1,1.31 -1.36,1.31 -0.85,0 -2.01,-0.69 -2.01,-2.3 0,-1.76 1.67,-3.06 4.14,-3.06 3.53,0 7.81,2.72 8.89,7.08 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /><path
+           id="path51967"
+           d="m 690.43,422.72 0,0 0,0.01 0,0 0,0 0,0.01 0,0 0.01,0.01 0,0 0,0.01 0,0.01 0.01,0 0,0.01 0,0.01 0.01,0 0,0.01 0.01,0.01 0,0.01 0,0.01 0.01,0 0,0.01 0,0.01 0.01,0.01 0,0.01 0,0.01 0,0.01 0.01,0.01 0,0.01 0,0.01 0,0.01 0,0.02 0,0.01 0,0.01 c 0,0.11 -0.04,0.36 -0.42,0.36 -0.5,0 -6.9,-3.99 -6.9,-12.45 0,-8.46 6.4,-12.47 6.9,-12.47 0.38,0 0.42,0.25 0.42,0.36 0,0.17 -0.1,0.25 -0.2,0.31 -4.4,3.51 -5.2,8.58 -5.2,11.8 0,6.09 2.81,10.1 5.33,11.84 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /><path
+           id="path51969"
+           d="m 702.74,420.19 0,0.05 -0.01,0.06 0,0.05 -0.01,0.05 -0.01,0.06 -0.02,0.05 -0.01,0.05 -0.02,0.04 -0.02,0.05 -0.02,0.05 -0.03,0.04 -0.02,0.04 -0.03,0.05 -0.03,0.04 -0.04,0.03 -0.03,0.04 -0.04,0.04 -0.04,0.03 -0.04,0.03 -0.04,0.03 -0.04,0.03 -0.05,0.02 -0.05,0.03 -0.05,0.02 -0.05,0.02 -0.05,0.01 -0.05,0.02 -0.06,0.01 -0.06,0.01 -0.05,0 -0.06,0.01 -0.06,0 c -0.69,0 -1.52,-0.67 -1.52,-1.48 0,-0.71 0.55,-1.08 1.06,-1.08 0.83,0 1.55,0.75 1.55,1.5 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /><path
+           id="path51971"
+           d="m 703.91,408.23 0,0.02 0,0.02 0,0.01 0,0.01 -0.01,0.02 0,0.01 0,0.01 -0.01,0.02 0,0.01 -0.01,0.01 0,0.01 -0.01,0.01 -0.01,0.01 0,0.01 -0.01,0.01 -0.01,0.01 -0.01,0.01 0,0.01 -0.01,0.01 -0.01,0.01 -0.02,0.01 -0.02,0.01 -0.02,0.02 -0.02,0.01 -0.02,0.01 -0.02,0.01 -0.02,0 -0.03,0.01 -0.02,0 -0.02,0.01 -0.02,0 -0.02,0.01 -0.03,0 -0.02,0 -0.01,0 -0.02,0.01 -0.02,0 -0.02,0 -0.01,0 -0.01,0 -0.02,0 0,0 0,0 c -0.43,0 -0.46,-0.1 -0.6,-0.58 -0.44,-1.36 -1.55,-2.78 -2.8,-2.78 -0.57,0 -0.75,0.39 -0.75,0.94 0,0.53 0.13,0.79 0.33,1.28 0.2,0.48 0.39,0.98 0.52,1.34 0.11,0.22 1.08,2.53 1.42,3.44 0.2,0.5 0.36,0.81 0.36,1.23 0,1.21 -1.16,2.21 -2.72,2.21 -2.63,0 -4.01,-3.19 -4.01,-3.86 0,-0.36 0.4,-0.36 0.53,-0.36 0.42,0 0.43,0.12 0.56,0.5 0.54,1.76 1.75,2.86 2.81,2.86 0.48,0 0.75,-0.27 0.75,-0.94 0,-0.09 0,-0.42 -0.14,-0.91 -0.19,-0.43 -1.3,-3.11 -1.66,-3.95 -0.17,-0.42 -0.17,-0.47 -0.54,-1.31 -0.13,-0.36 -0.27,-0.71 -0.27,-1.13 0,-1.29 1.22,-2.2 2.72,-2.2 2.61,0 4,3.25 4,3.87 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /><path
+           id="path51973"
+           d="m 715.93,410.88 0,0.39 -0.02,0.38 -0.02,0.38 -0.03,0.38 -0.09,0.72 -0.12,0.7 -0.14,0.68 -0.17,0.65 -0.2,0.62 -0.22,0.6 -0.23,0.57 -0.26,0.55 -0.27,0.53 -0.28,0.49 -0.29,0.48 -0.3,0.44 -0.31,0.43 -0.31,0.4 -0.31,0.37 -0.31,0.35 -0.31,0.32 -0.3,0.3 -0.3,0.28 -0.28,0.25 -0.27,0.23 -0.26,0.2 -0.25,0.18 -0.22,0.15 -0.2,0.13 -0.18,0.11 -0.16,0.08 -0.12,0.06 -0.1,0.04 -0.06,0.01 c -0.41,0 -0.41,-0.3 -0.41,-0.36 0,-0.02 0,-0.17 0.16,-0.31 3.73,-2.97 5.23,-7.3 5.23,-11.78 0,-2.26 -0.42,-4.6 -1.28,-6.65 -1.19,-2.82 -2.76,-4.2 -3.98,-5.2 -0.08,-0.05 -0.13,-0.17 -0.13,-0.26 0,-0.05 0,-0.36 0.41,-0.36 0.5,0 6.89,4 6.89,12.47 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /><path
+           id="path51975"
+           d="m 729.64,395.24 0,-0.36 -0.02,-0.37 -0.03,-0.38 -0.04,-0.38 -0.03,-0.2 -0.03,-0.19 -0.04,-0.2 -0.05,-0.19 -0.05,-0.2 -0.05,-0.2 -0.07,-0.2 -0.06,-0.2 -0.08,-0.21 -0.08,-0.2 -0.09,-0.2 -0.1,-0.21 -0.11,-0.2 -0.11,-0.21 -0.13,-0.2 -0.13,-0.21 -0.14,-0.21 -0.15,-0.21 -0.16,-0.2 -0.17,-0.21 -0.19,-0.21 -0.19,-0.21 -0.2,-0.2 -0.22,-0.21 c -0.14,-0.14 -0.25,-0.25 -0.25,-0.42 0,-0.25 0.28,-0.49 0.49,-0.49 0.48,0 3.45,2.78 3.45,6.92 0,2.17 -0.84,3.8 -2.44,3.8 -1.15,0 -1.98,-0.91 -1.98,-1.98 0,-1.11 0.79,-2.02 2.01,-2.02 0.85,0 1.39,0.56 1.44,0.56 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /><path
+           id="path51977"
+           d="m 742.35,401.71 0,0.01 0,0.02 0.01,0.02 0,0.02 0.01,0.03 0.01,0.03 0,0.04 0.01,0.04 0.01,0.04 0.01,0.05 0.02,0.04 0.01,0.05 0.01,0.06 0.01,0.05 0.03,0.12 0.04,0.13 0.03,0.13 0.03,0.14 0.04,0.15 0.04,0.15 0.04,0.15 0.08,0.31 0.08,0.32 0.04,0.15 0.04,0.15 0.04,0.14 0.03,0.14 0.04,0.13 0.03,0.13 0.03,0.11 0.02,0.06 0.01,0.05 0.01,0.05 0.02,0.05 0.01,0.04 0.01,0.04 0.01,0.04 0.01,0.03 0.01,0.03 0,0.03 0.01,0.02 0.01,0.02 0,0.01 0,0.01 c 0.08,0.28 1.08,2.02 2.21,2.86 0.37,0.27 1.31,0.97 2.81,0.97 0.34,0 1.22,-0.03 1.92,-0.48 -1.12,-0.32 -1.53,-1.3 -1.53,-1.93 0,-0.76 0.59,-1.28 1.39,-1.28 0.8,0 1.95,0.66 1.95,2.13 0,1.81 -1.92,2.53 -3.7,2.53 -1.81,0 -3.37,-0.72 -4.9,-2.47 -0.63,2.13 -2.75,2.47 -3.6,2.47 -1.28,0 -2.15,-0.8 -2.72,-1.77 -0.8,-1.36 -1.28,-3.39 -1.28,-3.56 0,-0.45 0.48,-0.45 0.6,-0.45 0.48,0 0.51,0.11 0.76,1.04 0.52,2.13 1.19,3.77 2.55,3.77 0.9,0 1.14,-0.77 1.14,-1.7 0,-0.67 -0.32,-1.96 -0.57,-2.89 -0.23,-0.96 -0.57,-2.38 -0.76,-3.14 l -1.11,-4.47 c -0.14,-0.44 -0.34,-1.32 -0.34,-1.42 0,-0.77 0.62,-1.11 1.18,-1.11 0.52,0 1.22,0.31 1.49,1 0.08,0.21 0.45,1.75 0.67,2.62 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /></g>    </g>
+    <g
+       transform="translate(-173.96904,218.26744)"
+       id="g25545"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+         id="g25547"
+         transform="matrix(1.0629921,0,0,-1.0629921,-186.02362,789.27165)"
+         xml:space="preserve"
+         stroke-miterlimit="10.433"
+         font-style="normal"
+         font-variant="normal"
+         font-weight="normal"
+         font-stretch="normal"
+         font-size-adjust="none"
+         letter-spacing="normal"
+         word-spacing="normal"><path
+           style="fill:#000000;stroke-width:0"
+           inkscape:connector-curvature="0"
+           d="m 474.71,434.04 0.13,-0.62 0.13,-0.64 0.14,-0.66 0.14,-0.68 0.15,-0.7 0.15,-0.72 0.32,-1.47 0.34,-1.52 0.35,-1.55 0.38,-1.57 0.39,-1.58 0.41,-1.56 0.43,-1.55 0.44,-1.51 0.47,-1.46 0.23,-0.71 0.24,-0.7 0.25,-0.67 0.25,-0.65 0.25,-0.64 0.26,-0.6 0.26,-0.59 0.26,-0.55 c 1.1,-2.14 1.64,-3.25 2.14,-3.25 0.21,0 0.3,0 1.19,0.9 3.8,3.64 6.39,6.53 9.88,10.52 l 10.9,12.7 c -0.7,-4.23 -2.48,-15.45 -2.48,-21.28 0,-1.34 0.04,-2.64 0.18,-3.98 0.07,-0.55 0.25,-1.99 2.35,-1.99 2.09,0 5.87,2.19 5.87,3.19 0,0.3 -0.29,0.34 -0.43,0.34 -0.66,0 -1.64,-0.45 -2.21,-0.79 -1.18,0.14 -1.28,0.93 -1.39,2.09 -0.14,1.59 -0.14,3.09 -0.14,3.28 0,5.53 2.19,20.63 3.63,26.81 0.06,0.35 0.11,0.44 0.11,0.85 0,0.2 -0.05,0.75 -0.41,0.75 -0.2,0 -0.25,-0.05 -1.19,-1.16 -4.69,-5.67 -19.23,-23.11 -24.17,-27.3 -1.23,2.64 -2.14,4.54 -3.87,11.52 -1.46,5.62 -2.3,9.77 -3.15,14.59 -0.15,0.71 -0.4,2.05 -0.4,2.14 -0.14,0.25 -0.39,0.25 -0.55,0.25 -0.89,0 -2.98,-1.09 -3.14,-2.14 -0.59,-4.18 -1.59,-10.76 -5.08,-20.28 -3.98,-10.61 -5.08,-10.61 -6.03,-10.61 -0.64,0 -2.48,0.39 -3.58,1.39 -0.25,0.25 -0.36,0.25 -0.45,0.25 -0.7,0 -1.8,-2.23 -1.8,-3.64 0,-0.43 0,-1.04 1.6,-1.89 1.25,-0.64 2.43,-0.69 2.68,-0.69 3.1,0 6.04,7.13 7.04,9.66 2.34,5.63 5.12,13.5 6.53,20.67 z"
+           id="path25549" /></g>    </g>
+    <g
+       id="g46713-6"
+       transform="matrix(0.75,0,0,0.75,456.38834,502.20504)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         id="g46715-1"
+         transform="matrix(1.0629921,0,0,-1.0629921,-186.02362,789.27165)"
+         xml:space="preserve"
+         stroke-miterlimit="10.433"
+         font-style="normal"
+         font-variant="normal"
+         font-weight="normal"
+         font-stretch="normal"
+         font-size-adjust="none"
+         letter-spacing="normal"
+         word-spacing="normal"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"><path
+           d="m 493.38,440.82 0,0.02 0,0.02 0,0.01 -0.01,0.02 0,0.02 0,0.02 -0.01,0.02 0,0.02 -0.01,0.02 -0.01,0.02 -0.01,0.02 0,0.02 -0.02,0.02 -0.01,0.02 -0.01,0.02 -0.01,0.02 -0.02,0.02 -0.02,0.02 -0.02,0.02 -0.02,0.02 -0.02,0.01 -0.02,0.02 -0.03,0.01 -0.02,0.02 -0.03,0.01 -0.01,0.01 -0.02,0 -0.01,0.01 -0.02,0 -0.02,0.01 -0.01,0 -0.02,0 -0.02,0.01 -0.02,0 -0.02,0 -0.02,0 -0.02,0 -0.02,0 -0.02,0 c -0.14,0 -0.2,-0.04 -0.75,-0.59 l -3.48,-3.84 c -0.44,0.7 -2.74,4.43 -8.27,4.43 -11.11,0 -22.33,-11.01 -22.33,-22.56 0,-8.23 5.89,-13.65 13.52,-13.65 4.33,0 8.11,1.98 10.75,4.28 4.64,4.09 5.48,8.62 5.48,8.76 0,0.5 -0.5,0.5 -0.59,0.5 -0.3,0 -0.55,-0.09 -0.66,-0.5 -0.43,-1.44 -1.59,-4.98 -5.03,-7.87 -3.43,-2.78 -6.58,-3.63 -9.15,-3.63 -4.49,0 -9.77,2.6 -9.77,10.36 0,2.85 1.05,10.91 6.02,16.74 3.04,3.54 7.73,6.03 12.15,6.03 5.1,0 8.03,-3.83 8.03,-9.61 0,-2 -0.15,-2.05 -0.15,-2.55 0,-0.5 0.54,-0.5 0.75,-0.5 0.64,0 0.64,0.11 0.89,1 z"
+           id="path46717-1"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /></g>    </g>
+    <g
+       id="g59559"
+       transform="matrix(0.75,0,0,0.75,377.30403,187.8934)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         word-spacing="normal"
+         letter-spacing="normal"
+         font-size-adjust="none"
+         font-stretch="normal"
+         font-weight="normal"
+         font-variant="normal"
+         font-style="normal"
+         stroke-miterlimit="10.433"
+         xml:space="preserve"
+         transform="matrix(1.0629921,0,0,-1.0629921,-186.02362,789.27165)"
+         id="g59561"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"><polygon
+           id="polygon59563"
+           points="479.13,450.79 484.87,445.71 485.76,446.6 479.13,453.38 472.46,446.6 473.35,445.71 "
+           style="fill:#000000;stroke-width:0" /><path
+           id="path59565"
+           d="m 470.61,422.39 h 4.83 c 3.75,0 4.14,-0.8 4.14,-2.24 0,-0.36 0,-0.95 -0.34,-2.44 -0.11,-0.25 -0.16,-0.45 -0.16,-0.56 0,-0.39 0.3,-0.59 0.6,-0.59 0.5,0 0.5,0.15 0.75,1.05 l 2.75,10.81 c 0.14,0.54 0.14,0.65 0.14,0.79 0,0.1 -0.1,0.55 -0.6,0.55 -0.5,0 -0.54,-0.25 -0.75,-1.05 -1.04,-3.87 -2.18,-4.78 -6.42,-4.78 h -4.53 l 3.19,12.66 c 0.43,1.75 0.5,1.94 2.68,1.94 h 6.58 c 6.13,0 7.27,-1.64 7.27,-5.47 0,-1.16 0,-1.35 -0.14,-2.7 -0.11,-0.65 -0.11,-0.74 -0.11,-0.9 0,-0.25 0.15,-0.59 0.61,-0.59 0.54,0 0.59,0.3 0.69,1.25 l 1,8.61 c 0.15,1.34 -0.1,1.34 -1.35,1.34 h -24.4 c -1,0 -1.5,0 -1.5,-1 0,-0.54 0.45,-0.54 1.39,-0.54 1.84,0 3.23,0 3.23,-0.89 0,-0.21 0,-0.3 -0.25,-1.21 l -6.56,-26.34 c -0.5,-1.95 -0.61,-2.34 -4.55,-2.34 -0.84,0 -1.39,0 -1.39,-0.96 0,-0.59 0.59,-0.59 0.75,-0.59 1.44,0 5.13,0.16 6.58,0.16 1.64,0 5.78,-0.16 7.42,-0.16 0.45,0 1.05,0 1.05,0.95 0,0.39 -0.3,0.49 -0.3,0.55 -0.16,0.05 -0.25,0.05 -1.39,0.05 -1.11,0 -1.36,0 -2.59,0.09 -1.46,0.16 -1.6,0.36 -1.6,1 0,0.09 0,0.41 0.19,1.14 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /><path
+           id="path59567"
+           d="m 511.18,418.39 0.25,0.25 0.26,0.25 0.12,0.12 0.13,0.12 0.13,0.12 0.14,0.12 0.13,0.11 0.13,0.11 0.14,0.12 0.14,0.1 0.13,0.11 0.14,0.11 0.15,0.1 0.14,0.1 c 1.42,0.97 2.72,1.05 3.17,1.08 0.37,0.03 0.8,0.03 0.8,0.76 0,0.25 -0.21,0.49 -0.49,0.49 -0.87,0 -1.92,-0.14 -2.82,-0.14 -1.12,0 -2.58,0.14 -3.63,0.14 -0.17,0 -0.69,0 -0.69,-0.77 0,-0.45 0.46,-0.48 0.63,-0.48 1.01,-0.08 1.01,-0.45 1.01,-0.67 0,-0.32 -0.22,-0.58 -0.45,-0.91 -0.22,-0.31 -0.39,-0.55 -0.59,-0.77 l -8.72,-9.09 -4.6,10.22 c -0.25,0.48 -0.25,0.55 -0.25,0.59 0,0.63 1.68,0.63 1.89,0.63 0.46,0 0.91,0 0.91,0.76 0,0.04 0,0.49 -0.56,0.49 -1.05,0 -3.63,-0.14 -4.67,-0.14 -0.88,0 -3.1,0.14 -3.97,0.14 -0.28,0 -0.71,-0.11 -0.71,-0.77 0,-0.48 0.46,-0.48 0.96,-0.48 2.01,0 2.15,-0.31 2.5,-1.08 l 5.4,-11.92 -1.57,-6.38 c -0.46,-1.78 -0.49,-1.87 -3.21,-1.92 -0.59,0 -1.04,0 -1.04,-0.73 0,-0.35 0.25,-0.52 0.56,-0.52 0.65,0 1.47,0.11 2.15,0.11 0.68,0 1.68,0.03 2.3,0.03 0.7,0 1.5,-0.03 2.24,-0.03 0.73,0 1.6,-0.11 2.34,-0.11 0.2,0 0.76,0 0.76,0.77 0,0.48 -0.42,0.48 -1.18,0.48 -0.57,0 -0.71,0 -1.33,0.08 -0.66,0.06 -0.77,0.14 -0.77,0.48 0,0.21 0.43,1.88 0.66,2.83 0.28,1.11 1.02,4.14 1.09,4.28 0.13,0.52 0.13,0.6 0.49,0.94 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /><path
+           id="path59569"
+           d="m 529.2,415.59 0,0.03 0,0.03 0,0.03 0.01,0.04 0,0.04 0.01,0.04 0,0.05 0.01,0.05 0.01,0.1 0.01,0.12 0.02,0.13 0.01,0.13 0.02,0.15 0.02,0.15 0.02,0.15 0.01,0.16 0.02,0.16 0.02,0.17 0.04,0.33 0.04,0.33 0.02,0.16 0.02,0.16 0.01,0.15 0.02,0.15 0.02,0.14 0.01,0.13 0.01,0.12 0.02,0.11 0,0.05 0.01,0.05 0,0.05 0.01,0.04 0,0.04 0,0.03 0.01,0.04 0,0.03 0,0.02 0,0.02 0,0.02 0,0.01 c 0,0.45 -0.36,0.8 -0.86,0.8 -0.53,0 -0.87,-0.39 -0.87,-0.77 0,-0.25 0.37,-3.41 0.45,-3.94 l -3.87,2.32 c -0.24,0.15 -0.35,0.23 -0.57,0.23 -0.4,0 -0.84,-0.37 -0.84,-0.92 0,-0.41 0.25,-0.66 0.52,-0.75 1.37,-0.55 2.79,-1.05 4.18,-1.52 -1.39,-0.53 -3.68,-1.36 -4.11,-1.53 -0.17,-0.06 -0.59,-0.22 -0.59,-0.76 0,-0.55 0.44,-0.93 0.84,-0.93 0.27,0 1.05,0.47 4.44,2.55 -0.08,-0.53 -0.45,-3.69 -0.45,-3.94 0,-0.37 0.34,-0.78 0.87,-0.78 0.5,0 0.86,0.36 0.86,0.8 0,0.23 -0.39,3.42 -0.43,3.92 l 3.93,-2.37 c 0.17,-0.1 0.27,-0.18 0.5,-0.18 0.39,0 0.85,0.38 0.85,0.93 0,0.39 -0.25,0.64 -0.53,0.75 -1.36,0.54 -2.79,1.04 -4.19,1.51 1.4,0.52 3.69,1.35 4.12,1.52 0.17,0.08 0.6,0.23 0.6,0.78 0,0.55 -0.46,0.92 -0.85,0.92 -0.23,0 -0.33,-0.08 -0.58,-0.23 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /></g>    </g>
+    <g
+       transform="matrix(0.75,0,0,0.75,236.2922,-66.698049)"
+       id="g19122"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+         id="g19124"
+         transform="matrix(1.0629921,0,0,-1.0629921,-186.02362,789.27165)"
+         xml:space="preserve"
+         stroke-miterlimit="10.433"
+         font-style="normal"
+         font-variant="normal"
+         font-weight="normal"
+         font-stretch="normal"
+         font-size-adjust="none"
+         letter-spacing="normal"
+         word-spacing="normal"><path
+           style="fill:#000000;stroke-width:0"
+           inkscape:connector-curvature="0"
+           d="m 485.27,434.54 0.69,0.71 c 1.5,1.5 3.14,3.18 6.53,3.43 0.55,0.05 1,0.05 1,0.96 0,0.39 -0.25,0.59 -0.66,0.59 -1.29,0 -2.73,-0.16 -4.08,-0.16 -1.64,0 -3.39,0.16 -4.98,0.16 -0.3,0 -0.95,0 -0.95,-0.95 0,-0.55 0.5,-0.6 0.75,-0.6 0.34,0 1.79,-0.09 1.79,-1.14 0,-0.86 -1.14,-2.14 -1.34,-2.39 l -11.56,-13.31 -5.49,14.8 c -0.29,0.7 -0.29,0.79 -0.29,0.84 0,1.2 2.43,1.2 2.93,1.2 0.71,0 1.21,0 1.21,1 0,0.55 -0.6,0.55 -0.75,0.55 -1.39,0 -4.88,-0.16 -6.28,-0.16 -1.24,0 -4.33,0.16 -5.58,0.16 -0.3,0 -0.94,0 -0.94,-1 0,-0.55 0.48,-0.55 1.14,-0.55 2.98,0 3.19,-0.45 3.64,-1.68 l 6.13,-16.41 c 0.04,-0.14 0.2,-0.69 0.2,-0.84 0,-0.14 -2,-8.18 -2.25,-9.07 -0.64,-2.73 -0.69,-2.89 -4.69,-2.93 -0.94,0 -1.34,0 -1.34,-1 0,-0.55 0.61,-0.55 0.7,-0.55 1.39,0 4.88,0.16 6.28,0.16 1.39,0 4.99,-0.16 6.38,-0.16 0.34,0 0.93,0 0.93,1 0,0.55 -0.43,0.55 -1.39,0.55 -0.09,0 -1.04,0 -1.89,0.09 -1.04,0.11 -1.34,0.2 -1.34,0.8 0,0.36 0.45,2.09 0.7,3.14 l 1.74,7.03 c 0.25,0.94 0.29,1.09 0.7,1.55 z"
+           id="path19126" /><path
+           style="fill:#000000;stroke-width:0"
+           inkscape:connector-curvature="0"
+           d="m 506.85,432.87 0.27,0.12 0.25,0.11 0.25,0.11 0.23,0.1 0.23,0.1 0.22,0.1 0.22,0.09 0.2,0.09 0.2,0.08 0.19,0.08 0.18,0.08 0.18,0.07 0.17,0.08 0.16,0.06 0.16,0.07 0.15,0.06 0.14,0.06 0.14,0.06 0.14,0.06 0.13,0.05 0.12,0.06 0.12,0.05 0.11,0.05 0.11,0.04 0.11,0.05 0.1,0.04 0.19,0.09 0.18,0.08 0.17,0.08 c 0.67,0.27 0.98,0.41 0.98,1.08 0,0.59 -0.45,1.11 -1.08,1.11 -0.25,0 -0.31,0 -0.73,-0.31 l -4.74,-3.17 0.52,5.15 c 0.08,0.63 0,1.5 -1.05,1.5 -0.42,0 -1.07,-0.28 -1.07,-1.04 0,-0.32 0.14,-1.36 0.17,-1.71 0.08,-0.59 0.31,-3.11 0.39,-3.9 l -4.71,3.17 c -0.35,0.2 -0.45,0.31 -0.76,0.31 -0.64,0 -1.09,-0.52 -1.09,-1.11 0,-0.7 0.42,-0.87 0.73,-1.01 l 5.27,-2.19 c -2.86,-1.27 -4.15,-1.75 -5.02,-2.17 -0.66,-0.29 -0.98,-0.43 -0.98,-1.08 0,-0.6 0.45,-1.11 1.09,-1.11 0.23,0 0.31,0 0.72,0.31 l 4.75,3.17 -0.56,-5.61 c 0,-0.76 0.65,-1.04 1.07,-1.04 0.43,0 1.08,0.28 1.08,1.04 0,0.32 -0.14,1.36 -0.17,1.71 -0.06,0.59 -0.31,3.09 -0.38,3.9 l 4.18,-2.79 c 0.9,-0.69 0.98,-0.69 1.29,-0.69 0.63,0 1.08,0.51 1.08,1.11 0,0.7 -0.42,0.87 -0.73,1.01 z"
+           id="path19128" /><path
+           style="fill:#000000;stroke-width:0"
+           inkscape:connector-curvature="0"
+           d="m 568.29,422.84 0,0.1 0,0.1 -0.01,0.09 0,0.09 -0.01,0.09 -0.01,0.08 -0.01,0.08 -0.01,0.08 -0.02,0.07 -0.01,0.07 -0.02,0.07 -0.02,0.07 -0.01,0.06 -0.02,0.05 -0.03,0.06 -0.02,0.05 -0.02,0.04 -0.03,0.05 -0.02,0.04 -0.03,0.04 -0.03,0.03 -0.03,0.03 -0.03,0.03 -0.03,0.03 -0.03,0.02 -0.03,0.02 -0.03,0.02 -0.04,0.01 -0.03,0.01 -0.04,0.01 -0.03,0 -0.04,0 c -0.25,0 -0.65,-0.34 -0.7,-1.29 -0.2,-4.78 -3.49,-7.52 -6.99,-7.52 -3.12,0 -5.51,2.14 -7.96,4.28 -2.54,2.3 -5.13,4.58 -8.52,4.58 -5.44,0 -8.38,-5.48 -8.38,-10.02 0,-1.59 0.66,-1.59 0.71,-1.59 0.54,0 0.7,1 0.7,1.16 0.19,5.47 3.94,7.67 6.97,7.67 3.14,0 5.53,-2.14 7.97,-4.3 2.55,-2.28 5.14,-4.58 8.51,-4.58 5.44,0 8.38,5.49 8.38,10.02 z"
+           id="path19130" /><path
+           style="fill:#000000;stroke-width:0"
+           inkscape:connector-curvature="0"
+           d="m 598.08,424.78 h 5.63 c -1.64,-7.38 -2.1,-9.52 -2.1,-12.85 0,-0.75 0,-2.09 0.41,-3.79 0.5,-2.19 1.05,-2.49 1.8,-2.49 0.98,0 2.03,0.89 2.03,1.89 0,0.3 0,0.41 -0.3,1.1 -1.44,3.59 -1.44,6.82 -1.44,8.22 0,2.64 0.35,5.34 0.89,7.92 h 5.69 c 0.64,0 2.44,0 2.44,1.7 0,1.19 -1.05,1.19 -2,1.19 h -16.69 c -1.09,0 -2.98,0 -5.17,-2.35 -1.75,-1.93 -3.05,-4.23 -3.05,-4.48 0,-0.05 0,-0.48 0.6,-0.48 0.4,0 0.5,0.18 0.79,0.59 2.46,3.83 5.35,3.83 6.33,3.83 h 2.84 C 595.19,418.76 592.5,412.73 590.41,408.2 590,407.45 590,407.34 590,407 c 0,-0.96 0.8,-1.35 1.46,-1.35 1.5,0 1.89,1.39 2.48,3.24 0.71,2.29 0.71,2.39 1.34,4.89 z"
+           id="path19132" /></g>    </g>
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect56056"
+       width="429.10992"
+       height="66.750435"
+       x="-64.183212"
+       y="192.47569"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path46052-3"
+       d="M 379.59693,223.80931 C 617.35648,169.28825 598.82322,342.32182 598.82322,342.32182"
+       style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path36991-1-7-9-0-7"
+       d="m 599.34413,340.84607 14.0998,-20.50889"
+       style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path36991-6-8-6-7-8-5"
+       d="m 598.59503,340.97176 -14.0998,-20.50889"
+       style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/risk.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
   </g>
 </svg>

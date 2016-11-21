@@ -24,16 +24,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.62106283"
-     inkscape:cx="431.98866"
-     inkscape:cy="308.39649"
+     inkscape:zoom="0.31053141"
+     inkscape:cx="454.78661"
+     inkscape:cy="501.61365"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="724"
      inkscape:window-height="861"
-     inkscape:window-x="521"
-     inkscape:window-y="107"
+     inkscape:window-x="527"
+     inkscape:window-y="92"
      inkscape:window-maximized="0" />
   <metadata
      id="metadata36006">
@@ -68,7 +68,10 @@
        x="-29.725853"
        y="370.23688"
        id="text36064"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          id="tspan36066"
          x="-29.725853"
@@ -76,7 +79,10 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor">Training set</tspan></text>
     <g
        transform="translate(-273.70907,229.06385)"
-       id="g2990">
+       id="g2990"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
          id="content"
@@ -96,7 +102,10 @@
            id="path2993" /></g>    </g>
     <g
        transform="translate(-171.46042,114.09832)"
-       id="g7869">
+       id="g7869"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
          id="g7871"
@@ -128,7 +137,10 @@
            id="path7879" /></g>    </g>
     <g
        id="g8097"
-       transform="translate(-168.8968,226.89718)">
+       transform="translate(-168.8968,226.89718)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          word-spacing="normal"
          letter-spacing="normal"
@@ -160,7 +172,10 @@
            style="fill:#000000;stroke-width:0" /></g>    </g>
     <g
        transform="translate(-166.8968,340.25965)"
-       id="g8337">
+       id="g8337"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
          id="g8339"
@@ -199,7 +214,10 @@
        sodipodi:rx="51.913116"
        sodipodi:ry="51.913116"
        d="m 431.96841,287.76529 a 51.913116,51.913116 0 1 1 -103.82623,0 51.913116,51.913116 0 1 1 103.82623,0 z"
-       transform="translate(-214.30582,166.42983)" />
+       transform="translate(-214.30582,166.42983)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        transform="translate(-211.10132,279.86961)"
        sodipodi:type="arc"
@@ -209,7 +227,10 @@
        sodipodi:cy="287.76529"
        sodipodi:rx="51.913116"
        sodipodi:ry="51.913116"
-       d="m 431.96841,287.76529 a 51.913116,51.913116 0 1 1 -103.82623,0 51.913116,51.913116 0 1 1 103.82623,0 z" />
+       d="m 431.96841,287.76529 a 51.913116,51.913116 0 1 1 -103.82623,0 51.913116,51.913116 0 1 1 103.82623,0 z"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        transform="translate(-207.81952,394.51389)"
        sodipodi:type="arc"
@@ -219,14 +240,20 @@
        sodipodi:cy="287.76529"
        sodipodi:rx="51.913116"
        sodipodi:ry="51.913116"
-       d="m 431.96841,287.76529 a 51.913116,51.913116 0 1 1 -103.82623,0 51.913116,51.913116 0 1 1 103.82623,0 z" />
+       d="m 431.96841,287.76529 a 51.913116,51.913116 0 1 1 -103.82623,0 51.913116,51.913116 0 1 1 103.82623,0 z"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <rect
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
        id="rect36967"
        width="139.71678"
        height="370.44171"
        x="99.736481"
-       y="392.02756" />
+       y="392.02756"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
        d="m 205.08885,107.67165 151.25303,0"
@@ -264,50 +291,80 @@
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 219.09661,455.20404 151.25303,0"
        id="path36969-1"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="M 369.32798,454.82611 348.81909,440.72626"
        id="path36991-3"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 369.45367,455.57518 -20.50889,14.09985"
        id="path36991-6-0"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 220.63967,567.84692 151.25303,0"
        id="path36969-7"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="M 370.87104,567.46899 350.36215,553.36915"
        id="path36991-7"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 370.99673,568.21806 -20.50889,14.09985"
        id="path36991-6-2"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 225.26883,682.03284 151.25303,0"
        id="path36969-14"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="M 375.5002,681.65491 354.99131,667.55507"
        id="path36991-11"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="M 375.62589,682.40398 355.117,696.50383"
        id="path36991-6-3"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <g
        transform="translate(73.70928,110.8606)"
-       id="g3639">
+       id="g3639"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
          id="g3641"
@@ -383,7 +440,10 @@
            id="path3671" /></g>    </g>
     <g
        id="g3811"
-       transform="translate(74.522392,221.95243)">
+       transform="translate(74.522392,221.95243)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          word-spacing="normal"
          letter-spacing="normal"
@@ -459,7 +519,10 @@
            style="fill:#000000;stroke-width:0" /></g>    </g>
     <g
        transform="translate(78.783645,341.8696)"
-       id="g4017">
+       id="g4017"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
          id="g4019"
@@ -538,58 +601,88 @@
        d="m 702.07222,450.57488 98.78923,0"
        id="path36969-2-2"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="M 799.83979,450.19695 779.3309,436.09711"
        id="path36991-1-4"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 799.96548,450.94602 -20.50889,14.09985"
        id="path36991-6-8-8"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 704.89416,565.11209 98.78923,0"
        id="path36969-2-2-2"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="M 802.66173,564.73416 782.15284,550.63432"
        id="path36991-1-4-3"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 802.78742,565.48323 -20.50889,14.09985"
        id="path36991-6-8-8-8"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 708.43722,683.74125 98.78923,0"
        id="path36969-2-2-5"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="M 806.20479,683.36332 785.6959,669.26348"
        id="path36991-1-4-7"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 806.33048,684.11239 -20.50889,14.09985"
        id="path36991-6-8-8-2"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <g
        id="g10407"
-       transform="translate(509.95501,111.97154)">
+       transform="translate(509.95501,111.97154)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          word-spacing="normal"
          letter-spacing="normal"
@@ -628,7 +721,10 @@
            style="fill:#000000;stroke-width:0" /></g>    </g>
     <g
        transform="translate(509.43252,223.61077)"
-       id="g10763">
+       id="g10763"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
          id="g10765"
@@ -667,7 +763,10 @@
            id="path10777" /></g>    </g>
     <g
        id="g11135"
-       transform="translate(510.21626,345.26763)">
+       transform="translate(510.21626,345.26763)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          word-spacing="normal"
          letter-spacing="normal"
@@ -706,7 +805,10 @@
            style="fill:#000000;stroke-width:0" /></g>    </g>
     <g
        id="g8589"
-       transform="matrix(0.75,0,0,0.75,29.795945,170.66837)">
+       transform="matrix(0.75,0,0,0.75,29.795945,170.66837)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          word-spacing="normal"
          letter-spacing="normal"
@@ -742,7 +844,10 @@
            style="fill:#000000;stroke-width:0" /></g>    </g>
     <g
        transform="matrix(0.75,0,0,0.75,31.8488,282.0541)"
-       id="g8857">
+       id="g8857"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
          id="g8859"
@@ -778,7 +883,10 @@
            id="path8869" /></g>    </g>
     <g
        id="g9139"
-       transform="matrix(0.75,0,0,0.75,32.780316,395.7368)">
+       transform="matrix(0.75,0,0,0.75,32.780316,395.7368)"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <g
          word-spacing="normal"
          letter-spacing="normal"
@@ -817,12 +925,18 @@
        d="m 83.234931,416.90834 c -44.613372,29.55876 -6.48773,88.28261 -7.324581,123.3316 -0.189804,7.94923 -6.65871,35.67442 -6.65871,35.67442 0,0 11.03365,-11.10868 15.315034,-29.55887 C 90.522405,520.69003 70.904138,477.6326 69.25164,453.60197 67.919891,434.2359 83.234931,416.90834 83.234931,416.90834 z"
        id="path38127-8"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cscssc" />
+       sodipodi:nodetypes="cscssc"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <path
        style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.27580023px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 83.238554,735.52842 c -44.613372,-29.5588 -6.487731,-88.28265 -7.324581,-123.33164 -0.189805,-7.94923 -6.658711,-35.67442 -6.658711,-35.67442 0,0 11.033651,11.10868 15.315034,29.55887 5.955732,25.66546 -13.662536,68.72289 -15.315034,92.75352 -1.331748,19.36607 13.983292,36.69367 13.983292,36.69367 z"
        id="path38127-8-8"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cscssc" />
+       sodipodi:nodetypes="cscssc"
+       inkscape:export-filename="/home/snarles/github/fmri/info_theory_paper/extrapolation_figures/training_set.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
   </g>
 </svg>

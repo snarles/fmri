@@ -479,7 +479,7 @@ without loss of generality, we can assume that
 With regards to the classification tasks, (i) we assume that there
 exists some prior density $\pi_0$ over $\mathcal{Y}$, and that (ii)
 the label subsets $\mathcal{S}_i = \{y^{(1,i)}, \hdots, y^{(k_i,i)}\}$
-are obtained by iid samples with replacement from the density $\nu_i$.
+are obtained by iid samples with replacement from the density $\nu$.
 We pause to remark on these assumptions.
 \begin{itemize}
 \item[i.]
@@ -499,9 +499,9 @@ classification problem which satisfies our assumptions.
 \item[ii.(a.)]
 We allow the sampling distribution of classes in the label subset to
 differ from the prior probabilities, because $\pi_0$ reflects the
-population distribution of $Y$ while $\nu_i$ reflects the mechanism
+population distribution of $Y$ while $\nu$ reflects the mechanism
 used to pick classes for the label subset.  In experimental settings,
-$\nu_i$ is under the control of the experimenter, so it need not be
+$\nu$ is under the control of the experimenter, so it need not be
 chosen to be identical to $\pi_0$.
 \item[ii.(b.)]
 Note that here we assumed that the label subsets $\mathcal{S}_1$ and
@@ -577,7 +577,7 @@ label subset $\mathcal{S}$.
 Therefore, define the $k$-class, $r$-repeat \emph{average risk} of
 classifier $\mathcal{F}$ with prior weights $\pi$ as
 \[
-\text{AvRisk}_{k, r, \nu}(\mathcal{F}; \pi) = \E[\text{Risk}_k(\mathcal{F}); \pi)]
+\text{AvRisk}_{k, r}(\mathcal{F}; \pi) = \E[\text{Risk}_k(\mathcal{F}); \pi)]
 \]
 where the expectation is taken over the distribution of $\mathcal{S} =
 (Y^{(1)},\hdots, Y^{(k)})$ when $Y^{(i)} \stackrel{iid}{\sim} \nu$.
@@ -617,7 +617,7 @@ error) for the (random) risk.
 
 \begin{figure}[h]
 \centering
-\includegraphics[scale = 0.4]{extrapolation_figures/average_risk.png}
+\includegraphics[scale = 0.3]{extrapolation_figures/average_risk.png}
 \caption{Average risk}\label{fig:average_risk}
 \end{figure}
 
