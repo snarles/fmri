@@ -831,7 +831,7 @@ We have
 \end{align*}
 Or equivalently,
 \[
-\text{AvRisk}_k((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int \bar{K}(u) u^{k-2} du.
+\text{AvRisk}_{k, r, \nu}((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int \bar{K}(u) u^{k-2} du.
 \]
 where $\bar{K}(u)$ denote the cumulative distribution function of $U^*$ on $[0,1]$:
 \[
@@ -904,25 +904,25 @@ With the conditional cost function and the distribution of $U_{max}$ both in han
 \]
 Now the average risk can be obtained by integrating over $(Y^*, \hat{F}_{Y^*}),$ and $X^*$.
 \[
-\text{AvRisk}_k((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int \bar{K}(u) u^{k-2} du.
+\text{AvRisk}_{k, r, \nu}((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int \bar{K}(u) u^{k-2} du.
 \]
 where
 \begin{equation}\label{eq:Kbar}
-\bar{K}(u) = \int K((y^*,\hat{F}_{y^*}), x^*, u) \pi_0(y^*)dy dF_{y^*}(x^*) d\Pi_{y^*, r}(\hat{F}_{y^*}).
+\bar{K}(u) = \int K((y^*,\hat{F}_{y^*}), x^*, u) \nu(y^*)dy dF_{y^*}(x^*) d\Pi_{y^*, r}(\hat{F}_{y^*}).
 \end{equation}
 
 
 This is the key result behind our estimation method, and we restate it
 in the following theorem.
 
-\begin{theorem}
+\begin{theorem}\label{theorem:avrisk_identity}
 Suppose $\pi_0$, $\{F_y\}_{y \in \mathcal{Y}}$ and marginal classifier
 $\mathcal{F}$ satisfy the marginal scaling condition tie-breaking
 condition.  Then, under the
 definitions \eqref{eq:U_function}, \eqref{eq:Kfunc},
 and \eqref{eq:Kbar}, we have
 \begin{equation}\label{eq:avrisk_identity}
-\text{AvRisk}_k((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int \bar{K}(u) u^{k-2} du.
+\text{AvRisk}_{k, r, \nu}((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int \bar{K}(u) u^{k-2} du.
 \end{equation}
 \end{theorem}
 
@@ -935,28 +935,45 @@ practice to estimate $\text{Average Risk}_k$ requires some means of
 estimating the unknown function $\bar{K}$--which we discuss in the
 following.
 
-\subsection{Estimation}\label{sec:estimation}
+\subsection{Estimation in the general case}\label{sec:estimation}
 
-Now we address the problem of estimating $\text{Average Risk}_{k_2}$
-from data.  
+[Note: In the final version we might just assume $\nu_1 = \nu_2$
+throughout the whole paper to simplify things.  But I have written the
+general case for now.]
 
-First, let us assume a $d$-th order polynomial model
+Now we address the problem of estimating $\text{AvRisk}_{k_2,
+r_{train}, \nu_2}$ from data.  As we have seen from
+Theorem \eqref{theorem:avrisk_identity}, the $k$-class average risk of
+a marginal classifier $\mathcal{M}$ is a functional of a object called
+$\bar{K}(u),$ which depends marginal model $\mathcal{M}$ of the
+classifier, the joint distribution of labels $Y$ and features $X$ when
+$Y$ is drawn from the sampling density $\nu$.
+
+Therefore, the strategy we take is to attempt to estimate $\bar{K}$
+for then given classification model, and then plug in our estimate of
+$\bar{K}$ into the integral \eqref{eq:avrisk_identity} to obtain an
+estimate of $\text{AvRisk}_{k_2, r_{train}, \nu_2}$.  Having decided
+to estimate $\bar{K}$, there is then the question of what kind of
+model we should assume for $\bar{K}$.  While a nonparametric approach
+may be ideal, for the case of general loss functions we will adopt a
+parametric model: that is the subject of this section.  On the other
+hand, for the special case of zero-one loss (Section \ref{sec:sp_case}), we take a
+nonparametric approach.
+
+Even restricting ourselves to parametric models, there are wide
+variety of parametric families one might consider for $\bar{K}(u)$.
+As it turns out, the $d$-th order polynomial model is unique for
+enabling unbiased estimation of the average risk.  Therefore, let us
+assume
 \[
 \bar{K}(u) = \sum_{\ell = 0}^d \beta_\ell u^\ell.
 \]
 
-Recall that the data consists of $k_1 < k_2$ classes, with
-$r_1$ repeats per class.  The set of class labels is $\mathcal{S}_1 =
-\{y^{(1)},\hdots, y^{(k_1)}\}$.  For each class $i = 1,\hdots, k_1$,
-we have repeats $x_j^{(i)}$ for $j = 1,\hdots, r_1$.
+Recall that the data consists of $k_1 < k_2$ classes, $\mathcal{S}_1 =
+\{y^{(1)},\hdots, y^{(k_1)}\}$. For each $y^{(i)}$ we have training sample $\hat{F}_{y^{(i)}}$, and
+$r_{test}$ test repeats per class, $(x_1^{(i)},\hdots,
+x_{r_{test}}^{(i)})$.
 
-Define $r_{test} = r_1 - r_2$.  Let us take the first $r_{test}$
-repeats per class, and form the \emph{test set} $\{x_j^{(i)}\}_{j=1,
-  i=1}^{r_{test}, k_1}$.  From the remaining $r_2$ repeats, we form
-the empirical distributions
-\[
-\hat{F}_{y^{(i)}} = \frac{1}{r_2}\sum_{j=r_{test} + 1}^{r_1} \delta_{x_j^{(i)}}.
-\]
 The marginal model $\mathcal{M}$ yields margins for each point in the
 test set for each label in $\mathcal{S}_1$.  Define the margins
 \[
@@ -969,35 +986,35 @@ The predicted label for each test point is
 Therefore, an unbiased estimate of the risk (which is also an unbiased
 estimate of the $k_1$-class average risk) is
 \[
-\text{Test Risk} = \frac{1}{r_{test}}\sum_{i=1}^k \sum_{j=1}^{r_{test}} \frac{\pi_0(y^{(i)})}{\nu_0(y^{(i)})} C(\hat{y}_{i, j}, y^{(i)}).
+\text{Test Risk} = \frac{1}{r_{test}}\sum_{i=1}^k \sum_{j=1}^{r_{test}} \frac{\nu_2(y^{(i)})}{\nu_1(y^{(i)})} C(\hat{y}_{i, j}, y^{(i)}).
 \]
 
 Now we turn to the question of estimating the function $\bar{K}(u)$.
 Suppose that hypothetically, we could have observed the quantities
 $U_{i, j, \ell}$, defined
 \[
-U_{i, j, \ell} = U_{x_j^{(i)}}(y^{(\ell)}).
+U_{i, j, \ell} = U_{x_j^{(i)}}(y^{(\ell)}, \hat{F}_{y^{(\ell)}}).
 \]
 Also define
 \[
-C_{i,\ell} = C(y^{(\ell)}, y^{(i)})
+C_{i,\ell} = C(y^{(\ell)}, y^{(i)})I\{U_{i, j, \ell} > U_{i, j, i}\}
 \]
 and
 \[
-w_i = \frac{\pi_0(y^{(i)})}{\nu_0(y^{(i)})}.
+w_i = \frac{\nu_2(y^{(i)})}{\nu_1(y^{(i)})}.
 \]
 Then $\bar{K}(u)$ could be estimated via a $d$-th order polynomial regression
 \[
-\hat{\beta} = \argmin_{\beta} \sum_{i=1,j=1, \ell=1}^{r_{test}, k_1, k_1} w_i \left(C_i^\ell - \sum_{h=0}^d \beta_h U_{i,j, \ell}^d\right)^2
+\hat{\beta} = \argmin_{\beta} \sum_{i=1,j=1, \ell=1}^{r_{test}, k_1, k_1} w_i \left(C_i^\ell - \sum_{h=0}^d \beta_h U_{i,j, \ell}^h\right)^2
 \]
 for the
 dataset $\{(w_i, U_{i,j, \ell}, C_{i,\ell})\}_{i=1, j=1,
   \ell=1}^{r_{test}, k_1, k_1}$.  However, this is not possible in
 practice because $U_{i,j,\ell}$ are not directly observed.
 
-Instead, we can obtain unbiased estimates via
+Instead, we can obtain unbiased estimates via the importance-sampling-reweighted mean
 \[
-\hat{U}_{i,j, \ell} = \frac{1}{(k-1)\zeta}\sum_{m \neq \ell}  \frac{\pi_0(y^{(m)})}{\nu_0(y^{(m)})} I\{M_{i, j}^\ell > M_{i, j}^m\}
+\hat{U}_{i,j, \ell} = \frac{1}{(k-1)\zeta}\sum_{m \neq \ell}  \frac{\nu_2(y^{(m)})}{\nu_1(y^{(m)})} I\{M_{i, j}^\ell > M_{i, j}^m\}
 \]
 However, if we were to simply treat $\hat{U}_{i, j, \ell}$ as a proxy
 for the unobserved $U_{i,j,\ell}$, and apply polynomial regression to
@@ -1026,12 +1043,12 @@ estimates $\hat{U}_{i,j,\ell}^h$ with unbiased estimators.
 There exist U-statistic estimators of the higher powers of
 $\hat{U}_{i,j,\ell}^h$.  For instance, for $h=2$, the estimator is
 \[
-\hat{U}_{i,j,\ell}^{(2)} = \frac{1}{\zeta^2 k(k-1)} \sum_{m_1\neq m_2 \neq j}  \frac{\pi_0(y^{(m_1)})}{\nu_0(y^{(m_2)})} I\{M_{i, j}^\ell > M_{i, j}^{m_2}\}
- \frac{\pi_0(y^{(m_2)})}{\nu_0(y^{(m_2)})} I\{M_{i, j}^\ell > M_{i, j}^{m_2}\}.
+\hat{U}_{i,j,\ell}^{(2)} = \frac{1}{\zeta^2 k(k-1)} \sum_{m_1\neq m_2 \neq j}  \frac{\nu_2(y^{(m_1)})}{\nu_1(y^{(m_2)})} I\{M_{i, j}^\ell > M_{i, j}^{m_2}\}
+ \frac{\nu_2(y^{(m_2)})}{\nu_1(y^{(m_2)})} I\{M_{i, j}^\ell > M_{i, j}^{m_2}\}.
 \]
 In general, the U-statistic is
 \[
-\hat{U}_{i, j, \ell}^{(h)} = \frac{(k-h)!}{\zeta^h k!} \sum_{m_1 \neq \cdots \neq m_h \neq j} \prod_{z=1}^h  \frac{\pi_0(y^{(m_z)})}{\nu_0(y^{(m_z)})} I\{M_{i, j}^\ell > M_{i, j}^{m_z}\}.
+\hat{U}_{i, j, \ell}^{(h)} = \frac{(k-h)!}{\zeta^h k!} \sum_{m_1 \neq \cdots \neq m_h \neq j} \prod_{z=1}^h  \frac{\nu_2(y^{(m_z)})}{\nu_1(y^{(m_z)})} I\{M_{i, j}^\ell > M_{i, j}^{m_z}\}.
 \]
 
 In summation, the algorithm is as follows:
@@ -1078,7 +1095,7 @@ Define
 Assuming that $\bar{K}(u)$ in monotone in $u \in [0,1]$.
 Justification and implications.
 
-\section{Special case: uniform prior and zero-one loss}
+\section{Special case: uniform prior and zero-one loss}\label{sec:sp_case}
 
 For the special case of zero-one loss and uniform prior, the theory
 becomes simplified and additional methods of estimation are possible.
