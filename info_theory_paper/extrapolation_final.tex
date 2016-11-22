@@ -939,7 +939,7 @@ following.
 
 Now we address the problem of estimating $\text{AvRisk}_{k_2,
 r_{train}}$ from data.  As we have seen from
-Theorem \eqref{theorem:avrisk_identity}, the $k$-class average risk of
+Theorem \ref{theorem:avrisk_identity}, the $k$-class average risk of
 a marginal classifier $\mathcal{M}$ is a functional of a object called
 $\bar{K}(u),$ which depends marginal model $\mathcal{M}$ of the
 classifier, the joint distribution of labels $Y$ and features $X$ when
@@ -1003,7 +1003,7 @@ By definition, we have
 \]
 This means that $\bar{K}(u)$ could be estimated via a $d$-th order polynomial regression
 \[
-\hat{\beta} = \argmin_{\beta} \sum_{i\neq \ell=1, j = 1}^{k_1, r_{test}} \left(C_i^\ell - \sum_{h=0}^d \beta_h U_{i,j, \ell}^h\right)^2.
+\hat{\beta} = \argmin_{\beta} \sum_{i\neq \ell=1, j = 1}^{k_1, r_{test}} \left(C_{i,j,\ell} - \sum_{h=0}^d \beta_h U_{i,j, \ell}^h\right)^2.
 \]
 However, this is not possible in
 practice because $U_{i,j,\ell}$ are not directly observed.
@@ -1018,7 +1018,7 @@ Appendix \ref{sec:me}).  Covariate adjustment is justified since the
 measurement error in $\hat{U}_{i,j, \ell}$ is independent of the
 response given the true covariates:
 \[
-\hat{U}_{i,j,\ell} \perp C_i^\ell | U_{i, j,\ell}.
+\hat{U}_{i,j,\ell} \perp C_{i,j,\ell} | U_{i, j,\ell}.
 \]
 Covariate adjustment in this case amounts to obtaining unbiased estimates of
 the powers $U_{i,j,\ell}^h$.
@@ -1039,7 +1039,7 @@ independent given $x^{(i)}_j$, $y^{(i)}$, and $y^{(\ell)}$ for $m
 
 Then, define
 \[
-\hat{\beta} = \argmin_\beta \sum_{i\neq \ell=1, j = 1}^{k_1, r_{test}} \left(C_i^\ell - \sum_{h=0}^d \beta_h \hat{U}_{i,j, \ell}^{(h)}\right)^2.
+\hat{\beta} = \argmin_\beta \sum_{i\neq \ell=1, j = 1}^{k_1, r_{test}} \left(C_{i,j,\ell} - \sum_{h=0}^d \beta_h \hat{U}_{i,j, \ell}^{(h)}\right)^2.
 \]
 By the properties of covariate adjustment (Appendix \ref{sec:me},) $\hat{\beta}$ is an unbiased estimate of $\beta$.
 Therefore we obtain the estimate
@@ -1093,7 +1093,7 @@ The algorithm is summarized below.
     \]
     \item Find the least-squares solution
     \[
-    \hat{\beta} = \argmin_\beta \sum_{i\neq \ell=1, j = 1}^{k_1, r_{test}} \left(C_i^\ell - \sum_{h=0}^d \beta_h \hat{U}_{i,j, \ell}^{(h)}\right)^2.
+    \hat{\beta} = \argmin_\beta \sum_{i\neq \ell=1, j = 1}^{k_1, r_{test}} \left(C_{i,j,\ell} - \sum_{h=0}^d \beta_h \hat{U}_{i,j, \ell}^{(h)}\right)^2.
     \]
     \item Output
     \[
