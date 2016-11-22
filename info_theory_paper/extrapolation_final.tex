@@ -885,7 +885,7 @@ p(\hat{y}) \propto \nu(\hat{y})\frac{d}{dt}\Pr[U_{x^*}(y^{(k-1)}, \hat{F}_{y^{(k
 The only property of the conditional distribution of $\hat{Y}|U_{max} = u$ that is needed is
 the expectation of $L = C(\hat{Y}, y^*)$.  Therefore, define the \emph{conditional expected loss} $K((y^*, \hat{F}_{y^*}), x^*, u)$ by
 \begin{equation}\label{eq:Kfunc}
-K((y^*, \hat{F}_{y^*}) x^*, u) = \begin{cases} 0 \text{ if } u < u^*\\
+K((y^*, \hat{F}_{y^*}), x^*, u) = \begin{cases} 0 \text{ if } u < u^*\\
 \E[C(\hat{Y}, y^*)|U_{max} = u, x^*, y^*, \hat{F}_{y^*}] \text{ otherwise.}
 \end{cases}
 \end{equation}
@@ -973,11 +973,11 @@ x_{r_{test}}^{(i)})$.
 The marginal model $\mathcal{M}$ yields margins for each point in the
 test set for each label in $\mathcal{S}_1$.  Define the margins
 \[
-M_{i, j}^\ell = \mathcal{M}(\hat{F}_{y^{(\ell)}}; \pi_1(y^{(\ell)}))(x_j^{(i)}).
+M_{i, j, \ell} = \mathcal{M}(\hat{F}_{y^{(\ell)}}; \pi_1(y^{(\ell)}))(x_j^{(i)}).
 \]
 The predicted label for each test point is
 \[
-\hat{y}_{i,j} = y^{(\argmax_{\ell \in \{1,\hdots, k\}} M_{i, j}^\ell)}.
+\hat{y}_{i,j} = y^{(\argmax_{\ell \in \{1,\hdots, k\}} M_{i, j, \ell})}.
 \]
 Therefore, an unbiased estimate of the risk (which is also an unbiased
 estimate of the $k_1$-class average risk) is
@@ -991,25 +991,26 @@ $U_{i, j, \ell}$, defined
 \[
 U_{i, j, \ell} = U_{x_j^{(i)}}(y^{(\ell)}, \hat{F}_{y^{(\ell)}}).
 \]
+for $i \neq \ell = 1,\hdots, k_1$, and $j = 1,\hdots, r_{test}$.
 Also define
 \[
-C_{i,j, \ell} = C(y^{(\ell)}, y^{(i)})I\{U_{i, j, \ell} > U_{i, j, i}\}
+C_{i,j, \ell} = C(y^{(\ell)}, y^{(i)})I\{M_{i, j, \ell} > M_{i, j, i}\}
 \]
+for $i \neq \ell = 1,\hdots, k_1$, and $j = 1,\hdots, r_{test}$.
 By definition, we have
 \[
 \bar{K}(u) = \E[C(Y, Y^*)I\{U_{X^*}(Y) > U_{X^*}(Y^*)\}] = \E[C_{i,\ell} | U_{i, j, \ell} = u].
 \]
-This means that $\bar{K}(u)$ can be estimated via a $d$-th order polynomial regression
+This means that $\bar{K}(u)$ could be estimated via a $d$-th order polynomial regression
 \[
-\hat{\beta} = \argmin_{\beta} \sum_{i=1,j=1, \ell=1}^{r_{test}, k_1, k_1} \left(C_i^\ell - \sum_{h=0}^d \beta_h U_{i,j, \ell}^h\right)^2
+\hat{\beta} = \argmin_{\beta} \sum_{i\neq \ell=1, j = 1}^{k_1, r_{test}} \left(C_i^\ell - \sum_{h=0}^d \beta_h U_{i,j, \ell}^h\right)^2.
 \]
-for the dataset $\{(U_{i,j, \ell}, C_{i,\ell})\}_{i=1,
-j=1, \ell=1}^{r_{test}, k_1, k_1}$.  However, this is not possible in
+However, this is not possible in
 practice because $U_{i,j,\ell}$ are not directly observed.
 
-Instead, we can obtain an unbiased estimate of $\hat{U}_{i, j, \ell}$ via
+Instead, we have an unbiased estimates of $\hat{U}_{i, j, \ell}$ via
 \[
-\hat{U}_{i,j, \ell} = \frac{1}{(k-1)}\sum_{m \neq \ell} I\{M_{i, j}^\ell > M_{i, j}^m\}
+\hat{U}_{i,j, \ell}^{(1)} = \frac{1}{(k_1-2)}\sum_{m \neq i \neq \ell} I\{M_{i, j, \ell} > M_{i, j, m}\}
 \]
 Since we have \emph{errors-in-covariates}, it is necessary to make use
 of the \emph{covariate adjustment} technique (see
@@ -1026,16 +1027,19 @@ the powers $U_{i,j,\ell}^h$.
 There exist U-statistic estimators of the higher powers of
 $\hat{U}_{i,j,\ell}^h$.  For instance, for $h=2$, the estimator is
 \[
-\hat{U}_{i,j,\ell}^{(2)} = \frac{1}{ k(k-1)} \sum_{m_1\neq m_2 \neq j} I\{M_{i, j}^\ell > M_{i, j}^{m_2}\} I\{M_{i, j}^\ell > M_{i, j}^{m_2}\}.
+\hat{U}_{i,j,\ell}^{(2)} = \frac{1}{ (k_1-2)(k_1-3) } \sum_{m_1\neq m_2 \neq i \neq \ell} I\{M_{i, j, \ell} > M_{i, j, m_1}\} I\{M_{i, j, \ell} > M_{i, j, m_2}\}.
 \]
 In general, the U-statistic is
 \[
-\hat{U}_{i, j, \ell}^{(h)} = \frac{(k-h)!}{k!} \sum_{m_1 \neq \cdots \neq m_h \neq j} \prod_{z=1}^h I\{M_{i, j}^\ell > M_{i, j}^{m_z}\}.
+\hat{U}_{i, j, \ell}^{(h)} = \frac{(k_1-h-2)!}{(k_1-2)!} \sum_{m_1 \neq \cdots \neq m_h \neq i \neq \ell} \prod_{z=1}^h I\{M_{i, j, \ell} > M_{i, j, m_z}\}.
 \]
+The U-statistic estimator works because $M_{i, j}^m$ are conditionally
+independent given $x^{(i)}_j$, $y^{(i)}$, and $y^{(\ell)}$ for $m
+= \{1,\hdots, k_1\}\setminus \{i, \ell\}$.
 
 Then, define
 \[
-\hat{\beta} = \argmin_\beta \sum_{i=1,j=1, \ell=1}^{r_{test}, k_1, k_1} \left(C_i^\ell - \sum_{h=0}^d \beta_h \hat{U}_{i,j, \ell}^{(h)}\right)^2.
+\hat{\beta} = \argmin_\beta \sum_{i\neq \ell=1, j = 1}^{k_1, r_{test}} \left(C_i^\ell - \sum_{h=0}^d \beta_h \hat{U}_{i,j, \ell}^{(h)}\right)^2.
 \]
 By the properties of covariate adjustment (Appendix \ref{sec:me},) $\hat{\beta}$ is an unbiased estimate of $\beta$.
 Therefore we obtain the estimate
@@ -1048,7 +1052,7 @@ Now in order to predict the average risk for $k_2$ classes, we use \eqref{eq:avr
 \widehat{\text{AvRisk}_k} &= (k-1) \int_0^1 \hat{K}(u) u^{k-2} du
 \\&= (k-1) \int_0^1 \sum_{\ell = 0}^d \hat{\beta}_\ell u^\ell u^{k-2} du
 \\&= (k-1) \sum_{\ell = 0}^d \hat{\beta}_\ell  \int_0^1 u^{\ell + k-2} du
-\\&= (k-1) \sum_{\ell = 0}^d \frac{\hat{\beta}_\ell}{\ell + k - 1} 
+\\&= (k-1) \sum_{\ell = 0}^d \frac{\hat{\beta}_\ell}{\ell + k - 1}.
 \end{align*}
 Again, since $\hat{\beta}$ is unbiased for $\beta$, it follows that
 $\widehat{\text{AvRisk}_{k_2}}$ is an unbiased estimator for the
@@ -1062,11 +1066,9 @@ The algorithm is summarized below.
 
     \emph{Inputs:}
     \begin{itemize}
-    \item Marginal model $\mathcal{M}$.
-    \item Label set $\mathcal{S}_1 =\{y^{(1)},\hdots, y^{(k_1)}\}$.
-    \item Prior class probabilities $\{\pi_1(y^{(1)}),\hdots, \pi_1(y^{(k_1)})\}$
-    \item Training sample $\hat{F}_{y^{(i)}}$ for $i = 1,\hdots, k_1$.
-    \item Test sample $(x_1^{(i)},\hdots, x_{r_{test}}^{(i)})$ for $i = 1,\hdots, k_1$.
+    \item Marginal model $\mathcal{M}$ and cost function $C$.
+    \item Class labels $y^{(i)}$ and prior weights $\pi_1(y^{(i)})$ for $i = 1,\hdots, k_1$.
+    \item Training sample $\hat{F}_{y^{(i)}}$ and test sample $(x_1^{(i)},\hdots, x_{r_{test}}^{(i)})$ for $i = 1,\hdots, k_1$.
     \end{itemize}
 
     \emph{Parameters:}
@@ -1077,21 +1079,21 @@ The algorithm is summarized below.
 
     \emph{Algorithm:}
     \begin{enumerate}
-    \item For $i = 1,\hdots, k_1$, $j= 1,\hdots, r_{test}$, and $\ell = 1,\hdots, k_1$, compute the margins
+    \item For $i = 1,\hdots, k_1$, $j= 1,\hdots, r_{test}$, and $\ell = 1,\hdots, k_1$, compute
     \[
-    M_{i, j}^\ell = \mathcal{M}(\hat{F}_{y^{(\ell)}}; \pi_1(y^{(\ell)}))(x_j^{(i)}).
+    M_{i, j, \ell} = \mathcal{M}(\hat{F}_{y^{(\ell)}}; \pi_1(y^{(\ell)}))(x_j^{(i)}).
     \]
-    \item  For $i = 1,\hdots, k_1$, $j= 1,\hdots, r_{test}$, $\ell = 1,\hdots, k_1$, and $h = 0,\hdots, d$, compute
+    and
     \[
-    \hat{U}_{i, j, \ell}^{(h)} = \frac{(k-h)!}{ k!} \sum_{m_1 \neq \cdots \neq m_h \neq j} \prod_{z=1}^h I\{M_{i, j}^\ell > M_{i, j}^{m_z}\}.
+    C_{i,j, \ell} = C(y^{(\ell)}, y^{(i)})I\{M_{i, j, \ell} > M_{i, j, i}\}.
     \]
-    \item For $i = 1,\hdots, k_1$, $j= 1,\hdots, r_{test}$, $\ell = 1,\hdots, k_1$, compute
+    \item  For $i\neq \ell = 1,\hdots, k_1$, $j= 1,\hdots, r_{test}$, and $h = 0,\hdots, d$, compute
     \[
-    C_{i,j, \ell} = C(y^{(\ell)}, y^{(i)})I\{U_{i, j, \ell} > U_{i, j, i}\}.
+    \hat{U}_{i, j, \ell}^{(h)} = \frac{(k_1-h-2)!}{(k_1-2)!} \sum_{m_1 \neq \cdots \neq m_h \neq i \neq \ell} \prod_{z=1}^h I\{M_{i, j, \ell} > M_{i, j, m_z}\}.
     \]
     \item Find the least-squares solution
     \[
-    \hat{\beta} = \argmin_\beta \sum_{i=1,j=1, \ell=1}^{r_{test}, k_1, k_1} \left(C_i^\ell - \sum_{h=0}^d \beta_h \hat{U}_{i,j, \ell}^{(h)}\right)^2,
+    \hat{\beta} = \argmin_\beta \sum_{i\neq \ell=1, j = 1}^{k_1, r_{test}} \left(C_i^\ell - \sum_{h=0}^d \beta_h \hat{U}_{i,j, \ell}^{(h)}\right)^2.
     \]
     \item Output
     \[
