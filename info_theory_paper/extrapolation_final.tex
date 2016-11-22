@@ -937,12 +937,8 @@ following.
 
 \subsection{Estimation in the general case}\label{sec:estimation}
 
-[Note: In the final version we might just assume $\nu_1 = \nu_2$
-throughout the whole paper to simplify things.  But I have written the
-general case for now.]
-
 Now we address the problem of estimating $\text{AvRisk}_{k_2,
-r_{train}, \nu_2}$ from data.  As we have seen from
+r_{train}}$ from data.  As we have seen from
 Theorem \eqref{theorem:avrisk_identity}, the $k$-class average risk of
 a marginal classifier $\mathcal{M}$ is a functional of a object called
 $\bar{K}(u),$ which depends marginal model $\mathcal{M}$ of the
@@ -952,13 +948,13 @@ $Y$ is drawn from the sampling density $\nu$.
 Therefore, the strategy we take is to attempt to estimate $\bar{K}$
 for then given classification model, and then plug in our estimate of
 $\bar{K}$ into the integral \eqref{eq:avrisk_identity} to obtain an
-estimate of $\text{AvRisk}_{k_2, r_{train}, \nu_2}$.  Having decided
-to estimate $\bar{K}$, there is then the question of what kind of
-model we should assume for $\bar{K}$.  While a nonparametric approach
-may be ideal, for the case of general loss functions we will adopt a
+estimate of $\text{AvRisk}_{k_2, r_{train}}$.  Having decided to
+estimate $\bar{K}$, there is then the question of what kind of model
+we should assume for $\bar{K}$.  While a nonparametric approach may be
+ideal, for the case of general loss functions we will adopt a
 parametric model: that is the subject of this section.  On the other
-hand, for the special case of zero-one loss (Section \ref{sec:sp_case}), we take a
-nonparametric approach.
+hand, for the special case of zero-one loss
+(Section \ref{sec:sp_case}), we take a nonparametric approach.
 
 Even restricting ourselves to parametric models, there are wide
 variety of parametric families one might consider for $\bar{K}(u)$.
@@ -986,7 +982,7 @@ The predicted label for each test point is
 Therefore, an unbiased estimate of the risk (which is also an unbiased
 estimate of the $k_1$-class average risk) is
 \[
-\text{Test Risk} = \frac{1}{r_{test}}\sum_{i=1}^k \sum_{j=1}^{r_{test}} \frac{\nu_2(y^{(i)})}{\nu_1(y^{(i)})} C(\hat{y}_{i, j}, y^{(i)}).
+\text{Test Risk} = \frac{1}{r_{test}}\sum_{i=1}^k \sum_{j=1}^{r_{test}} C(\hat{y}_{i, j}, y^{(i)}).
 \]
 
 Now we turn to the question of estimating the function $\bar{K}(u)$.
@@ -997,61 +993,113 @@ U_{i, j, \ell} = U_{x_j^{(i)}}(y^{(\ell)}, \hat{F}_{y^{(\ell)}}).
 \]
 Also define
 \[
-C_{i,\ell} = C(y^{(\ell)}, y^{(i)})I\{U_{i, j, \ell} > U_{i, j, i}\}
+C_{i,j, \ell} = C(y^{(\ell)}, y^{(i)})I\{U_{i, j, \ell} > U_{i, j, i}\}
 \]
-and
+By definition, we have
 \[
-w_i = \frac{\nu_2(y^{(i)})}{\nu_1(y^{(i)})}.
+\bar{K}(u) = \E[C(Y, Y^*)I\{U_{X^*}(Y) > U_{X^*}(Y^*)\}] = \E[C_{i,\ell} | U_{i, j, \ell} = u].
 \]
-Then $\bar{K}(u)$ could be estimated via a $d$-th order polynomial regression
+This means that $\bar{K}(u)$ can be estimated via a $d$-th order polynomial regression
 \[
-\hat{\beta} = \argmin_{\beta} \sum_{i=1,j=1, \ell=1}^{r_{test}, k_1, k_1} w_i \left(C_i^\ell - \sum_{h=0}^d \beta_h U_{i,j, \ell}^h\right)^2
+\hat{\beta} = \argmin_{\beta} \sum_{i=1,j=1, \ell=1}^{r_{test}, k_1, k_1} \left(C_i^\ell - \sum_{h=0}^d \beta_h U_{i,j, \ell}^h\right)^2
 \]
-for the
-dataset $\{(w_i, U_{i,j, \ell}, C_{i,\ell})\}_{i=1, j=1,
-  \ell=1}^{r_{test}, k_1, k_1}$.  However, this is not possible in
+for the dataset $\{(U_{i,j, \ell}, C_{i,\ell})\}_{i=1,
+j=1, \ell=1}^{r_{test}, k_1, k_1}$.  However, this is not possible in
 practice because $U_{i,j,\ell}$ are not directly observed.
 
-Instead, we can obtain unbiased estimates via the importance-sampling-reweighted mean
+Instead, we can obtain an unbiased estimate of $\hat{U}_{i, j, \ell}$ via
 \[
-\hat{U}_{i,j, \ell} = \frac{1}{(k-1)\zeta}\sum_{m \neq \ell}  \frac{\nu_2(y^{(m)})}{\nu_1(y^{(m)})} I\{M_{i, j}^\ell > M_{i, j}^m\}
+\hat{U}_{i,j, \ell} = \frac{1}{(k-1)}\sum_{m \neq \ell} I\{M_{i, j}^\ell > M_{i, j}^m\}
 \]
-However, if we were to simply treat $\hat{U}_{i, j, \ell}$ as a proxy
-for the unobserved $U_{i,j,\ell}$, and apply polynomial regression to
-the dataset
-\[
-\{(w_i, \hat{U}_{i,j, \ell}, C_{i, \ell})\}_{i=1, j=1, \ell=1}^{r_{test}, k_1,k_1},
-\]
-the estimated $\widehat{\bar{K}(u)}$ would be biased, since we have
-\emph{errors-in-covariates}.  It is necessary to make use of the
-\emph{covariate adjustment} technique.  Covariate adjustment is
-justified since the error in the covariates is conditionally
-independent of the response given the true covariates:
+Since we have \emph{errors-in-covariates}, it is necessary to make use
+of the \emph{covariate adjustment} technique (see
+Appendix \ref{sec:me}).  Covariate adjustment is justified since the
+measurement error in $\hat{U}_{i,j, \ell}$ is independent of the
+response given the true covariates:
 \[
 \hat{U}_{i,j,\ell} \perp C_i^\ell | U_{i, j,\ell}.
 \]
-
-In the naive polynomial regression, the predictors are the powers of
-the unbiased estimates, $\hat{U}_{i,j,\ell}^h$ for $h = 0,\hdots, d$.
-The issue is that while $\hat{U}_{i,j,\ell}$ is unbiased for
-$U_{i,j,\ell}$, the higher powers of $\hat{U}_{i,j,\ell}$ are
-\emph{not} unbiased estimators of the higher powers of $U_{i,j,\ell}$.
-Covariate adjustment in this case amounts to replacing the naive
-estimates $\hat{U}_{i,j,\ell}^h$ with unbiased estimators.
+Covariate adjustment in this case amounts to obtaining unbiased estimates of
+the powers $U_{i,j,\ell}^h$.
 
 % reconfigure notation to get rid of indicators somehow??
 There exist U-statistic estimators of the higher powers of
 $\hat{U}_{i,j,\ell}^h$.  For instance, for $h=2$, the estimator is
 \[
-\hat{U}_{i,j,\ell}^{(2)} = \frac{1}{\zeta^2 k(k-1)} \sum_{m_1\neq m_2 \neq j}  \frac{\nu_2(y^{(m_1)})}{\nu_1(y^{(m_2)})} I\{M_{i, j}^\ell > M_{i, j}^{m_2}\}
- \frac{\nu_2(y^{(m_2)})}{\nu_1(y^{(m_2)})} I\{M_{i, j}^\ell > M_{i, j}^{m_2}\}.
+\hat{U}_{i,j,\ell}^{(2)} = \frac{1}{ k(k-1)} \sum_{m_1\neq m_2 \neq j} I\{M_{i, j}^\ell > M_{i, j}^{m_2}\} I\{M_{i, j}^\ell > M_{i, j}^{m_2}\}.
 \]
 In general, the U-statistic is
 \[
-\hat{U}_{i, j, \ell}^{(h)} = \frac{(k-h)!}{\zeta^h k!} \sum_{m_1 \neq \cdots \neq m_h \neq j} \prod_{z=1}^h  \frac{\nu_2(y^{(m_z)})}{\nu_1(y^{(m_z)})} I\{M_{i, j}^\ell > M_{i, j}^{m_z}\}.
+\hat{U}_{i, j, \ell}^{(h)} = \frac{(k-h)!}{k!} \sum_{m_1 \neq \cdots \neq m_h \neq j} \prod_{z=1}^h I\{M_{i, j}^\ell > M_{i, j}^{m_z}\}.
 \]
 
-In summation, the algorithm is as follows:
+Then, define
+\[
+\hat{\beta} = \argmin_\beta \sum_{i=1,j=1, \ell=1}^{r_{test}, k_1, k_1} \left(C_i^\ell - \sum_{h=0}^d \beta_h \hat{U}_{i,j, \ell}^{(h)}\right)^2.
+\]
+By the properties of covariate adjustment (Appendix \ref{sec:me},) $\hat{\beta}$ is an unbiased estimate of $\beta$.
+Therefore we obtain the estimate
+\[
+\hat{K}(u) = \sum_{\ell = 0}^d \hat{\beta}_\ell u^\ell.
+\]
+
+Now in order to predict the average risk for $k_2$ classes, we use \eqref{eq:avrisk_identity} and compute
+\begin{align*}
+\widehat{\text{AvRisk}_k} &= (k-1) \int_0^1 \hat{K}(u) u^{k-2} du
+\\&= (k-1) \int_0^1 \sum_{\ell = 0}^d \hat{\beta}_\ell u^\ell u^{k-2} du
+\\&= (k-1) \sum_{\ell = 0}^d \hat{\beta}_\ell  \int_0^1 u^{\ell + k-2} du
+\\&= (k-1) \sum_{\ell = 0}^d \frac{\hat{\beta}_\ell}{\ell + k - 1} 
+\end{align*}
+Again, since $\hat{\beta}$ is unbiased for $\beta$, it follows that
+$\widehat{\text{AvRisk}_{k_2}}$ is an unbiased estimator for the
+average risk $\text{AvRisk}_{k_2}$.
+
+The algorithm is summarized below.
+
+\fbox{
+  \parbox{\textwidth}{
+    \textbf{Estimation of average risk under $d$th order polynomial model}
+
+    \emph{Inputs:}
+    \begin{itemize}
+    \item Marginal model $\mathcal{M}$.
+    \item Label set $\mathcal{S}_1 =\{y^{(1)},\hdots, y^{(k_1)}\}$.
+    \item Prior class probabilities $\{\pi_1(y^{(1)}),\hdots, \pi_1(y^{(k_1)})\}$
+    \item Training sample $\hat{F}_{y^{(i)}}$ for $i = 1,\hdots, k_1$.
+    \item Test sample $(x_1^{(i)},\hdots, x_{r_{test}}^{(i)})$ for $i = 1,\hdots, k_1$.
+    \end{itemize}
+
+    \emph{Parameters:}
+    \begin{itemize}
+    \item $k_2$: specifies number of classes for the estimation target $\text{AvRisk}_{k_2}$.
+    \item $d$: order of the polynomial model assumed for $\bar{K}(u)$.
+    \end{itemize}
+
+    \emph{Algorithm:}
+    \begin{enumerate}
+    \item For $i = 1,\hdots, k_1$, $j= 1,\hdots, r_{test}$, and $\ell = 1,\hdots, k_1$, compute the margins
+    \[
+    M_{i, j}^\ell = \mathcal{M}(\hat{F}_{y^{(\ell)}}; \pi_1(y^{(\ell)}))(x_j^{(i)}).
+    \]
+    \item  For $i = 1,\hdots, k_1$, $j= 1,\hdots, r_{test}$, $\ell = 1,\hdots, k_1$, and $h = 0,\hdots, d$, compute
+    \[
+    \hat{U}_{i, j, \ell}^{(h)} = \frac{(k-h)!}{ k!} \sum_{m_1 \neq \cdots \neq m_h \neq j} \prod_{z=1}^h I\{M_{i, j}^\ell > M_{i, j}^{m_z}\}.
+    \]
+    \item For $i = 1,\hdots, k_1$, $j= 1,\hdots, r_{test}$, $\ell = 1,\hdots, k_1$, compute
+    \[
+    C_{i,j, \ell} = C(y^{(\ell)}, y^{(i)})I\{U_{i, j, \ell} > U_{i, j, i}\}.
+    \]
+    \item Find the least-squares solution
+    \[
+    \hat{\beta} = \argmin_\beta \sum_{i=1,j=1, \ell=1}^{r_{test}, k_1, k_1} \left(C_i^\ell - \sum_{h=0}^d \beta_h \hat{U}_{i,j, \ell}^{(h)}\right)^2,
+    \]
+    \item Output
+    \[
+    \widehat{\text{AvRisk}_{k_2}} = (k_2-1) \sum_{\ell = 0}^d \frac{\hat{\beta}_\ell}{\ell + k_2 - 1}.
+    \]
+    \end{enumerate}
+  }
+}
 % summary of algorithm
 
 
@@ -1164,7 +1212,7 @@ Under this moment constraint, estimate $\hat{K}(u)$ using pseudolikelihood.
 
 \appendix
 \section{Appendix}
-\subsection{Measurement error models}
+\subsection{Measurement error models}\label{sec:me}
 
 We make use of measurement error regression models in
 section \ref{sec:estimation}: in particular, the regression adjustment
