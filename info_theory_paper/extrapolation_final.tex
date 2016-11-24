@@ -733,12 +733,12 @@ subsets, so $N_{i,j,\ell} = 0$.
 Otherwise, there are $R_{i,j,\ell} - 1$ elements in $\mathcal{S}_1$
 with a lower margin than $y^{(\ell)}$.  If $i \neq \ell$, then there
 are $k_2-2$ elements in $S \setminus \{i, \ell\}$, so therefore $N_{i,
-j, \ell} = {R_{i,j,\ell} - 1}\choose{k_2 - 2}$.  if $i = \ell$, then
-there are $k_2 - 1$ other indices, so $N_{i,j,\ell} = {R_{i,j,\ell} -
-1}\choose{k_2 - 1}$.  Therefore, we can write
+j, \ell} = {{R_{i,j,\ell} - 2}\choose{k_2 - 2}}$.  if $i = \ell$, then
+there are $k_2 - 1$ other indices, so $N_{i,j,\ell} = {{R_{i,j,\ell} -
+1}\choose{k_2 - 1}}$.  Therefore, we can write
 \begin{equation}\label{eq:avtestrisk_nil}
 N_{i,j,\ell} = I\{R_{i,j,\ell} > R_{i,j,i}\}{{R_{i,j,\ell} -
-1}\choose{k_2 - 2}} + I\{\ell = i\}{{R_{i,j,\ell} - 1}\choose{k_2 - 1}}.
+2}\choose{k_2 - 2}} + I\{\ell = i\}{{R_{i,j,\ell} - 1}\choose{k_2 - 1}}.
 \end{equation}
 
 Therefore, the challenging case is when $k_2 > k_1$: we want to
@@ -981,7 +981,7 @@ With the conditional cost function and the distribution of $U_{max}$ both in han
 \]
 Now the average risk can be obtained by integrating over $(Y^*, \hat{F}_{Y^*}),$ and $X^*$.
 \[
-\text{AvRisk}_{k, r, \nu}((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int \bar{K}(u) u^{k-2} du.
+\text{AvRisk}_{k, r}((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int \bar{K}(u) u^{k-2} du.
 \]
 where
 \begin{equation}\label{eq:Kbar}
@@ -999,7 +999,7 @@ condition.  Then, under the
 definitions \eqref{eq:U_function}, \eqref{eq:Kfunc},
 and \eqref{eq:Kbar}, we have
 \begin{equation}\label{eq:avrisk_identity}
-\text{AvRisk}_{k, r, \nu}((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int \bar{K}(u) u^{k-2} du.
+\text{AvRisk}_{k, r}((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int \bar{K}(u) u^{k-2} du.
 \end{equation}
 \end{theorem}
 
@@ -1025,42 +1025,93 @@ $Y$ is drawn from the sampling density $\nu$.
 Therefore, the strategy we take is to attempt to estimate $\bar{K}$
 for then given classification model, and then plug in our estimate of
 $\bar{K}$ into the integral \eqref{eq:avrisk_identity} to obtain an
-estimate of $\text{AvRisk}_{k_2, r_{train}}$.  Having decided to
-estimate $\bar{K}$, there is then the question of what kind of model
-we should assume for $\bar{K}$.  While a nonparametric approach may be
-ideal, for the case of general loss functions we will adopt a
-parametric model: that is the subject of this section.  On the other
-hand, for the special case of zero-one loss
-(Section \ref{sec:sp_case}), we take a nonparametric approach.
+estimate of $\text{AvRisk}_{k_2, r_{train}}$.
 
-Even restricting ourselves to parametric models, there are wide
-variety of parametric families one might consider for $\bar{K}(u)$.
-As it turns out, the $d$-th order polynomial model is unique for
-enabling unbiased estimation of the average risk.  Therefore, let us
+Having decided to estimate $\bar{K}$, there is then the question of
+what kind of model we should assume for $\bar{K}$.  While a
+nonparametric approach may be ideal, for the case of general loss
+functions we will adopt a parametric model: that is the subject of
+this section.
+%On the other
+%hand, for the special case of zero-one loss
+%(Section \ref{sec:sp_case}), we take a nonparametric approach.
+
+We assume the linear model
+\begin{equation}\label{eq:linearKu}
+\bar{K}(u) = \sum_{\ell = 1}^m \beta_\ell h_\ell(u),
+\end{equation}
+where $h_\ell(u)$ are known basis functions, and $\beta$ are the model
+parameters to be estimated. We propose two approaches
+for \emph{unbiased} estimation of $\text{AvRisk}_{k_2, r_{train}}$.
+The first approach estimates the coefficients $\beta$ via the unbiased
+estimates of $k$-class average risk obtained
+from \eqref{eq:avtestrisk}.  The second approach estimates $\beta$ by
+estimating $\bar{K}(u)$ directly.  However, the second approach
+requires the use of the \emph{regression adjustment} method taken from
+measurement error models, and therefore can only yield unbiased
+estimates for \emph{polynomial} basis functions $h_\ell(u)$.
+
+\subsubsection{Method 1: Moment method}
+
+If we plug in the assumed linear model \eqref{eq:linearKu} into the
+identity \eqref{eq:avrisk_identity}, then we get
+\begin{align}
+\text{AvRisk}_{k, r_{train}} &= (k-2)\int \bar{K}(u) u^{k-2} du
+\\&= (k-2)\int_0^1 \sum_{\ell = 1}^m \beta_\ell h_\ell(u) u^{k-2} du
+\\&= \sum_{\ell = 1}^m \beta_\ell H_{\ell,k} \label{eq:avrisk_linear}
+\end{align}
+where
+\begin{equation}
+H_{\ell,k} = (k-2) \int_0^1 h_\ell(u) u^{k-2} du.
+\end{equation}
+The constants $H_{\ell, k}$ are moments of the basis function
+$h_\ell$: hence we call this method the \emph{moment method.}  Note
+that $H_{\ell, k}$ can be precomputed numerically for any $k \geq 2$.
+
+
+Now, since the $\text{AvTestRisk}_k$ are unbiased estimates of
+$\text{AvRisk}_{k, r_{train}}$, this implies that the regression
+estimate
+\[
+\hat{\beta} = \argmin_\beta \sum_{k=2}^{k_1} w_k \left(\text{AvTestRisk}_k - \sum_{\ell=1}^m \beta_\ell H_{\ell, k}\right)^2
+\]
+is unbiased for $\beta$, under any choice of positive weights $w_k$.
+The estimate of $\text{AvRisk}_{k_2,r_{train}}$ is similarly obtained
+from \eqref{eq:avrisk_linear}, via
+\[
+\widehat{\text{AvRisk}_{k_2,r_{train}}} = \sum_{\ell=1}^m \hat{\beta}_\ell H_{\ell, k_2}.
+\]
+
+\subsubsection{Method 2: Regression adjustment method}
+%Even restricting ourselves to parametric models, there are wide
+%variety of parametric families one might consider for $\bar{K}(u)$.
+%As it turns out, the $d$-th order polynomial model is unique for
+%enabling unbiased estimation of the average risk.  Therefore, 
+Let us
 assume
 \[
 \bar{K}(u) = \sum_{\ell = 0}^d \beta_\ell u^\ell.
 \]
 
-Recall that the data consists of $k_1 < k_2$ classes, $\mathcal{S}_1 =
-\{y^{(1)},\hdots, y^{(k_1)}\}$. For each $y^{(i)}$ we have training sample $\hat{F}_{y^{(i)}}$, and
-$r_{test}$ test repeats per class, $(x_1^{(i)},\hdots,
-x_{r_{test}}^{(i)})$.
+%Recall that the data consists of $k_1 < k_2$ classes, $\mathcal{S}_1 =
+%\{y^{(1)},\hdots, y^{(k_1)}\}$. For each $y^{(i)}$ we have training sample $\hat{F}_{y^{(i)}}$, and
+%$r_{test}$ test repeats per class, $(x_1^{(i)},\hdots,
+%x_{r_{test}}^{(i)})$.
 
-The marginal model $\mathcal{M}$ yields margins for each point in the
-test set for each label in $\mathcal{S}_1$.  Define the margins
-\[
-M_{i, j, \ell} = \mathcal{M}(\hat{F}_{y^{(\ell)}}; \pi_1(y^{(\ell)}))(x_j^{(i)}).
-\]
-The predicted label for each test point is
-\[
-\hat{y}_{i,j} = y^{(\argmax_{\ell \in \{1,\hdots, k\}} M_{i, j, \ell})}.
-\]
-Therefore, an unbiased estimate of the risk (which is also an unbiased
-estimate of the $k_1$-class average risk) is
-\[
-\text{Test Risk} = \frac{1}{r_{test}}\sum_{i=1}^k \sum_{j=1}^{r_{test}} C(\hat{y}_{i, j}, y^{(i)}).
-\]
+%The marginal model $\mathcal{M}$ yields margins for each point in the
+%test set for each label in $\mathcal{S}_1$.  Define the margins
+%\[
+%M_{i, j, \ell} = \mathcal{M}(\hat{F}_{y^{(\ell)}}; \pi_1(y^{(\ell)}))(x_j^{(i)}).
+%\]
+%The predicted label for each test point is
+%\[
+%\hat{y}_{i,j} = y^{(\argmax_{\ell \in \{1,\hdots, k\}} M_{i, j, \ell})}.
+%\]
+%Therefore, an unbiased estimate of the risk (which is also an unbiased
+%estimate of the $k_1$-class average risk) is
+%\[
+%\text{Test Risk} = \frac{1}{r_{test}}\sum_{i=1}^k \sum_{j=1}^{r_{test}} C(\hat{y}_{i, j}, y^{(i)}).
+%\]
 
 Now we turn to the question of estimating the function $\bar{K}(u)$.
 Suppose that hypothetically, we could have observed the quantities
