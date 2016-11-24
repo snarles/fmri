@@ -647,22 +647,99 @@ the classification task.
 Let us first mention two easy special cases, which can be handled
 using existing machine learning methodology.
 
+\subsubsection{Equal numbers of classes}
+
 In the special case where $k_1 = k_2 = k$: that is, where the label
 subsets $\mathcal{S}_1$ and $\mathcal{S}_2$ are the same size, it is
 clear to see that any unbiased estimate of the risk of the classifier
 $\mathcal{F}$ for the first classification problem is an unbiased
-estimate of the average $k$-class risk.  Since various methods, such
-as cross-validation can be used to obtain close-to-unbiased estimates
-of the risk in a given classification problem, the problem is
-essentially solved for this special case.
+estimate of the average $k$-class risk.  The \emph{test risk}
+gives one such unbiased estimate of the average $k$-class risk.
 
-Meanwhile, in the case where $k_2 < k_1$, the problem can be solved by
-repeatedly subsampling label sets of size $k_2$ from $\mathcal{S}_1$
-and averaging unbiased estimates of the risk of each subsampled
-classification task.  Aside from computational issues with respect to
-computing or approximating the average of ${k_1}\choose{k_2}$
-empirical accuracies, the problem is again more or less solved by
-using existing methods.
+Recall that the data consists of class labels $y^{(i)}$ and prior
+weights $\pi_1(y^{(i)})$ for $i = 1,\hdots, k_1$, as well as training
+sample $\hat{F}_{y^{(i)}}$ and test sample $(x_1^{(i)},\hdots,
+x_{r_{test}}^{(i)})$ for $i = 1,\hdots, k_1$.
+
+% make sure we define the 'margin' terminology in earlier sections
+For any given test observation $x_j^{(i)}$, we obtain the predicted
+label $\hat{y}_j^{(i)}$ by finding the class with the highest margin $M_{i, j, \ell}$,
+\[
+\hat{y}_j^{(i)} = y_{\argmax_\ell M_{i, j, \ell}},
+\]
+where
+\[ 
+M_{i, j, \ell} = \mathcal{M}(\hat{F}_{y^{(\ell)}}; \pi_1(y^{(\ell)}))(x_j^{(i)}).
+\]
+The test risk is the average cost over test observations,
+\begin{equation}
+\text{Test Risk} = \frac{1}{r_{test}k} \sum_{i=1}^k \sum_{j=1}^{r_{test}} C(\hat{y}_j^{(i)}, y^{(i)}).
+\end{equation}
+For each test observation, define the ranks of the margins by
+\[
+R_{i,j,\ell} = \sum_{m \neq \ell} I\{M_{i,j,\ell} \geq M_{i, j, m}\}.
+\]
+Therefore, $\hat{y}_j^{(i)}$ is equal to $\ell$ if and only if $R_{i,j,\ell} = k$.
+Thus, an equivalent expression for test risk is
+\begin{equation}\label{eq:test_risk}
+\text{Test Risk} = \frac{1}{r_{test}k} \sum_{i=1}^k \sum_{\ell=1}^k \sum_{j=1}^{r_{test}} C_{ij} I\{R_{ij\ell} = k\}.
+\end{equation}
+where
+\[
+C_{ij} = C(y^{(j)}, y^{(i)}).
+\]
+
+Besides the test risk, other methods, such as cross-validation, can
+also be used to obtain estimates of the average $k$-class risk.
+
+\subsubsection{Fewer classes}
+
+Suppose we have data for $k_1$ classes, and we wish to estimate
+$\text{AvRisk}_{k_2}$ for $k_2 \leq k_1$.  Let $\mathcal{S}_1
+= \{y_1,\hdots,y_{k_1}\}$.  To obtain a classification problem with
+$k_2$ classes, we can simply pick a subset $S$ of size $k_2$ from
+$\mathcal{S}_1$, and throw away all the training and test data from the
+other classes $\mathcal{S}\setminus S$.  Then, the test
+risk \eqref{eq:test_risk} gives an unbiased estimate of the
+$\text{AvRisk}_{k_2}$.
+
+Of course, one could obtain a better estimator of the average risk by
+averaging over all the subsets $S \subset \mathcal{S}_1$ of size
+$k_2$.  For general classifiers, this may require retraining a
+classifier over each subset.  However, for marginal classifiers, one
+can compute the average test risk over all ${k_1}\choose{k_2}$ subsets
+easily.
+
+The reason why the efficient computation is possible is because the
+test risk for each subproblem can be determined by looking at the
+margins $M_{i, j, \ell}$, which remain the same as long as both $i$
+and $\ell$ are included in the subsample $S$.
+
+The computational trick is to look at each combination of test
+observation $x_j^{(i)}$ and class label $y^{(\ell)}$, and to count
+count the number of subsets $N_{i, j, \ell}$ where (i) both $i$ and
+$\ell$ are included in $S$, and (ii) $\hat{y}_j^{(i)} = y^{(\ell)}$.
+Then it should be clear that the average test risk over all subsets is
+equal to
+\begin{equation}\label{eq:avtestrisk}
+\text{AvTestRisk}_{k_2} = \frac{1}{{{k_1}\choose{k_2}}}\frac{1}{r_{test}k_2} \sum_{i=1}^{k_1} \sum_{\ell=1}^{k_1} \sum_{j=1}^{r_{test}} C_{i\ell}N_{i, j, \ell}.
+\end{equation}
+Now it is just a matter of simple combinatorics to compute
+$N_{i,j,\ell}$.  We require both $y^{(i)}$ and $y^{(\ell)}$ to be
+included in $S$.  This implies that if $M_{i,j,i} > M_{i,j,\ell}$,
+then $y^{(\ell)}$ will never have the highest margin in any of those
+subsets, so $N_{i,j,\ell} = 0$.
+
+Otherwise, there are $R_{i,j,\ell} - 1$ elements in $\mathcal{S}_1$
+with a lower margin than $y^{(\ell)}$.  If $i \neq \ell$, then there
+are $k_2-2$ elements in $S \setminus \{i, \ell\}$, so therefore $N_{i,
+j, \ell} = {R_{i,j,\ell} - 1}\choose{k_2 - 2}$.  if $i = \ell$, then
+there are $k_2 - 1$ other indices, so $N_{i,j,\ell} = {R_{i,j,\ell} -
+1}\choose{k_2 - 1}$.  Therefore, we can write
+\begin{equation}\label{eq:avtestrisk_nil}
+N_{i,j,\ell} = I\{R_{i,j,\ell} > R_{i,j,i}\}{{R_{i,j,\ell} -
+1}\choose{k_2 - 2}} + I\{\ell = i\}{{R_{i,j,\ell} - 1}\choose{k_2 - 1}}.
+\end{equation}
 
 Therefore, the challenging case is when $k_2 > k_1$: we want to
 predict the performance of the classification model in a setting with
@@ -1214,6 +1291,8 @@ Under this moment constraint, estimate $\hat{K}(u)$ using pseudolikelihood.
 
 \appendix
 \section{Appendix}
+
+
 \subsection{Measurement error models}\label{sec:me}
 
 We make use of measurement error regression models in
