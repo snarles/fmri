@@ -38,11 +38,11 @@ get_rank_prop <- function(pmat, true_ys) {
   cumsum(ans)[1:(k-1)]
 }
 
-get_sub_errs <- function(pmat, true_ys) {
+get_sub_errs <- function(pmat, true_ys, ks) {
   k <- nrow(pmat)
   p2 <- apply(pmat, 2, rank)
   true_ranks <- p2[cbind(true_ys, 1:ncol(pmat))]
-  1 - sapply(1:k, function(v) mean(binmom(true_ranks, k, v)))
+  1 - sapply(ks, function(v) mean(binmom(true_ranks - 1, k - 1, v - 1)))
 }
 
 get_vande <- function(xs = seq(0, 1, 0.01), d) {
@@ -114,7 +114,7 @@ cvec <- get_rank_prop(pmat, true_ys)
 #ks <- c(k - 2, k -1 , k)
 ks <- (k-5):k
 avr_w <- get_avrisk_mat(ks, d)
-avr <- get_sub_errs(pmat, true_ys)[ks]
+avr <- get_sub_errs(pmat, true_ys, ks)
 
 bt <- lsei(A = kmat, B = cvec)$X
 sum(bt)
@@ -123,7 +123,7 @@ bt <- lsei(A = kmat, B = cvec, E = avr_w, F = avr)$X
 sum(bt)
 
 Ws <- exp(5 * (2:k)/k)
-bt <- lsei(A = Ws * get_avrisk_mat(2:k, d), B = Ws * get_sub_errs(pmat, true_ys)[2:k])$X
+bt <- lsei(A = Ws * get_avrisk_mat(2:k, d), B = Ws * get_sub_errs(pmat, true_ys, 2:k))$X
 sum(bt)
 
 ku <- get_vande(d = d) %*% bt
