@@ -69,6 +69,11 @@ pmat <- lprobs$logistic_111938.logprobs
 dim(pmat) # 20 1000
 true_ys <- rep(1:20, each = 50)
 
+####
+##  polynomial model
+####
+
+
 k <- nrow(pmat)
 d <- 5
 
@@ -93,4 +98,38 @@ lines(seq(0, 1, 0.01), ku, col = "blue")
 avrisk(k, bt)
 cvec
 avrisk(30, bt)
+plot(2:200, avrisk(2:200, bt), type = "l")
+
+
+####
+##  Constraining predictions
+####
+
+library(limSolve)
+k <- nrow(pmat)
+d <- 5
+kmat <- get_kmat(k, d)
+cvec <- get_rank_prop(pmat, true_ys)
+
+#ks <- c(k - 2, k -1 , k)
+ks <- (k-5):k
+avr_w <- get_avrisk_mat(ks, d)
+avr <- get_sub_errs(pmat, true_ys)[ks]
+
+bt <- lsei(A = kmat, B = cvec)$X
+sum(bt)
+
+bt <- lsei(A = kmat, B = cvec, E = avr_w, F = avr)$X
+sum(bt)
+
+Ws <- exp(5 * (2:k)/k)
+bt <- lsei(A = Ws * get_avrisk_mat(2:k, d), B = Ws * get_sub_errs(pmat, true_ys)[2:k])$X
+sum(bt)
+
+ku <- get_vande(d = d) %*% bt
+yhat <- kmat %*% bt
+plot(kmat[, 2], cvec, ylim = c(0, 0.5))
+lines(kmat[, 2], yhat, col = "red")
+lines(seq(0, 1, 0.01), ku, col = "blue")
+
 plot(2:200, avrisk(2:200, bt), type = "l")
