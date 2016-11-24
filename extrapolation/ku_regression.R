@@ -3,6 +3,19 @@ library(lineId)
 k <- 20
 d <- 3 # degree
 
+binmom <- function(succ, tot, k) {
+  choose(succ, k)/choose(tot, k)
+}
+
+get_avrisk_mat <- function(ks, d) {
+  ans <- matrix(0, length(ks), d + 1)
+  ans <- col(ans) - 1
+  ans <- ans + (ks - 1)
+  ans <- 1/ans
+  ans <- ans * (ks - 1)
+  ans
+}
+
 get_kmat <- function(k, d) {
   kmat <- matrix(0, k - 1, d + 1)
   current <- rep(1, k - 1)
@@ -23,6 +36,13 @@ get_rank_prop <- function(pmat, true_ys) {
   ans[as.numeric(names(tab))] <- tab
   ans <- ans/ncol(pmat)
   cumsum(ans)[1:(k-1)]
+}
+
+get_sub_errs <- function(pmat, true_ys) {
+  k <- nrow(pmat)
+  p2 <- apply(pmat, 2, rank)
+  true_ranks <- p2[cbind(true_ys, 1:ncol(pmat))]
+  1 - sapply(1:k, function(v) mean(binmom(true_ranks, k, v)))
 }
 
 get_vande <- function(xs = seq(0, 1, 0.01), d) {
@@ -58,10 +78,13 @@ kmat <- get_kmat(k, d)
 cvec <- get_rank_prop(pmat, true_ys)
 
 (bt <- solve(t(kmat) %*% diag(ws) %*% kmat, t(kmat) %*% diag(ws) %*% cvec))
+sum(bt)
 
 ku <- get_vande(d = d) %*% bt
 
+
 yhat <- kmat %*% bt
+yhat
 
 plot(kmat[, 2], cvec, ylim = c(0, 0.5))
 lines(kmat[, 2], yhat, col = "red")
