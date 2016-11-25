@@ -722,7 +722,7 @@ $\ell$ are included in $S$, and (ii) $\hat{y}_j^{(i)} = y^{(\ell)}$.
 Then it should be clear that the average test risk over all subsets is
 equal to
 \begin{equation}\label{eq:avtestrisk}
-\text{AvTestRisk}_{k_2} = \frac{1}{{{k_1}\choose{k_2}}}\frac{1}{r_{test}k_2} \sum_{i=1}^{k_1} \sum_{\ell=1}^{k_1} \sum_{j=1}^{r_{test}} C_{i\ell}N_{i, j, \ell}.
+\text{AvTestRisk}_{k_2} = \frac{1}{{{k_1}\choose{k_2}}}\frac{1}{r_{test}k_2} \sum_{i=1}^{k_1} \sum_{\ell\neq i} \sum_{j=1}^{r_{test}} C_{i\ell}N_{i, j, \ell}.
 \end{equation}
 Now it is just a matter of simple combinatorics to compute
 $N_{i,j,\ell}$.  We require both $y^{(i)}$ and $y^{(\ell)}$ to be
@@ -731,14 +731,11 @@ then $y^{(\ell)}$ will never have the highest margin in any of those
 subsets, so $N_{i,j,\ell} = 0$.
 
 Otherwise, there are $R_{i,j,\ell} - 1$ elements in $\mathcal{S}_1$
-with a lower margin than $y^{(\ell)}$.  If $i \neq \ell$, then there
+with a lower margin than $y^{(\ell)}$.  Since $i \neq \ell$, then there
 are $k_2-2$ elements in $S \setminus \{i, \ell\}$, so therefore $N_{i,
-j, \ell} = {{R_{i,j,\ell} - 2}\choose{k_2 - 2}}$.  if $i = \ell$, then
-there are $k_2 - 1$ other indices, so $N_{i,j,\ell} = {{R_{i,j,\ell} -
-1}\choose{k_2 - 1}}$.  Therefore, we can write
+j, \ell} = {{R_{i,j,\ell} - 2}\choose{k_2 - 2}}$.  Therefore, we can write
 \begin{equation}\label{eq:avtestrisk_nil}
-N_{i,j,\ell} = I\{R_{i,j,\ell} > R_{i,j,i}\}{{R_{i,j,\ell} -
-2}\choose{k_2 - 2}} + I\{\ell = i\}{{R_{i,j,\ell} - 1}\choose{k_2 - 1}}.
+N_{i,j,\ell} = I\{R_{i,j,\ell} > R_{i,j,i}\}{{R_{i,j,\ell} -2}\choose{k_2 - 2}}
 \end{equation}
 
 Therefore, the challenging case is when $k_2 > k_1$: we want to
