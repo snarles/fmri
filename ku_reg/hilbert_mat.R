@@ -83,6 +83,7 @@ list(ihmat(5) * induction_mult(5),
      (2*5 + 1) * ih_induction_mult(5))
 sapply(1:5, function(n) sum(ih_induction_mult(n)))
 sapply(1:5, function(n) 1+choose(2*n, n)*(choose(2*n,n) - 2))
+sqrt(sapply(1:5, function(n) sum(ih_induction_mult(n))))
 
 ## looking for patterns
 sapply(1:5, function(n) sum(pmax(ih_induction_mult(n), 0)))
@@ -90,3 +91,7 @@ sapply(1:5, function(n) sum(pmin(ih_induction_mult(n), 0)))
 
 sapply(1:5, function(n) ih_induction_mult(n)[n,n])
 sapply(1:5, function(n) sum(ih_induction_mult(n)[n,]))
+
+sapply(1:5, function(n) sum(ih_induction_mult(n)[n,]))
+sapply(1:5, function(n) sqrt(sum(ih_induction_mult(n))) * factorial(2*n-1)/(factorial(n-1))^2)
+
