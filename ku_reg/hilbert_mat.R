@@ -88,3 +88,5 @@ sapply(1:5, function(n) 1+choose(2*n, n)*(choose(2*n,n) - 2))
 sapply(1:5, function(n) sum(pmax(ih_induction_mult(n), 0)))
 sapply(1:5, function(n) sum(pmin(ih_induction_mult(n), 0)))
 
+sapply(1:5, function(n) ih_induction_mult(n)[n,n])
+sapply(1:5, function(n) sum(ih_induction_mult(n)[n,]))
