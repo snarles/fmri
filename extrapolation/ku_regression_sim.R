@@ -18,12 +18,11 @@ get_avrisk_mat <- function(ks, d) {
 
 get_kmat <- function(k, d) {
   kmat <- matrix(0, k - 1, d + 1)
-  current <- rep(1, k - 1)
-  for (i in 0:d) {
-    kmat[, i + 1] <- current
-    current <- current * ((0 : (k-2)) - i)/(k - 2 - i)
-  }
-  kmat[, i + 1] <- current
+  al <- row(kmat)
+  bt <- k - al
+  h <- col(kmat) - 1
+  kmat <- lgamma(al + h) + lgamma(al + bt)  - lgamma(al) - lgamma(al + bt + h)
+  kmat <- exp(kmat)
   kmat  
 }
 
@@ -80,6 +79,7 @@ ws <- ws/sum(ws)
 kmat <- get_kmat(k, d)
 cvec <- get_rank_prop(pmat, true_ys)
 
+(bt <- solve(t(kmat) %*% kmat, t(kmat) %*% cvec))
 (bt <- solve(t(kmat) %*% diag(ws) %*% kmat, t(kmat) %*% diag(ws) %*% cvec))
 sum(bt)
 
@@ -91,8 +91,7 @@ yhat
 
 plot(kmat[, 2], cvec, ylim = c(0, 1), type = "l")
 lines(kmat[, 2], yhat, col = "red")
-
-plot(seq(0, 1, 0.01), ku, col = "blue", type = "l")
+lines(seq(0, 1, 0.01), ku, col = "blue")
 
 avrisk(k, bt)
 cvec
@@ -123,6 +122,12 @@ sum(bt)
 
 Ws <- exp(0 * (2:k)/k)
 bt <- lsei(A = Ws * get_avrisk_mat(2:k, d), B = Ws * get_sub_errs(pmat, true_ys, 2:k))$X
+
+
+ks <- 20:k
+avr_w <- get_avrisk_mat(ks, d)
+avr <- get_sub_errs(pmat, true_ys, ks)
+(bt <- solve(t(avr_w) %*% avr_w, t(avr_w) %*% avr))
 sum(bt)
 
 ku <- get_vande(d = d) %*% bt

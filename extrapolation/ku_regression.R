@@ -18,12 +18,11 @@ get_avrisk_mat <- function(ks, d) {
 
 get_kmat <- function(k, d) {
   kmat <- matrix(0, k - 1, d + 1)
-  current <- rep(1, k - 1)
-  for (i in 0:d) {
-    kmat[, i + 1] <- current
-    current <- current * ((0 : (k-2)) - i)/(k - 2 - i)
-  }
-  kmat[, i + 1] <- current
+  al <- row(kmat)
+  bt <- k - al
+  h <- col(kmat) - 1
+  kmat <- lgamma(al + h) + lgamma(al + bt)  - lgamma(al) - lgamma(al + bt + h)
+  kmat <- exp(kmat)
   kmat  
 }
 
