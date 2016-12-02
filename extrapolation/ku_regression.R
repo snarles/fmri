@@ -1,59 +1,4 @@
-library(lineId)
-
-k <- 20
-d <- 3 # degree
-
-binmom <- function(succ, tot, k) {
-  choose(succ, k)/choose(tot, k)
-}
-
-get_avrisk_mat <- function(ks, d) {
-  ans <- matrix(0, length(ks), d + 1)
-  ans <- col(ans) - 1
-  ans <- ans + (ks - 1)
-  ans <- 1/ans
-  ans <- ans * (ks - 1)
-  ans
-}
-
-get_kmat <- function(k, d) {
-  kmat <- matrix(0, k - 1, d + 1)
-  al <- row(kmat)
-  bt <- k - al
-  h <- col(kmat) - 1
-  kmat <- lgamma(al + h) + lgamma(al + bt)  - lgamma(al) - lgamma(al + bt + h)
-  kmat <- exp(kmat)
-  kmat  
-}
-
-get_rank_prop <- function(pmat, true_ys) {
-  k <- nrow(pmat)
-  p2 <- apply(pmat, 2, rank)
-  true_ranks <- p2[cbind(true_ys, 1:ncol(pmat))]
-  tab <- table(true_ranks)
-  ans <- numeric(k)
-  ans[as.numeric(names(tab))] <- tab
-  ans <- ans/ncol(pmat)
-  cumsum(ans)[1:(k-1)]
-}
-
-get_sub_errs <- function(pmat, true_ys, ks) {
-  k <- nrow(pmat)
-  p2 <- apply(pmat, 2, rank)
-  true_ranks <- p2[cbind(true_ys, 1:ncol(pmat))]
-  1 - sapply(ks, function(v) mean(binmom(true_ranks - 1, k - 1, v - 1)))
-}
-
-get_vande <- function(xs = seq(0, 1, 0.01), d) {
-  ans <- xs %*% t(rep(1, d+1)) 
-  ans <- ans ^ (col(ans) - 1)
-  ans
-}
-
-avrisk <- function(k, bt) {
-  d <- length(bt) - 1
-  sapply(k, function(k) (k - 1) * sum(bt/(0:d + k - 1)))
-}
+source("extrapolation/ku_source.R")
 
 ## get pmat
 load("rakesh/converted1.rda", verbose = TRUE)
@@ -132,3 +77,25 @@ lines(kmat[, 2], yhat, col = "red")
 lines(seq(0, 1, 0.01), ku, col = "blue")
 
 plot(2:200, avrisk(2:200, bt), type = "l")
+
+
+####
+##  Spline basis
+####
+
+nsplines <- 20
+knts <- seq(0, 1, length.out = nsplines + 2)
+knts <- knts[-c(1, nsplines + 2)]
+ffs <- lapply(knts, spline1_maker)
+
+Kmax <- 200
+
+ks <- (k-5):k
+MM <- make_moment_mat(ffs, 1:Kmax, res = 1e5)
+xmat <- MM[ks, ]
+avr <- get_sub_errs(pmat, true_ys, ks)
+
+#bt <- pinv(xmat) %*% avr
+bt <- nnls(xmat, avr)$X
+plot(MM %*% bt, type = "l")
+1-ac0

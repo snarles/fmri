@@ -1,63 +1,12 @@
-library(lineId)
+source("extrapolation/ku_source.R")
 
 k <- 20
 d <- 3 # degree
 
-binmom <- function(succ, tot, k) {
-  choose(succ, k)/choose(tot, k)
-}
-
-get_avrisk_mat <- function(ks, d) {
-  ans <- matrix(0, length(ks), d + 1)
-  ans <- col(ans) - 1
-  ans <- ans + (ks - 1)
-  ans <- 1/ans
-  ans <- ans * (ks - 1)
-  ans
-}
-
-get_kmat <- function(k, d) {
-  kmat <- matrix(0, k - 1, d + 1)
-  al <- row(kmat)
-  bt <- k - al
-  h <- col(kmat) - 1
-  kmat <- lgamma(al + h) + lgamma(al + bt)  - lgamma(al) - lgamma(al + bt + h)
-  kmat <- exp(kmat)
-  kmat  
-}
-
-get_rank_prop <- function(pmat, true_ys) {
-  k <- nrow(pmat)
-  p2 <- apply(pmat, 2, rank)
-  true_ranks <- p2[cbind(true_ys, 1:ncol(pmat))]
-  tab <- table(true_ranks)
-  ans <- numeric(k)
-  ans[as.numeric(names(tab))] <- tab
-  ans <- ans/ncol(pmat)
-  cumsum(ans)[1:(k-1)]
-}
-
-get_sub_errs <- function(pmat, true_ys, ks) {
-  k <- nrow(pmat)
-  p2 <- apply(pmat, 2, rank)
-  true_ranks <- p2[cbind(true_ys, 1:ncol(pmat))]
-  1 - sapply(ks, function(v) mean(binmom(true_ranks - 1, k - 1, v - 1)))
-}
-
-get_vande <- function(xs = seq(0, 1, 0.01), d) {
-  ans <- xs %*% t(rep(1, d+1)) 
-  ans <- ans ^ (col(ans) - 1)
-  ans
-}
-
-avrisk <- function(k, bt) {
-  d <- length(bt) - 1
-  sapply(k, function(k) (k - 1) * sum(bt/(0:d + k - 1)))
-}
 
 
 
-library(pracma)
+
 true_d <- 3
 k <- 300
 sigma <- 1
