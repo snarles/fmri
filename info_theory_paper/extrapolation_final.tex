@@ -52,6 +52,7 @@
 \newcommand{\bx}{\boldsymbol{x}}
 \newcommand{\bX}{\boldsymbol{X}}
 
+\newcommand{\bH}{\boldsymbol{H}}
 
 \begin{abstract}
 The difficulty of multi-class classification generally increases with
@@ -1048,8 +1049,6 @@ requires the use of the \emph{regression adjustment} method taken from
 measurement error models, and therefore can only yield unbiased
 estimates for \emph{polynomial} basis functions $h_\ell(u)$.
 
-\subsubsection{Method 1: Moment method}
-
 If we plug in the assumed linear model \eqref{eq:linearKu} into the
 identity \eqref{eq:avrisk_identity}, then we get
 \begin{align}
@@ -1075,9 +1074,201 @@ estimate
 is unbiased for $\beta$, under any choice of positive weights $w_k$.
 The estimate of $\text{AvRisk}_{k_2,r_{train}}$ is similarly obtained
 from \eqref{eq:avrisk_linear}, via
-\[
+\begin{equation}\label{eq:avrisk_hat}
 \widehat{\text{AvRisk}_{k_2,r_{train}}} = \sum_{\ell=1}^m \hat{\beta}_\ell H_{\ell, k_2}.
+\end{equation}
+
+\subsection{Large-Sample Theory}
+
+How good are the estimated average risks \eqref{eq:avrisk_hat}?  Let
+us investigate the accuracy of the estimates in the limit where
+$k_1 \to \infty$.
+
+If we fix the number of classes $k_2$ which defines the estimation
+target, then we need not use the estimator \eqref{eq:avrisk_hat},
+since once $k_1 > k_2$, we can use the $\text{AvTestRisk}_{k_2}$ as an
+estimator instead, which can easily be shown to a have a convergence
+rate of $O(1/\sqrt{k_1})$ to the true average risk.  Therefore, if we
+want to quantify the performance of the regression-based
+estimator \eqref{eq:avrisk_hat}, it does not make sense to look at
+asymptotic settings where $k_2$ is fixed.  One approach is to specify
+a setting where $k_2$ changes as a function of $k_1$.  However, the
+approach we will take is to look at the minimax error: that is, to
+look at the maximum discrepancy between the estimate and the true
+average risk over all $k_2$ simultaneously.  The performance criterion
+is the minimax error, defined
+\begin{equation}\label{eq:minimax_error}
+\text{MinimaxError} = \sup_{k_2 > 2} |\widehat{\text{AvRisk}_{k_2,r_{train}}} - \text{AvRisk}_{k_2,r_{train}}|.
+\end{equation}
+
+Note that if the parametric model \eqref{eq:linearKu} is correct, then
+\[
+\text{AvRisk}_{k_2,r_{train}} = \sum_{\ell=1}^m \beta_\ell H_{\ell, k_2} = \langle \vec{H}_{k_2}, \beta \rangle
 \]
+where $\vec{H}_{k_2} = (H_{\ell, k_2})_{\ell=1}^m$.
+Then, we get
+\[
+\text{MinimaxError} = \sup_{k_2 > 2} |\langle \vec{H}_{k_2}, \beta - \hat{\beta}\rangle|.
+\]
+If we assume that all the basis functions $h_\ell(u)$ are bounded by a
+common constant $M$, then it follows that $H_\ell, k$ are also bounded by the same constant $M$,
+and we have
+\[
+\text{MinimaxError} \leq M ||\beta - \hat{\beta}||_1 \leq M \sqrt{m}||\beta - \hat{\beta}||_2
+\]
+
+Therefore, any convergence rate we can establish for $\hat{\beta}$ is
+inherited by the minimax error.  Meanwhile, we can show that choosing
+$k_0$ sufficiently large that $(\vec{H}_2,\hdots,\vec{H}_{k_0})$ is
+full-rank, and setting weights $w_k = I\{k \leq k_0\}$, then the
+resulting $\hat{\beta}$ converges to the true $\beta$ at the usual
+$O(1/\sqrt{n})$ rate.  We state the result in the following theorem.
+
+\begin{theorem}
+Consider a sequence of problems where the model $\mathcal{M}$,
+$r_{train}$, $r_{test}$, joint distribution
+$\{F_y\}_{y \in \mathcal{Y}}$, and class sampling distribution $\eta$
+are fixed as $k_1 \to \infty$.  Further assume that the function
+$\bar{K}(u)$ defined by $\{F_y\}_{y \in \mathcal{Y}}$, $\eta$, and
+$\mathcal{M}$ satisfies
+\[
+\bar{K}(u) = \sum_{\ell = 1}^m \beta_\ell h_\ell(u)
+\]
+for some basis functions $h_\ell(u)$.
+%and that those basis functions satisfy
+%\[
+%\max_{\ell=1}^m ||h_\ell(u)||_\infty < M
+%\]
+%for some constant $M < \infty$.
+Let $k_0$ be an integer sufficiently large so that
+\[
+\text{Rank}(\vec{H}_2,\hdots,\vec{H}_{k_0}) = m.
+\]
+Then, defining
+\[
+\hat{\beta} = \argmin_\beta \sum_{k=2}^{k_0} \left(\text{AvTestRisk}_k - \sum_{\ell=1}^m \beta_\ell H_{\ell, k}\right)^2
+\]
+there exists some constant $C < \infty$ such that
+\[
+\lim_{k_1 \to \infty} \sqrt{k_1}||\hat{\beta}-\beta||_2 = C.
+\]
+\end{theorem}
+
+\textbf{Proof.}
+Note that the statistics $\text{AvTestRisk}_k$ are U-statistics of the
+$k_1$ pairs of test and training samples.  Therefore, by Hoeffding
+1948, it follows that
+$(\text{AvTestRisk}_2,\hdots, \text{AvTestRisk}_{k_0})$ is
+asymptotically normal with covariance satisfying
+\[
+\lim_{k_1 \to \infty} k_1 \Cov(\text{AvTestRisk}_2,\hdots, \text{AvTestRisk}_{k_0}) = \Sigma,
+\]
+for some positive semidefinite matrix $\Sigma$.  Defining $\bH$ to be
+the matrix with rows $\vec{H}_2,\hdots,\vec{H}_{k_0}$, this then
+implies that
+\[
+\lim_{k_1 \to \infty} k_1 \Cov(\hat{\beta}) = (\bH^T \bH)^{-1} \bH^T \Sigma \bH (\bH^T \bH)^{-1}.
+\]
+It follows that defining
+\[
+C = \sqrt{\text{tr} (\bH^T \bH)^{-1} \bH^T \Sigma \bH (\bH^T \bH)^{-1}}
+\]
+we have
+\[
+\lim_{k_1 \to \infty} \sqrt{k_1}||\hat{\beta}-\beta||_2 = C.
+\]
+
+\appendix
+\section{Appendix}
+
+
+
+
+\subsection{Proofs}
+
+\begin{lemma}\label{lemma:U_function}
+Defining $U_{y,\hat{F}_y}(x)$ as in \eqref{eq:U_function}.
+\end{lemma}
+
+
+
+\section*{References}
+
+\small
+
+[1] Kay, K. N., Naselaris, T., Prenger, R. J., \& Gallant, J. L. (2008). ``Identifying natural images from human brain activity.'' 
+\emph{Nature}, 452(March), 352-355.
+
+[2] Deng, J., Berg, A. C., Li, K., \& Fei-Fei, L. (2010). ``What does classifying more than 10,000 image categories tell us?'' \emph{Lecture Notes in Computer Science}, 6315 LNCS(PART 5), 71-84. 
+
+[3] Garfield, S., Stefan W., \& Devlin, S. (2005). ``Spoken language classification using hybrid classifier combination." 
+\emph{International Journal of Hybrid Intelligent Systems} 2.1: 13-33.
+
+[4] Anonymous, A. (2016). ``Estimating mutual information in high dimensions via classification error.''  Submitted to 
+\emph{NIPS 2016.}
+
+[5] Tewari, A., \& Bartlett, P. L. (2007). ``On the Consistency of Multiclass Classification Methods.''
+\emph{Journal of Machine Learning Research}, 8, 1007-1025.
+
+[6] Hastie, T., Tibshirani, R., \& Friedman, J., (2008). \emph{The elements
+of statistical learning.} Vol. 1. Springer, Berlin: Springer series in
+statistics.
+
+[7] Arnold, Barry C., \& Strauss, D.  (1991). ``Pseudolikelihood estimation: some examples." \emph{Sankhya: The Indian Journal of Statistics, Series B}: 233-243.
+
+[8] Cox, D.R., \& Hinkley, D.V. (1974). \emph{Theoretical statistics.} Chapman and Hall. ISBN 0-412-12420-3
+
+[9] Lawson, C. L., \& Hanson, R. J. (1974). \emph{Solving least squares problems.} Vol. 161. Englewood Cliffs, NJ: Prentice-hall.
+
+[10] Hong, J., Mohan, K. \& Zeng, D. (2014). ``CVX. jl: A Convex Modeling Environment in Julia."
+
+[11] Domahidi, A., Chu, E., \& Boyd, S. (2013). "ECOS: An SOCP solver for embedded systems." \emph{Control Conference (ECC), 2013 European. IEEE.}
+
+[12] Achanta, R., \& Hastie, T. (2015) "Telugu OCR Framework using Deep Learning." arXiv preprint arXiv:1509.05962 .
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%% DELETED SECTIONS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsubsection{Method 2: Regression adjustment method}
 %Even restricting ourselves to parametric models, there are wide
@@ -1229,7 +1420,6 @@ The algorithm is summarized below.
 }
 % summary of algorithm
 
-
 \subsection{Convergence analysis}
 
 
@@ -1331,14 +1521,6 @@ Under this moment constraint, estimate $\hat{K}(u)$ using pseudolikelihood.
 \item Either of the above two approaches, plus a monotonicity constraint on $\hat{K}(u).$
 \end{enumerate}
 
-
-
-
-
-
-
-\appendix
-\section{Appendix}
 
 
 \subsection{Measurement error models}\label{sec:me}
@@ -1462,70 +1644,3 @@ Then an unbiased estimate of $\beta$ can be obtained via an importance sampling 
 \[
 \hat{\beta} = \argmin_\beta \sum_{i=1}^n \frac{1}{\eta(\theta_i)} (y_i - \bx_i^T \beta).
 \]
-
-\subsection{Proofs}
-
-\begin{lemma}\label{lemma:U_function}
-Defining $U_{y,\hat{F}_y}(x)$ as in \eqref{eq:U_function}.
-\end{lemma}
-
-
-
-\section*{References}
-
-\small
-
-[1] Kay, K. N., Naselaris, T., Prenger, R. J., \& Gallant, J. L. (2008). ``Identifying natural images from human brain activity.'' 
-\emph{Nature}, 452(March), 352-355.
-
-[2] Deng, J., Berg, A. C., Li, K., \& Fei-Fei, L. (2010). ``What does classifying more than 10,000 image categories tell us?'' \emph{Lecture Notes in Computer Science}, 6315 LNCS(PART 5), 71-84. 
-
-[3] Garfield, S., Stefan W., \& Devlin, S. (2005). ``Spoken language classification using hybrid classifier combination." 
-\emph{International Journal of Hybrid Intelligent Systems} 2.1: 13-33.
-
-[4] Anonymous, A. (2016). ``Estimating mutual information in high dimensions via classification error.''  Submitted to 
-\emph{NIPS 2016.}
-
-[5] Tewari, A., \& Bartlett, P. L. (2007). ``On the Consistency of Multiclass Classification Methods.''
-\emph{Journal of Machine Learning Research}, 8, 1007-1025.
-
-[6] Hastie, T., Tibshirani, R., \& Friedman, J., (2008). \emph{The elements
-of statistical learning.} Vol. 1. Springer, Berlin: Springer series in
-statistics.
-
-[7] Arnold, Barry C., \& Strauss, D.  (1991). ``Pseudolikelihood estimation: some examples." \emph{Sankhya: The Indian Journal of Statistics, Series B}: 233-243.
-
-[8] Cox, D.R., \& Hinkley, D.V. (1974). \emph{Theoretical statistics.} Chapman and Hall. ISBN 0-412-12420-3
-
-[9] Lawson, C. L., \& Hanson, R. J. (1974). \emph{Solving least squares problems.} Vol. 161. Englewood Cliffs, NJ: Prentice-hall.
-
-[10] Hong, J., Mohan, K. \& Zeng, D. (2014). ``CVX. jl: A Convex Modeling Environment in Julia."
-
-[11] Domahidi, A., Chu, E., \& Boyd, S. (2013). "ECOS: An SOCP solver for embedded systems." \emph{Control Conference (ECC), 2013 European. IEEE.}
-
-[12] Achanta, R., \& Hastie, T. (2015) "Telugu OCR Framework using Deep Learning." arXiv preprint arXiv:1509.05962 .
-
-
-\end{document}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
