@@ -95,7 +95,7 @@ plot(20:300, avrisk(20:300, bt), type = "l")
 ##  Spline
 #####
 
-nsplines <- 20
+nsplines <- 200
 knts <- seq(0, 1, length.out = nsplines + 2)
 knts <- knts[-c(1, nsplines + 2)]
 ffs <- lapply(knts, spline1_maker)
