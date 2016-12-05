@@ -61,7 +61,7 @@ spline1_maker <- function(t0) {
 get_f_moments <- function(ff, ks, res = 1e3) {
   ts <- seq(0, 1, 1/res)
   ys <- ff(ts)
-  Tmat <- sapply(ks, function(k) (k - 2) * ts^(k - 2))
+  Tmat <- sapply(ks, function(k) (k - 1) * ts^(k - 2))
   Tprod <- Tmat * ys
   fmoms <- colSums(Tprod)/res
   fmoms
