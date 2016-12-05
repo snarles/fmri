@@ -43,10 +43,8 @@ true_ys <- rep(1:20, each = 50)
 nsplines <- 1000
 knts <- seq(0, 1, length.out = nsplines + 2)
 knts <- knts[-c(1, nsplines + 2)]
-#ffs <- lapply(knts, spline1_maker)
 Kmax <- 400
 ks <- 2:20
-#MM0 <- make_moment_mat(ffs, c(1:20, Kmax), res = 1e5)
 MM <- spline1_moments(knts, 1:Kmax)
 
 xmat <- MM[ks, ]
@@ -55,10 +53,32 @@ avr <- get_sub_errs(pmat, true_ys, ks)
 #bt <- pinv(xmat) %*% avr
 bt <- nnls::nnls(xmat, avr)$x
 
-plot(1:Kmax, MM %*% bt, type = "l")
+plot(1:Kmax, MM %*% bt, type = "l", main = "predicted err")
 
 list((MM %*% bt)[Kmax], 1-ac0)
-#plot(MM %*% bt, type = "l")
-#1-ac0
 
+xs <- seq(0, 1, 0.01)
+plot(xs, spline1_dm(knts, xs) %*% bt, type = "l", main = "K(u)")
+
+## nonpositive
+
+nsplines <- 15
+knts <- rev(1 - seq(0, 1, length.out = nsplines + 2)^2)
+knts <- knts[-c(1, nsplines + 2)]
+Kmax <- 400
+ks <- 2:20
+MM <- spline1_moments(knts, 1:Kmax)
+
+xmat <- MM[ks, ]
+avr <- get_sub_errs(pmat, true_ys, ks)
+
+bt <- pinv(xmat) %*% avr
+#plot(bt)
+
+plot(1:Kmax, MM %*% bt, type = "l", main = "predicted err")
+
+list((MM %*% bt)[Kmax], 1-ac0)
+
+xs <- seq(0, 1, 0.01)
+plot(xs, spline1_dm(knts, xs) %*% bt, type = "l", main = "K(u)")
 

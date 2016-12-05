@@ -73,6 +73,12 @@ spline1_moments <- function(ts, ks) {
   t(tmat^kmat/kmat - tmat + (kmat - 1)/kmat)
 }
 
+spline1_dm <- function(ts, xs) {
+  xmat <- xs %*% t(rep(1, length(ts)))
+  tmat <- rep(1, length(xs)) %*% t(ts)
+  matrix(pmax(0, xmat - tmat), nrow(xmat), ncol(xmat))
+}
+
 make_moment_mat <- function(flist, ks, res = 1e3) {
   sapply(flist, function(fl) get_f_moments(fl, ks, res))
 }
