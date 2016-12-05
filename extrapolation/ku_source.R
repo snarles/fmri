@@ -67,9 +67,17 @@ get_f_moments <- function(ff, ks, res = 1e3) {
   fmoms
 }
 
+spline1_moments <- function(ts, ks) {
+  tmat <- ts %*% t(rep(1, length(ks)))
+  kmat <- rep(1, length(ts)) %*% t(ks)
+  t(tmat^kmat/kmat - tmat + (kmat - 1)/kmat)
+}
+
 make_moment_mat <- function(flist, ks, res = 1e3) {
   sapply(flist, function(fl) get_f_moments(fl, ks, res))
 }
+
+
 
 # ffs <- lapply(seq(0, 1, 0.1), spline1_maker)
 # plot(ffs[[5]](seq(0, 1, 0.01)))
