@@ -28,6 +28,8 @@ pmat <- knnprobs$knn_415154_probs_15
 (ac0 <- err_knn400[err_knn400$k==500, "te"])
 pmat <- knnprobs$knn_415154_probs_25
 
+ac0 <- 0.601
+pmat <- read.table("~/github/predict_test_error/naive/tel400_logprobs/naive_tel400_20.logprobs")
 
 
 dim(pmat) # 20 1000
@@ -53,6 +55,8 @@ avr <- get_sub_errs(pmat, true_ys, ks)
 #bt <- pinv(xmat) %*% avr
 bt <- nnls::nnls(xmat, avr)$x
 
+plot(avr); lines(xmat %*% bt)
+
 plot(1:Kmax, MM %*% bt, type = "l", main = "predicted err")
 
 list((MM %*% bt)[Kmax], 1-ac0)
@@ -62,8 +66,8 @@ plot(xs, spline1_dm(knts, xs) %*% bt, type = "l", main = "K(u)")
 
 ## nonpositive
 
-nsplines <- 15
-knts <- rev(1 - seq(0, 1, length.out = nsplines + 2)^2)
+nsplines <- 5
+knts <- seq(0, 1, length.out = nsplines + 2)
 knts <- knts[-c(1, nsplines + 2)]
 Kmax <- 400
 ks <- 2:20
@@ -74,6 +78,8 @@ avr <- get_sub_errs(pmat, true_ys, ks)
 
 bt <- pinv(xmat) %*% avr
 #plot(bt)
+
+plot(avr); lines(xmat %*% bt)
 
 plot(1:Kmax, MM %*% bt, type = "l", main = "predicted err")
 
