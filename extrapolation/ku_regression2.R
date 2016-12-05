@@ -41,6 +41,10 @@ true_ys <- rep(1:20, each = 50)
 
 avr <- get_sub_errs(pmat, true_ys, ks)
 avr
+res <- lm(avr ~ log(ks))
+(pred_exp <- sum(res$coefficients * c(1, log(400))))
+
+list(avr[19], mean(1-ac0), pred_exp)
 
 ####
 ##  Spline basis
@@ -94,3 +98,27 @@ list((MM %*% bt)[Kmax], 1-ac0)
 xs <- seq(0, 1, 0.01)
 plot(xs, spline1_dm(knts, xs) %*% bt, type = "l", main = "K(u)")
 
+## polynomial
+
+d <- 5
+k <- 20
+ws <- exp(0 * (1:(k-1)))
+ws <- ws/sum(ws)
+kmat <- get_kmat(k, d)
+cvec <- get_rank_prop(pmat, true_ys)
+
+(bt <- solve(t(kmat) %*% diag(ws) %*% kmat, t(kmat) %*% diag(ws) %*% cvec))
+sum(bt)
+
+ku <- get_vande(d = d) %*% bt
+
+
+yhat <- kmat %*% bt
+yhat
+
+plot(kmat[, 2], cvec, ylim = c(0, 0.5))
+lines(kmat[, 2], yhat, col = "red")
+lines(seq(0, 1, 0.01), ku, col = "blue")
+
+avrisk(k, bt)
+avrisk(400, bt)
