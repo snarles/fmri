@@ -1178,6 +1178,22 @@ we have
 \lim_{k_1 \to \infty} \sqrt{k_1}||\hat{\beta}-\beta||_2 = C.
 \]
 
+\section{Results}
+
+\begin{table}
+\centering
+\begin{tabular}{|c||c|c|c|c|c|}\hline
+Classifier      & Test $\text{err}^{(20)}$ & Test $\text{err}^{(400)}$ & $\hat{p}^{EXP}_{400}$ & $\hat{p}^{POS}_{400}$ & $\hat{p}^{(5)}_{400}$\\ \hline
+Naive Bayes     & 0.049                   & 0.399                   & 0.108              & \textbf{0.142}      & 0.079             \\ \hline
+Logistic        & 0.078                   & 0.289                   & 0.166              & \textbf{0.188}      & 0.130             \\ \hline
+SVM             & 0.140                   & 0.455                   & 0.299              & \textbf{0.313}      & 0.227             \\ \hline
+$\epsilon$-NN   & 0.049                   & 0.409                   & 0.084              & \textbf{0.590}      & 0.102             \\ \hline
+Deep neural net & 0.005                   & 0.014                   & \textbf{0.011}     & 0.093               & 0.010             \\ \hline
+\end{tabular}
+\caption{Performance extrapolation: predicting the accuracy on 400 classes using data from 20 classes on a Telugu character dataset.
+$\epsilon = 0.002$ for $\epsilon$-nearest neighbors.}
+\end{table}
+
 \appendix
 \section{Appendix}
 
