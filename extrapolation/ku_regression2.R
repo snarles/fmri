@@ -28,6 +28,9 @@ pmat <- knnprobs$knn_415154_probs_15
 (ac0 <- err_knn400[err_knn400$k==500, "te"])
 pmat <- knnprobs$knn_415154_probs_25
 
+ac0 <- 1 - 0.0140
+pmat <- read.table("~/github/predict_test_error/train_tel/sub_sub_runs/deepslim_010855_20.logprobs")
+
 ac0 <- 0.601
 pmat <- read.table("~/github/predict_test_error/naive/tel400_logprobs/naive_tel400_20.logprobs")
 
@@ -35,6 +38,9 @@ pmat <- read.table("~/github/predict_test_error/naive/tel400_logprobs/naive_tel4
 dim(pmat) # 20 1000
 true_ys <- rep(1:20, each = 50)
 
+
+avr <- get_sub_errs(pmat, true_ys, ks)
+avr
 
 ####
 ##  Spline basis
