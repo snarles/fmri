@@ -6,7 +6,7 @@ library(pracma)
 source("idloss/mi_source.R")
 n <- 200
 p <- 5
-sgma <- 0.5
+sgma <- 2
 
 X <- randn(n, p)
 Y <- X + sgma * randn(n, p)
@@ -17,3 +17,6 @@ Y <- X + sgma * randn(n, p)
 (mi_kde <- naive_kde_mi(X, Y, 0.3))
 ## cv kde estimate
 (mi_cv <- cv_kde_mi(X, Y, 0.3))
+
+## nn estimate
+(mi_nn <- nn_mi(X, Y))
