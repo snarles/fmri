@@ -1,0 +1,48 @@
+####
+##  Methods for estimating mutual information for continuous RVs
+####
+
+library(pracma)
+
+logsumexp <- function(v) max(v) + log(sum(exp(v - max(v))))
+
+####
+##  naive kernel density estimate
+####
+
+naive_kde_mi <- function(X, Y, h, mc.mult = 10) {
+  mi_kdes <- sapply(1:mc.mult, function(i) {
+    sampX <- X + h * randn(nrow(X), ncol(X))
+    sampY <- Y + h * randn(nrow(X), ncol(X))
+    dX <- pdist2(X, sampX)
+    dY <- pdist2(X, sampX)
+    dXY <- dX + dY
+    lseX <- apply(dX, 2, logsumexp)
+    lseY <- apply(dX, 2, logsumexp)
+    lseXY <- apply(dXY, 2, logsumexp)
+    integrands <- log(nrow(X)) - 1/2/h^2 * (lseXY - lseX - lseY)
+    integrands
+  })
+  mean(mi_kdes)
+}
+
+####
+##  cross-validated kernel density estimate
+####
+cv_kde_mi <- function(X, Y, h, mc.mult = 10) {
+  mi_kdes <- sapply(1:mc.mult, function(i) {
+    sampX <- X + h * randn(nrow(X), ncol(X))
+    sampY <- Y + h * randn(nrow(X), ncol(X))
+    dX <- pdist2(X, sampX)
+    dY <- pdist2(X, sampX)
+    diag(dX) <- -Inf
+    diag(dY) <- -Inf
+    dXY <- dX + dY
+    lseX <- apply(dX, 2, logsumexp)
+    lseY <- apply(dX, 2, logsumexp)
+    lseXY <- apply(dXY, 2, logsumexp)
+    integrands <- log(nrow(X) - 1) - 1/2/h^2 * (lseXY - lseX - lseY)
+    integrands
+  })
+  mean(mi_kdes)
+}
