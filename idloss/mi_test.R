@@ -27,3 +27,20 @@ k <- 20
 (idl <- id_cv_loss(X, Y, k, mc.reps = 1000))
 (mi_li <- lineId::Ihat_LI(idl, k))
 (mi_np <- lineId::aba_to_mi_lower(k, 1 - idl))
+
+
+####
+##  check parmigene univariate
+####
+n <- 500
+sgma <- 0.01
+x <- rnorm(n)
+y <- x + sgma * rnorm(n)
+(mi_true <- 1/2 * log(1 + sgma^(-2)))
+
+library(parmigene)
+knnmi(x, y)
+knnmi(x, y^3)
+knnmi(x^3, y^3)
+
+

@@ -220,9 +220,9 @@ Suppose we observe pairs $(X_i,Y_i)_{i=1}^n$ iid from density $p(x, y)$.
 \item Estimate a (sparse) regression model for $\E[y|x]$.
 \item Estimate the noise model for $Y$.
 \item Estimate the \emph{identification risk} $p$ using cross-validation.
-\item Relate the identification risk to mutual information $I(X; Y)$:
+\item Use the identification risk to obtain a lower bound for the mutual information $I(X; Y)$:
 \[
-I(X; Y) \approx f(p)
+I(X; Y) \geq f(p)
 \]
 where $f$ is a function that we derive theoretically. 
 \end{enumerate}
@@ -287,25 +287,40 @@ Hence,
 \[
 \text{BayesRisk}_k \leq \text{IdRisk}_k.
 \]
-\item \textbf{High-dimensional result.}  In a certain high-dimensional
-  asymptotic regime, there exists a limiting functional relationship
-\[
-\text{Bayes risk} = \pi_k(\sqrt{2 I(X; Y)})
-\]
-%\item \textbf{Theorem.} (Z., Benjamini 2016)
-%For every $k \geq 2$, there exists a function $g_k$ such that
+%\item \textbf{High-dimensional result.}  In a certain high-dimensional
+%  asymptotic regime, there exists a limiting functional relationship
 %\[
-%I(X; Y) \geq g_k(\text{IdRisk}_k).
+%\text{Bayes risk} = \pi_k(\sqrt{2 I(X; Y)})
 %\]
+\item \textbf{Theorem.} (Z., Benjamini 2016) There exists a function $g_k$ such that
+%For every $k \geq 2$, there exists a function $g_k$ such that
+\[I(X; Y) \geq g_k(\text{IdRisk}_k).\]
 %$\Box$.
 \item Resulting estimator:
 \[
-\hat{I}_{IdLoss}(X; Y) = \frac{1}{2}(\pi_k^{-1}(\text{IdLoss}_k))^2
+\hat{I}_{IdLoss}(X; Y) = g_k(\text{IdLoss}_k)).
 \]
-where $\text{IdLoss}_k$ can either be the loss over a single test set of size $k$, or the L$k$oCV loss.
-\item \emph{Remark.} Although $\text{IdLoss}_k$ is unbiased for $\text{IdRisk}_k$, $g_k$ is nonlinear so $\hat{I}_{IdLoss}$ may be biased.
+%\item \emph{Remark.} Although $\text{IdLoss}_k$ is unbiased for $\text{IdRisk}_k$, $g_k$ is nonlinear so $\hat{I}_{IdLoss}$ may be biased.
 \end{itemize}
 \end{frame}
+
+\begin{frame}
+\frametitle{Functions}
+
+Illustration of $C_k = g_k^{-1}$
+\begin{center}
+\includegraphics[scale = 0.34]{ck_2.pdf}
+\includegraphics[scale = 0.34]{ck_3.pdf}
+\includegraphics[scale = 0.34]{ck_4.pdf}
+\end{center}
+As information increases, the maximal identification risk goes to 0.
+[note: pictures need to be rotated]
+%We find these curves using \emph{variational calculus}.
+
+\end{frame}
+
+
+\end{document}
 
 \begin{frame}
 \frametitle{Gaussian example}
