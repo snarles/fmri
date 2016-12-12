@@ -178,11 +178,12 @@ Suppose we observe pairs $(X_i,Y_i)_{i=1}^n$ iid from density $p(x, y)$
 \[
 I(X; Y) = \int \log \left(\frac{p(x, y)}{p(x)p(y)}\right) p(x, y) dx dy
 \]
-\item Simply using plugging in kernel density estimate $\hat{p}(x, y)$ leads to large bias (Beirlant et al. 2001)
-\item Jackknifed estimate gives better result (Ivanov and Rozhkova 1981)
-\[
-\hat{I}(X; Y) = \frac{1}{n} \sum_{i=1}^n \log \left(\frac{\hat{p}_{-i}(x_i, y_i)}{\hat{p}_{-i}(x_i)\hat{p}_{-i}(y_i)}\right)
-\]
+\item Simply using plugging in kernel density estimate $\hat{p}(x, y)$ leads to bias (Beirlant et al. 2001)
+\item Jackknifed estimate reduces bias (Ivanov and Rozhkova 1981)
+%\[
+%\hat{I}(X; Y) = \frac{1}{n} \sum_{i=1}^n \log \left(\frac{\hat{p}_{-i}(x_i, y_i)}{\hat{p}_{-i}(x_i)\hat{p}_{-i}(y_i)}\right)
+%\]
+\item Alternative to KDE: nearest neighbors (Mnatsakanov et al. 2008, Goria et al. 2005, Singh et. al. 2003)
 \end{itemize}
 \end{frame}
 
@@ -196,7 +197,7 @@ I(X; Y) = \int \log \left(\frac{p(x, y)}{p(x)p(y)}\right) p(x, y) dx dy
 \item Functional magnetic resonance imaging
 \end{itemize}
 \item One approach is to assume joint multivariate normality of $X$, $Y$, but this reduces mutual information to a linear statistic.
-\item Other approaches: binning (Bialek et al. 1991, Paninski 2003), confusion matrix of a classifier (Treves 1997, Quiroga et al. 2009).
+\item Other approaches: binning (Bialek et al. 1991, Paninski 2003), confusion matrix of a classifier (Treves 1997, Quiroga et al. 2009)
 \end{itemize}
 \end{frame}
 
@@ -218,13 +219,13 @@ I(X; Y) = \int \log \left(\frac{p(x, y)}{p(x)p(y)}\right) p(x, y) dx dy
 Suppose we observe pairs $(X_i,Y_i)_{i=1}^n$ iid from density $p(x, y)$.
 \begin{enumerate}
 \item Estimate a (sparse) regression model for $\E[y|x]$.
-\item Estimate the noise model for $Y$.
+%\item Estimate the noise model for $Y$.
 \item Estimate the \emph{identification risk} $p$ using cross-validation.
 \item Use the identification risk to obtain a lower bound for the mutual information $I(X; Y)$:
 \[
-I(X; Y) \geq f(p)
+I(X; Y) \geq g(p)
 \]
-where $f$ is a function that we derive theoretically. 
+where $g$ is a function that we derive theoretically. 
 \end{enumerate}
 \end{frame}
 
@@ -233,7 +234,7 @@ where $f$ is a function that we derive theoretically.
 \begin{itemize}
 \item Pairs $(x_i,y_i)_{i=1}^n$, where $X$ is $p$-dimensional and $Y$ is $q$-dimensional.
 \item Data matrices $\bX_{n \times p}$, $\bY_{n \times q}$.
-\item For each column of $Y$, fit sparse model $Y^{(i)} \approx X^T \beta^{(i)}  + \epsilon$, e.g. by using elastic net (Zou 1998), 
+\item For each column of $Y$, fit sparse model $Y^{(i)} \approx X^T \beta^{(i)}  + \epsilon$, e.g. by using elastic net (Zou 2008), 
 \[
 \hat{\beta}^{(i)} = \text{argmin}_\beta ||\bX^T \beta^{(i)} - Y^{(i)}||^2 + \lambda_2 ||\beta^{(i)}||_2^2 + \lambda_1 ||\beta^{(i)}||_1
 \]
@@ -254,26 +255,14 @@ Two ways to evaluate the predictive accuracy of the regression model:
 \[
 \text{MSE} = \frac{1}{k} \sum_{i=1}^k ||y_i^* - \hat{y}_i^*||^2.
 \]
-\item Identification loss:
+\item Identification loss (Kay 2008):
 \[
 \text{IdLoss}_k = \frac{1}{k} \sum_{i=1}^k (1 - I\{\hat{y}_i^* \text{ is nearest neighbor of }y_i^*\}).
 \]
 \end{itemize}
-\end{frame}
 
-\begin{frame}
-\frametitle{Cross-validated loss}
-Leave-$k$-out cross-validation (L$k$oCV) can be used for both squared-error loss and identification loss.
-\begin{itemize}
-\item Start with a dataset $(x_i,y_i)_{i=1}^N$.
-\item Let $n = N-k$.  Consider all ${N}\choose{k}$ partitions of the dataset into a test set $(\bX, \bY)$ and training set $(\bX^*, \bY^*)$.
-\item For each partition, compute the loss.
-\item Define the L$k$oCV loss as the average loss over ${N}\choose{k}$ partitions.
-\end{itemize}
-\emph{Computational note}.  One can subsample to avoid computing all
-${N}\choose{k}$ partitions.  In particular, if $m = N/k$, then one can
-use $m$-fold cross-validation which uses $m$ partitions that have
-disjoint test sets.
+[note: point out that while idloss was introduced by Kay, that we are the first to consider theory, and add slide about 1d example/robustness]
+
 \end{frame}
 
 \begin{frame}
@@ -295,15 +284,32 @@ Hence,
 %\]
 \item \textbf{Theorem.} (Z., Benjamini 2016) There exists a function $g_k$ such that
 %For every $k \geq 2$, there exists a function $g_k$ such that
-\[I(X; Y) \geq g_k(\text{IdRisk}_k).\]
+\[I(X; Y) \geq g_k(\text{BayesRisk}_k).\]
 %$\Box$.
 \item Resulting estimator:
 \[
-\hat{I}_{IdLoss}(X; Y) = g_k(\text{IdLoss}_k)).
+\hat{I}_{IdLoss}(X; Y) = g_k(\text{IdLoss}_k).
 \]
 %\item \emph{Remark.} Although $\text{IdLoss}_k$ is unbiased for $\text{IdRisk}_k$, $g_k$ is nonlinear so $\hat{I}_{IdLoss}$ may be biased.
 \end{itemize}
 \end{frame}
+
+
+\begin{frame}
+\frametitle{Cross-validated loss}
+Leave-$k$-out cross-validation (L$k$oCV) can be used for both squared-error loss and identification loss.
+\begin{itemize}
+\item Start with a dataset $(x_i,y_i)_{i=1}^N$.
+\item Let $n = N-k$.  Consider all ${N}\choose{k}$ partitions of the dataset into a test set $(\bX, \bY)$ and training set $(\bX^*, \bY^*)$.
+\item For each partition, compute the loss.
+\item Define the L$k$oCV loss as the average loss over ${N}\choose{k}$ partitions.
+\end{itemize}
+\emph{Computational note}.  One can subsample to avoid computing all
+${N}\choose{k}$ partitions.  In particular, if $m = N/k$, then one can
+use $m$-fold cross-validation which uses $m$ partitions that have
+disjoint test sets.
+\end{frame}
+
 
 \begin{frame}
 \frametitle{Functions}
@@ -320,24 +326,23 @@ As information increases, the maximal identification risk goes to 0.
 
 \end{frame}
 
-\section{Applications}
+%\section{Simulation}
 
-\begin{frame}
-\sectionpage
-\end{frame}
+%\begin{frame}
+%\sectionpage
+%\end{frame}
 
 \begin{frame}
 \frametitle{Simulation}
-
 
 \begin{center}
 \includegraphics[scale = 0.34]{../idloss/sim1_pairs.pdf}
 \end{center}
 \begin{itemize}
 \item Generate data: $(Y_1, Y_2) = f(X_1, X_2, \epsilon)$ where $f$ is nonlinear.
+\item Add extra noise dimensions $X_3, X_4, \hdots$.
 \item $n = 1000$.
 \item Compare Nearest-Neighbor estimator (Mnatsakov et al, 2008, implemented in {\tt FNN}) with our method using \emph{Random Forest}.
-\item Add extra noise dimensions $X_3, X_4, \hdots$.
 \end{itemize}
 
 %We find these curves using \emph{variational calculus}.
@@ -362,11 +367,6 @@ Extra dim & NN & RF $k = 10$ & RF $k=20$\\
 
 \end{frame}
 
-\begin{frame}
-\frametitle{Application to gene expression time series}
-to be contd
-\end{frame}
-
 \section{Theory}
 
 \begin{frame}
@@ -378,7 +378,7 @@ to be contd
 \frametitle{Functional formulation}
 Bayes identification risk $\text{BayesRisk}_k[p(x, y)]$ and mutual information $\text{I}[p(x, y)]$ are both \emph{functionals} of $p(x, y)$.
 \[
-\text{BayesAcc}_k[p(x, y)] = 1 - \frac{1}{k} \int p_X(x_1)\hdots p_X(x_k) \max_{i=1}^k p(y|x_i)  dx_1\hdots dx_k dy.
+\text{BayesAcc}_k[p(x, y)] = \frac{1}{k} \int p_X(x_1)\hdots p_X(x_k) \max_{i=1}^k p(y|x_i)  dx_1\hdots dx_k dy.
 \]
 \[
 \text{I}[p(x, y)] = \int p(x, y) \log \frac{p(x, y)}{p(x)p(y)} dx dy.
@@ -393,7 +393,7 @@ could be random vectors of any dimensionality.)  Supposing
 \[
 \text{I}[p(x, y)] \leq \iota,
 \]
-then can we find an upper bound on $\text{BayesAcc}_k[p(x, y)]$?
+then can we find an upper bound, $g_k^{-1}(\iota)$, on $\text{BayesAcc}_k[p(x, y)]$?
 
 \end{frame}
 
@@ -431,8 +431,25 @@ we have
 \]
 Then,
 \[
-\sup_{I(X; Y) = \iota} \text{BayesAcc}_k = \int_0^1 q_{\beta_\iota}(t) t^{k-1} dt.
+\sup_{I(X; Y) = \iota} \text{BayesAcc}_k = \int_0^1 q_{\beta_\iota}(t) t^{k-1} dt = g_k^{-1}(\iota).
 \]
+\end{frame}
+
+\section{Conclusion}
+
+\begin{frame}
+\sectionpage
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Application to gene expression time series}
+to be contd
+\end{frame}
+
+\begin{frame}
+\frametitle{Related work and future directions}
+to be contd
 \end{frame}
 
 \section{The End}
@@ -585,8 +602,12 @@ we have
 \]
 Then,
 \[
-\sup_{I(X; Y) = \iota} \text{BayesAcc}_k = \int_0^1 q_{\beta_\iota}(t) t^{k-1} dt.
+\sup_{I(X; Y) = \iota} \text{BayesAcc}_k = \int_0^1 q_{\beta_\iota}(t) t^{k-1} dt = g_k^{-1}(\iota).
 \]
 \end{frame}
+
+
+
+
 
 \end{document}
