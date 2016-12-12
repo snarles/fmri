@@ -204,7 +204,7 @@ I(X; Y) = \int \log \left(\frac{p(x, y)}{p(x)p(y)}\right) p(x, y) dx dy
 \begin{frame}
 \frametitle{Idea: Use sparsity!}
 \begin{center}
-\includegraphics[scale = 0.2]{sls.jpg}
+\includegraphics[scale = 0.05]{sls.jpg}
 \end{center}
 \begin{itemize}
 \item Suppose that $Y \approx f(X) + \epsilon$, where $f$ depends \emph{sparsely} on $X$.
@@ -257,7 +257,6 @@ Two ways to evaluate the predictive accuracy of the regression model:
 \[
 \text{IdLoss}_k = \frac{1}{k} \sum_{i=1}^k (1 - I\{\hat{y}_i^* \text{ is nearest neighbor of }y_i^*\}).
 \]
-where ``nearest neighbor'' is with respect to Mahalanobis distance $d(z,y) = (z-y)^T \hat{\Sigma}^{-1} (z-y)$.
 \end{itemize}
 \end{frame}
 
