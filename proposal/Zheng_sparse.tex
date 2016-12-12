@@ -118,7 +118,7 @@
 %----------------------------------------------------------------------------------------
 
 
-\title[Mutual information]{Estimating mutual information via identification risk}
+\title[Mutual information]{Estimating mutual information using sparse regression}
 
 \author{Charles Zheng} % Your name
 \institute[Stanford] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
@@ -196,27 +196,28 @@ I(X; Y) = \int \log \left(\frac{p(x, y)}{p(x)p(y)}\right) p(x, y) dx dy
 \item Functional magnetic resonance imaging
 \end{itemize}
 \item One approach is to assume joint multivariate normality of $X$, $Y$, but this reduces mutual information to a linear statistic.
+\item Other approaches: binning (Bialek et al. 1991, Paninski 2003), confusion matrix of a classifier (Treves 1997, Quiroga et al. 2009).
 \end{itemize}
 \end{frame}
 
+
 \begin{frame}
-\frametitle{Lower bounds on $I(X; Y)$ are still tractable}
+\frametitle{Idea: Use sparsity!}
+\begin{center}
+\includegraphics[scale = 0.2]{sls.jpg}
+\end{center}
 \begin{itemize}
-\item Using data-processing inequality,
-\[
-I(X; Y) \geq I(S(X), T(Y))
-\]
-where $S$ and $T$ are dimension-reducing inequalities (Bialek et al. 1991, Paninski 2003)
-\item When $Y$ is discrete, can be also be estimated from confusion matrix of a classifier (Treves 1997, Quiroga et al. 2009)
-\item \textbf{Our contribution}: A novel approach for approximate lower bounds of $I(X; Y)$, specialized for the high-dimensional setting.
+\item Suppose that $Y \approx f(X) + \epsilon$, where $f$ depends \emph{sparsely} on $X$.
+\item Can we exploit the sparsity to obtain an estimate of $I(X; Y)$?
 \end{itemize}
 \end{frame}
+
 
 \begin{frame}
 \frametitle{Our proposal}
 Suppose we observe pairs $(X_i,Y_i)_{i=1}^n$ iid from density $p(x, y)$.
 \begin{enumerate}
-\item Estimate a regression model (e.g. linear model or GLM) for $\E[y|x]$.
+\item Estimate a (sparse) regression model for $\E[y|x]$.
 \item Estimate the noise model for $Y$.
 \item Estimate the \emph{identification risk} $p$ using cross-validation.
 \item Relate the identification risk to mutual information $I(X; Y)$:
@@ -225,7 +226,6 @@ I(X; Y) \approx f(p)
 \]
 where $f$ is a function that we derive theoretically. 
 \end{enumerate}
-(We will stick with Gaussian linear model throughout talk.)
 \end{frame}
 
 \begin{frame}
@@ -233,15 +233,10 @@ where $f$ is a function that we derive theoretically.
 \begin{itemize}
 \item Pairs $(x_i,y_i)_{i=1}^n$, where $X$ is $p$-dimensional and $Y$ is $q$-dimensional.
 \item Data matrices $\bX_{n \times p}$, $\bY_{n \times q}$.
-\item Fit model $Y \approx X^T B  + \epsilon$, e.g. by using least-squares,
+\item For each column of $Y$, fit sparse model $Y^{(i)} \approx X^T \beta^{(i)}  + \epsilon$, e.g. by using elastic net (Zou 1998), 
 \[
-\hat{B}_{p \times q} = (\bX^T \bX)^{-1} \bX^T \bY.
+\hat{\beta}^{(i)} = \text{argmin}_\beta ||\bX^T \beta^{(i)} - Y^{(i)}||^2 + \lambda_2 ||\beta^{(i)}||_2^2 + \lambda_1 ||\beta^{(i)}||_1
 \]
-\item Estimate noise covariance $\hat{\Sigma}$ via residuals:
-\[
-\hat{\Sigma}_{q \times q} = \frac{1}{n-k} (\bY - \bX B)^T(\bY - \bX B).
-\]
-\item In higher dimensions, used regularized estimators for $\hat{B}$ and $\hat{\Sigma}$ (e.g. Zou et al. 2008, Ledoit 2003).
 \end{itemize}
 \end{frame}
 
