@@ -376,14 +376,14 @@ to be contd
 
 \begin{frame}
 \frametitle{Functional formulation}
-Identification risk $\text{IdRisk}_k[p(x, y)]$ and mutual information $\text{I}[p(x, y)]$ are both \emph{functionals} of $p(x, y)$.
+Bayes identification risk $\text{BayesRisk}_k[p(x, y)]$ and mutual information $\text{I}[p(x, y)]$ are both \emph{functionals} of $p(x, y)$.
 \[
-\text{IdAcc}_k[p(x, y)] = 1 - \frac{1}{k} \int p_X(x_1)\hdots p_X(x_k) \max_{i=1}^k p(y|x_i)  dx_1\hdots dx_k dy.
+\text{BayesAcc}_k[p(x, y)] = 1 - \frac{1}{k} \int p_X(x_1)\hdots p_X(x_k) \max_{i=1}^k p(y|x_i)  dx_1\hdots dx_k dy.
 \]
 \[
 \text{I}[p(x, y)] = \int p(x, y) \log \frac{p(x, y)}{p(x)p(y)} dx dy.
 \]
-where $\text{IdAcc}_k = 1 - \text{IdRisk}_k$.
+where $\text{BayesAcc}_k = 1 - \text{BayesRisk}_k$.
 \end{frame}
 
 \begin{frame}
@@ -393,9 +393,54 @@ could be random vectors of any dimensionality.)  Supposing
 \[
 \text{I}[p(x, y)] \leq \iota,
 \]
-then can we find an upper bound on $\text{IdAcc}_k[p(x, y)]$?
+then can we find an upper bound on $\text{BayesAcc}_k[p(x, y)]$?
 
 \end{frame}
+
+\begin{frame}
+\frametitle{Proof outline}
+\begin{enumerate}
+\item Reduce problem to optimization over univariate densities.
+\item Define the Lagrangian functional
+\[
+\mathcal{L}[q(x)] = -\text{BayesAcc}_k[q(x)] + \lambda \int_0^1 q(x) dx + \nu \text{I}[q(x)]
+\]
+which maps the univariate density $q(x)$ to a real number.
+\item Compute the functional derivative of the Lagrangian
+\[
+\nabla \mathcal{L}[q](x) = -t^{k-1} + \lambda + \nu (1 + \log q(x))
+\]
+\item Set $\nabla \mathcal{L}[q](x) = 0$, yielding
+\[
+q^*(t) = \alpha e^{\beta t^{k-1}}.
+\]
+\item Check that local minimizer is global minimizer.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Result}
+\textbf{Theorem}.
+For any $\iota > 0$, there exists $\beta_\iota \geq 0$ such that defining
+\[
+q_\beta(t) = \frac{\exp[\beta t^{k-1}]}{\int_0^1 \exp[\beta t^{k-1}]},
+\]
+we have
+\[
+\int_0^1 q_{\beta_\iota}(t) \log q_{\beta_\iota}(t) dt = \iota.
+\]
+Then,
+\[
+\sup_{I(X; Y) = \iota} \text{BayesAcc}_k = \int_0^1 q_{\beta_\iota}(t) t^{k-1} dt.
+\]
+\end{frame}
+
+\section{The End}
+
+\begin{frame}
+\sectionpage
+\end{frame}
+
 
 \begin{frame}
 \frametitle{Reduced Problem}
@@ -434,7 +479,7 @@ The information and average Bayes error can be written in terms of $q(x)$.
 \text{I}[p(x, y)] = \int_0^1 q(x) \log q(x) dx
 \]
 \[
-\text{IdAcc}_k[p(x, y)] = \int_{[0, 1]^k} \max_{i=1}^k q(x_i) dx_1 \cdots dx_k
+\text{BayesAcc}_k[p(x, y)] = \int_{[0, 1]^k} \max_{i=1}^k q(x_i) dx_1 \cdots dx_k
 \]
 
 
@@ -450,14 +495,14 @@ Overload the notation and ``redefine'' information and average Bayes error as fu
 \text{I}[q(x)] \stackrel{def}{=} \int_0^1 q(x) \log q(x) dx
 \]
 \[
-\text{IdAcc}_k[q(x)] \stackrel{def}{=} \frac{1}{k}\int_{[0, 1]^k} \max_{i=1}^k q(x_i) dx_1 \cdots dx_k
+\text{BayesAcc}_k[q(x)] \stackrel{def}{=} \frac{1}{k}\int_{[0, 1]^k} \max_{i=1}^k q(x_i) dx_1 \cdots dx_k
 \]
 
 \end{frame}
 
 \begin{frame}
 \frametitle{Optimization problem}
-We now pose the question: how do we find $q(x)$ which maximizes $\text{IdAcc}_k[q(x)]$ subject to $\text{I}[q(x)] \leq \iota$?
+We now pose the question: how do we find $q(x)$ which maximizes $\text{BayesAcc}_k[q(x)]$ subject to $\text{I}[q(x)] \leq \iota$?
 
 \begin{itemize}
 \item \emph{Domain of the optimization}: Recall that $q(x)$ satisfies $q(x) \geq 0$, $\int_0^1 q(x) dx = 1$, and is increasing in $x$.
@@ -467,7 +512,7 @@ Let $\mathcal{Q}$ denote the space of functions on $[0,1] \to [0,\infty)$ which 
 
 Hence the problem is
 \[
-\text{maximize}_{q(x) \in \mathcal{Q}}\text{ IdAcc}_k[q(x)]\text{ subject to }\int_0^1 q(x) dx = 1\text{ and }\text{I}[q(x)] \leq \iota.
+\text{maximize}_{q(x) \in \mathcal{Q}}\text{ BayesAcc}_k[q(x)]\text{ subject to }\int_0^1 q(x) dx = 1\text{ and }\text{I}[q(x)] \leq \iota.
 \]
 \end{frame}
 
@@ -475,7 +520,7 @@ Hence the problem is
 \begin{frame}
 \frametitle{Optimization problem}
 \[
-\text{maximize}_{q(x) \in \mathcal{Q}}\text{ IdAcc}_k[q(x)]\text{ subject to }\int_0^1 q(x) dx = 1\text{ and }\text{I}[q(x)] \leq \iota.
+\text{maximize}_{q(x) \in \mathcal{Q}}\text{ BayesAcc}_k[q(x)]\text{ subject to }\int_0^1 q(x) dx = 1\text{ and }\text{I}[q(x)] \leq \iota.
 \]
 \begin{itemize}
 \item Does a solution exist? \emph{Yes}, because the space of measures
@@ -484,7 +529,7 @@ Hence the problem is
   topology of weak convergence.
 \item Given a solution $q^*(x)$ exists, there exist Lagrange multipliers $\lambda \in \mathbb{R}$ and $\nu > 0$ such that $q^*$ minimizes
 \begin{align*}
-\mathcal{L}[q(x)] &= -\text{IdAcc}_k[q(x)] + \lambda \int_0^1 q(x) dx + \nu \text{I}[q(x)]
+\mathcal{L}[q(x)] &= -\text{BayesAcc}_k[q(x)] + \lambda \int_0^1 q(x) dx + \nu \text{I}[q(x)]
 \\&= \int_0^1 (-t^{k-1} + \lambda + \nu \log q(x)) q(x) dx.
 \end{align*}
 \end{itemize}
@@ -540,7 +585,7 @@ we have
 \]
 Then,
 \[
-\sup_{I(X; Y) = \iota} \text{IdAcc}_k = \int_0^1 q_{\beta_\iota}(t) t^{k-1} dt.
+\sup_{I(X; Y) = \iota} \text{BayesAcc}_k = \int_0^1 q_{\beta_\iota}(t) t^{k-1} dt.
 \]
 \end{frame}
 
