@@ -3,6 +3,7 @@
 ####
 
 library(pracma)
+library(FNN)
 
 logsumexp <- function(v) max(v) + log(sum(exp(v - max(v))))
 
@@ -52,15 +53,16 @@ cv_kde_mi <- function(X, Y, h, mc.mult = 10) {
 ##  Nearest-neighbor estimate
 ####
 
-nn_entropy <- function(X) {
-  n <- nrow(X)
-  dX <- pdist(X)
-  diag(dX) <- Inf
-  nns <- apply(dX, 1, min)
-  mean(log(n * nns)) + log(2) - 0.57721566
-}
+# nn_entropy <- function(X) {
+#   n <- nrow(X)
+#   dX <- pdist(X)
+#   diag(dX) <- Inf
+#   nns <- apply(dX, 1, min)
+#   mean(log(n * nns)) + log(2) - 0.57721566
+# }
 
 nn_mi <- function(X, Y) {
-  nn_entropy(X) + nn_entropy(Y) - nn_entropy(cbind(X, Y))
+#  nn_entropy(X) + nn_entropy(Y) - nn_entropy(cbind(X, Y))
+  entropy(X) + entropy(Y) - entropy(cbind(X, Y))
 }
 

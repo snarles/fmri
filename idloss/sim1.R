@@ -6,7 +6,7 @@ n <- 1000
 p <- 2
 sgma <- 0.1
 
-d_ex <- 0
+d_ex <- 2
 
 X0 <- randn(n, p)
 Y0 <- X0 + sgma * randn(n, p)
@@ -42,6 +42,8 @@ if (d_ex > 0) {
   X <- cbind(X, randn(n, d_ex))
   #Y <- cbind(Y, randn(n, d_ex))
 }
+colnames(X) <- paste0("X", 1:ncol(X))
+
 
 # ## kde estimate
 # (mi_kde <- naive_kde_mi(X, Y, 2))
@@ -49,7 +51,7 @@ if (d_ex > 0) {
 # (mi_cv <- cv_kde_mi(X, Y, 2))
 
 ## nn estimate
-(mi_nn <- nn_mi(X, Y))
+(mi_nn <- nn_mi(X, Y)[1])
 
 ## id loss using linear
 # k <- 2
