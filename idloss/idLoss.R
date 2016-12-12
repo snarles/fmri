@@ -3,11 +3,21 @@
 ####
 
 library(pracma)
+library(randomForest)
 
 fitter_ols <- function(X, Y, Xte, ...) {
   Xte %*% solve(t(X) %*% X, t(X) %*% Y)
 }
-
+fitter_rf <- function(X, Y, Xte, ...) {
+  Yh <- matrix(NA, nrow(Xte), ncol(Y))
+  for (i in 1:ncol(Y)) {
+    y <- Y[, i]
+    res <- randomForest(X, y)
+    yh <- predict(res, Xte)
+    Yh[, i] <- yh
+  }
+  Yh
+}
 
 nn_loss <- function(Yhat, Yte) {
   dm <- pdist2(Yhat, Yte)
