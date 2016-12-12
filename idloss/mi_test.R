@@ -4,9 +4,10 @@
 
 library(pracma)
 source("idloss/mi_source.R")
-n <- 200
+source("idloss/idLoss.R")
+n <- 1000
 p <- 5
-sgma <- 2
+sgma <- 1.5
 
 X <- randn(n, p)
 Y <- X + sgma * randn(n, p)
@@ -20,3 +21,9 @@ Y <- X + sgma * randn(n, p)
 
 ## nn estimate
 (mi_nn <- nn_mi(X, Y))
+
+## id loss
+k <- 20
+(idl <- id_cv_loss(X, Y, k, mc.reps = 1000))
+(mi_li <- lineId::Ihat_LI(idl, k))
+(mi_np <- lineId::aba_to_mi_lower(k, 1 - idl))
