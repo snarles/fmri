@@ -319,6 +319,43 @@ As information increases, the maximal identification risk goes to 0.
 
 \end{frame}
 
+\begin{frame}
+\frametitle{Simulation}
+
+
+\begin{center}
+\includegraphics[scale = 0.34]{../idloss/sim1_pairs.pdf}
+\end{center}
+\begin{itemize}
+\item Generate data: $(Y_1, Y_2) = f(X_1, X_2, \epsilon)$ where $f$ is nonlinear.
+\item $n = 1000$.
+\item Compare Nearest-Neighbor estimator (Mnatsakov et al, 2008, implemented in {\tt FNN}) with our method using \emph{Random Forest}.
+\item Add extra noise dimensions $X_3, X_4, \hdots$.
+\end{itemize}
+
+%We find these curves using \emph{variational calculus}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Simulation Results}
+
+True $I(X; Y) = 4.615$.
+
+\begin{center}
+\begin{tabular}{c||c|c|c}
+Extra dim & NN & RF $k = 10$ & RF $k=20$\\
+0 & \textbf{4.445} & 3.989 & 3.924\\
+1 & 3.040 & \textbf{3.645} & 3.610\\
+2 & 1.773 & \textbf{3.249} & 3.182
+\end{tabular}
+\end{center}
+
+%We find these curves using \emph{variational calculus}.
+
+\end{frame}
+
+
 
 \end{document}
 
