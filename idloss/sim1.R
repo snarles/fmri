@@ -6,7 +6,7 @@ n <- 1000
 p <- 2
 sgma <- 0.1
 
-d_ex <- 2
+d_ex <- 0
 
 X0 <- randn(n, p)
 Y0 <- X0 + sgma * randn(n, p)
@@ -27,12 +27,15 @@ randwarp <- function(v, nits = 2, mult = 3) {
 # xs <- seq(0, 1, 0.001)
 # plot(xs, randwarp(xs, 20, 1), type = "l")
 
+set.seed(0)
 bmat1 <- 0.1 * randn(p) + eye(p)
 bmat2 <- 0.1 * randn(p) + eye(p)
 X <- X0 %*% bmat1
 Y <- Y0 %*% bmat2
-X <- apply(X, 2, randwarp, nits = 1, mult = 1)
-Y <- apply(Y, 2, randwarp, nits = 1, mult = 1)
+X <- apply(X, 2, randwarp, nits = 20, mult = 1)
+Y <- apply(Y, 2, randwarp, nits = 20, mult = 1)
+colnames(X) <- paste0("X", 1:p)
+colnames(Y) <- paste0("Y", 1:p)
 pairs(cbind(X, Y))
 
 if (d_ex > 0) {
@@ -49,10 +52,10 @@ if (d_ex > 0) {
 (mi_nn <- nn_mi(X, Y))
 
 ## id loss using linear
-k <- 2
-(idl <- id_cv_loss(X, Y, k, mc.reps = 1000))
-(mi_li <- lineId::Ihat_LI(idl, k))
-(mi_np <- lineId::aba_to_mi_lower(k, 1 - idl))
+# k <- 2
+# (idl <- id_cv_loss(X, Y, k, mc.reps = 1000))
+# (mi_li <- lineId::Ihat_LI(idl, k))
+# (mi_np <- lineId::aba_to_mi_lower(k, 1 - idl))
 
 # ## test RF
 # Yh <- fitter_rf(X[1:500, ], Y[1:500, ], X[501:550, ])
@@ -66,3 +69,8 @@ k <- 10
 (mi_li <- lineId::Ihat_LI(idl, k))
 (mi_np <- lineId::aba_to_mi_lower(k, 1 - idl))
 
+k <- 20
+(idl <- id_cv_loss(X, Y, k, mc.reps = 50, fitter = fitter_rf))
+(mi_np20 <- lineId::aba_to_mi_lower(k, 1 - idl))
+
+list(mi_true = mi_true, mi_nn = mi_nn, mi_np = mi_np, mi_np20 = mi_np20)
