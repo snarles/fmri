@@ -33,42 +33,81 @@
 
 
 \begin{abstract}
-
-
-Multivariate pattern analyses approaches in neuroimaging are
-fundamentally concerned with investigating the quantity and type of
-information processed by various regions of the human brain;
-typically, estimates of classification accuracy are used to quantify
-information.  While a extensive and powerful library of methods can be
-applied to train and assess classifiers, it is not always clear how to
-use the resulting measures of classification performance to draw
-scientific conclusions: e.g. for the purpose of evaluating redundancy
-between brain regions.  
-
-An additional confound for interpreting
-classification performance is the dependence of the error rate on the
-number and choice of distinct classes obtained for the classification
-task.  In contrast, mutual information is a quantity which is in
-principle defined independently of the experimental design, and has
-ideal properties for comparative analyses.  One obstacle to wider use
-of mutual information is the difficulty of estimating mutual
-information in high-dimensional neuroimaging data.  We propose a new
-estimator of mutual information based on the concept of "average Bayes
-error."  Since the error of a classifier can be used to infer an upper
-bound on the average Bayes error, we develop a lower confidence bounds
-for mutual information based on a new theoretical lower bound on
-mutual information as a function of average Bayes error.
-Additionally, we develop an estimator of mutual information based on
-separate high-dimensional asymptotic theory.  We demonstrate the
-utility of our approach in simulated and real data examples.
+The analysis of encoding and decoding models is a common theme in both
+cell recording studies and in neuroimaging.  A basic measure of the
+precision of a decoder is its accuracy at distinguishing $k$ different
+stimuli. However, the fixed-$k$ accuracy becomes insensitive beyond
+limited range of precision: low-precision decoders saturate at the
+chance accuracy $1/k$, while high-precision decoders saturate near
+perfect accuracy.  On the other hand, the entire curve of accuracies
+for $k = 2,3,...$ provides a detailed and interpretable
+characterization of decoder performance.  However, due to limited
+sampling, usually only a portion of the curve can be estimated:
+furthermore, it is unclear how to summarize the information in the
+curve by a single statistic.  We show that under a high-dimensional
+limits, the mutual information becomes a sufficient statistic for
+reconstructing the entire accuracy curve, therefore suggesting the
+adoption of the mutual information as measure of decoder precision.
+Based on our theory, we develop a novel estimator of mutual
+information suited for high-dimensional settings (such as those found
+in neuroimaging), and also a procedure for extrapolating the accuracy
+curve to arbitrarily many stimuli.
 \end{abstract}
 
 
 \section{Introduction}
+Both computational and cognitive neuroscience are concerned with
+understanding brain function: while computational neuroscience is
+concerned with understanding functionality at the level of the spiking
+behavior of individual neurons and small neural populations, cognitive
+neuroscience tends to emphasize functionality at the level of
+macroscale regions of the interest in the brain.  While the recording
+technologies, motivating questions, and analytical methodologies
+differ between the two subdisciplines, the conceptualization of brain
+functionality in terms of \emph{encoding} and \emph{decoding} models
+has been widely applied in both
+areas \cite{QuianQuiroga2009}\cite{Naselaris2011}.  In computational
+neuroscience, cell recording experiments are conducted to determine
+whether spike trains have a temporal and/or correlational
+code \cite{Nelken2005}\cite{Hatsopoulos1998}, to examine how the
+neural code adapts to changes in stimulus
+distribution \cite{Fairhall2001} and whether downstream neurons make
+use of higher-order correlations for decoding \cite{Oizumi2010}.
+Meanwhile, in neuroimaging studies, functional MRI experiments are
+employed to model the receptive fields of early visual areas in the
+human brain \cite{Kay2008a}, to examine the semantic encoding of words \cite{Mitchell2008}
+or objects \cite{Huth2012}.
+
+
+\bibliography{neuroinfo}{}
+\bibliographystyle{plain}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+A common goal in neuroscience experiments is understand how some
+aspect of behavior, cognition, or sensation is reflected in brain
+activity:
+
+
+
 
 A fundamental challenge of computational neuroscience is to understand
 how information about the external world is processed and represented
-in the brain. Each individual neuron aggregates the incoming
+in the brain.
+
+
+Each individual neuron aggregates the incoming
 information into a single sequence of spikes--an output which is too
 simplistic by itself to capture the full complexity of sensory
 input. Only by combining the signals from massive ensembles of neurons
@@ -205,8 +244,7 @@ of number of classes $K$.
 
 
 
-\bibliography{neuroinfo}{}
-\bibliographystyle{plain}
+
 \end{document}
 
 
