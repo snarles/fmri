@@ -78,6 +78,44 @@ employed to model the receptive fields of early visual areas in the
 human brain \cite{Kay2008a}, to examine the semantic encoding of words \cite{Mitchell2008}
 or objects \cite{Huth2012}.
 
+The dual perspectives of encoding and decoding originate naturally
+from the fact that in examining the link between brain activity and
+function, one can either start with brain activity on one end, or with
+external stimulation or behavioral observation on the other end.
+Starting by exposing the subject to sensory stimuli or prompting the
+subject to engage in particular motor tasks, one can search for areas
+in the brain which respond to the task: in other words, one can test
+to see which areas of the brain \emph{encode} the given stimulus.  In
+the other direction, one seeks to understand the functionality of a
+given brain region: in other words, how to \emph{decode} brain
+activity in that region.
+
+Formulation of encoding models is relatively straightforward, since
+one needs only to characterize the observed brain response to a given
+stimulus.  One can further ask how to distinguish between signal and
+noise in the encoding mechanism \cite{Nelken2005}, or in complex
+stimuli, seek a linearizing feature set which reveals the nature of
+the brain representation \cite{Naselaris2011}.  However, the
+establishment of complete decoding models is much less amenable to
+experiemental manipulation, since to exhaustively characterize the
+functionality of a neuron, one would have to know in advance the type
+of information it encodes.  Early advances in decoding often depended
+on strokes of luck: Hubel \cite{Hubel1982} originally discovered the
+existence of neurons with orientation-sensitive receptive fields due
+to the vigorous response of a cell to the perfectly angled shadow of a
+glass slide that they were inserting into the ophthalmoscope.  Yet,
+even now, the goal of completely characterizing the function of a
+given brain region remains a difficult task, with the most promising
+approach being a \emph{reverse inference}
+procedure \cite{Poldrack2006} which aggregates information from the
+literature about activity-functionality relationships.
+
+A more feasible goal is to establish the \emph{precision} with which a
+neuron can decode a particular type of feature.  This can be
+accomplished by first training an encoding model, and then inverting
+the encoding model to obtain a decoding model \cite{Naselaris2011}.
+
+
 
 \bibliography{neuroinfo}{}
 \bibliographystyle{plain}
