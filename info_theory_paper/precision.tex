@@ -113,7 +113,55 @@ literature about activity-functionality relationships.
 A more feasible goal is to establish the \emph{precision} with which a
 neuron can decode a particular type of feature.  This can be
 accomplished by first training an encoding model, and then inverting
-the encoding model to obtain a decoding model \cite{Naselaris2011}.
+the encoding model using Bayes' rule to obtain a decoding
+model \cite{Oram1998}\cite{QuianQuiroga2009}\cite{Naselaris2011}.
+
+Measures of decoding precision can be used to support several
+different kinds of scientific inferences.  When there exist multiple
+plausible encoding models--for instance, a model where stimulus
+information is encoded solely by average firing rate versus a model
+where inter-spike timings also carry information--the precision of the
+decoder can be used as a basis for deciding the best encoding model.
+For two encoding models with equal complexity, such as comparing two
+different types of receptive field models, the model with better
+decoding precision could be considered the more plausible model.  In
+the case where a more complex encoding model is compared to a strictly
+simpler model--such as comparing a model with a temporal code versus a
+model only incorporating average firing rate, a substantial
+improvement in decoding precision for the more complex model is needed
+to demonstrate its validity, since in the null hypothesis where the
+simpler model is correct, the more complex model should still have
+approximately equal decoding performance.
+
+Yet another application of decoding precision is to track the
+adaptivity of the neural code.  Fairhall \cite{Fairhall2001} recorded
+the output of a motion-sensitive neuron in a fly in response to a
+visual stimulus with changing angular velocity.  Changing the variance
+of the stimulus results in rapid adaptation: the neural code starts
+adapting to the change in stimulus distribution within tens of
+milliseconds, which is reflected by an increased or decreased
+precision (as measured by mutual information) in resolving angular
+velocity to match the variance of the stimulus.  More generally,
+comparisons of decoding precisions between different conditions can
+show how the encoded information increases or decreases across
+experimental conditions.  Kayser \cite{Kayser2010} demonstrated how
+the mutual information between a sound stimulus and neurons in the
+auditory cortex increased when the subjects were also presented a
+matching visual stimulus (e.g. showing a picture of a lion roaring
+while playing the sound of a lion's roar.)
+
+The differing dimensionality and resolution of data between cell
+recording studies and neuroimaging studies leads to usage of different
+methods for quantifying decoding precision.  In electrophysiological
+recordings, mutual information \cite{Cover2006} and Fisher
+information \cite{Yarrow2012} are the most established methods for
+quantifying decoding precision.  In neuroimaging studies,
+classification accuracy \cite{Haxby2014} is the dominant measure of
+precision.
+
+
+
+
 
 
 
