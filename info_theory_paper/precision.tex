@@ -1,0 +1,215 @@
+\title{Quantifying the precision of decoders for high-dimensional stimuli}
+\author{Charles Zheng and Yuval Benjamini}
+\date{\today}
+
+\documentclass[12pt]{article} 
+
+% packages with special commands
+\usepackage{amssymb, amsmath}
+\usepackage{epsfig}
+\usepackage{array}
+\usepackage{ifthen}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{csquotes}
+\definecolor{grey}{rgb}{0.5,0.5,0.5}
+
+\begin{document}
+\maketitle
+
+\newcommand{\tr}{\text{tr}}
+\newcommand{\E}{\textbf{E}}
+\newcommand{\diag}{\text{diag}}
+\newcommand{\argmax}{\text{argmax}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\argmin}{\text{argmin}}
+\newcommand{\Vol}{\text{Vol}}
+\newcommand{\comm}[1]{}
+\newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+\newcommand{\Cor}{\text{Cor}}
+
+
+\begin{abstract}
+
+
+Multivariate pattern analyses approaches in neuroimaging are
+fundamentally concerned with investigating the quantity and type of
+information processed by various regions of the human brain;
+typically, estimates of classification accuracy are used to quantify
+information.  While a extensive and powerful library of methods can be
+applied to train and assess classifiers, it is not always clear how to
+use the resulting measures of classification performance to draw
+scientific conclusions: e.g. for the purpose of evaluating redundancy
+between brain regions.  
+
+An additional confound for interpreting
+classification performance is the dependence of the error rate on the
+number and choice of distinct classes obtained for the classification
+task.  In contrast, mutual information is a quantity which is in
+principle defined independently of the experimental design, and has
+ideal properties for comparative analyses.  One obstacle to wider use
+of mutual information is the difficulty of estimating mutual
+information in high-dimensional neuroimaging data.  We propose a new
+estimator of mutual information based on the concept of "average Bayes
+error."  Since the error of a classifier can be used to infer an upper
+bound on the average Bayes error, we develop a lower confidence bounds
+for mutual information based on a new theoretical lower bound on
+mutual information as a function of average Bayes error.
+Additionally, we develop an estimator of mutual information based on
+separate high-dimensional asymptotic theory.  We demonstrate the
+utility of our approach in simulated and real data examples.
+\end{abstract}
+
+
+\section{Introduction}
+
+A fundamental challenge of computational neuroscience is to understand
+how information about the external world is processed and represented
+in the brain. Each individual neuron aggregates the incoming
+information into a single sequence of spikes--an output which is too
+simplistic by itself to capture the full complexity of sensory
+input. Only by combining the signals from massive ensembles of neurons
+is it possible to reconstruct our complex representation of the
+world. Nevertheless, neurons form hierarchies of specialization within
+neural circuits, which are further organized in various specialized
+regions of the brain.  At the lowest level of the hierarchy--individual neurons,
+it is possible to infer and interpret the functional relationship between
+a neuron and stimulus features of interest using single-cell recording technologies.
+Due to the inherent stochasticity of the neural output, it is natural to
+view the neuron as a noisy channel, and use mutual information
+to quantify how much of the stimulus information is encoded by the neuron.
+Moving up the hierarchy to the the macroscale level of organization in the
+brain requires both different experimental methodologies and 
+new approaches for summarizing and inferring measures of
+information in the brain.
+
+Shannon's mutual information $I(X; Y)$ is fundamentally a measure of dependence
+between random variables $X$ and $Y$, and is defined as
+\[
+I(X;Y) = \int p(x, y) \log \frac{p(x, y)}{p(x)p(y)}dxdy.
+\]
+Various properties of $I(X; Y)$ make it ideal for quantifying the information between
+a random stimulus $X$ and the signaling behavior of an ensembles of neurons, $Y$ ~\cite{Borst1999}.
+A leading metaphor is that of a noisy communications channel; the mutual
+information describes the rate at which $Y$ can communicate bits from
+$X$.  This framework is well-suited for summarizing the properties of
+a single neuron coding external stimulus information; indeed,
+experiments studying the properties of a single or a small number of
+neurons often make use of the concept of mutual information in
+summarizing or interpreting their results ~\cite{QuianQuiroga2009}. However,
+estimating mutual information for multiple channels require large and
+over-parameterized generative models.  For instance, one can tractably
+estimate mutual information by assuming a multivariate Gaussian model:
+however, this approach essentially assumes a linear relationship
+between the input and output, and hence fails to quantify nonlinear
+dependencies.  As the complexity of stimuli and the number of output
+channels increases, these models are hard or impossible to estimate
+without gross over-fitting.  As new technologies for simultaneous measurement
+of multiple brain regions developed, such as functional MRI, it became
+increasingly difficult to quantify information at such scales under the classical approach.
+ 
+Machine learning algorithms showed a way forward: a seminal work
+by Haxby (2001) proposed to quantify the information in multiple
+channels by measuring how well the stimulus can be identified from the
+brain responses, in what is known as ``multivariate pattern analysis''
+(MVPA). To demonstrate that a particular brain region responds to a
+certain type of sensory information, one employs supervised learning
+to build a classifier that classifies the stimulus class from the
+brain activation in that region. Classifiers that achieve above-chance
+classification accuracy indicate that information from the stimulus is
+represented in the brain region. In principle, one could just as well
+test the statistical hypothesis that the Fisher information or mutual
+information between the stimulus and the activation patterns is
+nonzero. But in practice, the machine learning approach enjoys several
+advantages: First, it is invariant to the parametric representation of
+the stimulus space, and is opportunistic in the parameterization of
+the response space. This is an important quality for naturalistic
+stimulus-spaces, such as faces or natural images. Second, it scales
+better with the dimensionality of both the stimulus space and the
+responses space, because a slimmer discriminative model can be used
+rather than a fully generative model.
+
+Nevertheless, classification error is problematic for quantifying the
+strength of the relation between stimulus and outputs due to its
+arbitrary scale and strong dependence on experimental
+choices. Classification accuracy depends on the particular choice of
+stimuli exemplars employed in the study and the number of partitions
+used to define the classes for the classification task. The difficulty
+of the classification task depends on the number of classes defined:
+high classification accuracy can be achieved relatively easily by
+using a coarse partition of stimuli exemplars into classes. In a
+meta-analysis on visual decoding, Coutanche et al (2016) quantified
+the strength of a classification study using the formula
+\[
+\text{decoding strength} = \frac{\text{accuracy} - \text{chance}}{\text{chance}}.
+\]
+Such an approach may compensate for the differences in accuracy due
+purely to choice of number of classes defined; however, no theory is
+provided to justify the formula. In contrast, mutual information has
+ideal properties for quantitatively comparing information between
+different studies, or between different brain regions, subjects,
+featurization models, or modalities. Not only is the mutual
+information defined independently of the arbitrary definition of
+stimulus classes (albeit still dependent on an implied distribution
+over stimuli), it is even meaningful to discuss the difference between
+the mutual information measured for one system and the mutual
+information for a second system.
+
+Hence, a popular approach which combines the strengths of the machine
+learning approach and the advantages of the information theoretic
+approach is to obtain a lower bound on the mutual information by using
+the confusion matrix of a classifier.  This is the most popular
+approach for estimating mutual information in neuroimaging studies,
+but suffers from known shortcomings (Gastpar 2010, Quiroga 2009).
+The idea of linking classification performance to mutual information
+dates back to the beginnings of information theory: Shannon's original
+motivation was to characterize the minimum achievable error
+probability of a noisy communication channel.  More explicitly, Fano's
+inequality provides a lower bound on mutual information in relation to
+the optimal prediction error, or Bayes error.  Fano's inequality can
+be further refined to obtain a tighter lower bound on mutual
+information (Tebbe and Dwyer 1968.)  However, all approaches to date
+can only obtain a lower bound on the mutual information from
+classification error.  In practice, the bound obtained may be a vast
+underestimate.
+
+In this paper, we propose a new way to link classification performance
+to the implied mutual information. 
+To create this link we need to overcome the arbitrary choice of
+exemplars, and the arbitrary number of classes K.  Towards this end,
+we define a notion of $K$-class \emph{average Bayes error} which is
+uniquely defined for any given stimulus distribution and stochastic
+mapping from stimulus to response.  The $K$-class average Bayes error
+is the expectation of the Bayes error (the classification error
+of the optimal classifier) when $K$ stimuli exemplars are drawn
+i.i.d. from the stimulus distribution, and treated as distinct
+classes.  Hence the average Bayes error can in principle be estimated
+if the appropriate randomization is employed for designing the
+experiment.
+
+Our main theoretical contributions are (i) the derivation of a tight lower bound
+on mutual information as a function of $k$-class average Bayes error, and (ii)
+the derivation of an asymptotic relationship between the $K$-class average Bayes error and the mutual
+information. Although the $K$-class average Bayes error is defined
+independently of the particular choice of stimuli, the quantity still
+depends on the choice of number of classes, $K$. Mutual information
+provides a quantification of information that does not depend on $K$,
+allowing more flexible comparisons and easier interpretation. Our
+method allows estimates of the $K$-class Bayes error to be translated
+into estimate of the mutual information, and this resulting estimator
+of mutual information will be asymptotically independent of the choice
+of number of classes $K$.
+
+
+
+\bibliography{neuroinfo}{}
+\bibliographystyle{plain}
+\end{document}
+
+
+
+
+
