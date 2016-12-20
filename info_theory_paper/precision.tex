@@ -1,4 +1,4 @@
-\title{Quantifying the precision of decoders for high-dimensional stimuli}
+\title{Quantifying the precision of decoding models for high-dimensional stimuli}
 \author{Charles Zheng and Yuval Benjamini}
 \date{\today}
 
@@ -150,18 +150,50 @@ auditory cortex increased when the subjects were also presented a
 matching visual stimulus (e.g. showing a picture of a lion roaring
 while playing the sound of a lion's roar.)
 
-The differing dimensionality and resolution of data between cell
-recording studies and neuroimaging studies leads to usage of different
-methods for quantifying decoding precision.  In electrophysiological
-recordings, mutual information \cite{Cover2006} and Fisher
-information \cite{Yarrow2012} are the most established methods for
-quantifying decoding precision.  In neuroimaging studies,
-classification accuracy \cite{Haxby2014} is the dominant measure of
-precision.
+Differing types and parameterizations of stimuli naturally lead to
+differing measures of decoding precision.  For stimuli which can be
+parameterized by a scalar $x$, the precision can be measured by the
+squared correlation coefficient $R^2$ \cite{Abbott1994}.  However, the
+resulting measure of precision is not invariant to scaling of the
+parameterization: for instance, the choice of whether to parameterize
+volume on an absolute scale or a logarithmic scale.  The mutual
+information \cite{Shannon1948} between the stimulus and the predicted
+stimulus is invariant to the parameterization of the stimulus.  Due to
+its invariance and a number of other properties, the mutual
+information is widely used to measure the precision of the neural code
+in cell recording studies, both for single-neuron decoding
+models \cite{Borst1999} and for population coding
+models \cite{QuianQuiroga2009}\cite{Ince2010}.
 
+However, the difficulties of estimating mutual information in small
+samples has been widely recognized, with a large literature on bias
+correction methods \cite{Panzeri2007}\cite{Paninski}.  Methods for
+bias correction have been developed for three different sample size
+regimes: the moderate-sample regime, where the number of observations
+is larger than the number of stimulus-response
+pairs\cite{Miller1955}\cite{Strong1998}\cite{Treves1995}, the
+undersampled regime, where the number of observations is less than the
+number of stimulus-response pairs \cite{Nemenmen2004}, and
+a \emph{stimulus-undersampled} regime, where only a small fraction of
+possible stimuli are sampled, but with a large number of observations
+for each of the sampled stimuli \cite{Gastpar2009}.  Nevertheless,
+even the bias-corrected estimates may be unusably inaccurate in
+problems of moderate dimensionality, since the cardinality of response
+space grows exponentially with the dimensionality.  In such cases,
+alternative approaches for estimating the mutual information include
+the assumption of a parametric model \cite{Gastpar2009}, or usage of
+the maximum entropy principle to obtain bounds on the mutual
+information subject to the empirical moments of a certain
+order \cite{Ince2009}\cite{Globerson2009}.
 
-
-
+Perhaps due to the technical difficulties of estimating mutual
+information in high dimensions, mutual information has seldom been
+employed as a measure of decoding precision in neuroimaging studies,
+although it has been proposed for the purpose of bypassing the
+modelling of the hemodynamic response function for single-voxel
+analyses \cite{FuhrmannAlpert2007}.  Instead, classification
+accuracy \cite{Haxby2014} is the dominant measure of precision
+for multivoxel decoding models.
 
 
 
