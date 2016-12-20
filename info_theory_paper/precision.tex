@@ -114,7 +114,16 @@ A more feasible goal is to establish the \emph{precision} with which a
 neuron can decode a particular type of feature.  This can be
 accomplished by first training an encoding model, and then inverting
 the encoding model using Bayes' rule to obtain a decoding
-model \cite{Oram1998}\cite{QuianQuiroga2009}\cite{Naselaris2011}.
+model \cite{Oram1998}\cite{QuianQuiroga2009}\cite{Naselaris2011}.  
+
+By decoding \emph{precision}, we mean the specificity which we can
+identify or reconstruct the stimulus based on the neural response.  As
+such, in our view, the term decoder \emph{precision} is more or less
+synonymous with terms such as decoder \emph{performance} or
+decoder \emph{accuracy} as they are used in the literature.  However,
+we choose the word \emph{precision} in particular, because it
+communicates the idea that the essential quality of a good decoder is
+that it allows one to confidently and precisely infer the stimulus.
 
 Measures of decoding precision can be used to support several
 different kinds of scientific inferences.  When there exist multiple
@@ -173,7 +182,7 @@ regimes: the moderate-sample regime, where the number of observations
 is larger than the number of stimulus-response
 pairs\cite{Miller1955}\cite{Strong1998}\cite{Treves1995}, the
 undersampled regime, where the number of observations is less than the
-number of stimulus-response pairs \cite{Nemenmen2004}, and
+number of stimulus-response pairs \cite{Nemenman2004}, and
 a \emph{stimulus-undersampled} regime, where only a small fraction of
 possible stimuli are sampled, but with a large number of observations
 for each of the sampled stimuli \cite{Gastpar2009}.  Nevertheless,
@@ -181,19 +190,68 @@ even the bias-corrected estimates may be unusably inaccurate in
 problems of moderate dimensionality, since the cardinality of response
 space grows exponentially with the dimensionality.  In such cases,
 alternative approaches for estimating the mutual information include
-the assumption of a parametric model \cite{Gastpar2009}, or usage of
+the assumption of a parametric model \cite{Brunel1998}\cite{Gastpar2009}\cite{Yarrow2012}, or usage of
 the maximum entropy principle to obtain bounds on the mutual
 information subject to the empirical moments of a certain
 order \cite{Ince2009}\cite{Globerson2009}.
 
 Perhaps due to the technical difficulties of estimating mutual
-information in high dimensions, mutual information has seldom been
-employed as a measure of decoding precision in neuroimaging studies,
-although it has been proposed for the purpose of bypassing the
-modelling of the hemodynamic response function for single-voxel
-analyses \cite{FuhrmannAlpert2007}.  Instead, classification
-accuracy \cite{Haxby2014} is the dominant measure of precision
-for multivoxel decoding models.
+information in high dimensions, mutual information has never, to our
+knowledge, been used as a measure of decoding precision in
+neuroimaging studies, although it has been proposed for the purpose of
+bypassing the modelling of the hemodynamic response function for
+single-voxel analyses \cite{FuhrmannAlpert2007}.  Instead, a variety
+of methods are employed to characterize the precision of decoding
+models, depending on the nature of the stimulus and the experimental
+setup.
+
+In task fMRI experiments where stimuli are drawn from a number of
+disjoint semantic categories-- for instance, `birds', `insects', and
+`mammals' as in \cite{Connolly2012}, it is natural to construct a
+decoder which outputs the predicted category of a stimulus as a
+function of the response.  Such a decoder is known as
+a \emph{classifier} in the machine learning
+literature \cite{Hastie2009a}, and a natural measure of classifier
+precision is the probability that the decoder outputs the correct
+category on a new, randomly drawn test example, which is
+the \emph{classification accuracy}.
+
+In experiments where the subject is presented a number of
+parameterized stimuli are drawn from a continuous distribution (such
+as natural images or sounds), there are two types of decoders which
+can be constructed.  In the first case, one constructs a decoder which
+estimates the parameters of the stimulus which we call
+a \emph{reconstructor}: the precision of such a decoder is measured by
+the correlation between the estimated and true parameter vector
+\cite{Pasley2012} \cite{Nishimoto2011}\cite{Naselaris2009}.
+In the second case, one constructs a decoder which picks the most
+likely stimulus from a finite library of examples \emph{which includes
+the true stimulus} \cite{Kay2008a}\cite{Mitchell2008}.  Since the true
+stimulus is included in the library, the task is to `identify' the
+correct stimulus from the library.  A natural measure of decoder
+performance is therefore the probability of correct identification.
+However, note that this probability is dependent on the arbitrary
+choice of the size of the exemplar library: a different choice for
+library size therefore results in a different measure of precision.
+We refer to the probability of correct classification for a library of
+$k$ exemplars as the \emph{$k$-example identification accuracy}.
+
+In their respective domains, these different measures of precision
+suffice to make inferences on many interesting scientific questions:
+to list a few examples, showing the superiority of a Gabor filters
+versus center-surround filters for modeling the receptive fields of V1
+and V2 neurons \cite{Kay2008a}, or demonstrating that brain activity
+in response to viewing an Engish noun can be predicted from word
+association frequencies \cite{Mitchell2008}.  However, the
+idiosyncracy of having different measures of precision for different
+types of experiments and stimuli hinders the possibility of comparing
+decoder precision across experimental setups and stimuli classes.
+
+
+
+
+
+
 
 
 
