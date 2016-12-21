@@ -8,6 +8,13 @@ fit_I_to_curve <- function(acs, ks = 1:length(acs),
   i_lb <- 0
   i_ub <- i_max
   i_cur <- (i_lb + i_ub)/2
-  yh <- 1 - sapply(ks, function(k) piK(sqrt(2 * i_cur), k))
-  
+  yh <- 1 - piK(sqrt(2 * i_cur), ks)
+  dyh <- -d_piK(sqrt(2 * i_cur), ks)
 }
+
+
+numDeriv::grad(function(v) piK(v, 3), 0.5)
+d_piK(0.5, 3)
+
+numDeriv::grad(function(v) piK(v, 4), 0.5)
+d_piK(0.5, 3:5)

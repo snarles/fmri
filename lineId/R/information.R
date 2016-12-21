@@ -36,6 +36,35 @@ piK <- function(mus, K, mc.reps = 1e4) {
   }
 }
 
+#' Function which computes derivative of piK
+#' 
+#' @param mus Mean mu, can be vectorized.
+#' @param K Number of independent gaussians.
+#' @param mc.reps Numerical resolution (larger for more precision.)
+#' @return A real
+#' @export
+#' @examples 
+#' d_piK(3, 10)
+d_piK <- function(mus, K, mc.reps = 1e4) {
+  samp <- qnorm(((1:mc.reps) - 0.5)/mc.reps)
+  if (length(K) == 1) {
+    sampmat <- repmat(t(samp), length(mus), 1) - mus# one row per mu  
+    temp <- log(K-1) + (K-2) * log(1 - pnorm(sampmat)) + log(dnorm(sampmat))
+    ans <- -apply(temp, 1, meanexp)
+    if (K == 1) ans <- rep(0, length(ans))
+    return(ans)
+  }
+  if (length(mus) == 1) {
+    samp <- samp - mus
+    temp <- log(1-pnorm(samp))
+    tmat <- repmat(temp, length(K), 1)
+    tmat2 <- repmat(log(dnorm(samp)), length(K), 1)
+    ans <- -apply(log(K-1) + (K-2) * tmat + tmat2, 1, meanexp)
+    ans[K==1] <- 0
+    return(ans)
+  }
+}
+
 #' Function which inverts piK
 #' 
 #' \code{piK} computes the probability that a normal with mean mu is smaller than the max of K-1 other iid Gaussian.
