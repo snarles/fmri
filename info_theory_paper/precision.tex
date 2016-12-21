@@ -335,8 +335,40 @@ well as providing an unbounded measure of decoding precision which,
 similar to mutual information, has desirable scaling properties for
 the purpose of comparing decoders spanning a range of precisions.
 
+\section{Methods}
 
+\begin{itemize}
+\item Computation of $k$-example identification curve
+\item Estimation of $I_{implied}$ based on Zheng and Benjamini (2016). What we have to add in the new paper is how to estimate $I$ from multiple $k$ rather than single $k$ as we had in ZB 2016
+\end{itemize}
 
+\section{Theory}
+
+\begin{itemize}
+\item When will the method work well?
+\item Explain the conditions of ZB 2016 using examples from neuroimaging
+\item ZB 2016 fails when stimulus is too low-dimensional--for example, arm reaching angle
+\item ZB 2016 fails when stimulus is drawn from multimodal distribution--for example, half of the pictures are houses and half are faces
+\item How can we diagnose the assumptions? Testing goodness-of-fit of identification curve
+\end{itemize}
+
+\section{Simulations}
+
+\begin{itemize}
+\item Simulations which illustrate points made in theory section
+\item Low-dimensional sim (bad)
+\item High-dimensional sim (good)
+\item High-dimensional but bimodal (bad)
+\end{itemize}
+
+\section{Real-data examples}
+
+Examples using Kay et al data:
+\begin{itemize}
+\item Comparison of different feature models (subsets of pyramid levels)
+\item Comparison of differing voxel numbers
+\item Effect of voxel resolution (by averaging neighboring voxels into bigger voxels)
+\end{itemize}
 
 \bibliography{neuroinfo}{}
 \bibliographystyle{plain}
