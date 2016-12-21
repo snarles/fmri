@@ -26,16 +26,25 @@ Yhat <- Xte %*% Bhat
 dmat <- pdist2(Yhat, Yte)
 acs <- 1-sapply(1:nte, function(i) resample_misclassification(-dmat, 1:nte, i))
 plot(acs, type = "l")
+k_sub <- 20
+(I_implied <- fit_I_to_curve(acs[1:k_sub]))
+acs_hat <- acs_curve(I_implied, 1:nte)
+plot(1:nte, acs, type = "l"); lines(acs_hat, col = "red"); abline(v = k_sub)
+
+
+## high-dim
+
+
+
 
 ## predict 100th ac from 30, trying different wts
-
-k_sub <- 50
-
-(I_unif <- fit_I_to_curve(acs[1:k_sub], wt_exp = 0))
-(ac_unif <- acs_curve(I_unif, 100))
-abs(ac_unif - acs[100])
-
-(I_wt <- fit_I_to_curve(acs[1:k_sub], wt_exp = -1))
-(ac_wt <- acs_curve(I_wt, 100))
-abs(ac_wt - acs[100])
+# k_sub <- 50
+# 
+# (I_unif <- fit_I_to_curve(acs[1:k_sub], wt_exp = 0))
+# (ac_unif <- acs_curve(I_unif, 100))
+# abs(ac_unif - acs[100])
+# 
+# (I_wt <- fit_I_to_curve(acs[1:k_sub], wt_exp = -1))
+# (ac_wt <- acs_curve(I_wt, 100))
+# abs(ac_wt - acs[100])
 
