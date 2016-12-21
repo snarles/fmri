@@ -23,9 +23,17 @@ meanexp <- function(v) {
 #' piK(3, 10)
 piK <- function(mus, K, mc.reps = 1e4) {
   samp <- qnorm(((1:mc.reps) - 0.5)/mc.reps)
-  sampmat <- repmat(t(samp), length(mus), 1) - mus# one row per mu  
-  temp <- log(1 - pnorm(sampmat))
-  1 - apply((K-1) * temp, 1, meanexp)
+  if (length(K) == 1) {
+    sampmat <- repmat(t(samp), length(mus), 1) - mus# one row per mu  
+    temp <- log(1 - pnorm(sampmat))
+    return(1 - apply((K-1) * temp, 1, meanexp))
+  }
+  if (length(mus) == 1) {
+    samp <- samp - mus
+    temp <- log(1-pnorm(samp))
+    tmat <- repmat(temp, length(K), 1)
+    return(1 - apply((K-1) * tmat, 1, meanexp))
+  }
 }
 
 #' Function which inverts piK
