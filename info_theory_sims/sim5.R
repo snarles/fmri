@@ -27,12 +27,34 @@ dmat <- pdist2(Yhat, Yte)
 acs <- 1-sapply(1:nte, function(i) resample_misclassification(-dmat, 1:nte, i))
 plot(acs, type = "l")
 k_sub <- 20
-(I_implied <- fit_I_to_curve(acs[1:k_sub]))
+(I_implied <- fit_I_to_curve(acs[1:k_sub], wt_exp = 0))
 acs_hat <- acs_curve(I_implied, 1:nte)
 plot(1:nte, acs, type = "l"); lines(acs_hat, col = "red"); abline(v = k_sub)
 
 
 ## high-dim
+
+ntr <- 2000
+nte <- 100
+p <- 30
+q <- 50
+sigma <- 10
+B <- randn(p, q)
+
+Xtr <- randn(ntr, p)
+Ytr <- Xtr %*% B + sigma * randn(ntr, q)
+Xte <- randn(nte, p)
+Yte <- Xte %*% B + sigma * randn(nte, q)
+
+Bhat <- solve(t(Xtr) %*% Xtr, t(Xtr) %*% Ytr)
+Yhat <- Xte %*% Bhat
+dmat <- pdist2(Yhat, Yte)
+acs <- 1-sapply(1:nte, function(i) resample_misclassification(-dmat, 1:nte, i))
+plot(acs, type = "l")
+k_sub <- 20
+(I_implied <- fit_I_to_curve(acs[1:k_sub], wt_exp = 0))
+acs_hat <- acs_curve(I_implied, 1:nte)
+plot(1:nte, acs, type = "l"); lines(acs_hat, col = "red"); abline(v = k_sub)
 
 
 
