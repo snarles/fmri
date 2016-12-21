@@ -242,15 +242,98 @@ to list a few examples, showing the superiority of a Gabor filters
 versus center-surround filters for modeling the receptive fields of V1
 and V2 neurons \cite{Kay2008a}, or demonstrating that brain activity
 in response to viewing an Engish noun can be predicted from word
-association frequencies \cite{Mitchell2008}.  However, the
-idiosyncracy of having different measures of precision for different
-types of experiments and stimuli hinders the possibility of comparing
-decoder precision across experimental setups and stimuli classes.
+association frequencies \cite{Mitchell2008}.  
 
+A commonality to all applications of decoding models in neuroimaging
+is the pairwise comparison of two decoding models (Gabor
+vs. retinotopic) or the comparison of a single decoding model to
+chance accuracy.  Looking ahead to anticipate what kinds of analyses
+might be employed in the future based on neuroimaging data, it is
+suggestive to note that the earliest decoding studies in the cell
+recording literature also involved comparisons between two or three
+different decoders \cite{Eckhorn1976}.  However, as neuroscientists
+began to consider questions of population coding, analyses of the
+redundancy between neurons started to make use of comparisons between
+large numbers of decoders: for a population of $N$ neurons, one might
+compare the precision of a decoder (mutual information) based on the
+entire ensemble, compared to the precisions of decoders based on each
+of the $N$ individual neurons.  Furthermore, one can make the same
+comparison for a range of different ensemble sizes $N$.  As questions
+about the redundancy of the neural code are relevant on both the micro
+scale (the domain of cell recording studies) and the macro scale (the
+domain of neuroimaging), it is safe to assume that similar analyses,
+requiring comparisons of large numbers of decoders, will emerge in
+neuroimaging studies.  Already in the functional MRI literature, we
+see similar decompositions of decoding accuracy versus ensemble
+size \cite{Kay2008a}, but another possible type of decomposition would
+be to compare decoding performance as the number of stimulus features
+is varied, rather than the number of voxels.
 
+The scaling properties of mutual information are highly advantageous
+when comparing multiple decoders, which could potentially span a wide
+range of decoding precision: for instance, a single neuron versus an
+ensemble of thousands of neurons.  In contrast, classification
+accuracy, $k$-class identification accuracy and reconstruction
+accuracy all suffer from the issue of \emph{limited dynamic range}:
+that is, they are only effective at measuring precision within a
+certain range.
 
+Let us illustrate with the example of identification accuracy.  A low
+precision decoder, such as a decoder based on a single voxel, may have
+an accuracy which is so close to chance accuracy, $1/k$, as to be
+statistically indistinguishable from chance based on the data.  On the
+other hand, a sufficiently high-precision decoder may face the
+opposite problem, where it achieves perfect classification on the
+limited number of test examples.  Any empirical estimate of
+identification accuracy can only be used to accurately rank decoders
+which have accuracies sufficiently bounded away from both $1/k$ and 1.
+The same issue applies to reconstruction accuracy (bounded between 0
+and 1) and classification accuracy (bounded between $1/k$ and 1, where
+$k$ is the number of classes): any bounded measure of precision is
+ineffective at comparing decoders which are too close to either the
+upper bound or lower bound of achievable precision.
 
+In practice, the solution to this issue is to find a measure of
+precision which is well-suited for all of the decoders that needed to
+be compared.  If there are two encoding models which both achieve
+perfect classification on the test set, then perhaps the more
+demanding measure of reconstruction accuracy can be used to
+distinguish them.  However, this strategy begins to become impractical
+as the number of decoders to be compared increases.  One wishes to
+relate the decoding precision of an $N$-voxel ensemble for $N$
+spanning from 1 to 10000: however, any bounded measure of precision
+which is suitably stringent for distinguishing $N=9999$ from $N=10000$
+would fail for comparing $N=1$ to $N=2$, and vice-versa.
 
+We have seen that one solution to this predicament is to use an
+unbounded measure of precision which can remain sensitive to
+variations in precision across a large dynamic range: for instance,
+the mutual information.  Yet, given the difficulty of estimating the
+mutual information in high-dimensional settings, one might consider
+another approach: to develop a systematic means for comparing decoders
+by using multiple (easily estimated) precision measures, each of which
+may only capture a limited range of precisions, but which collectively
+span a sufficiently large range of precisions to include all of the
+decoders being compared.  Our contribution in this paper is to show
+that both of these approaches--the estimation of mutual information,
+and the comparison of decoders based on a range of decoding metrics,
+turn out to be the very same problem in high-dimensional settings.
+The \emph{identification accuracy curve}, which we define as the
+collection of all $k$-class identification accuracies for $k \geq 2$,
+can be used to compare a collection of decoders over a large span of
+precisions.  Yet, a recent theoretical result\cite{Zheng2016} shows
+that the identification accuracy curve for the Bayes decoder (the
+optimal decoder) is determined by the mutual information in a certain
+high-dimensional regime.  While it is generally not feasible to
+approximate the Bayes decoder in high-dimensional settings, we use
+this result to define the \emph{implied information} for a non-Bayes
+(suboptimal) decoder.  The implied information, $I_{implied}$, is not
+the true mutual information between the stimulus and response, but it
+provides a means of comparing two accuracy curves (estimate the
+implied information from each, and then compare the estimates), as
+well as providing an unbounded measure of decoding precision which,
+similar to mutual information, has desirable scaling properties for
+the purpose of comparing decoders spanning a range of precisions.
 
 
 
