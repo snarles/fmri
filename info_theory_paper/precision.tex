@@ -30,7 +30,17 @@
 \newcommand{\comm}[1]{}
 \newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
 \newcommand{\Cor}{\text{Cor}}
-
+\newcommand{\bx}{\boldsymbol{x}}
+\newcommand{\by}{\boldsymbol{y}}
+\newcommand{\bX}{\boldsymbol{X}}
+\newcommand{\bY}{\boldsymbol{Y}}
+\newcommand{\bS}{\boldsymbol{S}}
+\newcommand{\bu}{\boldsymbol{u}}
+\newcommand{\bv}{\boldsymbol{v}}
+\newcommand{\bU}{\boldsymbol{U}}
+\newcommand{\bV}{\boldsymbol{V}}
+\newcommand{\bB}{\boldsymbol{B}}
+\newcommand{\bepsilon}{\boldsymbol{\epsilon}}
 
 \begin{abstract}
 The analysis of encoding and decoding models is a common theme in both
@@ -338,6 +348,79 @@ similar to mutual information, has desirable scaling properties for
 the purpose of comparing decoders spanning a range of precisions.
 
 \section{Methods}
+
+\subsection{Experimental design}
+
+We consider experiments in which a single subject is presented with a
+sequence of $T$ stimuli: each stimulus is presented during a `task
+window' of a fixed duration.  The stimuli are represented by
+real-valued feature vectors $\vec{X}$; let $p$ be the dimensionality of
+the feature space.  The brain activity of the subject is recorded,
+yielding a $q$-dimensional vector $\vec{Y}$: in practice, $\vec{Y}$ could
+consist of discretized time series data or mean firing rates for
+spike-sorted neurons, or BOLD response for voxels, depending on the
+recording modality.  Let $\vec{X}^{(t)}$ denote the feature vector of the
+stimulus, and let $\vec{Y}^{(t)}$ denote the vector of intensities
+(e.g. BOLD response, mean spike) for the $t$th task window in the
+sequence.
+
+\subsection{Data splitting}
+
+The $T$ stimulus-response pairs $(\vec{X}, \vec{Y})$ are randomly
+partitioned into a \emph{training set} of size $N$ and a \emph{test
+set} of size $M = T-N$.  Form the $N \times p$ data matrix $\bX^{tr}$
+by stacking the features of the $N$ training set stimuli as row
+vectors, and stack the corresponding responses as row vectors to form
+the $N \times q$ matrix $\bY^{tr}$.  Similarly, define $\bX^{te}$ as
+the $N \times p$ matrix of test stimuli and $\bY^{te}$ as the
+$N \times q$ matrix of corresponding test responses.
+
+\subsection{Stimulus-based encoding model}
+
+The data is used to estimate a stimulus-based encoding
+model \cite{Kay2008a}\cite{Naselaris2011}\cite{Mitchell2008}.
+The conditional mean response $\E[\bY|\bX]$ is modelled as
+a linear transformation of the stimulus features,
+\[
+\vec{Y} = \bB^T \vec{X} + \bepsilon
+\]
+where $\bB$ is a $p \times q$ coefficient matrix and $\bepsilon$ is a
+noise variable satisfying $\E[\bepsilon] = 0$.  Furthermore, we assume
+that the noise the homoskedastic--that is, the covariance $\Sigma$ of
+$\bepsilon$ does not vary depending on $\vec{X}$.  The coefficient $B$
+can be estimated from the training set data $(\bX^{tr}, \bY^{tr})$
+using a variety of methods for regularized regression, for instance,
+the elastic net \cite{Zou2005}, where each column of $\bB =
+(\beta_1,\hdots, \beta_q)$ is estimated via
+\[
+\hat{\beta}_i = \argmin_\beta ||\bY_i^{tr} - \bX^{tr} \beta||^2 + \lambda_1 ||\beta||_1 + \lambda_2 ||\beta||_2^2,
+\]
+where $\lambda_1$ and $\lambda_2$ are regularization parameters which
+can be chosen via cross-validation \cite{Hastie2009a} separately for
+each column $i$.
+
+After forming the estimated coefficient matrix $\hat{\bB} =
+(\hat{\beta}_1,\hdots, \hat{\beta}_q)$, we estimate the noise
+covariance $\Sigma$ of $\bepsilon$ via a shrunken covariance
+estimate\cite{Ledoit2004}\cite{Daniels2001} from the residuals,
+\[
+\hat{\Sigma} = \frac{1}{N} ((1-\lambda) S + \lambda \text{Diag}(S)) 
+\]
+where
+\[
+S = (\bY^{tr} - \bX^{tr} \bB)^T (\bY^{tr} - \bX^{tr} \bB).
+\]
+
+\subsection{Decoder}
+
+
+
+\subsection{Computation of identification accuracy curve}
+
+
+
+
+
 
 \begin{itemize}
 \item Computation of $k$-example identification curve

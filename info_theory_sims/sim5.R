@@ -9,6 +9,8 @@ source("info_theory_sims/fit_ident_curve.R")
 
 ## low-dim
 
+set.seed(0)
+
 ntr <- 20
 nte <- 100
 p <- 3
