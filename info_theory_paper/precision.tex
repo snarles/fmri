@@ -411,7 +411,23 @@ where
 S = (\bY^{tr} - \bX^{tr} \bB)^T (\bY^{tr} - \bX^{tr} \bB).
 \]
 
-\subsection{Decoder}
+
+\subsection{Converting the encoding model to a decoding model}
+
+Bayes' rule can be used to convert a probabilistic encoding model into a decoding model \cite{Naselaris2011}.
+The encoding model can also be given a probabilistic interpretation,
+by assuming that the responses are multivariate normal conditional on the stimulus,
+\[
+\vec{Y}|\vec{X} \sim N(\bB^T \vec{X}, \Sigma).
+\]
+Hence, the conditional density of $\vec{Y}|\vec{X}$ is given by the multivariate normal density
+\[
+p(\vec{y}|\vec{x}) = -\frac{1}{(2\pi |\Sigma|)^{-q/2}} \exp\left[-\frac{1}{2}(\vec{y} - \bB^T \vec{x})^T \Sigma^{-1} (\vec{y}-\bB^T \vec{x})\right].
+\]
+The Bayesian decoding model gives the posterior probability of the stimulus given the response,
+\[
+p(\vec{x}|\vec{y}) = p(\vec{y}|\vec{x})\frac{p(\vec{x})}{p(\vec{y})}
+\]
 
 
 
