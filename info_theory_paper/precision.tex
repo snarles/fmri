@@ -459,10 +459,10 @@ The computational trick is to look at each combination of test
 response $\vec{y}^{(i)}$ and stimulus $\vec{x}^{(\ell)}$, and to count
 count the number of subsets $N_{i, \ell}$ where (i) both $i$ and
 $\ell$ are included in $S$, and (ii) $\hat{x}^{(i)} = \vec{x}^{(\ell)}$.
-Then it should be clear that the empirical accuracy over all subsets is
+One can then verify that the empirical accuracy over all subsets is
 equal to
 \begin{equation}\label{eq:avtestrisk}
-\text{EmpAcc}_k = \frac{1}{{{M}\choose{k}}}\frac{1}{k} \sum_{i=1}^{k} \sum_{\ell\neq i} C_{i\ell}N_{i, \ell}.
+\text{EmpAcc}_k = 1 - \frac{1}{{{M}\choose{k}}}\frac{1}{k} \sum_{i=1}^{k} \sum_{\ell\neq i} C_{i\ell}N_{i, \ell}.
 \end{equation}
 Now it is just a matter of simple combinatorics to compute
 $N_{i,\ell}$.  We require both $\vec{x}^{(i)}$ and $\vec{x}^{(\ell)}$ to be
@@ -482,16 +482,36 @@ The \emph{identification accuracy curve} is defined as the function which maps $
 
 \subsection{Implied information}
 
+Define the Bayes risk as the identification risk of the optimal decoder.  The result of ZB 2016 says that under certain regularity conditions, for for sufficiently high-dimensional $p(\vec{x}, \vec{y})$, we have
+\[
+\text{BayesAcc}_k \approx \bar{\pi}_k(\sqrt{2 I(\vec{x}; \vec{y})})
+\]
+where $\bar{\pi}_k$ is the function
+\[
+\bar{\pi}_k(c) = \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
+\]
+and where $I(\vec{x}; \vec{y})$ is the Shannon information
+\[
+I(\vec{X};\vec{Y}) = \int p(\vec{x}, \vec{y}) \log \frac{p(\vec{x}, \vec{y})}{p(\vec{x})p(\vec{y})}dxdy.
+\]
 
+This is an important result because it implies that the entire identification accuracy curve can be summarized by a single parameter--the mutual information.  This means that in the asymptotic regime specified by ZB 2016, (i) any portion of the curve can be used to estimate the mutual information and therefore reconstruct the entire curve, and (ii) that there exists a strict ordering over identification accuracy curves: for any two curves $A_k$ and $A_k'$, one dominates the other for all $k$: either $A_k \geq A_k'$ for all $k \geq 2$, or $A_k' \geq A_k$ for all $k \geq 2$.
 
+However, the result in ZB 2016 only applies to the optimal decoder, or \emph{Bayes decoder}.  Yet, it is impossible to obtain the Bayes decoder in practice, since constructing the Bayes decoder requires knowing $p(\vec{x}, \vec{y})$.  Therefore, we propose that under similar conditions to those stipulated in ZB 2016, for a certain class of classifiers\footnote{We leave it to future work to specify the conditions on the joint density and classifiers needed to formally establish the desired property.}, we have
+\[
+\text{IdAcc}_k \approx \bar{\pi}_k(\sqrt{2 I_{implied}})
+\]
+where $\text{IdRisk}_k$ is the $k$-class identification risk for a given classifier trained from the training set,
+and where $I_{implied}$ is a real-valued attribute of the classifier called the \emph{implied information}.
+Furthermore, since $\text{IdAcc}_k \leq \text{BayesAcc}_k$ by definition (as $\text{BayesAcc}_k$ is the best achievable accuracy), we have
+\[
+I_{implied} \leq I(\vec{X}; \vec{Y}).
+\]
 
-
-
-
-\begin{itemize}
-\item Computation of $k$-example identification curve
-\item Estimation of $I_{implied}$ based on Zheng and Benjamini (2016). What we have to add in the new paper is how to estimate $I$ from multiple $k$ rather than single $k$ as we had in ZB 2016
-\end{itemize}
+In order to estimate the implied information, we can rely on the fact that the empirical identification accuracy curve $\text{EmpAcc}_k$ is an unbiased estimate of the true identification accuracy curve $\text{IdAcc}_k$.  Therefore, we can estimate $I_{implied}$ by finding the theoretical curve which gives the best fit to the empirical accuracies in terms of mean-squared error.  Thus, define $\hat{I}_{implied}$ as the nonlinear least-squares estimator
+\[
+\hat{I}_{implied} = \text{argmin}_{\iota \geq 0} \sum_{k=2}^{M} (\text{EmpAcc}_k - \bar{\pi}_k(\sqrt{2 \iota}))^2.
+\]
 
 \section{Theory}
 
