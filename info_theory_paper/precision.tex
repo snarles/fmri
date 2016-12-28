@@ -515,15 +515,30 @@ In order to estimate the implied information, we can rely on the fact that the e
 
 \section{Theory}
 
+The main condition needed for the theory of ZB 2016 is that the log-likelihoods $\log p(\vec{Y}^{(i)}|\vec{X}^{(j)})$ have a jointly multivariate normal distribution for $(\vec{X}^{(i)}, \vec{Y}^{(i)}) \stackrel{iid}{\sim} p(\vec{x}, \vec{y})$ for $i = 1,\hdots, k$.  The multivariate normal distributional assumption, in turn, approximately holds in high dimensions due to central limit theorem, due to the decomposition
+\[
+\log p(\vec{Y}|\vec{X}) = \sum_{j=1}^{\dim(\vec{y})} \log p(Y_j | \vec{X}, Y_1,\hdots, Y_{j-1})
+\]
+under the condition that the covariances between summands,
+\begin{equation}\label{eq:cov_loglik}
+\text{Cov}[\log p(Y_j | \vec{X}, Y_1,\hdots, Y_{j-1}), \log p(Y_\ell | \vec{X}, Y_1,\hdots, Y_{\ell-1})]
+\end{equation}
+ are not too large.  Therefore, two conditions are needed for the approximation to be effective
 \begin{itemize}
-\item When will the method work well?
-\item Explain the conditions of ZB 2016 using examples from neuroimaging
-\item ZB 2016 fails when stimulus is too low-dimensional--for example, arm reaching angle
-\item ZB 2016 fails when stimulus is drawn from multimodal distribution--for example, half of the pictures are houses and half are faces
-\item How can we diagnose the assumptions? Testing goodness-of-fit of identification curve
+\item[1.] The dimensionality of the response $\vec{Y}$ must be large, so that the central limit theorem be applied.
+\item[2.] The components of the response, $Y_i$, should be ``close to independent'' in the sense that the covariances of of log-likelihoods \eqref{eq:cov_loglik} are small--again, so that the assumptions of the central limit theorem can be satisfied.
+\end{itemize}
+However, due to the symmetry of mutual information, we can exchange the places of $\vec{X}$ and $\vec{Y}$ to get another set of necessary conditions: namely, that the dimensionality of $\vec{X}$ be large and that the components of $\vec{X}$ must be approximately indepndent.  The reason why the $\vec{Y}$ conditions are equivalent to the $\vec{X}$ conditions is that low dimensionality in $\vec{Y}$ implies correlation among components in $\vec{X}$, and vice-versa.
+
+The most effective way to illustrate the practical implications of these conditions is to list examples of experiments in neuroscience where the conditions are either well-satisfied, or violated.
+\begin{itemize}
+\item When $\vec{Y}$ is the mean spike count of a single neuron, and $\vec{X}$ is the wind direction, as in \cite{Theunissen1991}, the dimensionality of both the stimulus and the response is too low for the theory to apply.
+\item When the stimulus $\vec{X}$ consists of a images drawn from a mixture of a $k$ different disjoint classes, as in \cite{Connolly2012} (mammal, insect, bird), even if $\vec{X}$ is high-dimensional, the mixture structure creates correlations between the components of $\vec{X}$.  Whether or not the theory is still effective depends on the degree of separation between mixture components--we discuss this issue in more detail in Section \ref{sec:simulations}.
+%if the individual class distributions are highly concentrated relative to the inter-class variation, then the distribution of $\vec{X}$ is well-approximated by its first $k$ principal components, and $\vec{X}$ is effectively `low-dimensional', leading to poor results.
+\item The ideal case is when $\vec{X}$ is high-dimensional, and drawn from a population with either no clear cluster structure or with very many clusters, and where $\vec{Y}$ is high-dimensional (e.g. a large region of interest in an fMRI scan), as in \cite{Kay2008a}\cite{Mitchell2008}.
 \end{itemize}
 
-\section{Simulations}
+\section{Simulations}\label{sec:simulations}
 
 \begin{itemize}
 \item Simulations which illustrate points made in theory section
