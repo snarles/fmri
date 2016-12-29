@@ -61,8 +61,9 @@ cv_kde_mi <- function(X, Y, h, mc.mult = 10) {
 #   mean(log(n * nns)) + log(2) - 0.57721566
 # }
 
-nn_mi <- function(X, Y) {
+nn_mi <- function(X, Y, ...) {
 #  nn_entropy(X) + nn_entropy(Y) - nn_entropy(cbind(X, Y))
-  entropy(X) + entropy(Y) - entropy(cbind(X, Y))
+  ans <- entropy(X, ...) + entropy(Y, ...) - entropy(cbind(X, Y), ...)
+  pmax(0, ans)
 }
 
