@@ -9,9 +9,11 @@ mi_to_cor <- function(mi) {
 
 p <- 1
 ns <- (2:200)^2
-sgma <- 5
+sgma <- 2
 Xall <- randn(max(ns), p)
 Yall <- Xall + sgma * randn(max(ns), p)
+
+plot(Xall[1:1000, ]/sd(Xall), Yall[1:1000, ]/sd(Yall), asp = 1, axes = FALSE, ann = FALSE); abline(v=0); abline(h = 0)
 
 (cor_true <- 1/sqrt(1 + sgma^2))
 (mi_true <- p/2 * log(1 + sgma^(-2)))
