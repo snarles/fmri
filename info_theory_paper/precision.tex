@@ -540,12 +540,29 @@ The most effective way to illustrate the practical implications of these conditi
 
 \section{Simulations}\label{sec:simulations}
 
+To demonstrate the effectiveness of our procedure for recovering the identification accuracy curve in various settings,
+we apply our method to three different simulated examples: (a) a low dimensional case, (b) a high-dimensional case, (c) a high-dimensional mixture, as seen in Figure \ref{fig:simulations}.  Since only case (b) is close to satisfying the high-dimensionality and component dependence assumptions, we only expect the method to be effective in case (b).
+
+Details of the simulation [to be moved to appendix]
 \begin{itemize}
-\item Simulations which illustrate points made in theory section
-\item Low-dimensional sim (bad)
-\item High-dimensional sim (good)
-\item High-dimensional but bimodal (bad)
+\item $\vec{X}$ is standard multivariate normal.
+\item $\vec{Y} = \vec{X}^T \bB + \bepsilon$, where $\bepsilon$ is standard multivariate normal, and $\bB$ is a randomly generated $p \times q$ coefficient matrix with independent $N(0, 1)$ entries.
+\item Training size $n$ is varied; test set size is 100.
+\item Our method is used to estimate the accuracy curve from $K=2$ to $K=100$ from the empirical accuracies from $K=2$ to $K=50$.
 \end{itemize}
+
+\begin{figure}
+\begin{center}
+\begin{tabular}{ccc}
+\includegraphics[scale=0.4]{../info_theory_sims/fig_sim5a.pdf} &
+\includegraphics[scale=0.4]{../info_theory_sims/fig_sim5b.pdf} &
+\includegraphics[scale=0.4]{../info_theory_sims/fig_sim5c.pdf}\\
+(a) & (b) & (c)
+\end{tabular}
+\end{center}
+\label{fig:simulations}
+\caption{Success at recovering identification accuracy curves for various settings.  Black = empirical accuracy curve, Blue = ground truth accuracy curve, Red = estimated accuracy curve. (a) Low-dimensional setting ($n = 20, p = 3, q = 5$).  The estimated accuracy curve is not close to either the empirical curve nor the true accuracy curve.  (b) High-dimensional setting ($n = 2000, p = 30, q = 50$).  The estimated accuracy curve is close to both the empirical and true accuracy curves, and is a better estimate of the true accuracy than the empirical accuracy.  (c) High-dimensional mixture setting. ($n = 2000, p = 30, q = 50$)  Although the estimated curve is similar to the empirical curve, the true accuracy is much diffferent from either.}
+\end{figure}
 
 \section{Real-data examples}
 
