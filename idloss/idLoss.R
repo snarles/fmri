@@ -3,11 +3,22 @@
 ####
 
 library(pracma)
+library(glmnet)
 library(randomForest)
 
 fitter_ols <- function(Xtr, Ytr, Xte, ...) {
   Xte %*% solve(t(Xtr) %*% Xtr, t(Xtr) %*% Ytr)
 }
+
+fitter_enet <- function(Xtr, Ytr, Xte, ...) {
+  Yh <- zeros(nrow(Xte), ncol(Ytr))
+  for (i in 1:ncol(Yte)) {
+    res <- cv.glmnet(Xtr, Ytr[, i], ...)
+    Yh[, i] <- predict(res, Xte)
+  }
+  Yh
+}
+
 fitter_rf <- function(Xtr, Ytr, Xte, ...) {
   Yh <- matrix(NA, nrow(Xte), ncol(Ytr))
   for (i in 1:ncol(Ytr)) {
