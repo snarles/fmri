@@ -8,14 +8,15 @@ n <- 1000
 p <- 2
 sgma <- 0.1
 
-d_ex <- 2
+d_ex <- 0
+
+set.seed(0)
 
 X0 <- randn(n, p)
 Y0 <- X0 + sgma * randn(n, p)
 ## true MI
 (mi_true <- p/2 * log(1 + sgma^(-2)))
 
-set.seed(0)
 bmat1 <- 0.1 * randn(p) + eye(p)
 bmat2 <- 0.1 * randn(p) + eye(p)
 X <- X0 %*% bmat1

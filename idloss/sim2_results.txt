@@ -1,0 +1,13 @@
+
+d = 0
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10   mi_np_rf_20 
+     4.615121      4.311630      4.222693      4.322725      4.176937      4.213995      3.885612      4.116224 
+     
+d = 1
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10   mi_np_rf_20 
+     4.615121      3.802041      4.326183      4.341274      4.283336      4.293942      3.759048      3.705610 
+     
+d = 2
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10   mi_np_rf_20 
+     4.615121      3.178328      4.264677      4.314410      4.262344      4.310572      3.422462      3.252161 
+     
