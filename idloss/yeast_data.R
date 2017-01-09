@@ -1,4 +1,6 @@
 
+source("idloss/idLoss.R")
+
 ###
 ## Reading yeast data
 ###
@@ -8,6 +10,11 @@ dat <- read.delim("data2/yeast_cell_cycle.txt", row.names = 1)
 plot(dat[, 1])
 dim(dat)
 table(colSums(is.na(dat)))
+
+colnames(dat)
+tseries_inds <- c(7:24, 26:49, 51:67, 69:82)
+colnames(dat)[tseries_inds]
+
 
 image(is.na(dat))
 
@@ -65,11 +72,50 @@ sort(table(annot$Process), decreasing = TRUE)[1:10]
 
 ## matching the rownames to the processes
 
-colnames(cdc_dat)[1:10]
+rownames(dat)[1:10]
 annot$ORF[1:20]
 
-annots <- character(ncol(cdc_dat))
-m_inds <- match(colnames(cdc_dat), annot$ORF)
+annots <- character(nrow(dat))
+m_inds <- match(rownames(dat), annot$ORF)
 annots[!is.na(m_inds)] <- annot$Process[m_inds[!is.na(m_inds)]]
-annots[1:10]
-names(annots) <- colnames(cdc_dat)
+annots[1:100]
+names(annots) <- rownames(dat)
+annots[is.na(annots)] <- ""
+
+cell_cyc <- dat[annots=="cell cycle", ]
+dim(cell_cyc)
+matplot(t(as.matrix(cell_cyc[, tseries_inds])), type = "l")
+
+rowSums(is.na(cell_cyc[, tseries_inds]))
+colSums(is.na(cell_cyc[, tseries_inds]))
+fseries_inds <- intersect(tseries_inds, which(colSums(is.na(cell_cyc))== 0))
+colnames(cell_cyc)[fseries_inds]
+
+image(is.na(cell_cyc[, tseries_inds]))
+
+annots[annots == "cell cycle"]
+
+matplot(apply(is.na(cell_cyc) + 0, 2, jitter, factor = 0.5), type = "l")
+
+## cross-validation prediction
+
+
+tr_inds <- sample(nrow(cell_cyc), 23)
+cell_cyc_tr <- t(as.matrix(cell_cyc[tr_inds, fseries_inds]))
+cell_cyc_te <- t(as.matrix(cell_cyc[-tr_inds, fseries_inds]))
+
+#View(cell_cyc_tr)
+
+k <- 3
+id_cv_loss(cell_cyc_tr, cell_cyc_te, 3, fitter_ols)
+id_cv_loss(cell_cyc_tr, cell_cyc_te[, 2, drop = FALSE], 3, fitter_ols, 
+           mc.reps = 100)
+
+
+errs_cyc <- sapply(1:ncol(cell_cyc_te),
+                   function(i) 
+                     id_cv_loss(cell_cyc_tr, cell_cyc_te[, i, drop = FALSE], 
+                                k, fitter_ols, 
+                                mc.reps = 100))
+
+

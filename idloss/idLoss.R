@@ -41,10 +41,10 @@ id_cv_loss <- function(X, Y, k, fitter = fitter_ols, mc.reps = 20, ...) {
   n <- nrow(X)
   for (rep.i in 1:mc.reps) {
     inds.te <- sample(n, k)
-    Xtr <- X[-inds.te, ]
-    Ytr <- Y[-inds.te, ]
-    Xte <- X[inds.te, ]
-    Yte <- Y[inds.te, ]
+    Xtr <- X[-inds.te, , drop = FALSE]
+    Ytr <- Y[-inds.te, , drop = FALSE]
+    Xte <- X[inds.te, , drop = FALSE]
+    Yte <- Y[inds.te, , drop = FALSE]
     Yhat <- fitter(Xtr, Ytr, Xte, ...)
     loss <- nn_loss(Yhat, Yte)
     losses[rep.i] <- loss
