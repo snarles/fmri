@@ -91,11 +91,11 @@ colSums(is.na(cell_cyc[, tseries_inds]))
 fseries_inds <- intersect(tseries_inds, which(colSums(is.na(cell_cyc))== 0))
 colnames(cell_cyc)[fseries_inds]
 
-image(is.na(cell_cyc[, tseries_inds]))
+#image(is.na(cell_cyc[, tseries_inds]))
 
-annots[annots == "cell cycle"]
+#annots[annots == "cell cycle"]
 
-matplot(apply(is.na(cell_cyc) + 0, 2, jitter, factor = 0.5), type = "l")
+#matplot(apply(is.na(cell_cyc) + 0, 2, jitter, factor = 0.5), type = "l")
 
 ## cross-validation prediction
 
@@ -106,16 +106,46 @@ cell_cyc_te <- t(as.matrix(cell_cyc[-tr_inds, fseries_inds]))
 
 #View(cell_cyc_tr)
 
-k <- 3
-id_cv_loss(cell_cyc_tr, cell_cyc_te, 3, fitter_ols)
-id_cv_loss(cell_cyc_tr, cell_cyc_te[, 2, drop = FALSE], 3, fitter_ols, 
-           mc.reps = 100)
+ftr <- fitter_ols
+#ftr <- fitter_enet
+
+# k <- 3
+# id_cv_loss(cell_cyc_tr, cell_cyc_te, 3, fitter_ols)
+# id_cv_loss(cell_cyc_tr, cell_cyc_te[, 2, drop = FALSE], 3, fitter_ols, 
+#            mc.reps = 100)
 
 
 errs_cyc <- sapply(1:ncol(cell_cyc_te),
                    function(i) 
                      id_cv_loss(cell_cyc_tr, cell_cyc_te[, i, drop = FALSE], 
-                                k, fitter_ols, 
-                                mc.reps = 100))
+                                k, ftr, 
+                                mc.reps = 1000))
+errs_cyc
 
+
+id_cv_loss(cell_cyc_tr, cell_cyc_te, k, ftr,mc.reps = 1000)
+
+## apply to random other genes
+
+sort(table(annots), decreasing = TRUE)[1:10]
+non_cell_cyc <- dat[annots=="DNA replication", ]
+
+
+
+non_cell_cyc <- dat[annots!="cell cycle", ]
+dim(non_cell_cyc)
+filt <- (rowSums(is.na(non_cell_cyc[, fseries_inds])) == 0)
+sum(filt)
+ncc <- t(as.matrix(non_cell_cyc[filt, fseries_inds]))
+
+id_cv_loss(cell_cyc_tr, ncc, k, ftr,mc.reps = 1000)
+
+
+(inds_samp <- sample(ncol(ncc), 5))
+errs_noncyc <- sapply(inds_samp,
+                   function(i) 
+                     id_cv_loss(cell_cyc_tr, ncc[, i, drop = FALSE], 
+                                k, ftr, 
+                                mc.reps = 100))
+errs_noncyc
 

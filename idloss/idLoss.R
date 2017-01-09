@@ -12,7 +12,7 @@ fitter_ols <- function(Xtr, Ytr, Xte, ...) {
 
 fitter_enet <- function(Xtr, Ytr, Xte, ...) {
   Yh <- zeros(nrow(Xte), ncol(Ytr))
-  for (i in 1:ncol(Yte)) {
+  for (i in 1:ncol(Ytr)) {
     res <- cv.glmnet(Xtr, Ytr[, i], ...)
     Yh[, i] <- predict(res, Xte)
   }
