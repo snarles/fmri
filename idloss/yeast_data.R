@@ -129,6 +129,9 @@ id_cv_loss(cell_cyc_tr, cell_cyc_te, k, ftr,mc.reps = 1000)
 
 sort(table(annots), decreasing = TRUE)[1:10]
 non_cell_cyc <- dat[annots=="DNA replication", ]
+non_cell_cyc <- dat[annots=="transport", ]
+non_cell_cyc <- dat[annots=="cytoskeleton", ]
+non_cell_cyc <- dat[annots=="chromatin structure", ]
 
 
 
