@@ -134,7 +134,6 @@ non_cell_cyc <- dat[annots=="cytoskeleton", ]
 non_cell_cyc <- dat[annots=="chromatin structure", ]
 
 
-
 non_cell_cyc <- dat[annots!="cell cycle", ]
 dim(non_cell_cyc)
 filt <- (rowSums(is.na(non_cell_cyc[, fseries_inds])) == 0)
@@ -152,3 +151,71 @@ errs_noncyc <- sapply(inds_samp,
                                 mc.reps = 100))
 errs_noncyc
 
+####
+##  do the full comparisons
+####
+
+library(lineId)
+cats <- c("cell cycle", "DNA replication", "transport", "cytoskeleton", "chromatin structure")
+dsets <- list()
+for (cat in cats) {
+  non_cell_cyc <- dat[annots==cat, ]
+  filt <- (rowSums(is.na(non_cell_cyc[, fseries_inds])) == 0)
+  sum(filt)
+  ncc <- t(as.matrix(non_cell_cyc[filt, fseries_inds]))
+  dsets[[cat]] <- ncc
+}
+
+ccs <- matrix(0, length(dsets), length(dsets))
+for (i in 1:(length(dsets) - 1)) {
+  for (j in (i+1):length(dsets)) {
+    ccs[i, j] <- cancor(dsets[[i]], dsets[[j]])$cor[1]
+  }
+}
+ccs
+# [,1] [,2] [,3]      [,4]      [,5]
+# [1,]    0    1    1 1.0000000 1.0000000
+# [2,]    0    0    1 0.9988279 0.9994315
+# [3,]    0    0    0 0.9911839 0.9897579
+# [4,]    0    0    0 0.0000000 0.9891288
+# [5,]    0    0    0 0.0000000 0.0000000
+
+library(PMA)
+
+res <- CCA(dsets[[1]], dsets[[2]])
+names(res)
+res$cors
+
+help(CCA)
+
+pccs <- matrix(0, length(dsets), length(dsets))
+for (i in 1:(length(dsets) - 1)) {
+  for (j in (i+1):length(dsets)) {
+    pccs[i, j] <- CCA(dsets[[i]], dsets[[j]])$cors
+  }
+}
+pccs
+# [,1]      [,2]      [,3]      [,4]      [,5]
+# [1,]    0 0.9348542 0.7932636 0.8883622 0.8753969
+# [2,]    0 0.0000000 0.7629753 0.7618839 0.9170895
+# [3,]    0 0.0000000 0.0000000 0.6527667 0.6887320
+# [4,]    0 0.0000000 0.0000000 0.0000000 0.8398731
+# [5,]    0 0.0000000 0.0000000 0.0000000 0.0000000
+
+k <- 3
+ftr <- fitter_ols
+infos <- matrix(0, length(dsets), length(dsets))
+for (i in 1:(length(dsets) - 1)) {
+  for (j in (i+1):length(dsets)) {
+    ep <- id_cv_loss(dsets[[i]], dsets[[j]], k, ftr,mc.reps = 1000)
+    infos[i, j] <- lineId::aba_to_mi_lower(k, 1-ep)
+  }
+}
+infos
+(s_cors <- sqrt(1 - exp(-2 * infos)))
+# [,1]      [,2]      [,3]      [,4]      [,5]
+# [1,]    0 0.8370564 0.5568816 0.8212755 0.5916115
+# [2,]    0 0.0000000 0.6007758 0.8825376 0.8781796
+# [3,]    0 0.0000000 0.0000000 0.7458287 0.7176739
+# [4,]    0 0.0000000 0.0000000 0.0000000 0.9262076
+# [5,]    0 0.0000000 0.0000000 0.0000000 0.0000000
