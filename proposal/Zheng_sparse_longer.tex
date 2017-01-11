@@ -117,8 +117,24 @@
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
 
+%"Estimating mutual information for high-dimensional sparse relationships"
 
-\title[Mutual information]{Estimating mutual information using sparse regression}
+%Abstract: Mutual information is a versatile measure of the strength of
+%nonlinear dependence between two random variables or vectors.
+%However, estimating mutual information in high dimensions requires
+%prohibitively large numbers of observations, which limits its use in
+%many applications of interest.  We propose a new method for estimating
+%mutual information in when the assumption of sparsity can be
+%justified--i.e., in situations where there exists a low-dimensional
+%structure hidden within the high-dimensional data.  Our method builds
+%a bridge between modern statistical and machine learning models for
+%"learning from sparsity" and the classical problem of estimating
+%mutual information, exploiting the assumption of sparsity to achieve
+%effective estimation even with relatively few observations.  We
+%demonstrate the utility of our approach in simulations, and a
+%gene-expression time series data set.
+
+\title[Mutual information]{Estimating mutual information for high-dimensional sparse relationships}
 
 \author{Charles Zheng} % Your name
 \institute[Stanford] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
@@ -136,16 +152,37 @@
 \section{Introduction}
 
 \begin{frame}
+\frametitle{Overview}
+\begin{columns}
+\begin{column}{0.25\textwidth}
+\includegraphics[scale = 0.27]{kinney3.png}
+\end{column}
+\begin{column}{0.75\textwidth}
+Mutual information $I(\vec{X}; \vec{Y})$
+\begin{itemize}
+\item measures dependence between two random vectors, $\vec{X}$ and $\vec{Y}$ \pause
+\item applies to nonlinear and multidimensional relationships (unlike correlation) \pause
+\item is \emph{difficult to estimate} in high dimensions \pause
+\end{itemize}
+This work combines \emph{machine learning} (sparse estimation) with \emph{information theory} to obtain better estimates of mutual information.
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
 \frametitle{Mutual information $I(X; Y)$}
 \begin{center}
 \includegraphics[scale = 0.23]{shannon_claude.png}
 \hspace{0.2in}
-\includegraphics[scale = 0.2]{kinney.png}
+\includegraphics[scale = 0.2]{kinney2.png}
 \end{center}
-\begin{itemize}
-\item Introduced in Shannon's 1948 paper, ``A mathematical theory of communication''\pause
-\item Mutual information measures nonlinear dependence between random variables $X$ and $Y$
-\end{itemize}
+Introduced in Shannon's 1948 paper, ``A mathematical theory of communication''
+%\begin{itemize}
+%\item 
+%\item Mutual information measures nonlinear dependence between random variables% $X$ and $Y$
+%\end{itemize}
+
+\vspace{1in}
 \tiny{Image credit Kinney et al. 2014.}
 \end{frame}
 
@@ -166,34 +203,37 @@ Engineering, biology, computer science, physics, medicine
 \begin{center}
 \includegraphics[scale = 0.2]{speed_reshef.png}
 \end{center}
-Mutual-information based quantities proposed for detecting associations between variables (Reshef et al. 2011, Speed 2011)
+\begin{itemize}
+\item In many applications scientists are interested in \emph{dependence}, not \emph{correlation} (Reshef et al. 2011, Speed 2011). \pause
+\item Only mutual information (and derived quantities) measures dependence directly  \pause
+\end{itemize}
 \end{frame}
 
-\begin{frame}
-\frametitle{Mutual information (Shannon 1948)}
-\begin{center}
-\includegraphics[scale = 0.2]{kinney.png}
-\end{center}
-\begin{itemize}
-\item $I(X;Y) \geq 0$.\pause
-\item $I(X; Y) = $0 if $X \perp Y$ \pause
-\item Symmetry: $I(X;Y) = I(Y; X)$.\pause 
-\end{itemize}
-\emph{(all of these are also properties of Pearson correlation)}
-\end{frame}
+%\begin{frame}
+%\frametitle{Mutual information (Shannon 1948)}
+%\begin{center}
+%\includegraphics[scale = 0.2]{kinney2.png}
+%\end{center}
+%\begin{itemize}
+%\item $I(X;Y) \geq 0$.\pause
+%\item $I(X; Y) = $0 if $X \perp Y$ \pause
+%\item Symmetry: $I(X;Y) = I(Y; X)$.\pause 
+%\end{itemize}
+%\emph{(all of these are also properties of Pearson correlation)}
+%\end{frame}
 
-\begin{frame}
-\frametitle{Mutual information (Shannon 1948)}
-\begin{center}
-\includegraphics[scale = 0.2]{kinney.png}
-\end{center}
-\begin{itemize}
-\item Data-processing inequality:
-\begin{itemize}
-\item Transforming $X$ or $Y$ generally \emph{decreases} the information (and can never increase it) \pause
-\item But if the transformation is bijective, the information stays the same (\emph{invariance} under bijections)\pause
-\end{itemize}
-Pearson correlation is invariant only under \emph{linear} bijections--and can otherwise increase under transformations.
+%\begin{frame}
+%\frametitle{Mutual information (Shannon 1948)}
+%\begin{center}
+%\includegraphics[scale = 0.2]{kinney2.png}
+%\end{center}
+%\begin{itemize}
+%\item Data-processing inequality:
+%\begin{itemize}
+%\item Transforming $X$ or $Y$ generally \emph{decreases} the information (and can never increase it) \pause
+%\item But if the transformation is bijective, the information stays the same (\emph{invariance} under bijections)\pause
+%\end{itemize}
+%Pearson correlation is invariant only under \emph{linear} bijections--and can otherwise increase under transformations.
 %\[I(X; Y) \geq I(\phi(X); \psi(Y))\]
 %equality for $\phi$, $\psi$ bijections
 %\item Additivity.  If $(X_1,Y_1) \perp (X_2, Y_2)$, then
@@ -202,34 +242,42 @@ Pearson correlation is invariant only under \emph{linear} bijections--and can ot
 %\]
 %\item Relation to KL divergence
 %\[\mathbb{D}(p(x, y)||p(x)p(y)) = I(X; Y).\]
-\end{itemize}
-\end{frame}
+%\end{itemize}
+%\end{frame}
 
 
 \begin{frame}
-\frametitle{Comparing $I(X; Y)$ with Pearson correlation}
-\begin{columns}
-\begin{column}{0.5\textwidth}
-Pearson correlation
+\frametitle{Problems with mutual information}
 \begin{itemize}
-\item[+] Easy to interpret \\(0 = independence,\\ 1 = perfect correlation)\pause
-\item[+] Straightforwardly estimated
-\item[-] Only applies to univariate $X$, $Y$\pause
-\item[-] Only captures linear associations\pause
+\item Hard to interpret (compared to $R^2$)
+\item Hard to estimate (compared to $R^2$)
 \end{itemize}
-\end{column}
-\begin{column}{0.5\textwidth}
-Mutual information
-\begin{itemize}
-\item[+] Captures nonlinear associations \pause
-\item[+] Extends to arbitrarily many dimensions \pause
-\item[+] Nonlinear invariance \pause
-\item[-] Less easy to interpret? \pause
-\item[-] Harder to estimate from data!
-\end{itemize}
-\end{column}
-\end{columns}
 \end{frame}
+
+%\begin{frame}
+%\frametitle{Comparing $I(X; Y)$ with Pearson correlation}
+%\begin{columns}
+%\begin{column}{0.5\textwidth}
+%Pearson $R^2$
+%\begin{itemize}
+%\item[+] Easy to interpret \\(0 = uncorrelated,\\ 1 = perfect correlation)\pause
+%\item[+] Straightforwardly estimated
+%\item[-] Only applies to univariate $X$, $Y$\pause
+%\item[-] Only captures linear associations\pause
+%\end{itemize}
+%\end{column}
+%\begin{column}{0.5\textwidth}
+%Mutual information
+%\begin{itemize}
+%\item[+] Captures nonlinear associations \pause
+%\item[+] Extends to arbitrarily many dimensions \pause
+%\item[+] Nonlinear invariance \pause
+%\item[-] Less easy to interpret? \pause
+%\item[-] Harder to estimate from data!
+%\end{itemize}
+%\end{column}
+%\end{columns}
+%\end{frame}
 
 \begin{frame}
 \frametitle{Can we make $I(X; Y)$ easier to interpret?}
