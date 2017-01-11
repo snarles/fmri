@@ -628,7 +628,121 @@ Then,
 
 \begin{frame}
 \frametitle{Application to gene expression time series}
-to be contd
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\includegraphics[scale = 0.27]{yeast_cc_fig1.jpg}
+\end{column}
+\begin{column}{0.6\textwidth}
+
+\begin{itemize}
+\item Data for expression levels of 6178 yeast genes during cell cycle
+\item Total 73 time points per gene
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Groups of genes}
+\begin{center}
+\begin{tabular}{c|c}
+Group & No. genes \\ \hline
+unknown & 396 \\
+cell cycle & 27 \\
+DNA replication & 27 \\
+transport & 19 \\
+cytoskeleton & 17\\
+chromatin structure & 16 \\\hline
+\end{tabular}
+\end{center}
+
+\vspace{0.5in}
+Total 145 different categories (only top 6 shown).
+\end{frame}
+
+%# [,1] [,2] [,3]      [,4]      [,5]
+%# [1,]    0    1    1 1.0000000 1.0000000
+%# [2,]    0    0    1 0.9988279 0.9994315
+%# [3,]    0    0    0 0.9911839 0.9897579
+%# [4,]    0    0    0 0.0000000 0.9891288
+%# [5,]    0    0    0 0.0000000 0.0000000
+
+\begin{frame}
+\frametitle{Canonical correlations between time series}
+Top canonical correlation (Hotelling 1936)
+
+\begin{center}
+\begin{tabular}{c|c|c|c|c|c|} 
+   & CC   & DR   & Tr   & Cy   & CS  \\ \hline
+CC &      & 1    & 1    & 1    & 1   \\ \hline
+DR &      &      & 1    & 0.99 & 0.99\\ \hline
+Tr &      &      &      & 0.99 & 0.98\\ \hline
+Cy &      &      &      &      & 0.98\\ \hline
+CS &      &      &      &      &     \\ \hline
+\end{tabular}
+\end{center}
+
+\vspace{0.5in}
+CC = cell cycle, DR = DNA replication, Tr = transport, \\
+Cy = cytoskeleton, CS = chromatin structure
+\end{frame}
+
+%# [,1]      [,2]      [,3]      [,4]      [,5]
+%# [1,]    0 0.9348542 0.7932636 0.8883622 0.8753969
+%# [2,]    0 0.0000000 0.7629753 0.7618839 0.9170895
+%# [3,]    0 0.0000000 0.0000000 0.6527667 0.6887320
+%# [4,]    0 0.0000000 0.0000000 0.0000000 0.8398731
+%# [5,]    0 0.0000000 0.0000000 0.0000000 0.0000000
+
+\begin{frame}
+\frametitle{Sparse canonical correlations between time series}
+Using sparse CCA* (Witten and Tibshirani 2009).
+
+\begin{center}
+\begin{tabular}{c|c|c|c|c|c|} 
+   & CC   & DR   & Tr   & Cy   & CS \\ \hline
+CC &      & 0.93 & 0.79 & 0.88 & 0.87\\ \hline
+DR &      &      & 0.76 & 0.76 & 0.91\\ \hline
+Tr &      &      &      & 0.65 & 0.68\\ \hline
+Cy &      &      &      &      & 0.83\\ \hline
+CS &      &      &      &      &     \\ \hline
+\end{tabular}
+\end{center}
+
+\vspace{0.5in}
+CC = cell cycle, DR = DNA replication, Tr = transport, \\
+Cy = cytoskeleton, CS = chromatin structure
+
+\vspace{0.1in}
+
+\tiny{*: Default settings in R package {\tt PMA}}
+\end{frame}
+
+%# [,1]      [,2]      [,3]      [,4]      [,5]
+%# [1,] 0.0000000 0.9208131 0.7884693 0.9734130 0.8068120
+%# [2,] 0.9208131 0.0000000 0.8525753 0.9004876 0.9213302
+%# [3,] 0.7884693 0.8525753 0.0000000 0.7305535 0.7105705
+%# [4,] 0.9734130 0.9004876 0.7305535 0.0000000 0.9344747
+%# [5,] 0.8068120 0.9213302 0.7105705 0.9344747 0.0000000
+
+\begin{frame}
+\frametitle{Information correlations between time series}
+Taking the max of $\hat{I}(X; Y)$ and $\hat{I}(Y; X)$.
+
+\begin{center}
+\begin{tabular}{c|c|c|c|c|c|} 
+   & CC   & DR   & Tr   & Cy   & CS \\ \hline
+CC &      & 0.92 & 0.79 & 0.97 & 0.81\\ \hline
+DR &      &      & 0.85 & 0.90 & 0.92\\ \hline
+Tr &      &      &      & 0.73 & 0.71\\ \hline
+Cy &      &      &      &      & 0.93\\ \hline
+CS &      &      &      &      &     \\ \hline
+\end{tabular}
+\end{center}
+
+\vspace{0.5in}
+CC = cell cycle, DR = DNA replication, Tr = transport, \\
+Cy = cytoskeleton, CS = chromatin structure
 \end{frame}
 
 \begin{frame}
