@@ -164,7 +164,10 @@ Mutual information $I(\vec{X}; \vec{Y})$
 \item applies to nonlinear and multidimensional relationships (unlike correlation) \pause
 \item is \emph{difficult to estimate} in high dimensions \pause
 \end{itemize}
-This work combines \emph{machine learning} (sparse estimation) with \emph{information theory} to obtain better estimates of mutual information.
+We combine \emph{machine learning} (sparse estimation) with \emph{information theory} to obtain better estimates of $I(\vec{X}; \vec{Y})$
+\begin{center}
+\includegraphics[scale = 0.23]{ml_shann.png}
+\end{center}
 \end{column}
 \end{columns}
 \end{frame}
@@ -282,25 +285,26 @@ Engineering, biology, computer science, physics, medicine
 \begin{frame}
 \frametitle{Can we make $I(X; Y)$ easier to interpret?}
 \begin{itemize}
-\item If $(X, Y)$ have a bivariate normal distribution with correlation $\rho$, then
+%\item If $(X, Y)$ have a bivariate normal distribution with correlation $\rho$, then
+%\[
+%I(X; Y) = \frac{-1}{2}\ln(1 - \rho^2)
+%\] \pause
+\item Define the ``informational correlation'' (Linfoot 1957)
 \[
-I(X; Y) = \frac{-1}{2}\ln(1 - \rho^2)
-\] \pause
-\item Define the ``Shannon correlation''
-\[
-\text{Cor}_{Shannon}(X, Y) = \sqrt{1-e^{-2I(X; Y)}}
+\text{Cor}_{Info}(X, Y) = \sqrt{1-e^{-2I(X; Y)}}
 \]\pause
-\item Then $\text{Cor}_{Shannon}(X, Y) \in [0,1]$.
+\item Then $\text{Cor}_{Info}(X, Y) \in [0,1]$.
 \item For $(X, Y)$ bivariate normal,
 \[
-\text{Cor}_{Pearson}(X, Y) = \text{Cor}_{Shannon}(X, Y)
+|\text{Cor}_{Pearson}(X, Y)| = \text{Cor}_{Shannon}(X, Y)
 \]
 \end{itemize}
+\pause 
 \end{frame}
 
 \begin{frame}
 \frametitle{Difficulty of estimating $I(X; Y)$}
-Example with $\text{Cor}_{Pearson}(X, Y) = \text{Cor}_{Shannon}(X, Y) = 0.44$.
+Example with $\text{Cor}_{Pearson}(X, Y) = \text{Cor}_{Info}(X, Y) = 0.44$.
 \begin{center}
 \includegraphics[scale = 0.2, clip=true, trim=0 -2in 0 0]{../info_theory_sims/cor_2.pdf}
 \includegraphics[scale = 0.5]{../info_theory_sims/cor_info2.pdf}
@@ -310,7 +314,7 @@ Example with $\text{Cor}_{Pearson}(X, Y) = \text{Cor}_{Shannon}(X, Y) = 0.44$.
 
 \begin{frame}
 \frametitle{Difficulty of estimating $I(X; Y)$}
-Example with $\text{Cor}_{Pearson}(X, Y) = \text{Cor}_{Shannon}(X, Y) = 0.2$.
+Example with $\text{Cor}_{Pearson}(X, Y) = \text{Cor}_{Info}(X, Y) = 0.2$.
 \begin{center}
 \includegraphics[scale = 0.2, clip=true, trim=0 -2in 0 0]{../info_theory_sims/cor_1.pdf}
 \includegraphics[scale = 0.5]{../info_theory_sims/cor_info1.pdf}
