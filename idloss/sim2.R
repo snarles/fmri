@@ -11,7 +11,7 @@ sgma <- 0.1
 RES <- list()
 sink("idloss/temp.txt")
 #d_ex <- 0
-for (d_ex in 0:10) {
+for (d_ex in 11:20) {
 
   set.seed(0)
   
