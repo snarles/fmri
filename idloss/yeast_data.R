@@ -272,7 +272,7 @@ best_cors
 
 nullsets <- list()
 for (ii in 1:100) {
-  non_cell_cyc <- dat[sample(nrow(dat), 20), ]
+  non_cell_cyc <- dat[sample(nrow(dat), 30), ]
   filt <- (rowSums(is.na(non_cell_cyc[, fseries_inds])) == 0)
   sum(filt)
   ncc <- t(as.matrix(non_cell_cyc[filt, fseries_inds]))
@@ -283,8 +283,9 @@ null_ccs <- numeric()
 null_pccs <- numeric()
 null_infos <- numeric()
 
-niters <- 1000
-
+niters <- 100
+k <- 3
+ftr <- fitter_ols
 for (jj in 1:niters) {
   d1 <- nullsets[[sample(100, 1)]]
   d2 <- nullsets[[sample(100, 1)]]
@@ -301,3 +302,6 @@ for (jj in 1:niters) {
   null_infos[jj] <- ss
 }
 
+sapply(ccs[upper.tri(ccs)], function(v) mean(v < null_ccs))
+sapply(pccs[upper.tri(ccs)], function(v) mean(v < null_pccs))
+sapply(s_cors[upper.tri(ccs)], function(v) mean(v < null_infos))
