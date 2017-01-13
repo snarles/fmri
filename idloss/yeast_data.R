@@ -166,13 +166,13 @@ for (cat in cats) {
   dsets[[cat]] <- ncc
 }
 
-for (ii in 1:2) {
-  non_cell_cyc <- dat[sample(nrow(dat), 20), ]
-  filt <- (rowSums(is.na(non_cell_cyc[, fseries_inds])) == 0)
-  sum(filt)
-  ncc <- t(as.matrix(non_cell_cyc[filt, fseries_inds]))
-  dsets[[paste0("noise", ii)]] <- ncc
-}
+# for (ii in 1:2) {
+#   non_cell_cyc <- dat[sample(nrow(dat), 20), ]
+#   filt <- (rowSums(is.na(non_cell_cyc[, fseries_inds])) == 0)
+#   sum(filt)
+#   ncc <- t(as.matrix(non_cell_cyc[filt, fseries_inds]))
+#   dsets[[paste0("noise", ii)]] <- ncc
+# }
 
 
 
@@ -264,3 +264,40 @@ best_cors
 # [5,] 0.8048830 0.9226075 0.7574145 0.9328052 0.0000000 0.5669996 0.5338290
 # [6,] 0.5560886 0.6154163 0.8403493 0.6566270 0.5669996 0.0000000 0.4720365
 # [7,] 0.5962307 0.4203205 0.4071043 0.5789880 0.5338290 0.4720365 0.0000000
+
+
+####
+##  Get null distributions for CCA, pCCA, info
+####
+
+nullsets <- list()
+for (ii in 1:100) {
+  non_cell_cyc <- dat[sample(nrow(dat), 20), ]
+  filt <- (rowSums(is.na(non_cell_cyc[, fseries_inds])) == 0)
+  sum(filt)
+  ncc <- t(as.matrix(non_cell_cyc[filt, fseries_inds]))
+  nullsets[[paste0("noise", ii)]] <- ncc
+}
+
+null_ccs <- numeric()
+null_pccs <- numeric()
+null_infos <- numeric()
+
+niters <- 1000
+
+for (jj in 1:niters) {
+  d1 <- nullsets[[sample(100, 1)]]
+  d2 <- nullsets[[sample(100, 1)]]
+  null_ccs[jj] <- cancor(d1, d2)$cor[1]
+  res_cca <- CCA.permute(dsets[[i]], dsets[[j]])
+  ccor <- res_cca$cors[res_cca$penaltyxs == res_cca$bestpenaltyx]
+  null_pccs[jj] <- ccor
+  ep <- id_cv_loss(d1, d2, k, ftr,mc.reps = 1000)
+  i1 <- lineId::aba_to_mi_lower(k, 1-ep)
+  ep <- id_cv_loss(d2, d1, k, ftr,mc.reps = 1000)
+  i2 <- lineId::aba_to_mi_lower(k, 1-ep)
+  i3 <- pmax(i1, i2)
+  ss <- sqrt(1 - exp(-2 * i3))
+  null_infos[jj] <- ss
+}
+
