@@ -104,8 +104,8 @@ lines(ress$d_ex + 2, ress$mi_np_ols_10, col = cols["ols10"], lwd = 2, type = "o"
 lines(ress$d_ex + 2, ress$mi_np_ols_20, col = cols["ols20"], lwd = 2, type = "o")
 lines(ress$d_ex + 2, ress$mi_np_enet_10, col = cols["enet10"], lwd = 2, type = "o")
 lines(ress$d_ex + 2, ress$mi_np_enet_20, col = cols["enet20"], lwd = 2, type = "o")
-legend(15, 3.5, lwd = 2, 
-       col = cols, legend = c("nn", "ols10", "ols20",
+legend(15, 3.7, lwd = 2, 
+       col = c("black", cols), legend = c("true", "nn", "ols10", "ols20",
                               "enet10", "enet20"))
 
 
