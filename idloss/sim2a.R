@@ -82,3 +82,83 @@ for (d_ex in 100 * 1:6) {
 res2 <- data.frame(d_ex = 1:6 * 100, do.call(rbind, RES))
 res2
 saveRDS(res2, "idloss/sim2a_results.rds")
+
+
+## MAKE PLOTS
+
+res1 <- readRDS("idloss/sim2_res.rds")
+res2 <- readRDS("idloss/sim2_res2.rds")
+res3 <- readRDS("idloss/sim2a_results.rds")
+
+View(res1)
+
+ress <- res1
+plot(NA, NA, ylim = c(0, 5), xlim = c(0, 22), xlab = "dimension",
+     ylab = "estimated MI")
+abline(h = res1$mi_true[1], lwd = 2)
+cols <- c(nn = grey(0.2), ols10 = rgb(0,0,0.4),
+          ols20 = rgb(0,0,0.6), enet10 = rgb(0,0.4,0),
+          enet20 = rgb(0,0.6,0))
+lines(ress$d_ex + 2, ress$mi_nn, col = cols["nn"], lwd = 2, type = "o")
+lines(ress$d_ex + 2, ress$mi_np_ols_10, col = cols["ols10"], lwd = 2, type = "o")
+lines(ress$d_ex + 2, ress$mi_np_ols_20, col = cols["ols20"], lwd = 2, type = "o")
+lines(ress$d_ex + 2, ress$mi_np_enet_10, col = cols["enet10"], lwd = 2, type = "o")
+lines(ress$d_ex + 2, ress$mi_np_enet_20, col = cols["enet20"], lwd = 2, type = "o")
+legend(15, 3.5, lwd = 2, 
+       col = cols, legend = c("nn", "ols10", "ols20",
+                              "enet10", "enet20"))
+
+
+plot(NA, NA, ylim = c(4.1, 4.7), xlim = c(0, 22), xlab = "dimension",
+     ylab = "estimated MI")
+abline(h = res1$mi_true[1], lwd = 2)
+cols <- c(nn = grey(0.2), ols10 = rgb(0,0,0.4),
+          ols20 = rgb(0,0,0.6), enet10 = rgb(0,0.4,0),
+          enet20 = rgb(0,0.6,0))
+lines(res1$d_ex + 2, res1$mi_nn, col = cols["nn"], lwd = 2, type = "o")
+lines(res1$d_ex + 2, res1$mi_np_ols_10, col = cols["ols10"], lwd = 2, type = "o")
+lines(res1$d_ex + 2, res1$mi_np_ols_20, col = cols["ols20"], lwd = 2, type = "o")
+lines(res1$d_ex + 2, res1$mi_np_enet_10, col = cols["enet10"], lwd = 2, type = "o")
+lines(res1$d_ex + 2, res1$mi_np_enet_20, col = cols["enet20"], lwd = 2, type = "o")
+legend(5, 4.3, lwd = 2, 
+       col = cols[1:3], legend = c("nn", "ols10", "ols20"))
+legend(15, 4.25, lwd = 2, 
+       col = cols[4:5], legend = c("enet10", "enet20"))
+
+
+
+res2$d_ex
+ress <- res2
+plot(NA, NA, ylim = c(4, 4.8), xlim = c(0, 202), xlab = "dimension",
+     ylab = "estimated MI")
+abline(h = res1$mi_true[1], lwd = 2)
+cols <- c(nn = grey(0.2), ols10 = rgb(0,0,0.4),
+          ols20 = rgb(0,0,0.6), enet10 = rgb(0,0.4,0),
+          enet20 = rgb(0,0.6,0))
+#lines(ress$d_ex + 2, ress$mi_nn, col = cols["nn"], lwd = 2, type = "o")
+lines(ress$d_ex + 2, ress$mi_np_ols_10, col = cols["ols10"], lwd = 2, type = "o")
+lines(ress$d_ex + 2, ress$mi_np_ols_20, col = cols["ols20"], lwd = 2, type = "o")
+lines(ress$d_ex + 2, ress$mi_np_enet_10, col = cols["enet10"], lwd = 2, type = "o")
+lines(ress$d_ex + 2, ress$mi_np_enet_20, col = cols["enet20"], lwd = 2, type = "o")
+legend(50, 4.22, lwd = 2, 
+       col = cols[2:3], legend = c("ols10", "ols20"))
+legend(125, 4.22, lwd = 2, 
+       col = cols[4:5], legend = c("enet10", "enet20"))
+
+
+res3$d_ex
+ress <- res3
+plot(NA, NA, ylim = c(3, 4.8), xlim = c(0, 602), xlab = "dimension",
+     ylab = "estimated MI")
+abline(h = res1$mi_true[1], lwd = 2)
+cols <- c(nn = grey(0.2), ols10 = rgb(0,0,0.4),
+          ols20 = rgb(0,0,0.6), enet10 = rgb(0,0.4,0),
+          enet20 = rgb(0,0.6,0))
+#lines(ress$d_ex + 2, ress$mi_nn, col = cols["nn"], lwd = 2, type = "o")
+lines(ress$d_ex + 2, ress$mi_np_ols_10, col = cols["ols10"], lwd = 2, type = "o")
+lines(ress$d_ex + 2, ress$mi_np_ols_20, col = cols["ols20"], lwd = 2, type = "o")
+lines(ress$d_ex + 2, ress$mi_np_enet_10, col = cols["enet10"], lwd = 2, type = "o")
+lines(ress$d_ex + 2, ress$mi_np_enet_20, col = cols["enet20"], lwd = 2, type = "o")
+legend(50, 3.72, lwd = 2, 
+       col = cols[-1], legend = c("ols10", "ols20","enet10", "enet20"))
+
