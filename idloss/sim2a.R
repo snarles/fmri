@@ -11,7 +11,7 @@ sgma <- 0.1
 RES <- list()
 #sink("idloss/temp.txt")
 #d_ex <- 0
-for (d_ex in 10 * 1:60) {
+for (d_ex in 100 * 1:6) {
 
   set.seed(0)
   
@@ -52,12 +52,12 @@ for (d_ex in 10 * 1:60) {
   
   ## id loss using enet
   k <- 10
-  (idl <- id_cv_loss(X, Y, k, mc.reps = 100, fitter = fitter_enet, alpha = 0.5))
+  (idl <- id_cv_loss(X, Y, k, mc.reps = 1000, fitter = fitter_enet, alpha = 0.5))
   (mi_li <- lineId::Ihat_LI(idl, k))
   (mi_np_enet_10 <- lineId::aba_to_mi_lower(k, 1 - idl))
   
   k <- 20
-  (idl <- id_cv_loss(X, Y, k, mc.reps = 100, fitter = fitter_enet, alpha = 0.5))
+  (idl <- id_cv_loss(X, Y, k, mc.reps = 1000, fitter = fitter_enet, alpha = 0.5))
   (mi_li <- lineId::Ihat_LI(idl, k))
   (mi_np_enet_20 <- lineId::aba_to_mi_lower(k, 1 - idl))
   
@@ -79,3 +79,6 @@ for (d_ex in 10 * 1:60) {
   #,mi_np_rf_10 = mi_np_rf_10, mi_np_rf_20 = mi_np_rf_20)
   RES[[paste0("d", d_ex)]] <- reso
 }
+res2 <- data.frame(d_ex = 1:6 * 100, do.call(rbind, RES))
+res2
+saveRDS(res2, "idloss/sim2a_results.rds")
