@@ -275,23 +275,27 @@ best_cors2
 # [4,] 0.9740365 0.9025591 0.7365561 0.0000000 0.9184419
 # [5,] 0.8156416 0.9256730 0.7281062 0.9184419 0.0000000
 
-plot(pccs[upper.tri(pccs)], pccs2[upper.tri(pccs)], xlim = c(0, 1), ylim = c(0,1),
-     xlab = "original", ylab = "transformed", main = "sCCA permute")
+plot(pccs[upper.tri(pccs)], pccs2[upper.tri(pccs)], 
+     xlab = "original", ylab = "transformed", main = "sCCA permute", col = "white")
+text(pccs[upper.tri(pccs)], pccs2[upper.tri(pccs)], 
+     paste0("(", row(pccs)[upper.tri(pccs)], ",", 
+            col(pccs)[upper.tri(pccs)], ")"))
 abline(0, 1, col = "red")
 
-plot(best_cors[upper.tri(pccs)], best_cors2[upper.tri(pccs)], xlim = c(0, 1), ylim = c(0,1),
-     xlab = "original", ylab = "transformed", main = "Info cor")
+plot(best_cors[upper.tri(pccs)], best_cors2[upper.tri(pccs)], 
+     xlab = "original", ylab = "transformed", main = "Info cor", col = "white")
+text(best_cors[upper.tri(pccs)], best_cors2[upper.tri(pccs)], 
+     paste0("(", row(pccs)[upper.tri(pccs)], ",", 
+            col(pccs)[upper.tri(pccs)], ")"))
 abline(0, 1, col = "red")
 
 plot(pccs[upper.tri(pccs)], best_cors[upper.tri(pccs)], xlab = "sCCA", ylab = "Info cor", col = "white")
-abline(0, 1, col = "red")
-title("Comparison")
-
 text(pccs[upper.tri(pccs)], best_cors[upper.tri(pccs)], 
      paste0("(", row(pccs)[upper.tri(pccs)], ",", 
             col(pccs)[upper.tri(pccs)], ")"))
 abline(0, 1, col = "red")
 title("Comparison")
+
 
 
 
