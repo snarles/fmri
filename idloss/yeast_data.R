@@ -155,15 +155,19 @@ errs_noncyc
 ##  do the full comparisons
 ####
 
+set.seed(0)
 library(lineId)
 cats <- c("cell cycle", "DNA replication", "transport", "cytoskeleton", "chromatin structure")
 dsets <- list()
+dsets2 <- list()
 for (cat in cats) {
   non_cell_cyc <- dat[annots==cat, ]
   filt <- (rowSums(is.na(non_cell_cyc[, fseries_inds])) == 0)
   sum(filt)
   ncc <- t(as.matrix(non_cell_cyc[filt, fseries_inds]))
   dsets[[cat]] <- ncc
+  tmat <- svd(randn(ncol(ncc), ncol(ncc)))$u + 0.01 * randn(ncol(ncc), ncol(ncc))
+  dsets2[[cat]] <- ncc %*% tmat
 }
 
 # for (ii in 1:2) {
@@ -203,11 +207,13 @@ pccs2 <- matrix(0, length(dsets), length(dsets))
 for (i in 1:(length(dsets) - 1)) {
   for (j in (i+1):length(dsets)) {
     #pccs[i, j] <- CCA(dsets[[i]], dsets[[j]])$cors
-    res_cca <- CCA.permute(dsets[[i]], dsets[[j]])
+    res_cca <- CCA.permute(dsets[[i]], dsets[[j]], nperms = 99)
     ccor <- res_cca$cors[res_cca$penaltyxs == res_cca$bestpenaltyx]
+    ccor
     pccs[i, j] <- ccor
-    res_cca <- CCA.permute(exp(3 * dsets[[i]]), exp(3 * dsets[[j]]))
+    res_cca <- CCA.permute(dsets2[[i]], dsets2[[j]], nperms = 99)
     ccor <- res_cca$cors[res_cca$penaltyxs == res_cca$bestpenaltyx]
+    ccor
     pccs2[i, j] <- ccor
   }
 }
@@ -216,33 +222,33 @@ pccs2
 
 # > pccs
 # [,1]      [,2]      [,3]      [,4]      [,5]
-# [1,]    0 0.9570214 0.8697984 0.9223172 0.9358656
-# [2,]    0 0.0000000 0.8338793 0.8856461 0.9500084
-# [3,]    0 0.0000000 0.0000000 0.8376016 0.7810961
-# [4,]    0 0.0000000 0.0000000 0.0000000 0.9014151
+# [1,]    0 0.9570214 0.8734071 0.9245117 0.9358656
+# [2,]    0 0.0000000 0.8325764 0.8856461 0.9500084
+# [3,]    0 0.0000000 0.0000000 0.8329383 0.7832109
+# [4,]    0 0.0000000 0.0000000 0.0000000 0.9001239
 # [5,]    0 0.0000000 0.0000000 0.0000000 0.0000000
 # > pccs2
 # [,1]      [,2]      [,3]      [,4]      [,5]
-# [1,]    0 0.9919508 0.9241681 0.8840183 0.9657301
-# [2,]    0 0.0000000 0.8224505 0.6722902 0.9879212
-# [3,]    0 0.0000000 0.0000000 0.5269828 0.6627958
-# [4,]    0 0.0000000 0.0000000 0.0000000 0.8201928
+# [1,]    0 0.9499904 0.7242711 0.9189365 0.8460021
+# [2,]    0 0.0000000 0.8002326 0.9047987 0.9031802
+# [3,]    0 0.0000000 0.0000000 0.7719477 0.7903274
+# [4,]    0 0.0000000 0.0000000 0.0000000 0.9177965
 # [5,]    0 0.0000000 0.0000000 0.0000000 0.0000000
 
-k <- 5
-ftr <- fitter_rf
+k <- 3
+ftr <- fitter_ols
 infos <- matrix(0, length(dsets), length(dsets))
 infos2 <- matrix(0, length(dsets), length(dsets))
-mcr <- 10
+mcr <- 1000
 for (i in 1:(length(dsets) - 1)) {
   for (j in (i+1):length(dsets)) {
     ep <- id_cv_loss(dsets[[i]], dsets[[j]], k, ftr,mc.reps = mcr)
     infos[i, j] <- lineId::aba_to_mi_lower(k, 1-ep)
     ep <- id_cv_loss(dsets[[j]], dsets[[i]], k, ftr,mc.reps = mcr)
     infos[j, i] <- lineId::aba_to_mi_lower(k, 1-ep)
-    ep <- id_cv_loss(exp(3 * dsets[[i]]), exp(3 * dsets[[j]]), k, ftr,mc.reps = mcr)
+    ep <- id_cv_loss(dsets2[[i]], dsets2[[j]], k, ftr,mc.reps = mcr)
     infos2[i, j] <- lineId::aba_to_mi_lower(k, 1-ep)
-    ep <- id_cv_loss(exp(3 * dsets[[j]]), exp(3 * dsets[[i]]), k, ftr,mc.reps = mcr)
+    ep <- id_cv_loss(dsets2[[j]], dsets2[[i]], k, ftr,mc.reps = mcr)
     infos2[j, i] <- lineId::aba_to_mi_lower(k, 1-ep)
   }
 }
@@ -254,12 +260,38 @@ s_cors2 <- sqrt(1 - exp(-2 * infos2))
 best_cors2 <- pmax(s_cors2, t(s_cors2))
 best_cors2
 
+# > best_cors
 # [,1]      [,2]      [,3]      [,4]      [,5]
-# [1,] 0.0000000 0.9208131 0.7884693 0.9734130 0.8068120
-# [2,] 0.9208131 0.0000000 0.8525753 0.9004876 0.9213302
-# [3,] 0.7884693 0.8525753 0.0000000 0.7305535 0.7105705
-# [4,] 0.9734130 0.9004876 0.7305535 0.0000000 0.9344747
-# [5,] 0.8068120 0.9213302 0.7105705 0.9344747 0.0000000
+# [1,] 0.0000000 0.9288215 0.7770040 0.9767242 0.8293687
+# [2,] 0.9288215 0.0000000 0.8496598 0.9102823 0.9200308
+# [3,] 0.7770040 0.8496598 0.0000000 0.7165050 0.7147406
+# [4,] 0.9767242 0.9102823 0.7165050 0.0000000 0.9303434
+# [5,] 0.8293687 0.9200308 0.7147406 0.9303434 0.0000000
+# > best_cors2
+# [,1]      [,2]      [,3]      [,4]      [,5]
+# [1,] 0.0000000 0.9179050 0.8002113 0.9740365 0.8156416
+# [2,] 0.9179050 0.0000000 0.8578273 0.9025591 0.9256730
+# [3,] 0.8002113 0.8578273 0.0000000 0.7365561 0.7281062
+# [4,] 0.9740365 0.9025591 0.7365561 0.0000000 0.9184419
+# [5,] 0.8156416 0.9256730 0.7281062 0.9184419 0.0000000
+
+plot(pccs[upper.tri(pccs)], pccs2[upper.tri(pccs)], xlim = c(0, 1), ylim = c(0,1),
+     xlab = "original", ylab = "transformed", main = "sCCA permute")
+abline(0, 1, col = "red")
+
+plot(best_cors[upper.tri(pccs)], best_cors2[upper.tri(pccs)], xlim = c(0, 1), ylim = c(0,1),
+     xlab = "original", ylab = "transformed", main = "Info cor")
+abline(0, 1, col = "red")
+
+plot(pccs[upper.tri(pccs)], best_cors[upper.tri(pccs)], xlab = "sCCA", ylab = "Info cor", col = "white")
+abline(0, 1, col = "red")
+title("Comparison")
+
+text(pccs[upper.tri(pccs)], best_cors[upper.tri(pccs)], 
+     paste0("(", row(pccs)[upper.tri(pccs)], ",", 
+            col(pccs)[upper.tri(pccs)], ")"))
+abline(0, 1, col = "red")
+title("Comparison")
 
 
 
