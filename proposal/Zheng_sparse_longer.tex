@@ -335,6 +335,20 @@ I(X; Y) = \int \log \left(\frac{p(x, y)}{p(x)p(y)}\right) p(x, y) dx dy
 \end{frame}
 
 \begin{frame}
+\frametitle{How to estimate $I(X; Y)$}
+Suppose we observe pairs $(X_i,Y_i)_{i=1}^n$ iid from density $p(x, y)$
+\begin{itemize}
+\item \textbf{Plug-in estimate}:
+\[
+\hat{I}(X; Y) = \int \log \left(\frac{\hat{p}(x, y)}{\hat{p}(x)\hat{p}(y)}\right) \hat{p}(x, y) dx dy
+\]
+\item Kernel density estimate approaches estimate $p(x,y)$ (Beirlant et al. 2001, Ivanov and Rozhkova 1981)
+\item Nearest neighbor estimators rely on distance-based computations (Mnatsakanov et al. 2008, Goria et al. 2005, Singh et. al. 2003)
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
 \frametitle{Problems in high dimensions}
 \begin{itemize}
 \item Density estimation is known to have \emph{exponential complexity} with respect to dimensionality.
