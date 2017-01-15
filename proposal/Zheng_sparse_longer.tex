@@ -358,8 +358,9 @@ I(X; Y) = \int \log \left(\frac{p(x, y)}{p(x)p(y)}\right) p(x, y) dx dy
 \includegraphics[scale = 0.05]{sls.jpg}
 \end{center}
 \begin{itemize}
-\item Suppose that $Y \approx f(X) + \epsilon$, where $f$ depends \emph{sparsely} on $X$.
-\item Can we exploit the sparsity to obtain an estimate of $I(X; Y)$?
+\item \emph{Sparsity} refers to existence of low-dimensional structure hidden in high-dimensional data.\pause
+\item E.g. suppose $X$ is 100-dimensional but $Y$ is only a function of $(X_5, X_9)$.\pause
+\item Can we exploit sparsity to obtain a good estimate of $I(X; Y)$ even under low sample sizes?
 \end{itemize}
 \end{frame}
 
@@ -694,11 +695,12 @@ CC = cell cycle, DR = DNA replication, Tr = transport, \\
 Cy = cytoskeleton, CS = chromatin structure
 \end{frame}
 
+
 %# [,1]      [,2]      [,3]      [,4]      [,5]
-%# [1,]    0 0.9348542 0.7932636 0.8883622 0.8753969
-%# [2,]    0 0.0000000 0.7629753 0.7618839 0.9170895
-%# [3,]    0 0.0000000 0.0000000 0.6527667 0.6887320
-%# [4,]    0 0.0000000 0.0000000 0.0000000 0.8398731
+%# [1,]    0 0.9570214 0.8734071 0.9245117 0.9358656
+%# [2,]    0 0.0000000 0.8325764 0.8856461 0.9500084
+%# [3,]    0 0.0000000 0.0000000 0.8329383 0.7832109
+%# [4,]    0 0.0000000 0.0000000 0.0000000 0.9001239
 %# [5,]    0 0.0000000 0.0000000 0.0000000 0.0000000
 
 \begin{frame}
@@ -708,10 +710,10 @@ Using sparse CCA* (Witten and Tibshirani 2009).
 \begin{center}
 \begin{tabular}{c|c|c|c|c|c|} 
    & CC   & DR   & Tr   & Cy   & CS \\ \hline
-CC &      & 0.93 & 0.79 & 0.88 & 0.87\\ \hline
-DR &      &      & 0.76 & 0.76 & 0.91\\ \hline
-Tr &      &      &      & 0.65 & 0.68\\ \hline
-Cy &      &      &      &      & 0.83\\ \hline
+CC &      & 0.96 & 0.87 & 0.92 & 0.94\\ \hline
+DR &      &      & 0.83 & 0.88 & 0.95\\ \hline
+Tr &      &      &      & 0.83 & 0.78\\ \hline
+Cy &      &      &      &      & 0.90\\ \hline
 CS &      &      &      &      &     \\ \hline
 \end{tabular}
 \end{center}
@@ -722,15 +724,16 @@ Cy = cytoskeleton, CS = chromatin structure
 
 \vspace{0.1in}
 
-\tiny{*: Default settings in R package {\tt PMA}}
+\tiny{*: using {\tt CCApermute} in R package {\tt PMA}}
 \end{frame}
 
+
 %# [,1]      [,2]      [,3]      [,4]      [,5]
-%# [1,] 0.0000000 0.9208131 0.7884693 0.9734130 0.8068120
-%# [2,] 0.9208131 0.0000000 0.8525753 0.9004876 0.9213302
-%# [3,] 0.7884693 0.8525753 0.0000000 0.7305535 0.7105705
-%# [4,] 0.9734130 0.9004876 0.7305535 0.0000000 0.9344747
-%# [5,] 0.8068120 0.9213302 0.7105705 0.9344747 0.0000000
+%# [1,] 0.0000000 0.9288215 0.7770040 0.9767242 0.8293687
+%# [2,] 0.9288215 0.0000000 0.8496598 0.9102823 0.9200308
+%# [3,] 0.7770040 0.8496598 0.0000000 0.7165050 0.7147406
+%# [4,] 0.9767242 0.9102823 0.7165050 0.0000000 0.9303434
+%# [5,] 0.8293687 0.9200308 0.7147406 0.9303434 0.0000000
 
 \begin{frame}
 \frametitle{Information correlations between time series}
@@ -739,9 +742,9 @@ Taking the max of $\hat{I}(X; Y)$ and $\hat{I}(Y; X)$.
 \begin{center}
 \begin{tabular}{c|c|c|c|c|c|} 
    & CC   & DR   & Tr   & Cy   & CS \\ \hline
-CC &      & 0.92 & 0.79 & 0.97 & 0.81\\ \hline
-DR &      &      & 0.85 & 0.90 & 0.92\\ \hline
-Tr &      &      &      & 0.73 & 0.71\\ \hline
+CC &      & 0.93 & 0.78 & 0.98 & 0.83\\ \hline
+DR &      &      & 0.85 & 0.91 & 0.92\\ \hline
+Tr &      &      &      & 0.72 & 0.71\\ \hline
 Cy &      &      &      &      & 0.93\\ \hline
 CS &      &      &      &      &     \\ \hline
 \end{tabular}
@@ -753,8 +756,56 @@ Cy = cytoskeleton, CS = chromatin structure
 \end{frame}
 
 \begin{frame}
+\frametitle{Comparing sparse CCA and $Cor_{Info}$}
+\begin{center}
+\includegraphics[scale = 0.5]{../idloss/cca_p_vs_info_cor.pdf}
+\end{center}
+(1) cell cycle, (2) DNA replication, (3) transport, \\
+(4) cytoskeleton, (5) chromatin structure
+\end{frame}
+
+\begin{frame}
+\frametitle{Invariance properties}
+Transform data from each group with random rotation...\pause
+
+\begin{center}
+\includegraphics[scale = 0.5]{../idloss/cca_p_robustness.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Invariance properties}
+Transform data from each group with random rotation...
+
+\begin{center}
+\includegraphics[scale = 0.5]{../idloss/info_cor_robustness.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Conclusions}
+\begin{itemize}
+\item Mutual information, and derived $\text{Cor}_{Info}$ are useful measures of correlation, but hard to estimate.\pause
+\item Our method targets high-dimensional data with sparsity.\pause
+\item How to use: choose a regression model suited to the model
+  assumptions.  Our method allows you to convert the prediction
+  accuracy of the model, $\text{IdLoss}_k$ into an estimate of $I(\vec{X};
+  \vec{Y})$.\pause
+\item Example application: measure of joint information between two tables which is robust to transformations.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
 \frametitle{Related work and future directions}
-to be contd
+\begin{itemize}
+\item What if data is high-dimensional, but not sparse?  We have another method based on high-dimensional asymptotics (ZB 2016).\pause
+\item Estimating quantities related to mutual information, such as \emph{transfer information}, \emph{stimulus-specific information} and \emph{redundancy} (Borst and Theunissen 1999) \pause
+\item Inferring resting-state brain networks.
+\begin{center}
+\includegraphics[scale = 0.5]{cmsIMG_6589b1.png}
+\end{center}
+{\tiny Image credit Simons Foundation}
+\end{itemize}
 \end{frame}
 
 \section{The End}
@@ -763,6 +814,21 @@ to be contd
 \sectionpage
 \end{frame}
 
+\begin{frame}
+\frametitle{References}
+{\tiny
+\begin{itemize}
+\item Reshef et al, 2011. ``Detecting Novel Associations in Large Datasets.'' \emph{Science}.
+\item Speed, 2011. ``A correlation for the 21st century.'' \emph{Science}.
+\item Linfoot, 1957.  ``An informational measure of correlation.''  \emph{Information and Control}.
+\item Kay, 2008.  ``Identifying natural images from human brain activity.''  \emph{Nature}.
+\item Mnatsakanov, et al, (2008). ``K-nearest neighbor estimators of entropy.'' \emph{Mathematical Methods of Statistics}
+\item Spellman et al., (1998).  ``Comprehensive Identification of Cell Cycle-regulated Genes of the Yeast Saccharomyces cerevisiae by Microarray Hybridization.''  \emph{Molecular Biology of the Cell}. 
+\item Hotelling, H. (1936). ``Relations Between Two Sets of Variates''. \emph{Biometrika.}
+\item Witten, Daniela M., and Robert J. Tibshirani. (2009). ``Extensions of sparse canonical correlation analysis with applications to genomic data.'' \emph{Statistical applications in genetics and molecular biology}
+\end{itemize}
+}
+\end{frame}
 
 \begin{frame}
 \frametitle{Reduced Problem}

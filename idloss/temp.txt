@@ -1,1578 +1,920 @@
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.3263619     4.2506823     4.4384650     4.4781207     4.4009889 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.3263619     4.2506823     4.4384650     4.4781207     4.4009889 
 
 [[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.1447643     4.4752718     4.4002818     4.4189817     4.4229089 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.3263619     4.2506823     4.4384650     4.4781207     4.4009889 
 
 [[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.1447643     4.4752718     4.4002818     4.4189817     4.4229089 
 
 [[5]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.241769      4.455330      4.463920      4.411248      4.478769      3.701875 
-  mi_np_rf_20 
-     4.008488 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+   4.61512052    0.06113667    4.38031541    4.47169850    4.40093744    4.41866633 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.3263619     4.2506823     4.4384650     4.4781207     4.4009889 
 
 [[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.1447643     4.4752718     4.4002818     4.4189817     4.4229089 
 
 [[5]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.241769      4.455330      4.463920      4.411248      4.478769      3.701875 
-  mi_np_rf_20 
-     4.008488 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+   4.61512052    0.06113667    4.38031541    4.47169850    4.40093744    4.41866633 
 
 [[6]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.974078      4.449632      4.465335      4.424137      4.484426      3.645300 
-  mi_np_rf_20 
-     3.593361 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.354538      4.412302      4.393204      4.438465 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.3263619     4.2506823     4.4384650     4.4781207     4.4009889 
 
 [[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.1447643     4.4752718     4.4002818     4.4189817     4.4229089 
 
 [[5]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.241769      4.455330      4.463920      4.411248      4.478769      3.701875 
-  mi_np_rf_20 
-     4.008488 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+   4.61512052    0.06113667    4.38031541    4.47169850    4.40093744    4.41866633 
 
 [[6]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.974078      4.449632      4.465335      4.424137      4.484426      3.645300 
-  mi_np_rf_20 
-     3.593361 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.354538      4.412302      4.393204      4.438465 
 
 [[7]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.735300      4.463876      4.453314      4.452481      4.468163      3.491917 
-  mi_np_rf_20 
-     3.221152 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.276339      4.390382      4.370004      4.422202 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.3263619     4.2506823     4.4384650     4.4781207     4.4009889 
 
 [[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.1447643     4.4752718     4.4002818     4.4189817     4.4229089 
 
 [[5]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.241769      4.455330      4.463920      4.411248      4.478769      3.701875 
-  mi_np_rf_20 
-     4.008488 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+   4.61512052    0.06113667    4.38031541    4.47169850    4.40093744    4.41866633 
 
 [[6]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.974078      4.449632      4.465335      4.424137      4.484426      3.645300 
-  mi_np_rf_20 
-     3.593361 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.354538      4.412302      4.393204      4.438465 
 
 [[7]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.735300      4.463876      4.453314      4.452481      4.468163      3.491917 
-  mi_np_rf_20 
-     3.221152 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.276339      4.390382      4.370004      4.422202 
 
 [[8]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.548355      4.416404      4.457557      4.500912      4.479477      3.491917 
-  mi_np_rf_20 
-     3.715076 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.406093      4.380483      4.370004      4.435637 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.3263619     4.2506823     4.4384650     4.4781207     4.4009889 
 
 [[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.1447643     4.4752718     4.4002818     4.4189817     4.4229089 
 
 [[5]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.241769      4.455330      4.463920      4.411248      4.478769      3.701875 
-  mi_np_rf_20 
-     4.008488 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+   4.61512052    0.06113667    4.38031541    4.47169850    4.40093744    4.41866633 
 
 [[6]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.974078      4.449632      4.465335      4.424137      4.484426      3.645300 
-  mi_np_rf_20 
-     3.593361 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.354538      4.412302      4.393204      4.438465 
 
 [[7]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.735300      4.463876      4.453314      4.452481      4.468163      3.491917 
-  mi_np_rf_20 
-     3.221152 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.276339      4.390382      4.370004      4.422202 
 
 [[8]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.548355      4.416404      4.457557      4.500912      4.479477      3.491917 
-  mi_np_rf_20 
-     3.715076 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.406093      4.380483      4.370004      4.435637 
 
 [[9]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.387274      4.408671      4.457557      4.478121      4.469577      3.541663 
-  mi_np_rf_20 
-     3.734009 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.446783      4.422202      4.503761      4.411595 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.3263619     4.2506823     4.4384650     4.4781207     4.4009889 
 
 [[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.1447643     4.4752718     4.4002818     4.4189817     4.4229089 
 
 [[5]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.241769      4.455330      4.463920      4.411248      4.478769      3.701875 
-  mi_np_rf_20 
-     4.008488 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+   4.61512052    0.06113667    4.38031541    4.47169850    4.40093744    4.41866633 
 
 [[6]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.974078      4.449632      4.465335      4.424137      4.484426      3.645300 
-  mi_np_rf_20 
-     3.593361 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.354538      4.412302      4.393204      4.438465 
 
 [[7]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.735300      4.463876      4.453314      4.452481      4.468163      3.491917 
-  mi_np_rf_20 
-     3.221152 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.276339      4.390382      4.370004      4.422202 
 
 [[8]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.548355      4.416404      4.457557      4.500912      4.479477      3.491917 
-  mi_np_rf_20 
-     3.715076 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.406093      4.380483      4.370004      4.435637 
 
 [[9]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.387274      4.408671      4.457557      4.478121      4.469577      3.541663 
-  mi_np_rf_20 
-     3.734009 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.446783      4.422202      4.503761      4.411595 
 
 [[10]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.239840      4.458178      4.468870      4.388049      4.451900      3.759048 
-  mi_np_rf_20 
-     3.541968 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.413826      4.358544      4.418982      4.411595 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.3263619     4.2506823     4.4384650     4.4781207     4.4009889 
 
 [[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.1447643     4.4752718     4.4002818     4.4189817     4.4229089 
 
 [[5]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.241769      4.455330      4.463920      4.411248      4.478769      3.701875 
-  mi_np_rf_20 
-     4.008488 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+   4.61512052    0.06113667    4.38031541    4.47169850    4.40093744    4.41866633 
 
 [[6]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.974078      4.449632      4.465335      4.424137      4.484426      3.645300 
-  mi_np_rf_20 
-     3.593361 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.354538      4.412302      4.393204      4.438465 
 
 [[7]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.735300      4.463876      4.453314      4.452481      4.468163      3.491917 
-  mi_np_rf_20 
-     3.221152 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.276339      4.390382      4.370004      4.422202 
 
 [[8]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.548355      4.416404      4.457557      4.500912      4.479477      3.491917 
-  mi_np_rf_20 
-     3.715076 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.406093      4.380483      4.370004      4.435637 
 
 [[9]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.387274      4.408671      4.457557      4.478121      4.469577      3.541663 
-  mi_np_rf_20 
-     3.734009 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.446783      4.422202      4.503761      4.411595 
 
 [[10]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.239840      4.458178      4.468870      4.388049      4.451900      3.759048 
-  mi_np_rf_20 
-     3.541968 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.413826      4.358544      4.418982      4.411595 
 
 [[11]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950      3.821579 
-  mi_np_rf_20 
-     3.885473 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.326183      4.400989      4.362271      4.434930 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.3263619     4.2506823     4.4384650     4.4781207     4.4009889 
 
 [[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.1447643     4.4752718     4.4002818     4.4189817     4.4229089 
 
 [[5]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.241769      4.455330      4.463920      4.411248      4.478769      3.701875 
-  mi_np_rf_20 
-     4.008488 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+   4.61512052    0.06113667    4.38031541    4.47169850    4.40093744    4.41866633 
 
 [[6]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.974078      4.449632      4.465335      4.424137      4.484426      3.645300 
-  mi_np_rf_20 
-     3.593361 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.354538      4.412302      4.393204      4.438465 
 
 [[7]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.735300      4.463876      4.453314      4.452481      4.468163      3.491917 
-  mi_np_rf_20 
-     3.221152 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.276339      4.390382      4.370004      4.422202 
 
 [[8]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.548355      4.416404      4.457557      4.500912      4.479477      3.491917 
-  mi_np_rf_20 
-     3.715076 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.406093      4.380483      4.370004      4.435637 
 
 [[9]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.387274      4.408671      4.457557      4.478121      4.469577      3.541663 
-  mi_np_rf_20 
-     3.734009 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.446783      4.422202      4.503761      4.411595 
 
 [[10]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.239840      4.458178      4.468870      4.388049      4.451900      3.759048 
-  mi_np_rf_20 
-     3.541968 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.413826      4.358544      4.418982      4.411595 
 
 [[11]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950      3.821579 
-  mi_np_rf_20 
-     3.885473 
-
-[[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
-
-[[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
-
-[[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
-
-[[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
-
-[[5]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.241769      4.455330      4.463920      4.411248      4.478769      3.701875 
-  mi_np_rf_20 
-     4.008488 
-
-[[6]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.974078      4.449632      4.465335      4.424137      4.484426      3.645300 
-  mi_np_rf_20 
-     3.593361 
-
-[[7]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.735300      4.463876      4.453314      4.452481      4.468163      3.491917 
-  mi_np_rf_20 
-     3.221152 
-
-[[8]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.548355      4.416404      4.457557      4.500912      4.479477      3.491917 
-  mi_np_rf_20 
-     3.715076 
-
-[[9]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.387274      4.408671      4.457557      4.478121      4.469577      3.541663 
-  mi_np_rf_20 
-     3.734009 
-
-[[10]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.239840      4.458178      4.468870      4.388049      4.451900      3.759048 
-  mi_np_rf_20 
-     3.541968 
-
-[[11]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950      3.821579 
-  mi_np_rf_20 
-     3.885473 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.326183      4.400989      4.362271      4.434930 
 
 [[12]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.031248      4.403515      4.464628      4.426841      4.470284      3.541663 
-  mi_np_rf_20 
-     3.724543 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.362271      4.323364      4.426841      4.407353 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.3263619     4.2506823     4.4384650     4.4781207     4.4009889 
 
 [[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.1447643     4.4752718     4.4002818     4.4189817     4.4229089 
 
 [[5]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.241769      4.455330      4.463920      4.411248      4.478769      3.701875 
-  mi_np_rf_20 
-     4.008488 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+   4.61512052    0.06113667    4.38031541    4.47169850    4.40093744    4.41866633 
 
 [[6]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.974078      4.449632      4.465335      4.424137      4.484426      3.645300 
-  mi_np_rf_20 
-     3.593361 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.354538      4.412302      4.393204      4.438465 
 
 [[7]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.735300      4.463876      4.453314      4.452481      4.468163      3.491917 
-  mi_np_rf_20 
-     3.221152 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.276339      4.390382      4.370004      4.422202 
 
 [[8]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.548355      4.416404      4.457557      4.500912      4.479477      3.491917 
-  mi_np_rf_20 
-     3.715076 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.406093      4.380483      4.370004      4.435637 
 
 [[9]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.387274      4.408671      4.457557      4.478121      4.469577      3.541663 
-  mi_np_rf_20 
-     3.734009 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.446783      4.422202      4.503761      4.411595 
 
 [[10]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.239840      4.458178      4.468870      4.388049      4.451900      3.759048 
-  mi_np_rf_20 
-     3.541968 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.413826      4.358544      4.418982      4.411595 
 
 [[11]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950      3.821579 
-  mi_np_rf_20 
-     3.885473 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.326183      4.400989      4.362271      4.434930 
 
 [[12]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.031248      4.403515      4.464628      4.426841      4.470284      3.541663 
-  mi_np_rf_20 
-     3.724543 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.362271      4.323364      4.426841      4.407353 
 
 [[13]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.9639466     4.4112485     4.4695772     4.4667251     4.4462431     3.4224622 
-  mi_np_rf_20 
-    3.5762299 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.250682      4.304176      4.398360      4.478769 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.3263619     4.2506823     4.4384650     4.4781207     4.4009889 
 
 [[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.1447643     4.4752718     4.4002818     4.4189817     4.4229089 
 
 [[5]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.241769      4.455330      4.463920      4.411248      4.478769      3.701875 
-  mi_np_rf_20 
-     4.008488 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+   4.61512052    0.06113667    4.38031541    4.47169850    4.40093744    4.41866633 
 
 [[6]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.974078      4.449632      4.465335      4.424137      4.484426      3.645300 
-  mi_np_rf_20 
-     3.593361 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.354538      4.412302      4.393204      4.438465 
 
 [[7]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.735300      4.463876      4.453314      4.452481      4.468163      3.491917 
-  mi_np_rf_20 
-     3.221152 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.276339      4.390382      4.370004      4.422202 
 
 [[8]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.548355      4.416404      4.457557      4.500912      4.479477      3.491917 
-  mi_np_rf_20 
-     3.715076 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.406093      4.380483      4.370004      4.435637 
 
 [[9]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.387274      4.408671      4.457557      4.478121      4.469577      3.541663 
-  mi_np_rf_20 
-     3.734009 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.446783      4.422202      4.503761      4.411595 
 
 [[10]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.239840      4.458178      4.468870      4.388049      4.451900      3.759048 
-  mi_np_rf_20 
-     3.541968 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.413826      4.358544      4.418982      4.411595 
 
 [[11]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950      3.821579 
-  mi_np_rf_20 
-     3.885473 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.326183      4.400989      4.362271      4.434930 
 
 [[12]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.031248      4.403515      4.464628      4.426841      4.470284      3.541663 
-  mi_np_rf_20 
-     3.724543 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.362271      4.323364      4.426841      4.407353 
 
 [[13]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.9639466     4.4112485     4.4695772     4.4667251     4.4462431     3.4224622 
-  mi_np_rf_20 
-    3.5762299 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.250682      4.304176      4.398360      4.478769 
 
 [[14]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.8926769     4.4268407     4.4561424     4.2973307     4.4045244     3.9547228 
-  mi_np_rf_20 
-    3.8286739 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.292666      4.364300      4.408671      4.399575 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.3263619     4.2506823     4.4384650     4.4781207     4.4009889 
 
 [[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.1447643     4.4752718     4.4002818     4.4189817     4.4229089 
 
 [[5]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.241769      4.455330      4.463920      4.411248      4.478769      3.701875 
-  mi_np_rf_20 
-     4.008488 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+   4.61512052    0.06113667    4.38031541    4.47169850    4.40093744    4.41866633 
 
 [[6]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.974078      4.449632      4.465335      4.424137      4.484426      3.645300 
-  mi_np_rf_20 
-     3.593361 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.354538      4.412302      4.393204      4.438465 
 
 [[7]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.735300      4.463876      4.453314      4.452481      4.468163      3.491917 
-  mi_np_rf_20 
-     3.221152 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.276339      4.390382      4.370004      4.422202 
 
 [[8]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.548355      4.416404      4.457557      4.500912      4.479477      3.491917 
-  mi_np_rf_20 
-     3.715076 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.406093      4.380483      4.370004      4.435637 
 
 [[9]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.387274      4.408671      4.457557      4.478121      4.469577      3.541663 
-  mi_np_rf_20 
-     3.734009 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.446783      4.422202      4.503761      4.411595 
 
 [[10]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.239840      4.458178      4.468870      4.388049      4.451900      3.759048 
-  mi_np_rf_20 
-     3.541968 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.413826      4.358544      4.418982      4.411595 
 
 [[11]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950      3.821579 
-  mi_np_rf_20 
-     3.885473 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.326183      4.400989      4.362271      4.434930 
 
 [[12]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.031248      4.403515      4.464628      4.426841      4.470284      3.541663 
-  mi_np_rf_20 
-     3.724543 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.362271      4.323364      4.426841      4.407353 
 
 [[13]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.9639466     4.4112485     4.4695772     4.4667251     4.4462431     3.4224622 
-  mi_np_rf_20 
-    3.5762299 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.250682      4.304176      4.398360      4.478769 
 
 [[14]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.8926769     4.4268407     4.4561424     4.2973307     4.4045244     3.9547228 
-  mi_np_rf_20 
-    3.8286739 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.292666      4.364300      4.408671      4.399575 
 
 [[15]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      0.837502      4.346805      4.466042      4.492365      4.475234      3.790313 
-  mi_np_rf_20 
-     3.809741 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.344227      4.328481      4.382893      4.481598 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.3263619     4.2506823     4.4384650     4.4781207     4.4009889 
 
 [[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.1447643     4.4752718     4.4002818     4.4189817     4.4229089 
 
 [[5]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.241769      4.455330      4.463920      4.411248      4.478769      3.701875 
-  mi_np_rf_20 
-     4.008488 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+   4.61512052    0.06113667    4.38031541    4.47169850    4.40093744    4.41866633 
 
 [[6]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.974078      4.449632      4.465335      4.424137      4.484426      3.645300 
-  mi_np_rf_20 
-     3.593361 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.354538      4.412302      4.393204      4.438465 
 
 [[7]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.735300      4.463876      4.453314      4.452481      4.468163      3.491917 
-  mi_np_rf_20 
-     3.221152 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.276339      4.390382      4.370004      4.422202 
 
 [[8]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.548355      4.416404      4.457557      4.500912      4.479477      3.491917 
-  mi_np_rf_20 
-     3.715076 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.406093      4.380483      4.370004      4.435637 
 
 [[9]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.387274      4.408671      4.457557      4.478121      4.469577      3.541663 
-  mi_np_rf_20 
-     3.734009 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.446783      4.422202      4.503761      4.411595 
 
 [[10]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.239840      4.458178      4.468870      4.388049      4.451900      3.759048 
-  mi_np_rf_20 
-     3.541968 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.413826      4.358544      4.418982      4.411595 
 
 [[11]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950      3.821579 
-  mi_np_rf_20 
-     3.885473 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.326183      4.400989      4.362271      4.434930 
 
 [[12]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.031248      4.403515      4.464628      4.426841      4.470284      3.541663 
-  mi_np_rf_20 
-     3.724543 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.362271      4.323364      4.426841      4.407353 
 
 [[13]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.9639466     4.4112485     4.4695772     4.4667251     4.4462431     3.4224622 
-  mi_np_rf_20 
-    3.5762299 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.250682      4.304176      4.398360      4.478769 
 
 [[14]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.8926769     4.4268407     4.4561424     4.2973307     4.4045244     3.9547228 
-  mi_np_rf_20 
-    3.8286739 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.292666      4.364300      4.408671      4.399575 
 
 [[15]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      0.837502      4.346805      4.466042      4.492365      4.475234      3.790313 
-  mi_np_rf_20 
-     3.809741 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.344227      4.328481      4.382893      4.481598 
 
 [[16]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.8032316     4.3287603     4.4610921     4.4553295     4.3804832     3.7301621 
-  mi_np_rf_20 
-    3.5419683 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.336494      4.339355      4.344227      4.499570 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.3263619     4.2506823     4.4384650     4.4781207     4.4009889 
 
 [[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.1447643     4.4752718     4.4002818     4.4189817     4.4229089 
 
 [[5]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.241769      4.455330      4.463920      4.411248      4.478769      3.701875 
-  mi_np_rf_20 
-     4.008488 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+   4.61512052    0.06113667    4.38031541    4.47169850    4.40093744    4.41866633 
 
 [[6]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.974078      4.449632      4.465335      4.424137      4.484426      3.645300 
-  mi_np_rf_20 
-     3.593361 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.354538      4.412302      4.393204      4.438465 
 
 [[7]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.735300      4.463876      4.453314      4.452481      4.468163      3.491917 
-  mi_np_rf_20 
-     3.221152 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.276339      4.390382      4.370004      4.422202 
 
 [[8]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.548355      4.416404      4.457557      4.500912      4.479477      3.491917 
-  mi_np_rf_20 
-     3.715076 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.406093      4.380483      4.370004      4.435637 
 
 [[9]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.387274      4.408671      4.457557      4.478121      4.469577      3.541663 
-  mi_np_rf_20 
-     3.734009 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.446783      4.422202      4.503761      4.411595 
 
 [[10]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.239840      4.458178      4.468870      4.388049      4.451900      3.759048 
-  mi_np_rf_20 
-     3.541968 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.413826      4.358544      4.418982      4.411595 
 
 [[11]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950      3.821579 
-  mi_np_rf_20 
-     3.885473 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.326183      4.400989      4.362271      4.434930 
 
 [[12]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.031248      4.403515      4.464628      4.426841      4.470284      3.541663 
-  mi_np_rf_20 
-     3.724543 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.362271      4.323364      4.426841      4.407353 
 
 [[13]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.9639466     4.4112485     4.4695772     4.4667251     4.4462431     3.4224622 
-  mi_np_rf_20 
-    3.5762299 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.250682      4.304176      4.398360      4.478769 
 
 [[14]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.8926769     4.4268407     4.4561424     4.2973307     4.4045244     3.9547228 
-  mi_np_rf_20 
-    3.8286739 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.292666      4.364300      4.408671      4.399575 
 
 [[15]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      0.837502      4.346805      4.466042      4.492365      4.475234      3.790313 
-  mi_np_rf_20 
-     3.809741 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.344227      4.328481      4.382893      4.481598 
 
 [[16]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.8032316     4.3287603     4.4610921     4.4553295     4.3804832     3.7301621 
-  mi_np_rf_20 
-    3.5419683 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.336494      4.339355      4.344227      4.499570 
 
 [[17]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.7740821     4.3442269     4.4582637     4.4724229     4.4342224     3.9547228 
-  mi_np_rf_20 
-    3.7150763 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.362271      4.328481      4.432538      4.435637 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.3263619     4.2506823     4.4384650     4.4781207     4.4009889 
 
 [[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.1447643     4.4752718     4.4002818     4.4189817     4.4229089 
 
 [[5]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.241769      4.455330      4.463920      4.411248      4.478769      3.701875 
-  mi_np_rf_20 
-     4.008488 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+   4.61512052    0.06113667    4.38031541    4.47169850    4.40093744    4.41866633 
 
 [[6]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.974078      4.449632      4.465335      4.424137      4.484426      3.645300 
-  mi_np_rf_20 
-     3.593361 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.354538      4.412302      4.393204      4.438465 
 
 [[7]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.735300      4.463876      4.453314      4.452481      4.468163      3.491917 
-  mi_np_rf_20 
-     3.221152 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.276339      4.390382      4.370004      4.422202 
 
 [[8]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.548355      4.416404      4.457557      4.500912      4.479477      3.491917 
-  mi_np_rf_20 
-     3.715076 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.406093      4.380483      4.370004      4.435637 
 
 [[9]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.387274      4.408671      4.457557      4.478121      4.469577      3.541663 
-  mi_np_rf_20 
-     3.734009 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.446783      4.422202      4.503761      4.411595 
 
 [[10]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.239840      4.458178      4.468870      4.388049      4.451900      3.759048 
-  mi_np_rf_20 
-     3.541968 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.413826      4.358544      4.418982      4.411595 
 
 [[11]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950      3.821579 
-  mi_np_rf_20 
-     3.885473 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.326183      4.400989      4.362271      4.434930 
 
 [[12]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.031248      4.403515      4.464628      4.426841      4.470284      3.541663 
-  mi_np_rf_20 
-     3.724543 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.362271      4.323364      4.426841      4.407353 
 
 [[13]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.9639466     4.4112485     4.4695772     4.4667251     4.4462431     3.4224622 
-  mi_np_rf_20 
-    3.5762299 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.250682      4.304176      4.398360      4.478769 
 
 [[14]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.8926769     4.4268407     4.4561424     4.2973307     4.4045244     3.9547228 
-  mi_np_rf_20 
-    3.8286739 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.292666      4.364300      4.408671      4.399575 
 
 [[15]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      0.837502      4.346805      4.466042      4.492365      4.475234      3.790313 
-  mi_np_rf_20 
-     3.809741 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.344227      4.328481      4.382893      4.481598 
 
 [[16]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.8032316     4.3287603     4.4610921     4.4553295     4.3804832     3.7301621 
-  mi_np_rf_20 
-    3.5419683 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.336494      4.339355      4.344227      4.499570 
 
 [[17]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.7740821     4.3442269     4.4582637     4.4724229     4.4342224     3.9547228 
-  mi_np_rf_20 
-    3.7150763 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.362271      4.328481      4.432538      4.435637 
 
 [[18]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.7149162     4.3571156     4.4561424     4.3416491     4.4660417     3.9898046 
-  mi_np_rf_20 
-    3.7150763 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.288001      4.304176      4.563660      4.416545 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.3263619     4.2506823     4.4384650     4.4781207     4.4009889 
 
 [[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.1447643     4.4752718     4.4002818     4.4189817     4.4229089 
 
 [[5]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.241769      4.455330      4.463920      4.411248      4.478769      3.701875 
-  mi_np_rf_20 
-     4.008488 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+   4.61512052    0.06113667    4.38031541    4.47169850    4.40093744    4.41866633 
 
 [[6]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.974078      4.449632      4.465335      4.424137      4.484426      3.645300 
-  mi_np_rf_20 
-     3.593361 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.354538      4.412302      4.393204      4.438465 
 
 [[7]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.735300      4.463876      4.453314      4.452481      4.468163      3.491917 
-  mi_np_rf_20 
-     3.221152 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.276339      4.390382      4.370004      4.422202 
 
 [[8]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.548355      4.416404      4.457557      4.500912      4.479477      3.491917 
-  mi_np_rf_20 
-     3.715076 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.406093      4.380483      4.370004      4.435637 
 
 [[9]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.387274      4.408671      4.457557      4.478121      4.469577      3.541663 
-  mi_np_rf_20 
-     3.734009 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.446783      4.422202      4.503761      4.411595 
 
 [[10]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.239840      4.458178      4.468870      4.388049      4.451900      3.759048 
-  mi_np_rf_20 
-     3.541968 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.413826      4.358544      4.418982      4.411595 
 
 [[11]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950      3.821579 
-  mi_np_rf_20 
-     3.885473 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.326183      4.400989      4.362271      4.434930 
 
 [[12]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.031248      4.403515      4.464628      4.426841      4.470284      3.541663 
-  mi_np_rf_20 
-     3.724543 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.362271      4.323364      4.426841      4.407353 
 
 [[13]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.9639466     4.4112485     4.4695772     4.4667251     4.4462431     3.4224622 
-  mi_np_rf_20 
-    3.5762299 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.250682      4.304176      4.398360      4.478769 
 
 [[14]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.8926769     4.4268407     4.4561424     4.2973307     4.4045244     3.9547228 
-  mi_np_rf_20 
-    3.8286739 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.292666      4.364300      4.408671      4.399575 
 
 [[15]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      0.837502      4.346805      4.466042      4.492365      4.475234      3.790313 
-  mi_np_rf_20 
-     3.809741 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.344227      4.328481      4.382893      4.481598 
 
 [[16]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.8032316     4.3287603     4.4610921     4.4553295     4.3804832     3.7301621 
-  mi_np_rf_20 
-    3.5419683 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.336494      4.339355      4.344227      4.499570 
 
 [[17]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.7740821     4.3442269     4.4582637     4.4724229     4.4342224     3.9547228 
-  mi_np_rf_20 
-    3.7150763 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.362271      4.328481      4.432538      4.435637 
 
 [[18]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.7149162     4.3571156     4.4561424     4.3416491     4.4660417     3.9898046 
-  mi_np_rf_20 
-    3.7150763 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.288001      4.304176      4.563660      4.416545 
 
 [[19]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.6737418     4.4086707     4.4497785     4.4980629     4.4561424     3.7018746 
-  mi_np_rf_20 
-    3.5419683 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.271674      4.241492      4.311325      4.487255 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.3263619     4.2506823     4.4384650     4.4781207     4.4009889 
 
 [[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.1447643     4.4752718     4.4002818     4.4189817     4.4229089 
 
 [[5]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.241769      4.455330      4.463920      4.411248      4.478769      3.701875 
-  mi_np_rf_20 
-     4.008488 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+   4.61512052    0.06113667    4.38031541    4.47169850    4.40093744    4.41866633 
 
 [[6]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.974078      4.449632      4.465335      4.424137      4.484426      3.645300 
-  mi_np_rf_20 
-     3.593361 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.354538      4.412302      4.393204      4.438465 
 
 [[7]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.735300      4.463876      4.453314      4.452481      4.468163      3.491917 
-  mi_np_rf_20 
-     3.221152 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.276339      4.390382      4.370004      4.422202 
 
 [[8]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.548355      4.416404      4.457557      4.500912      4.479477      3.491917 
-  mi_np_rf_20 
-     3.715076 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.406093      4.380483      4.370004      4.435637 
 
 [[9]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.387274      4.408671      4.457557      4.478121      4.469577      3.541663 
-  mi_np_rf_20 
-     3.734009 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.446783      4.422202      4.503761      4.411595 
 
 [[10]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.239840      4.458178      4.468870      4.388049      4.451900      3.759048 
-  mi_np_rf_20 
-     3.541968 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.413826      4.358544      4.418982      4.411595 
 
 [[11]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950      3.821579 
-  mi_np_rf_20 
-     3.885473 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.326183      4.400989      4.362271      4.434930 
 
 [[12]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.031248      4.403515      4.464628      4.426841      4.470284      3.541663 
-  mi_np_rf_20 
-     3.724543 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.362271      4.323364      4.426841      4.407353 
 
 [[13]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.9639466     4.4112485     4.4695772     4.4667251     4.4462431     3.4224622 
-  mi_np_rf_20 
-    3.5762299 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.250682      4.304176      4.398360      4.478769 
 
 [[14]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.8926769     4.4268407     4.4561424     4.2973307     4.4045244     3.9547228 
-  mi_np_rf_20 
-    3.8286739 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.292666      4.364300      4.408671      4.399575 
 
 [[15]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      0.837502      4.346805      4.466042      4.492365      4.475234      3.790313 
-  mi_np_rf_20 
-     3.809741 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.344227      4.328481      4.382893      4.481598 
 
 [[16]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.8032316     4.3287603     4.4610921     4.4553295     4.3804832     3.7301621 
-  mi_np_rf_20 
-    3.5419683 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.336494      4.339355      4.344227      4.499570 
 
 [[17]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.7740821     4.3442269     4.4582637     4.4724229     4.4342224     3.9547228 
-  mi_np_rf_20 
-    3.7150763 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.362271      4.328481      4.432538      4.435637 
 
 [[18]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.7149162     4.3571156     4.4561424     4.3416491     4.4660417     3.9898046 
-  mi_np_rf_20 
-    3.7150763 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.288001      4.304176      4.563660      4.416545 
 
 [[19]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.6737418     4.4086707     4.4497785     4.4980629     4.4561424     3.7018746 
-  mi_np_rf_20 
-    3.5419683 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.271674      4.241492      4.311325      4.487255 
 
 [[20]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.6254323     4.4553295     4.4490714     4.4724229     4.4752340     3.7903132 
-  mi_np_rf_20 
-    3.8002745 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.290333      4.214574      4.388049      4.453314 
 
 [[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950 
 
 [[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160 
 
 [[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.3263619     4.2506823     4.4384650     4.4781207     4.4009889 
 
 [[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+    4.6151205     0.1447643     4.4752718     4.4002818     4.4189817     4.4229089 
 
 [[5]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.241769      4.455330      4.463920      4.411248      4.478769      3.701875 
-  mi_np_rf_20 
-     4.008488 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+   4.61512052    0.06113667    4.38031541    4.47169850    4.40093744    4.41866633 
 
 [[6]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.974078      4.449632      4.465335      4.424137      4.484426      3.645300 
-  mi_np_rf_20 
-     3.593361 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.354538      4.412302      4.393204      4.438465 
 
 [[7]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.735300      4.463876      4.453314      4.452481      4.468163      3.491917 
-  mi_np_rf_20 
-     3.221152 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.276339      4.390382      4.370004      4.422202 
 
 [[8]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.548355      4.416404      4.457557      4.500912      4.479477      3.491917 
-  mi_np_rf_20 
-     3.715076 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.406093      4.380483      4.370004      4.435637 
 
 [[9]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.387274      4.408671      4.457557      4.478121      4.469577      3.541663 
-  mi_np_rf_20 
-     3.734009 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.446783      4.422202      4.503761      4.411595 
 
 [[10]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.239840      4.458178      4.468870      4.388049      4.451900      3.759048 
-  mi_np_rf_20 
-     3.541968 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.413826      4.358544      4.418982      4.411595 
 
 [[11]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950      3.821579 
-  mi_np_rf_20 
-     3.885473 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.326183      4.400989      4.362271      4.434930 
 
 [[12]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.031248      4.403515      4.464628      4.426841      4.470284      3.541663 
-  mi_np_rf_20 
-     3.724543 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.362271      4.323364      4.426841      4.407353 
 
 [[13]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.9639466     4.4112485     4.4695772     4.4667251     4.4462431     3.4224622 
-  mi_np_rf_20 
-    3.5762299 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.250682      4.304176      4.398360      4.478769 
 
 [[14]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.8926769     4.4268407     4.4561424     4.2973307     4.4045244     3.9547228 
-  mi_np_rf_20 
-    3.8286739 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.292666      4.364300      4.408671      4.399575 
 
 [[15]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      0.837502      4.346805      4.466042      4.492365      4.475234      3.790313 
-  mi_np_rf_20 
-     3.809741 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.344227      4.328481      4.382893      4.481598 
 
 [[16]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.8032316     4.3287603     4.4610921     4.4553295     4.3804832     3.7301621 
-  mi_np_rf_20 
-    3.5419683 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.336494      4.339355      4.344227      4.499570 
 
 [[17]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.7740821     4.3442269     4.4582637     4.4724229     4.4342224     3.9547228 
-  mi_np_rf_20 
-    3.7150763 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.362271      4.328481      4.432538      4.435637 
 
 [[18]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.7149162     4.3571156     4.4561424     4.3416491     4.4660417     3.9898046 
-  mi_np_rf_20 
-    3.7150763 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.288001      4.304176      4.563660      4.416545 
 
 [[19]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.6737418     4.4086707     4.4497785     4.4980629     4.4561424     3.7018746 
-  mi_np_rf_20 
-    3.5419683 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.271674      4.241492      4.311325      4.487255 
 
 [[20]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.6254323     4.4553295     4.4490714     4.4724229     4.4752340     3.7903132 
-  mi_np_rf_20 
-    3.8002745 
-
-[[21]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160     3.7903132 
-  mi_np_rf_20 
-    3.7813416 
-
-[[1]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      4.589494      4.518005      4.466749      4.411248      4.427151      3.954723 
-  mi_np_rf_20 
-     4.244690 
-
-[[2]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.899212      4.547918      4.468163      4.380315      4.428566      3.920167 
-  mi_np_rf_20 
-     3.819207 
-
-[[3]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      3.136324      4.598294      4.442000      4.339071      4.468870      3.645300 
-  mi_np_rf_20 
-     3.550534 
-
-[[4]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.621106      4.503761      4.450486      4.398360      4.434930      3.399311 
-  mi_np_rf_20 
-     3.097376 
-
-[[5]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      2.241769      4.455330      4.463920      4.411248      4.478769      3.701875 
-  mi_np_rf_20 
-     4.008488 
-
-[[6]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.974078      4.449632      4.465335      4.424137      4.484426      3.645300 
-  mi_np_rf_20 
-     3.593361 
-
-[[7]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.735300      4.463876      4.453314      4.452481      4.468163      3.491917 
-  mi_np_rf_20 
-     3.221152 
-
-[[8]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.548355      4.416404      4.457557      4.500912      4.479477      3.491917 
-  mi_np_rf_20 
-     3.715076 
-
-[[9]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.387274      4.408671      4.457557      4.478121      4.469577      3.541663 
-  mi_np_rf_20 
-     3.734009 
-
-[[10]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.239840      4.458178      4.468870      4.388049      4.451900      3.759048 
-  mi_np_rf_20 
-     3.541968 
-
-[[11]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.136439      4.449632      4.470991      4.403515      4.446950      3.821579 
-  mi_np_rf_20 
-     3.885473 
-
-[[12]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      1.031248      4.403515      4.464628      4.426841      4.470284      3.541663 
-  mi_np_rf_20 
-     3.724543 
-
-[[13]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.9639466     4.4112485     4.4695772     4.4667251     4.4462431     3.4224622 
-  mi_np_rf_20 
-    3.5762299 
-
-[[14]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.8926769     4.4268407     4.4561424     4.2973307     4.4045244     3.9547228 
-  mi_np_rf_20 
-    3.8286739 
-
-[[15]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-     4.615121      0.837502      4.346805      4.466042      4.492365      4.475234      3.790313 
-  mi_np_rf_20 
-     3.809741 
-
-[[16]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.8032316     4.3287603     4.4610921     4.4553295     4.3804832     3.7301621 
-  mi_np_rf_20 
-    3.5419683 
-
-[[17]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.7740821     4.3442269     4.4582637     4.4724229     4.4342224     3.9547228 
-  mi_np_rf_20 
-    3.7150763 
-
-[[18]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.7149162     4.3571156     4.4561424     4.3416491     4.4660417     3.9898046 
-  mi_np_rf_20 
-    3.7150763 
-
-[[19]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.6737418     4.4086707     4.4497785     4.4980629     4.4561424     3.7018746 
-  mi_np_rf_20 
-    3.5419683 
-
-[[20]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.6254323     4.4553295     4.4490714     4.4724229     4.4752340     3.7903132 
-  mi_np_rf_20 
-    3.8002745 
-
-[[21]]
-      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20   mi_np_rf_10 
-    4.6151205     0.5717198     4.4241372     4.4391721     4.4439340     4.4236160     3.7903132 
-  mi_np_rf_20 
-    3.7813416 
+      mi_true         mi_nn  mi_np_ols_10  mi_np_ols_20 mi_np_enet_10 mi_np_enet_20 
+     4.615121      0.000000      4.290333      4.214574      4.388049      4.453314 
 
