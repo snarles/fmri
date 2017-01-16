@@ -379,6 +379,29 @@ Suppose we observe pairs $(X_i,Y_i)_{i=1}^n$ iid from density $p(x, y)$
 \end{frame}
 
 \begin{frame}
+\frametitle{Dimension reduction vs. sparsity?}
+\begin{columns}
+
+\begin{column}{0.5\textwidth}
+\begin{center}
+\includegraphics[scale = 0.5]{reduction_unsup.png}
+\end{center}
+Unsupervised dimension reduction
+\pause
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\begin{center}
+\includegraphics[scale = 0.5]{reduction_sup.png}
+\end{center}
+Sparsity = supervised dim. reduction
+\end{column}
+
+
+\end{columns}
+\end{frame}
+
+\begin{frame}
 \frametitle{Second idea: link prediction accuracy to mutual information}
 \begin{itemize}
 \item If $I(X; Y) > 0$, then $X$ carries information about $Y$ and vice-versa. \pause
