@@ -66,7 +66,9 @@ lines(acs_mu, col = "blue")
 #lines(acs_hat2, col = "green")
 
 m_err <- sqrt(mean(((acs_hat - acs)^2)[-(1:k_sub)]))
-m_err
+m_err # 0.01763447
 m_err2 <- sqrt(mean(((acs_hat - acs_mu)^2)[-(1:k_sub)]))
-m_err2
+m_err2 # 0.01010458
 #title(sub = paste("RMSE =", m_err2))
+m_err3 <- sqrt(mean(((acs - acs_mu)^2)[-(1:k_sub)]))
+m_err3 # 0.01278825

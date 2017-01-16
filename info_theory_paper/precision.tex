@@ -553,6 +553,14 @@ Details of the simulation [to be moved to appendix]
 
 \begin{figure}
 \begin{center}
+\includegraphics[scale=0.7]{../info_theory_sims/fig_sim5d.pdf}
+\end{center}
+\label{fig:good_simulations}
+\caption{Success at recovering identification accuracy curves for various settings.  Black = empirical accuracy curve, Blue = ground truth accuracy curve, Red = estimated accuracy curve. Sparse high-dimensional, large sample size case.  $n = 1000, p = 200, q = 200$.}
+\end{figure}
+
+\begin{figure}
+\begin{center}
 \begin{tabular}{ccc}
 \includegraphics[scale=0.4]{../info_theory_sims/fig_sim5a.pdf} &
 \includegraphics[scale=0.4]{../info_theory_sims/fig_sim5b.pdf} &
@@ -572,6 +580,27 @@ Examples using Kay et al data:
 \item Comparison of differing voxel numbers
 \item Effect of voxel resolution (by averaging neighboring voxels into bigger voxels)
 \end{itemize}
+
+
+\begin{figure}
+\begin{center}
+\begin{tabular}{cccc}
+\includegraphics[scale=0.3]{../Yuval/ident_extrap1.pdf} &
+\includegraphics[scale=0.3]{../Yuval/ident_extrap2.pdf} &
+\includegraphics[scale=0.3]{../Yuval/ident_extrap3.pdf} \\
+(a) & (b) & (c) \\
+\includegraphics[scale=0.3]{../Yuval/ident_extrap4.pdf} &
+\includegraphics[scale=0.3]{../Yuval/ident_extrap5.pdf} &
+\includegraphics[scale=0.3]{../Yuval/ident_extrap6.pdf} \\
+(d) & (e) & (f) \\
+\includegraphics[scale=0.3]{../Yuval/ident_extrap7.pdf} &
+\includegraphics[scale=0.3]{../Yuval/ident_extrap8.pdf} & \\
+(g) & (h)  &  
+\end{tabular}
+\end{center}
+\label{fig:data}
+\caption{Accuracy of extrapolation in Kay et al..  Black = empirical accuracy curve, Red = estimated accuracy curve, extrapolating from $k = 50$.}
+\end{figure}
 
 \bibliography{neuroinfo}{}
 \bibliographystyle{plain}
