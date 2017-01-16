@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="compression.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="188.47441"
+     inkscape:cy="537.57359"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:snap-global="true"
+     inkscape:window-width="1215"
+     inkscape:window-height="1000"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3061" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="opacity:0.7;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 110.35177,228.46016 7.5,0.25 7.75,0.75 10,2 8.25,2.5 8.5,4.75 11,7 8,8 8.75,11.75 4.5,9.5 3.25,9.75 2.25,11.5 -0.25,12.25 -1,10.75 -2.75,9.75 -4.5,10.25 -7.5,11.25 -7.25,7.75 -8.25,6.75 -7.25,4.5 -6,3.25 -8.25,2.75 -11,2.5 -9,0.75 -9.75,-0.25 -10.500002,-1.75 -9,-2.75 -9.75,-4.5 -7.5,-5.25 -8.5,-7.25 -5.25,-5.5 -5.5,-7.5 -4.25,-7.5 -3.75,-9.25 -2,-8.5 -1.5,-10.5 0.25,-11 1.5,-11.5 3.75,-9.75 4.75,-10.25 6.75,-9.75 6.25,-7.25 9.25,-7 9,-5.5 10,-4.25 8.750002,-1.75 z"
+       id="path3039"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_unsup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="opacity:0.7;fill:#0000ff;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 201.72677,228.83516 7.5,0.25 7.75,0.75 10,2 8.25,2.5 8.5,4.75 11,7 8,8 8.75,11.75 4.5,9.5 3.25,9.75 2.25,11.5 -0.25,12.25 -1,10.75 -2.75,9.75 -4.5,10.25 -7.5,11.25 -7.25,7.75 -8.25,6.75 -7.25,4.5 -6,3.25 -8.25,2.75 -11,2.5 -9,0.75 -9.75,-0.25 -10.5,-1.75 -9,-2.75 -9.75,-4.5 -7.5,-5.25 -8.5,-7.25 -5.25,-5.5 -5.5,-7.5 -4.25,-7.5 -3.75,-9.25 -2,-8.5 -1.5,-10.5 0.25,-11 1.5,-11.5 3.75,-9.75 4.75,-10.25 6.75,-9.75 6.25,-7.25 9.25,-7 9,-5.5 10,-4.25 8.75,-1.75 z"
+       id="path3039-7"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_unsup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 140.70711,420.03985 40,0 0,40 20,0 -40,50 -40,-50 20,0 z"
+       id="path3067"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_unsup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="opacity:0.7;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:0.49198225px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 152.375 559.875 C 149.93711 560.40118 147.2981 560.98079 145.51174 562.8408 C 143.86321 564.51679 142.71623 566.60476 141.34375 568.5 C 140.5749 569.68524 139.66762 570.79956 138.67471 571.82529 C 137.35061 573.29034 135.60781 574.24237 133.9375 575.25 C 131.58555 576.37518 129.24287 577.55068 126.90625 578.71875 C 125.60214 579.45341 124.37136 580.31904 123.36841 581.43939 C 121.40658 583.22521 119.98207 585.58244 119.18081 588.10155 C 118.67362 589.48802 118.77142 591.05646 119.48384 592.35302 C 120.73095 595.07136 122.70876 597.3634 124.15885 599.96856 C 127.59419 605.43485 130.24914 611.33913 133.50561 616.90631 C 134.77393 619.018 136.54214 620.8605 138.78125 621.9375 C 141.79926 623.48251 145.09408 624.43006 148.41554 625.06141 C 152.69004 625.84342 157.10636 625.36751 161.25944 624.17553 C 164.83242 623.23372 168.26894 621.76408 171.39564 619.79576 C 173.72394 618.08838 176.0369 615.99114 176.91035 613.14772 C 177.90684 609.88591 177.4823 606.43923 177.33638 603.09289 C 177.14535 599.26481 177.21577 595.37476 178.22154 591.65143 C 179.04627 587.88358 180.41331 584.08016 179.87486 580.17104 C 179.23766 576.28717 177.04914 572.92027 174.90812 569.70566 C 171.93263 565.64764 167.53257 562.71984 162.7126 561.33147 C 159.37446 560.31619 155.86877 559.74623 152.375 559.875 z "
+       id="path3039-5"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_unsup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="opacity:0.7;fill:#0000ff;fill-opacity:1;stroke:#000000;stroke-width:0.49198225px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 182.46875 561.40625 C 179.30695 561.8393 176.46714 563.41256 173.72396 564.94673 C 169.25602 567.83868 166.07902 572.50638 164.69692 577.61715 C 163.58949 581.23188 163.02698 584.97918 162.34854 588.69003 C 161.95125 592.20954 161.67771 595.7894 162.1875 599.3125 C 163.46232 605.08457 166.56945 610.21658 169.71229 615.14434 C 172.25165 619.05898 175.2441 622.82479 179.1875 625.40625 C 181.23358 626.65721 183.62195 627.33948 186.02656 627.21875 C 188.9778 627.19468 191.92752 626.33548 194.46354 624.83452 C 195.76418 624.09126 196.64204 622.83424 197.20453 621.4736 C 198.61604 618.33306 198.98076 614.74085 201.02843 611.89113 C 201.78679 610.59868 203.18098 609.81225 203.81037 608.43486 C 204.46523 607.14059 205.11206 605.82129 206.12989 604.76416 C 208.45945 601.98331 211.5094 599.93103 213.9375 597.25 C 215.04573 595.84776 215.63542 594.10358 215.69091 592.32353 C 215.88026 589.15121 214.86109 586.07019 213.83546 583.11271 C 212.46566 579.66711 210.64007 576.34271 207.99147 573.71022 C 206.54219 572.2891 204.9288 571.04595 203.40453 569.70598 C 200.58159 567.37652 197.60364 565.20153 194.375 563.46875 C 191.06477 562.03772 187.44882 561.48853 183.86378 561.39456 C 183.39931 561.35814 182.9329 561.3725 182.46875 561.40625 z "
+       id="path3039-7-3"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_unsup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="opacity:0.7;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 410.35177,228.46016 7.5,0.25 7.75,0.75 10,2 8.25,2.5 8.5,4.75 11,7 8,8 8.75,11.75 4.5,9.5 3.25,9.75 2.25,11.5 -0.25,12.25 -1,10.75 -2.75,9.75 -4.5,10.25 -7.5,11.25 -7.25,7.75 -8.25,6.75 -7.25,4.5 -6,3.25 -8.25,2.75 -11,2.5 -9,0.75 -9.75,-0.25 -10.5,-1.75 -9,-2.75 -9.75,-4.5 -7.5,-5.25 -8.5,-7.25 -5.25,-5.5 -5.5,-7.5 -4.25,-7.5 -3.75,-9.25 -2,-8.5 -1.5,-10.5 0.25,-11 1.5,-11.5 3.75,-9.75 4.75,-10.25 6.75,-9.75 6.25,-7.25 9.25,-7 9,-5.5 10,-4.25 8.75,-1.75 z"
+       id="path3039-56"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_sup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="opacity:0.7;fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 452.0625 555.25 C 447.16959 557.68894 442.98757 561.27844 438.83348 564.77922 C 435.10869 568.09892 431.61393 571.72664 428.77166 575.8392 C 426.19745 579.71967 424.64721 584.22745 424.05082 588.83391 C 423.36099 593.52676 423.06726 598.2734 423.06836 603.01539 C 423.09851 607.6263 423.37911 612.2492 424.25954 616.78299 C 425.14109 621.47943 426.70178 626.09198 429.19691 630.18381 C 431.72565 634.22307 435.2257 637.54365 438.875 640.5625 C 442.48842 643.54842 446.32523 646.28228 450.40625 648.59375 C 452.30714 649.54801 454.24132 650.81 456.46406 650.625 C 458.06969 650.56978 459.29957 649.40809 460.44808 648.41522 C 463.48799 645.68692 465.88023 642.3421 468.28125 639.0625 C 470.65897 635.65242 473.01316 632.21295 475.05309 628.58781 C 477.26498 624.57237 478.65695 620.13714 479.27937 615.60082 C 479.8687 612.14979 480.095 608.64686 480.24616 605.1535 C 480.41862 599.27561 479.92213 593.33237 478.22337 587.68202 C 477.1369 583.97484 475.81757 580.30254 473.85781 576.95781 C 472.20455 574.22816 470.43679 571.56099 468.53125 569 C 465.10936 564.51935 461.15866 560.40339 456.5772 557.09867 C 455.34015 556.31306 454.05 555.47043 452.59375 555.1875 C 452.41048 555.17153 452.23676 555.19215 452.0625 555.25 z "
+       id="path3039-56-7"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccccccccccccc"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_sup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="opacity:0.7;fill:#0000ff;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 501.72677,228.83516 7.5,0.25 7.75,0.75 10,2 8.25,2.5 8.5,4.75 11,7 8,8 8.75,11.75 4.5,9.5 3.25,9.75 2.25,11.5 -0.25,12.25 -1,10.75 -2.75,9.75 -4.5,10.25 -7.5,11.25 -7.25,7.75 -8.25,6.75 -7.25,4.5 -6,3.25 -8.25,2.75 -11,2.5 -9,0.75 -9.75,-0.25 -10.5,-1.75 -9,-2.75 -9.75,-4.5 -7.5,-5.25 -8.5,-7.25 -5.25,-5.5 -5.5,-7.5 -4.25,-7.5 -3.75,-9.25 -2,-8.5 -1.5,-10.5 0.25,-11 1.5,-11.5 3.75,-9.75 4.75,-10.25 6.75,-9.75 6.25,-7.25 9.25,-7 9,-5.5 10,-4.25 8.75,-1.75 z"
+       id="path3039-7-2"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_sup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 440.70711,420.03985 40,0 0,40 20,0 -40,50 -40,-50 20,0 z"
+       id="path3067-9"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_sup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="opacity:0.7;fill:#0000ff;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 468.25 556.3125 C 465.64239 557.03026 462.98923 557.82486 460.70131 559.30459 C 458.9557 560.39615 457.60476 561.97515 456.24642 563.49571 C 452.64185 567.66096 449.59226 572.26753 446.6875 576.9375 C 444.6468 580.44297 442.88167 584.13847 441.71875 588.03125 C 440.53829 593.31451 439.81552 598.71319 439.79173 604.13255 C 439.79492 608.58492 440.09763 613.05813 440.98338 617.42696 C 441.97336 621.83089 443.8679 625.98461 446.127 629.87517 C 449.75651 635.80422 454.28914 641.14582 459.28125 645.96875 C 461.82916 648.37764 464.65842 650.66323 468.03849 651.75862 C 469.86611 652.35901 472.05047 652.27761 473.5625 650.96875 C 475.15739 649.61486 476.13759 647.70514 477.12011 645.89413 C 480.63466 639.21506 484.79209 632.87119 487.875 625.96875 C 489.13928 622.99949 490.07388 619.91077 490.98136 616.81838 C 491.83131 613.99379 492.63501 611.1519 493.3125 608.28125 C 493.92557 605.47513 494.55417 602.59852 494.1799 599.71366 C 493.5563 594.45692 491.51731 589.52443 489.89377 584.52505 C 489.19984 582.47938 488.67471 580.38308 488.0625 578.3125 C 487.80109 577.39119 487.35107 576.35674 486.86519 575.45552 C 485.50786 572.60932 483.71898 570.00616 481.8125 567.5 C 481.0295 566.56281 480.32964 565.65218 479.42564 564.77343 C 477.74092 562.90152 475.70309 561.33456 473.73485 559.75315 C 472.24506 558.62505 470.78525 557.43528 469.2392 556.39451 C 468.94044 556.24225 468.56356 556.17929 468.25 556.3125 z "
+       id="path3039-7-2-0"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccccccccccccc"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_sup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#ffffff;stroke-width:0.69506007000000003px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 84.573255,681.83823 166.022115,0"
+       id="path3909"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_unsup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#ffffff;stroke-width:0.66494489000000001px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 390.53966,681.83823 151.94715,0"
+       id="path3909-9"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_sup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3003"
+       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       transform="translate(-38.183766,188.09041)"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_unsup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
+         id="flowRegion3005"><rect
+           id="rect3007"
+           width="123.03658"
+           height="86.267029"
+           x="124.45079"
+           y="97.768028" /></flowRegion><flowPara
+         id="flowPara3009">X</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3003-3"
+       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       transform="translate(12.350497,477.68783)"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_unsup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
+         id="flowRegion3005-6"><rect
+           id="rect3007-7"
+           width="123.03658"
+           height="86.267029"
+           x="124.45079"
+           y="97.768028" /></flowRegion><flowPara
+         id="flowPara3009-5">X</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3038"
+       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       transform="translate(114.5513,190.91883)"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_unsup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
+         id="flowRegion3040"><rect
+           id="rect3042"
+           width="120.20815"
+           height="70.710678"
+           x="100.40916"
+           y="92.111176" /></flowRegion><flowPara
+         id="flowPara3044">Y</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3038-3"
+       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       transform="translate(84.969011,480.51565)"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_unsup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
+         id="flowRegion3040-5"><rect
+           id="rect3042-6"
+           width="120.20815"
+           height="70.710678"
+           x="100.40916"
+           y="92.111176" /></flowRegion><flowPara
+         id="flowPara3044-2">Y</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3038-3-9"
+       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       transform="translate(376.297,490.41515)"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_sup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
+         id="flowRegion3040-5-1"><rect
+           id="rect3042-6-2"
+           width="120.20815"
+           height="70.710678"
+           x="100.40916"
+           y="92.111176" /></flowRegion><flowPara
+         id="flowPara3044-2-7">Y</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3003-3-0"
+       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       transform="translate(296.60742,487.58733)"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_sup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
+         id="flowRegion3005-6-9"><rect
+           id="rect3007-7-3"
+           width="123.03658"
+           height="86.267029"
+           x="124.45079"
+           y="97.768028" /></flowRegion><flowPara
+         id="flowPara3009-5-6">X</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3003-0"
+       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       transform="translate(263.63422,188.48087)"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_sup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
+         id="flowRegion3005-62"><rect
+           id="rect3007-6"
+           width="123.03658"
+           height="86.267029"
+           x="124.45079"
+           y="97.768028" /></flowRegion><flowPara
+         id="flowPara3009-1">X</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3038-8"
+       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       transform="translate(416.36928,191.30929)"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/reduction_sup.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
+         id="flowRegion3040-7"><rect
+           id="rect3042-9"
+           width="120.20815"
+           height="70.710678"
+           x="100.40916"
+           y="92.111176" /></flowRegion><flowPara
+         id="flowPara3044-20">Y</flowPara></flowRoot>  </g>
+</svg>
