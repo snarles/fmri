@@ -152,7 +152,18 @@
 \section{Introduction}
 
 \begin{frame}
-\frametitle{Overview}
+\frametitle{Introduction}
+\begin{center}
+\includegraphics[scale = 0.5, clip=true, trim = 0 2.4in 0 0]{kay00.png}
+\end{center}
+\begin{itemize}
+\item Much of my work has been inspired by use of machine learning in encoding/decoding models in fMRI (Kay et al. 2008, Nishimoto et al. 2011)\pause
+\item E.g.: Extrapolating classification accuracy curves (Z., Achanta, and Benjamini 2016)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{This talk}
 \begin{columns}
 \begin{column}{0.25\textwidth}
 \includegraphics[scale = 0.27]{kinney3.png}
@@ -255,7 +266,20 @@ Engineering, biology, computer science, physics, medicine
 \begin{frame}
 \frametitle{Problems with mutual information}
 \begin{itemize}
-\item Hard to interpret (compared to $R^2$)
+\item Hard to interpret (compared to $R^2$) \pause
+\begin{itemize}
+\item Define the ``informational correlation'' (Linfoot 1957)
+\[
+\text{Cor}_{Info}(X, Y) = \sqrt{1-e^{-2I(X; Y)}}
+\]
+\pause
+\item Then $\text{Cor}_{Info}(X, Y) \in [0,1]$.
+\item For $(X, Y)$ bivariate normal,
+\[
+|\text{Cor}_{Pearson}(X, Y)| = \text{Cor}_{Info}(X, Y)
+\]
+\pause
+\end{itemize}
 \item Hard to estimate (compared to $R^2$)
 \end{itemize}
 \end{frame}
@@ -285,25 +309,25 @@ Engineering, biology, computer science, physics, medicine
 %\end{columns}
 %\end{frame}
 
-\begin{frame}
-\frametitle{Can we make $I(X; Y)$ easier to interpret?}
-\begin{itemize}
+%\begin{frame}
+%\frametitle{Can we make $I(X; Y)$ easier to interpret?}
+%\begin{itemize}
 %\item If $(X, Y)$ have a bivariate normal distribution with correlation $\rho$, then
 %\[
 %I(X; Y) = \frac{-1}{2}\ln(1 - \rho^2)
 %\] \pause
-\item Define the ``informational correlation'' (Linfoot 1957)
-\[
-\text{Cor}_{Info}(X, Y) = \sqrt{1-e^{-2I(X; Y)}}
-\]\pause
-\item Then $\text{Cor}_{Info}(X, Y) \in [0,1]$.
-\item For $(X, Y)$ bivariate normal,
-\[
-|\text{Cor}_{Pearson}(X, Y)| = \text{Cor}_{Info}(X, Y)
-\]
-\end{itemize}
-\pause 
-\end{frame}
+%\item Define the ``informational correlation'' (Linfoot 1957)
+%\[
+%\text{Cor}_{Info}(X, Y) = \sqrt{1-e^{-2I(X; Y)}}
+%\]\pause
+%\item Then $\text{Cor}_{Info}(X, Y) \in [0,1]$.
+%\item For $(X, Y)$ bivariate normal,
+%\[
+%\text{Cor}_{Pearson}(X, Y)| = \text{Cor}_{Info}(X, Y)
+%\]
+%\end{itemize}
+%\pause 
+%\end{frame}
 
 %\begin{frame}
 %\frametitle{Difficulty of estimating $I(X; Y)$}
@@ -381,28 +405,24 @@ Suppose we observe pairs $(X_i,Y_i)_{i=1}^n$ iid from density $p(x, y)$
 \end{itemize}
 \end{frame}
 
-\begin{frame}
-\frametitle{Dimension reduction vs. sparsity?}
-\begin{columns}
-
-\begin{column}{0.5\textwidth}
-\begin{center}
-\includegraphics[scale = 0.5]{reduction_unsup.png}
-\end{center}
-Unsupervised dimension reduction
-\pause
-\end{column}
-
-\begin{column}{0.5\textwidth}
-\begin{center}
-\includegraphics[scale = 0.5]{reduction_sup.png}
-\end{center}
-Sparsity = supervised dim. reduction
-\end{column}
-
-
-\end{columns}
-\end{frame}
+%\begin{frame}
+%\frametitle{Dimension reduction vs. sparsity?}
+%\begin{columns}
+%\begin{column}{0.5\textwidth}
+%\begin{center}
+%\includegraphics[scale = 0.5]{reduction_unsup.png}
+%\end{center}
+%Unsupervised dimension reduction
+%\pause
+%\end{column}
+%\begin{column}{0.5\textwidth}
+%\begin{center}
+%\includegraphics[scale = 0.5]{reduction_sup.png}
+%\end{center}
+%Sparsity = supervised dim. reduction
+%\end{column}
+%\end{columns}
+%\end{frame}
 
 %\begin{frame}
 %\frametitle{Second idea: link prediction accuracy to mutual information}
@@ -506,6 +526,11 @@ Suppose we observe pairs $(X_i,Y_i)_{i=1}^n$ iid from density $p(x, y)$.
 \begin{center}
 \includegraphics[scale = 0.5]{../diagram/idloss2b.png}
 \end{center}
+\pause
+\begin{itemize}
+\item First used by Kay et al. (2008) to compare accuracy of center-surround model of V1 versus Gabor filter model of V1. \pause
+\item We are the first to explore theoretical properties of the loss (e.g. connection to mutual information)
+\end{itemize}
 \end{frame}
 
 %\begin{frame}
@@ -548,8 +573,8 @@ Suppose we observe pairs $(X_i,Y_i)_{i=1}^n$ iid from density $p(x, y)$.
 \includegraphics[scale = 0.27]{vcalc.jpg}
 \end{column}
 \begin{column}{0.75\textwidth}
-We use \emph{calculus of variations} to obtain this result. \pause
 \begin{itemize}
+\item Variational calculus allows optimization of \emph{functionals}.\pause
 \item Mutual information is a functional of $p(x, y)$. 
 \[
 \text{I}[p(x, y)] = \E\left[\log \frac{p(X, Y)}{p(X)p(Y)}\right].
@@ -560,7 +585,7 @@ We use \emph{calculus of variations} to obtain this result. \pause
 \text{BayesRisk}_k[p(x, y)] = 1-\E[\max_{i=1}^k p(Y|X_i)].
 \]
 \pause
-\item $g_k(u) = \inf_{p(x, y)} I[p(x, y)]$ \[\text{subject to BayesRisk}_k[p(x, y)] \geq u.\]
+\item $g_k(u)$ obtained by minimizing $\text{I}[p(x, y)]$ subject to $\text{BayesRisk}_k[p(x,y)] \leq u$.
 \end{itemize}
 \end{column}
 \end{columns}
@@ -579,19 +604,19 @@ Suppose we observe pairs $(X_i,Y_i)_{i=1}^n$ iid from density $p(x, y)$.
 \end{enumerate}
 \end{frame}
 
-\begin{frame}
-\frametitle{What is leave-k-out cross-validation?}
-\begin{center}
-\includegraphics[scale = 0.5]{loocv_sub.png}
-\end{center}
-\begin{itemize}
-\item Randomly hold out a subset of size $k$.
-\item Use remaining data to predict the held-out data.
-\item Obtain the average prediction error.
-\end{itemize}
+%\begin{frame}
+%\frametitle{What is leave-k-out cross-validation?}
+%\begin{center}
+%\includegraphics[scale = 0.5]{loocv_sub.png}
+%\end{center}
+%\begin{itemize}
+%\item Randomly hold out a subset of size $k$.
+%\item Use remaining data to predict the held-out data.
+%\item Obtain the average prediction error.
+%\end{itemize}
 
-{\tiny Image credit Hsuan-Tien Lin}
-\end{frame}
+%{\tiny Image credit Hsuan-Tien Lin}
+%\end{frame}
 
 %\item Resulting estimator:
 %\[
@@ -806,7 +831,22 @@ Cy = cytoskeleton, CS = chromatin structure
 
 \begin{frame}
 \frametitle{Invariance properties}
-Transform data from each group with random rotation...\pause
+\begin{itemize}
+\item Transform data from each group with random rotation...
+\[\tilde{bX} = \bX E\]
+\[\tilde{bY} = \bX F\]
+with $E^T E = I$, $F^T F = I$.\pause
+\item CCA is invariant:
+\[
+\text{CCA}(\bX, \bY) = \text{CCA}(\tilde{bX},\tilde{bY})
+\]
+\pause
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Invariance properties}
+However, sparse CCA is not invariant.
 
 \begin{center}
 \includegraphics[scale = 0.5]{../idloss/cca_p_robustness.pdf}
@@ -815,7 +855,7 @@ Transform data from each group with random rotation...\pause
 
 \begin{frame}
 \frametitle{Invariance properties}
-Transform data from each group with random rotation...
+Our method, on the other hand, is \emph{robust} to rotation.
 
 \begin{center}
 \includegraphics[scale = 0.5]{../idloss/info_cor_robustness.pdf}
