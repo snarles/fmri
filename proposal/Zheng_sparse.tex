@@ -933,20 +933,24 @@ Our method, on the other hand, is \emph{robust} to rotation.
 
 
 \begin{frame}[label=supplemental]
-\frametitle{Result}
-\textbf{Theorem}.
-For any $\iota > 0$, there exists $\beta_\iota \geq 0$ such that defining
+\frametitle{Intuition behind identity}
 \[
-q_\beta(t) = \frac{\exp[\beta t^{k-1}]}{\int_0^1 \exp[\beta t^{k-1}]},
+\text{BayesRisk}_k[p(x, y)] = 1 - \text{BA}_k[p(x, y)] = 1-\E[\max_{i=1}^k p(Y|X_i)].
 \]
-we have
-\[
-\int_0^1 q_{\beta_\iota}(t) \log q_{\beta_\iota}(t) dt = \iota.
-\]
-Then,
-\[
-\sup_{I(X; Y) = \iota} \text{BayesAcc}_k = \int_0^1 q_{\beta_\iota}(t) t^{k-1} dt = g_k^{-1}(\iota).
-\]
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{center}
+\includegraphics[scale = 0.35, clip = true, trim = 1.2in 1.3in 0in 1in]{var_ba.png}
+\end{center}   
+\end{column}
+\begin{column}{0.5\textwidth}  %%<--- here
+\begin{align*}
+\text{BA}&(x_1,x_2,x_3) \\&= \sum_i \Pr[x_i]\Pr_{Y \sim p(y|x_i)}[Y \in \text{zone }i]
+\\&= \sum_i \frac{1}{k} \text{Area under curve $i$ in zone $i$}
+\\&\ \ \ = \frac{1}{k} \text{Area under } \max_{i=1}^k p(y|x_i)
+\end{align*}
+\end{column}
+\end{columns}
 Back to \hyperlink{main}{\beamerbutton{main}}.
 \end{frame}
 
