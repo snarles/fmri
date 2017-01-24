@@ -597,8 +597,8 @@ Suppose we observe pairs $(X_i,Y_i)_{i=1}^n$ iid from density $p(x, y)$.
 
 \begin{frame}
 \frametitle{Result}
-\textbf{Theorem}.
-For any $\iota > 0$, there exists $\beta_\iota \geq 0$ such that defining
+\textbf{Theorem}. (Z., Benjamini 2017)
+For any $\iota > 0$ and $k = 2,3,\hdots$, there exists $\beta_\iota \geq 0$ such that defining
 \[
 q_\beta(t) = \frac{\exp[\beta t^{k-1}]}{\int_0^1 \exp[\beta t^{k-1}]},
 \]
@@ -606,7 +606,10 @@ we have
 \[
 \int_0^1 q_{\beta_\iota}(t) \log q_{\beta_\iota}(t) dt = \iota.
 \]
-Then,
+Then, there exists a function $g_k$ such that
+%For every $k \geq 2$, there exists a function $g_k$ such that
+\[I(X; Y) \geq g_k(\text{IdRisk}_k),\]
+defined by
 \[
 g_k^{-1}(\iota) = \sup_{I(X; Y) = \iota} \text{BayesAcc}_k = \int_0^1 q_{\beta_\iota}(t) t^{k-1} dt.
 \]
@@ -618,6 +621,9 @@ Suppose we observe pairs $(X_i,Y_i)_{i=1}^n$ iid from density $p(x, y)$.
 \begin{enumerate}
 \item Estimate a (sparse) regression model for $\E[\vec{Y}|\vec{X}]$.
 \item Compute \emph{identification loss}, $\text{IdLoss}_k$, using \emph{leave-k-out}.
+\begin{center}
+\includegraphics[scale = 0.3]{loocv_sub.png}
+\end{center}
 \item Estimate mutual information using
 \[
 \hat{I}_{IdLoss}(X; Y) = g_k(\text{IdLoss}_k).
