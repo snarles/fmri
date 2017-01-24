@@ -722,7 +722,19 @@ Suppose we observe pairs $(X_i,Y_i)_{i=1}^n$ iid from density $p(x, y)$.
 
 
 
-
+\begin{frame}
+\frametitle{Application to gene expression time series}
+\begin{itemize}
+\item Suppose we have \emph{groups} of genes, $\vec{X}^{(1)},\hdots, \vec{X}^{(m)}$.
+\item Each group may consist of a different number of genes, $p_i$.
+\item Goal: estimate the mutual information
+\[
+I(\vec{X}^{(i)}; \vec{X}^{(j)})
+\]
+between each pair, $i \neq j$.
+\item Conclusion: find groups which are high predictive of each other--this may have biological significance.
+\end{itemize}
+\end{frame}
 
 
 \begin{frame}
