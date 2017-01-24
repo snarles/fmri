@@ -223,7 +223,7 @@ Engineering, biology, computer science, physics, medicine
 \end{center}
 \begin{itemize}
 \item In many applications scientists are interested in \emph{dependence}, not \emph{correlation} (Reshef et al. 2011, Speed 2011). \pause
-\item Only mutual information (and derived quantities) measures dependence directly  \pause
+\item Only mutual information (and derived quantities) measures dependence directly.
 \end{itemize}
 \end{frame}
 
@@ -470,8 +470,8 @@ Suppose we observe pairs $(X_i,Y_i)_{i=1}^n$ iid from density $p(x, y)$.
 \begin{enumerate}
 \item Estimate a (sparse) regression model for $\E[\vec{Y}|\vec{X}]$.
 %\item Estimate the noise model for $Y$.
-\item Assess the \emph{prediction accuracy} of the model using \emph{identification risk}
-\item Use the identification risk to obtain a lower bound for the mutual information $I(X; Y)$
+\item Assess the \emph{prediction accuracy} of the model using \emph{identification loss} (Kay et al. 2008)
+\item Use the identification loss to obtain a lower bound for the mutual information $I(X; Y)$
 \end{enumerate}
 \end{frame}
 
@@ -562,12 +562,12 @@ Suppose we observe pairs $(X_i,Y_i)_{i=1}^n$ iid from density $p(x, y)$.
 \end{itemize}
 \begin{center}
 \includegraphics[scale = 0.4]{../idloss/g3.pdf}
-\includegraphics[scale = 0.4]{../idloss/g4.pdf}
+\includegraphics[scale = 0.4]{../idloss/g50.pdf}
 \end{center}
 \end{frame}
 
 
-\begin{frame}
+\begin{frame}[label=main]
 \frametitle{Proof details}
 \begin{columns}
 \begin{column}{0.25\textwidth}
@@ -581,15 +581,35 @@ Suppose we observe pairs $(X_i,Y_i)_{i=1}^n$ iid from density $p(x, y)$.
 \text{I}[p(x, y)] = \E\left[\log \frac{p(X, Y)}{p(X)p(Y)}\right].
 \]
 \pause
-\item Identification risk is \emph{lower-bounded} by another functional--the \emph{Bayes risk}. 
+\item Identification risk is \emph{lower-bounded} by another functional--the \hyperlink{supplemental}{\beamerbutton{Bayes Risk}}. 
 \[
 \text{BayesRisk}_k[p(x, y)] = 1-\E[\max_{i=1}^k p(Y|X_i)].
 \]
+
 \pause
 \item $g_k(u)$ obtained by minimizing $\text{I}[p(x, y)]$ subject to $\text{BayesRisk}_k[p(x,y)] \leq u$.
 \end{itemize}
 \end{column}
 \end{columns}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Result}
+\textbf{Theorem}.
+For any $\iota > 0$, there exists $\beta_\iota \geq 0$ such that defining
+\[
+q_\beta(t) = \frac{\exp[\beta t^{k-1}]}{\int_0^1 \exp[\beta t^{k-1}]},
+\]
+we have
+\[
+\int_0^1 q_{\beta_\iota}(t) \log q_{\beta_\iota}(t) dt = \iota.
+\]
+Then,
+\[
+g_k^{-1}(\iota) = \sup_{I(X; Y) = \iota} \text{BayesAcc}_k = \int_0^1 q_{\beta_\iota}(t) t^{k-1} dt.
+\]
 \end{frame}
 
 \begin{frame}
@@ -658,7 +678,7 @@ Suppose we observe pairs $(X_i,Y_i)_{i=1}^n$ iid from density $p(x, y)$.
 %\includegraphics[scale = 0.34]{../idloss/sim1_pairs.pdf}
 %\end{center}
 \begin{itemize}
-\item Generate data: $(Y_1, Y_2) = (X_1, X_2)^T B + \epsilon$ where $B$ is a randomly generated coefficient matrix.
+\item Generate data: $(Y_1, Y_2) = (X_1, X_2)^T B + \epsilon$\\ where $B$ is a randomly generated coefficient matrix.
 \item Add extra noise dimensions $X_3, X_4, \hdots$.
 \item $n = 1000$.
 \item Compare Nearest-Neighbor estimator (Mnatsakov et al, 2008, implemented in {\tt FNN}) with our method using OLS and elastic net (sparse).
@@ -710,7 +730,7 @@ Suppose we observe pairs $(X_i,Y_i)_{i=1}^n$ iid from density $p(x, y)$.
 \begin{itemize}
 \item Data from Spellman et al. 1998
 \item Expression levels of 6178 yeast genes during cell cycle
-\item Total 73 time points per gene
+\item Total 73 measurements per gene
 \end{itemize}
 \end{column}
 \end{columns}
@@ -911,6 +931,25 @@ Our method, on the other hand, is \emph{robust} to rotation.
 }
 \end{frame}
 
+
+\begin{frame}[label=supplemental]
+\frametitle{Result}
+\textbf{Theorem}.
+For any $\iota > 0$, there exists $\beta_\iota \geq 0$ such that defining
+\[
+q_\beta(t) = \frac{\exp[\beta t^{k-1}]}{\int_0^1 \exp[\beta t^{k-1}]},
+\]
+we have
+\[
+\int_0^1 q_{\beta_\iota}(t) \log q_{\beta_\iota}(t) dt = \iota.
+\]
+Then,
+\[
+\sup_{I(X; Y) = \iota} \text{BayesAcc}_k = \int_0^1 q_{\beta_\iota}(t) t^{k-1} dt = g_k^{-1}(\iota).
+\]
+Back to \hyperlink{main}{\beamerbutton{main}}.
+\end{frame}
+
 \end{document}
 
 \begin{frame}
@@ -1043,22 +1082,10 @@ q_\beta(t) = \frac{e^{\beta t^{k-1}}}{\int e^{\beta t^{k-1}} dt}.
 \]
 \end{frame}
 
-\begin{frame}
-\frametitle{Result}
-\textbf{Theorem}.
-For any $\iota > 0$, there exists $\beta_\iota \geq 0$ such that defining
-\[
-q_\beta(t) = \frac{\exp[\beta t^{k-1}]}{\int_0^1 \exp[\beta t^{k-1}]},
-\]
-we have
-\[
-\int_0^1 q_{\beta_\iota}(t) \log q_{\beta_\iota}(t) dt = \iota.
-\]
-Then,
-\[
-\sup_{I(X; Y) = \iota} \text{BayesAcc}_k = \int_0^1 q_{\beta_\iota}(t) t^{k-1} dt = g_k^{-1}(\iota).
-\]
-\end{frame}
+
+
+
+
 
 
 
