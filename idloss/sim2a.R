@@ -95,8 +95,8 @@ View(res1)
 ress <- res1
 plot(NA, NA, ylim = c(0, 5), xlim = c(0, 22), xlab = "dimension",
      ylab = "estimated MI")
-abline(h = res1$mi_true[1], lwd = 2)
-cols <- c(nn = grey(0.2), ols10 = rgb(0,0,0.4),
+abline(h = res1$mi_true[1], lwd = 2, lty = 2)
+cols <- c(nn = rgb(0.8,0,0), ols10 = rgb(0,0,0.4),
           ols20 = rgb(0,0,0.6), enet10 = rgb(0,0.4,0),
           enet20 = rgb(0,0.6,0))
 lines(ress$d_ex + 2, ress$mi_nn, col = cols["nn"], lwd = 2, type = "o")
@@ -104,9 +104,10 @@ lines(ress$d_ex + 2, ress$mi_np_ols_10, col = cols["ols10"], lwd = 2, type = "o"
 lines(ress$d_ex + 2, ress$mi_np_ols_20, col = cols["ols20"], lwd = 2, type = "o")
 lines(ress$d_ex + 2, ress$mi_np_enet_10, col = cols["enet10"], lwd = 2, type = "o")
 lines(ress$d_ex + 2, ress$mi_np_enet_20, col = cols["enet20"], lwd = 2, type = "o")
-legend(15, 3.7, lwd = 2, 
-       col = c("black", cols), legend = c("true", "nn", "ols10", "ols20",
-                              "enet10", "enet20"))
+legend(13, 3.7, lwd = 2, 
+       col = c("black", cols), legend = c("true", "nonpar", "OLS (k=10)", "OLS (k=20)",
+                              "enet (k=10)", "enet (k=20)"),
+       lty = c(2, 1,1,1,1,1))
 
 
 plot(NA, NA, ylim = c(4.1, 4.7), xlim = c(0, 22), xlab = "dimension",

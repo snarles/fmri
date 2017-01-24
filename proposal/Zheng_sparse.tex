@@ -725,14 +725,15 @@ Suppose we observe pairs $(X_i,Y_i)_{i=1}^n$ iid from density $p(x, y)$.
 \begin{frame}
 \frametitle{Application to gene expression time series}
 \begin{itemize}
-\item Suppose we have \emph{groups} of genes, $\vec{X}^{(1)},\hdots, \vec{X}^{(m)}$.
-\item Each group may consist of a different number of genes, $p_i$.
-\item Goal: estimate the mutual information
+\item Suppose we have \emph{groups} of genes, $\vec{X}^{(1)},\hdots, \vec{X}^{(m)}$. 
+\item Each group may consist of a different number of genes, $p_i$. 
+\item Goal: estimate the informational correlation
 \[
-I(\vec{X}^{(i)}; \vec{X}^{(j)})
+\text{Cor}_{Info}(\vec{X}^{(i)}, \vec{X}^{(j)})
 \]
-between each pair, $i \neq j$.
-\item Conclusion: find groups which are high predictive of each other--this may have biological significance.
+between each pair, $i \neq j$.\pause
+\item Conclusion: find groups which are high predictive of each other--this may have biological significance.\pause 
+\item Also: we will show that our method is \emph{robust} to rotations.
 \end{itemize}
 \end{frame}
 
@@ -764,7 +765,8 @@ cell cycle & 27 \\
 DNA replication & 27 \\
 transport & 19 \\
 cytoskeleton & 17\\
-chromatin structure & 16 \\\hline
+chromatin structure & 16 \\
+$\vdots$ & $\vdots$ \\ \hline
 \end{tabular}
 \end{center}
 
@@ -779,126 +781,78 @@ Total 145 different categories (only top 6 shown).
 %# [4,]    0    0    0 0.0000000 0.9891288
 %# [5,]    0    0    0 0.0000000 0.0000000
 
-\begin{frame}
-\frametitle{Canonical correlations between time series}
-Top canonical correlation (Hotelling 1936)
-
-\begin{center}
-\begin{tabular}{c|c|c|c|c|c|} 
-   & CC   & DR   & Tr   & Cy   & CS  \\ \hline
-CC &      & 1    & 1    & 1    & 1   \\ \hline
-DR &      &      & 1    & 0.99 & 0.99\\ \hline
-Tr &      &      &      & 0.99 & 0.98\\ \hline
-Cy &      &      &      &      & 0.98\\ \hline
-CS &      &      &      &      &     \\ \hline
-\end{tabular}
-\end{center}
-
-\vspace{0.5in}
-CC = cell cycle, DR = DNA replication, Tr = transport, \\
-Cy = cytoskeleton, CS = chromatin structure
-\end{frame}
-
-
-%# [,1]      [,2]      [,3]      [,4]      [,5]
-%# [1,]    0 0.9570214 0.8734071 0.9245117 0.9358656
-%# [2,]    0 0.0000000 0.8325764 0.8856461 0.9500084
-%# [3,]    0 0.0000000 0.0000000 0.8329383 0.7832109
-%# [4,]    0 0.0000000 0.0000000 0.0000000 0.9001239
-%# [5,]    0 0.0000000 0.0000000 0.0000000 0.0000000
 
 \begin{frame}
-\frametitle{Sparse canonical correlations between time series}
-Using sparse CCA* (Witten and Tibshirani 2009).
+\frametitle{Correlations between time series}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+$\text{Cor}_{Info}$ (using OLS)\\
 
 \begin{center}
-\begin{tabular}{c|c|c|c|c|c|} 
-   & CC   & DR   & Tr   & Cy   & CS \\ \hline
-CC &      & 0.96 & 0.87 & 0.92 & 0.94\\ \hline
-DR &      &      & 0.83 & 0.88 & 0.95\\ \hline
-Tr &      &      &      & 0.83 & 0.78\\ \hline
-Cy &      &      &      &      & 0.90\\ \hline
-CS &      &      &      &      &     \\ \hline
+\begin{tabular}{|c|c|c|c|c|} 
+\hline
+   & DR   & Tr   & Cy   & CS \\ \hline
+CC & 0.93 & 0.78 & 0.98 & 0.83\\ \hline
+DR &      & 0.85 & 0.91 & 0.92\\ \hline
+Tr &      &      & 0.72 & 0.71\\ \hline
+Cy &      &      &      & 0.93\\ \hline
+\end{tabular}
+\end{center}\pause
+\end{column}
+
+\begin{column}{0.5\textwidth}
+Using sparse CCA*
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|} 
+\hline
+   & DR   & Tr   & Cy   & CS \\ \hline
+CC & 0.96 & 0.87 & 0.92 & 0.94\\ \hline
+DR &      & 0.83 & 0.88 & 0.95\\ \hline
+Tr &      &      & 0.83 & 0.78\\ \hline
+Cy &      &      &      & 0.90\\ \hline
 \end{tabular}
 \end{center}
+\end{column}
 
-\vspace{0.5in}
+\end{columns}
+
+
+\vspace{0.2in}
 CC = cell cycle, DR = DNA replication, Tr = transport, \\
 Cy = cytoskeleton, CS = chromatin structure
 
-\vspace{0.1in}
-
-\tiny{*: using {\tt CCApermute} in R package {\tt PMA}}
+{\tiny *Witten and Tibshirani 2009, {\tt PMA::CCApermute}}
 \end{frame}
 
-
-%# [,1]      [,2]      [,3]      [,4]      [,5]
-%# [1,] 0.0000000 0.9288215 0.7770040 0.9767242 0.8293687
-%# [2,] 0.9288215 0.0000000 0.8496598 0.9102823 0.9200308
-%# [3,] 0.7770040 0.8496598 0.0000000 0.7165050 0.7147406
-%# [4,] 0.9767242 0.9102823 0.7165050 0.0000000 0.9303434
-%# [5,] 0.8293687 0.9200308 0.7147406 0.9303434 0.0000000
-
-\begin{frame}
-\frametitle{Information correlations between time series}
-Taking the max of $\hat{I}(X; Y)$ and $\hat{I}(Y; X)$.
-
-\begin{center}
-\begin{tabular}{c|c|c|c|c|c|} 
-   & CC   & DR   & Tr   & Cy   & CS \\ \hline
-CC &      & 0.93 & 0.78 & 0.98 & 0.83\\ \hline
-DR &      &      & 0.85 & 0.91 & 0.92\\ \hline
-Tr &      &      &      & 0.72 & 0.71\\ \hline
-Cy &      &      &      &      & 0.93\\ \hline
-CS &      &      &      &      &     \\ \hline
-\end{tabular}
-\end{center}
-
-\vspace{0.5in}
-CC = cell cycle, DR = DNA replication, Tr = transport, \\
-Cy = cytoskeleton, CS = chromatin structure
-\end{frame}
-
-%\begin{frame}
-%\frametitle{Comparing sparse CCA and $Cor_{Info}$}
-%\begin{center}
-%\includegraphics[scale = 0.5]{../idloss/cca_p_vs_info_cor.pdf}
-%\end{center}
-%(1) cell cycle, (2) DNA replication, (3) transport, \\
-%(4) cytoskeleton, (5) chromatin structure
-%\end{frame}
 
 \begin{frame}
 \frametitle{Invariance properties}
-\begin{itemize}
-\item Transform data from each group with random rotation...
-\[\tilde{bX} = \bX E\]
-\[\tilde{bY} = \bX F\]
+Transform data from each group with random rotation...
+\[\tilde{\bX} = \bX E\]
+\[\tilde{\bY} = \bX F\]
 with $E^T E = I$, $F^T F = I$.\pause
-\item CCA is invariant:
-\[
-\text{CCA}(\bX, \bY) = \text{CCA}(\tilde{bX},\tilde{bY})
-\]
-\pause
-\end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{Invariance properties}
-However, sparse CCA is not invariant.
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+$\text{Cor}_{Info}$ (using OLS)\\
 
 \begin{center}
-\includegraphics[scale = 0.5]{../idloss/cca_p_robustness.pdf}
+\includegraphics[scale = 0.4]{../idloss/info_cor_robustness.pdf}
 \end{center}
-\end{frame}
+\end{column}
 
-\begin{frame}
-\frametitle{Invariance properties}
-Our method, on the other hand, is \emph{robust} to rotation.
-
+\begin{column}{0.5\textwidth}
+Using sparse CCA* 
 \begin{center}
-\includegraphics[scale = 0.5]{../idloss/info_cor_robustness.pdf}
+\includegraphics[scale = 0.4]{../idloss/cca_p_robustness.pdf}
 \end{center}
+\end{column}
+
+\end{columns}
 \end{frame}
 
 \begin{frame}
