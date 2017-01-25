@@ -22,7 +22,7 @@ Is_2 <- -1/2 * log(1 - rhos^2)
 
 par(bg = "grey")
 
-plot(NA, NA, xlab = "IdRisk", ylab = "MI", ylim = c(0, 5), xlim = c(0, 1))
+plot(NA, NA, xlab = "IdRisk", ylab = "MI", ylim = c(0, 4), xlim = c(0, 1))
 lines(risks_lb, Is_lb, lwd = 2, col = "black")
 lines(risks_inf, Is, lwd = 2, col = "blue")
 lines(risks_2, Is_2, lwd = 2, col = "yellow")
