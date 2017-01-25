@@ -15,9 +15,9 @@ Is_lb <- sapply(risks_lb, function(x) aba_to_mi_lower(K, 1 - x))
 
 
 
-sigs <- exp(seq(-5, 3, by = 0.2))
-risks_2 <- sapply(sigs, function(x) mc_ident2(1, x, K, 1e5))
-rhos <- 1/sqrt(1 + sigs^2)
+sigs <- exp(seq(-8.5, 4, by = 0.5))
+risks_2 <- sapply(sigs, function(x) mc_ident2(1, x, K, 3e5))
+rhos <- 1/sqrt(1 + sigs)
 Is_2 <- -1/2 * log(1 - rhos^2)
 
 par(bg = "grey")
