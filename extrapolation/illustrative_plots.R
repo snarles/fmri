@@ -91,3 +91,21 @@ for (rho in rhos) {
 }
 legend(6, 0.3, col = cols, legend = paste("rho = ", rhos, "  "), lwd = 2, pch = "o")
 
+## get polynomial approximation rates
+source("extrapolation/polynomial_approximation.R")
+dmax <- 10
+tabl <- matrix(0, dmax, length(rhos))
+colnames(tabl) <- paste(rhos)
+
+for (rho in rhos) {
+  ds <- dsets[[paste(rho)]]
+  for (d in 1:dmax) {
+    res <- uniform_poly(d, ds$us, ds$Kfunc)
+    tabl[d, paste(rho)] <- res$error
+  }
+}
+
+tabl
+matplot(log(tabl), type = "o", ylab = "log(error)",
+        xlab = "deg", lwd = 2, main = "Approximation Errors")
+legend(6, -2.5, legend = paste("rho =", rhos, "  "), col = 1:4, lty = 1:4, lwd = 2, pch = paste(1:4))
