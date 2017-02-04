@@ -61,3 +61,8 @@ for (u in us) {
        paste("U > ", u))
   
 }
+
+## Ku function
+
+plot(kures$us, kures$Kfunc, type = "l", ylim = c(0, 1),
+     xlab = "u", ylab = "K(u)", main = "rho = 0.7")
