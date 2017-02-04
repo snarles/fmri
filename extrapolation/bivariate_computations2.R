@@ -80,7 +80,7 @@ for (k in 2:10) {
   muss[[paste(k)]] <- mus
 }
 
-boxplot(bess, pch = "o", xlab = "k", ylab = "Error")
+boxplot(bess, pch = "o", xlab = "k", ylab = "Error", ylim = c(0, 1))
 stripchart(bess, vertical = TRUE, xlim = c(0, 10), add = TRUE, pch = "o", 
            col = grey(0, alpha = 0.5))
 
