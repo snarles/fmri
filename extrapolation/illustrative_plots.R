@@ -66,3 +66,28 @@ for (u in us) {
 
 plot(kures$us, kures$Kfunc, type = "l", ylim = c(0, 1),
      xlab = "u", ylab = "K(u)", main = "rho = 0.7")
+
+
+## plot Kus and errs
+dsets <- list()
+rhos <- seq(0.3, 0.9, 0.2)
+for (rho in rhos) {
+  dsets[[paste(rho)]] <- readRDS(paste0("extrapolation/ku_rho", rho, ".rds"))
+}
+
+cols <- c("black", "green", "red", "blue"); names(cols) <- names(dsets)
+
+plot(NA, NA, xlim = c(0,1), ylim = c(0,1), xlab = "u", ylab = "K(u)")
+for (rho in rhos) {
+  lines(dsets[[paste(rho)]]$us, dsets[[paste(rho)]]$Kfunc,
+        lwd = 2, col = cols[paste(rho)])
+}
+legend(0, 1, col = cols, legend = paste("rho = ", rhos, "  "), lwd = 2)
+
+plot(NA, NA, xlim = c(2,10), ylim = c(0,1), xlab = "k", ylab = "AvRisk")
+for (rho in rhos) {
+  lines(dsets[[paste(rho)]]$tabl[, "k"], dsets[[paste(rho)]]$tabl[, "the.l"],
+        lwd = 2, col = cols[paste(rho)], type = "o")
+}
+legend(6, 0.3, col = cols, legend = paste("rho = ", rhos, "  "), lwd = 2, pch = "o")
+

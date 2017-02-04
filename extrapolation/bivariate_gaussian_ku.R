@@ -1,7 +1,7 @@
 source("approximation/gaussian_lc_source.R")
 library(mvtnorm)
 
-rho <- 0.7 # >=0.3
+rho <- 0.9 # >=0.3
 Sigma2 <- rho^2/(1-rho^2)
 Sigma <- matrix(c(1,rho, rho, 1), 2, 2)
 
@@ -10,8 +10,9 @@ udelt <- 0.002
 us <- seq(0, 1, udelt)
 
 delta <- 0.002
+#delta <- 0.01
 xmax <- 3.5
-dmax <- 10
+dmax <- 16
 xgrid <- seq(0, xmax, delta)
 #xygrid <- cbind(rep(xgrid, each = length(xgrid)), rep(xgrid, length(xgrid)))
 dgrid <- seq(0, dmax, delta)
@@ -56,4 +57,4 @@ dKfunc <- (Kfunc[-1] - Kfunc[-length(Kfunc)])/udelt
 plot(us[-1] + udelt/2, dKfunc, type = "l")
 
 res <- list(us = us, Kfunc = Kfunc, tabl = tabl)
-saveRDS(res, "extrapolation/ku_rho0.7.rds")
+saveRDS(res, paste0("extrapolation/ku_rho", rho, ".rds"))
