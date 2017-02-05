@@ -173,15 +173,15 @@ label set $\mathcal{Y}_k$, for all $k$, is governed by a
 specific function - the \emph{conditional risk} -  
 that depends on the true distributions and the classifier. 
 As long as one can recover the conditional risk
-function $\bar{K}(u)$, one can compute the average risk for any number
+function $\bar{D}(u)$, one can compute the average risk for any number
 of classes. 
   In section 5, we
 empirically study the performance curves of classifiers on sequences
 of classification tasks.  Since marginal classifiers only comprise a
 minority of the classifiers used in practice, we applied our methods
-to a variety of generative and non-generative classifiers in
+to a variety of marginal and non-marginal classifiers in
 simulations and in one OCR dataset.  Our methods have varying success
-on generative and non-generative classifiers, but seem to work badly
+on marginal and non-marginal classifiers, but seem to work badly
 for neural networks.
 \newline
 
@@ -190,10 +190,7 @@ for neural networks.
 To our knowledge, we are the first to formalize the problem of
 prediction extrapolation.  We develop a general theory for prediction
 extrapolation under \emph{general class priors} and under bounded cost
-functions.  In addition, we investigate the special case of zero-one
-loss under uniform priors: we develop a pseudolikelihood-based
-estimation approach for this special case, and evaluate its
-performance in real data examples.
+functions.  [[TODO: mention estimation results, theory]]
 
 
 % semantic distance is not explained
@@ -292,15 +289,15 @@ f: \mathcal{X} \to \mathcal{S}.
 For a random class $Y$ drawn according to the uniform
 distribution\footnote{See the discussion for extensions to non-uniform
 priors.} on $\mathcal{S}$ and a feature vector drawn under $F_Y$, the
-loss of $\ell(f(X),Y)$ is obtained.  Therefore, the \emph{risk}, or
-expected loss, of the classification rule is
+loss of $\ell(f(X),Y)$ is obtained.  The \emph{risk}, or expected
+loss, of the classification rule is
 \[\text{Risk}(f;\pi,\ell) = \int \ell(f(X),Y)dF_Y d\pi .\]
 For now, we will assume a 0--1 loss and a uniform prior over the
-labels in $\mathcal{S}$; the risk can therefore be re-written as
-\[\text{Risk}(f;\mathcal{S},\ell_{01}) = \frac{1}{k}\sum_{y_i\in \mathcal{S}}P(f(X)\neq y_i ; X\sim F_{y_i} )   \]
+labels in $\mathcal{S}$.  Therefore, the risk can be rewritten as
+\[\text{Risk}(f;\mathcal{S}, \ell_{01}) = \frac{1}{k}\sum_{y_i\in \mathcal{S}}\Pr(f(X)\neq y_i ; X\sim F_{y_i} ).   \]
 
 The classification rule itself can be seen as a random function that
-is based on the choice of the training set. For convenience, assume
+depends on the sampling of the training set. For convenience, assume
 that the training set is composed of $r$ i.i.d examples for
 each label $y \in \mathcal{S}$ (a total of $k\times r$).  An
 i.i.d. sample of size $r$, $X_1,\hdots, X_r \sim F_y$ can also be
@@ -310,7 +307,7 @@ $\hat{F}_y$. [[TODO: Should $r$ appear in the notation for $\hat{F}_y$?]].
 
 %[[TODO: IS this needed Let $\Pi_{y, r}$ denote the sampling distribution of $\hat{F}_y$. \textcolor{blue}{It is used in the following equation defining Risk(F; pi).}]]
 
-A\emph{classifier} $\mathcal{F}$ is the algorithm or procedure for
+A \emph{classifier} $\mathcal{F}$ is the algorithm or procedure for
 producing classification rules given a vector of empirical
 distributions $(\hat{F}_y)_{y\in \mathcal{S}}$.  The classifier maps
 the empirical distributions to a classification rule $f$
@@ -321,18 +318,18 @@ as the expected risk of a classification rule $\hat{f}$ trained
 using a sample of size $r$ from each of labels in $\mathcal{S}_k$.
 %\mathcal{F}(\hat{F}_{y_1},\hdots, \hat{F}_{y_k})$ trained for the
 %classification task on \mathcal{S_k}, $\hat{F}_y \sim \Pi_{y, r}$. 
+% NOTE that we suppresed the \ell within Risk_r below
 That is,
 \[
 \text{Risk}_r(\mathcal{F}; \pi) =
-\int \text{Risk}(\mathcal{F}(\{\hat{F}_y\}_{y \in \mathcal{S}};
-\pi)) \prod_{y \in \mathcal{S}} d\Pi_{y, r}(\hat{F}_y).
+\int \text{Risk}(\mathcal{F}(\{\hat{F}_y\}_{y \in \mathcal{S}}; \mathcal{S}, \ell) \prod_{y \in \mathcal{S}} d\Pi_{y, r}(\hat{F}_y).
 \]
 Figure \ref{fig:risk} illustrates the variables involved in defining
 the risk.
 
 The problem of \emph{performance extrapolation} can now be formally
 defined as follows: Given a known classification task
-$\skone=\{y_1,...,y_{k_1}\}$ with an observed size-$r$ training set
+$\skone=\{y_1,...,y_{k_1}\}$ with an observed $r$-repeat training set
 and $r_{test}$ test set per class, can we estimate the expected
 $r$-repeat risk of the classifier $\mathcal{F}$ on a second
 classification task with $k_2$ labels?
@@ -348,7 +345,7 @@ the two classification tasks are comparable.
 \begin{itemize}
 \item[Assumption 1] Let $\skone, \sktwo$ be the label sets
 for the first and second classification tasks. Then $\skone, 
-\sktwo$ are i.i.d. samples from an infinite population $\pi_Y$.
+\sktwo$ are i.i.d. samples from an infinite population $\pi$.
 %\item[Assumption 1B] For $y,y'\sim \pi_Y$, 
 %\[P(y=y')=0\]
 \end{itemize}
@@ -361,7 +358,7 @@ for the first and second classification tasks. Then $\skone,
 \textbf{Comments:}
 \begin{enumerate}
 \item These assumption are most easily satisfied by taking $\mathcal{Y}$ 
-to be a continuous space and letting $\pi_Y$ be a density over $\mathcal{Y}$. However, a discrete space with a small enough 
+to be a continuous space and letting $\pi$ be a density over $\mathcal{Y}$. However, a discrete space with a small enough 
 probability for the classes would work well. 
 \item Note that here we assumed that the label subsets $\skone$ and
 $\sktwo$ are independent and disjoint. An alternative
@@ -371,7 +368,7 @@ $\sktwo$: this assumption can also be addressed, as we will
 discuss later.
 \item 
 In practice, $\skone$ is often a convenience sample meant to be
-similar to $\sktwo$. The theory will be relevant in so far as the
+similar to $\sktwo$. The theory will be relevant insofar as the
 assumptions approximate well the true sampling similarity between the
 $\skone$ and $\sktwo$.
 \item We can imagine other sampling mechanisms designed to make $\skone$ a representative sample from the population, e.g. by stratifying. In this paper we do not discuss these more complex sampling schemes. 
@@ -381,8 +378,8 @@ $\skone$ and $\sktwo$.
 %[[END of TODO]]
 
 Our analysis will also rely on a property of the classification
-model. We do not want the classifier to rely to strongly on
-complicated interaction between the labels in the set. We therefore
+model. We do not want the classifier to rely too strongly on
+complicated interactions between the labels in the set. We therefore
 propose the following property of marginal separability for
 classification models:
 
@@ -398,11 +395,12 @@ to margin functions,
 \[
 \mathcal{M}(\hat{F}_y) = m_y(x).
 \]
-\item A classifier that produces classification rules
+\item A classifier that produces marginal classification rules
 \[
 f(x) = \text{argmax}_{y \in \mathcal{S}} m_y(x),
 \]
-where $m_y=\mathcal{M}(\hat{F}_y)$ for some marginal model $\mathcal{M}$
+by use of a marginal model, i.e. such that
+$m_y=\mathcal{M}(\hat{F}_y)$ for some marginal model $\mathcal{M}$,
 is called a \emph{marginal classifier}.
 %\item A classifier that produces marginal classification rules
 % is called a \emph{marginal model}. 
@@ -413,7 +411,7 @@ score, for each label, and chooses the label with the highest
 margin. The marginal model converts empirical distributions
 $\hat{F_y}$ over $\mathcal{X}$ into the margin function
 $m_y$.  The \emph{marginal} property allows us to prove strong results
-about the accuracy of the classifier under i.i.d. sampling assumption.
+about the accuracy of the classifier under i.i.d. sampling assumptions.
 
 %[TODO: Do we need both the marginal model and the marginal classifier? $\mathcal{M}$. \textcolor{blue}{We can omit the definition of marginal classifier here, but later we have to have some discussion of marginal vs non-marginal classifiers.  So we can move the definition to the discussion, maybe.}]]
 
@@ -424,14 +422,14 @@ A primary example for a marginal model is the estimated Bayes
 classifier. Let $\hat{f_y}$ be a density estimate obtained from the
 empirical distribution $\hat{F_y}$. Then, we can use the estimated
 densities of each class to produce the margin functions:
-\[ m^{EB}_y(x) = \log(\hat{f_{y}}(x))\]
-if class probabilities are uniform, or 
-\[m^{EB}_y(x,p_y) = \log(p_y) + \log(\hat{f_y}(x))\]
-if $\pi = (p_y)_{y \in \mathcal{S}}$.
+\[ m^{EB}_y(x) = \log(\hat{f_{y}}(x)).\]
+%if class probabilities are uniform, or 
+%\[m^{EB}_y(x) = \log(\hat{\pi}(y)) + \log(\hat{f_y}(x))\]
+%where $\hat{\pi}$ is an estimate of the 
 The resulting empirical approximation for the Bayes classifier
-would be 
+(further assuming a uniform prior $\pi$) would be
 \[ f^{EB}(x) = \text{argmax}_{y \in \mathcal{S}}(m^{EB}_y(x)).\]
-\item Both the Quadratic Discriminant Analysis and the naive Bayes can be seen as specific instances of an estimated Bayes classifier
+\item Both the Quadratic Discriminant Analysis and the naive Bayes classifiers can be seen as specific instances of an estimated Bayes classifier
 \footnote{QDA is the special case of the estimated Bayes classifier when $\hat{f_y}$ is obtained as
 the multivariate Gaussian density with mean and covariance parameters estimated from the data.
 Naive Bayes is the estimated Bayes classifier when $\hat{f_y}$ is obtained as the product of estimated componentwise marginal distributions
@@ -520,7 +518,7 @@ error) for the (random) risk.
 %Introduce the notation $\{(w_i, x_i, y_i)\}_{i=1}^n$: ordered triples
 %of weight, predictor and response.
 
-\section{Performance extrapolation for marginal classification models}
+\section{Performance extrapolation for marginal classifiers}
 
 Having outlined our assumption for randomized label subsets, the focus
 of our theory moves towards understanding the $k$-class average risk:
@@ -606,11 +604,11 @@ margins $M_{i, j, \ell}$, which remain the same as long as both $i$
 and $\ell$ are included in the subsample $S$.
 
 The computational trick is to look at each combination of test
-observation $x_j^{(i)}$ and class label $y^{(\ell)}$, and to count
-count the number of subsets $N_{i, j, \ell}$ where (i) both $i$ and
-$\ell$ are included in $S$, and (ii) $\hat{y}_j^{(i)} = y^{(\ell)}$.
-Then it should be clear that the average test risk over all subsets is
-equal to
+observation $x_j^{(i)}$ and class label $y^{(\ell)}$, and to count the
+number of subsets $N_{i, j, \ell}$ where (i) both $i$ and $\ell$ are
+included in $S$, and (ii) $\hat{y}_j^{(i)} = y^{(\ell)}$.  Then it
+should be clear that the average test risk over all subsets is equal
+to
 \begin{equation}\label{eq:avtestrisk}
 \text{AvTestRisk}_{k_2} = \frac{1}{{{k_1}\choose{k_2}}}\frac{1}{r_{test}k_2} \sum_{i=1}^{k_1} \sum_{\ell\neq i} \sum_{j=1}^{r_{test}} C_{i\ell}N_{i, j, \ell}.
 \end{equation}
@@ -795,20 +793,20 @@ We have
 \end{align*}
 Or equivalently,
 \[
-\text{AvRisk}_{k, r, \nu}((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int \bar{K}(u) u^{k-2} du.
+\text{AvRisk}_{k, r, \nu}((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int \bar{D}(u) u^{k-2} du.
 \]
-where $\bar{K}(u)$ denote the cumulative distribution function of $U^*$ on $[0,1]$:
+where $\bar{D}(u)$ denote the cumulative distribution function of $U^*$ on $[0,1]$:
 \[
-\bar{K}(u) = \Pr[U_{x^*}(y^*, \hat{F}_{y^*}) \leq u].
+\bar{D}(u) = \Pr[U_{x^*}(y^*, \hat{F}_{y^*}) \leq u].
 \]
 We have expressed the average risk expressed as a weighted integral of
-a certain function $\bar{K}(u)$ defined on $u \in [0,1]$.  We have
+a certain function $\bar{D}(u)$ defined on $u \in [0,1]$.  We have
 clearly isolated the part of the average risk which is independent of
-$k$--the univariate function $\bar{K}(u)$, and the part which is
+$k$--the univariate function $\bar{D}(u)$, and the part which is
 dependent on $k$--which is the density of $U_{max}$.
 
 In section \ref{sec:estimation}, we will develop estimators of
-$\bar{K}(u)$ in order to estimate the $k$-class average risk.
+$\bar{D}(u)$ in order to estimate the $k$-class average risk.
 But now let us return to the general case.
 \newline
 
@@ -849,7 +847,7 @@ p(\hat{y}) \propto \pi(\hat{y})\frac{d}{dt}\Pr[U_{x^*}(y^{(k-1)}, \hat{F}_{y^{(k
 The only property of the conditional distribution of $\hat{Y}|U_{max} = u$ that is needed is
 the expectation of $L = C(\hat{Y}, y^*)$.  Therefore, define the \emph{conditional expected loss} $K((y^*, \hat{F}_{y^*}), x^*, u)$ by
 \begin{equation}\label{eq:Kfunc}
-K((y^*, \hat{F}_{y^*}), x^*, u) = \begin{cases} 0 \text{ if } u < u^*\\
+D((y^*, \hat{F}_{y^*}), x^*, u) = \begin{cases} 0 \text{ if } u < u^*\\
 \E[C(\hat{Y}, y^*)|U_{max} = u, x^*, y^*, \hat{F}_{y^*}] \text{ otherwise.}
 \end{cases}
 \end{equation}
@@ -864,15 +862,15 @@ function is also independent of $k$.
 
 With the conditional cost function and the distribution of $U_{max}$ both in hand, we can compute the average conditional risk
 \[
-\text{CondRisk}_k((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int K((y^*,\hat{F}_{y^*}), x^*, u) u^{k-2} du.
+\text{CondRisk}_k((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int D((y^*,\hat{F}_{y^*}), x^*, u) u^{k-2} du.
 \]
 Now the average risk can be obtained by integrating over $(Y^*, \hat{F}_{Y^*}),$ and $X^*$.
 \[
-\text{AvRisk}_{k, r}((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int \bar{K}(u) u^{k-2} du.
+\text{AvRisk}_{k, r}((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int \bar{D}(u) u^{k-2} du.
 \]
 where
 \begin{equation}\label{eq:Kbar}
-\bar{K}(u) = \int K((y^*,\hat{F}_{y^*}), x^*, u) \pi(y^*)dy dF_{y^*}(x^*) d\Pi_{y^*, r}(\hat{F}_{y^*}).
+\bar{D}(u) = \int D((y^*,\hat{F}_{y^*}), x^*, u) \pi(y^*)dy dF_{y^*}(x^*) d\Pi_{y^*, r}(\hat{F}_{y^*}).
 \end{equation}
 
 
@@ -886,7 +884,7 @@ condition.  Then, under the
 definitions \eqref{eq:U_function}, \eqref{eq:Kfunc},
 and \eqref{eq:Kbar}, we have
 \begin{equation}\label{eq:avrisk_identity}
-\text{AvRisk}_{k, r}((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int \bar{K}(u) u^{k-2} du.
+\text{AvRisk}_{k, r}((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int \bar{D}(u) u^{k-2} du.
 \end{equation}
 \end{theorem}
 
@@ -896,7 +894,7 @@ Having this theoretical result allows us to understand how the
 expected $k$-class risk scales with $k$ in problems where all the
 relevant densities are known.  However, applying this result in
 practice to estimate $\text{Average Risk}_k$ requires some means of
-estimating the unknown function $\bar{K}$--which we discuss in the
+estimating the unknown function $\bar{D}$--which we discuss in the
 following.
 
 \subsection{Estimation in the general case}\label{sec:estimation}
@@ -905,17 +903,17 @@ Now we address the problem of estimating $\text{AvRisk}_{k_2,
 r_{train}}$ from data.  As we have seen from
 Theorem \ref{theorem:avrisk_identity}, the $k$-class average risk of
 a marginal classifier $\mathcal{M}$ is a functional of a object called
-$\bar{K}(u),$ which depends marginal model $\mathcal{M}$ of the
+$\bar{D}(u),$ which depends marginal model $\mathcal{M}$ of the
 classifier, the joint distribution of labels $Y$ and features $X$ when
 $Y$ is drawn from the sampling density $\nu$.
 
-Therefore, the strategy we take is to attempt to estimate $\bar{K}$
+Therefore, the strategy we take is to attempt to estimate $\bar{D}$
 for then given classification model, and then plug in our estimate of
-$\bar{K}$ into the integral \eqref{eq:avrisk_identity} to obtain an
+$\bar{D}$ into the integral \eqref{eq:avrisk_identity} to obtain an
 estimate of $\text{AvRisk}_{k_2, r_{train}}$.
 
-Having decided to estimate $\bar{K}$, there is then the question of
-what kind of model we should assume for $\bar{K}$.  While a
+Having decided to estimate $\bar{D}$, there is then the question of
+what kind of model we should assume for $\bar{D}$.  While a
 nonparametric approach may be ideal, for the case of general loss
 functions we will adopt a parametric model: that is the subject of
 this section.
@@ -925,7 +923,7 @@ this section.
 
 We assume the linear model
 \begin{equation}\label{eq:linearKu}
-\bar{K}(u) = \sum_{\ell = 1}^m \beta_\ell h_\ell(u),
+\bar{D}(u) = \sum_{\ell = 1}^m \beta_\ell h_\ell(u),
 \end{equation}
 where $h_\ell(u)$ are known basis functions, and $\beta$ are the model
 parameters to be estimated. We propose two approaches
@@ -933,7 +931,7 @@ for \emph{unbiased} estimation of $\text{AvRisk}_{k_2, r_{train}}$.
 The first approach estimates the coefficients $\beta$ via the unbiased
 estimates of $k$-class average risk obtained
 from \eqref{eq:avtestrisk}.  The second approach estimates $\beta$ by
-estimating $\bar{K}(u)$ directly.  However, the second approach
+estimating $\bar{D}(u)$ directly.  However, the second approach
 requires the use of the \emph{regression adjustment} method taken from
 measurement error models, and therefore can only yield unbiased
 estimates for \emph{polynomial} basis functions $h_\ell(u)$.
@@ -941,7 +939,7 @@ estimates for \emph{polynomial} basis functions $h_\ell(u)$.
 If we plug in the assumed linear model \eqref{eq:linearKu} into the
 identity \eqref{eq:avrisk_identity}, then we get
 \begin{align}
-\text{AvRisk}_{k, r_{train}} &= (k-2)\int \bar{K}(u) u^{k-2} du
+\text{AvRisk}_{k, r_{train}} &= (k-2)\int \bar{D}(u) u^{k-2} du
 \\&= (k-2)\int_0^1 \sum_{\ell = 1}^m \beta_\ell h_\ell(u) u^{k-2} du
 \\&= \sum_{\ell = 1}^m \beta_\ell H_{\ell,k} \label{eq:avrisk_linear}
 \end{align}
@@ -1018,10 +1016,10 @@ Consider a sequence of problems where the model $\mathcal{M}$,
 $r_{train}$, $r_{test}$, joint distribution
 $\{F_y\}_{y \in \mathcal{Y}}$, and class sampling distribution $\eta$
 are fixed as $k_1 \to \infty$.  Further assume that the function
-$\bar{K}(u)$ defined by $\{F_y\}_{y \in \mathcal{Y}}$, $\eta$, and
+$\bar{D}(u)$ defined by $\{F_y\}_{y \in \mathcal{Y}}$, $\eta$, and
 $\mathcal{M}$ satisfies
 \[
-\bar{K}(u) = \sum_{\ell = 1}^m \beta_\ell h_\ell(u)
+\bar{D}(u) = \sum_{\ell = 1}^m \beta_\ell h_\ell(u)
 \]
 for some basis functions $h_\ell(u)$.
 %and that those basis functions satisfy
@@ -1103,6 +1101,9 @@ problem is $\pi_0$, a sensible choice would be to choose
 as the prior for the $i$th classification task.  As it turns out, such
 a prior assignment also simplifies the theory, so we will assume that
 $\pi_i$ is defined according to the above.
+\item $\skone \subset
+\sktwo$ with $\skone$ being a subsample of
+$\sktwo$.
 \end{itemize}
 
 \appendix
