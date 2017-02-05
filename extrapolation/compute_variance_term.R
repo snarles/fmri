@@ -13,10 +13,10 @@ coefficient_matrix <- function(k1, k2, d) {
 }
 
 vfunc <- function(k, K, d, rcoeffs = FALSE) {
-  B <- coefficient_matrix(k, 2*k, d)
+  B <- coefficient_matrix(2, k, d)
   coeffs <- coefficient_matrix(K, K, d) %*% pinv(t(B) %*% B) %*% t(B)
   if (rcoeffs) return(coeffs)
-  sum(coeffs^2)
+  sum(abs(coeffs))^2
 }
 
 check_unbiased <- function(k, K, d) {
