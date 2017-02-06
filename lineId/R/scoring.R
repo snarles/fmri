@@ -28,6 +28,23 @@ topk_score <- function(plikes, i_chosen, k = 1, ...) {
   sum(res)
 }
 
+#' Counting correct classifications within top-K rankings
+#' 
+#' A \code{scoring_method}.
+#' @param plikes Matrix of posterior likelihoods, rows = responses, columns = classes
+#' @param i_chosen True classes
+#' @param max_k max number of top candidates for each response
+#' @return Number correct for K = 1...max_k
+#' @export
+topk_scores <- function(plikes, i_chosen, max_k = ncol(plikes), ...) {
+  mmat <- cbind(i_chosen, plikes)
+  rrank <- apply(mmat, 1, function(v) sum(v[v[1] + 1] < v[-1]))
+  tabl <- table(rrank)
+  ans <- numeric(max_k)
+  ans[as.numeric(names(tabl)) + 1] <- tabl
+  cumsum(ans)
+}
+
 #' Probability of misclassification if we resampled m out of K classes
 #' 
 #' A \code{scoring_method}.
