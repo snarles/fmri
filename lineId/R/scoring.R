@@ -63,9 +63,15 @@ resample_misclassification <- function(plikes, i_chosen,
   nbads <- apply(mmat, 1, function(v) sum(v[-1] >= v[-1][v[1]]))
   p_i <- 1 - nbads/K
   if (replace) {
-    ans <- 1 - mean(p_i ^ (m - 1))    
+    #ans <- 1 - mean(p_i ^ (m[1] - 1))    
+    ans <- 1 - rowMeans(repmat(p_i, length(m), 1) ^ 
+                          repmat(t(t(m)), 1, length(p_i)))
   } else {
-    ans <- 1 - mean(dhyper(0, nbads - 1, K - nbads, m - 1))
+    #ans <- 1 - mean(dhyper(0, nbads - 1, K - nbads, m[1] - 1))
+    ans <- 1 - rowMeans(dhyper(zeros(length(m), length(p_i)),
+                               repmat(nbads, length(m), 1) - 1,
+                               K - repmat(nbads, length(m), 1),
+                               repmat(t(t(m)), 1, length(p_i)) - 1))
   }
   ans
 }
