@@ -47,7 +47,8 @@ simulate_qda <- function(
 
 compute_qda_posterior <- function(xtrains, xtests, 
                                   mu_hats = NULL, Sigma_hats = NULL) {
-  k <- length(xtrains)
+  k <- length(xtrains); p <- ncol(xtrains[[1]]);
+  r_train <- nrow(xtrains[[1]]); r_test <- nrow(xtests[[1]])
   if (is.null(mu_hats)) {
     mu_hats <- lapply(xtrains, colMeans) %>% do.call(what = rbind)
     Sigma_hats <- lapply(xtrains, cov)
