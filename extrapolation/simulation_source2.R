@@ -21,11 +21,11 @@ coefficient_matrix_type2 <- function(k, d) {
 
 qda_params1 <- list(
   k = 200,
-  r_train = 20,
+  r_train = 40,
   r_test = 1,
   p = 2,
-  wishart_par = 3,
-  snr = 20
+  wishart_par = 3.5,
+  snr = 30
 )
 qda_params2 <- modifyList(qda_params1, list(k = 1000))
 
@@ -51,40 +51,51 @@ plot(sds, type = "l")
 
 ## extrapolate from fewer classes
 
-out <- data.frame(true = mc_rates)
+mc.reps <- 100
+errs_tot_s <- numeric()
+errs_top_s <- numeric()
 
-for (d in 1:8) {
-  pb <- coefficient_matrix_type1(1, qda_params2$k, d = d)
-  dmults <- c(4, 5, 6)
-  res <- do.call(simulate_qda, qda_params1)
-  errs1 <- resample_misclassification(res$plikes, res$i_chosen, 1:qda_params1$k)
-  errs2 <- 1 - topk_scores(res$plikes, res$i_chosen, qda_params1$k)/qda_params1$k
-  mat1 <- coefficient_matrix_type1(1, qda_params1$k, d)
-  mat2 <- coefficient_matrix_type2(qda_params1$k, d)
-  # mat1 <- mat1[nrow(mat1):1, ]
-  # errs1 <- rev(errs1)
-  # mat1 <- mat1[1:190, ]
-  # errs1 <- errs1[1:190]
-  res1 <- as.numeric(pb %*% pinv(mat1) %*% errs1)
-  nm1 <- paste0("m1_", d)
-  out[[nm1]] <- res1
+for (ind in 1:mc.reps) {
+  out <- data.frame(true = mc_rates)
   
-  for (dm in dmults) {
-    m2 <- mat2[1:(d * dm), ]
-    e2 <- errs2[1:(d * dm)]
-    res2 <- as.numeric(pb %*% pinv(m2) %*% e2)
-    nm <- paste0("m2_", d, "_dm_", dm)
-    out[[nm]] <- res2
+  for (d in 1:20) {
+    pb <- coefficient_matrix_type1(1, qda_params2$k, d = d)
+    dmults <- c(4, 5, 6)
+    res <- do.call(simulate_qda, qda_params1)
+    errs1 <- resample_misclassification(res$plikes, res$i_chosen, 1:qda_params1$k)
+    errs2 <- 1 - topk_scores(res$plikes, res$i_chosen, qda_params1$k)/qda_params1$k
+    mat1 <- coefficient_matrix_type1(1, qda_params1$k, d)
+    mat2 <- coefficient_matrix_type2(qda_params1$k, d)
+    # mat1 <- mat1[nrow(mat1):1, ]
+    # errs1 <- rev(errs1)
+    # mat1 <- mat1[1:190, ]
+    # errs1 <- errs1[1:190]
+    res1 <- as.numeric(pb %*% pinv(mat1) %*% errs1)
+    nm1 <- paste0("m1_", d)
+    out[[nm1]] <- res1
+    
+    for (dm in dmults) {
+      m2 <- mat2[1:(d * dm), ]
+      e2 <- errs2[1:(d * dm)]
+      res2 <- as.numeric(pb %*% pinv(m2) %*% e2)
+      nm <- paste0("m2_", d, "_dm_", dm)
+      out[[nm]] <- res2
+    }
   }
+  
+  errs_top <- sapply(out, function(v) sum(abs(v - mc_rates)[-(1:qda_params1$k)]), 
+                     USE.NAMES = TRUE)
+  sort(errs_top)
+  errs_top_s <- rbind(errs_top_s, errs_top)
+  errs_tot <- sapply(out, function(v) sum(abs(v - mc_rates)), USE.NAMES = TRUE)
+  sort(errs_tot)
+  errs_tot_s <- rbind(errs_tot_s, errs_tot)
 }
+errs_tot_av <- colMeans(errs_tot_s)
+sort(errs_tot_av)
+errs_top_av <- colMeans(errs_top_s)
+sort(errs_top_av)
 
-errs_top <- sapply(out, function(v) sum(abs(v - mc_rates)[-(1:200)]), 
-                   USE.NAMES = TRUE)
-sort(errs_top)
-
-matplot(out[names(sort(errs_top))[1:5]], ylim = c(0, 1), type = "l")
-legend(400, 0.6, col = 1:5, lty = 1:5, legend = names(sort(errs_top)[1:5]))
-
-errs_tot <- sapply(out, function(v) sum(abs(v - mc_rates)), USE.NAMES = TRUE)
-sort(errs_tot)
+# matplot(out[names(sort(errs_tot_av))[1:5]], ylim = c(0, 1), type = "l")
+# legend(400, 0.6, col = 1:5, lty = 1:5, legend = names(sort(errs_tot_av)[1:5]))
 
