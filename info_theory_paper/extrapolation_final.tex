@@ -526,6 +526,33 @@ the classification task.
 
 \subsection{Toy example}
 
+Let us first illustrate using a toy example the computation of the
+average risk, and preview the theory for extrapolating the average
+risk.
+
+Let $(Y, X)$ have a bivariate normal joint distribution,
+\[
+(Y, X) \sim N\left(\begin{pmatrix}0 \\0\end{pmatrix}, \begin{pmatrix}1 & \rho \\ \rho & 1\end{pmatrix}\right),
+\]
+as illustrated in figure \ref{fig:toy1}(a).
+Therefore, for a given randomly drawn label $Y$, the conditional
+distribution of $X$ for that label is univariate normal with mean $\rho Y$ and variance $1-\rho^2$:
+\[
+X|Y = y \sim N(\rho Y, 1-\rho^2).
+\]
+Supposing we draw $k = 3$ labels $y_1,y_2, y_3$, the classification
+problem will be to assign a test instance $X^*$ to the correct label.
+The test instance would be drawn from the three-class mixture,
+\[
+X^* \sim \frac{1}{k}\sum_{i=1}^k p(x|y_i),
+\]
+as illustrated in figure \ref{fig:toy1}(b, top).  In this toy example, we
+ignore the issue of training a classifier from sampled data, and
+instead assume that we have access to the \emph{Bayes classification
+rule}, or optimal classification rule.  The Bayes rule assigns $X^*$
+to the class with the highest density $p(x|y_i)$, as illustrated by
+figure \ref{fig:toy1}(b, bottom).
+
 \begin{figure}[h]
 \centering
 \begin{tabular}{cc}
@@ -536,21 +563,81 @@ the classification task.
 \end{tabular}
 
 \caption{
-(a) The joint distribution of $(X, Y)$ is bivariate normal with correlation $\rho$.
+(a) The joint distribution of $(X, Y)$ is bivariate normal with correlation $\rho = 0.7$.
 (b) A typical classification problem instance from the bivariate normal model with $k = 3$ classes.
 Top: the conditional density of $X$ given label $Y$, for $Y = \{y_1, y_2, y_3\}$.
 Bottom: the Bayes classification regions for the three classes.}\label{fig:toy1}
 \end{figure}
 
-
+The risk of the Bayes rule for any label set $\{y_1,\hdots, y_k\}$ is given by
+\[
+\text{Risk}(y_1,\hdots, y_k) = \frac{1}{k}\sum_{i=1}^k \Pr_{X \sim p(x|y_i)}[p(X|y_i) = \max_{j=1}^k p(X|y_j)].
+\]
+We numerically computed $\text{Risk}(y_1,\hdots, y_k)$ for randomly
+drawn labels $Y_1,\hdots, Y_k \stackrel{iid}{\sim} N(0, 1)$; the
+distributions of $\text{Risk}(Y_1,\hdots, Y_k)$ for $k = 2,\hdots, 10$
+are illustrated in figure \ref{fig:toy2}.  The $k$-class average risk,
+$\text{AvRisk}_k$, in this case, is given by
+\[
+\text{AvRisk}_k = \E[\text{Risk}(Y_1,\hdots, Y_k)]
+\]
+for $Y_1,\hdots, Y_k \stackrel{iid}{\sim} N(0, 1)$. The theory
+presented in the rest of the section deals with how to analyze the
+average risk $\text{AvRisk}_k$ as a function of $k$.  We now proceed
+to preview some selected aspects of the theory for the toy example.
 
 \begin{figure}[h]
 \centering
 \includegraphics[scale = 0.7, clip = true, trim = 0 0 0 0.5in]{../extrapolation/illus_err_0_7.pdf}
 
-\caption{The distribution of the classification risk for $k = 2,3,\hdots, 10$.  
+\caption{The distribution of the classification risk for $k = 2,3,\hdots, 10$ for the bivariate normal model with $\rho = 0.7$.
 Circles indicate the average classificatin risk; the red curve is the theoretically computed average risk.}\label{fig:toy2}
 \end{figure}
+
+For a given test instance $X^*$ drawn from the label $Y^*$, the closer
+that $X^*$ is to the center of the correct class distribution, $\rho
+Y^*$, the more likely it is to be classified correctly.  Based on this
+concept, we define the \emph{conditional accuracy} function $U_x(y)$,
+which gives the conditional probability that a test instance $(Y_1,
+X_1)$ will be classified correctly in the two-class classification
+problem.  One can therefore think of $U_x(y)$ as measuring the
+``strength'' of the pair $(y, x)$, with stronger pairs being more
+likely to be classified correctly.  Since in the two-class problem,
+there is one incorrect class label $Y_2$, the conditional accuracy in
+this case is simply the probability that $\rho Y_2$ is closer to $X_1$
+than $\rho Y_1$.  Therefore, in this toy example, we can give an
+explicit formula
+\begin{align*}
+U_x(y) &= \Pr[p(x|y) < p(x|Y)]
+\\&= \Pr[|\rho Y - x|< |\rho y - x|] 
+\\&= \Phi\left(\frac{x + |\rho y - x|}{\rho}\right) - \Phi\left(\frac{x - |\rho y - x|}{\rho}\right),
+\end{align*}
+where $\Phi$ is the standard normal cumulative distribution function.
+Figure \ref{fig:toy3}(a) illustrates the level sets of the function
+$U_x(y)$.  The highest values of $U_x(y)$ are near the line $x = \rho
+y$ corresponding the to conditional mean of $X|Y$: as one moves
+farther from the line, $U_x(y)$ decays.  Note however that large
+values of $(y, x)$ (with the same sign) result in larger values of
+$U_x(y)$ since it becomes unlikely for $Y_2 \sim N(0,1)$ to exceed
+$Y_1 = y$.
+
+Now define the random variable $U = U_X(Y)$ for $(X, Y)$ drawn from
+the joint distribution.  An important object in our theory is the
+cumulative distribution function
+\footnote{Note however that $\bar{D}(u)$ is only defined as the cumulative
+distribution function of $U$ in the class of zero-one loss--the
+definition for general cost functions is somewhat more involved, as we
+will see.}
+of $U$, written as
+\[
+\bar{D}(u) = \Pr[U \leq u].
+\]
+The function $\bar{D}$ is illustrated in
+figure \ref{fig:toy3}(b) for the current example with $\rho = 0.7$.
+The red curve in figure \ref{fig:toy2} was computed using the formula
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
 
 \begin{figure}[h]
 \centering
@@ -561,10 +648,33 @@ Circles indicate the average classificatin risk; the red curve is the theoretica
 \end{tabular}
 
 \caption{
-(a) The level curves of the function $U_y(x)$ in the bivariate normal model.
-(b) The function $\bar{K}(u)$, which gives the cumulative distribution function of the random variable $U_Y(X)$.}\label{fig:toy3}
+(a) The level curves of the function $U_x(y)$ in the bivariate normal model with $\rho = 0.7$.
+(b) The function $\bar{D}(u)$, which gives the cumulative distribution function of the random variable $U_Y(X)$.}\label{fig:toy3}
 \end{figure}
 
+It is illuminating to consider how the average risk curves and the
+$\bar{D}(u)$ functions vary as we change the parameter $\rho$.  Higher
+correlations $\rho$ lead to lower classification risk, as seen in
+figure \ref{fig:toy4}(a), where the risk curves are shifted downward as
+$\rho$ increases from 0.3 to 0.9.  The conditional accuracy $U_y(x)$
+tends to be higher on average as well, which leads to lower values of
+the cumulative distribution function--as we see in
+figure \ref{fig:toy4}(b), where the function $\bar{D}(u)$ becomes smaller
+as $\rho$ increases.
+
+In section \ref{sec:estimation}, when we consider approximating
+$\bar{D}(u)$ by polynomials, or some other function basis, it becomes
+relevant to consider how well $\bar{D}(u)$ can be approximated by such
+bases in realistic problems.  We see in figure \ref{fig:toy4}(c) that,
+at least in this toy problem, $\bar{D}(u)$ is well-aproximated by
+low-order polynomials.  However, the approximation becomes less
+adequate as $\rho$ increases.  We can see visually why this is the
+case: as $\rho$ increases, the curvature of $\bar{D}(u)$ near $u = 1$
+increases.  Hence, higher-degree polynomials become needed to capture
+the behavior near $u = 1$.  More generally, we observe that in cases
+where classes are relatively well-separated, it becomes necessary to
+use increasingly precise approximations in order to extrapolate the
+average risk.
 
 \begin{figure}[h]
 \centering
@@ -576,8 +686,8 @@ Circles indicate the average classificatin risk; the red curve is the theoretica
 \end{tabular}
 
 \caption{
-The (a) average risk, (b) $\bar{K}(u)$ function for $k = 2,\hdots, 7$ for the bivariate normal model with $\rho \in \{0.3, 0.5, 0.7, 0.9\}$.
-(c) The $d$-degree $\ell_\infty$ polynomial approximation error for $\bar{K}(u)$ for the bivariate normal model with $\rho \in \{0.3, 0.5, 0.7, 0.9\}$.
+The (a) average risk, (b) $\bar{D}(u)$ function for $k = 2,\hdots, 7$ for the bivariate normal model with $\rho \in \{0.3, 0.5, 0.7, 0.9\}$.
+(c) The $d$-degree $\ell_\infty$ polynomial approximation error for $\bar{D}(u)$ for the bivariate normal model with $\rho \in \{0.3, 0.5, 0.7, 0.9\}$.
 }\label{fig:toy4}
 \end{figure}
 
@@ -691,6 +801,41 @@ so the challenge is to understand how the risk will ``extrapolate'' to
 $k > k_1$.  Hence, the goal of the current analysis is to isolate the
 effect of $k$, the size of the label subset, on the average risk.
 
+The result of our analysis is to expose the average risk
+$\text{AvRisk}_{k, r}$ as the weighted average of a function
+$\bar{D}(u)$, where $\bar{D}(u)$ is independent of $k$, and where $k$
+only changes the weighting.  The result is stated as follows.
+
+\begin{theorem}\label{theorem:avrisk_identity}
+Suppose $\pi$, $\{F_y\}_{y \in \mathcal{Y}}$ and marginal classifier
+$\mathcal{F}$ satisfy the tie-breaking condition.  Then, under the
+definitions \eqref{eq:U_function}, \eqref{eq:Kfunc},
+and \eqref{eq:Kbar}, we have
+\begin{equation}\label{eq:avrisk_identity}
+\text{AvRisk}_{k, r} = (k-1) \int \bar{D}(u) u^{k-2} du.
+\end{equation}
+\end{theorem}
+
+The tie-breaking condition referred in the theorem is defined as follows.
+\begin{itemize}
+%\item 
+%\emph{Scaling property of margins}: if $\mathcal{M}(\hat{F}_1, \pi_1)(x) >
+%\mathcal{M}(\hat{F}_2, \pi_2)(x)$ then also $\mathcal{M}(\hat{F}_1,
+%c\pi_1)(x) > \mathcal{M}(\hat{F}_2, c\pi_2)(x)$.
+\item 
+\emph{Tie-breaking condition}: for all $x \in \mathcal{X}$,
+$\mathcal{M}(\hat{F}_Y)(x) = \mathcal{M}(\hat{F}_{Y'})(x)$
+with zero probability for $Y, Y'$ independently drawn from $\pi$.
+\end{itemize}
+%The scaling property of margins is satisfied by most of the marginal
+%classifiers which are used in practice, and as such we do not consider
+%it to be a strong assumption.  Meanwhile, 
+The tie-breaking condition is a technical assumption which allows us
+to neglect the specification of a tie-breaking rule in the case that
+margins are tied.  In practice, one can simply break ties randomly,
+which is mathematically equivalent to adding a small amount of random
+noise $\epsilon$ to the function $\mathcal{M}$.
+
 Our strategy is to analyze the average risk \eqref{eq:avrisk_EL} by
 means of \emph{conditioning on} the true label and its training
 sample, $(y^*, \hat{F}_{y^*})$, and the test feature $x^*$
@@ -748,28 +893,8 @@ steps A3 and A4 and randomized over steps A1 and A2.
 \end{figure}
 
 %However, we will further decompose $R_k$ into $k$-dependent and $k$-independent components.
-Having defined the conditional average risk, we will now further
-decompose it to expose its dependence on $k$.
-We make the following additional technical assumption:
-\begin{itemize}
-%\item 
-%\emph{Scaling property of margins}: if $\mathcal{M}(\hat{F}_1, \pi_1)(x) >
-%\mathcal{M}(\hat{F}_2, \pi_2)(x)$ then also $\mathcal{M}(\hat{F}_1,
-%c\pi_1)(x) > \mathcal{M}(\hat{F}_2, c\pi_2)(x)$.
-\item 
-\emph{Tie-breaking condition}: for all $x \in \mathcal{X}$,
-$\mathcal{M}(\hat{F}_Y)(x) = \mathcal{M}(\hat{F}_{Y'})(x)$
-with zero probability for $Y, Y'$ independently drawn from $\pi$.
-\end{itemize}
-%The scaling property of margins is satisfied by most of the marginal
-%classifiers which are used in practice, and as such we do not consider
-%it to be a strong assumption.  Meanwhile, 
-The tie-breaking condition is a technical assumption which allows us
-to neglect the specification of a tie-breaking rule in the case that
-margins are tied.  In practice, one can simply break ties randomly,
-which is mathematically equivalent to adding a small amount of random
-noise $\epsilon$ to the function $\mathcal{M}$.
-
+%Having defined the conditional average risk, we will now further
+%decompose it to expose its dependence on $k$.
 Now, in order to analyze the $k$-class behavior of the conditional
 average risk, we begin by considering the \emph{two-class} situation.
 
@@ -896,7 +1021,7 @@ p(\hat{y}) \propto \pi(\hat{y})\frac{d}{dt}\Pr[U_{x^*}(y^{(k-1)}, \hat{F}_{y^{(k
 \]
 
 The only property of the conditional distribution of $\hat{Y}|U_{max} = u$ that is needed is
-the expectation of $L = C(\hat{Y}, y^*)$.  Therefore, define the \emph{conditional expected loss} $K((y^*, \hat{F}_{y^*}), x^*, u)$ by
+the expectation of $L = C(\hat{Y}, y^*)$.  Therefore, define the \emph{conditional expected loss} $D((y^*, \hat{F}_{y^*}), x^*, u)$ by
 \begin{equation}\label{eq:Kfunc}
 D((y^*, \hat{F}_{y^*}), x^*, u) = \begin{cases} 0 \text{ if } u < u^*\\
 \E[C(\hat{Y}, y^*)|U_{max} = u, x^*, y^*, \hat{F}_{y^*}] \text{ otherwise.}
@@ -917,7 +1042,7 @@ With the conditional cost function and the distribution of $U_{max}$ both in han
 \]
 Now the average risk can be obtained by integrating over $(Y^*, \hat{F}_{Y^*}),$ and $X^*$.
 \[
-\text{AvRisk}_{k, r}((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int \bar{D}(u) u^{k-2} du.
+\text{AvRisk}_{k, r} = (k-1) \int \bar{D}(u) u^{k-2} du.
 \]
 where
 \begin{equation}\label{eq:Kbar}
@@ -925,20 +1050,7 @@ where
 \end{equation}
 
 
-This is the key result behind our estimation method, and we restate it
-in the following theorem.
-
-\begin{theorem}\label{theorem:avrisk_identity}
-Suppose $\pi$, $\{F_y\}_{y \in \mathcal{Y}}$ and marginal classifier
-$\mathcal{F}$ satisfy the marginal scaling condition tie-breaking
-condition.  Then, under the
-definitions \eqref{eq:U_function}, \eqref{eq:Kfunc},
-and \eqref{eq:Kbar}, we have
-\begin{equation}\label{eq:avrisk_identity}
-\text{AvRisk}_{k, r}((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int \bar{D}(u) u^{k-2} du.
-\end{equation}
-\end{theorem}
-
+This is the key result behind our estimation method, which was stated in theorem \ref{theorem:avrisk_identity}. 
 The proof is given in the appendix.
 
 Having this theoretical result allows us to understand how the
