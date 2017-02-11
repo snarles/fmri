@@ -260,7 +260,7 @@ functions.  [[TODO: mention estimation results, theory]]
 
 \begin{figure}[h]
 \centering
-\includegraphics[scale = 0.4]{extrapolation_figures/risk.png}
+\includegraphics[scale = 0.3]{extrapolation_figures/risk.png}
 \caption{Classification risk}\label{fig:risk}
 \end{figure}
 
@@ -505,12 +505,6 @@ generated, the average risk is the best predictor (in mean-squared
 error) for the (random) risk.
 
 
-\begin{figure}[h]
-\centering
-%\includegraphics[scale = 0.3]{extrapolation_figures/average_risk.png}
-\caption{Average risk}\label{fig:average_risk}
-\end{figure}
-
 %\subsection{Local polynomial regression}
 
 %Explain background.
@@ -529,6 +523,63 @@ We obtain a method for estimating the risk in the second
 classification task using data from the first.  The insight behind our
 estimation method is obtained via an analysis of the average risk of
 the classification task.
+
+\subsection{Toy example}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{cc}
+\multirow{3}{*}{\includegraphics[scale = 0.5, clip = true, trim = 0 0 0 0.5in]{../extrapolation/illus_rho_0_7.pdf}} & \\
+& \includegraphics[scale = 0.5, clip = true, trim = 0 0.8in 0 0.8in]{../extrapolation/illus_example1a.pdf}\\
+ &  \includegraphics[scale = 0.5, clip = true, trim = 0 0 0 0.5in]{../extrapolation/illus_example1b.pdf}\\
+(a) & (b)
+\end{tabular}
+
+\caption{
+(a) The joint distribution of $(X, Y)$ is bivariate normal with correlation $\rho$.
+(b) A typical classification problem instance from the bivariate normal model with $k = 3$ classes.
+Top: the conditional density of $X$ given label $Y$, for $Y = \{y_1, y_2, y_3\}$.
+Bottom: the Bayes classification regions for the three classes.}\label{fig:toy1}
+\end{figure}
+
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale = 0.7, clip = true, trim = 0 0 0 0.5in]{../extrapolation/illus_err_0_7.pdf}
+
+\caption{The distribution of the classification risk for $k = 2,3,\hdots, 10$.  
+Circles indicate the average classificatin risk; the red curve is the theoretically computed average risk.}\label{fig:toy2}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{cc}
+\includegraphics[scale = 0.6, clip = true, trim = 0.1in 0 0 0.8in]{../extrapolation/illus_ufunc_0_7.pdf} &
+\includegraphics[scale = 0.65, clip = true, trim = 0 -0.3in 0 0.5in]{../extrapolation/illus_kfunc_0_7.pdf}\\
+(a) & (b)
+\end{tabular}
+
+\caption{
+(a) The level curves of the function $U_y(x)$ in the bivariate normal model.
+(b) The function $\bar{K}(u)$, which gives the cumulative distribution function of the random variable $U_Y(X)$.}\label{fig:toy3}
+\end{figure}
+
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{ccc}
+\includegraphics[scale = 0.45, clip = true, trim = 0.05in 0 0.2in 0.6in]{../extrapolation/illus_rhos_avrisk.pdf} &
+\includegraphics[scale = 0.45, clip = true, trim = 0.05in 0 0.2in 0.6in]{../extrapolation/illus_rhos_Kfunc.pdf} &
+\includegraphics[scale = 0.45, clip = true, trim = 0.05in 0 0.2in 0.6in]{../extrapolation/illus_approx_errors.pdf}\\
+(a) & (b) & (c)
+\end{tabular}
+
+\caption{
+The (a) average risk, (b) $\bar{K}(u)$ function for $k = 2,\hdots, 7$ for the bivariate normal model with $\rho \in \{0.3, 0.5, 0.7, 0.9\}$.
+(c) The $d$-degree $\ell_\infty$ polynomial approximation error for $\bar{K}(u)$ for the bivariate normal model with $\rho \in \{0.3, 0.5, 0.7, 0.9\}$.
+}\label{fig:toy4}
+\end{figure}
 
 \subsection{Easy special cases}
 
