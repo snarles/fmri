@@ -1,5 +1,6 @@
 library(lineId)
 library(pracma)
+library(nnls)
 
 binmom <- function(succ, tot, k) {
   choose(succ, k)/choose(tot, k)
@@ -90,3 +91,19 @@ make_moment_mat <- function(flist, ks, res = 1e3) {
 # 
 # ks <- 4:10
 # make_moment_mat(ffs, ks, res = 1e5)
+
+###
+##  Spline non-negative method
+###
+
+spline_extrap <- function(acs, k = length(acs), nsplines = 1000) {
+  knts <- seq(0, 1, length.out = nsplines + 2)
+  knts <- knts[-c(1, nsplines + 2)]
+  Kmax <- length(acs)
+  MM <- spline1_moments(knts, 1:Kmax)
+  xmat <- MM[1:k, ]
+  avr <- acs[1:k]
+  bt <- nnls::nnls(xmat, avr)$x
+  acs_hat <- MM %*% bt
+  acs_hat
+}

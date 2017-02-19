@@ -137,6 +137,12 @@
 %non-marginal classifiers in simulations and one optical character
 %recognition example.
 
+
+% Image sources
+% http://sociable.co/social-media/how-to-disable-facebook-facial-recognition/
+% https://alexanderskv.wordpress.com/2012/06/04/facial-recognition/
+% https://medium.com/@ageitgey/machine-learning-is-fun-part-4-modern-face-recognition-with-deep-learning-c3cffc121d78#.fzgvan3ii
+
 \title[Multi-class error]{Extrapolating prediction error for `extreme' multi-class classification}
 
 \author{Charles Zheng} % Your name
@@ -174,14 +180,29 @@
 \end{frame}
 
 \begin{frame}
-\frametitle{Accuracy vs. number of classes}
-Kay (2008) image identification task in functional MRI.
-\begin{center}
-\includegraphics[scale = 0.2, clip=true, trim = 0 0in 0 0]{kay_extrapolation.png}
-\end{center}
+\frametitle{Facial recognition}
 \begin{itemize}
-\item Question: how does the accuracy scale with the number of classes?
+\item Used to tag images in software, security \pause
+\item Preprocessing
+\includegraphics[scale = 0.4]{face_alignment.png}
+\pause
+\item Feature extraction
+\includegraphics[scale = 0.4]{facerec_features.jpg}
 \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Accuracy vs. number of classes}
+%Kay (2008) image identification task in functional MRI.
+\begin{center}
+%\includegraphics[scale = 0.2, clip=true, trim = 0 0in 0 0]{kay_extrapolation.png}
+\includegraphics[scale = 0.2]{face_rec_the-problem-n.jpg}\pause
+\hspace{0.2in}
+\includegraphics[scale = 0.3]{../facerec/acc_plot1.pdf}\pause
+\end{center}
+
+How does the accuracy scale with the number of classes (faces)?
 \end{frame}
 
 
@@ -194,15 +215,15 @@ Kay (2008) image identification task in functional MRI.
 \begin{tabular}{c|c}
 1. Population of categories $\pi(y)$ & 
 2. Subsample $k$ labels, $y_1,\hdots, y_k$\\
-\includegraphics[scale = 0.05]{imagenet.jpg} &
-\includegraphics[scale = 0.5]{imagenet_sub.png}
+\includegraphics[scale = 0.2]{facegrid.png} &
+\includegraphics[scale = 0.2]{facegrid_samp.png}
 \end{tabular}
 \end{center}
 
 \pause
 
 \vspace{0.1in}
-3. Collect training and test data $x_i^{(j)}$ for labels $\{y_1,\hdots, y_k\}$.\pause
+3. Collect training and test data $x_i^{(j)}$ (faces) for labels (people) $\{y_1,\hdots, y_k\}$.\pause
 
 \vspace{0.1in}
 4. Train a classifier and compute test error. \pause
@@ -212,6 +233,50 @@ Kay (2008) image identification task in functional MRI.
 \end{frame}
 
 
+\begin{frame}
+\frametitle{Key assumption: marginal classifier}
+\begin{itemize}
+\item The classifier is \emph{marginal} if it learns a model \emph{independently} for each class.\pause
+\item Examples: LDA/QDA \includegraphics[scale = 0.2]{discriminant.jpg}, \pause
+na\"{i}ve Bayes \includegraphics[scale = 0.2]{naive_bayes.png}
+\item Non-marginal classifiers: Multinomial logistic, multilayer neural networks, k-nearest neighbors
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Definitions}
+
+$\hat{F}_{y^{(i)}}$ is the empirical distribution obtained from the training data for label $y^{(i)}$.
+
+\begin{center}
+\includegraphics[scale = 0.2]{../info_theory_paper/extrapolation_figures/classification_rule.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+
+\begin{center}
+\includegraphics[scale = 0.2]{../info_theory_paper/extrapolation_figures/average_risk.png}
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Theoretical Result}
+
+\textbf{Theorem. (Z.}, Achanta, Benjamini.)
+Suppose $\pi$, $\{F_y\}_{y \in \mathcal{Y}}$ and marginal classifier
+$\mathcal{F}$ satisfy \emph{(some regularity condition)}.  Then, 
+there exists some function $\bar{D}(u)$ on $[0,1] \to [0,1]$ such that
+the $k$-class average risk is given by
+\begin{equation}\label{eq:avrisk_identity}
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\end{equation}
+\pause
+
+\vspace{1in}
+What is this $\bar{D}(u)$ function? We will explain in the following toy example...
+\end{frame}
 
 \begin{frame}
 \frametitle{Toy example}
@@ -315,6 +380,69 @@ $X|Y \sim N(\rho Y, 1-\rho^2)$ i.e. $(Y, X) \sim N(0, \begin{pmatrix}1 & \rho\\\
 \end{frame}
 
 \begin{frame}
+\frametitle{Defining the $U$-function}
+Define $U_x(y)$ as follows:
+\begin{itemize}
+\item Suppose we have test instance (face) $x$ whose true label (person) is $y$.
+\item Let $Y'$ be a random \emph{incorrect} label (person).
+\item Use the classifier to guess whether $x$ belongs to $y$ or $Y'$.
+\item Define $U_x(y)$ as the probabilility of success (randomizing over training data).
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Toy example}
+\begin{center}
+\includegraphics[scale = 0.5]{../extrapolation/illus_ufunc_0_7.pdf}
+\end{center}
+\[
+U_y(x) = \Pr[d(x, \rho Y') > d(x, \rho y)],\text{ for }Y' \sim N(0,1).
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Defining the $\bar{D}(u)$}
+\begin{itemize}
+\item Define random variable as $U_Y(X)$ for $(Y, X)$ drawn from the joint distribution.\pause
+\item $\bar{D}(u)$ is the cumulative distribution function of $U$,
+\[
+\bar{D}(u) = \Pr[U_Y(X) \leq u].
+\]
+\pause
+\end{itemize}
+\begin{center}
+\includegraphics[scale = 0.45]{../extrapolation/illus_kfunc_0_7.pdf}
+\end{center}
+\end{frame}
+
+
+
+\end{document}
+\end{frame}
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{frame}
 \frametitle{Considering the $k=2$ case}
 How is the risk in $k=2$ case defined?
 \begin{itemize}
@@ -373,10 +501,3 @@ for $X \sim N(\rho Y_1, 1-\rho^2)$.
 The main theoretical trick we use is to change the order of conditioning.
 
 \end{frame}
-
-
-
-
-\end{document}
-\end{frame}
-\end{document}
