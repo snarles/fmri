@@ -215,15 +215,48 @@ How does the accuracy scale with the number of classes (faces)?
 \begin{tabular}{c|c}
 1. Population of categories $\pi(y)$ & 
 2. Subsample $k$ labels, $y_1,\hdots, y_k$\\
-\includegraphics[scale = 0.2]{facegrid.png} &
-\includegraphics[scale = 0.2]{facegrid_samp.png}
+\includegraphics[scale = 0.2]{photo_folders.png} &
+\includegraphics[scale = 0.2]{photo_folders2.png}
 \end{tabular}
 \end{center}
 
-\pause
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Setup}
 
 \vspace{0.1in}
-3. Collect training and test data $x_i^{(j)}$ (faces) for labels (people) $\{y_1,\hdots, y_k\}$.\pause
+3. Collect training and test data $x_j^{(i)}$ (faces) for labels (people) $\{y_1,\hdots, y_k\}$.
+
+\begin{center}
+\begin{tabular}{|c|ccc|c|}
+\hline
+Label & & Training & & Test\\ \hline
+$y_1$=Amelia & 
+  $x_1^{(1)} = $\includegraphics[scale = 0.2]{face_photos/Amelia_Vega_0001.png} &  
+  $x_1^{(2)} = $\includegraphics[scale = 0.2]{face_photos/Amelia_Vega_0002.png} &  
+  $x_1^{(3)} = $\includegraphics[scale = 0.2]{face_photos/Amelia_Vega_0003.png} &  
+  $x_1^{*} = $\includegraphics[scale = 0.2]{face_photos/Amelia_Vega_0004.png} \\ \hline
+$y_2$=Jean-Pierre & 
+  $x_2^{(1)} = $\includegraphics[scale = 0.2]{face_photos/Jean-Pierre_Raffarin_0001.png} &  
+  $x_2^{(2)} = $\includegraphics[scale = 0.2]{face_photos/Jean-Pierre_Raffarin_0002.png} &  
+  $x_2^{(3)} = $\includegraphics[scale = 0.2]{face_photos/Jean-Pierre_Raffarin_0003.png} &  
+  $x_2^{*} = $\includegraphics[scale = 0.2]{face_photos/Jean-Pierre_Raffarin_0004.png} \\ \hline
+$y_3$=Liza & 
+  $x_3^{(1)} = $\includegraphics[scale = 0.2]{face_photos/Liza_Minnelli_0001.png} &  
+  $x_3^{(2)} = $\includegraphics[scale = 0.2]{face_photos/Liza_Minnelli_0002.png} &  
+  $x_3^{(3)} = $\includegraphics[scale = 0.2]{face_photos/Liza_Minnelli_0003.png} &  
+  $x_3^{*} = $\includegraphics[scale = 0.2]{face_photos/Liza_Minnelli_0004.png} \\ \hline
+$y_4$=Patricia & 
+  $x_4^{(1)} = $\includegraphics[scale = 0.2]{face_photos/Patricia_Clarkson_0001.png} &  
+  $x_4^{(2)} = $\includegraphics[scale = 0.2]{face_photos/Patricia_Clarkson_0002.png} &  
+  $x_4^{(3)} = $\includegraphics[scale = 0.2]{face_photos/Patricia_Clarkson_0003.png} &  
+  $x_4^{*} = $\includegraphics[scale = 0.2]{face_photos/Patricia_Clarkson_0004.png} \\ \hline
+\end{tabular}
+\end{center}
+
 
 \vspace{0.1in}
 4. Train a classifier and compute test error. \pause
@@ -238,7 +271,7 @@ How does the accuracy scale with the number of classes (faces)?
 \begin{itemize}
 \item The classifier is \emph{marginal} if it learns a model \emph{independently} for each class.\pause
 \item Examples: LDA/QDA \includegraphics[scale = 0.2]{discriminant.jpg}, \pause
-na\"{i}ve Bayes \includegraphics[scale = 0.2]{naive_bayes.png}
+na\"{i}ve Bayes \includegraphics[scale = 0.2]{naive_bayes.png} \pause
 \item Non-marginal classifiers: Multinomial logistic, multilayer neural networks, k-nearest neighbors
 \end{itemize}
 \end{frame}
@@ -269,9 +302,9 @@ Suppose $\pi$, $\{F_y\}_{y \in \mathcal{Y}}$ and marginal classifier
 $\mathcal{F}$ satisfy \emph{(some regularity condition)}.  Then, 
 there exists some function $\bar{D}(u)$ on $[0,1] \to [0,1]$ such that
 the $k$-class average risk is given by
-\begin{equation}\label{eq:avrisk_identity}
+\[
 \text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
-\end{equation}
+\]
 \pause
 
 \vspace{1in}
@@ -401,7 +434,7 @@ U_y(x) = \Pr[d(x, \rho Y') > d(x, \rho y)],\text{ for }Y' \sim N(0,1).
 \end{frame}
 
 \begin{frame}
-\frametitle{Defining the $\bar{D}(u)$}
+\frametitle{Defining $\bar{D}(u)$}
 \begin{itemize}
 \item Define random variable as $U_Y(X)$ for $(Y, X)$ drawn from the joint distribution.\pause
 \item $\bar{D}(u)$ is the cumulative distribution function of $U$,
@@ -414,6 +447,110 @@ U_y(x) = \Pr[d(x, \rho Y') > d(x, \rho y)],\text{ for }Y' \sim N(0,1).
 \includegraphics[scale = 0.45]{../extrapolation/illus_kfunc_0_7.pdf}
 \end{center}
 \end{frame}
+
+\begin{frame}
+\frametitle{Computing average risk}
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+\begin{center}
+($k$ = 2)
+\includegraphics[scale = 0.4, clip=true, trim=0 0.1in 0 0.7in]{../extrapolation/rho_0_7_fmla2.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Computing average risk}
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+\begin{center}
+($k$ = 3)
+\includegraphics[scale = 0.4, clip=true, trim=0 0.1in 0 0.7in]{../extrapolation/rho_0_7_fmla3.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Computing average risk}
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+\begin{center}
+($k$ = 4)
+\includegraphics[scale = 0.4, clip=true, trim=0 0.1in 0 0.7in]{../extrapolation/rho_0_7_fmla4.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Computing average risk}
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+\begin{center}
+($k$ = 5)
+\includegraphics[scale = 0.4, clip=true, trim=0 0.1in 0 0.7in]{../extrapolation/rho_0_7_fmla5.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Computing average risk}
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+\begin{center}
+($k$ = 6)
+\includegraphics[scale = 0.4, clip=true, trim=0 0.1in 0 0.7in]{../extrapolation/rho_0_7_fmla6.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Computing average risk}
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+\begin{center}
+($k$ = 7)
+\includegraphics[scale = 0.4, clip=true, trim=0 0.1in 0 0.7in]{../extrapolation/rho_0_7_fmla7.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Computing average risk}
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+\begin{center}
+($k$ = 8)
+\includegraphics[scale = 0.4, clip=true, trim=0 0.1in 0 0.7in]{../extrapolation/rho_0_7_fmla8.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Computing average risk}
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+\begin{center}
+($k$ = 9)
+\includegraphics[scale = 0.4, clip=true, trim=0 0.1in 0 0.7in]{../extrapolation/rho_0_7_fmla9.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Computing average risk}
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+\begin{center}
+($k$ {\tiny =}\hspace{0.025in}10)
+\includegraphics[scale = 0.4, clip=true, trim=0 0.1in 0 0.7in]{../extrapolation/rho_0_7_fmla10.png}
+\end{center}
+\end{frame}
+
+
+
+
+
 
 
 
