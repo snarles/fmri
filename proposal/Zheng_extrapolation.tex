@@ -110,6 +110,11 @@
 \definecolor{color3}{RGB}{13,128,128}
 \definecolor{color4}{RGB}{70,13,128}
 
+\newcommand{\faceA}{\includegraphics[scale = 0.15]{face_photos/Amelia_Vega_0002.png}}
+\newcommand{\faceB}{\includegraphics[scale = 0.15]{face_photos/Jean-Pierre_Raffarin_0004.png}}
+\newcommand{\faceC}{\includegraphics[scale = 0.15]{face_photos/Liza_Minnelli_0003.png}}
+\newcommand{\faceD}{\includegraphics[scale = 0.15]{face_photos/Patricia_Clarkson_0001.png}}
+
 %tikz stufff
 
 
@@ -547,11 +552,96 @@ U_y(x) = \Pr[d(x, \rho Y') > d(x, \rho y)],\text{ for }Y' \sim N(0,1).
 \end{center}
 \end{frame}
 
+\begin{frame}
+\frametitle{Implication: estimate $\bar{D}(u)$ to predict risk}
+\begin{itemize}
+\item Theoretical result links $k$-class average risk to $\bar{D}(u)$ function
+\item In real data, we do not know $\bar{D}(u)$ since it depends on the unknown joint distribution
+\item However, given a model, we can estimate $\bar{D}(u)$
+\end{itemize}
+\end{frame}
 
+\begin{frame}
+\frametitle{Subsampled risk estimates}
 
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item Suppose we have data for $k$ classes (subsampled from $\pi$)
+\item The test error $\text{TestErr}_k$ is an unbiased estimate for $\text{AvRisk}_k$
+\item For any $\ell < k$, we can estimate $\text{AvRisk}_\ell$ by \emph{subsampling} the $k$ classes, and taking the average test risk, $\text{AvTestErr}_\ell$.
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{tabular}{|c|c|}
+\hline
+$k = 4$ & \faceA vs \faceB vs \faceC vs \faceD \\ \hline
+$k = 3$ 
+ & \faceA vs \faceB vs \faceC \\
+ & \faceA vs \faceB vs \faceD \\
+ & \faceA vs \faceC vs \faceD \\
+ & \faceB vs \faceC vs \faceD \\ \hline
+$k = 2$
+ & \faceA vs \faceB \\
+ & \faceA vs \faceC \\
+ & \faceA vs \faceD \\
+ & \faceB vs \faceC \\
+ & \faceB vs \faceD \\
+ & \faceC vs \faceD \\ \hline
+\end{tabular}
+\end{column}
+\end{columns}
 
+\end{frame}
 
+\begin{frame}
+\frametitle{Parametric modelling approach}
+Assume that for set of basis functions $h_1,\hdots, h_\ell$, we have
 
+\[
+\bar{D}(u) = \sum_{\ell = 1}^m \beta_\ell h_\ell(u).
+\]
+
+Then
+\[
+\text{AvRisk}_{k} = \sum_{\ell = 1}^m \beta_\ell H_{\ell,k} = \beta^T \vec{H}_k
+\]
+where
+\[
+H_{\ell,k} = (k-2) \int_0^1 h_\ell(u) u^{k-2} du.
+\]
+and $\vec{H}_k = (H_{1,k},\hdots, H_{\ell, k})$
+\end{frame}
+
+\begin{frame}
+\frametitle{Prediction extrapolation as regression}
+\begin{enumerate}
+\item Choose basis $h_1,\hdots, h_\ell$
+\[
+\bar{D}(u) = \sum_{\ell = 1}^m \beta_\ell h_\ell(u).\pause
+\]
+\item Obtain subsampled test errors $\text{AvTestErr}_2,\hdots, \text{AvTestErr}_k$.\pause
+\item Fit regression model
+\[
+\hat{\beta} = \argmin_\beta \sum_{i=2}^{k} \left(\text{AvTestErr}_i - \vec{H}_i^T \beta_\ell\right)^2
+\]\pause
+\item For $K > k$, predict $\text{AvRisk}_K$ as
+\[
+\widehat{\text{AvRisk}}_K = \vec{H}_K^T \beta_\ell.
+\]
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{Examples of basis functions}
+\begin{itemize}
+\item Polynomials, $1, x, x^2, \hdots$
+\item Cubic splines
+\item Linear splines, $[x-t_\ell]_+$
+\end{itemize}
+
+Optional constraint: assume $\beta$ is \emph{non-negative}.  In the case of linear splines, this results in a \emph{convex} fit.
+\end{frame}
 
 
 \end{document}
