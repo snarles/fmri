@@ -643,6 +643,72 @@ and $\vec{H}_k = (H_{1,k},\hdots, H_{\ell, k})$
 Optional constraint: assume $\beta$ is \emph{non-negative}.  In the case of linear splines, this results in a \emph{convex} fit.
 \end{frame}
 
+\section{Applications}
+
+\begin{frame}
+\sectionpage
+\end{frame}
+
+\begin{frame}
+\frametitle{Facial recognition example}
+\begin{itemize}
+\item Data: faces from ``Labeled Faces in the Wild.''
+\item 1672 people with at least 2 photos
+\item Featurization: trained neural network from OpenFace
+\end{itemize}
+\begin{center}
+\includegraphics[scale = 0.3]{openface_struc.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Facial recognition example}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item Let us first subsample 400 faces (out of 1672)
+\item Randomly choose 1 face as training and 1 as test for each person
+\item Use 1-nearest neighbor.
+\begin{itemize}
+\item NOTE: 1-NN with 1 example/class is equivalent to LDA with $\Sigma = I$: this fits marginal classifier assumption!
+\end{itemize}
+\end{itemize}
+\pause
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{center}
+\includegraphics[scale = 0.4]{../facerec/acc_plot1.pdf}
+\end{center}
+\pause
+\end{column}
+\end{columns}
+\vspace{0.1in}
+\textbf{Can we predict the accuracy on the full set of 1672?}
+\end{frame}
+
+\begin{frame}
+\frametitle{Estimated $\bar{D}(u)$}
+Using linear spline basis ($p=10000$) and nonnegativity constraint. 
+\begin{center}
+\includegraphics[scale = 0.5]{../facerec/du_est.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Estimated risk}
+Compare to test risk at $K = 1672$
+\begin{center}
+\includegraphics[scale = 0.4]{../facerec/acc_plot2.pdf}
+\end{center}
+\end{frame}
+
+\section{The end}
+
+\begin{frame}
+\sectionpage
+\end{frame}
+
+
 
 \end{document}
 \end{frame}
