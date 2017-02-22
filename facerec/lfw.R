@@ -126,7 +126,7 @@ for (nsub in nsubs) {
   accs_final[[paste(nsub)]] <- accs
 }
 
-boxplot(accs_final, ylim = c(0, 1))
+boxplot(accs_final, ylim = c(0, 1), main = "Predicted accuracy (1672)")
 abline(h = min(accs_full), col = "blue")
 
 saveRDS(accs_final, file = "lfw_sub_preds.rds")
