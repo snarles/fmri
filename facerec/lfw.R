@@ -113,7 +113,7 @@ nsubs <- c(50, 100, 200, 400, 800)
 for (nsub in nsubs) {
   pdf(paste0("facerec/sub_", nsub, ".pdf"))
   plot(accs_full, type = "l", ylim = c(0, 1), xlab = "faces", ylab = "accuracy",
-       main = paste(nsub), cex.lab = 1.5, col = "blue")
+       main = paste(nsub), cex.lab = 1.5, col = "blue", lwd = 3)
   abline(v = nsub, lty = 2)
   for (i in 1:nreps) lines(draw_sub_accs(nsub), col = "red")
   dev.off()

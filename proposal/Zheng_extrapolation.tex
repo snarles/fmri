@@ -702,7 +702,52 @@ Compare to test risk at $K = 1672$
 \end{center}
 \end{frame}
 
-\section{The end}
+\begin{frame}
+\frametitle{Estimated risk: more experiments}
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[scale = 0.2]{../facerec/sub_100.pdf} &
+\includegraphics[scale = 0.2]{../facerec/sub_200.pdf} \\
+\includegraphics[scale = 0.2]{../facerec/sub_400.pdf} &
+\includegraphics[scale = 0.2]{../facerec/sub_800.pdf}
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Estimated risk: more experiments}
+\begin{center}
+\includegraphics[scale = 0.6]{../facerec/sub_preds.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Telugu OCR example}
+\begin{center}
+\includegraphics[scale = 0.4]{telugu_chars.png}
+
+\includegraphics[scale = 0.3]{telugu_cnn.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Telugu OCR example}
+\begin{center}
+\begin{tabular}{|c||c|c|c|c|c|}\hline
+Classifier      & Test $\text{err}^{(20)}$ & Test $\text{err}^{(400)}$ & $\hat{p}^{EXP}_{400}$ & $\hat{p}^{POS}_{400}$ & $\hat{p}^{(5)}_{400}$\\ \hline
+Naive Bayes     & 0.049                   & 0.399                   & 0.108              & \textbf{0.142}      & 0.079             \\ \hline
+Logistic        & 0.078                   & 0.289                   & 0.166              & \textbf{0.188}      & 0.130             \\ \hline
+SVM             & 0.140                   & 0.455                   & 0.299              & \textbf{0.313}      & 0.227             \\ \hline
+$\epsilon$-NN   & 0.049                   & 0.409                   & 0.084              & \textbf{0.590}      & 0.102             \\ \hline
+Deep neural net & 0.005                   & 0.014                   & \textbf{0.011}     & 0.093               & 0.010             \\ \hline
+\end{tabular}
+
+Performance extrapolation: predicting the accuracy on 400 classes using data from 20 classes on a Telugu character dataset.
+$\epsilon = 0.002$ for $\epsilon$-nearest neighbors.
+\end{center}
+\end{frame}
+
+\section*{The end}
 
 \begin{frame}
 \sectionpage
