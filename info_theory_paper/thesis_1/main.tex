@@ -45,6 +45,18 @@ headsepline, % Uncomment to get a line under the header
 
 \usepackage[backend=bibtex,style=authoryear,natbib=true]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
 
+\usepackage{amssymb, amsmath}
+\usepackage{epsfig}
+\usepackage{array}
+\usepackage{ifthen}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{chngcntr}
+\usepackage{apptools}
+
 \addbibresource{example.bib} % The filename of the bibliography
 
 \usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
@@ -108,6 +120,9 @@ headsepline, % Uncomment to get a line under the header
 \newcommand{\bv}{\boldsymbol{v}}
 \newcommand{\bU}{\boldsymbol{U}}
 \newcommand{\bV}{\boldsymbol{V}}
+\newcommand{\bB}{\boldsymbol{B}}
+\newcommand{\bepsilon}{\boldsymbol{\epsilon}}
+
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{proposition}{Proposition}[section]
 \newtheorem{corollary}{Corollary}[theorem]
