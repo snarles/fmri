@@ -45,6 +45,11 @@ headsepline, % Uncomment to get a line under the header
 
 \usepackage[backend=bibtex,style=authoryear]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
 
+%% temp fix for bibtex
+\makeatletter
+\def\blx@maxline{77}
+\makeatother
+
 \usepackage{amssymb, amsmath}
 \usepackage{epsfig}
 \usepackage{array}
