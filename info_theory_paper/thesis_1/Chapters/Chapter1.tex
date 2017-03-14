@@ -18,10 +18,83 @@
 
 \section{Introduction}
 
+The concepts of \emph{information} and \emph{discrimination} are
+linked at a fundamental level.  A statistical hypothesis test is
+\emph{informative} because it provides evidence that the data behaves
+according to a certain hypothesis rather than another: it allows us to
+\emph{discriminate} between two potential possibilities.  More
+generally, a true message contains \emph{information} if it allows the
+reciever to understand that the world is in a certain state and not
+another: it conveys the fact that out of two possible sets of world
+states, that the reciever is in one state rather than another.  The
+link between information and discrimination can also be formalized
+using the tools of measure theory.  Supposing $\Omega$ is a
+probability space defined with respect to a $\sigma$-algebra
+$\mathcal{F}$, we can represent our state of knowledge with a
+filtration (or sub-$\sigma$-algebra) $\mathcal{F}' \subseteq
+\mathcal{F}$.  Complete knowledge (zero uncertainty) is represented by
+the full $\sigma$-algebra: that is, $\mathcal{F}' = \mathcal{F}$.
+Partial knowledge is represented by a coarser filtration, $\mathcal{F}
+\subset \mathcal{F}'$.  The filtration, of course, indicates that our
+knowledge is sufficient to \emph{discriminate} the outcome space
+$\Omega$ into a number of finitely or infinitely many categories.  The
+more information we have, (or, the closer we come to complete
+knowledge of the outcome), the more finely we can discriminate the
+realized outcomes given by $\omega \in \Omega$.
+%% probably need to elaborate on sigma-algebra
+
+A system is \emph{intelligent} if it uses this discriminatory
+information to choose the optimal response to the situation.  A
+primitive organism may classify percieved objects in its environment
+as either beneficial (potential food and resources) or harmful (toxins
+and predators), and intelligently respond by means of pursuing the
+former and avoiding the latter.  Complex organisms, like humans, not
+only discriminate in order to make immediate decisions, but also
+categorize objects in the world in order to perform intermediate
+calculations and carry out contextual reasoning.  
+%% example?
+
 %% Introduce examples of classification and multi-class classification
+
+Similarly, \emph{artificially intelligent} algorithms and agents will
+also discriminate input data into categories, either to (i) make
+immediate decisions, or (ii) to facillitate intermediate calculations
+and optimizations, like intelligent organisms, or (iii) to communicate
+the labels of the categories to human users or other algorithms.
+Accordingly, a large swath of the field of artificial intelligence
+consists of various types of discrimination tasks, from natural
+language processing, to object recognition, to game playing, to
+multi-class classification.  Among these types of tasks, multi-class
+classification is the simplest and the most generally applicable
+type of discrimination problem.  Supposing the input data $x$ is
+associated with one of $k$ pre-defined classes or labels
+$\{y_1,\hdots, y_k\}$, the problem of multi-class classification is to
+determine a rule for assigning new inputs $x$ to the correct label.
+Examples of multi-class classification applications include:
+\begin{itemize}
+\item Optical character recognition: labeling bitmaps of handwritten characters with the corresponding character.
+\item Biomedical diagnoses: assigning possible diagnoses to patients based on biological measurements and demographic characteristics.
+\item Image annotation: assigning descriptive words to images on the internet.
+\end{itemize}
 
 %% Multi-class classification was first studied by SHannon (?) (was it Shannon?  look up the first ref to gaussian random codes)
 %% in random codes
+While multi-class classification is a rapidly developing field within
+machine learning, the problem of discriminating inputs according to
+discrete classes had been studied even before the advent of artificial
+intelligence: arguably, it was Claude Shannon who developed some the
+earliest theory pertaining to multi-class classification in his
+seminal 1948 paper ``A mathematical theory of communication,'' which
+laid the foundation for the field of information theory.  Shannon,
+along with other pioneers of information theory such as Robert M. Fano
+and Norbert Weiner, recognized that the information content of a
+signal depended on how many different messages it can plausibly
+convey.  Furthermore, it was Shannon who first recognized that when
+the signal is corrupted by noise, the amount of information
+\emph{lost} depends on how reliably the original message can be
+recovered from the noisy input--in other words, how well the reciever
+can \emph{discriminate} the original message on the basis of the
+noise-corrupted recieved message.  %% maybe add more details, redundancy of English, etc.
 
 %% Make the connection between random codes and randomized classification,
 %% point out why randomized classification is a good model for some contemporary problems
