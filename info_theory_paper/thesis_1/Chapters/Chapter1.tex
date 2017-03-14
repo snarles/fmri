@@ -96,6 +96,124 @@ recovered from the noisy input--in other words, how well the reciever
 can \emph{discriminate} the original message on the basis of the
 noise-corrupted recieved message.  %% maybe add more details, redundancy of English, etc.
 
+\tikzstyle{block} = [rectangle, draw, fill=white, 
+    text width=5em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{cloud} = [ellipse, draw, fill=white, 
+    text width=5em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{line} = [draw, -latex']
+    
+\begin{figure}
+\centering
+\begin{tabular}{ccc}
+
+Multi-class classification & & Information Theory\\
+
+\begin{tikzpicture}[node distance = 2cm, auto]
+    % Place nodes
+    \node [block] (init1) {label $Y$};
+    \node [cloud, below of=init1] (init2) {distribution $F_{X|Y}$};
+    \node [block, below of=init2] (init3) {observation $X$};
+    \node [cloud, below of=init3] (init4) {classification rule $h(X)$};
+    \node [block, below of=init4] (init5) {estimate $\hat{Y}$};
+    % Draw edges
+    \path [line] (init1) -- (init2);
+    \path [line] (init2) -- (init3);
+    \path [line] (init3) -- (init4);
+    \path [line] (init4) -- (init5);
+\end{tikzpicture} 
+
+& & 
+
+\begin{tikzpicture}[node distance = 2cm, auto]
+    % Place nodes
+    \node [block] (initA) {message $M$};
+    \node [cloud, below of=initA] (initB) {encoder $g(M)$};
+    \node [block, below of=initB] (init1) {encoded message $Y$};
+    \node [cloud, below of=init1] (init2) {noisy channel $F_{X|Y}$};
+    \node [block, below of=init2] (init3) {observation $X$};
+    \node [cloud, below of=init3] (init4) {decoder $d(X)$};
+    \node [block, below of=init4] (init5) {estimate $\hat{M}$};
+    % Draw edges
+    \path [line] (initA) -- (initB);
+    \path [line] (initB) -- (init1);
+    \path [line] (init1) -- (init2);
+    \path [line] (init2) -- (init3);
+    \path [line] (init3) -- (init4);
+    \path [line] (init4) -- (init5);
+\end{tikzpicture} 
+
+\end{tabular}
+\caption{Comparing the discrimnation tasks in multi-class classification and information theory.}
+\label{fig:mcc_vs_it}
+\end{figure}
+
+If we compare the discrimination tasks defined in multi-class
+classification and information theory, we find much similarity, but
+also a few important differences.  Figure \ref{fig:mcc_vs_it} displays
+the schematic diagrams of the general multi-class classification
+problem and the setup for the noisy channel considered by Shannon.
+
+In multi-class classification, we may assume without loss of generality that the data has been generated in the following manner:
+\begin{enumerate}
+\item First, a label $Y$ is drawn according to some distribution from the label set $\{y_1,\hdots, y_k\}$.
+\item Secondly, the new observation $X$ is drawn according to the unknown conditional distribution $F_{X|Y}$.
+\item Finally, an estimated label $\hat{Y} = h(X)$ is obtained
+  according to a data-dependent classification rule, $h$.
+  Typically, $h$ is determined by fitting a model to training data.
+\end{enumerate}
+In the particular application, the above description may not match the
+\emph{causal relationship} between $X$ and $Y$: however, whether $X$
+is drawn conditional on $Y$, or $Y$ is drawn conditional on $X$, or
+that $(X, Y)$ are drawn from some joint distribution, makes no
+difference from the theoretical standpoint, since only the statistical
+(and not causal) properties of the joint distribution $(X, Y)$ are
+relevant for determining the peformance of the classification rule $h(X)$.
+
+In the noisy channel model, we also see the appearance of an unknown
+encoded message $Y$, a conditional distribution $F_{X|Y}$ which is now
+referred to as a \emph{noisy channel}, and the observed $X$ drawn from
+the conditional distribution.  However, the differences between the
+noisy channel model and the multi-class classification problem are:
+\begin{itemize}
+\item While in multi-class classification, $F_{X|Y}$ is unknown and
+  has to be inferred from data, in the noisy channel model, the
+  stochastic properties of the channel $F_{X|Y}$ are usually assumed
+  to be known.  For example, for a binary channel where $Y$ consists
+  of an $m$-length binary string, a commonly studied channel $F_{X|Y}$
+  generates $X$ by randomly flipping bits in $Y$ independently with
+  some probability $\epsilon$.
+\item In the noisy channel model, the goal is to recover a message
+  $M$, rather than the encoded message $Y$.  However, in the problem
+  setup, the sender is allowed to choose a deterministic encoder
+  function which produces $Y$ as a deterministic function of $M$.  And
+  since we assume that the reciever knows the encoder function, the
+  problem of recovering $M$ from $X$ reduces to the problem of
+  recovering $Y$ from $X$.  Yet, an important detail is that the
+  distribution of $Y$ depends on both the distribution of $M$ and the
+  chosen encoder, and the reciever should use this information, along
+  with the known channel properties, in choosing a decoder $d(X)$.
+\end{itemize}
+In general, we can say that both the multi-class classification
+problem and the noisy channel model present examples of discrimination
+problems where one must recover some latent variable $Y$ from
+observations $X$; however, the two problems diverge on the matter of
+whether or not the stochastic relationship $F_{X|Y}$ is known, and
+whether or not there are any degrees of freedom in controlling the
+distribution of $Y$ (by means of choosing the encoder $g(M)$ in the
+noisy channel model.)
+
+Yet, in theoretical work it is useful to study an \emph{upper bound}
+on achievable performance in the multi-class classification problem,
+by considering the performance of the \emph{optimal} classification
+rule $h(X)$.  This is the Bayes classifer $h_{Bayes}$, which can be
+obtained from knowledge of the conditional distributions $F_{X|Y}$ and
+marginal distribution of $Y$.  For instance, supposing that the
+performance criterion is to minimize the zero-one risk $\Pr[\hat{Y}
+  \neq Y]$, then the Bayes rule is to 
+
+
+
+
 %% Make the connection between random codes and randomized classification,
 %% point out why randomized classification is a good model for some contemporary problems
 
