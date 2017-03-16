@@ -169,38 +169,54 @@ difference from the theoretical standpoint, since only the statistical
 (and not causal) properties of the joint distribution $(X, Y)$ are
 relevant for determining the peformance of the classification rule $h(X)$.
 
-In the noisy channel model, we also see the appearance of an unknown
-encoded message $Y$, a conditional distribution $F_{X|Y}$ which is now
-referred to as a \emph{noisy channel}, and the observed $X$ drawn from
-the conditional distribution.  However, the differences between the
-noisy channel model and the multi-class classification problem are:
-\begin{itemize}
-\item While in multi-class classification, $F_{X|Y}$ is unknown and
-  has to be inferred from data, in the noisy channel model, the
-  stochastic properties of the channel $F_{X|Y}$ are usually assumed
-  to be known.  For example, for a binary channel where $Y$ consists
-  of an $m$-length binary string, a commonly studied channel $F_{X|Y}$
-  generates $X$ by randomly flipping bits in $Y$ independently with
-  some probability $\epsilon$.
-\item In the noisy channel model, the goal is to recover a message
-  $M$, rather than the encoded message $Y$.  However, in the problem
-  setup, the sender is allowed to choose a deterministic encoder
-  function which produces $Y$ as a deterministic function of $M$.  And
-  since we assume that the reciever knows the encoder function, the
-  problem of recovering $M$ from $X$ reduces to the problem of
-  recovering $Y$ from $X$.  Yet, an important detail is that the
-  distribution of $Y$ depends on both the distribution of $M$ and the
-  chosen encoder, and the reciever should use this information, along
-  with the known channel properties, in choosing a decoder $d(X)$.
-\end{itemize}
-In general, we can say that both the multi-class classification
-problem and the noisy channel model present examples of discrimination
+Meanwhile, in the noisy channel model, we assume that the sender wants
+to transmit message $M$, out of a finite set of possible messages
+$\mathcal{M} = \{1,\hdots, m\}$.  The message must be encoded into a
+signal $Y \in \mathcal{Y}$, which is sent through a stochastic channel
+$F_{X|Y}$.  Given that a signal $y$ is sent through the channel, the
+reciever observes a signal $X$ drawn from the distribution $F_{X|y}$.
+The communications problem is to design an encoding function $g(M)$,
+which is an injective map from messages $\{1,\hdots,m\}$ to signals in
+$\mathcal{M}$, and a corresponding decoding function $d(X)$ which
+infers the message $\{1,\hdots, m\}$ from the recieved signal $X$.
+
+Therefore, we see that in both the multi-class classification problem
+and the noisy channel model present examples of discrimination
 problems where one must recover some latent variable $Y$ from
-observations $X$; however, the two problems diverge on the matter of
-whether or not the stochastic relationship $F_{X|Y}$ is known, and
-whether or not there are any degrees of freedom in controlling the
-distribution of $Y$ (by means of choosing the encoder $g(M)$ in the
-noisy channel model.)
+observations $X$, where $X$ is related to $Y$ through the family of
+conditional distributions $F_{X|Y}$.  One difference is that while in
+multi-class classification, $F_{X|Y}$ is unknown and has to be
+inferred from data, in the noisy channel model, the stochastic
+properties of the channel $F_{X|Y}$ are usually assumed to be known.
+For example, for a binary channel where $Y$ consists of an $m$-length
+binary string, a commonly studied channel $F_{X|Y}$ generates $X$ by
+randomly flipping bits in $Y$ independently with some probability
+$\epsilon$.  A second difference is that in the noisy channel model,
+there is a choice in how to specify the encoding function $g(M)$,
+which affects subsequent performance.  Finally, in the broader
+research context, machine learning research has traditionally focused
+on multi-class problems with relatively few classes, while information
+theory tends to consider problems in asymptotic regimes where the
+number of possible messages $m$ is taken to infinity. These
+differences were sufficient to explain why little overlap exists in
+the respective literatures between multi-class classification and the
+noisy channel model.  
+
+However, an interesting development in the machine learning community
+has been the application of multi-class classification to problems
+with increasingly large and complex label sets.  Consider the
+following timeline of representative papers in the multi-class
+classification literature:
+\begin{itemize}
+\item Fisher's Iris data set, \cite{fisher1936use}, $K = 3$ classes
+\item Letter recognition, \cite{frey1991letter}, $K = 26$ classes
+\item Michalski's soybean dataset, \cite{mickalstd1980learning}, $K = 15$ classes
+\item The NIST handwritten digits data set, \cite{grother1995nist}, $K = 10$ classes
+\item Phoneme recognition on the TIMIT datset, \cite{clarkson1999use}, $K = 39$ classes
+\item Object categorization using Corel images, \cite{duygulu2002object} $K = 371$ classes
+\item Object categorization for ImageNet dataset, \cite{deng2010does}, $K = 10,184$ classes
+\item The 2nd Kaggle large-scale hierarchical text classification challenge (LSHTC), \cite{partalas2015lshtc}, $K = 325,056$
+\end{itemize}
 
 Yet, in theoretical work it is useful to study an \emph{upper bound}
 on achievable performance in the multi-class classification problem,
@@ -209,7 +225,16 @@ rule $h(X)$.  This is the Bayes classifer $h_{Bayes}$, which can be
 obtained from knowledge of the conditional distributions $F_{X|Y}$ and
 marginal distribution of $Y$.  For instance, supposing that the
 performance criterion is to minimize the zero-one risk $\Pr[\hat{Y}
-  \neq Y]$, then the Bayes rule is to 
+  \neq Y]$, then the Bayes rule is to assign $X$ to the label with the
+highest posterior density,
+\[
+g_{Bayes}(X) = \text{argmax}_{y \in \{y_1, \hdots, y_k\}} f_{X|y}(x) \pi(y)
+\]
+where $\pi(y)$ is the prior probability of $Y = y$.  Since the Bayes
+rule yields the best possible performance and requires knowledge of
+$F_{X|Y}$ for its construction, the assumption that one has access to
+the Bayes classifier is effectively equivalent to assuming that one
+has knowledge of $F_{X|Y}$.
 
 
 
