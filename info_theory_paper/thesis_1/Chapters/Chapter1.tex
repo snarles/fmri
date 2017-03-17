@@ -217,26 +217,130 @@ classification literature:
 \item Object categorization for ImageNet dataset, \cite{deng2010does}, $K = 10,184$ classes
 \item The 2nd Kaggle large-scale hierarchical text classification challenge (LSHTC), \cite{partalas2015lshtc}, $K = 325,056$
 \end{itemize}
+As we can see, in recent times we begin to see classification problems
+with extremely large label sets.  In such large-scale classification
+problems, or `extreme' classification problems, results for $K \to
+\infty$ numbers of classes, like those found in information theory,
+begin to look more applicable.
 
-Yet, in theoretical work it is useful to study an \emph{upper bound}
-on achievable performance in the multi-class classification problem,
-by considering the performance of the \emph{optimal} classification
-rule $h(X)$.  This is the Bayes classifer $h_{Bayes}$, which can be
-obtained from knowledge of the conditional distributions $F_{X|Y}$ and
-marginal distribution of $Y$.  For instance, supposing that the
-performance criterion is to minimize the zero-one risk $\Pr[\hat{Y}
-  \neq Y]$, then the Bayes rule is to assign $X$ to the label with the
-highest posterior density,
+This work focuses on a particular intersection between multi-class
+classification and information theory, which is the study of
+\emph{random classification tasks.}  In numerous domains of applied
+mathematics, it has been found that systems with large numbers of
+components can be modelled using randomized versions of those same
+systems, which are more tractable to mathematical analysis: for
+example, studying the properties of networks by studying random graphs
+in graph theory, or studying the performance of combinatorial
+optimization algorithms for random problem instances.  Similarly, it
+makes sense to posit randomized models of multi-class discrimination
+problems.  Since information theorists were the first to study
+discrimination problems with large number of classes, we find in the
+information theory literature a long tradition of the study of
+\emph{random code} models, dating back all the way to Shannon's
+seminal 1948 paper.  This thesis is dedicated to the the study of the
+analogue of random code models in the multi-class classification
+setting: models of \emph{randomized classification.}  
+
+A random code model in information theory is one where given some
+distribution $\nu$ (typically a uniform distribution) on the space of
+transmittable signals $\mathcal{Y}$, we posit that the decoder $g(M)$
+is randomly generated, by letting $g(1),\hdots, g(m)$ be identically
+and independently assigned to random draws from $\nu$.  For example,
+when $\mathcal{Y}$ is the space of $m$-length binary strings, the
+encoder $g$ maps indices $1, \hdots, m$ to random $m$-length binary
+strings.  The purpose of the random code model is usually to establish
+a lower bound on achievable accuracy given some constraints on the
+signal space.
+
+Meanwhile, a randomized classification model is one where the label
+set $\{y^{(1)},\hdots, y^{(k)}\}$ is not fixed, but randomly sampled.
+One defines a label space $\mathcal{Y}$, a family of conditional
+distributions $\{F_{X|y}\}_{y \in \mathcal{Y}}$, and a distribution
+$\nu$ on $\mathcal{Y}$.  Then the randomized classification model is a
+classification task obtained by drawing labels $\{Y^{(1)},\hdots,
+Y^{(k)}\}$ iid from $\nu$, generating training data for those
+particular labels by drawing observations $X_i^{(j)} \sim
+F_{X|Y^{(j)}}$, and where the problem is to construct a classification
+rule for assigning new observations $X$ which are drawn from the
+mixture
 \[
-g_{Bayes}(X) = \text{argmax}_{y \in \{y_1, \hdots, y_k\}} f_{X|y}(x) \pi(y)
+X \sim \frac{1}{k}\sum_{i=1}^k F_{X|Y^{(k)}}
 \]
-where $\pi(y)$ is the prior probability of $Y = y$.  Since the Bayes
-rule yields the best possible performance and requires knowledge of
-$F_{X|Y}$ for its construction, the assumption that one has access to
-the Bayes classifier is effectively equivalent to assuming that one
-has knowledge of $F_{X|Y}$.
+to one of the labels $\{Y^{(1)},\hdots, Y^{(k)}\}.$ As we will see
+throughout the thesis, the randomized classification model can be
+naturally applied to a large number of multi-class classification
+applications, such as facial recognition, where the labels
+(e.g. people) can be justifiably modelled as random draws from some
+population.  And, even in the majority of classification problems
+where the labels cannot be assumed to come from an iid sample,
+randomized classification models can still be applied to provide
+intuition for the original problem.
 
+The link between random code models and randomized classification
+models should now be apparent. Define $Y_i = g(i)$ in the random code
+model, so that $Y_i$ are iid drawn from $\nu$.  Fixing a particular
+realization of $Y_1,\hdots, Y_k$, the decoding problem is then
+evidently a multi-class classification problem with labels
+$\{Y_1,\hdots, Y_k\}$.  The only difference between the two models is
+that the conditional distributions $F_{X|Y}$ are assumed to be known
+in the random code model, and assumed unknown in the randomized
+classification model.
 
+But happens when we assume that $F_{X|Y}$ is known, in the multi-class
+classification problem?  In fact, it is common to consider the case of
+known $F_{X|Y}$ in the machine learning literature, because the
+resulting accruacy gives an \emph{upper bound} on achievable
+performance in the multi-class classification problem.  This is
+because once $F_{X|Y}$ is known, it is possible to define the
+\emph{optimal} classification rule, or \emph{Bayes} classification
+rule $h_{Bayes}$.  For example, supposing that the performance
+criterion is to minimize the zero-one risk $\Pr[\hat{Y} \neq Y]$, then
+the Bayes rule is to assign $X$ to the label with the highest
+posterior density,
+\[
+h_{Bayes}(X) = \text{argmax}_{y \in \{y_1, \hdots, y_k\}} f_{X|y}(x) \pi(y)
+\]
+where $\pi(y)$ is the prior probability of $Y = y$.  Therefore, it is
+the same thing to study the Bayes accuracy in a randomized
+classification model and the decoding accuracy of a randomized code in
+a noisy channel.
+
+Indeed, the analysis of the Bayes accuracy of a randomized
+classification model forms the subject of Chapters 2 and 3.  Due to
+the aforementioned equivalence, it can be said that a large body of
+work dealing with the Bayes accuracy of randomized classification
+problems exists in information theory: however, the majority of such
+works deal with the limit as $k \to \infty$, and to our knowledge no
+analysis has been done for the case of finite $k$, which is the
+relevant scenario for multi-class classification.  There is good
+reason for this lacuna in the information theory literature, which is
+that since information theorists are concerned with understanding the
+properties of \emph{optimal} coding schemes, it follows that
+randomized coding schemes are only interesting insofar as that they
+give good approximations to optimal coding schemes.  However, in the
+classification setting, we may be interested in studying randomized
+classification for its own sake, and not merely as a means to obtain
+lower bounds or estimates for another problem.  Therefore, Chapter 2
+presents novel results on the statistical properties of the Bayes
+accuracy in the randomized classification model.  Meanwhile, Chapter 3
+studies an interesting application of the randomized classification
+problem, which is to analyze the dependence of the classification
+accuracy on the size of the label set.  This analysis yields a novel
+method for `performance extrapolation' in real-world classification
+problems, meaning that our method can be used to estimate the
+classification accuracy on a large multi-class classification problem
+using data from only a subsample of the classes in the larger problem.
+
+Furthermore, as we might expect from the close connection between
+random codes and randomized classification, we are able to form links
+between multi-class classification and information theory.  Therefore,
+Chapters 4 and 5 leverage the link between randomized classification
+and information theory in order to develop new estimators of mutual
+information in high-dimensional datasets consisting of pairs ob
+observations $(X, Y)$.  While Chapter 4 works in a setting where a
+true, sparse relationship between $Y$ and $X$ is assumed to be known,
+Chapter 5 makes a different assumption, which is that $X$ is
+high-dimensional, and that its components are not too dependent.
 
 
 %% Make the connection between random codes and randomized classification,
