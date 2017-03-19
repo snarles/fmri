@@ -77,7 +77,18 @@ Examples of multi-class classification applications include:
 \item Image annotation: assigning descriptive words to images on the internet.
 \end{itemize}
 
-%% Multi-class classification was first studied by SHannon (?) (was it Shannon?  look up the first ref to gaussian random codes)
+%% Write about neuroscience application here
+An interesting development in science is the use of \emph{artificial
+  intelligence}--that is, machine learning and classification
+algorithms, to mimic \emph{natural intelligence.}  This is the case in
+neuroscience.  Take for example a cricket, which can sense the
+direction of the wind based on sensations in its cercal hairs.  That
+is, the cricket behaviorally demonstrates the ability to
+\emph{discriminate} the direction of the wind, based on input from its
+cercal system.  Neuroscientists then recorded the spiking activity of
+the interneurons of the cricket 
+
+%% Multi-class classification was first studied by SHannon
 %% in random codes
 While multi-class classification is a rapidly developing field within
 machine learning, the problem of discriminating inputs according to
@@ -152,6 +163,39 @@ classification and information theory, we find much similarity, but
 also a few important differences.  Figure \ref{fig:mcc_vs_it} displays
 the schematic diagrams of the general multi-class classification
 problem and the setup for the noisy channel considered by Shannon.
+%% If we put the figure here, probably will need some more explanation
+
+%% we should mention mutual information earlier
+From figure \ref{fig:mcc_vs_it}, we can see major similarities between
+the multi-class classification problem and the noisy decoding problem
+studied in information theory: both involve inferring some latent
+variable $Y$ on the basis of observed $X$.  We will go into great
+detail about the similarities and differences in section
+\ref{sec:rand_code_rand_class}.  However, despite these similarities,
+it has historically been the case that the machine learning literature
+and the information theory literature diverge in terms of the metric
+used to characterize performance in the discrimination task.  In
+multi-class learning, the performance is generally characterized by
+the \emph{accuracy} of the classification--the probability that the
+label is assigned correctly.  However, in information theory, a
+quantity called the \emph{mutual information}, which was invented by
+Claude Shannon, is used to characterize the quality of the noisy
+channel with regards to achievable decoding performance. %% jargony phrase, due to the idea being difficult to express
+
+\section{Supervised learning}
+
+The generalization error of the learner as a statistic.
+
+\subsection{General characaterization of supervised learning}
+
+\section{Mutual information}
+
+\subsection{Definition and history}
+
+\subsection{Usage in neuroscience}
+
+
+\section{Random codes and random classification}\label{sec:rand_code_rand_class}
 
 In multi-class classification, we may assume without loss of generality that the data has been generated in the following manner:
 \begin{enumerate}
@@ -239,7 +283,29 @@ information theory literature a long tradition of the study of
 \emph{random code} models, dating back all the way to Shannon's
 seminal 1948 paper.  This thesis is dedicated to the the study of the
 analogue of random code models in the multi-class classification
-setting: models of \emph{randomized classification.}  
+setting: models of \emph{randomized classification.}
+
+Furthermore, as we might expect from the close connection between
+random codes and randomized classification, we are able to form links
+between multi-class classification and information theory.  Therefore,
+Chapters 4 and 5 leverage the link between randomized classification
+and information theory in order to develop new estimators of mutual
+information in high-dimensional datasets consisting of pairs ob
+observations $(X, Y)$.  While Chapter 4 works in a setting where a
+true, sparse relationship between $Y$ and $X$ is assumed to be known,
+Chapter 5 makes a different assumption, which is that $X$ is
+high-dimensional, and that its components are not too dependent.
+
+In the following sections, we review the relevant background for
+information theory, the applications of information theory to
+neuroscience, and multi-class classification, then introduce the
+connection between random code models in information theory and
+randomized classification.
+
+
+%% Make the connection between random codes and randomized classification,
+%% point out why randomized classification is a good model for some contemporary problems
+
 
 A random code model in information theory is one where given some
 distribution $\nu$ (typically a uniform distribution) on the space of
@@ -331,35 +397,13 @@ problems, meaning that our method can be used to estimate the
 classification accuracy on a large multi-class classification problem
 using data from only a subsample of the classes in the larger problem.
 
-Furthermore, as we might expect from the close connection between
-random codes and randomized classification, we are able to form links
-between multi-class classification and information theory.  Therefore,
-Chapters 4 and 5 leverage the link between randomized classification
-and information theory in order to develop new estimators of mutual
-information in high-dimensional datasets consisting of pairs ob
-observations $(X, Y)$.  While Chapter 4 works in a setting where a
-true, sparse relationship between $Y$ and $X$ is assumed to be known,
-Chapter 5 makes a different assumption, which is that $X$ is
-high-dimensional, and that its components are not too dependent.
 
 
-%% Make the connection between random codes and randomized classification,
-%% point out why randomized classification is a good model for some contemporary problems
+
+
 
 %% Link back to Shannon and information theory.  We develop further links between randomized classification and information theory.
 
-
-\section{Supervised learning}
-
-The generalization error of the learner as a statistic.
-
-\subsection{General characaterization of supervised learning}
-
-\section{Mutual information}
-
-\subsection{Definition and history}
-
-\subsection{Usage in neuroscience}
 
 \section{Generalizations of information}
 
