@@ -18,45 +18,27 @@
 
 \section{Introduction}
 
-The concepts of \emph{information} and \emph{discrimination} are
-linked at a fundamental level.  A statistical hypothesis test is
-\emph{informative} because it provides evidence that the data behaves
-according to a certain hypothesis rather than another: it allows us to
-\emph{discriminate} between two potential possibilities.  More
-generally, a true message contains \emph{information} if it allows the
-reciever to understand that the world is in a certain state and not
-another: it conveys the fact that out of two possible sets of world
-states, that the reciever is in one state rather than another.  The
-formalism of measure-theoretic probability theory provides yet another
-example of the conceptual link between information and
-discrimination\footnote{Supposing $\Omega$ is a probability space
-  defined with respect to a $\sigma$-algebra $\mathcal{F}$, we can
-  represent our state of knowledge with a filtration (or
-  sub-$\sigma$-algebra) $\mathcal{F}' \subseteq \mathcal{F}$.
-  Complete knowledge (zero uncertainty) is represented by the full
-  $\sigma$-algebra: that is, $\mathcal{F}' = \mathcal{F}$.  Partial
-  knowledge is represented by a coarser filtration, $\mathcal{F}
-  \subset \mathcal{F}'$.  The filtration, of course, indicates that
-  our knowledge is sufficient to \emph{discriminate} the outcome space
-  $\Omega$ into a number of finitely or infinitely many categories.
-  The more information we have, (or, the closer we come to complete
-  knowledge of the outcome), the more finely we can discriminate the
-  realized outcomes given by $\omega \in \Omega$.}.
-%% transition here to the applications of such a link
-The practical implication of this--and the primary topic of this thesis, are that questions about the
-\emph{information} content of a signal can be addressed by using methods based on discrimination tasks,
-and 
+The study of naturally intelligent systems, and the study and design
+of artificially intelligent systems, form two major intertwining
+domains of modern research.  Here, we take \emph{intelligence} to
+refer to the property of a system by which it can modulate its
+reaction to external inputs in a purposeful manner.  Therefore, by
+this definition, an amoeba which seeks food and avoids toxins is
+intelligent, as is a gene-regulation network, or a mammalian brain.
+Similarly, artificially intelligent algorithms which implement
+automated decision-making rules in response to external inputs also
+satisfy this definition of intelligence.
 
-A system is \emph{intelligent} if it uses this discriminatory
-information to choose the optimal response to the situation.  A
-primitive organism may classify percieved objects in its environment
+A primitive organism may classify percieved objects in its environment
 as either beneficial (potential food and resources) or harmful (toxins
 and predators), and intelligently respond by means of pursuing the
-former and avoiding the latter.  Complex organisms, like humans, not
+former and avoiding the latter.  %% note that this example is redundant
+Complex organisms, like humans, not
 only discriminate in order to make immediate decisions, but also
 categorize objects in the world in order to perform intermediate
-calculations and carry out contextual reasoning.  
+calculations and carry out contextual reasoning.
 %% example?
+
 
 %% Introduce examples of classification and multi-class classification
 
@@ -89,6 +71,74 @@ objects in a natural scene, but research into the mechanisms of
 vision, and attempts to replicate human capabilities for object
 recognition, have already provided crucial insight into the
 hierarchical nature of mammalian vision.  %% needs citation
+
+However, a potentially puzzling aspect of this approach, is that the
+structure or dynamics of the artificially intelligent classifier need
+not imitate the dynamics of the biological system for the modelling
+approach to be useful.  Computational neuroscientists have developed
+biological realistic models of neural signalling activity which could
+be employed to simulate the neural decision-making process from input
+to output, at a very high level of versimilitude.  However, it is
+often more useful in practice to model the decision-making process
+with much simpler statistical models, such as linear regression.  Even
+relatively complex machine learning models, such as deep neural
+networks, represent a vast simplification from biological dynamics.
+Even when an artificial learning algorithm has a much different
+structure than the biological mechanism being studied, its performance
+on a discrimination task can yield insight into the system of
+interest.  The whole reason for this is that the quantity of interest
+does not depend on the dynamics or the specific mechanisms of the
+system.  Rather, the quantity of interest is the \emph{informational
+  content} of the signal, which is defined independently of a choice
+of a specific classification algorithm or natural mechanism.  [NOTE:
+  This claim is too strong, because sometimes we do think that the
+  artificial classifier is a good coarse model for the system, and the
+  fact that information is what we really care about is only really
+  apparent at the implicit level.]
+
+
+
+The concept of intelligence is then further intertwined with two other
+highly related concepts: the ability to \emph{discriminate}, and the
+ability to process \emph{information.}
+
+
+
+The concepts of \emph{information} and \emph{discrimination} are
+linked at a fundamental level.  A statistical hypothesis test is
+\emph{informative} because it provides evidence that the data behaves
+according to a certain hypothesis rather than another: it allows us to
+\emph{discriminate} between two potential possibilities.  More
+generally, a true message contains \emph{information} if it allows the
+reciever to understand that the world is in a certain state and not
+another: it conveys the fact that out of two possible sets of world
+states, that the reciever is in one state rather than another.  The
+formalism of measure-theoretic probability theory provides yet another
+example of the conceptual link between information and
+discrimination\footnote{Supposing $\Omega$ is a probability space
+  defined with respect to a $\sigma$-algebra $\mathcal{F}$, we can
+  represent our state of knowledge with a filtration (or
+  sub-$\sigma$-algebra) $\mathcal{F}' \subseteq \mathcal{F}$.
+  Complete knowledge (zero uncertainty) is represented by the full
+  $\sigma$-algebra: that is, $\mathcal{F}' = \mathcal{F}$.  Partial
+  knowledge is represented by a coarser filtration, $\mathcal{F}
+  \subset \mathcal{F}'$.  The filtration, of course, indicates that
+  our knowledge is sufficient to \emph{discriminate} the outcome space
+  $\Omega$ into a number of finitely or infinitely many categories.
+  The more information we have, (or, the closer we come to complete
+  knowledge of the outcome), the more finely we can discriminate the
+  realized outcomes given by $\omega \in \Omega$.}.
+%% transition here to the applications of such a link
+One practical implication of this is that performance on
+discrimination tasks can be predicted by measures of the
+\emph{information content} of the input. This was the basis of Claude
+Shannon's foundational work on information theory, and the definition
+of \emph{mutual information.}  However, another, less-studied
+application of this connection is that questions about the
+\emph{information} content of a signal can be addressed by using
+methods based on discrimination tasks.  
+
+
 
 %% we played a trick where natural intelligence = brain, but remember that an 'intelligent system' could also be a gene regulation system or something
 
