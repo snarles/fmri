@@ -27,21 +27,24 @@ generally, a true message contains \emph{information} if it allows the
 reciever to understand that the world is in a certain state and not
 another: it conveys the fact that out of two possible sets of world
 states, that the reciever is in one state rather than another.  The
-link between information and discrimination can also be formalized
-using the tools of measure theory.  Supposing $\Omega$ is a
-probability space defined with respect to a $\sigma$-algebra
-$\mathcal{F}$, we can represent our state of knowledge with a
-filtration (or sub-$\sigma$-algebra) $\mathcal{F}' \subseteq
-\mathcal{F}$.  Complete knowledge (zero uncertainty) is represented by
-the full $\sigma$-algebra: that is, $\mathcal{F}' = \mathcal{F}$.
-Partial knowledge is represented by a coarser filtration, $\mathcal{F}
-\subset \mathcal{F}'$.  The filtration, of course, indicates that our
-knowledge is sufficient to \emph{discriminate} the outcome space
-$\Omega$ into a number of finitely or infinitely many categories.  The
-more information we have, (or, the closer we come to complete
-knowledge of the outcome), the more finely we can discriminate the
-realized outcomes given by $\omega \in \Omega$.
-%% probably need to elaborate on sigma-algebra
+formalism of measure-theoretic probability theory provides yet another
+example of the conceptual link between information and
+discrimination \footnote{Supposing $\Omega$ is a probability space
+  defined with respect to a $\sigma$-algebra $\mathcal{F}$, we can
+  represent our state of knowledge with a filtration (or
+  sub-$\sigma$-algebra) $\mathcal{F}' \subseteq \mathcal{F}$.
+  Complete knowledge (zero uncertainty) is represented by the full
+  $\sigma$-algebra: that is, $\mathcal{F}' = \mathcal{F}$.  Partial
+  knowledge is represented by a coarser filtration, $\mathcal{F}
+  \subset \mathcal{F}'$.  The filtration, of course, indicates that
+  our knowledge is sufficient to \emph{discriminate} the outcome space
+  $\Omega$ into a number of finitely or infinitely many categories.
+  The more information we have, (or, the closer we come to complete
+  knowledge of the outcome), the more finely we can discriminate the
+  realized outcomes given by $\omega \in \Omega$.}.
+%% transition here to the applications of such a link
+Practically speaking, this means that questions about the
+\emph{information} content of a signal can be addressed by using 
 
 A system is \emph{intelligent} if it uses this discriminatory
 information to choose the optimal response to the situation.  A
@@ -57,49 +60,136 @@ calculations and carry out contextual reasoning.
 %% Introduce examples of classification and multi-class classification
 
 Similarly, \emph{artificially intelligent} algorithms and agents will
-also discriminate input data into categories, either to (i) make
-immediate decisions, or (ii) to facillitate intermediate calculations
-and optimizations, like intelligent organisms, or (iii) to communicate
-the labels of the categories to human users or other algorithms.
-Accordingly, a large swath of the field of artificial intelligence
-consists of various types of discrimination tasks, from natural
-language processing, to object recognition, to game playing, to
-multi-class classification.  Among these types of tasks, multi-class
-classification is the simplest and the most generally applicable
-type of discrimination problem.  Supposing the input data $x$ is
-associated with one of $k$ pre-defined classes or labels
-$\{y_1,\hdots, y_k\}$, the problem of multi-class classification is to
-determine a rule for assigning new inputs $x$ to the correct label.
-Examples of multi-class classification applications include:
+also discriminate input data into categories.  Very often, these types
+of classification and recognition tasks mimic and automate
+discrimination tasks that humans already perform, such as:
 \begin{itemize}
-\item Optical character recognition: labeling bitmaps of handwritten characters with the corresponding character.
-\item Biomedical diagnoses: assigning possible diagnoses to patients based on biological measurements and demographic characteristics.
-\item Image annotation: assigning descriptive words to images on the internet.
+\item Optical character recognition: recognizing characters from handwritten glyphs.
+\item Facial recognition: identifying individuals from images of their faces.
+\item Object recognition: identifying objects in photographs and labelling them with the appropriate keyword.
 \end{itemize}
+However, classification can also be performed on novel types of tasks
+where no human substitute exists, such as diagnosis of cancer
+phenotype based on thousands of gene expression levels.
+
+While a major use of artificially intelligent classifiers is to
+automate routine tasks or to categorize complex data, it is also
+scientifically interesting to compare the performance of naturally
+intelligent agents (human or animal subjects) versus artificially
+intelligent agents on discrimination tasks.  One reason is that human
+benchmarks on complex classification tasks, such as object
+recognition, are often non-trivial to beat, and provide a useful
+reference to quantify progress in machine learning.  Yet, another
+reason is that the attempt to engineer an artificially intelligent
+solution to a natural recognition problem provides insight into the
+nature of intelligence in human and animal brains.  We still cannot
+fully explain the human capability to quickly locate and identify
+objects in a natural scene, but research into the mechanisms of
+vision, and attempts to replicate human capabilities for object
+recognition, have already provided crucial insight into the
+hierarchical nature of mammalian vision.  %% needs citation
+
+%% we played a trick where natural intelligence = brain, but remember that an 'intelligent system' could also be a gene regulation system or something
+
+%% the purpose of this paragraph is to make the link between discrimination and information
+Either natural or artificially intelligence discrimination systems
+must rely on input data that is \emph{informative} of the optimal
+response.  In natural environments, mammals rely on a combination of
+visual, auditory, and tactile cues to recognize potential threats in
+the environment.  Mammalian brains integrate all of this sensory
+information in order to make more rapid and reliable decisions.
+Generally, increased diversity and quality of the available sources of
+information will lead to more accurate discrimination.
+%% possibly mention the study about information integration (visual + audio) to identify objects?
+
+This link between the information content of the sensory input and the
+achievable discrimination accuracy was first formalized by Claude
+Shannon via the concept of \emph{mutual information.}  The mutual
+information $I(X; Y)$ quantifies the information content that an input
+$X$ holds abut a target of interest, $Y$.  For instance, in the case
+of facial identification, the discrimination target $Y$ is a label
+corresponding to the identity of the person, and $X$ is an image of
+the individual's face.  An image corrupted by noise holds less
+information, and correspondingly leads to lower classification
+accuracies.
+%% good way to introduce mutual information
+%% need to decide on the order of introducing these various concepts
+%% - natural and artificial discrimination systems
+%  - mutual information
+%  - studying parts of systems
+%  - using artificial systems to model natural ones
+%  - discrimination as a measure of information
+
+
+A key problem in the study of intelligent systems is to understand how
+the various components of the system specialize for different tasks,
+and how those components cooperate to perform complex tasks.
+Specializing to the brain, a key problem is to discover how to divide
+the brain into discrete ``modules'' responsible for differing types of
+cognitive tasks.  Given observed behavior--for instance, the human
+ability to recognize faces--we can conclude that the brain, as a
+whole, possesses the ability to discriminate faces based on visual
+input.  However, the next step is to establish which \emph{parts} of
+the brain are neccessary--and which parts are unneccessary--for the
+particular discrimination task of facial recognition.  Ignoring
+ethical and practical considerations, an ideal approach might be to
+selectively disable parts of the brain while testing to see whether
+the recognition ability is preserved.  Indeed, some of the early
+results on functional specialization, such as the discovery of Broca's
+area for speech production, resulted from studies on patients with
+brain lesions.  However, given the important ethical and practical
+limitations on the possibility shutting down parts of the brain, a far
+more flexible approach is to leverage the power of \emph{artificially
+  intelligent} discriminators as a model for intelligent subsystems. 
+%% def unclear.  what we mean is that performance of artificially int subsystems can be informative of how the natural intelligence works
+
+
+%% put the facial recognition exampl here?
+
+%COMMENTING OUT: m either to (i) make
+%immediate decisions, or (ii) to facillitate intermediate calculations
+%and optimizations, like intelligent organisms, or (iii) to communicate
+%the labels of the categories to human users or other algorithms.
+%Accordingly, a large swath of the field of artificial intelligence
+%consists of various types of discrimination tasks, from natural
+%language processing, to object recognition, to game playing, to
+%multi-class classification.  Among these types of tasks, multi-class
+%classification is the simplest and the most generally applicable
+%type of discrimination problem.  Supposing the input data $x$ is
+%associated with one of $k$ pre-defined classes or labels
+%$\{y_1,\hdots, y_k\}$, the problem of multi-class classification is to
+%determine a rule for assigning new inputs $x$ to the correct label.
+
+%Other examples of multi-class classification applications include:
+%\begin{itemize}
+%\item Biomedical diagnoses: assigning possible diagnoses to patients based on biological measurements and demographic characteristics.
+%\item Image annotation: assigning descriptive words to images on the internet.
+%\end{itemize}
 
 %% Write about neuroscience application here
-An interesting development in science is the use of \emph{artificial
-  intelligence}--that is, machine learning and classification
-algorithms, to mimic \emph{natural intelligence.}  This is the case in
-neuroscience.  Take for instance the study of \cite{oram1998theideal}.
-Researchers showed a macaque monkey the image of a human face in
-varying view angles, while recording the response of 32 cells in the
-superior temporal to each view angle.  They then used a Bayesian
-decoder to build a disciminative model for the view angle from the
-data, and assessed its predictive accuracy for determining the view
-angle from the responses of the 32 recorded cells.  In nature, the
-brain of the macaque monkey infers the rotational angle of various
-objects using lower-level neural inputs; Oram et al. mimic the natural
-discriminatory behavior by training a model to achieve the same task
-from cell recoding data.  
+%An interesting development in science is the use of \emph{artificial
+%  intelligence}--that is, machine learning and classification
+%algorithms, to mimic \emph{natural intelligence.}  This is the case in
+%neuroscience.  
+%Take for instance the study of \cite{oram1998theideal}.
+%Researchers showed a macaque monkey the image of a human face in
+%varying view angles, while recording the response of 32 cells in the
+%superior temporal to each view angle.  They then used a Bayesian
+%decoder to build a disciminative model for the view angle from the
+%data, and assessed its predictive accuracy for determining the view
+%angle from the responses of the 32 recorded cells.  In nature, the
+%brain of the macaque monkey infers the rotational angle of various
+%objects using lower-level neural inputs; Oram et al. mimic the natural
+%discriminatory behavior by training a model to achieve the same task
+%from cell recoding data.  
 
 While the precise mechanisms by which low-level sensory inputs are
 aggregated into high-level concepts, such as rotational angle, are
 still not well-understood, the feasibility of \emph{artificially}
 discriminating the signal based on such data is scientifically
 meaningful, even if the artificial classifier employed has little
-resemblance to the actual dynamics driving cognition in the brain.  %%
-mammal brain? human brain?  This is because the existence of
+resemblance to the actual dynamics driving cognition in the brain.  %%mammal brain? human brain?  
+This is because the existence of
 \emph{any} discriminative model which can infer the signal from the
 data is sufficient to establish that \emph{information} about the
 signal is contained within the sources of the data--e.g. the neurons
@@ -224,7 +314,7 @@ channel with regards to achievable decoding performance. %% jargony phrase, due 
 
 The generalization error of the learner as a statistic.
 
-\subsection{General characaterization of supervised learning}
+%\subsection{General characaterization of supervised learning}
 
 \section{Mutual information}\ref{sec:intro_mi}
 
@@ -443,9 +533,9 @@ using data from only a subsample of the classes in the larger problem.
 %% Link back to Shannon and information theory.  We develop further links between randomized classification and information theory.
 
 
-\section{Generalizations of information}
+%\section{Generalizations of information}
 
-\subsection{Information axioms}
+%\subsection{Information axioms}
 
-\subsection{Information coefficients based on supervised learning}
+%\subsection{Information coefficients based on supervised learning}
 
