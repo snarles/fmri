@@ -59,7 +59,7 @@ While a major use of artificially intelligent classifiers is to
 automate routine tasks or to categorize complex data, it is also
 scientifically interesting to compare the performance of naturally
 intelligent agents (human or animal subjects) versus artificially
-intelligent agents on discrimination tasks.  One reason is that human
+intelligent classifiers on discrimination tasks.  One reason is that human
 benchmarks on complex classification tasks, such as object
 recognition, are often non-trivial to beat, and provide a useful
 reference to quantify progress in machine learning.  Yet, another
@@ -72,6 +72,42 @@ vision, and attempts to replicate human capabilities for object
 recognition, have already provided crucial insight into the
 hierarchical nature of mammalian vision.  %% needs citation
 
+The approach of using classifiers as models of cognition is especially
+valuable for the problem of understanding specialization in the brain.
+Historically, the earliest discoveries of specialized modules in the
+brain were due to lesion studies, where patients who had parts of
+their brain destroyed due to injury or clinical surgeries also lost
+cognitive or motor functionality as a result.  The loss of
+functionality established a causal pathway between the lesioned area
+and the affected behavior--as, for example, in the case of the
+discovery of Broca's area, which was established in this way to be
+critical for speech production [CITE].  However, ethical and practical
+limitations restrict the use of lesioning as an experimental
+technique, and furthermore, lesion studies cannot be applied to
+exhaustively isolate the regions of the brain which are specialized
+for a given task.  
+%% Next part is a bit brief
+%% We want to say that training classifiers on parts of brain is like a ``synthetic lesion'' study,
+%% but this would be misleading because unlike lesion studies, these cannot establish causality.
+Therefore, an alternative method of studying specialization is to
+acquire an image of the brain activity, and then to assess the
+discriminative performance of classifiers on either the whole brain,
+the brain minus a number of ``lesioned'' areas, or isolated regions of
+the brain by themselves.  The classifier may achieve a certain
+accuracy using the whole brain image, and reduced accuracies using
+``lesioned'' images--and, given the removal of the task-critical parts
+of the brain in the image, may be reduced to chance accuracy levels.
+Therefore, similar to lesion studies, these classification experiments
+can reveal specialization in the brain by establishing which parts of
+the brain image contain \emph{information} related to the task.  However, an
+important distinction is that these studies can only establish
+association, rather than causality, because actual lesions to the
+brain affect the activity patterns of other parts of the brain, and
+therefore the effect of lesions cannot actually be simulated by merely
+masking parts of the brain image.
+%% examples where the artificial classifier does mimic the natural classifier
+
+%% ''puzzling'' is being used in a patronizing manner
 However, a potentially puzzling aspect of this approach, is that the
 structure or dynamics of the artificially intelligent classifier need
 not imitate the dynamics of the biological system for the modelling
@@ -83,27 +119,70 @@ often more useful in practice to model the decision-making process
 with much simpler statistical models, such as linear regression.  Even
 relatively complex machine learning models, such as deep neural
 networks, represent a vast simplification from biological dynamics.
-Even when an artificial learning algorithm has a much different
-structure than the biological mechanism being studied, its performance
-on a discrimination task can yield insight into the system of
-interest.  The whole reason for this is that the quantity of interest
-does not depend on the dynamics or the specific mechanisms of the
-system.  Rather, the quantity of interest is the \emph{informational
-  content} of the signal, which is defined independently of a choice
-of a specific classification algorithm or natural mechanism.  [NOTE:
-  This claim is too strong, because sometimes we do think that the
-  artificial classifier is a good coarse model for the system, and the
-  fact that information is what we really care about is only really
-  apparent at the implicit level.]
+Yet their use can often be justified by the assumption that the
+performance achieved on this task by the given classifier is
+reflective of the performance that would be achieved by a more
+biologically realistic model.  Indeed, this assumption can often be
+justified because, as is generally observed in real-world machine
+learning applications, several very different types of classifiers
+often end up achieving similar performance (when tuned correctly).
 
+How can we explain the correlation in the performance of very
+different families of classifiers across problems in a wide range of
+domains? In problems where it is hard to a given family of classifiers
+to perform well, it is also hard to other families of classifiers.  In
+problems where one classifier achieves very high accuracy, many other
+families of classifier can achieve high accuracy as well.  
+% Whoops, this below part was not necessary
+%In
+%engineering contexts, where the accuracy of the classifier matters a
+%great deal, and where even a 1 percent absolute different in accuracy
+%can be practically significant, there is still a need to find the best
+%classifier for the given problem.  However, for scientific
+%applications, such as the one described, where the purpose of the
+%classifier is to infer other quantities of interest (areas specialized
+%for a task,) it is often seen that the final conclusion is not too
+%sensitive to the choice of classifier.
 
+One explanation for this phenomenon is that the input contains a
+certain amount of \emph{information} about the output, and that the
+amount of information sets fundamental limits on what kind of
+classification accuracies can be achieved.  Indeed, the relationship
+between information and bounds on discrimination accuracy were first
+established by Claude Shannon, who gave the formula for the
+\emph{mutual information} between two random variables $X$ and $Y$,
+and whose proved in his noisy-channel theorem an asymptotic
+relationship between the mutual information and achievable
+discrimination accuracy.  Fano [CITE] followed this result with the
+equally classical Fano's inequality, which establishes an upper bound
+on accuracy as a function of mutual information.
 
-The concept of intelligence is then further intertwined with two other
-highly related concepts: the ability to \emph{discriminate}, and the
-ability to process \emph{information.}
+Neuroscientists have used the connection between information and
+discrimination in several ways.  One is to sidestep the application of
+classifiers altogether, and to directly estimate the mutual
+information between brain activity and the task of interest [CITE].  A
+second way to to proceed with training classifiers on the data, but
+then summarizing the performance of the classifier by the mutual
+information implied by the confusion matrix.  Hence, implied mutual
+information becomes a error metric for the classification--but one
+that is more readily comparable across different classification tasks.
 
+[OK, now what do we do?  We play around with the connection between MI
+  and discrimination some more, and find some things.]
 
+%Furthermore, given the
+%limit to achievable classification in the data, if the functional
+%relationship between input and output is not too complicated, then it
+%is likely that many of the most commonly used families of machine
+%learning models can approach the limit of achievable classification
+%[again, within a rather generous margin, like 10 percent.]
 
+%% introduce information theory and MI here?
+
+%% why do we care about information?? 
+
+\subsection{Information and Discrimination}
+%% have to reorder the next para, 
 The concepts of \emph{information} and \emph{discrimination} are
 linked at a fundamental level.  A statistical hypothesis test is
 \emph{informative} because it provides evidence that the data behaves
@@ -136,7 +215,7 @@ Shannon's foundational work on information theory, and the definition
 of \emph{mutual information.}  However, another, less-studied
 application of this connection is that questions about the
 \emph{information} content of a signal can be addressed by using
-methods based on discrimination tasks.  
+methods based on discrimination tasks.
 
 
 
@@ -172,27 +251,7 @@ accuracies.
 %  - discrimination as a measure of information
 
 
-A key problem in the study of intelligent systems is to understand how
-the various components of the system specialize for different tasks,
-and how those components cooperate to perform complex tasks.
-Specializing to the brain, a key problem is to discover how to divide
-the brain into discrete ``modules'' responsible for differing types of
-cognitive tasks.  Given observed behavior--for instance, the human
-ability to recognize faces--we can conclude that the brain, as a
-whole, possesses the ability to discriminate faces based on visual
-input.  However, the next step is to establish which \emph{parts} of
-the brain are neccessary--and which parts are unneccessary--for the
-particular discrimination task of facial recognition.  Ignoring
-ethical and practical considerations, an ideal approach might be to
-selectively disable parts of the brain while testing to see whether
-the recognition ability is preserved.  Indeed, some of the early
-results on functional specialization, such as the discovery of Broca's
-area for speech production, resulted from studies on patients with
-brain lesions.  However, given the important ethical and practical
-limitations on the possibility shutting down parts of the brain, a far
-more flexible approach is to leverage the power of \emph{artificially
-  intelligent} discriminators as a model for intelligent subsystems. 
-%% def unclear.  what we mean is that performance of artificially int subsystems can be informative of how the natural intelligence works
+
 
 
 %% put the facial recognition exampl here?
