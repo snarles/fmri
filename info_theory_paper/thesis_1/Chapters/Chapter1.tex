@@ -18,168 +18,105 @@
 
 \section{Introduction}
 
-The study of naturally intelligent systems, and the study and design
-of artificially intelligent systems, form two major intertwining
-domains of modern research.  Here, we take \emph{intelligence} to
-refer to the property of a system by which it can modulate its
-reaction to external inputs in a purposeful manner.  Therefore, by
-this definition, an amoeba which seeks food and avoids toxins is
-intelligent, as is a gene-regulation network, or a mammalian brain.
-Similarly, artificially intelligent algorithms which implement
-automated decision-making rules in response to external inputs also
-satisfy this definition of intelligence.
+The study of human intelligence, and the study of artificial
+intelligence, form two major intertwining areas of modern research.
+The attempt to algorithmically mimic or exceed human perceptual and
+cognitive capabilities not only advances the application of artificial
+intelligence for industrial applications, but also sheds light on the
+nature of biological intelligence, and the nature of intelligence in
+general.  One of the key capabilities of an intelligent system,
+natural or artificial, is the ability to recognize objects, agents,
+and signs in the environment based on input data.  Human brains have a
+remarkable ability to recognize objects, faces, spoken syllables and
+words, and written symbols or words, and this recognition ability is
+essential for everyday life.  While researchers in artificial
+intelligence have attempted to meet human benchmarks for these
+classical recognition tasks for the last X decades, only very recent
+advances in machine learning, such as deep neural networks, have
+allowed algorithmic recognition algorithms to approach or exceed human
+performance [CITE].
 
-A primitive organism may classify percieved objects in its environment
-as either beneficial (potential food and resources) or harmful (toxins
-and predators), and intelligently respond by means of pursuing the
-former and avoiding the latter.  %% note that this example is redundant
-Complex organisms, like humans, not
-only discriminate in order to make immediate decisions, but also
-categorize objects in the world in order to perform intermediate
-calculations and carry out contextual reasoning.
-%% example?
+Within the statistics and machine learning literature, the usual
+formalism for studying a recognition task is to pose it as a
+\emph{multi-class classification} problem.  One delineates a finite
+set of distinct entities which are to be recognized and distinguished,
+which is the \emph{label set} $\mathcal{Y}$.  The input data is
+assumed to take the form of a finite-dimensional real \emph{feature
+  vector} $X \in \mathbb{R}^p$.  Each input instance is associated
+with exactly one true label $Y \in \mathcal{Y}$.  The solution to the
+classification problem takes the form of an algorithmically
+implemented \emph{classification rule} $h$ that maps vectors $X$ to
+predicted labels $\hat{Y} \in \mathcal{Y}$.  The classification rule
+can be constructed in a data-dependent way: that is, one collects a
+number of labelled \emph{training observations} $(X_1, Y_1)$ which is
+used to inform the construction of the classification rule $h$.  The
+success of the classification rule $h$ is measured by the \emph{expected loss} or \emph{risk},
+which in the case of zero-one loss takes the form
+\[
+\text{Risk}_{0-1}(h) = \Pr[h(X) \neq Y],
+\]
+where the probability is defined with reference to the unknown
+population joint distribution of $(X, Y)$.  A common approach for
+constructing a classifier $h$ is \emph{empirical risk minimization} [CITE],
+which constructs $h$ by minimizing the objective function
+\[
+\text{EmpiricalRisk}_{h \in \mathcal{H}}(h) = \frac{1}{n} \sum_{i=1}^n I(h(X) \neq Y)
+\]
+where $\mathcal{H}$ is some pre-specified function class.
+
+However, a limitation of the usual multi-class classification
+framework for studying recognition problems is the assumption that the
+label set $\mathcal{Y}$ is finite and known in advance.  When
+considering human recognition capabilities, it is clear that this is
+not the case.  Our ability to recognize faces is not limited to some
+pre-defined, fixed set of faces; same with our ability to recognize
+objects in the environment.  Humans learn to recognize novel faces and
+objects on a daily basis.  And, if artificial intelligence is to fully
+match the human capability for recognition, it must also possess the
+ability to add new categories of entities to its label set over time;
+however, at present, there currently exists a void in the machine
+learning literature on the subject of the online learning of new
+classes in the data [CITE].
+
+The subject of this thesis is an extension of the classical
+multi-class classification framework to accommodate the possibility of
+growing or infinite label sets $\mathcal{Y}$. The basic approach taken
+is to assume an infinite or even continuous label space $\mathcal{Y}$,
+and then to study the problem of classification on finite label sets
+$S$ which are randomly sampled from $\mathcal{Y}.$ This, therefore
+defines a \emph{randomized classification} problem where the label set
+is finite but may vary from instance to instance.  One can then
+proceed to answer questions about the variability of the performance
+due to randomness in the labels, or how performance changes depending
+on the size of the random label set.
+
+An additional set of applications of the randomized classification
+framework lies in its connection to information theory.  Randomized
+classification is the natural analogue of the \emph{random code}
+models first studied by Claude Shannon.  Furthermore, it becomes
+possible to prove extensions of Fano's inequality to the case of
+continuous $X$ and $Y$ by means of randomized classification.
+Therefore, randomized classification can be used as a means of
+inferring mutual information.
+
+The rest of the thesis is organized as follows.  The remaining
+sections in this chapter deal with background material on supervised
+learning and information theory, as well as the application of both to
+neuroscience, which forms a major motivation for the current work.
+Chapter 2 introduces the concept of randomized classification, and
+also establishes some variability bounds which will be used later in
+the development of inference procedures.  Chapter 3 studies the
+dependence of classification accuracy on the label set size in
+randomized classification, and a practical method for predicting the
+accuracy-versus-label set size curve from real data.  Chapter 4 and 5
+deal with the applications of randomized classification to the
+estimation of mutual information in continuous data: chapter 4 derives
+a lower confidence bound for mutual information under very weak
+assumptions, while chapter 5 works within an asymptotic
+high-dimensional framework which leads to a more powerful but less
+robust estimator estimate of mutual information.
 
 
-%% Introduce examples of classification and multi-class classification
-
-Similarly, \emph{artificially intelligent} algorithms and agents will
-also discriminate input data into categories.  Very often, these types
-of classification and recognition tasks mimic and automate
-discrimination tasks that humans already perform, such as:
-\begin{itemize}
-\item Optical character recognition: recognizing characters from handwritten glyphs.
-\item Facial recognition: identifying individuals from images of their faces.
-\item Object recognition: identifying objects in photographs and labelling them with the appropriate keyword.
-\end{itemize}
-However, classification can also be performed on novel types of tasks
-where no human substitute exists, such as diagnosis of cancer
-phenotype based on thousands of gene expression levels.
-
-While a major use of artificially intelligent classifiers is to
-automate routine tasks or to categorize complex data, it is also
-scientifically interesting to compare the performance of naturally
-intelligent agents (human or animal subjects) versus artificially
-intelligent classifiers on discrimination tasks.  One reason is that human
-benchmarks on complex classification tasks, such as object
-recognition, are often non-trivial to beat, and provide a useful
-reference to quantify progress in machine learning.  Yet, another
-reason is that the attempt to engineer an artificially intelligent
-solution to a natural recognition problem provides insight into the
-nature of intelligence in human and animal brains.  We still cannot
-fully explain the human capability to quickly locate and identify
-objects in a natural scene, but research into the mechanisms of
-vision, and attempts to replicate human capabilities for object
-recognition, have already provided crucial insight into the
-hierarchical nature of mammalian vision.  %% needs citation
-
-The approach of using classifiers as models of cognition is especially
-valuable for the problem of understanding specialization in the brain.
-Historically, the earliest discoveries of specialized modules in the
-brain were due to lesion studies, where patients who had parts of
-their brain destroyed due to injury or clinical surgeries also lost
-cognitive or motor functionality as a result.  The loss of
-functionality established a causal pathway between the lesioned area
-and the affected behavior--as, for example, in the case of the
-discovery of Broca's area, which was established in this way to be
-critical for speech production [CITE].  However, ethical and practical
-limitations restrict the use of lesioning as an experimental
-technique, and furthermore, lesion studies cannot be applied to
-exhaustively isolate the regions of the brain which are specialized
-for a given task.  
-%% Next part is a bit brief
-%% We want to say that training classifiers on parts of brain is like a ``synthetic lesion'' study,
-%% but this would be misleading because unlike lesion studies, these cannot establish causality.
-Therefore, an alternative method of studying specialization is to
-acquire an image of the brain activity, and then to assess the
-discriminative performance of classifiers on either the whole brain,
-the brain minus a number of ``lesioned'' areas, or isolated regions of
-the brain by themselves.  The classifier may achieve a certain
-accuracy using the whole brain image, and reduced accuracies using
-``lesioned'' images--and, given the removal of the task-critical parts
-of the brain in the image, may be reduced to chance accuracy levels.
-Therefore, similar to lesion studies, these classification experiments
-can reveal specialization in the brain by establishing which parts of
-the brain image contain \emph{information} related to the task.  However, an
-important distinction is that these studies can only establish
-association, rather than causality, because actual lesions to the
-brain affect the activity patterns of other parts of the brain, and
-therefore the effect of lesions cannot actually be simulated by merely
-masking parts of the brain image.
-%% examples where the artificial classifier does mimic the natural classifier
-
-%% ''puzzling'' is being used in a patronizing manner
-However, a potentially puzzling aspect of this approach, is that the
-structure or dynamics of the artificially intelligent classifier need
-not imitate the dynamics of the biological system for the modelling
-approach to be useful.  Computational neuroscientists have developed
-biological realistic models of neural signalling activity which could
-be employed to simulate the neural decision-making process from input
-to output, at a very high level of versimilitude.  However, it is
-often more useful in practice to model the decision-making process
-with much simpler statistical models, such as linear regression.  Even
-relatively complex machine learning models, such as deep neural
-networks, represent a vast simplification from biological dynamics.
-Yet their use can often be justified by the assumption that the
-performance achieved on this task by the given classifier is
-reflective of the performance that would be achieved by a more
-biologically realistic model.  Indeed, this assumption can often be
-justified because, as is generally observed in real-world machine
-learning applications, several very different types of classifiers
-often end up achieving similar performance (when tuned correctly).
-
-How can we explain the correlation in the performance of very
-different families of classifiers across problems in a wide range of
-domains? In problems where it is hard to a given family of classifiers
-to perform well, it is also hard to other families of classifiers.  In
-problems where one classifier achieves very high accuracy, many other
-families of classifier can achieve high accuracy as well.  
-% Whoops, this below part was not necessary
-%In
-%engineering contexts, where the accuracy of the classifier matters a
-%great deal, and where even a 1 percent absolute different in accuracy
-%can be practically significant, there is still a need to find the best
-%classifier for the given problem.  However, for scientific
-%applications, such as the one described, where the purpose of the
-%classifier is to infer other quantities of interest (areas specialized
-%for a task,) it is often seen that the final conclusion is not too
-%sensitive to the choice of classifier.
-
-One explanation for this phenomenon is that the input contains a
-certain amount of \emph{information} about the output, and that the
-amount of information sets fundamental limits on what kind of
-classification accuracies can be achieved.  Indeed, the relationship
-between information and bounds on discrimination accuracy were first
-established by Claude Shannon, who gave the formula for the
-\emph{mutual information} between two random variables $X$ and $Y$,
-and whose proved in his noisy-channel theorem an asymptotic
-relationship between the mutual information and achievable
-discrimination accuracy.  Fano [CITE] followed this result with the
-equally classical Fano's inequality, which establishes an upper bound
-on accuracy as a function of mutual information.
-
-Neuroscientists have used the connection between information and
-discrimination in several ways.  One is to sidestep the application of
-classifiers altogether, and to directly estimate the mutual
-information between brain activity and the task of interest [CITE].  A
-second way to to proceed with training classifiers on the data, but
-then summarizing the performance of the classifier by the mutual
-information implied by the confusion matrix.  Hence, implied mutual
-information becomes a error metric for the classification--but one
-that is more readily comparable across different classification tasks.
-
-[OK, now what do we do?  We play around with the connection between MI
-  and discrimination some more, and find some things.]
-
-%Furthermore, given the
-%limit to achievable classification in the data, if the functional
-%relationship between input and output is not too complicated, then it
-%is likely that many of the most commonly used families of machine
-%learning models can approach the limit of achievable classification
-%[again, within a rather generous margin, like 10 percent.]
-
-%% introduce information theory and MI here?
-
-%% why do we care about information?? 
 
 \subsection{Information and Discrimination}
 %% have to reorder the next para, 
@@ -420,17 +357,14 @@ quantity called the \emph{mutual information}, which was invented by
 Claude Shannon, is used to characterize the quality of the noisy
 channel with regards to achievable decoding performance. %% jargony phrase, due to the idea being difficult to express
 
-\section{Supervised learning}
+\subsection{Supervised learning}
 
 The generalization error of the learner as a statistic.
 
 %\subsection{General characaterization of supervised learning}
 
-\section{Mutual information}\ref{sec:intro_mi}
+\subsection{Mutual information}\ref{sec:intro_mi}
 
-\subsection{Definition and history}
-
-\subsection{Usage in neuroscience}
 
 
 \section{Random codes and random classification}\label{sec:rand_code_rand_class}
@@ -649,3 +583,157 @@ using data from only a subsample of the classes in the larger problem.
 
 %\subsection{Information coefficients based on supervised learning}
 
+\subsection{Neuroscience background}
+
+The study of naturally intelligent systems, and the study and design
+of artificially intelligent systems, form two major intertwining
+domains of modern research.  Here, we take \emph{intelligence} to
+refer to the property of a system by which it can modulate its
+reaction to external inputs in a purposeful manner.  Therefore, by
+this definition, an amoeba which seeks food and avoids toxins is
+intelligent, as is a gene-regulation network, or a mammalian brain.
+Similarly, artificially intelligent algorithms which implement
+automated decision-making rules in response to external inputs also
+satisfy this definition of intelligence.
+
+A primitive organism may classify percieved objects in its environment
+as either beneficial (potential food and resources) or harmful (toxins
+and predators), and intelligently respond by means of pursuing the
+former and avoiding the latter.  %% note that this example is redundant
+Complex organisms, like humans, not
+only discriminate in order to make immediate decisions, but also
+categorize objects in the world in order to perform intermediate
+calculations and carry out contextual reasoning.
+%% example?
+
+
+%% Introduce examples of classification and multi-class classification
+
+Similarly, \emph{artificially intelligent} algorithms and agents will
+also discriminate input data into categories.  Very often, these types
+of classification and recognition tasks mimic and automate
+discrimination tasks that humans already perform, such as:
+\begin{itemize}
+\item Optical character recognition: recognizing characters from handwritten glyphs.
+\item Facial recognition: identifying individuals from images of their faces.
+\item Object recognition: identifying objects in photographs and labelling them with the appropriate keyword.
+\end{itemize}
+However, classification can also be performed on novel types of tasks
+where no human substitute exists, such as diagnosis of cancer
+phenotype based on thousands of gene expression levels.
+
+While a major use of artificially intelligent classifiers is to
+automate routine tasks or to categorize complex data, it is also
+scientifically interesting to compare the performance of naturally
+intelligent agents (human or animal subjects) versus artificially
+intelligent classifiers on discrimination tasks.  One reason is that human
+benchmarks on complex classification tasks, such as object
+recognition, are often non-trivial to beat, and provide a useful
+reference to quantify progress in machine learning.  Yet, another
+reason is that the attempt to engineer an artificially intelligent
+solution to a natural recognition problem provides insight into the
+nature of intelligence in human and animal brains.  We still cannot
+fully explain the human capability to quickly locate and identify
+objects in a natural scene, but research into the mechanisms of
+vision, and attempts to replicate human capabilities for object
+recognition, have already provided crucial insight into the
+hierarchical nature of mammalian vision.  %% needs citation
+
+The approach of using classifiers as models of cognition is especially
+valuable for the problem of understanding specialization in the brain.
+Historically, the earliest discoveries of specialized modules in the
+brain were due to lesion studies, where patients who had parts of
+their brain destroyed due to injury or clinical surgeries also lost
+cognitive or motor functionality as a result.  The loss of
+functionality established a causal pathway between the lesioned area
+and the affected behavior--as, for example, in the case of the
+discovery of Broca's area, which was established in this way to be
+critical for speech production [CITE].  However, ethical and practical
+limitations restrict the use of lesioning as an experimental
+technique, and furthermore, lesion studies cannot be applied to
+exhaustively isolate the regions of the brain which are specialized
+for a given task.  
+%% Next part is a bit brief
+%% We want to say that training classifiers on parts of brain is like a ``synthetic lesion'' study,
+%% but this would be misleading because unlike lesion studies, these cannot establish causality.
+Therefore, an alternative method of studying specialization is to
+acquire an image of the brain activity, and then to assess the
+discriminative performance of classifiers on either the whole brain,
+the brain minus a number of ``lesioned'' areas, or isolated regions of
+the brain by themselves.  The classifier may achieve a certain
+accuracy using the whole brain image, and reduced accuracies using
+``lesioned'' images--and, given the removal of the task-critical parts
+of the brain in the image, may be reduced to chance accuracy levels.
+Therefore, similar to lesion studies, these classification experiments
+can reveal specialization in the brain by establishing which parts of
+the brain image contain \emph{information} related to the task.
+However, an important distinction is that these studies can only
+establish association, rather than causality, because actual lesions
+to the brain affect the activity patterns of other parts of the brain,
+and therefore the effect of lesions cannot actually be completely
+simulated by merely masking parts of the brain image.
+%% examples where the artificial classifier does mimic the natural classifier
+
+%% ''puzzling'' is being used in a patronizing manner
+However, a potentially puzzling aspect of this approach, is that the
+structure or dynamics of the artificially intelligent classifier need
+not imitate the dynamics of the biological system for the modelling
+approach to be useful.  Computational neuroscientists have developed
+biological realistic models of neural signalling activity which could
+be employed to simulate the neural decision-making process from input
+to output, at a very high level of versimilitude.  However, it is
+often more useful in practice to model the decision-making process
+with much simpler statistical models, such as linear regression.  Even
+relatively complex machine learning models, such as deep neural
+networks, represent a vast simplification from biological dynamics.
+Yet their use can often be justified by the assumption that the
+performance achieved on this task by the given classifier is
+reflective of the performance that would be achieved by a more
+biologically realistic model.  Indeed, this assumption can often be
+justified because, as is generally observed in real-world machine
+learning applications, several very different types of classifiers
+often end up achieving similar performance (when tuned correctly).
+
+How can we explain the correlation in the performance of very
+different families of classifiers across problems in a wide range of
+domains? In problems where it is hard to a given family of classifiers
+to perform well, it is also hard to other families of classifiers.  In
+problems where one classifier achieves very high accuracy, many other
+families of classifier can achieve high accuracy as well.  
+
+One explanation for this phenomenon is that the input contains a
+certain amount of \emph{information} about the output, and that the
+amount of information sets fundamental limits on what kind of
+classification accuracies can be achieved.  Indeed, the relationship
+between information and bounds on discrimination accuracy were first
+established by Claude Shannon, who gave the formula for the
+\emph{mutual information} between two random variables $X$ and $Y$,
+and whose proved in his noisy-channel theorem an asymptotic
+relationship between the mutual information and achievable
+discrimination accuracy.  Fano [CITE] followed this result with the
+equally classical Fano's inequality, which establishes an upper bound
+on accuracy as a function of mutual information.
+
+Neuroscientists have used the connection between information and
+discrimination in several ways.  One is to sidestep the application of
+classifiers altogether, and to directly estimate the mutual
+information between brain activity and the task of interest [CITE].  A
+second way to to proceed with training classifiers on the data, but
+then summarizing the performance of the classifier by the mutual
+information implied by the confusion matrix.  Hence, implied mutual
+information becomes a error metric for the classification--but one
+that is more readily comparable across different classification tasks.
+
+[OK, now what do we do?  We play around with the connection between MI
+  and discrimination some more, and find some things.]
+
+%Furthermore, given the
+%limit to achievable classification in the data, if the functional
+%relationship between input and output is not too complicated, then it
+%is likely that many of the most commonly used families of machine
+%learning models can approach the limit of achievable classification
+%[again, within a rather generous margin, like 10 percent.]
+
+%% introduce information theory and MI here?
+
+%% why do we care about information?? 
