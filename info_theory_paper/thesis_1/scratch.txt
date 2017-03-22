@@ -1,0 +1,97 @@
+One practical implication of this is that performance on
+discrimination tasks can be predicted by measures of the
+\emph{information content} of the input. This was the basis of Claude
+Shannon's foundational work on information theory, and the definition
+of \emph{mutual information.}  However, another, less-studied
+application of this connection is that questions about the
+\emph{information} content of a signal can be addressed by using
+methods based on discrimination tasks.
+
+Take for instance the study of \cite{oram1998theideal}.
+Researchers showed a macaque monkey the image of a human face in
+varying view angles, while recording the response of 32 cells in the
+superior temporal to each view angle.  They then used a Bayesian
+decoder to build a disciminative model for the view angle from the
+data, and assessed its predictive accuracy for determining the view
+angle from the responses of the 32 recorded cells.  In nature, the
+brain of the macaque monkey infers the rotational angle of various
+objects using lower-level neural inputs; Oram et al. mimic the natural
+discriminatory behavior by training a model to achieve the same task
+from cell recoding data.  
+
+While the precise mechanisms by which low-level sensory inputs are
+aggregated into high-level concepts, such as rotational angle, are
+still not well-understood, the feasibility of \emph{artificially}
+discriminating the signal based on such data is scientifically
+meaningful, even if the artificial classifier employed has little
+resemblance to the actual dynamics driving cognition in the brain.  %%mammal brain? human brain?  
+This is because the existence of
+\emph{any} discriminative model which can infer the signal from the
+data is sufficient to establish that \emph{information} about the
+signal is contained within the sources of the data--e.g. the neurons
+measured.
+
+%% limitations of classification: e.g. can only provide lower bound?
+
+%% Multi-class classification was first studied by SHannon
+%% in random codes
+
+%While multi-class classification is a rapidly developing field within
+%machine learning, the problem of discriminating inputs according to
+%discrete classes had been studied even before the advent of artificial
+%intelligence: arguably, it was 
+
+That is to say, the concept of \emph{information} indicates the
+potentiality to achieve accurate discrimination.  This was first
+formalized by the pioneers of information theory, most notably Claude
+Shannon, who laid the foundation for the field in his seminal 1948
+paper ``A mathematical theory of communication.''  Shannon defined a
+quantity called the \emph{mutual information}, which measures the
+information carried by a recieved signal $X$ about a transmitted
+signal $Y$.  From Shannon's celebrated noisy channel theorem, we have
+a formal relationship between mutual information and discrimination:
+one that we will discuss in section \ref{sec:mi}.
+
+
+Shannon, along
+with other pioneers of information theory such as Robert M. Fano and
+Norbert Weiner, recognized that the information content of a signal
+depended on how many different messages it can plausibly convey.
+
+
+
+Furthermore, it was Shannon who first recognized that when the signal
+is corrupted by noise, the amount of information \emph{lost} depends
+on how reliably the original message can be recovered from the noisy
+input--in other words, how well the reciever can \emph{discriminate}
+the original message on the basis of the noise-corrupted recieved
+message.  %% maybe add more details, redundancy of English, etc.
+
+Indeed, we see that key to the development of information theory is
+the study of the \emph{noisy-channel decoding problem}, which is
+illustrated in figure \ref{fig:mcc_vs_it}.  % Shannon's key result: decoding accuracy and mutual information
+
+If we compare the discrimination tasks defined in multi-class
+classification and information theory, we find much similarity, but
+also a few important differences.  Figure \ref{fig:mcc_vs_it} displays
+the schematic diagrams of the general multi-class classification
+problem and the setup for the noisy channel considered by Shannon.
+%% If we put the figure here, probably will need some more explanation
+
+%% we should mention mutual information earlier
+From figure \ref{fig:mcc_vs_it}, we can see major similarities between
+the multi-class classification problem and the noisy decoding problem
+studied in information theory: both involve inferring some latent
+variable $Y$ on the basis of observed $X$.  We will go into great
+detail about the similarities and differences in section
+\ref{sec:rand_code_rand_class}.  However, despite these similarities,
+it has historically been the case that the machine learning literature
+and the information theory literature diverge in terms of the metric
+used to characterize performance in the discrimination task.  In
+multi-class learning, the performance is generally characterized by
+the \emph{accuracy} of the classification--the probability that the
+label is assigned correctly.  However, in information theory, a
+quantity called the \emph{mutual information}, which was invented by
+Claude Shannon, is used to characterize the quality of the noisy
+channel with regards to achievable decoding performance. %% jargony phrase, due to the idea being difficult to express
+
