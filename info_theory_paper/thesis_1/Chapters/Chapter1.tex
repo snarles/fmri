@@ -1,6 +1,6 @@
 % Chapter 1
 
-\chapter{Multi-class classification, random codes, and information} % Main chapter title
+\chapter{Introduction} % Main chapter title
 
 \label{Chapter1} % For referencing the chapter elsewhere, use \ref{Chapter1} 
 
@@ -16,7 +16,7 @@
 %----------------------------------------------------------------------------------------
 
 
-\section{Introduction}
+\section{Recognition tasks}
 
 The study of human intelligence, and the study of artificial
 intelligence, form two major intertwining areas of modern research.
@@ -258,13 +258,37 @@ Multi-class classification & & Information Theory\\
 \end{tikzpicture} 
 
 \end{tabular}
-\caption{Comparing the discrimnation tasks in multi-class classification and information theory.}
+\caption{Comparing the discrimination tasks in multi-class classification and information theory.}
 \label{fig:mcc_vs_it}
 \end{figure}
 
+We will now review the relevant background for supervised learning and
+information theory, to give the context for each side of figure
+\ref{fig:mcc_vs_it}.  Afterwards, we will compare and contrast the
+supervised learning and information theory, and note what kind of
+cross-talk exists between the two related fields, and what new
+developments could still arise by way of a dialogue between supervised
+learning and information theory.  One such new development is the
+\emph{randomized classification} model, since it is a very close
+analogue of the \emph{random code} model studied in information
+theory.
 
+\subsection{Supervised learning}
 
-
+\begin{itemize}
+\item Supervised learning task is defined using a prediction task.
+\item 1. A predictive model is learned using training data
+\item 2. The performance of the model on the prediction task is estimated using independent test data
+\item Classical examples of prediction tasks: regression and classification
+\item Third example: identification
+\item Definition of Bayes prediction model
+\item General definition of supervised learning task
+\item SL performance can be a scalar
+\item SL can be used to test for independence
+\item Bayes performance satisfies data-processing inequality
+\item How SL is interpreted in MVPA as information
+\item Section 3, we'll see how Bayes performance can be legitimately considered a measure of information
+\end{itemize}
 
 In multi-class classification, we may assume without loss of generality that the data has been generated in the following manner:
 \begin{enumerate}
@@ -282,6 +306,8 @@ difference from the theoretical standpoint, since only the statistical
 (and not causal) properties of the joint distribution $(X, Y)$ are
 relevant for determining the peformance of the classification rule $h(X)$.
 
+\subsection{Information Theory}\label{sec:intro_mi}
+
 Meanwhile, in the noisy channel model, we assume that the sender wants
 to transmit message $M$, out of a finite set of possible messages
 $\mathcal{M} = \{1,\hdots, m\}$.  The message must be encoded into a
@@ -292,6 +318,147 @@ The communications problem is to design an encoding function $g(M)$,
 which is an injective map from messages $\{1,\hdots,m\}$ to signals in
 $\mathcal{M}$, and a corresponding decoding function $d(X)$ which
 infers the message $\{1,\hdots, m\}$ from the recieved signal $X$.
+
+
+While Shannon's theory of information was motivated by the problem of
+designing communications system, the applicability of mutual
+information was quickly recognized by neuroscientists.  Only four
+years after Shannon's seminal paper in information theory (1948),
+McKay and McCullough (1952) inaugurated the application of mutual
+information to neuroscience.  If $\bX$ and $\bY$ have joint density
+$p(\bx, \by)$ with respect to the product measure $\mu_x \times \mu_y$, then the mutual information is defined as
+\[
+\text{I}(\bX;\bY) = \int p(\bx, \by) \log \frac{p(\bx, \by)}{p(\bx)p(\by)}d\mu_x(\bx) d\mu_y(\by).
+\]
+where $p(\bx)$ and $p(\by)$ are the marginal densities with respect to
+$\mu_x$ and $\mu_y$\footnote{Note that the mutual information is invariant with respect to change-of-measure.}.  Since then, mutual information has enjoyed a
+celebrated position in both experimental and theoretical neuroscience.
+Experimentally, mutual information has been used to detect strong
+dependencies between stimulus features and features derived from
+neural recordings, which can be used to draw conclusions about the
+kinds of stimuli that a neural subsystem is designed to detect, or to
+distinguish between signal and noise in the neural output.
+Theoretically, the assumption that neural systems maximize mutual
+information between salient features of the stimulus and neural output
+has allowed scientists to predict neural codes from signal processing
+models: for instance, the center-surround structure of human retinal
+neurons matches theoretical constructions for the optimal filter based
+on correlations found in natural images [cite].
+
+The mutual information measures the information ``capacity'' of a
+channel consisting of an input $\bX$ and an output $\bY$, and
+satisfies a number of important properties.
+\begin{enumerate}
+\item The channel input $\bX$ and output $\bY$ can be random vectors of arbitrary dimension, and the mutual information remains a scalar functional of the joint distribution $P$ of $(\bX, \bY)$.
+\item When $\bX$ and $\bY$ are independent, $\text{I}(\bX; \bY) = 0$; otherwise, $\text{I}(\bX; \bY) > 0$.
+\item The data-processing inequality: for any vector-valued function $\vec{f}$ of the output space,
+\[
+\text{I}(\bX; \vec{f}(\bY)) \leq \text{I}(\bX; \bY).
+\]
+\item Symmetry: $\text{I}(\bX; \bY) = \text{I}(\bY; \bX)$.
+\item Independent additivity: if $(\bX_1,\bY_1)$ is independent of $(\bX_2, \bY_2)$, then
+\[
+\text{I}((\bX_1,\bY_1); (\bX_2, \bY_2)) = \text{I}(\bX_1; \bY_1) + \text{I}(\bX_2; \bY_2).
+\]
+\end{enumerate}
+Three additional consequences result from the data-processing inequality:
+\begin{itemize}
+\item \emph{Stochastic data-processing inequality}  If $\vec{f}$ is a stochastic function independent of both $\bX$ and $\bY$, then
+\[
+\text{I}(\bX; \vec{f}(\bY)) \leq \text{I}(\bX; \bY).
+\]
+This can be shown as follows: any stochastic function $\vec{f}(\bY)$
+can be expressed as a deterministic function $\vec{g}(\bY, W)$, where
+$W$ is a random variable independent of $\bX$ and $\bY$.
+By independent additivity,
+\[
+\text{I}(\bX; \bY) = \text{I}(\bX; (\bY, W)).
+\]
+Then, by the data-processing inequality,
+\[
+\text{I}(\bX; \bY) = \text{I}(\bX; (\bY, W)) \geq \text{I}(\bX; \vec{g}(\bY, W)) = \text{I}(\bX; \vec{f}(\bY)).
+\]
+\item \emph{Invariance under bijections.} If $\vec{f}$ has an inverse $\vec{f}^{-1}$, then 
+\[
+\text{I}(\bX; \vec{f}(\bY)) \leq \text{I}(\bX; \bY) = \text{I}(\bX; \vec{f}^{-1}(\vec{f}(\bY))) \leq \text{I}(\bX; \vec{f}(\bY)),
+\]
+therefore, $\text{I}(\bX; \vec{f}(\bY)) = \text{I}(\bX; \bY)$.
+\item \emph{Monotonicity with respect to inclusion of outputs.}  Suppose we have an output ensemble $(\bY_1,\bY_2)$.  Then the individual component $\bY_1$ can be obtained as a projection of the ensemble.  By the data-processing inequality, we therefore have
+\[
+\text{I}(\bX; \bY_1) \leq \text{I}(\bX; (\bY_1, \bY_2)).
+\]
+Intuitively, if we observe both $\bY_1$ and $\bY_2$, this can
+only \emph{increase} the information we have about $\bX$ compared to
+the case where we only observe $\bY_1$ by itself.
+\end{itemize}
+And it is the property of \emph{invariance under bijections},
+inclusive of non-linear bijections, which qualifies mutual information
+as a \emph{non-linear measure of dependence.}  Linear correlations are
+invariant under scaling and translation, but not invariant
+to \emph{nonlinear} bijections.
+
+%As for
+%the completeness of the five listed properties: as we know, Shannon's
+%mutual information (up to arbitrary scaling factor) is the only
+%functional proposed in the literature which satisfies all five
+%properties.
+Besides the formal definition, there are a number of well-known alternative
+characterizations of mutual information in terms of other
+information-theoretic quantities: the \emph{entropy} $\text{H}$:
+\[
+\text{H}_\mu(\bX) = -\int p(\bX) \log p(\bX) d\mu(\bX),
+\]
+and the \emph{conditional entropy}:
+\[
+\text{H}_\mu(\bX|\bY) = -\int p(\bY) d\mu_y(\bY) \int p(\bX|\bY) \log p(\bX|\bY) d\mu_x(\bX).
+\]
+Some care needs to be taken with entropy and conditional entropy since
+they are not invariant with respect to change-of-measure: hence the
+use of the subscript in the notation $\text{H}_\mu$.  In particular,
+there is a difference between \emph{discrete entropy} (when $\mu$ is
+the counting measure) and \emph{differential entropy} (when $\mu$ is
+$p$-dimensional Lesbegue measure.)  Intutively, entropy measures an
+observer's uncertainty of the random variable $\bX$, supposing the
+observer has no prior information other than the distribution of
+$\bX$. Conditional entropy measures the \emph{expected uncertainty} of
+$\bX$ supposing the observer observes $\bY$.
+
+The following identities characterize mutual information in terms of entropy:
+\[
+\text{I}(\bX; \bY) = \text{H}_{\mu_x \times \mu_y}((\bX, \bY)) - \text{H}_{\mu_x}(\bX) - \text{H}_{\mu_y}(\bY).
+\]
+\begin{equation}\label{eq:ce_ident}
+\text{I}(\bX; \bY) = \text{H}_\mu(\bY) - \text{H}_\mu(\bY|\bX).
+\end{equation}
+The second identity \eqref{eq:ce_ident} is noteworthy
+as being practically important for estimation of mutual information.
+Since the entropies in question only depend on the marginal and
+conditional distributions of $\bY$, the problem of estimating
+$\text{I}(\bX; \bY)$ can be reduced from a $\dim(\bX)
++ \dim(\bY)$-dimensional nonparametric estimation problem to a
+$\dim(\bY)$-dimensional problem: hence this identity is a basis of
+several methods of estimation used in neuroscience, such as Gastpar
+(2014).
+
+However, by symmetry, we also have the flipped identity
+\begin{equation}\label{eq:ce_ident2}
+\text{I}(\bX; \bY) = \text{H}_\mu(\bX) - \text{H}_\mu(\bX|\bY).
+\end{equation}
+In neuroscience studies, where $\bX$ is the controlled stimulus, and
+$\bY$ is the neural activity, the two mirror pairs \eqref{eq:ce_ident}
+and \eqref{eq:ce_ident2} have different interpretations.  Rather than
+providing a basis for practical estimation, \eqref{eq:ce_ident2}
+provides an \emph{interpretation} of the mutual information.  Loosely
+speaking, $\text{H}_\mu(\bX)$ is the uncertainty of $\bX$ before
+having observed $\bY$, and $\text{H}_\mu(\bX|\bY)$ is the uncertainty
+of $\bX$ after having observed $\bY$, hence $\text{H}_\mu(\bX)
+- \text{H}_\mu(\bX|\bY)$ is how much the observation of $\bY$
+has \emph{reduced} the uncertainty of $\bX$.  Stated in words,
+\[
+\text{I}(\bX; \bY) = \text{average reduction of uncertainty about $\bX$ upon observing $\bY$}.
+\]
+
+\subsection{Comparisons}
 
 Therefore, we see that in both the multi-class classification problem
 and the noisy channel model present examples of discrimination
@@ -314,6 +481,8 @@ number of possible messages $m$ is taken to infinity. These
 differences were sufficient to explain why little overlap exists in
 the respective literatures between multi-class classification and the
 noisy channel model.  
+
+%% unusual to put mention this here
 
 However, an interesting development in the machine learning community
 has been the application of multi-class classification to problems
@@ -354,49 +523,14 @@ seminal 1948 paper.  This thesis is dedicated to the the study of the
 analogue of random code models in the multi-class classification
 setting: models of \emph{randomized classification.}
 
-Furthermore, as we might expect from the close connection between
-random codes and randomized classification, we are able to form links
-between multi-class classification and information theory.  Therefore,
-Chapters 4 and 5 leverage the link between randomized classification
-and information theory in order to develop new estimators of mutual
-information in high-dimensional datasets consisting of pairs ob
-observations $(X, Y)$.  While Chapter 4 works in a setting where a
-true, sparse relationship between $Y$ and $X$ is assumed to be known,
-Chapter 5 makes a different assumption, which is that $X$ is
-high-dimensional, and that its components are not too dependent.
-
-In the following sections, we review the relevant background for
-information theory, the applications of information theory to
-neuroscience, and multi-class classification, then introduce the
-connection between random code models in information theory and
-randomized classification.
 
 %% Make the connection between random codes and randomized classification,
 %% point out why randomized classification is a good model for some contemporary problems
 
 
-
-
 %% Link back to Shannon and information theory.  We develop further links between randomized classification and information theory.
 
-
-%\section{Generalizations of information}
-
-%\subsection{Information axioms}
-
-%\subsection{Information coefficients based on supervised learning}
-
-\section{Supervised learning}
-
-The generalization error of the learner as a statistic.
-
-%\subsection{General characaterization of supervised learning}
-
-\section{Mutual information}\ref{sec:intro_mi}
-
-
-
-\subsection{Neuroscience background}
+\section{Applications of supervised learning and information theory in neuroscience}
 
 The study of naturally intelligent systems, and the study and design
 of artificially intelligent systems, form two major intertwining
@@ -539,6 +673,92 @@ that is more readily comparable across different classification tasks.
 
 [OK, now what do we do?  We play around with the connection between MI
   and discrimination some more, and find some things.]
+
+We list these properties of mutual information in preparation for
+section \ref{sec:axiom_info}, where we prepare a ``minimal'' set of
+properties for an information coefficient, and consider how much of
+the functionality of the mutual information would be preserved by an
+alternative information coefficient satisfying only those minimal
+properties.
+
+But what, exactly, is the functionality of mutual information in
+neuroscience?  How it is used in practice?  A nice summary of the
+applications of mutual information is provided in the introduction of
+Gastpar (2014).  Taking their list as a starting point, we briefly
+overview the main use-cases of mutual information, and illustrate each
+with a representative example.
+
+\subsubsection{Selecting decoding models.}
+Neurons carry information via \emph{spike trains}, which are temporal
+point processes.  In response to stimulus $\bX$, the neuron produces a
+spike train $Y(t)$ where $Y(t) = 1$ indicates a spike at time $t$ and
+$Y(t) = 0$ indicates no spiking, for $t \in [0, T]$.
+
+An open question in neuroscience that of how information is encoded in
+the spike train.  Put loosely, what is `signal' in the spike train
+$Y(t)$ and what is `noise'?  Presumably there exists
+some \emph{decoder}--some function $\vec{g}$ of the time series, which
+compresses $Y(t)$ to a small dimension while preserving most of the
+information about $\bX$.
+
+Nelken et. al. (2005) investigated the neural code in the A1 auditory
+cortex of a cat, in response to recorded birdsongs.  The stimulus $\bX
+= (X_1, X_2)$ takes the form of 15 different auditory recordings
+presented in 24 spatial directions: $X_1 \in \{1,\hdots, 15\}$ indexes
+the recording and $X_2 \in \{1,\hdots, 24\}$ indexes the direction of
+presentation.  The response $Y(t)$ takes the form of a spike train.
+
+%First, Nelken et al. found a discretization bin width $\delta t$ which
+%appeared to preserve most of the information in $Y(t)$.  Let $\bY$
+%represent the discretized signal, where
+%\[
+%\bY_i = I\{\max_{t \in [(i-1)\delta t, i \delta t]} Y(t)\}
+%\]
+%for $i = 1,\hdots, \lceil \frac{T}{\delta t}\rceil$.  Making the
+%working assumption that $\text{I}(\bX;
+%Y(t)) \approx \text{I}(\bX; \bY)$, Nelken estimate
+%$\text{I}(\bX; \bY)$ as the information in the spike train.
+
+Nelkin et. al. compare the following \emph{decoders} $\vec{g}$ in terms
+of the information $\text{I}(\bX; \vec{g}(Y(t)))$.
+\begin{itemize}
+\item The total spike count $\vec{g}_1(Y(t)) = \sum_t Y(t)$.
+\item The mean response time $\vec{g}_2(Y(t)) = \frac{1}{\sum_t Y(t)} \sum_t t Y(t)$.
+\item The combination of the two codes: $\vec{g}_{1+2}(Y(t)) = (\vec{g}_1(Y(t)), \vec{g}_2(Y(t)))$.
+\end{itemize}
+The information of each decoder is compared to the full information of
+the signal, $\text{I}(\bX; Y(t))$, which is estimated via binning.
+
+Nelkin et al. find that while the decoder $\vec{g}_1$ reduces the
+mutual information by 20 to 90 percent, the information loss from
+$\vec{g}_2$ is much less, and barely any information at all is lost
+when both decoders are used jointly in $\vec{g}_{1+2}$.  The
+scientific conclusion that can be drawn is that since
+$\text{I}(\bX; \vec{g}_{1+2}(Y(t)))$ is not much smaller than
+$\text{I}(\bX; Y(t))$, the ``signal'' in the spike train is mostly
+captured by the spike counts and response times: beyond that, the
+detailed temporal pattern of spiking is likely to be ``noise.''  Of
+course, an important caveat to their conclusions is
+only \emph{individual} neurons are considered: the analysis did not
+rule out the possibility that the temporal spiking pattern could yield
+information within an \emph{ensemble} of neurons.
+
+
+%\item Example: Comparison of decoders in Nelken.  
+%Property (i) is important to enable model comparison.  Property (iii)
+%is needed because relationships may be nonlinear.
+\begin{itemize}
+\item Example: Redundancy in population code of retina.  
+Property (i)-(iii) and (v) are needed to obtain a meaningful measure
+of redundancy.
+\item In general, symmetry not important, but additivity is desirable 
+for measures of redundancy.  Property (ii) can usually be enforced
+since any measure needs to have a unique ``minimum'' value for the
+case of independence.
+\end{itemize}
+
+
+
 
 %Furthermore, given the
 %limit to achievable classification in the data, if the functional

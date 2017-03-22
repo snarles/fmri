@@ -95,3 +95,25 @@ quantity called the \emph{mutual information}, which was invented by
 Claude Shannon, is used to characterize the quality of the noisy
 channel with regards to achievable decoding performance. %% jargony phrase, due to the idea being difficult to express
 
+
+
+
+
+Furthermore, as we might expect from the close connection between
+random codes and randomized classification, we are able to form links
+between multi-class classification and information theory.  Therefore,
+Chapters 4 and 5 leverage the link between randomized classification
+and information theory in order to develop new estimators of mutual
+information in high-dimensional datasets consisting of pairs ob
+observations $(X, Y)$.  While Chapter 4 works in a setting where a
+true, sparse relationship between $Y$ and $X$ is assumed to be known,
+Chapter 5 makes a different assumption, which is that $X$ is
+high-dimensional, and that its components are not too dependent.
+
+In the following sections, we review the relevant background for
+information theory, the applications of information theory to
+neuroscience, and multi-class classification, then introduce the
+connection between random code models in information theory and
+randomized classification.
+
+
