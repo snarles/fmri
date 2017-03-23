@@ -134,3 +134,24 @@ difference from the theoretical standpoint, since only the statistical
 relevant for determining the peformance of the classification rule $h(X)$.
 
 
+While Shannon's theory of information was motivated by the problem of
+designing communications system, the applicability of mutual
+information was quickly recognized by neuroscientists.  Only four
+years after Shannon's seminal paper in information theory (1948),
+McKay and McCullough (1952) inaugurated the application of mutual
+information to neuroscience.  
+
+Since then, mutual information has enjoyed a
+celebrated position in both experimental and theoretical neuroscience.
+Experimentally, mutual information has been used to detect strong
+dependencies between stimulus features and features derived from
+neural recordings, which can be used to draw conclusions about the
+kinds of stimuli that a neural subsystem is designed to detect, or to
+distinguish between signal and noise in the neural output.
+Theoretically, the assumption that neural systems maximize mutual
+information between salient features of the stimulus and neural output
+has allowed scientists to predict neural codes from signal processing
+models: for instance, the center-surround structure of human retinal
+neurons matches theoretical constructions for the optimal filter based
+on correlations found in natural images [cite].
+

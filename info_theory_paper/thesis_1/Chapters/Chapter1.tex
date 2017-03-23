@@ -262,7 +262,7 @@ Multi-class classification & & Information Theory\\
 \label{fig:mcc_vs_it}
 \end{figure}
 
-We will now review the relevant background for supervised learning and
+We will now briefly review the relevant background for supervised learning and
 information theory, to give the context for each side of figure
 \ref{fig:mcc_vs_it}.  Afterwards, we will compare and contrast the
 supervised learning and information theory, and note what kind of
@@ -417,51 +417,95 @@ selecting $\lambda$ is cross-validation, with either the ``min'' or
 ``one standard deviation'' rule.  We do not go into details here, and
 refer the interested reader to \cite{Hastie2009a}, section 7.10.
 
-
-
-
 \subsection{Information Theory}\label{sec:intro_mi}
 
-Meanwhile, in the noisy channel model, we assume that the sender wants
-to transmit message $M$, out of a finite set of possible messages
-$\mathcal{M} = \{1,\hdots, m\}$.  The message must be encoded into a
-signal $Y \in \mathcal{Y}$, which is sent through a stochastic channel
-$F_{X|Y}$.  Given that a signal $y$ is sent through the channel, the
-reciever observes a signal $X$ drawn from the distribution $F_{X|y}$.
-The communications problem is to design an encoding function $g(M)$,
-which is an injective map from messages $\{1,\hdots,m\}$ to signals in
-$\mathcal{M}$, and a corresponding decoding function $d(X)$ which
-infers the message $\{1,\hdots, m\}$ from the recieved signal $X$.
+Information theory is motivated by the question of how to design a
+message-transmission system, which includes two users--a sender and a
+reciever, a \emph{channel} that the sender can use in order to
+communicate to the reciever, and a protocol that specifies:
+\begin{itemize}
+\item[a.] how the sender can \emph{encode} the message in order to
+  transmit it over the channel.  Morse code is one example of an
+  encoding scheme: a means of translating plaintext into signals than
+  can be transmitted over a wire (dots and dashes); and
+\item[b.] how the reciever can \emph{decode} the signals recieved from
+  the channel output in order to (probabilistically) recover the
+  original message.
+\end{itemize}
 
+Beginning with Shannon (1948), one constrains the properties of the
+channel, and studies properties of encoding/decoding protocols to be
+used with the channel.  Two types of channels are studied:
+\emph{noiseless} channels, which transmit symbols from a fixed
+alphabet (e.g. ``dots'' and ``dashes'') from the sender to reciever,
+and \emph{noisy} channels, which transmit symbols from a discrete
+symbol space $\mathcal{Y}$ to a possibly different symbol space
+$\mathcal{X}$ in a stochastic fashion.  That is, for each input symbol
+$y \in \mathcal{Y}$, the transmitted symbol output $X$ is drawn from a
+distribution $F_y$ that depends on $y$\footnote{Note that here we
+  have flipped the usual convention in information theory, in which
+  the letter $X$ commonly denotes the input and $Y$ denotes the
+  output.  However, we flip the notation in order to match the
+  convention in multi-class classification.}.  It is the study of
+noisy channels that is of primary interest to us.
 
-While Shannon's theory of information was motivated by the problem of
-designing communications system, the applicability of mutual
-information was quickly recognized by neuroscientists.  Only four
-years after Shannon's seminal paper in information theory (1948),
-McKay and McCullough (1952) inaugurated the application of mutual
-information to neuroscience.  If $\bX$ and $\bY$ have joint density
-$p(\bx, \by)$ with respect to the product measure $\mu_x \times \mu_y$, then the mutual information is defined as
+We allow the sender to transmit a sequence of $L$ input symbols over
+the channel, $\vec{Y} = (Y_1,Y_2,\hdots, Y_L)$. The reciever will observe the
+output $\vec{X} = (X_1,X_2,\hdots, X_L)$, where each $X_i$ is drawn from
+$F_{Y_i}$ independently of the previous $X_1,\hdots, X_{i-1}$.
+
+Now, let us assume that the sender wants to transmit message $M$, out
+of a finite set of possible messages $\mathcal{M} = \{1,\hdots, m\}$.
+The message must be encoded into a signal $\vec{Y} \in \mathcal{Y}^L$,
+which is sent through a stochastic channel $F$.  Thus, the encoding
+scheme is given by a \emph{codebook} or \emph{encoding function} $g:
+\{1,\hdots, m\} \to \mathcal{Y}^L$ which specifies how each message
+$i$ is mapped to an input sequence, $g(i) \in \mathcal{Y}^L$.
+Conversely, the decoding scheme is given by a decoding function
+$d(\vec{X})$ which infers the message $\{1,\hdots, m\}$ from the
+recieved signal $\vec{X}$.  Theoretically
+speaking\footnote{Practically speaking, the maximum likelihood (ML)
+  decoder may be intractable to implement, and computational
+  considerations mean that development of practical decoders remains a
+  challenging problem.}, a reasonable decoding scheme is the
+\emph{maximum likelihood decoder},
+\[
+d(\vec{x}) = \max_{i \in \{1,\hdots, m\}} \Pr[\vec{X} = \vec{x}| \vec{Y} = g(i)] = \max_{i \in \{1,\hdots, m\}} \prod_{j=1}^L F_{(g(i))_j}(X_j).
+\]
+
+The design of encoding/decoding schemes with minimal error (or other
+desirable properties) over a fixed channel is a highly nontrivial
+problem, which remains a core problem in the information theory
+literature.  However, Shannon's original proof of the noisy channel
+capacity theorem demonstrates a surprising fact, which is that for
+large message spaces $\mathcal{M}$, close-to-optimal information
+transmission can be achieved by using a \emph{randomized} codebook.
+In order to discuss the noisy channel capacity theorem and the
+construction of the randomized codebook, we first need to define
+the concept of \emph{mutual information}.
+
+\subsubsection{Mutual information}
+
+If $\bX$ and $\bY$ have joint density $p(\bx, \by)$ with respect to
+the product measure $\mu_x \times \mu_y$, then the mutual information
+is defined as
 \[
 \text{I}(\bX;\bY) = \int p(\bx, \by) \log \frac{p(\bx, \by)}{p(\bx)p(\by)}d\mu_x(\bx) d\mu_y(\by).
 \]
 where $p(\bx)$ and $p(\by)$ are the marginal densities with respect to
-$\mu_x$ and $\mu_y$\footnote{Note that the mutual information is invariant with respect to change-of-measure.}.  Since then, mutual information has enjoyed a
-celebrated position in both experimental and theoretical neuroscience.
-Experimentally, mutual information has been used to detect strong
-dependencies between stimulus features and features derived from
-neural recordings, which can be used to draw conclusions about the
-kinds of stimuli that a neural subsystem is designed to detect, or to
-distinguish between signal and noise in the neural output.
-Theoretically, the assumption that neural systems maximize mutual
-information between salient features of the stimulus and neural output
-has allowed scientists to predict neural codes from signal processing
-models: for instance, the center-surround structure of human retinal
-neurons matches theoretical constructions for the optimal filter based
-on correlations found in natural images [cite].
+$\mu_x$ and $\mu_y$\footnote{Note that the mutual information is
+  invariant with respect to change-of-measure.}.  When the reference
+measure $\mu_x \times \mu_y$ is unambiguous, note that $\text{I}$ is
+simply a functional of the joint density $p(\bx, \by)$.  Therefore, we
+can also use the \emph{functional} notation
+\[
+\text{I}[p(\bx, \by)] = \int p(\bx, \by) \log \frac{p(\bx, \by)}{p(\bx)p(\by)}d\mu_x(\bx) d\mu_y(\by).
+\]
 
-The mutual information measures the information ``capacity'' of a
-channel consisting of an input $\bX$ and an output $\bY$, and
-satisfies a number of important properties.
+
+The mutual information is a measure of dependence between random
+vectors $\bX$ and $\bY$, and satisfies a number of important
+properties.
 \begin{enumerate}
 \item The channel input $\bX$ and output $\bY$ can be random vectors of arbitrary dimension, and the mutual information remains a scalar functional of the joint distribution $P$ of $(\bX, \bY)$.
 \item When $\bX$ and $\bY$ are independent, $\text{I}(\bX; \bY) = 0$; otherwise, $\text{I}(\bX; \bY) > 0$.
@@ -571,6 +615,51 @@ has \emph{reduced} the uncertainty of $\bX$.  Stated in words,
 \[
 \text{I}(\bX; \bY) = \text{average reduction of uncertainty about $\bX$ upon observing $\bY$}.
 \]
+
+\subsubsection{Channel capacity and randomized codebooks}
+
+As a general measure of dependence, mutual information has enjoyed
+numerous and diverse applications outside of information theory.
+However, its original role in Shannon's paper was to define the
+quantity known as \emph{channel capacity} of a noisy channel.
+
+Let us first note that the channel capacity of a noiseless channel
+with $S$ symbols is simply $\log S$.  The justification is that if we
+allow $L$ symbols to be sent, then $S^L$ possible messages can be
+encoded.  Therefore, the channel capacity of a noiseless channel can
+be understood as the logarithm of the number of possible messages to
+be transmitted divided by the length of the sequence, with is $\log
+S$.
+
+
+However, how can the channel capacity $C$ be defined for a noisy channel?
+Suppose we have a noisy channel with transmission probabilities given by $\{F_y\}_{y \in \mathcal{Y}}$.
+Shannon came with with the following definition:
+\[
+C = \max_{p\in \mathcal{P}} I[p(x,y)].
+\]
+where $\mathcal{P}$ is the set of joint distributions that can be
+realized in the channel.  We will define $\mathcal{P}$ in a moment,
+but what is the key property of $C = \max_p I[p(x,y)]$ that makes it
+the correct analogue of the noiseless channel capacity?  It turns out
+that the optimal ratio of logarithm of the number of messages $M$ that
+can be transmitted with \emph{vanishing} error, divided by the length
+$L$ of the encoding scheme, approaches $C$ as $M \to \infty$--which is
+the crux of the noisy channel capacity theorem.
+
+Now let us define the set $\mathcal{P}$.  Let $p_y$ be a probability
+distribution over input symbols $\mathcal{Y}$.  If we transmit input $Y$
+randomly according to $Y \sim p_y$, the induced joint distribution $p(Y, X)$
+is given by
+\[
+p(y, x) = p_y(y) F_y(x).
+\]
+The set $\mathcal{P}$ is simply the collection of all such distributions: that is,
+\[
+\mathcal{P} = \{p(y, x) \text{ such that } p(x|y) = F_y(x)\text{ for all }(x, y) \in \mathcal{X} \times \mathcal{Y}\}.
+\]
+
+
 
 \subsection{Comparisons}
 
