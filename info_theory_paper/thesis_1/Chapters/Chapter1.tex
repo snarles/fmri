@@ -275,38 +275,150 @@ theory.
 
 \subsection{Supervised learning}
 
+Multi-class classification is a special case of a \emph{prediction
+  task}, which refers to a problem in which one is asked to predict a
+variable $Y$ conditional on an observation $X$.  In classification,
+$Y$ is a categorical vector: in \emph{binary} classification $Y$ can
+take one of two possible values, while in multi-class classification,
+$Y$ can take more than two values.  In \emph{regression}, another
+supervised learning task, $Y$ takes a numeric value.  In
+\emph{multiple-response regression}, or \emph{multivariate
+  regression}, $Y$ is a numeric vector.  In \emph{multi-label
+  classification}, $Y$ is a vector of categorical values.
 
+However, both
+classification and regression fit into the same general framework,
+which consists of:
 
 \begin{itemize}
-\item Supervised learning task is defined using a prediction task.
-\item 1. A predictive model is learned using training data
-\item 2. The performance of the model on the prediction task is estimated using independent test data
-\item Classical examples of prediction tasks: regression and classification
-\item Third example: identification
-\item Definition of Bayes prediction model
-\item General definition of supervised learning task
-\item SL performance can be a scalar
-\item SL can be used to test for independence
-\item Bayes performance satisfies data-processing inequality
-\item How SL is interpreted in MVPA as information
-\item Section 3, we'll see how Bayes performance can be legitimately considered a measure of information
+\item A predictor space $\mathcal{X}$ defining the possible values the predictor $X$ can take;
+\item A response space $\mathcal{Y}$ defining the possible values the response $Y$ can take;
+\item An \emph{unknown} population joint distribution $G$ for the pair $(X, Y)$;
+\item A \emph{loss} function defining the penalty for incorrect
+  predictions, $L: \mathcal{Y} \times \mathcal{Y} \to \mathbb{R}$.  If
+  $Y$ is the response, and $\hat{Y} = h(X)$ is the prediction, then
+  the loss for making the prediction $\hat{Y}$ when the truth is $Y$
+  is given by $L(Y; \hat{Y})$.
 \end{itemize}
 
-In multi-class classification, we may assume without loss of generality that the data has been generated in the following manner:
-\begin{enumerate}
-\item First, a label $Y$ is drawn according to some distribution from the label set $\{y_1,\hdots, y_k\}$.
-\item Secondly, the new observation $X$ is drawn according to the unknown conditional distribution $F_{X|Y}$.
-\item Finally, an estimated label $\hat{Y} = h(X)$ is obtained
-  according to a data-dependent classification rule, $h$.
-  Typically, $h$ is determined by fitting a model to training data.
-\end{enumerate}
-In the particular application, the above description may not match the
-\emph{causal relationship} between $X$ and $Y$: however, whether $X$
-is drawn conditional on $Y$, or $Y$ is drawn conditional on $X$, or
-that $(X, Y)$ are drawn from some joint distribution, makes no
-difference from the theoretical standpoint, since only the statistical
-(and not causal) properties of the joint distribution $(X, Y)$ are
-relevant for determining the peformance of the classification rule $h(X)$.
+Therefore, some of the aforementioned special cases of prediction tasks include:
+
+\begin{itemize}
+\item In classification, the response space is finite and discrete.  The most common loss function is zero-one loss,
+\[
+L(y; \hat{y}) = I(y \neq \hat{y}).
+\]
+\item In regression, the response space is $\mathbb{R}$.  The most common loss function is squared loss:
+\[
+L(y; \hat{y}) = (y - \hat{y})^2.
+\]
+\item In multiple-response regression, the response space is $\mathbb{R}^p$.  A natural loss function is squared Euclidean distance,
+\[
+L(y; \hat{y}) = ||y - \hat{y}||^2.
+\]
+\end{itemize}
+
+A \emph{prediction rule} is a function $h: \mathcal{X} \to
+\mathcal{Y}$ for predicting $Y$ as a function of $X$.  The \emph{risk}
+of the prediction rule is the expected loss under the joint
+distribution $G$,
+\[
+\text{Risk}(h) = \mathbb{E}[L(Y, h(X))]
+\]
+
+Prediction rules can be found through a variety of means.  In some
+domains, experts manually construct the prediction rules using their
+domain knowledge.  However, the field of \emph{supervised learning}
+aims to algorithmically construct, or `learn' a good prediction rule
+from data.  In supervised learning, we assume that we have access to a
+\emph{training set} of observations $\{(X_i,Y_i)\}_{i=1}^{n_1}$, plus
+a \emph{test set} of observations $\{(X_i,Y_i\}_{i=n_1 + 1}^{n_1 +
+  n_2}$; usually, we assume that the pairs in both the training and
+test set have been sampled i.i.d. from the distribution $G$.  We will
+also write $\bX$ for the matrix of training observations, with each
+$X_i$ stacked in rows, and $\bY$ for the vector of training
+responses. The training set is used to construct the prediction rule
+$h$.  The test set is then used to estimate the risk of the
+constructed rule (which is also called the \emph{generalization
+  error}.)
+
+A \emph{learning algorithm} $\Lambda$ is a procedure for constructing the
+prediction rule $h$ given training data $\{(X_i,Y_i)\}_{i=1}^{n_1}$ as
+an input.  Formally, we write
+\[
+h = \Lambda(\{(X_i,Y_i)\}_{i=1}^{n_1}),
+\]
+indicating that $h$ is the output of the function $\Lambda$ evaluated
+on the input $\{(X_i,Y_i)\}_{i=1}^{n_1}$.  However, how this works in
+practice can very considerably; we illustrate just a few of the most
+common types of learning algorithms:
+
+\begin{itemize}
+\item \emph{Parametric generative models.}  Define a parametric family
+  $F_\theta$ of joint distributions $(X, Y)$.  For instance, in linear
+  regression, a commonly studied family is the multivariate normal linear model,
+  where
+\[
+(X, Y) \sim N((1,0,\hdots,0, \beta_0), \begin{pmatrix}\Sigma_X & \Sigma_X \beta \\
+\beta^T \Sigma_X & \beta^T \Sigma_X \beta + \Sigma_\epsilon\end{pmatrix},
+\]
+or equivalently,
+\[
+X \sim N((1,0,\hdots,0), \Sigma_X)
+\]
+\[
+Y|X \sim N(X \beta, \Sigma_\epsilon).
+\]
+Then, fit the parametric model to estimate the parameter
+$\hat{\theta}$.  One may use a variety of methods to estimate
+$\theta$: maximimum likelihood, penalized maximum likelihood, or
+Bayesian estimation.  Note also that in many cases, such as
+regression, not all parameters of the model need to be estimated for
+prediction purposes.  For instance, in the linear regression model
+given above, only $\beta$ needs to be estimated, and not $\Sigma_X$ or
+$\Sigma_Y$.  One then constructs the prediction rule $h$ depending on
+the estimated parameter $\hat{\theta}$, in a way so that the risk is
+controlled.  For instance, in linear regression, one takes $h =
+\hat{\beta}^T X.$
+\item \emph{Empirical risk minimization.} As mentioned before, define
+  a function class $\mathcal{H}$.  We wish to search for an element $h
+  \in \mathcal{H}$ which minimizes the empirical risk on the training
+  set,
+\[
+h = \text{argmin}_{h \in \mathcal{H}} \frac{1}{n_1} \sum_{i=1}^{n_1} \tilde{L}(Y_i, h(X_i))
+\]
+Here, $\tilde{L}$ could be taken to be equal to the original loss
+function $L$, or could be taken to be a different function, such as a
+smoothed approximation of $L$.  The advantage of using a smoothed
+approximation $\tilde{L}$ is that the empirical risk can be made
+differentiable (whereas the original loss $L$ might be
+nondifferentiable) and hence the optimization made much more tractable
+from a numerical standpoint.  This is often the case in binary
+classification, where $L$ is zero-one loss, but $\tilde{L}$ is the logistic loss
+\[
+\tilde{L}(y; p) = y \log p + (1-y) \log (1-p).
+\]
+%% might have to explain why the prediction space is probabilities rather than responses, as well
+\end{itemize}
+Further complicating the picture is the fact that often the learning
+algorithm requires specification of various \emph{hyperparameters}.
+For instance, lasso regression is a penalized generative model which
+finds $\beta$ minimizing the objective function
+\[
+\beta = \text{argmin}_\beta \frac{1}{2}||\bY - \bX \beta||^2 + \lambda ||\beta||_1.
+\]
+%% No explanation of L1 norm notation
+Here, the L1-penalty constant $\lambda$ needs to be specified by the
+user.  In practice, one can either use prior knowledge or
+theoretically-justified rules to select $\lambda$; or, more commonly,
+one uses various procedures to automatically tune $\lambda$ based on
+the training data.  The most common procedure for automatically
+selecting $\lambda$ is cross-validation, with either the ``min'' or
+``one standard deviation'' rule.  We do not go into details here, and
+refer the interested reader to \cite{Hastie2009a}, section 7.10.
+
+
+
 
 \subsection{Information Theory}\label{sec:intro_mi}
 

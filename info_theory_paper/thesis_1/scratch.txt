@@ -117,3 +117,20 @@ connection between random code models in information theory and
 randomized classification.
 
 
+In multi-class classification, we may assume without loss of generality that the data has been generated in the following manner:
+\begin{enumerate}
+\item First, a label $Y$ is drawn according to some distribution from the label set $\{y_1,\hdots, y_k\}$.
+\item Secondly, the new observation $X$ is drawn according to the unknown conditional distribution $F_{X|Y}$.
+\item Finally, an estimated label $\hat{Y} = h(X)$ is obtained
+  according to a data-dependent classification rule, $h$.
+  Typically, $h$ is determined by fitting a model to training data.
+\end{enumerate}
+In the particular application, the above description may not match the
+\emph{causal relationship} between $X$ and $Y$: however, whether $X$
+is drawn conditional on $Y$, or $Y$ is drawn conditional on $X$, or
+that $(X, Y)$ are drawn from some joint distribution, makes no
+difference from the theoretical standpoint, since only the statistical
+(and not causal) properties of the joint distribution $(X, Y)$ are
+relevant for determining the peformance of the classification rule $h(X)$.
+
+
