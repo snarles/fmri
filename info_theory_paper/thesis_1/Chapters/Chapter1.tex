@@ -226,7 +226,7 @@ Multi-class classification & & Information Theory\\
 \begin{tikzpicture}[node distance = 2cm, auto]
     % Place nodes
     \node [block] (init1) {label $Y$};
-    \node [cloud, below of=init1] (init2) {distribution $F_{X|Y}$};
+    \node [cloud, below of=init1] (init2) {distribution $F_Y$};
     \node [block, below of=init2] (init3) {observation $X$};
     \node [cloud, below of=init3] (init4) {classification rule $h(X)$};
     \node [block, below of=init4] (init5) {estimate $\hat{Y}$};
@@ -244,7 +244,7 @@ Multi-class classification & & Information Theory\\
     \node [block] (initA) {message $M$};
     \node [cloud, below of=initA] (initB) {encoder $g(M)$};
     \node [block, below of=initB] (init1) {encoded message $Y$};
-    \node [cloud, below of=init1] (init2) {noisy channel $F_{X|Y}$};
+    \node [cloud, below of=init1] (init2) {noisy channel $F_Y$};
     \node [block, below of=init2] (init3) {observation $X$};
     \node [cloud, below of=init3] (init4) {decoder $d(X)$};
     \node [block, below of=init4] (init5) {estimate $\hat{M}$};
@@ -645,7 +645,10 @@ the correct analogue of the noiseless channel capacity?  It turns out
 that the optimal ratio of logarithm of the number of messages $M$ that
 can be transmitted with \emph{vanishing} error, divided by the length
 $L$ of the encoding scheme, approaches $C$ as $M \to \infty$--which is
-the crux of the noisy channel capacity theorem.
+the crux of the noisy channel capacity theorem: that is,
+\[
+\lim_{M \to \infty} \frac{\log M}{L} = C.
+\]
 
 Now let us define the set $\mathcal{P}$.  Let $p_y$ be a probability
 distribution over input symbols $\mathcal{Y}$.  If we transmit input $Y$
@@ -658,6 +661,28 @@ The set $\mathcal{P}$ is simply the collection of all such distributions: that i
 \[
 \mathcal{P} = \{p(y, x) \text{ such that } p(x|y) = F_y(x)\text{ for all }(x, y) \in \mathcal{X} \times \mathcal{Y}\}.
 \]
+
+To show that $C = \max_p I[p(y, x)]$ is the noisy channel capacity,
+then, (i) we need to show that there exists a sequence of codes with
+length $L = \frac{\log M}{C}$ which achieves vanishing decoding error
+as $M \to \infty$, and (ii) we need to show that any code with a
+shorter length has non-vanishing decoding error.  We omit the proof of
+(ii), which can be found in any textbook on information theory, such
+as \cite{Cover2006}.  However, it is of interest to illustrate (i),
+because randomized codebooks provide such a construction.
+
+
+For a given channel $\{F_y\}$, let $p^* \in \mathcal{P}$ be the
+distribution which maximizes $I[p(y, x)]$.  Let $p^*_y$ be the
+marginal distribution of $Y$, and let $L = \lceil \frac{\log M}{C}
+\rceil$.  Now we can define the random code.  Let $g(i) =
+(Y_1^{(i)},\hdots, Y_L^{(i)})$ where $Y_j^{(i)}$ are iid draws from
+$p^*_y$ for $i = 1,\hdots, M$ and $j = 1,\hdots, L$.  We will show
+that the average decoding error (taken over the distribution of random
+codebooks) goes to zero as $M \to \infty$.
+
+
+
 
 
 
