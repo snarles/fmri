@@ -53,16 +53,17 @@ used to inform the construction of the classification rule $h$.  The
 success of the classification rule $h$ is measured by the \emph{expected loss} or \emph{risk},
 which in the case of zero-one loss takes the form
 \[
-\text{Risk}_{0-1}(h) = \Pr[h(X) \neq Y],
+\text{Risk}(h) = \Pr[h(X) \neq Y],
 \]
 where the probability is defined with reference to the unknown
-population joint distribution of $(X, Y)$.  A common approach for
-constructing a classifier $h$ is \emph{empirical risk minimization} [CITE],
-which constructs $h$ by minimizing the objective function
-\[
-\text{EmpiricalRisk}_{h \in \mathcal{H}}(h) = \frac{1}{n} \sum_{i=1}^n I(h(X) \neq Y)
-\]
-where $\mathcal{H}$ is some pre-specified function class.
+population joint distribution of $(X, Y)$.  
+%A common approach for
+%constructing a classifier $h$ is \emph{empirical risk minimization} [CITE],
+%which constructs $h$ by minimizing the objective function
+%\[
+%\text{EmpiricalRisk}_{h \in \mathcal{H}}(h) = \frac{1}{n} \sum_{i=1}^n I(h(X) \neq Y)
+%\]
+%where $\mathcal{H}$ is some pre-specified function class.
 
 However, a limitation of the usual multi-class classification
 framework for studying recognition problems is the assumption that the
@@ -151,7 +152,10 @@ therefore, the resulting achievable accuracy) through the \emph{mutual
 the reciever's recieved message $Y$.  If we specialize within machine
 learning to the study of classification, then we are concerned with
 accurate \emph{discrimination} of the input $X$ according to labels
-$Y$.
+$Y$.  Similarly, if we specialize to the problem of hypothesis testing
+within statistics, the the problem is again to \emph{discriminate}
+between two (or more) different hypotheses regarding the
+data-geenrating mechanism.
 
 %% have to reorder the next para, 
 The concepts of \emph{information} and \emph{discrimination} are quite
@@ -160,12 +164,11 @@ fundamental level.  This link can be seen throughout statistics and
 machine learning, and in the way we think about statistical problems.
 A statistical hypothesis test is \emph{informative} because it
 provides evidence that the data behaves according to a certain
-hypothesis rather than another: it allows us to \emph{discriminate}
-between two potential possibilities.  More generally, a true message
-contains \emph{information} if it allows the reciever to understand
-that the world is in a certain state and not another: it conveys the
-fact that out of two possible sets of world states, that the reciever
-is in one state rather than another.  The formalism of
+hypothesis rather than another.  %% slightly redundant with prev para.
+In information theory, even if the reciever cannot conclusively
+determine the sender's message from the observed signal, the signal
+still contains \emph{information} if it contains some evidence that
+favors one set of possible messages over another.  The formalism of
 measure-theoretic probability theory provides yet another example of
 the conceptual link between information and
 discrimination\footnote{Supposing $\Omega$ is a probability space
@@ -183,18 +186,20 @@ discrimination\footnote{Supposing $\Omega$ is a probability space
   realized outcomes given by $\omega \in \Omega$.}.
 
 %% the purpose of this paragraph is to make the link between discrimination and information
-Either natural or artificially intelligence recognition systems
-must rely on input data that is \emph{informative} of the optimal
-response if they are to achieve reasonable discriminative accuracy.
-In natural environments, mammals rely on a combination of visual,
-auditory, and tactile cues to recognize potential threats in the
-environment.  Mammalian brains integrate all of this sensory
-information in order to make more rapid and reliable decisions.
-Generally, increased diversity and quality of the available sources of
-information will lead to more accurate recognition.
+%% this para needs work after being moved
+Either natural or artificially intelligence recognition systems must
+rely on input data that is \emph{informative} of the optimal response
+if they are to achieve reasonable discriminative accuracy.  In natural
+environments, mammals rely on a combination of visual, auditory, and
+tactile cues to recognize potential threats in the environment.
+Mammalian brains integrate all of this sensory information in order to
+make more rapid and reliable decisions.  Generally, increased
+diversity and quality of the available sources of information will
+lead to more accurate recognition (say, of possible environmental
+threats.)
 
-This link between the information content of the sensory input and the
-achievable discrimination accuracy was first formalized by Claude
+This link between the information content of the input and the
+achievable discrimination accuracy was first quantified by Claude
 Shannon via the concept of \emph{mutual information.}  The mutual
 information $I(X; Y)$ quantifies the information content that an input
 $X$ holds abut a target of interest, $Y$.  For instance, in the case
@@ -209,7 +214,12 @@ The discrmination problem that Shannon studied--the
 multi-class classification problem, but also features some important
 differences.  A side-by side comparison between the schematics of
 multi-class classification and the noisy channel problem is displayed
-in Figure \ref{fig:mcc_vs_it}.
+in Figure \ref{fig:mcc_vs_it}.  We will elaborate much further on the
+comparison illustrated in the figure, but for now, one can note that
+both the multi-class classification problem and the noisy-channel
+decoding problem involves the inference of a latent variable $Y$ from
+an observation $X$, where $X$ is linked to $Y$ through a conditional
+distribution $F_Y$.
 
 \tikzstyle{block} = [rectangle, draw, fill=white, 
     text width=5em, text centered, rounded corners, minimum height=4em]
@@ -275,20 +285,9 @@ theory.
 
 \subsection{Supervised learning}
 
-Multi-class classification is a special case of a \emph{prediction
-  task}, which refers to a problem in which one is asked to predict a
-variable $Y$ conditional on an observation $X$.  In classification,
-$Y$ is a categorical vector: in \emph{binary} classification $Y$ can
-take one of two possible values, while in multi-class classification,
-$Y$ can take more than two values.  In \emph{regression}, another
-supervised learning task, $Y$ takes a numeric value.  In
-\emph{multiple-response regression}, or \emph{multivariate
-  regression}, $Y$ is a numeric vector.  In \emph{multi-label
-  classification}, $Y$ is a vector of categorical values.
-
-However, both
-classification and regression fit into the same general framework,
-which consists of:
+Up until now we have been discussing \emph{classification}, which is a
+particular type of \emph{prediction task}.  However, the most general
+recipe for a prediction task involves:
 
 \begin{itemize}
 \item A predictor space $\mathcal{X}$ defining the possible values the predictor $X$ can take;
@@ -301,20 +300,38 @@ which consists of:
   is given by $L(Y; \hat{Y})$.
 \end{itemize}
 
-Therefore, some of the aforementioned special cases of prediction tasks include:
+The various types of prediction tasks include classification,
+regression, and multivariate variants: such as multi-label
+classification and multiple-response regression.  These special cases
+are just specializations of the general prediction task to a
+particular type of response space.
 
 \begin{itemize}
-\item In classification, the response space is finite and discrete.  The most common loss function is zero-one loss,
+\item In \emph{classification}, the response space is finite and
+  discrete.  In \emph{binary classification}, the response space
+  $\mathcal{Y}$ consists of two elements, say, $\mathcal{Y} = \{0,
+  1\}$.  Multi-class classification usually refers to the case
+  $\mathcal{Y}$ has more than two elements.  The most common loss
+  function for classification is zero-one loss,
 \[
 L(y; \hat{y}) = I(y \neq \hat{y}).
 \]
-\item In regression, the response space is $\mathbb{R}$.  The most common loss function is squared loss:
+\item In \emph{regression}, the response space is $\mathbb{R}$.  The most common loss function is squared loss:
 \[
 L(y; \hat{y}) = (y - \hat{y})^2.
 \]
-\item In multiple-response regression, the response space is $\mathbb{R}^p$.  A natural loss function is squared Euclidean distance,
+\item In \emph{multi-label classification}, the response space is a
+  product of several finite sets, say $\mathcal{Y} = \mathcal{Y}_1
+  \times \mathcal{Y}_2 \times \cdots \mathcal{Y}_\ell$.  That is to
+  say, that the response $\vec{Y}$ consists of a categorical vector,
+  $\vec{Y} = (Y_1,\hdots, Y_\ell)$. More complex types of loss
+  functions can be considered, such as \emph{Jaccard distance},
 \[
-L(y; \hat{y}) = ||y - \hat{y}||^2.
+L(\vec{y}; \hat{\vec{y}}) = \frac{\sum_{i=1}^\ell y_i \wedge \hat{y}_i}{\sum_{i=1}^\ell y_i \vee \hat{y}_i}.
+\]
+\item In \emph{multiple-response regression}, the response space is $\mathbb{R}^p$.  A natural loss function is squared Euclidean distance,
+\[
+L(\vec{y}; \hat{\vec{y}}) = ||\vec{y} - \hat{\vec{y}}||^2.
 \]
 \end{itemize}
 
@@ -323,7 +340,7 @@ A \emph{prediction rule} is a function $h: \mathcal{X} \to
 of the prediction rule is the expected loss under the joint
 distribution $G$,
 \[
-\text{Risk}(h) = \mathbb{E}[L(Y, h(X))]
+\text{Risk}(h) = \mathbb{E}[L(Y; h(X))]
 \]
 
 Prediction rules can be found through a variety of means.  In some
@@ -331,16 +348,16 @@ domains, experts manually construct the prediction rules using their
 domain knowledge.  However, the field of \emph{supervised learning}
 aims to algorithmically construct, or `learn' a good prediction rule
 from data.  In supervised learning, we assume that we have access to a
-\emph{training set} of observations $\{(X_i,Y_i)\}_{i=1}^{n_1}$, plus
-a \emph{test set} of observations $\{(X_i,Y_i\}_{i=n_1 + 1}^{n_1 +
-  n_2}$; usually, we assume that the pairs in both the training and
-test set have been sampled i.i.d. from the distribution $G$.  We will
-also write $\bX$ for the matrix of training observations, with each
-$X_i$ stacked in rows, and $\bY$ for the vector of training
-responses. The training set is used to construct the prediction rule
-$h$.  The test set is then used to estimate the risk of the
-constructed rule (which is also called the \emph{generalization
-  error}.)
+\emph{training set} consisting of $n_1$ observations
+$\{(X_i,Y_i)\}_{i=1}^{n_1}$, plus a \emph{test set} consisting of
+$n_2$ observations $\{(X_i,Y_i\}_{i=n_1 + 1}^{n_1 + n_2}$; usually, we
+assume that the pairs in both the training and test set have been
+sampled i.i.d. from the distribution $G$.  We will also write $\bX$
+for the matrix of training observations, with each $X_i$ stacked in
+rows, and $\bY$ for the vector of training responses. The training set
+is used to construct the prediction rule $h$.  The test set is then
+used to estimate the risk of the constructed rule (which is also
+called the \emph{generalization error}.)
 
 A \emph{learning algorithm} $\Lambda$ is a procedure for constructing the
 prediction rule $h$ given training data $\{(X_i,Y_i)\}_{i=1}^{n_1}$ as
@@ -349,9 +366,9 @@ an input.  Formally, we write
 h = \Lambda(\{(X_i,Y_i)\}_{i=1}^{n_1}),
 \]
 indicating that $h$ is the output of the function $\Lambda$ evaluated
-on the input $\{(X_i,Y_i)\}_{i=1}^{n_1}$.  However, how this works in
-practice can very considerably; we illustrate just a few of the most
-common types of learning algorithms:
+on the input $\{(X_i,Y_i)\}_{i=1}^{n_1}$.  How learning algorithms are
+implemented in practice can very considerably; we illustrate just a
+few of the most common types of learning algorithms:
 
 \begin{itemize}
 \item \emph{Parametric generative models.}  Define a parametric family
@@ -369,17 +386,17 @@ X \sim N((1,0,\hdots,0), \Sigma_X)
 \[
 Y|X \sim N(X \beta, \Sigma_\epsilon).
 \]
-Then, fit the parametric model to estimate the parameter
-$\hat{\theta}$.  One may use a variety of methods to estimate
-$\theta$: maximimum likelihood, penalized maximum likelihood, or
-Bayesian estimation.  Note also that in many cases, such as
-regression, not all parameters of the model need to be estimated for
-prediction purposes.  For instance, in the linear regression model
-given above, only $\beta$ needs to be estimated, and not $\Sigma_X$ or
-$\Sigma_Y$.  One then constructs the prediction rule $h$ depending on
-the estimated parameter $\hat{\theta}$, in a way so that the risk is
-controlled.  For instance, in linear regression, one takes $h =
-\hat{\beta}^T X.$
+The learning algorithm $\Lambda$ proceeds by first fitting the
+parametric model to estimate the parameter $\hat{\theta}$.  A variety
+of methods may be chosen to estimate $\theta$: maximimum likelihood,
+penalized maximum likelihood, or Bayesian estimation.  Note also that
+in many cases, such as regression, not all parameters of the model
+need to be estimated for prediction purposes.  For instance, in the
+linear regression model given above, only $\beta$ needs to be
+estimated, and not $\Sigma_X$ or $\Sigma_Y$.  One then constructs the
+prediction rule $h$ depending on the estimated parameter
+$\hat{\theta}$, in a way so that the risk is controlled.  For
+instance, in linear regression, one takes $h = \hat{\beta}^T X.$
 \item \emph{Empirical risk minimization.} As mentioned before, define
   a function class $\mathcal{H}$.  We wish to search for an element $h
   \in \mathcal{H}$ which minimizes the empirical risk on the training
@@ -407,6 +424,10 @@ finds $\beta$ minimizing the objective function
 \[
 \beta = \text{argmin}_\beta \frac{1}{2}||\bY - \bX \beta||^2 + \lambda ||\beta||_1.
 \]
+and then constructs the prediction rule
+\[
+h(x) = x^T \beta.
+\]
 %% No explanation of L1 norm notation
 Here, the L1-penalty constant $\lambda$ needs to be specified by the
 user.  In practice, one can either use prior knowledge or
@@ -418,6 +439,8 @@ selecting $\lambda$ is cross-validation, with either the ``min'' or
 refer the interested reader to \cite{Hastie2009a}, section 7.10.
 
 \subsection{Information Theory}\label{sec:intro_mi}
+
+%% Sudden transition
 
 Information theory is motivated by the question of how to design a
 message-transmission system, which includes two users--a sender and a
@@ -453,6 +476,18 @@ We allow the sender to transmit a sequence of $L$ input symbols over
 the channel, $\vec{Y} = (Y_1,Y_2,\hdots, Y_L)$. The reciever will observe the
 output $\vec{X} = (X_1,X_2,\hdots, X_L)$, where each $X_i$ is drawn from
 $F_{Y_i}$ independently of the previous $X_1,\hdots, X_{i-1}$.
+
+An example of a noisy channel is the \emph{bit-flip} channel.
+Let $\mathcal{Y} = \mathcal{X} = \{0,1\}$, so that both the input and output are binary strings.
+The bit flip channel is given by
+\[
+F_0 = \text{Bernoulli}(\epsilon)
+\]
+\[
+F_1 = \text{Bernoulli}(1-\epsilon)
+\]
+so that $X = Y$ with probability $1-\epsilon$, and $X = 1-Y$
+otherwise.
 
 Now, let us assume that the sender wants to transmit message $M$, out
 of a finite set of possible messages $\mathcal{M} = \{1,\hdots, m\}$.
@@ -495,7 +530,7 @@ is defined as
 where $p(\bx)$ and $p(\by)$ are the marginal densities with respect to
 $\mu_x$ and $\mu_y$\footnote{Note that the mutual information is
   invariant with respect to change-of-measure.}.  When the reference
-measure $\mu_x \times \mu_y$ is unambiguous, note that $\text{I}$ is
+measure $\mu_x \times \mu_y$ is unambiguous, note that $\text{I}(\bX;\bY)$ is
 simply a functional of the joint density $p(\bx, \by)$.  Therefore, we
 can also use the \emph{functional} notation
 \[
@@ -602,16 +637,12 @@ However, by symmetry, we also have the flipped identity
 \begin{equation}\label{eq:ce_ident2}
 \text{I}(\bX; \bY) = \text{H}_\mu(\bX) - \text{H}_\mu(\bX|\bY).
 \end{equation}
-In neuroscience studies, where $\bX$ is the controlled stimulus, and
-$\bY$ is the neural activity, the two mirror pairs \eqref{eq:ce_ident}
-and \eqref{eq:ce_ident2} have different interpretations.  Rather than
-providing a basis for practical estimation, \eqref{eq:ce_ident2}
-provides an \emph{interpretation} of the mutual information.  Loosely
-speaking, $\text{H}_\mu(\bX)$ is the uncertainty of $\bX$ before
-having observed $\bY$, and $\text{H}_\mu(\bX|\bY)$ is the uncertainty
-of $\bX$ after having observed $\bY$, hence $\text{H}_\mu(\bX)
-- \text{H}_\mu(\bX|\bY)$ is how much the observation of $\bY$
-has \emph{reduced} the uncertainty of $\bX$.  Stated in words,
+Loosely speaking, $\text{H}_\mu(\bX)$ is the uncertainty of $\bX$
+before having observed $\bY$, and $\text{H}_\mu(\bX|\bY)$ is the
+uncertainty of $\bX$ after having observed $\bY$, hence
+$\text{H}_\mu(\bX) - \text{H}_\mu(\bX|\bY)$ is how much the
+observation of $\bY$ has \emph{reduced} the uncertainty of $\bX$.
+Stated in words,
 \[
 \text{I}(\bX; \bY) = \text{average reduction of uncertainty about $\bX$ upon observing $\bY$}.
 \]
@@ -631,84 +662,114 @@ be understood as the logarithm of the number of possible messages to
 be transmitted divided by the length of the sequence, with is $\log
 S$.
 
-
-However, how can the channel capacity $C$ be defined for a noisy channel?
-Suppose we have a noisy channel with transmission probabilities given by $\{F_y\}_{y \in \mathcal{Y}}$.
-Shannon came with with the following definition:
+However, how can the idea of channel capacity be generalized to the
+noisy case?  At first glance, it would seem like no comparison is
+possible, because no matter how many symbols $L$ the sender is allowed
+to transmit, it may \emph{never} be possible for the reciever to
+deterministically infer the original message.  Consider the bit-flip
+channel, where $X = Y$ with probability $1-\epsilon$ and $X = 1-Y$
+otherwise.  Given two different messages, $M \in \{1,2\}$, a
+reasonable encoding scheme is for the sender to transmit a string of
+$L$ repeated zeros for $M = 1$, and an string of $L$ repeated ones for
+$M = 2$.
 \[
-C = \max_{p\in \mathcal{P}} I[p(x,y)].
+Y_1 = Y_2 = \cdots = Y_L = M-1.
 \]
-where $\mathcal{P}$ is the set of joint distributions that can be
-realized in the channel.  We will define $\mathcal{P}$ in a moment,
-but what is the key property of $C = \max_p I[p(x,y)]$ that makes it
-the correct analogue of the noiseless channel capacity?  It turns out
-that the optimal ratio of logarithm of the number of messages $M$ that
-can be transmitted with \emph{vanishing} error, divided by the length
-$L$ of the encoding scheme, approaches $C$ as $M \to \infty$--which is
-the crux of the noisy channel capacity theorem: that is,
-\[
-\lim_{M \to \infty} \frac{\log M}{L} = C.
-\]
+The reciever should guess $M = 1$ if she recieves more zeros than
+ones, and guess $M = 2$ otherwise.  However, for any $L$, the decoding
+error will always be nonzero.  Therefore there seems to be no analogy
+to the noiseless channel, where zero decoding error can be achieved.
 
-Now let us define the set $\mathcal{P}$.  Let $p_y$ be a probability
-distribution over input symbols $\mathcal{Y}$.  If we transmit input $Y$
-randomly according to $Y \sim p_y$, the induced joint distribution $p(Y, X)$
-is given by
+Shannon's idea was to invent an asymptotic definition of channel
+capacity.  Consider a sequence of problems where the number of
+messages $M$ is increasing to infinity.  In the $m$th coding problem,
+where $M = m$, let $(g_m, d_m)$ be an encoder/decoder pair (or \emph{protocol}), where
+$g_m$ produces strings of length $L_m$.  Let $e_m$ be the maximimum
+error probability over all messages $1,\hdots, m$ when using the
+protocol $(g_m, d_m)$.  Now, let us require that we choose $(g_m,
+d_m)$ so that the error probability vanishes in the limit:
 \[
-p(y, x) = p_y(y) F_y(x).
+\lim_{m \to \infty} e_m \to 0.
+\]
+We can define the channel capacity to be the best possible limiting ratio
+\[
+C = \lim_{m \to \infty} \frac{\log m}{L_m}
+\]
+over all sequences of protocols that have vanishing error probability.
+Note that this definition yields $C = \log S$ for the noiseless
+channel, but can also be extended to the noisy channel case.
+Remarkably, Shannon finds an explicit formula for the noisy channel
+capacity, which is proved in his noisy channel capacity theorem.  We
+will now discuss how to calculate the capacity of a noisy channel.
+
+First, let us define the set of joint distributions which can be
+realized in the noisy channel.  Let $p_y$ be a probability
+distribution over input symbols $\mathcal{Y}$.  If we transmit input
+$Y$ randomly according to $Y \sim p_y$, the induced joint distribution
+$p(Y, X)$ is given by
+\[
+p(y, x) = p_y(y) F_y(\{x\}).
 \]
 The set $\mathcal{P}$ is simply the collection of all such distributions: that is,
 \[
-\mathcal{P} = \{p(y, x) \text{ such that } p(x|y) = F_y(x)\text{ for all }(x, y) \in \mathcal{X} \times \mathcal{Y}\}.
+\mathcal{P} = \{p(y, x) \text{ such that } p(x|y) = F_y(\{x\})\text{ for all }(x, y) \in \mathcal{X} \times \mathcal{Y}\}.
 \]
+
+Suppose we have a noisy channel with transmission probabilities given by $\{F_y\}_{y \in \mathcal{Y}}$.
+Shannon came with with the following result:
+\[
+C = \max_{p\in \mathcal{P}} I[p(y, x)].
+\]
+The noisy channel capacity is given by the maximal mutual information
+$I(Y; X)$ over all joint distributions of $(Y, X)$ that can be
+realized in the channel.
 
 To show that $C = \max_p I[p(y, x)]$ is the noisy channel capacity,
 then, (i) we need to show that there exists a sequence of codes with
 length $L = \frac{\log M}{C}$ which achieves vanishing decoding error
-as $M \to \infty$, and (ii) we need to show that any code with a
+as $M \to \infty$\footnote{Shannon's noisy channel capacity theorem
+  shows a much stronger property--that the \emph{maximum} decoding
+  error over all messages has to vanish.  However, for our purposes,
+  we will limit our discussion to a weaker form of the noisy channel
+  capacity theorem which is only concerned with average decoding error
+  over all messages.}, and (ii) we need to show that any code with a
 shorter length has non-vanishing decoding error.  We omit the proof of
-(ii), which can be found in any textbook on information theory, such
-as \cite{Cover2006}.  However, it is of interest to illustrate (i),
-because randomized codebooks provide such a construction.
-
+(i) and (ii), which can be found in any textbook on information
+theory, such as \cite{Cover2006}.  However, for our purposes, it is
+very much worth discussing the construction that shows direction (i)
+of the proof--the achievability of channel capacity.
 
 For a given channel $\{F_y\}$, let $p^* \in \mathcal{P}$ be the
 distribution which maximizes $I[p(y, x)]$.  Let $p^*_y$ be the
 marginal distribution of $Y$, and let $L = \lceil \frac{\log M}{C}
 \rceil$.  Now we can define the random code.  Let $g(i) =
 (Y_1^{(i)},\hdots, Y_L^{(i)})$ where $Y_j^{(i)}$ are iid draws from
-$p^*_y$ for $i = 1,\hdots, M$ and $j = 1,\hdots, L$.  We will show
-that the average decoding error (taken over the distribution of random
-codebooks) goes to zero as $M \to \infty$.
-
-
-
-
+$p^*_y$ for $i = 1,\hdots, M$ and $j = 1,\hdots, L$.  Shannon proved
+that average decoding error, taken over the distribution of random
+codebooks, goes to zero as $M \to \infty$.  This implies the existence
+of a deterministic sequence of codebooks with the same property, hence
+establishing (i).
 
 
 \subsection{Comparisons}
 
-Therefore, we see that in both the multi-class classification problem
-and the noisy channel model present examples of discrimination
-problems where one must recover some latent variable $Y$ from
-observations $X$, where $X$ is related to $Y$ through the family of
-conditional distributions $F_{X|Y}$.  One difference is that while in
-multi-class classification, $F_{X|Y}$ is unknown and has to be
-inferred from data, in the noisy channel model, the stochastic
-properties of the channel $F_{X|Y}$ are usually assumed to be known.
-For example, for a binary channel where $Y$ consists of an $m$-length
-binary string, a commonly studied channel $F_{X|Y}$ generates $X$ by
-randomly flipping bits in $Y$ independently with some probability
-$\epsilon$.  A second difference is that in the noisy channel model,
-there is a choice in how to specify the encoding function $g(M)$,
-which affects subsequent performance.  Finally, in the broader
-research context, machine learning research has traditionally focused
-on multi-class problems with relatively few classes, while information
-theory tends to consider problems in asymptotic regimes where the
-number of possible messages $m$ is taken to infinity. These
-differences were sufficient to explain why little overlap exists in
-the respective literatures between multi-class classification and the
-noisy channel model.  
+We see that in both the multi-class classification problem and the
+noisy channel model present examples of discrimination problems where
+one must recover some latent variable $Y$ from observations $X$, where
+$X$ is related to $Y$ through the family of conditional distributions
+$F_Y$.  One difference is that while in multi-class classification,
+$F_Y$ is unknown and has to be inferred from data, in the noisy
+channel model, the stochastic properties of the channel $F_Y$ are
+usually assumed to be known.  A second difference is that in the noisy
+channel model, there is a choice in how to specify the encoding
+function $g(M)$, which affects subsequent performance.  Finally, in
+the broader research context, machine learning research has
+traditionally focused on multi-class problems with relatively few
+classes, while information theory tends to consider problems in
+asymptotic regimes where the number of possible messages $m$ is taken
+to infinity. These differences were sufficient to explain why little
+overlap exists in the respective literatures between multi-class
+classification and the noisy channel model.
 
 %% unusual to put mention this here
 
@@ -746,11 +807,10 @@ makes sense to posit randomized models of multi-class discrimination
 problems.  Since information theorists were the first to study
 discrimination problems with large number of classes, we find in the
 information theory literature a long tradition of the study of
-\emph{random code} models, dating back all the way to Shannon's
-seminal 1948 paper.  This thesis is dedicated to the the study of the
-analogue of random code models in the multi-class classification
-setting: models of \emph{randomized classification.}
-
+\emph{random code} models.  This thesis is dedicated to the the study
+of the analogue of random code models in the multi-class
+classification setting: models of \emph{randomized classification,}
+which we motivate and analyze in the next chapter.
 
 %% Make the connection between random codes and randomized classification,
 %% point out why randomized classification is a good model for some contemporary problems
@@ -998,94 +1058,3 @@ case of independence.
 %% introduce information theory and MI here?
 
 %% why do we care about information?? 
-\section{Random codes and random classification}
-
-A random code model in information theory is one where given some
-distribution $\nu$ (typically a uniform distribution) on the space of
-transmittable signals $\mathcal{Y}$, we posit that the decoder $g(M)$
-is randomly generated, by letting $g(1),\hdots, g(m)$ be identically
-and independently assigned to random draws from $\nu$.  For example,
-when $\mathcal{Y}$ is the space of $m$-length binary strings, the
-encoder $g$ maps indices $1, \hdots, m$ to random $m$-length binary
-strings.  The purpose of the random code model is usually to establish
-a lower bound on achievable accuracy given some constraints on the
-signal space.
-
-Meanwhile, a randomized classification model is one where the label
-set $\{y^{(1)},\hdots, y^{(k)}\}$ is not fixed, but randomly sampled.
-One defines a label space $\mathcal{Y}$, a family of conditional
-distributions $\{F_{X|y}\}_{y \in \mathcal{Y}}$, and a distribution
-$\nu$ on $\mathcal{Y}$.  Then the randomized classification model is a
-classification task obtained by drawing labels $\{Y^{(1)},\hdots,
-Y^{(k)}\}$ iid from $\nu$, generating training data for those
-particular labels by drawing observations $X_i^{(j)} \sim
-F_{X|Y^{(j)}}$, and where the problem is to construct a classification
-rule for assigning new observations $X$ which are drawn from the
-mixture
-\[
-X \sim \frac{1}{k}\sum_{i=1}^k F_{X|Y^{(k)}}
-\]
-to one of the labels $\{Y^{(1)},\hdots, Y^{(k)}\}.$ As we will see
-throughout the thesis, the randomized classification model can be
-naturally applied to a large number of multi-class classification
-applications, such as facial recognition, where the labels
-(e.g. people) can be justifiably modelled as random draws from some
-population.  And, even in the majority of classification problems
-where the labels cannot be assumed to come from an iid sample,
-randomized classification models can still be applied to provide
-intuition for the original problem.
-
-The link between random code models and randomized classification
-models should now be apparent. Define $Y_i = g(i)$ in the random code
-model, so that $Y_i$ are iid drawn from $\nu$.  Fixing a particular
-realization of $Y_1,\hdots, Y_k$, the decoding problem is then
-evidently a multi-class classification problem with labels
-$\{Y_1,\hdots, Y_k\}$.  The only difference between the two models is
-that the conditional distributions $F_{X|Y}$ are assumed to be known
-in the random code model, and assumed unknown in the randomized
-classification model.
-
-But happens when we assume that $F_{X|Y}$ is known, in the multi-class
-classification problem?  In fact, it is common to consider the case of
-known $F_{X|Y}$ in the machine learning literature, because the
-resulting accruacy gives an \emph{upper bound} on achievable
-performance in the multi-class classification problem.  This is
-because once $F_{X|Y}$ is known, it is possible to define the
-\emph{optimal} classification rule, or \emph{Bayes} classification
-rule $h_{Bayes}$.  For example, supposing that the performance
-criterion is to minimize the zero-one risk $\Pr[\hat{Y} \neq Y]$, then
-the Bayes rule is to assign $X$ to the label with the highest
-posterior density,
-\[
-h_{Bayes}(X) = \text{argmax}_{y \in \{y_1, \hdots, y_k\}} f_{X|y}(x) \pi(y)
-\]
-where $\pi(y)$ is the prior probability of $Y = y$.  Therefore, it is
-the same thing to study the Bayes accuracy in a randomized
-classification model and the decoding accuracy of a randomized code in
-a noisy channel.
-
-Indeed, the analysis of the Bayes accuracy of a randomized
-classification model forms the subject of Chapters 2 and 3.  Due to
-the aforementioned equivalence, it can be said that a large body of
-work dealing with the Bayes accuracy of randomized classification
-problems exists in information theory: however, the majority of such
-works deal with the limit as $k \to \infty$, and to our knowledge no
-analysis has been done for the case of finite $k$, which is the
-relevant scenario for multi-class classification.  There is good
-reason for this lacuna in the information theory literature, which is
-that since information theorists are concerned with understanding the
-properties of \emph{optimal} coding schemes, it follows that
-randomized coding schemes are only interesting insofar as that they
-give good approximations to optimal coding schemes.  However, in the
-classification setting, we may be interested in studying randomized
-classification for its own sake, and not merely as a means to obtain
-lower bounds or estimates for another problem.  Therefore, Chapter 2
-presents novel results on the statistical properties of the Bayes
-accuracy in the randomized classification model.  Meanwhile, Chapter 3
-studies an interesting application of the randomized classification
-problem, which is to analyze the dependence of the classification
-accuracy on the size of the label set.  This analysis yields a novel
-method for `performance extrapolation' in real-world classification
-problems, meaning that our method can be used to estimate the
-classification accuracy on a large multi-class classification problem
-using data from only a subsample of the classes in the larger problem.
