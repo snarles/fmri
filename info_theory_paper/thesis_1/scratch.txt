@@ -263,4 +263,118 @@ problems, meaning that our method can be used to estimate the
 classification accuracy on a large multi-class classification problem
 using data from only a subsample of the classes in the larger problem.
 
+The study of naturally intelligent systems, and the study and design
+of artificially intelligent systems, form two major intertwining
+domains of modern research.  Here, we take \emph{intelligence} to
+refer to the property of a system by which it can modulate its
+reaction to external inputs in a purposeful manner.  Therefore, by
+this definition, an amoeba which seeks food and avoids toxins is
+intelligent, as is a gene-regulation network, or a mammalian brain.
+Similarly, artificially intelligent algorithms which implement
+automated decision-making rules in response to external inputs also
+satisfy this definition of intelligence.
+
+A primitive organism may classify percieved objects in its environment
+as either beneficial (potential food and resources) or harmful (toxins
+and predators), and intelligently respond by means of pursuing the
+former and avoiding the latter.  %% note that this example is redundant
+Complex organisms, like humans, not
+only discriminate in order to make immediate decisions, but also
+categorize objects in the world in order to perform intermediate
+calculations and carry out contextual reasoning.
+%% example?
+
+
+%% Introduce examples of classification and multi-class classification
+
+Similarly, \emph{artificially intelligent} algorithms and agents will
+also discriminate input data into categories.  Very often, these types
+of classification and recognition tasks mimic and automate
+discrimination tasks that humans already perform, such as:
+\begin{itemize}
+\item Optical character recognition: recognizing characters from handwritten glyphs.
+\item Facial recognition: identifying individuals from images of their faces.
+\item Object recognition: identifying objects in photographs and labelling them with the appropriate keyword.
+\end{itemize}
+However, classification can also be performed on novel types of tasks
+where no human substitute exists, such as diagnosis of cancer
+phenotype based on thousands of gene expression levels.
+
+While a major use of artificially intelligent classifiers is to
+automate routine tasks or to categorize complex data, it is also
+scientifically interesting to compare the performance of naturally
+intelligent agents (human or animal subjects) versus artificially
+intelligent classifiers on discrimination tasks.  One reason is that human
+benchmarks on complex classification tasks, such as object
+recognition, are often non-trivial to beat, and provide a useful
+reference to quantify progress in machine learning.  Yet, another
+reason is that the attempt to engineer an artificially intelligent
+solution to a natural recognition problem provides insight into the
+nature of intelligence in human and animal brains.  We still cannot
+fully explain the human capability to quickly locate and identify
+objects in a natural scene, but research into the mechanisms of
+vision, and attempts to replicate human capabilities for object
+recognition, have already provided crucial insight into the
+hierarchical nature of mammalian vision.  %% needs citation
+
+However, a potentially puzzling aspect of this approach, is that the
+structure or dynamics of the artificially intelligent classifier need
+not imitate the dynamics of the biological system for the modelling
+approach to be useful.  Computational neuroscientists have developed
+biological realistic models of neural signalling activity which could
+be employed to simulate the neural decision-making process from input
+to output, at a very high level of versimilitude.  However, it is
+often more useful in practice to model the decision-making process
+with much simpler statistical models, such as linear regression.  Even
+relatively complex machine learning models, such as deep neural
+networks, represent a vast simplification from biological dynamics.
+Yet their use can often be justified by the assumption that the
+performance achieved on this task by the given classifier is
+reflective of the performance that would be achieved by a more
+biologically realistic model.  Indeed, this assumption can often be
+justified because, as is generally observed in real-world machine
+learning applications, several very different types of classifiers
+often end up achieving similar performance (when tuned correctly).
+
+How can we explain the correlation in the performance of very
+different families of classifiers across problems in a wide range of
+domains? In problems where it is hard to a given family of classifiers
+to perform well, it is also hard to other families of classifiers.  In
+problems where one classifier achieves very high accuracy, many other
+families of classifier can achieve high accuracy as well.  
+
+One explanation for this phenomenon is that the input contains a
+certain amount of \emph{information} about the output, and that the
+amount of information sets fundamental limits on what kind of
+classification accuracies can be achieved.  Indeed, the relationship
+between information and bounds on discrimination accuracy were first
+established by Claude Shannon, who gave the formula for the
+\emph{mutual information} between two random variables $X$ and $Y$,
+and whose proved in his noisy-channel theorem an asymptotic
+relationship between the mutual information and achievable
+discrimination accuracy.  Fano [CITE] followed this result with the
+equally classical Fano's inequality, which establishes an upper bound
+on accuracy as a function of mutual information.
+
+Neuroscientists have used the connection between information and
+discrimination in several ways.  One is to sidestep the application of
+classifiers altogether, and to directly estimate the mutual
+information between brain activity and the task of interest [CITE].  A
+second way to to proceed with training classifiers on the data, but
+then summarizing the performance of the classifier by the mutual
+information implied by the confusion matrix.  Hence, implied mutual
+information becomes a error metric for the classification--but one
+that is more readily comparable across different classification tasks.
+
+[OK, now what do we do?  We play around with the connection between MI
+  and discrimination some more, and find some things.]
+
+We list these properties of mutual information in preparation for
+section \ref{sec:axiom_info}, where we prepare a ``minimal'' set of
+properties for an information coefficient, and consider how much of
+the functionality of the mutual information would be preserved by an
+alternative information coefficient satisfying only those minimal
+properties.
+
+
 
