@@ -843,7 +843,7 @@ specialization in the brain.
 We now illustrate these use cases of information theory and supervised
 learning in a number of specific applications in neuroscience.
 
-\subsubsection{Selecting decoding models.}
+\subsection{Selecting decoding models.}
 Neurons carry information via \emph{spike trains}, which are temporal
 point processes.  In response to stimulus $\bX$, the neuron produces a
 spike train $Y(t)$ where $Y(t) = 1$ indicates a spike at time $t$ and
@@ -902,9 +902,6 @@ experimental technique, and furthermore, lesion studies cannot be
 applied to exhaustively isolate the regions of the brain which are
 specialized for a given task.
 
-%% Next part is a bit brief
-%% We want to say that training classifiers on parts of brain is like a ``synthetic lesion'' study,
-%% but this would be misleading because unlike lesion studies, these cannot establish causality.
 Therefore, an alternative method of studying specialization is to
 acquire an image of the brain activity, and then to assess the
 discriminative performance of classifiers on either the whole brain,
@@ -915,14 +912,122 @@ accuracy using the whole brain image, and reduced accuracies using
 of the brain in the image, may be reduced to chance accuracy levels.
 Therefore, similar to lesion studies, these classification experiments
 can reveal specialization in the brain by establishing which parts of
-the brain image contain \emph{information} related to the task.
-However, an important distinction is that these studies can only
-establish association, rather than causality, because actual lesions
-to the brain affect the activity patterns of other parts of the brain,
-and therefore the effect of lesions cannot actually be completely
+the brain image contain \emph{information} related to the task.  This
+type of classification study was first introduced to the neuroimaging
+community by Haxby (1999); approaches of these types are known as
+\emph{multivariate pattern analyses} (MVPA) in the neuroscience
+literature. However, an important distinction between MVPA studies and
+actual lesion studies is that MVP analyses can only establish
+association, rather than causality, because actual lesions to the
+brain affect the activity patterns of other parts of the brain, and
+therefore the effect of lesions cannot actually be completely
 simulated by merely masking parts of the brain image.
 %% examples where the artificial classifier does mimic the natural classifier
 
+We now proceed the describe the principles of MVPA.
+Let
+$\mathcal{X} \subset \mathbb{R}^q$ and
+$\mathcal{Y} \subset \mathbb{R}^p$; 
+%let $p(x)$ be a probability density on $\mathcal{X}$.
+For every $x \in \mathcal{X}$, let $p_x(y)$
+be a probability density on $\mathcal{Y}$.  
+%Define the joint density
+%\[
+%p(x, y) = p(x) p_x(y)
+%\]
+%so that $p_x(y)$ can also be written $p(y|x)$.
+Take a subset $\{x^{(1)},\hdots, x^{(k)}\} \subset \mathcal{X}$.  Let
+$Y_i^j$ be a random vector distributed according to density
+$p_{x^{(i)}}(y)$; and let $Y^{(i),j}$ be independent for $i =
+1,\hdots, k$ and $j = 1, \hdots, r.$
+ 
+In MVPA, one carries out a classification task to assess whether $y$
+contains information about $x$.  A classification rule is any
+(possibly stochastic) mapping $f: \mathcal{Y} \to \{1,\hdots, k\}$.
+The \emph{generalization accuracy} of the classification rule for
+classes $x^{(1)},\hdots, x^{(k)}$ is
+\[
+\text{GA}(f) = \frac{1}{k} \sum_{i=1}^k\Pr[f(Y) = i | X = x^{(i)}].
+\]
+A trivial classification rule which outputs the result of a $k$-sided
+die roll for all inputs $y$ would achieve a generalization accuracy of
+$\text{GA} = \frac{1}{k}$.  Conversely, even a single counterexample
+with $\text{GA} > \frac{1}{k}$ is indicative that $y$ contains nonzero
+information about $x$.  Hence, in order to demonstrate that $y$ is
+informative of $x$, one tests the null hypothesis
+\[
+H_0: \text{GA}(f) = \frac{1}{k}
+\]
+versus the alternative
+\[
+H_1: \text{GA}(f) > \frac{1}{k}.
+\]
+Rejecting the null hypothesis for a given classification rule $f$ can
+be taken as evidence that $y$ is informative of $x$.
+
+We have not yet specified how any classification rule $f$ is to be
+obtained.  Unless one has strong prior knowledge about the nature of
+the brain encoding, it is necessary to choose the function $f$ in a
+data-dependent way in order to obtain a reasonable classification
+rule.  A wide variety of machine learning algorithms exist for
+``learning'' good classification rules $f$ from data.  We use the
+terminology \emph{classifier} to refer to any algorithm which takes
+data as input, and produces a classification rule $f$ as output.  The
+following discussion makes it necessary for us to make a precise
+distinction between the \emph{classifier} and the \emph{classification
+rule} it produces, and our usage of the terms may differ from the
+standard in the literature.  Mathematically speaking, the classifier
+is a functional which maps a set of observations to a classification
+rule,
+\[
+\mathcal{F}: \{(x^{1},y^{1}),\hdots, (x^{m}, y^{m})\} \mapsto f(\cdot).
+\]
+The data $(x^1,y^1),\hdots, (x^m, y^m)$ used to obtain the
+classification rule is called \emph{training data.}  When the
+objective is to obtain the best possible classification rule, as is
+the case in diagnostic settings, it is optimal to use all of the
+availible data to train the classifier.  However, when the goal is to
+obtain \emph{inference} about the performance of the classification
+rule, it beomes necessary to split the data into two independent sets:
+one set to train the classifier, and one to evaluate the performance.
+The reason that such a splitting is necessary is because using the
+same data to test and train a classifier introduces significant bias
+into the empirical classification error.
+
+In \emph{data-splitting}, one creates a \emph{training
+set} consisting of $r_1$ repeats per class,
+\[
+\{(x^{(1)}, y^{(1),1}),\hdots, (x^1,y^{(1), r_1}), \hdots, (x^{(k)}, y^{(k),1}),\hdots, (x^{(m)},y^{(m), r_1})\}
+\]
+and a \emph{test set} consisting of the remaining $r_2 = r - r_1$ repeats.
+\[
+\{(x^{(1)}, y^{(1), r_1 + 1}),\hdots, (x^{(1)},y^{(1),r}), \hdots, (x^{(k)}, y^{(k), r_1 + 1}),\hdots, (x^{(k)},y^{(k),r_1})\}.
+\]
+One inputs the training data into the classifier to obtain the classification rule $f$,
+\[
+f = \mathcal{F}(\{(x^{(1)}, y^{(1),1}),\hdots, (x^{(1)},y^{(1),r_1}), \hdots, (x^{(k)}, y^{(k),1},\hdots, (x^{(k)},y^{(k), r_1})\}).
+\]
+The test statistic of interest is the test error,
+defined as
+\[
+\widehat{\text{GA}} = \frac{1}{k r_2} \sum_{i=1}^k \sum_{j = r_1 + 1}^r \text{I}(f(y^{(i),j}) \neq i).
+\]
+Due to the conditional independence of the training set and test set,
+$\widehat{\text{GA}}$ is an unbiased estimate of $\text{GA}$.  Hence various
+approaches can be used to obtain a threshold $c_\alpha$ such that
+$\Pr[\widehat{\text{GA}} > c_\alpha] \leq \alpha$ holds (approximately) under the
+null hypothesis.  These approaches include permutation tests, tests
+based on a universal variance bound, or the generalized likelihood
+ratio test.  The hypothesis $H_0$ is then rejected at level $\alpha$
+if $\widehat{\text{GA}} > c_\alpha$.
+
+There is also a way to improve on data-splitting, by
+using \emph{cross-validation}. Essentially, one applies the
+data-splitting approach multiple times, with different training and
+test partitions, and aggregates the results. Cross-validation can be
+used to reduce the variance of the estimated $\text{GA}$ and hence
+improve the power of the test, and it can also be used to
+obtain \emph{confidence intervals} for the estimate.
 
 \subsection{Other applications}
 
