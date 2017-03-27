@@ -438,6 +438,70 @@ selecting $\lambda$ is cross-validation, with either the ``min'' or
 ``one standard deviation'' rule.  We do not go into details here, and
 refer the interested reader to \cite{Hastie2009a}, section 7.10.
 
+\subsubsection{Performance evaluation}
+
+\begin{itemize}
+\item Error estimation using the test set
+\item Data-splitting
+\end{itemize}
+
+%% needs edit, or just delete
+In \emph{data-splitting}, one creates a \emph{training
+set} consisting of $r_1$ repeats per class,
+\[
+\{(x^{(1)}, y^{(1),1}),\hdots, (x^1,y^{(1), r_1}), \hdots, (x^{(k)}, y^{(k),1}),\hdots, (x^{(m)},y^{(m), r_1})\}
+\]
+and a \emph{test set} consisting of the remaining $r_2 = r - r_1$ repeats.
+\[
+\{(x^{(1)}, y^{(1), r_1 + 1}),\hdots, (x^{(1)},y^{(1),r}), \hdots, (x^{(k)}, y^{(k), r_1 + 1}),\hdots, (x^{(k)},y^{(k),r_1})\}.
+\]
+One inputs the training data into the classifier to obtain the classification rule $f$,
+\[
+f = \mathcal{F}(\{(x^{(1)}, y^{(1),1}),\hdots, (x^{(1)},y^{(1),r_1}), \hdots, (x^{(k)}, y^{(k),1},\hdots, (x^{(k)},y^{(k), r_1})\}).
+\]
+The test statistic of interest is the test error,
+defined as
+\[
+\widehat{\text{GA}} = \frac{1}{k r_2} \sum_{i=1}^k \sum_{j = r_1 + 1}^r \text{I}(f(y^{(i),j}) \neq i).
+\]
+Due to the conditional independence of the training set and test set,
+$\widehat{\text{GA}}$ is an unbiased estimate of $\text{GA}$.
+
+\subsubsection{Classification}
+
+Discuss specific facts about classification.
+
+\begin{itemize}
+\item Terminology, classification and classification rule
+\item Test error is Bernoulli
+\end{itemize}
+
+%% needs edit
+A wide variety of machine learning algorithms exist for ``learning''
+good classification rules $f$ from data.  We use the terminology
+\emph{classifier} to refer to any algorithm which takes data as input,
+and produces a classification rule $f$ as output.  The following
+discussion makes it necessary for us to make a precise distinction
+between the \emph{classifier} and the \emph{classification rule} it
+produces, and our usage of the terms may differ from the standard in
+the literature.  Mathematically speaking, the classifier is a
+functional which maps a set of observations to a classification rule,
+\[
+\mathcal{F}: \{(x^{1},y^{1}),\hdots, (x^{m}, y^{m})\} \mapsto f(\cdot).
+\]
+The data $(x^1,y^1),\hdots, (x^m, y^m)$ used to obtain the
+classification rule is called \emph{training data.}  When the
+objective is to obtain the best possible classification rule, as is
+the case in diagnostic settings, it is optimal to use all of the
+availible data to train the classifier.  However, when the goal is to
+obtain \emph{inference} about the performance of the classification
+rule, it beomes necessary to split the data into two independent sets:
+one set to train the classifier, and one to evaluate the performance.
+The reason that such a splitting is necessary is because using the
+same data to test and train a classifier introduces significant bias
+into the empirical classification error.
+
+
 \subsection{Information Theory}\label{sec:intro_mi}
 
 %% Sudden transition
@@ -924,110 +988,189 @@ therefore the effect of lesions cannot actually be completely
 simulated by merely masking parts of the brain image.
 %% examples where the artificial classifier does mimic the natural classifier
 
-We now proceed the describe the principles of MVPA.
-Let
-$\mathcal{X} \subset \mathbb{R}^q$ and
-$\mathcal{Y} \subset \mathbb{R}^p$; 
-%let $p(x)$ be a probability density on $\mathcal{X}$.
-For every $x \in \mathcal{X}$, let $p_x(y)$
-be a probability density on $\mathcal{Y}$.  
-%Define the joint density
-%\[
-%p(x, y) = p(x) p_x(y)
-%\]
-%so that $p_x(y)$ can also be written $p(y|x)$.
-Take a subset $\{x^{(1)},\hdots, x^{(k)}\} \subset \mathcal{X}$.  Let
-$Y_i^j$ be a random vector distributed according to density
-$p_{x^{(i)}}(y)$; and let $Y^{(i),j}$ be independent for $i =
-1,\hdots, k$ and $j = 1, \hdots, r.$
- 
-In MVPA, one carries out a classification task to assess whether $y$
-contains information about $x$.  A classification rule is any
-(possibly stochastic) mapping $f: \mathcal{Y} \to \{1,\hdots, k\}$.
-The \emph{generalization accuracy} of the classification rule for
-classes $x^{(1)},\hdots, x^{(k)}$ is
+\subsubsection{Data Setup}
+
+\begin{itemize}
+\item Data setup: In fMRI, we obtain (indirect) measurements of brain activation in response to stimuli
+\item Test of whether brain region contains information using classification
+\item Spotlight analysis, p-value map
+\end{itemize}
+
+While multivariate pattern analysis can be applied in a wide variety
+of brain imaging modalities, its dominant use has been in functional
+magnetic resonance imaging (fMRI.)  Therefore, we will briefly
+describe the experimental setup and initial data analysis protocol for
+a typical task-fMRI experiment.  For more details, the interested
+reader is invited to consult a standard reference such as
+\cite{poldrack2011handbook}.
+
+In task-fMRI experiments, a subject is presented with a timed sequence
+of behaviorial tasks to be performed, while the MRI scanner uses
+magnetic fields to measure blood oxygenation levels in the subject's
+brain.  The raw imaging data is obtained in Fourier space.  Initial
+preprocessing converts the data into a spatial time series consisting
+of one time dimension and three spatial dimensions, with measure of
+BOLD (blood-oxygenation level dependent) signal at each point in the
+brain.  Further preprocessing steps reduce noise due to head motion,
+physiologically induced artifacts, and electromagnetically induced
+artifacts.  A generalized linear model (GLM) is fitted to the spatial
+time series in order to infer an aggregated activity level for each
+specific task.  We do not go into details of the GLM model; however,
+the output of the GLM model is an inferred activity level map for each
+task.
+
+Figure \ref{fig:task_fmri} illustrates a cartooon schematic of the
+output of the GLM fitting stage.  There are four tasks in the
+illustrated experiment.  Each task $y_i$ belongs to two different
+categories, coded as 1 and 2.  Task 1 is a visual task, where the
+subject is presented an picture of an eagle, and asked to focus on the
+image.  Task 2 is the same type of visual task, but with a picture of
+a bear instead.  For each task $i=1,\hdots, 4$, the GLM produces a
+parametric map of inferred activation levels, $\vec{x}_i$.  The map
+$\vec{x}_i$ is divided into uniformly sized cubical regions in the
+brain, called \emph{voxels}.  We denote the number of voxels in the
+map by $q$; for typical resolutions ($2\text{mm} \times 2 \text{mm}
+\times 2.5 \text{mm}$), the map has on the order of $q = 20,000$
+voxels.  Each voxel has an inferred activity level.  Therefore, the
+map $\vec{x}_i$, when represented as a numerical vector, is a vector
+in $\mathbb{R}^q$ where each component is the activity level of a
+particular voxel in the brain.
+
+
+\begin{figure}
+\centering
+\begin{tabular}{|c|cc|c|}
+\hline
+Task & Stimulus & & Activation Map\\ \hline
+1 & $y_1 = 1$ & \includegraphics[scale = 0.26]{../../proposal/img3.png} & $\vec{x}_1 = $ \includegraphics[scale = 0.035]{../../proposal/brain1.png} \\ \hline
+2 & $y_2 = 2$ & \includegraphics[scale = 0.26]{../../proposal/img4.png} & $\vec{x}_2 = $\includegraphics[scale = 0.035]{../../proposal/brain3.png} \\ \hline
+3 & $y_3 = 1$ & \includegraphics[scale = 0.26]{../../proposal/img3.png} & $\vec{x}_3 = $\includegraphics[scale = 0.035]{../../proposal/brain4.png} \\ \hline
+4 & $y_4 = 2$ & \includegraphics[scale = 0.26]{../../proposal/img4.png} & $\vec{x}_4 = $\includegraphics[scale = 0.035]{../../proposal/brain8.png} \\ \hline
+\end{tabular}
+\caption{Data output of a typical analysis of a task fMRI experiment.
+  The raw data is processed to obtain a parametric map of inferred
+  activation levels to each stimulus.  These activation levels are
+  further utilized in downstream analyses. }
+\label{fig:task_fmri}
+\end{figure}
+
+A number of statistical analyses can be performed on the
+task-activation pairs $(y_i, \vec{x}_i)$.  The most common type of
+analysis tests for significant \emph{peaks} of task-correlated
+activity.  These analyses involve \emph{global} tests of the null
+hypothesis of no correlation between task and activity.  However, MVPA
+analyses tend to begin with local tests of independence between a
+given region-of-interest (a cluster of neighboring voxels) and the
+task.
+
+\subsubsection{Classification-based test of independence}
+
+A region of interest (ROI) is a collection of neighboring voxels,
+chosen based on anatomical or geometric considerations.  To give a
+concrete example, one can choose an arbitrary voxel in the brain, and
+define an ROI as the set of all voxels within a given radius (say, $5
+\text{mm}$) of the chosen voxel.  Recalling that $\vec{x}_i$ denotes
+the activity level of the entire brain, let us write $\vec{x}_i^{ROI}$
+for the subset of voxels in the brain map belonging to the ROI.
+
+We would like to test the hypothesis of independence between the task
+$Y$ and the joint activity level of the voxels belonging to the ROI,
+considered as a random vector, $\vec{X}^{ROI}$.  While there are
+numerous methods in the statistical literature for testing for
+independence between a categorical random variable $Y$ and a random
+vector $\vec{X}$, the approach taken in MVPA is typically to use
+classification accuracies as the test statistic.
+
+Recall that a classification rule is any (possibly stochastic) mapping
+$f: \mathcal{X} \to \{1,\hdots, k\}$, where $k$ is the number of
+levels of $Y$.  Let us assume that the $k$ different levels of $Y$
+have the same number of repeats within the data.  The
+\emph{generalization accuracy} of the classification rule is
 \[
-\text{GA}(f) = \frac{1}{k} \sum_{i=1}^k\Pr[f(Y) = i | X = x^{(i)}].
+\text{GA}(f) = \frac{1}{k} \sum_{i=1}^k\Pr[f(\vec{X}^{ROI}) = i | Y = i].
 \]
 A trivial classification rule which outputs the result of a $k$-sided
 die roll for all inputs $y$ would achieve a generalization accuracy of
-$\text{GA} = \frac{1}{k}$.  Conversely, even a single counterexample
-with $\text{GA} > \frac{1}{k}$ is indicative that $y$ contains nonzero
-information about $x$.  Hence, in order to demonstrate that $y$ is
-informative of $x$, one tests the null hypothesis
+$\text{GA} = \frac{1}{k}$.
+
+Recall that the generalization accuracy of a data-dependent
+classification rule $f$ can be obtained by using
+\emph{data-splitting}, provided that the rule $f$ is constructed using
+only the \emph{training data}.  Supposing that the original data
+consists of pairs $(y_i,\vec{x}_i^{ROI})$ for $i = 1,\hdots, n$, let
+$j_1,\hdots, j_{n_1}$ denote the $n_1$ randomly drawn training
+indices, and $\ell_1,\hdots, \ell_{n_2}$ denote the $n_2$ randomly
+drawn test indices.  The training data $(y_{j_i},
+\vec{x}_{j_i}^{ROI})_{i=1}^{n_1}$ is used to construct a classification rule
+$f$, while the test data is used to obtain a test accuracy $T$:
+\[
+T= \frac{1}{n_2} \sum_{i=1}^{n_2} I(f(\vec{x}_{\ell_i}^{ROI}) = y_{\ell_i}).
+\]
+%% also give the formula for stratifying by class
+
+Under the null hypothesis $H_0: Y \perp \vec{X}^{ROI}$, the
+generalization accuracy of any classification rule $f$ is equal to
+$1/k$.  Therefore, we can write the null hypothesis as
 \[
 H_0: \text{GA}(f) = \frac{1}{k}
 \]
-versus the alternative
+and the alternative hypothesis as
 \[
 H_1: \text{GA}(f) > \frac{1}{k}.
 \]
-Rejecting the null hypothesis for a given classification rule $f$ can
-be taken as evidence that $y$ is informative of $x$.
 
-We have not yet specified how any classification rule $f$ is to be
-obtained.  Unless one has strong prior knowledge about the nature of
-the brain encoding, it is necessary to choose the function $f$ in a
-data-dependent way in order to obtain a reasonable classification
-rule.  A wide variety of machine learning algorithms exist for
-``learning'' good classification rules $f$ from data.  We use the
-terminology \emph{classifier} to refer to any algorithm which takes
-data as input, and produces a classification rule $f$ as output.  The
-following discussion makes it necessary for us to make a precise
-distinction between the \emph{classifier} and the \emph{classification
-rule} it produces, and our usage of the terms may differ from the
-standard in the literature.  Mathematically speaking, the classifier
-is a functional which maps a set of observations to a classification
-rule,
-\[
-\mathcal{F}: \{(x^{1},y^{1}),\hdots, (x^{m}, y^{m})\} \mapsto f(\cdot).
-\]
-The data $(x^1,y^1),\hdots, (x^m, y^m)$ used to obtain the
-classification rule is called \emph{training data.}  When the
-objective is to obtain the best possible classification rule, as is
-the case in diagnostic settings, it is optimal to use all of the
-availible data to train the classifier.  However, when the goal is to
-obtain \emph{inference} about the performance of the classification
-rule, it beomes necessary to split the data into two independent sets:
-one set to train the classifier, and one to evaluate the performance.
-The reason that such a splitting is necessary is because using the
-same data to test and train a classifier introduces significant bias
-into the empirical classification error.
+We will describe two different methods for testing $H_0$ versus $H_1$.
+The first approach is to use the fact that the distribution of $T$ is
+known under the null hypothesis.  The second approach is a permutation
+test.  The permutation test is more computationally expensive, but has
+important advantages in terms of family-wise error control, as we will
+describe in the sequel. %% describe in the next subsubsection
 
-In \emph{data-splitting}, one creates a \emph{training
-set} consisting of $r_1$ repeats per class,
+\emph{First approach.} Under the null hypothesis, using the fact that
+the test observations $(y_{\ell_i}, \vec{x}_{\ell_i})$ are identical
+and independently distributed from the population distribution of
+stimulus-activity pairs, we have
 \[
-\{(x^{(1)}, y^{(1),1}),\hdots, (x^1,y^{(1), r_1}), \hdots, (x^{(k)}, y^{(k),1}),\hdots, (x^{(m)},y^{(m), r_1})\}
+T \sim_{H_0} \text{Bernoulli}(n_2, \frac{1}{k})
 \]
-and a \emph{test set} consisting of the remaining $r_2 = r - r_1$ repeats.
+Therefore, let $c_\alpha$ be the $(1-\alpha)$ quantile of a
+$\text{Bernoulli}(n_2, \frac{1}{k})$ distribution.  To perform a
+hypothesis test at level $\alpha$, reject the null $H_0$ if $T >
+c_\alpha$ and accept otherwise.  Equivalently, define the $p$-value as
+the area under the tail of the $\text{Bernoulli}(n_2,
+\frac{1}{k})$ distribution to the right of $T$,
 \[
-\{(x^{(1)}, y^{(1), r_1 + 1}),\hdots, (x^{(1)},y^{(1),r}), \hdots, (x^{(k)}, y^{(k), r_1 + 1}),\hdots, (x^{(k)},y^{(k),r_1})\}.
+p = \Pr[X > T| X \sim \text{Bernoulli}(n_2, \frac{1}{k})],
 \]
-One inputs the training data into the classifier to obtain the classification rule $f$,
-\[
-f = \mathcal{F}(\{(x^{(1)}, y^{(1),1}),\hdots, (x^{(1)},y^{(1),r_1}), \hdots, (x^{(k)}, y^{(k),1},\hdots, (x^{(k)},y^{(k), r_1})\}).
-\]
-The test statistic of interest is the test error,
-defined as
-\[
-\widehat{\text{GA}} = \frac{1}{k r_2} \sum_{i=1}^k \sum_{j = r_1 + 1}^r \text{I}(f(y^{(i),j}) \neq i).
-\]
-Due to the conditional independence of the training set and test set,
-$\widehat{\text{GA}}$ is an unbiased estimate of $\text{GA}$.  Hence various
-approaches can be used to obtain a threshold $c_\alpha$ such that
-$\Pr[\widehat{\text{GA}} > c_\alpha] \leq \alpha$ holds (approximately) under the
-null hypothesis.  These approaches include permutation tests, tests
-based on a universal variance bound, or the generalized likelihood
-ratio test.  The hypothesis $H_0$ is then rejected at level $\alpha$
-if $\widehat{\text{GA}} > c_\alpha$.
+and reject if and only if $p < \alpha$.
 
-There is also a way to improve on data-splitting, by
-using \emph{cross-validation}. Essentially, one applies the
-data-splitting approach multiple times, with different training and
-test partitions, and aggregates the results. Cross-validation can be
-used to reduce the variance of the estimated $\text{GA}$ and hence
-improve the power of the test, and it can also be used to
-obtain \emph{confidence intervals} for the estimate.
+\emph{Second approach (permutation test).}  Permutation tests are
+widely used in statistical applications: for a good introduction to
+the subject, the reader is invited to consult
+\cite{efron1994introduction}.  Under the null hypothesis of
+independence between $Y$ and $\vec{X}^{ROI}$, the test statistic $T$
+(the test accuracy on $n_2$ test observations) has a distribution that
+is invariant under permutation of the labels $Y_1,\hdots, Y_n$.
+Therefore, obtain $B$ samples of permutation test statistics
+$T^{(1)},\hdots, T^{(B)}$ by the following procedure:
+\begin{itemize}
+\item[1.] For $i = 1,\hdots, B$, draw a random permutation $\sigma: n \to n$.
+\item[2.] Use the pairs
+  $(y_{\sigma_i},\vec{x}^{ROI}_{\sigma_i})_{i=1}^{n_1}$ to construct
+  classification rule $f^{(i)}$ (using the same classifier as the one
+  used to construct $f$).
+\item[3.] Evaluate the test accuracy of $f^{(i)}$,
+\[
+T^{(i)}= \frac{1}{n_2} \sum_{i=1}^{n_2} I(f^{(i)}(\vec{x}_{\sigma_i}^{ROI}) = y_{\sigma_i}).
+\]
+\end{itemize}
+The permutation $p$-value is calculated based on the rank of $T$ within the sample of permuation test statistics:
+\[
+p = \frac{\sum_{i=1}^B I(T^{(i)} < T) + 1}{B + 1},
+\]
+and reject the null hypothesis if and only if $p < \alpha$.
+
+\subsubsection{Spotlight analysis}
 
 \subsection{Other applications}
 
