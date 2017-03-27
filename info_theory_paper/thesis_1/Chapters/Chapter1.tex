@@ -990,12 +990,6 @@ simulated by merely masking parts of the brain image.
 
 \subsubsection{Data Setup}
 
-\begin{itemize}
-\item Data setup: In fMRI, we obtain (indirect) measurements of brain activation in response to stimuli
-\item Test of whether brain region contains information using classification
-\item Spotlight analysis, p-value map
-\end{itemize}
-
 While multivariate pattern analysis can be applied in a wide variety
 of brain imaging modalities, its dominant use has been in functional
 magnetic resonance imaging (fMRI.)  Therefore, we will briefly
@@ -1122,7 +1116,10 @@ H_1: \text{GA}(f) > \frac{1}{k}.
 We will describe two different methods for testing $H_0$ versus $H_1$.
 The first approach is to use the fact that the distribution of $T$ is
 known under the null hypothesis.  The second approach is a permutation
-test.  The permutation test is more computationally expensive, but has
+test\footnote{Permutation tests are
+widely used in statistical applications: for a good introduction to
+the subject, the reader is invited to consult
+\cite{efron1994introduction}.}.  The permutation test is more computationally expensive, but has
 important advantages in terms of family-wise error control, as we will
 describe in the sequel. %% describe in the next subsubsection
 
@@ -1144,33 +1141,92 @@ p = \Pr[X > T| X \sim \text{Bernoulli}(n_2, \frac{1}{k})],
 \]
 and reject if and only if $p < \alpha$.
 
-\emph{Second approach (permutation test).}  Permutation tests are
-widely used in statistical applications: for a good introduction to
-the subject, the reader is invited to consult
-\cite{efron1994introduction}.  Under the null hypothesis of
+\emph{Second approach (permutation test)}.  Under the null hypothesis of
 independence between $Y$ and $\vec{X}^{ROI}$, the test statistic $T$
 (the test accuracy on $n_2$ test observations) has a distribution that
 is invariant under permutation of the labels $Y_1,\hdots, Y_n$.
 Therefore, obtain $B$ samples of permutation test statistics
 $T^{(1)},\hdots, T^{(B)}$ by the following procedure:
 \begin{itemize}
-\item[1.] For $i = 1,\hdots, B$, draw a random permutation $\sigma: n \to n$.
+\item[1.] For $j = 1,\hdots, B$, draw a random permutation $\sigma: n \to n$.
 \item[2.] Use the pairs
   $(y_{\sigma_i},\vec{x}^{ROI}_{\sigma_i})_{i=1}^{n_1}$ to construct
-  classification rule $f^{(i)}$ (using the same classifier as the one
+  classification rule $f^{(j)}$ (using the same classifier as the one
   used to construct $f$).
-\item[3.] Evaluate the test accuracy of $f^{(i)}$,
+\item[3.] Evaluate the test accuracy of $f^{(j)}$,
 \[
-T^{(i)}= \frac{1}{n_2} \sum_{i=1}^{n_2} I(f^{(i)}(\vec{x}_{\sigma_i}^{ROI}) = y_{\sigma_i}).
+T^{(j)}= \frac{1}{n_2} \sum_{i=1}^{n_2} I(f^{(j)}(\vec{x}_{\sigma_i}^{ROI}) = y_{\sigma_i}).
 \]
 \end{itemize}
 The permutation $p$-value is calculated based on the rank of $T$ within the sample of permuation test statistics:
 \[
-p = \frac{\sum_{i=1}^B I(T^{(i)} < T) + 1}{B + 1},
+p = \frac{\sum_{j=1}^B I(T^{(j)} < T) + 1}{B + 1},
 \]
 and reject the null hypothesis if and only if $p < \alpha$.
 
-\subsubsection{Spotlight analysis}
+\subsubsection{Searchlight analysis}
+
+Classifier-based tests of independence are commonly combined with the
+\emph{multivariate searchlight} procedure
+(\cite{kriegeskorte2006information}, \cite{kriegeskorte2007analyzing})
+in order the scan the entire brain for informative clusters of voxels.
+The procedure produces a 3D map of $p$-values in the brain, with
+significant $p$-values indicative of regions in the brain associated
+with the task.  Figure \ref{fig:searchlight_example} displays one
+example of a $p$-value map obtained from an object perception task (\cite{chen2011cortical}).
+
+\begin{figure}
+\centering
+\includegraphics[scale = 0.5]{Figures/chen2010_cropped.png}
+\caption{$p$-value map obtained from linear SVM-based searchlight
+  applied to object perception data, using spherical neighborhoods
+  with 9mm radius (\cite{chen2011cortical}).}
+\label{fig:searchlight_example}
+\end{figure}
+
+A \emph{searchlight} refers to a local region-of-interest centered
+around a particular \emph{central voxel}.  A variety of methods can be
+used to define the neighborhood.  The most straightforward is the
+\emph{spherical searchlight}, which fixes a radius $r$, and to include
+all voxels within a distance $r$ of the central voxel.  However, more
+sophisticated approaches may account for the geometry of the brain
+surface (\cite{chen2011cortical}.)
+
+Having chosen a method for obtaining searchlights, one generates a
+searchlight centered around each voxel in the fMRI image, $\vec{x}$.
+Let $\{ROI_1,\hdots, ROI_v\}$ denote the collection of such
+searchlights, with $\vec{X}^{ROI_i}$ consisting of the voxels centered
+around the $i$th voxel.
+
+For each $ROI_i$, one conducts a hypothesis test for independence
+between $Y$ and $\vec{X}^{ROI_i}$ using the local test of independence
+described earlier.  % in the previous subsection This produces a map
+of $p$-values, $p_1,\hdots, p_v$, for each voxel in the fMRI image.
+Clusters of small $p$-values can be informally interpreted as
+indicative of brain regions associated with the task.  Alternatively,
+to test the global null hypothesis that all ROIs are independent of
+the task, one can apply the permutation testing approach
+simultaneously to all voxels in the brain.  The global permuation
+approach is carried out as follows:
+\begin{itemize}
+\item[0.] (Non-permuted data): Draw a random permutation $\sigma: n \to n$. For $i = 1,\hdots, v$, use the pairs
+  $(y_{\sigma_\ell},\vec{x}^{ROI_i}_{\sigma_\ell})_{\ell=1}^{n_1}$ to construct
+  classification rule $f^{(0, i)}$
+\item[1.] For $j = 1,\hdots, B$, draw a random permutation $\sigma: n \to n$.
+\item[2.] For $i = 1,\hdots, v$, use the pairs
+  $(y_{\sigma_\ell},\vec{x}^{ROI_i}_{\sigma_k})_{\ell=1}^{n_1}$ to construct
+  classification rule $f^{(j, i)}$ (using the same classifier as the one
+  used to construct $f$).
+\item[3.] Evaluate the test accuracy $T^{(j,i)}$ of $f^{(j, i)}$.
+\item[4.] Find the maximum accuracy $T^{(j)} = \max_{i=1}^v T^{(j,i)}$.
+\item[5.] Define the $p$-value for each ROI by
+\[
+p_i =  \frac{\sum_{j=1}^B I(T^{(j)} < T^{(0, i)}) + 1}{B + 1},
+\]
+\end{itemize}
+Since the permutations are shared across the ROIs, familywise control
+is attained, in the sense that $p^* = \min_i p_i$ is a valid
+$p$-value.
 
 \subsection{Other applications}
 
