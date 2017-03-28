@@ -7,11 +7,152 @@
 
 \section{Motivation}
 
-\subsection{Facial recognition example}
+%\subsection{Facial recognition example}
+Facial recognition is an important technology with applications in
+security and in social media, such as automatic tagging of photographs
+on Facebook.  The basic problem is illustrated in Figure
+\ref{fig:face_rec}: given a collection of tagged and cropped
+photographs $\{(y^{(i)}, x_j^{(i)})\}$, where $y^{(i)}$ is the label,
+and $x_j^{(i)}$ is a vector containing the numeric features of the
+photograph (e.g. pixels), assign labels $y$ to untagged photographs
+$x_*$.  Here, the notation $x_j^{(i)}$ indicates the $j$th labelled
+photograph in the database belonging to the $i$th individual. One way
+to study the problem is to fit it into the multi-class classification
+framework, where the label set $\mathcal{Y}$ consists of all
+individuals in the data set, $\{y^{(1)},\hdots, y^{(k)}\}$.
+
+\begin{figure}
+\centering
+\begin{tabular}{|c|ccc|c|}
+\hline
+Label & & Training & & Test\\ \hline
+$y^{(1)}$=Amelia & 
+  $x_1^{(1)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Amelia_Vega_0001.png} &  
+  $x_2^{(1)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Amelia_Vega_0002.png} &  
+  $x_3^{(1)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Amelia_Vega_0003.png} &  
+  $x_*^{(1)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Amelia_Vega_0004.png} \\ \hline
+$y^{(2)}$=Jean-Pierre & 
+  $x_1^{(2)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Jean-Pierre_Raffarin_0001.png} &  
+  $x_2^{(2)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Jean-Pierre_Raffarin_0002.png} &  
+  $x_3^{(2)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Jean-Pierre_Raffarin_0003.png} &  
+  $x_*^{(2)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Jean-Pierre_Raffarin_0004.png} \\ \hline
+$y^{(3)}$=Liza & 
+  $x_1^{(3)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Liza_Minnelli_0001.png} &  
+  $x_2^{(3)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Liza_Minnelli_0002.png} &  
+  $x_3^{(3)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Liza_Minnelli_0003.png} &  
+  $x_4^{(3)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Liza_Minnelli_0004.png} \\ \hline
+$y^{(4)}$=Patricia & 
+  $x_1^{(4)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Patricia_Clarkson_0001.png} &  
+  $x_2^{(4)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Patricia_Clarkson_0002.png} &  
+  $x_3^{(4)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Patricia_Clarkson_0003.png} &  
+  $x_4^{(4)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Patricia_Clarkson_0004.png} \\ \hline
+\end{tabular}
+\caption{Face recognition problem}
+\label{fig:face_rec}
+\end{figure}
+
+However, the formalism of classification is inadequate for studying
+many practical questions related to the generalizability of the facial
+recognition system.  We can define a population risk (also called
+generalization error) for the classification rule, and make inferences
+about the population risk based on the test performance.  However, the
+population risk and associated inferences apply only to the particular
+collection of individuals $\{y^{(1)},\hdots, y^{(k)}\}$.  If we were
+to add a new individual $y^{(k+1)}$ to the dataset, for instance, when
+photographs are uploaded on Facebook containing a new user, this
+defines a totally new classification problem because the expanded set
+of labels $\{y^{(1)},\hdots, y^{(k+1)}\}$ defines a different response
+space than the old set of labels $\{y^{(1)},\hdots, y^{(k)}\}$.  Yet,
+these two classification problems are clearly linked.  To take another
+example, a client might want to run the facial recognition system on
+their own database of individuals.  In this case, there might be no
+overlap between the first set of labels (the people in my database)
+and the second set of labels (the people in the client's database.)
+And yet, the client might still expect the performance of the system
+on our database to be informative of how well it will do on the second
+set of labels!
+
+The question of how to link performance between two different but
+related classification tasks is an active area of research, known as
+\emph{transfer learning}.  But while the two examples we just listed
+might be considered as examples of transfer learning problems, the
+current literature on transfer learning, as far as we know, does not
+study the problem of \emph{mutating label sets}.  Therefore, to
+address this new class of questions about the generalizability of the
+recognition system, we need to formalize our notions of (a) what
+constitutes a `recognition system' which can be applied to different
+classification problems, and (b) what assumptions allow one to infer
+performance in one classification problem based on performance in
+another classification problem.
 
 \section{Setup}
 
+By `recognition system,' we really mean a \emph{learning algorithm}
+$\Lambda$ which can take training data as input, and produce a
+classification rule for recognizing faces.  While a classification
+rule is bound to a specific label set, a learning algorithm can be
+applied to datasets with arbitrary label sets, and be continually
+updated as new labels are added to the label set.  To `update' a
+facial recognition system with new data means to apply the learning
+algorithm to the updated database.
 
+Now we can formalize what it means to generalize performance from one
+problem to another.  A \emph{classification problem} $P$ is specified
+by a label set $\mathcal{Y}$, a predictor space $\mathcal{X}$, a joint
+distribution $G$ on $\mathcal{Y} \times \mathcal{X}$, and a
+\emph{sampling scheme} $S$ for obtaining training data (for example,
+to obtain $n$ observations from $G$ i.i.d.); for now, let us take the
+loss function as zero-one loss.  The sampling scheme is needed because
+we cannot say much about how the learning algorithm will perform
+unless we know how much training data it is going to have.  The
+\emph{risk} of the algorithm $\Lambda$ on the classification problem
+$P = (\mathcal{Y}, \mathcal{X}, G, S)$ is defined as the expected risk
+of the resulting classification rule $h$,
+\[
+\text{Risk}_P(\Lambda) = \E[\text{Risk}(h)]
+\]
+where $h$ is produced by applying $\Lambda$ to the training data,
+sampled by $S$.  The expectation is taken over the randomness in the
+generation of the training data.
+
+At this point we have defined an extremely general transfer learning
+problem: given two different classification problems $P_1 =
+(\mathcal{Y}_1, \mathcal{X}_1, G_1, S_1)$ and $P_2 = (\mathcal{Y}_2,
+\mathcal{X}_2, G_2, S_2)$, what can we say about the relationship
+between $\text{Risk}_{P_1}(\Lambda)$ and $\text{Risk}_{P_2}(\Lambda)$?
+Not much, unless we make many more assumptions about how $P_1$ and
+$P_2$ are linked.  
+
+The basic approach we will take is to assume that both $P_1$ and $P_2$
+have been generated randomly via a common mechanism.  In the original
+motivating context of facial recognition, this is to say that two
+different label sets $\mathcal{Y}_1$ and $\mathcal{Y}_2$ are linked
+because they both belong to a common population of labels
+$\mathcal{Y}$, i.e., the population of all possible humans, and to
+further assume that both have been \emph{sampled}, in the same manner,
+from $\mathcal{Y}$.
+
+The study of how to make inferences about the risk in $P_2$ given
+information about the performance achieved in $P_1$, granted a set of
+assumptions on how $P_1$ and $P_2$ have been randomly generated (and
+are thereby linked through shared randomization mechanisms) forms the
+basis of the subject of \emph{randomized classification}.
+
+As we noted in the introduction, the problem of randomized
+classification has a close ancestor in the study of \emph{random code
+  models} in information theory.  There, the problem is to understand
+the \emph{decoding performance} (the analogue to risk) of a
+encoding/decoding system $P$ which has a randomized code space
+$\mathcal{Y}$.  Where random code models have a random codebook which
+is a sample over a distribution of all possible codes, randomized
+classification problems have a random label set that is a sample of a
+larger label space.  However, the results we obtain for randomized
+classification are more general in nature than the existing results
+availible for random code models, because work on random codes is
+generally limited to asymptotic settings, whereas we obtain finite-$k$
+results, and because random code models assume a specific
+product-distribution structure on $(X, Y)$ which is not appropriate
+for classification problems.
 
 \subsection{Sampling scheme}
 

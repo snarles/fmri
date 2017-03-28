@@ -456,13 +456,14 @@ $h$ will perform on new data.  This can be done rigorously if we can
 assume that the new data pairs $(X, Y)$ will be drawn i.i.d. from some
 population distribution $G$, and that the observations in the test set
 are also drawn i.i.d. from $G$.  The criterion we use to judge the
-performance of the prediction rule $h$ is the \emph{prediction risk}
+performance of the prediction rule $h$ is the \emph{prediction risk} (also called \emph{generalization error})
 \[
 \text{Risk}(h) = \mathbb{E}_G[L(Y; h(X))].
 \]
 
 Under the assumption that the test set is drawn i.i.d. from $G$, then
-it follows that the test risk is an unbiased estimator of the risk.
+it follows that the test risk (aka \emph{test error}) is an unbiased
+estimator of the risk.
 \[
 \text{TestRisk}(h) = \frac{1}{n_2} \sum_{i=n_1+1}^{n_1 + n_2} L(y_i, h(x_i)).
 \]

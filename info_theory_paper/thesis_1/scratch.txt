@@ -376,5 +376,31 @@ the functionality of the mutual information would be preserved by an
 alternative information coefficient satisfying only those minimal
 properties.
 
+Having outlined the reasoning behind our assumptions, we will restate,
+clarify, and extend our model in the following section.
 
+  In most realistic applications,
+the label set is not going to be a \emph{uniform} sample over all
+possible humans, and two label sets will be drawn using different
+sampling distributions over $\mathcal{Y}$.  However, for the sake of
+developing the simplest possible theory, we will make the assumption
+that both of the label sets $\mathcal{S}_1$ and $\mathcal{S}_2$ are
+composed of i.i.d. samples (of size $k_1$ and $k_2$ respectively) from
+the population distribution $\mathcal{Y}$.  Here we have switched
+notation from $\mathcal{Y}_i$ to $\mathcal{S}_i$ to emphasize the fact
+that the label set is a subsample.
+
+Secondly, given that label sets overlap in two classification
+problems, we expect the conditional distributions to match for the
+overlapping labels.  This means that for each $y \in \mathcal{Y}$,
+there exists a unique distribution of features $F_y$, so that for both
+$G_1$ and $G_2$, the conditional distribution of $X$ given $Y = y$ is
+$F_y$.
+
+Finally, as a necessary simplification, we assume that the size of the
+training set is comparable in the two problems.  This assumption is
+made so that the resulting theory can be made to some extent
+independent of the details of the learning algorithm $\Lambda$.  We
+require that the sampling scheme be parameterized by $r$, the number
+of training instances drawn from each label $y \in \mathcal{S}_i$.
 
