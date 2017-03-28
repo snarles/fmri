@@ -532,37 +532,107 @@ $h$.
 
 \subsubsection{Classification}
 
-Discuss specific facts about classification.
+In classification, the response space $\mathcal{Y}$ is discrete.  The
+prediction rule is called a \emph{classification rule}, and the
+learning algorithm is called a \emph{classifier}.  The elements $y \in
+\mathcal{Y}$ of the response space are called \emph{labels}.  However,
+without loss of generality, we will take the convention that the
+labels are integers $\mathcal{Y} = \{1,\hdots, k\}$, where $k$ is the
+number of labels.  When a feature vector $\vec{x}$ has the true label
+$i$, we can also say that $\vec{x}$ belongs to the $i$th class.
 
+The most common loss function considered in classification problems is
+zero-one loss,
+\[
+L(y;\hat{y}) = I(y \neq \hat{y}).
+\]
+We assume the zero-one loss for the rest of the discussion.
+
+A theoretically important (but non-implementable) classification rule
+is the \emph{Bayes rule}, which achieves optimal prediction risk.
+However, since the Bayes rule requires knowledge of the population
+joint distribution, it cannot be constructed in practice.  Supposing
+that $(\vec{X}, Y)$ are drawn from a joint distribution $G$, then
+define $F_y$ as the conditional distribution of $\vec{X}$ given $Y =
+y$.  Supposing that $F_y$ has a density $f_y$, and that the labels $Y$
+have a uniform distribution, then the Bayes rule assigns feature
+vectors $\vec{x}$ to the label with the highest density.
+\[
+h_{Bayes}(\vec{x}) = \text{argmax}_{y \in \mathcal{Y}} f_y(\vec{x}).
+\]
+
+Since the response space is discrete, the classification rule $h$
+partitions the input space $\mathcal{X}$ into $k$ partitions.  The
+boundaries between adjacent partitions are called \emph{decision
+  boundaries}.  A large number of popular classifiers produce
+\emph{linear decision boundaries}: that is, each decision boundary
+lies on a hyperplane.
+
+A large number of classifiers create classification rules that are
+based on \emph{discriminant functions.}  A discriminant function is
+produced for each label in $\mathcal{Y}$.  The $i$th discriminant
+function, $d_i: \mathcal{X} \to \mathbb{R}$ quantifies how likely a
+feature vector $\vec{x}$ belongs to the $i$th class.  We say that
+$d_i(\vec{x})$ is the \emph{discriminant score} of $\vec{x}$ for the
+$i$th label.  The classification rule $h$, therefore, assigns points to
+the label having the highest discriminant score for $\vec{x}$,
+\[
+h(\vec{x}) = \text{argmax}_{i \in \{1,\hdots, k\}} d_i(x).
+\]
+
+Classifiers with \emph{linear discriminant functions}; that is, which produce discriminant functions of the form
+\[
+d_i(\vec{x}) = w^T \vec{x}
+\]
+result in \emph{linear decision boundaries.}  These include:
 \begin{itemize}
-\item Terminology, classification and classification rule
-\item Test error is Bernoulli
+\item \emph{Linear support vector machines} [CITE].
+\item \emph{Multinomial logistic regression}.
+\item \emph{Fisher's linear discriminant analysis}.
 \end{itemize}
 
-%% needs edit
-A wide variety of machine learning algorithms exist for ``learning''
-good classification rules $f$ from data.  We use the terminology
-\emph{classifier} to refer to any algorithm which takes data as input,
-and produces a classification rule $f$ as output.  The following
-discussion makes it necessary for us to make a precise distinction
-between the \emph{classifier} and the \emph{classification rule} it
-produces, and our usage of the terms may differ from the standard in
-the literature.  Mathematically speaking, the classifier is a
-functional which maps a set of observations to a classification rule,
+Another large class of classifiers--\emph{generative} classifiers--are based on estimating the
+conditional distribution of $\vec{x}$ within each class.
+These classifiers use the discriminant function
 \[
-\mathcal{F}: \{(x^{1},y^{1}),\hdots, (x^{m}, y^{m})\} \mapsto f(\cdot).
+d_y(\vec{x}) = \log \hat{f}_y(\vec{x})
 \]
-The data $(x^1,y^1),\hdots, (x^m, y^m)$ used to obtain the
-classification rule is called \emph{training data.}  When the
-objective is to obtain the best possible classification rule, as is
-the case in diagnostic settings, it is optimal to use all of the
-availible data to train the classifier.  However, when the goal is to
-obtain \emph{inference} about the performance of the classification
-rule, it beomes necessary to split the data into two independent sets:
-one set to train the classifier, and one to evaluate the performance.
-The reason that such a splitting is necessary is because using the
-same data to test and train a classifier introduces significant bias
-into the empirical classification error.
+where $\hat{f}_y$ is the estimated density of the distribution $F_y$.
+The estimated densities $\hat{f}_y$ also comprise a \emph{generative
+  model} in the sense that they allow the possibility of simulating
+new data from the class--hence the nomenclature.  Different
+distributional assumptions lead to different classifiers within the
+generative category.  Some examples are:
+\begin{itemize}
+\item \emph{Naive Bayes.}  One assumes that $F_y$ is a product distribution on the components of $\vec{x}$.
+\item \emph{Fisher's linear discriminant analysis.}  One assumes that $\{F_y\}_{y \in \mathcal{Y}}$ are multivariate normal with common covariance.
+\item \emph{Quadratic discriminant analysis.}  One assumes that $\{F_y\}_{y \in \mathcal{Y}}$ are multivariate normal.
+\end{itemize}
+
+Some other commonly used classifiers include:
+\begin{itemize}
+\item \emph{k-Nearest neighbors.}  Uses discriminant functions
+  $d_i(\vec{x})$ which count how many of the $k$ nearest neighbors of
+  $\vec{x}$ in the training set have the label $i$.
+\item \emph{Decision trees.}  Recursively partitions the input space
+  $\mathcal{X}$ into smaller and smaller regions, then assigns points
+  $\vec{x}$ to the majority class within the region.
+\item \emph{Multilayer neural networks.}  Learns nonlinear
+  representations of the input space, $g_j(\vec{x})$, then constructs
+  discriminant functions which are linear combinations of the
+  representations $g_j$.
+\end{itemize}
+
+%% discuss parallelization here??
+
+Under zero-one loss, it is easy to conduct inference for the
+prediction risk of $h$.  Under the i.i.d. sampling assumption, the
+loss of a test observation $L(y_i; h(x_i))$ has a Bernoulli
+distribution with probability equal to the population risk.  Therefore,
+we have
+\[
+n_2 \text{TestRisk}(h) \sim \text{Bernoulli}(n_2, \text{Risk}(h)).
+\]
 
 
 \subsection{Information Theory}\label{sec:intro_mi}
@@ -970,7 +1040,7 @@ specialization in the brain.
 We now illustrate these use cases of information theory and supervised
 learning in a number of specific applications in neuroscience.
 
-\subsection{Selecting decoding models.}
+\subsection{Selecting decoding models.}\label{sec:model_selection}
 Neurons carry information via \emph{spike trains}, which are temporal
 point processes.  In response to stimulus $\bX$, the neuron produces a
 spike train $Y(t)$ where $Y(t) = 1$ indicates a spike at time $t$ and
@@ -1014,7 +1084,7 @@ only \emph{individual} neurons are considered: the analysis did not
 rule out the possibility that the temporal spiking pattern could yield
 information within an \emph{ensemble} of neurons.
 
-\subsection{Inferring functional specialization}
+\subsection{Inferring functional specialization}\label{sec:searchlight}
 
 Historically, the earliest discoveries
 of specialized modules in the brain were due to lesion studies, where
@@ -1191,16 +1261,16 @@ the test observations $(y_{\ell_i}, \vec{x}_{\ell_i})$ are identical
 and independently distributed from the population distribution of
 stimulus-activity pairs, we have
 \[
-T \sim_{H_0} \text{Bernoulli}(n_2, \frac{1}{k})
+n_2 T \sim_{H_0} \text{Bernoulli}(n_2, \frac{1}{k})
 \]
 Therefore, let $c_\alpha$ be the $(1-\alpha)$ quantile of a
 $\text{Bernoulli}(n_2, \frac{1}{k})$ distribution.  To perform a
-hypothesis test at level $\alpha$, reject the null $H_0$ if $T >
+hypothesis test at level $\alpha$, reject the null $H_0$ if $n_2 T >
 c_\alpha$ and accept otherwise.  Equivalently, define the $p$-value as
 the area under the tail of the $\text{Bernoulli}(n_2,
 \frac{1}{k})$ distribution to the right of $T$,
 \[
-p = \Pr[X > T| X \sim \text{Bernoulli}(n_2, \frac{1}{k})],
+p = \Pr[X > n_2 T| X \sim \text{Bernoulli}(n_2, \frac{1}{k})],
 \]
 and reject if and only if $p < \alpha$.
 
@@ -1304,5 +1374,123 @@ has allowed scientists to predict neural codes from signal processing
 models: for instance, the center-surround structure of human retinal
 neurons matches theoretical constructions for the optimal filter based
 on correlations found in natural images [cite].
+
+\subsection{Can classification accuracy quantify information?}
+
+Due to the analogy between the nervous system and a communications
+network, it was a natural choice for early neuroscientists to adopt
+Shannon's \emph{mutual information} as a quantitative measure of
+dependence, as we saw in the application of mutual information to
+decoding models (Section \ref{sec:model_selection}).  But as new
+technologies enabled the recording of neural data at larger scales and
+resolution, the traditional reductionist goals of neuroscience were
+supplemented by increasingly ambitious attempts within neuroscience to
+understand the dynamics of neural ensembles, and by efforts
+originating within psychology and medicine to link the structure and
+function of the entire human brain to behavior or disease.  The scale
+of the data, and the complexity of the models studied posed an
+obstacle to traditional information-theoretic approaches.  Therefore,
+it was of considerable interest when Haxby (2001) introduced the usage
+of \emph{supervised learning} (classification tasks) for the purpose
+of quantifying stimulus information in task fMRI scans, as we
+discussed in section \ref{sec:searchlight}.
+
+Judging from the language used by the practioners themselves, it is
+intuitively clear to them how classification accuracies can be used to
+quantify information in brain scans.  We agree with the intuition
+behind this practice, and go further to say that the use of
+classification accuracies as a measure of information can be formally
+justified.  However, having said this, it is important to remark that
+Shannon's \emph{mutual information} need not be taken as the canonical
+quantification of ``information'' as a measure of multivariate
+dependence.  Instead, we take a step back and attempt to dissect the
+intuitive properties of ``information'' and why the concept is useful
+in science.  We will argue that given these intuitions, both mutual
+information and classification accuracy can be seen as useful measures
+of information.
+
+\begin{itemize}
+\item \emph{
+Intuition 1: Information is a measure of dependence.}   If $\bX$ and $\bY$ are statistically independent, then
+$\bX$ gives no information about $\bY$, and vice-versa.
+\end{itemize}
+This intuition is employed when researchers test the null hypothesis
+of chance accuracy for classification.  If the null is accepted, the
+researcher concludes that there is no information in the predictors
+about the response.
+
+\begin{itemize}
+\item \emph{
+Intuition 2a: Monotonicity with respect to inclusion of outputs.} If $\bX_1$ and $\bX_2$ are ensembles of neurons (or
+individual neurons), then the combined ensemble $(\bX_1, \bX_2)$ has equal or
+more information about $\bY$ than either component by itself.
+\end{itemize}
+
+\begin{itemize}
+\item \emph{
+Intuition 2b: Noise adds no information.} If, in the previous example, $\bX_2$ is independent of
+$\bY$, then $\bX_2$ adds no information to the ensemble.
+\end{itemize}
+The non-informativity of noise is vital for the purpose of
+\emph{localizing} information within fMRI voxels (as is done in
+searchlight analysis.)  Since noise voxels fail to improve
+classification performance (and indeed, sometimes harm empirical
+performance,) the optimal searchlight radius will concentrate on
+clusters of signal voxels, and minimize the inclusion of noise voxels.
+
+\begin{itemize}
+\item \emph{Intuition 3:}
+Information can be used as a basis of model selection.  Among multiple
+encoding/decoding models, a more accurate model should tend to have
+greater information relative to less accurate models.  
+\end{itemize}
+Compared to the first two, this third intuition is somewhat less
+obvious, but nevertheless appears as an important use-case for mutual
+information, as seen in the application of mutual information to
+choose encoding models.
+
+%Arguably, both the application of mutual information described in
+%\ref{sec:model_selection} and the use of classification accuracies in
+%\ref{sec:searchlight} are justified by this common set of three
+%intuitions.
+
+It is well-known that the mutual information $I(\bX; \bY)$ satisfies
+these three intuitions.  However, the \emph{Bayes classification
+  accuracy}--the accuracy of the \emph{optimal} classifier, also
+satifies these three intuitions.  
+\begin{enumerate}
+\item When $\bX$ and $\bY$ are
+independent, then the Bayes accuracy falls to chance, $1/k$,
+indicating `no information.'  
+\item As additional predictors are made available, the Bayes accuracy
+  can only improve.  As noise predictors are addded, the Bayes
+  accuracy remains unchanged.
+\item Supposing that there exists a `true encoding' with $\bY$ only
+  depending on some function basis $\vec{b}(\bX)$, then the Bayes
+  accuracy for predicting $\bY$ from the basis $\vec{g}(\bX)$ is
+  maximized when $\vec{g} = \vec{b}$.
+\end{enumerate}
+
+However, an important caveat is that classification accuracies
+attained in practice are at best an \emph{underestimate} of Bayes
+accuracy, and therefore do not perfectly inherit all of the above
+properties.  For instance, while the Bayes accuracy satisfies
+Intuition 2b, classification accuracy generally does not: due to the
+phenomenon of overfitting, the inclusion of noise predictors reduces
+classification accuracy.
+
+On the other hand, given sufficient training observations and
+well-specification of models, classification accuracies begin to
+approach Bayes accuracies, and therefore can be justifiable used as
+measures of information which satisfy Intuitions 1-3.  This link
+between empirical classification accuracies, Bayes accuracies, and
+information forms the basis for much of the work in this thesis.
+
+That said, a deeper understanding of the conditions which allow
+attained classification accuracies to mimic the properties of Bayes
+classification accuracy would be greatly useful for understanding the
+practical limitations of some of the methods that will be proposed in
+the later chapters.  However, we must leave this important work for
+future research.
 
 
