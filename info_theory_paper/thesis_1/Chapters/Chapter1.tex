@@ -290,12 +290,14 @@ particular type of \emph{prediction task}.  However, the most general
 recipe for a prediction task involves:
 
 \begin{itemize}
-\item A predictor space $\mathcal{X}$ defining the possible values the predictor $X$ can take;
+\item A predictor space $\mathcal{X}$ defining the possible values the
+  predictor $X$ can take; though typically, $\mathcal{X} =
+  \mathbb{R}^p$.
 \item A response space $\mathcal{Y}$ defining the possible values the response $Y$ can take;
-\item An \emph{unknown} population joint distribution $G$ for the pair $(X, Y)$;
+\item An \emph{unknown} population joint distribution $G$ for the pair $(\vec{X}, Y)$;
 \item A \emph{loss} function defining the penalty for incorrect
   predictions, $L: \mathcal{Y} \times \mathcal{Y} \to \mathbb{R}$.  If
-  $Y$ is the response, and $\hat{Y} = h(X)$ is the prediction, then
+  $Y$ is the response, and $\hat{Y} = h(\vec{X})$ is the prediction, then
   the loss for making the prediction $\hat{Y}$ when the truth is $Y$
   is given by $L(Y; \hat{Y})$.
 \end{itemize}
@@ -336,73 +338,82 @@ L(\vec{y}; \hat{\vec{y}}) = ||\vec{y} - \hat{\vec{y}}||^2.
 \end{itemize}
 
 A \emph{prediction rule} is a function $h: \mathcal{X} \to
-\mathcal{Y}$ for predicting $Y$ as a function of $X$.  The \emph{risk}
-of the prediction rule is the expected loss under the joint
-distribution $G$,
-\[
-\text{Risk}(h) = \mathbb{E}[L(Y; h(X))]
-\]
-
+\mathcal{Y}$ for predicting $Y$ as a function of $\vec{X}$.
 Prediction rules can be found through a variety of means.  In some
 domains, experts manually construct the prediction rules using their
 domain knowledge.  However, the field of \emph{supervised learning}
 aims to algorithmically construct, or `learn' a good prediction rule
 from data.  In supervised learning, we assume that we have access to a
 \emph{training set} consisting of $n_1$ observations
-$\{(X_i,Y_i)\}_{i=1}^{n_1}$, plus a \emph{test set} consisting of
-$n_2$ observations $\{(X_i,Y_i\}_{i=n_1 + 1}^{n_1 + n_2}$; usually, we
-assume that the pairs in both the training and test set have been
-sampled i.i.d. from the distribution $G$.  We will also write $\bX$
-for the matrix of training observations, with each $X_i$ stacked in
-rows, and $\bY$ for the vector of training responses. The training set
-is used to construct the prediction rule $h$.  The test set is then
-used to estimate the risk of the constructed rule (which is also
-called the \emph{generalization error}.)
+$\{(\vec{X}_i,Y_i)\}_{i=1}^{n_1}$, plus a \emph{test set} consisting
+of $n_2$ observations $\{(\vec{X}_i,Y_i\}_{i=n_1 + 1}^{n_1 + n_2}$;
+usually, we assume that the pairs in both the training and test set
+have been sampled i.i.d. from the distribution $G$.  As we will
+elaborate further, the training set is used to construct $h$, while
+the test set is used to evaluate the performance of $h$.
+%We will also write $\bX$
+%for the matrix of training observations, with each $\vec{X}_i$ stacked in
+%rows, and $\bY$ for the vector of training responses. The training set
+%is used to construct the prediction rule $h$.  The test set is then
+%used to estimate the risk of the constructed rule (which is also
+%called the \emph{generalization error}.)
 
 A \emph{learning algorithm} $\Lambda$ is a procedure for constructing the
-prediction rule $h$ given training data $\{(X_i,Y_i)\}_{i=1}^{n_1}$ as
+prediction rule $h$ given training data $\{(\vec{X}_i,Y_i)\}_{i=1}^{n_1}$ as
 an input.  Formally, we write
 \[
-h = \Lambda(\{(X_i,Y_i)\}_{i=1}^{n_1}),
+h = \Lambda(\{(\vec{X}_i,Y_i)\}_{i=1}^{n_1}),
 \]
 indicating that $h$ is the output of the function $\Lambda$ evaluated
-on the input $\{(X_i,Y_i)\}_{i=1}^{n_1}$.  How learning algorithms are
-implemented in practice can very considerably; we illustrate just a
-few of the most common types of learning algorithms:
+on the input $\{(\vec{X}_i,Y_i)\}_{i=1}^{n_1}$.  But recall that $h:
+\mathcal{X} \to \mathcal{Y}$, the classification rule, is also a
+function!  How learning algorithms are implemented in practice can
+very considerably; we illustrate just a few of the most common types
+of learning algorithms:
 
 \begin{itemize}
-\item \emph{Parametric generative models.}  Define a parametric family
-  $F_\theta$ of joint distributions $(X, Y)$.  For instance, in linear
-  regression, a commonly studied family is the multivariate normal linear model,
-  where
+\item \emph{Parametric generative models.}  These types of learning
+  algorithms $\Lambda$ first fit a statistical model to the observed
+  data, then use that model to predict on new observations. Define a
+  parametric family $F_\theta$ of joint distributions $(X, Y)$.  For
+  instance, in linear regression, a commonly studied family is the
+  multivariate normal linear model, where
 \[
-(X, Y) \sim N((1,0,\hdots,0, \beta_0), \begin{pmatrix}\Sigma_X & \Sigma_X \beta \\
+(\vec{X}, Y) \sim N((1,0,\hdots,0, \beta_0), \begin{pmatrix}\Sigma_X & \Sigma_X \beta \\
 \beta^T \Sigma_X & \beta^T \Sigma_X \beta + \Sigma_\epsilon\end{pmatrix},
 \]
 or equivalently,
 \[
-X \sim N((1,0,\hdots,0), \Sigma_X)
+\vec{X} \sim N((1,0,\hdots,0), \Sigma_X)
 \]
 \[
-Y|X \sim N(X \beta, \Sigma_\epsilon).
+Y|\vec{X} \sim N(\vec{X}^T \beta, \Sigma_\epsilon).
 \]
 The learning algorithm $\Lambda$ proceeds by first fitting the
 parametric model to estimate the parameter $\hat{\theta}$.  A variety
 of methods may be chosen to estimate $\theta$: maximimum likelihood,
-penalized maximum likelihood, or Bayesian estimation.  Note also that
-in many cases, such as regression, not all parameters of the model
-need to be estimated for prediction purposes.  For instance, in the
-linear regression model given above, only $\beta$ needs to be
-estimated, and not $\Sigma_X$ or $\Sigma_Y$.  One then constructs the
-prediction rule $h$ depending on the estimated parameter
-$\hat{\theta}$, in a way so that the risk is controlled.  For
-instance, in linear regression, one takes $h = \hat{\beta}^T X.$
-\item \emph{Empirical risk minimization.} As mentioned before, define
-  a function class $\mathcal{H}$.  We wish to search for an element $h
-  \in \mathcal{H}$ which minimizes the empirical risk on the training
-  set,
+penalized maximum likelihood, or Bayesian estimation.  Given the
+fitted statistical model, we can obtain the conditional distribution
+of $Y$ given $\vec{X}$.  The prediction rule $h(\vec{x})$ is then
+constructed using this conditional distribution; for instance, taking
+$h(\vec{x})$ to be the conditional mean of $Y$ given $\vec{X} =
+\vec{x}$.
+%Note also that
+%in many cases, such as regression, not all parameters of the model
+%need to be estimated for prediction purposes.  For instance, in the
+%linear regression model given above, only $\beta$ needs to be
+%estimated, and not $\Sigma_X$ or $\Sigma_Y$.  One then constructs the
+%prediction rule $h$ depending on the estimated parameter
+%$\hat{\theta}$, in a way so that the risk is controlled.  For
+%instance, in linear regression, one takes $h(\vec{X}) = \hat{\beta}^T \vec{X}.$
+\item \emph{Discriminative models.} These types of learning algorithms
+  directly attempt to find a good prediction rule, using empirical
+  performance on the training data as a criterion. One typically
+  limits the search over possible prediction rules to a function class
+  $\mathcal{H}$.  We wish to search for an element $h \in \mathcal{H}$
+  which minimizes the empirical risk on the training set,
 \[
-h = \text{argmin}_{h \in \mathcal{H}} \frac{1}{n_1} \sum_{i=1}^{n_1} \tilde{L}(Y_i, h(X_i))
+h = \text{argmin}_{h \in \mathcal{H}} \frac{1}{n_1} \sum_{i=1}^{n_1} \tilde{L}(Y_i, h(\vec{X}_i))
 \]
 Here, $\tilde{L}$ could be taken to be equal to the original loss
 function $L$, or could be taken to be a different function, such as a
@@ -422,11 +433,11 @@ algorithm requires specification of various \emph{hyperparameters}.
 For instance, lasso regression is a penalized generative model which
 finds $\beta$ minimizing the objective function
 \[
-\beta = \text{argmin}_\beta \frac{1}{2}||\bY - \bX \beta||^2 + \lambda ||\beta||_1.
+\beta = \text{argmin}_\beta \frac{1}{2}\sum_{i=1}^{n_1}(y_i - \vec{x}_i^T \beta)^2 + \lambda ||\beta||_1.
 \]
 and then constructs the prediction rule
 \[
-h(x) = x^T \beta.
+h(\vec{x}) = \vec{x}^T \beta.
 \]
 %% No explanation of L1 norm notation
 Here, the L1-penalty constant $\lambda$ needs to be specified by the
@@ -440,32 +451,84 @@ refer the interested reader to \cite{Hastie2009a}, section 7.10.
 
 \subsubsection{Performance evaluation}
 
-\begin{itemize}
-\item Error estimation using the test set
-\item Data-splitting
-\end{itemize}
+In practice, we would often like to know how well the prediction rule
+$h$ will perform on new data.  This can be done rigorously if we can
+assume that the new data pairs $(X, Y)$ will be drawn i.i.d. from some
+population distribution $G$, and that the observations in the test set
+are also drawn i.i.d. from $G$.  The criterion we use to judge the
+performance of the prediction rule $h$ is the \emph{prediction risk}
+\[
+\text{Risk}(h) = \mathbb{E}_G[L(Y; h(X))].
+\]
 
-%% needs edit, or just delete
-In \emph{data-splitting}, one creates a \emph{training
-set} consisting of $r_1$ repeats per class,
+Under the assumption that the test set is drawn i.i.d. from $G$, then
+it follows that the test risk is an unbiased estimator of the risk.
 \[
-\{(x^{(1)}, y^{(1),1}),\hdots, (x^1,y^{(1), r_1}), \hdots, (x^{(k)}, y^{(k),1}),\hdots, (x^{(m)},y^{(m), r_1})\}
+\text{TestRisk}(h) = \frac{1}{n_2} \sum_{i=n_1+1}^{n_1 + n_2} L(y_i, h(x_i)).
 \]
-and a \emph{test set} consisting of the remaining $r_2 = r - r_1$ repeats.
 \[
-\{(x^{(1)}, y^{(1), r_1 + 1}),\hdots, (x^{(1)},y^{(1),r}), \hdots, (x^{(k)}, y^{(k), r_1 + 1}),\hdots, (x^{(k)},y^{(k),r_1})\}.
+\E[\text{TestRisk}(h)] = \text{Risk}(h).
 \]
-One inputs the training data into the classifier to obtain the classification rule $f$,
+
+Under mild assumptions, one can use the Student-t quantiles to
+construct a confidence interval for the risk,
 \[
-f = \mathcal{F}(\{(x^{(1)}, y^{(1),1}),\hdots, (x^{(1)},y^{(1),r_1}), \hdots, (x^{(k)}, y^{(k),1},\hdots, (x^{(k)},y^{(k), r_1})\}).
+\text{TestRisk}(h) \pm t_{1 - \alpha/2; df = n_2 - 1} \hat{\text{sd}}(\{L(y_i, h(x_i))\}_{i=n_1+1}^{n_1 + n_2})
 \]
-The test statistic of interest is the test error,
-defined as
+where $t_{1 - \alpha/2, df = n_2 - 1}$ is the $1 - \frac{\alpha}{2}$
+quantile of the t-distribution with $n_2 - 1$ degrees of freedom, and
+$\hat{\text{sd}}$ is the sample standard deviation.
+
+A common pitfall is to attempt to use the \emph{training data}, rather
+than independent test data, to estimate the risk.  The empirical risk
+on the training data tends to be an underestimate of the true
+population risk, due to the phenomenon of \emph{overfitting}.  That
+is, the prediction rule $h$ may be capturing the effect of noise in
+the training data as well as signal.
+
+It is usually the job of the data analyst to make sure that the data
+has been partitioned into independent training and test data sets
+before carrying out any analysis.  It is an important decision as to
+how much data to allocate to each of the training and test sets.  A
+larger training set generally results in better prediction rules, but
+a larger test set allows for more precise estimates of prediction
+risk.
+
+In any case, once it has been decided to allocate $n_1$ observations
+to the training set, and $n_2$ observations to the test set, one
+carries out \emph{data-splitting} in order to randomly assign the
+observations to the training and test sets.  The randomization ensures
+that the i.i.d. sampling assumption is met for both the training and
+test set.  Concretely speaking, given observations $(\vec{x}_i,
+y_i)_{i=1}^n$, one draws a random permutation $\sigma: n \to n$, then
+takes $\{(\vec{x}_{\sigma_i}, y_{\sigma_i})_{i=1}^{n_1}\}$ as the
+training set, and the remaining observations $\{(\vec{x}_{\sigma_i},
+y_{\sigma_i})_{i=n_1 + 1}^{n}\}$ as the test set.
+
+Often it is the case that the number of observations $n$ is so small
+that one cannot afford to create a large test set.  To avoid the
+tradeoff between having insufficient training data and insufficient
+test data, one can use the $k$-fold \emph{cross-validation} procedure.
+In cross-validation, one uses the entire data set to construct the
+prediction rule $h$.  Now, in order to estimate the prediction risk,
+one splits the data into $k$ (approximately) equally-sized partitions.
+Then, for fold $i = 1,\hdots, k$, we take the $i$th partition as the
+test set, and merge the the remaining $k-1$ partitions into the
+training set.  The training set is used to construct a new prediction
+rule, $h^{(i)}$.  Then, the test set is used to estimate the risk of
+$h^{(i)}$, yielding the empirical risk $\text{TestRisk}^{(i)}$.  After
+this has been done for all $k$ folds, we have the cross-validation
+risk estimates $\text{TestRisk}^{(1)},\hdots, \text{TestRisk}^{(k)}$.
+The risk of $h$ itself is estimated as
 \[
-\widehat{\text{GA}} = \frac{1}{k r_2} \sum_{i=1}^k \sum_{j = r_1 + 1}^r \text{I}(f(y^{(i),j}) \neq i).
+\text{CVRisk} = \frac{1}{k}\sum_{i=1}^k \text{TestRisk}^{(i)}.
 \]
-Due to the conditional independence of the training set and test set,
-$\widehat{\text{GA}}$ is an unbiased estimate of $\text{GA}$.
+The intuition behind cross-validation is that each cross-validated
+risk estimate $\text{TestRisk}^{(i)}$ should be an overestimate of the
+population risk of $h$, because $h^{(i)}$, being constructed from
+fewer training data, tends to have a larger population risk than $h$.
+Therefore, $\text{CVRisk}$ should be an overestimate of the risk of
+$h$.
 
 \subsubsection{Classification}
 
