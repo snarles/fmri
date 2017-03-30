@@ -295,11 +295,11 @@ recipe for a prediction task involves:
   \mathbb{R}^p$.
 \item A response space $\mathcal{Y}$ defining the possible values the response $Y$ can take;
 \item An \emph{unknown} population joint distribution $G$ for the pair $(\vec{X}, Y)$;
-\item A \emph{loss} function defining the penalty for incorrect
-  predictions, $L: \mathcal{Y} \times \mathcal{Y} \to \mathbb{R}$.  If
+\item A \emph{cost} function defining the penalty for incorrect
+  predictions, $C: \mathcal{Y} \times \mathcal{Y} \to \mathbb{R}$.  If
   $Y$ is the response, and $\hat{Y} = h(\vec{X})$ is the prediction, then
   the loss for making the prediction $\hat{Y}$ when the truth is $Y$
-  is given by $L(Y; \hat{Y})$.
+  is given by $C(Y; \hat{Y})$.
 \end{itemize}
 
 The various types of prediction tasks include classification,
@@ -313,27 +313,27 @@ particular type of response space.
   discrete.  In \emph{binary classification}, the response space
   $\mathcal{Y}$ consists of two elements, say, $\mathcal{Y} = \{0,
   1\}$.  Multi-class classification usually refers to the case
-  $\mathcal{Y}$ has more than two elements.  The most common loss
+  $\mathcal{Y}$ has more than two elements.  The most common cost
   function for classification is zero-one loss,
 \[
-L(y; \hat{y}) = I(y \neq \hat{y}).
+C(y; \hat{y}) = I(y \neq \hat{y}).
 \]
-\item In \emph{regression}, the response space is $\mathbb{R}$.  The most common loss function is squared loss:
+\item In \emph{regression}, the response space is $\mathbb{R}$.  The most common cost function is squared loss:
 \[
-L(y; \hat{y}) = (y - \hat{y})^2.
+C(y; \hat{y}) = (y - \hat{y})^2.
 \]
 \item In \emph{multi-label classification}, the response space is a
   product of several finite sets, say $\mathcal{Y} = \mathcal{Y}_1
   \times \mathcal{Y}_2 \times \cdots \mathcal{Y}_\ell$.  That is to
   say, that the response $\vec{Y}$ consists of a categorical vector,
-  $\vec{Y} = (Y_1,\hdots, Y_\ell)$. More complex types of loss
+  $\vec{Y} = (Y_1,\hdots, Y_\ell)$. More complex types of cost
   functions can be considered, such as \emph{Jaccard distance},
 \[
-L(\vec{y}; \hat{\vec{y}}) = \frac{\sum_{i=1}^\ell y_i \wedge \hat{y}_i}{\sum_{i=1}^\ell y_i \vee \hat{y}_i}.
+C(\vec{y}; \hat{\vec{y}}) = \frac{\sum_{i=1}^\ell y_i \wedge \hat{y}_i}{\sum_{i=1}^\ell y_i \vee \hat{y}_i}.
 \]
-\item In \emph{multiple-response regression}, the response space is $\mathbb{R}^p$.  A natural loss function is squared Euclidean distance,
+\item In \emph{multiple-response regression}, the response space is $\mathbb{R}^p$.  A natural cost function is squared Euclidean distance,
 \[
-L(\vec{y}; \hat{\vec{y}}) = ||\vec{y} - \hat{\vec{y}}||^2.
+C(\vec{y}; \hat{\vec{y}}) = ||\vec{y} - \hat{\vec{y}}||^2.
 \]
 \end{itemize}
 
@@ -413,18 +413,18 @@ $h(\vec{x})$ to be the conditional mean of $Y$ given $\vec{X} =
   $\mathcal{H}$.  We wish to search for an element $h \in \mathcal{H}$
   which minimizes the empirical risk on the training set,
 \[
-h = \text{argmin}_{h \in \mathcal{H}} \frac{1}{n_1} \sum_{i=1}^{n_1} \tilde{L}(Y_i, h(\vec{X}_i))
+h = \text{argmin}_{h \in \mathcal{H}} \frac{1}{n_1} \sum_{i=1}^{n_1} \tilde{C}(Y_i; h(\vec{X}_i))
 \]
-Here, $\tilde{L}$ could be taken to be equal to the original loss
-function $L$, or could be taken to be a different function, such as a
-smoothed approximation of $L$.  The advantage of using a smoothed
-approximation $\tilde{L}$ is that the empirical risk can be made
-differentiable (whereas the original loss $L$ might be
+Here, $\tilde{C}$ could be taken to be equal to the original cost
+function $C$, or could be taken to be a different function, such as a
+smoothed approximation of $C$.  The advantage of using a smoothed
+approximation $\tilde{C}$ is that the empirical risk can be made
+differentiable (whereas the original cost $C$ might be
 nondifferentiable) and hence the optimization made much more tractable
 from a numerical standpoint.  This is often the case in binary
-classification, where $L$ is zero-one loss, but $\tilde{L}$ is the logistic loss
+classification, where $C$ is zero-one loss, but $\tilde{C}$ is the logistic loss
 \[
-\tilde{L}(y; p) = y \log p + (1-y) \log (1-p).
+\tilde{C}(y; p) = y \log p + (1-y) \log (1-p).
 \]
 %% might have to explain why the prediction space is probabilities rather than responses, as well
 \end{itemize}
@@ -458,14 +458,14 @@ population distribution $G$, and that the observations in the test set
 are also drawn i.i.d. from $G$.  The criterion we use to judge the
 performance of the prediction rule $h$ is the \emph{prediction risk} (also called \emph{generalization error})
 \[
-\text{Risk}(h) = \mathbb{E}_G[L(Y; h(X))].
+\text{Risk}(h) = \mathbb{E}_G[C(Y; h(X))].
 \]
 
 Under the assumption that the test set is drawn i.i.d. from $G$, then
 it follows that the test risk (aka \emph{test error}) is an unbiased
 estimator of the risk.
 \[
-\text{TestRisk}(h) = \frac{1}{n_2} \sum_{i=n_1+1}^{n_1 + n_2} L(y_i, h(x_i)).
+\text{TestRisk}(h) = \frac{1}{n_2} \sum_{i=n_1+1}^{n_1 + n_2} C(y_i; h(x_i)).
 \]
 \[
 \E[\text{TestRisk}(h)] = \text{Risk}(h).
@@ -474,7 +474,7 @@ estimator of the risk.
 Under mild assumptions, one can use the Student-t quantiles to
 construct a confidence interval for the risk,
 \[
-\text{TestRisk}(h) \pm t_{1 - \alpha/2; df = n_2 - 1} \hat{\text{sd}}(\{L(y_i, h(x_i))\}_{i=n_1+1}^{n_1 + n_2})
+\text{TestRisk}(h) \pm t_{1 - \alpha/2; df = n_2 - 1} \hat{\text{sd}}(\{C(y_i; h(x_i))\}_{i=n_1+1}^{n_1 + n_2})
 \]
 where $t_{1 - \alpha/2, df = n_2 - 1}$ is the $1 - \frac{\alpha}{2}$
 quantile of the t-distribution with $n_2 - 1$ degrees of freedom, and
@@ -536,18 +536,22 @@ $h$.
 In classification, the response space $\mathcal{Y}$ is discrete.  The
 prediction rule is called a \emph{classification rule}, and the
 learning algorithm is called a \emph{classifier}.  The elements $y \in
-\mathcal{Y}$ of the response space are called \emph{labels}.  However,
-without loss of generality, we will take the convention that the
-labels are integers $\mathcal{Y} = \{1,\hdots, k\}$, where $k$ is the
-number of labels.  When a feature vector $\vec{x}$ has the true label
-$i$, we can also say that $\vec{x}$ belongs to the $i$th class.
+\mathcal{Y}$ of the response space are called \emph{labels}.  Let $k =
+|\mathcal{Y}|$ be the number of labels.  When a feature vector
+$\vec{x}$ has the true label $i$, we can also say that $\vec{x}$
+belongs to the $i$th class.
 
-The most common loss function considered in classification problems is
+The most common cost function considered in classification problems is
 zero-one loss,
 \[
-L(y;\hat{y}) = I(y \neq \hat{y}).
+C(y;\hat{y}) = I(y \neq \hat{y}).
 \]
-We assume the zero-one loss for the rest of the discussion.
+We assume the zero-one loss for the rest of the discussion.  This
+implies that the risk of a classification rule is the probability of
+misclassification,
+\[
+\text{Risk}(h) = \E[C(Y; h(X))] = \Pr[Y \neq h(X)].
+\]
 
 A theoretically important (but non-implementable) classification rule
 is the \emph{Bayes rule}, which achieves optimal prediction risk.
@@ -570,20 +574,21 @@ boundaries between adjacent partitions are called \emph{decision
 lies on a hyperplane.
 
 A large number of classifiers create classification rules that are
-based on \emph{discriminant functions.}  A discriminant function is
-produced for each label in $\mathcal{Y}$.  The $i$th discriminant
-function, $d_i: \mathcal{X} \to \mathbb{R}$ quantifies how likely a
-feature vector $\vec{x}$ belongs to the $i$th class.  We say that
-$d_i(\vec{x})$ is the \emph{discriminant score} of $\vec{x}$ for the
-$i$th label.  The classification rule $h$, therefore, assigns points to
-the label having the highest discriminant score for $\vec{x}$,
+based on \emph{margin functions} (or \emph{discriminant functions.})
+A margin function is produced for each label in $\mathcal{Y}$.  The
+margin function for label $y$, $m_y: \mathcal{X} \to \mathbb{R}$
+quantifies how likely a feature vector $\vec{x}$ has label $y$.  We
+say that $m_y(\vec{x})$ is the margin (or \emph{discriminant score})
+of $\vec{x}$ for the $i$th label.  The classification rule $h$,
+therefore, assigns points to the label having the highest margin for
+$\vec{x}$,
 \[
-h(\vec{x}) = \text{argmax}_{i \in \{1,\hdots, k\}} d_i(x).
+h(\vec{x}) = \text{argmax}_{y \in \mathcal{Y}} m_y(x).
 \]
 
-Classifiers with \emph{linear discriminant functions}; that is, which produce discriminant functions of the form
+Classifiers with \emph{linear discriminant functions}; that is, which produce margin functions of the form
 \[
-d_i(\vec{x}) = w^T \vec{x}
+m_y(\vec{x}) = w^T \vec{x}
 \]
 result in \emph{linear decision boundaries.}  These include:
 \begin{itemize}
@@ -596,7 +601,7 @@ Another large class of classifiers--\emph{generative} classifiers--are based on 
 conditional distribution of $\vec{x}$ within each class.
 These classifiers use the discriminant function
 \[
-d_y(\vec{x}) = \log \hat{f}_y(\vec{x})
+m_y(\vec{x}) = \log \hat{f}_y(\vec{x})
 \]
 where $\hat{f}_y$ is the estimated density of the distribution $F_y$.
 The estimated densities $\hat{f}_y$ also comprise a \emph{generative
@@ -612,15 +617,15 @@ generative category.  Some examples are:
 
 Some other commonly used classifiers include:
 \begin{itemize}
-\item \emph{k-Nearest neighbors.}  Uses discriminant functions
-  $d_i(\vec{x})$ which count how many of the $k$ nearest neighbors of
-  $\vec{x}$ in the training set have the label $i$.
+\item \emph{k-Nearest neighbors.}  Uses margin functions
+  $m_y(\vec{x})$ which count how many of the $k$ nearest neighbors of
+  $\vec{x}$ in the training set have the label $y$.
 \item \emph{Decision trees.}  Recursively partitions the input space
   $\mathcal{X}$ into smaller and smaller regions, then assigns points
   $\vec{x}$ to the majority class within the region.
 \item \emph{Multilayer neural networks.}  Learns nonlinear
   representations of the input space, $g_j(\vec{x})$, then constructs
-  discriminant functions which are linear combinations of the
+  margin functions which are linear combinations of the
   representations $g_j$.
 \end{itemize}
 
