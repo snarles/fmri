@@ -8,246 +8,28 @@
 
 \label{Chapter3} % For referencing the chapter elsewhere, use \ref{Chapter1} 
 
-\section{Motivation}
+\section{Introduction}
 
-An algorithm that can use sensory information to automatically
- distinguish between multiple scenarios has increasingly many applications
- in modern life. Examples include detecting the speaker from his voice patterns, 
-identifying the author from her written text, or labeling the object 
-category from its image. All these examples can be described as multi-class classification problems:
-the algorithm observes an input $x$, and uses the classifier function $f$ to guess
-the label $y$ from a discrete set $\mathcal{Y}$ of possible labels. 
-In all applications described above, the space of potential labels is practically infinite.
-But in any particular experiment, the number of different labels $k$ used would be finite.
-A natural question, then, is how changing the number of 
-possible labels affects the classification accuracy. 
+In this chapter, we address the question of how to estimate the
+$k$-class average risk, $\text{AvRisk}_{k, r}$, based on data from a
+problem $P_1$ with $k_1 < k$ classes, and $r = r_1$-repeat training
+data.  We continue with the framework introduced in Chapter 2,
+including the definition of the average risk and the marginal property
+of classifiers.  However, we generalize the cost function $C(y;
+\hat{y})$ from the zero-one cost function to a general nonnegative cost function.
 
-More technically, we consider a sequence of classification
-problems on finite label subsets
-$\mathcal{S}_1 \subset \cdots \subset \mathcal{S}_K \subset \mathcal{Y}$,
-where in the $i$-th problem, one constructs the classification rule
-$f^{(i)}:\mathcal{X} \to \mathcal{S}_i$.  Supposing that $(X, Y)$ have
-a joint distribution, define the misclassification error for the
-$i$-th problem as
-\[
-\text{Err}^{(i)} = \Pr[f^{(i)}(X) \neq Y|Y \in \mathcal{S}_i].
-\]
-The problem of \emph{performance extrapolation} is the following: using data
-from only $\mathcal{S}_k$, can one predict the misclassification error
- on the larger label set $\mathcal{S}_K$, with $K> k$?
-Note that unlike other
-extrapolations from a smaller sample to a larger population, 
-the classification problem becomes harder as the number of distractor classes
-increases. 
-
-Accurate answers to this 
-problem are not only of theoretical interest, but also have practical implications:
-\begin{itemize} 
-\item Example 1: A researcher develops a classifier for the purpose of labelling
-images in 10,000 classes. However, for a pilot study, her resources are sufficient to 
-tag only a smaller subset of these classes, perhaps 100. Can she estimate how well the algorithm 
-work on the full set of classes based on an initial "pilot" subsample of class labels?
-\item Example 2: A neuroscientist is interested in how well the brain activity 
-in various regions of the brain can discriminate between different classes of stimuli.
-Kay et al. [1] obtained fMRI brain scans which record how a single
-subject's visual cortex responds to natural images. They wanted to know how 
-well the brain signals could discriminate between different images. For a set of 1750
-photographs, they constructed a classifier which
-achieved over 0.75 accuracy of classification. Based on
-exponential extrapolation, they estimate that it would take on the
-order of $10^{9.5}$ classes before the accuracy of the model drops
-below 0.10!  A theory of performance extrapolation could be useful for
-the purpose of making such extrapolations in a more principled way.
-\item The stories just described can be viewed as a metaphor for typical
-paradigm of machine learning research, where academic researchers,
-working under limited resources, develop novel algorithms and apply
-them to relatively small-scale datasets. Those same algorithms may
-then be adopted by companies and applied to much larger datasets with
-many more classes. In this scenario, it would be convenient if one
-could simply assume that performance on the smaller-scale
-classification problems was highly representative of performance on
-larger-scale problems. 
-\end{itemize}
-
-Previous works have shown that generalizing from a small set of classes 
-to a larger one is not straightforward. In a paper titled ``What
-does classifying more than 10,000 Image Categories Tell Us,'' Deng and
-co-authors compared the performance of four different classifiers on
-three different scales: a small-scale (1,000-class) problem,
-medium-scale (7,404-class) problem, and large-scale (10,184-class)
-problem (all from ImageNet.)  They found that while the
-nearest-neighbor classifier outperformed the support vector machine
-classifier (SVM) in the small and medium scale, the ranking switched
-in the large scale, where the SVM classifier outperformed
-nearest-neighbor.  As they write in their conclusion, ``we cannot
-always rely on experiments on small datasets to predict performance at
-large scale.'' Theory for performance
-extrapolation may therefore reveal models with bad scaling properties in the
-pilot stages of development.
-
-Our primary goal in this paper is to formulate this question, and
-identify scenarios where answers are possible. 
-The most important condition is that the smaller problem would be 
-representative of the larger one. For simplicity, we
-assume that in both $\mathcal{S}_K$ and $\mathcal{S}_k$ are iid samples
-from a population (or distribution) of labels. (Other sampling 
-mechanisms would require some modification). 
-The condition of i.i.d. sampling of labels ensures that the
-separation of labels in a random set $\mathcal{S}_K$ can be inferred by
-looking at the empirical separation in $\mathcal{S}_k$, and
-therefore that some estimate of the achievable accuracy on
-$\mathcal{S}_K$ can be obtained.
-
-Our analysis considers a restricted set of classifiers,
-\emph{marginal classifiers}, which train a separate model for each class. 
-This convenient property allows us to
-characterize the accuracy of the classifier by selectively
-conditioning on one class at a time.  In section \ref{sec:extrapolation}, we use this
-technique to reveal that the expected risk for classifying on the
-label set $\mathcal{Y}_k$, for all $k$, is governed by a
-specific function - the \emph{conditional risk} -  
-that depends on the true distributions and the classifier. 
-As long as one can recover the conditional risk
-function $\bar{D}(u)$, one can compute the average risk for any number
-of classes. 
-  In section 5, we
-empirically study the performance curves of classifiers on sequences
-of classification tasks.  Since marginal classifiers only comprise a
-minority of the classifiers used in practice, we applied our methods
-to a variety of marginal and non-marginal classifiers in
-simulations and in one OCR dataset.  Our methods have varying success
-on marginal and non-marginal classifiers, but seem to work badly
-for neural networks.
-\newline
-
-\noindent\emph{Our contribution.}
-
-To our knowledge, we are the first to formalize the problem of
-prediction extrapolation.  We develop a general theory for prediction
-extrapolation under \emph{general class priors} and under bounded cost
-functions.  [[TODO: mention estimation results, theory]]
-
-
-\subsection{Facial recognition example}
-
-\section{Assumptions}
-
-Implicit in our definition of performance extrapolation is that the
-new set of $k_2$ is partially or fully unknown at the time of the
-extrapolation. Therefore, the extrapolation must account also for the
-randomness in the choice of labels. We will assume that the labels in
-the two classification tasks are comparable.
-
-\begin{itemize}
-\item[Assumption 1] Let $\skone, \sktwo$ be the label sets
-for the first and second classification tasks. Then $\skone, 
-\sktwo$ are i.i.d. samples from an infinite population $\pi$.
-%\item[Assumption 1B] For $y,y'\sim \pi_Y$, 
-%\[P(y=y')=0\]
-\end{itemize}
-
-%[[TODO: Assumption 1B is implied by the previous text. Is it really
-%necessary as an assumption, or can we deal with it without loss of
-%generality. \textcolor{blue}{Assumption 1B is implied by the
-%tie-breaking condition, so we can drop it here.}]]
-
-\textbf{Comments:}
-\begin{enumerate}
-\item These assumption are most easily satisfied by taking $\mathcal{Y}$ 
-to be a continuous space and letting $\pi$ be a density over $\mathcal{Y}$. However, a discrete space with a small enough 
-probability for the classes would work well. 
-\item Note that here we assumed that the label subsets $\skone$ and
-$\sktwo$ are independent and disjoint. An alternative
-assumption would be that $\skone \subset
-\sktwo$ with $\skone$ being a subsample of
-$\sktwo$: this assumption can also be addressed, as we will
-discuss later.
-\item 
-In practice, $\skone$ is often a convenience sample meant to be
-similar to $\sktwo$. The theory will be relevant insofar as the
-assumptions approximate well the true sampling similarity between the
-$\skone$ and $\sktwo$.
-\item We can imagine other sampling mechanisms designed to make $\skone$ a representative sample from the population, e.g. by stratifying. In this paper we do not discuss these more complex sampling schemes. 
-\end{enumerate}
-
-%[TODO: Is the following paragraph really needed? \textcolor{blue}{Somehow we need prior probabilities to be assigned in a sensible way.  An easier alternative would just be to have uniform prior probabilities by default, but this would work really poorly in practice.}]
-%[[END of TODO]]
-
-Our analysis will also rely on a property of the classification
-model. We do not want the classifier to rely too strongly on
-complicated interactions between the labels in the set. We therefore
-propose the following property of marginal separability for
-classification models:
-
-\begin{definition}
-\begin{enumerate}
-\item The classification rule $f$ is called a \emph{marginal rule} if 
-\[
-f(x) = \text{argmax}_{y \in \mathcal{S}} m_y(x),
-\]
-where the function $m_y$ maps $\mathcal{X}$ to $\mathbb{R}$. 
-\item Define a marginal model $\mathcal{M}$ as a mapping from empirical distributions
-to margin functions,
-\[
-\mathcal{M}(\hat{F}_y) = m_y(x).
-\]
-\item A classifier that produces marginal classification rules
-\[
-f(x) = \text{argmax}_{y \in \mathcal{S}} m_y(x),
-\]
-by use of a marginal model, i.e. such that
-$m_y=\mathcal{M}(\hat{F}_y)$ for some marginal model $\mathcal{M}$,
-is called a \emph{marginal classifier}.
-%\item A classifier that produces marginal classification rules
-% is called a \emph{marginal model}. 
-\end{enumerate}
-\end{definition}
-In words, a marginal classification rule produces a \emph{margin}, or
-score, for each label, and chooses the label with the highest
-margin. The marginal model converts empirical distributions
-$\hat{F_y}$ over $\mathcal{X}$ into the margin function
-$m_y$.  The \emph{marginal} property allows us to prove strong results
-about the accuracy of the classifier under i.i.d. sampling assumptions.
-
-%[TODO: Do we need both the marginal model and the marginal classifier? $\mathcal{M}$. \textcolor{blue}{We can omit the definition of marginal classifier here, but later we have to have some discussion of marginal vs non-marginal classifiers.  So we can move the definition to the discussion, maybe.}]]
-
-\textbf{Comments:}
-\begin{enumerate}
-\item The marginal model includes several popular classifiers.
-A primary example for a marginal model is the estimated Bayes
-classifier. Let $\hat{f_y}$ be a density estimate obtained from the
-empirical distribution $\hat{F_y}$. Then, we can use the estimated
-densities of each class to produce the margin functions:
-\[ m^{EB}_y(x) = \log(\hat{f_{y}}(x)).\]
-%if class probabilities are uniform, or 
-%\[m^{EB}_y(x) = \log(\hat{\pi}(y)) + \log(\hat{f_y}(x))\]
-%where $\hat{\pi}$ is an estimate of the 
-The resulting empirical approximation for the Bayes classifier
-(further assuming a uniform prior $\pi$) would be
-\[ f^{EB}(x) = \text{argmax}_{y \in \mathcal{S}}(m^{EB}_y(x)).\]
-\item Both the Quadratic Discriminant Analysis and the naive Bayes classifiers can be seen as specific instances of an estimated Bayes classifier
-\footnote{QDA is the special case of the estimated Bayes classifier when $\hat{f_y}$ is obtained as
-the multivariate Gaussian density with mean and covariance parameters estimated from the data.
-Naive Bayes is the estimated Bayes classifier when $\hat{f_y}$ is obtained as the product of estimated componentwise marginal distributions
-of $p(x_i|y)$}. 
-For QDA, the margin function is
-given by
-\[
-m_y^{QDA}(x) = -(x - \mu(\hat{F}_y))^T \Sigma(\hat{F}_y)^{-1} (x-\mu(\hat{F}_y)) - \log\det(\Sigma(\hat{F}_y)),
-\]
-where $\mu(F) = \int y dF(y)$ and $\Sigma(F) = \int (y-\mu(F))(y-\mu(F))^T dF(y)$.
-In Naive Bayes, the margin function is
-\[
-m^{NB}_y(x) = \sum_{i=1}^n \log \hat{f}_{y, i}(x),
-\]
-where $\hat{f}_{y, i}$ is a density estimate for the $i$-th component of
-$\hat{F}_y$.
-\item There are also many classifiers which do not satisfy the marginal property, such as multinomial logistic regression,
-multilayer neural networks, decision trees, and k-nearest neighbors.
-%[TODO: Examples of classifiers that are not \textcolor{blue}{Such as multinomial logistic regression.}]
-%\item[] [TODO: where do you want to treat the empirical vs. true class probabilities? \textcolor{blue}{I guess you are referring to the distinction between population probabilities and sampling probabilities.  If you really want to simplify things, we should just assume that population probabilities, sampling probabilities, and prior probabilities are all uniform, and we can discuss extensions in the same section as for general cost function.}]
-\end{enumerate}
-
+We begin by continuing to analyze the average risk $\text{AvRisk}_{k,
+  r}$, which results in an explicit formula for the average risk.  The
+formula reveals that all of the information needed to compute the
+average risk is contained in a one-dimensional function $\bar{D}(u)$,
+and therefore that estimation of the average risk can be accomplished
+via estimation of the unknown function $\bar{D}(u)$.  This allows the
+development of a class of unbiased estimators of $\bar{D}(u)$,
+presented in section \ref{sec:extrapolation_estimation} given the
+assumption of a known parametric form for $\bar{D}(u)$.  We analyze
+the performance of the estimator in both the well-specified and
+misspecified case.  In Chapter 5 %% cite the specific section later
+we will see the application of the estimator to simulated and real-data examples.
 
 \section{Analysis of average risk}
 
@@ -286,6 +68,51 @@ margins are tied.  In practice, one can simply break ties randomly,
 which is mathematically equivalent to adding a small amount of random
 noise $\epsilon$ to the function $\mathcal{M}$.
 
+Let us revisit the definition of the average risk, under a general
+cost function $C$.  The $k$-class, $r$-repeat \emph{average risk} of a
+marginal classifier $\mathcal{M}$ is defined as
+\begin{align*}
+\text{AvRisk}_{k,r_1}(\mathcal{M}) &= \E[\text{Risk}_{\mathcal{S}}(\mathcal{M})|Y^{(1)}, \hdots, Y^{(k)} \sim \pi]
+\\&= \frac{1}{k} \sum_{i=1}^k \int
+I(\mathcal{M}(\hat{F}_{y^{(i)}})(x) \neq \max_j
+\mathcal{M}(\hat{F}_{y^{(j)}})) dF_{y^{(i)}}(x) \prod_{\ell=1}^k
+d\Pi_{y^{(\ell)}, r_1}(\hat{F}_{y^{(\ell)}}) d\pi(y^{(\ell)}).
+\end{align*}
+The definition of average risk is illustrated in Figure \ref{fig:average_risk2}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale = 0.3]{../extrapolation_figures/average_risk.png}
+\caption{Average risk}\label{fig:average_risk2}
+\end{figure}
+
+As we can see from Figure \ref{fig:average_risk2}, the average risk is obtained by averaging
+over four randomizations:
+\begin{enumerate}
+\item[A1.] Drawing the label subset $\mathcal{S}$.
+\item[A2.] Drawing the training dataset.
+\item[A3.] Drawing $Y^*$ uniformly at random from $\mathcal{S}$.
+\item[A4.] Drawing $X^*$ from $F_{X^*}$.
+\end{enumerate}
+
+For the sake of developing a better intuition of the average risk, it
+is helpful to define a random variable called the \emph{loss}, which
+is the cost incurred by a single test instance.  The loss is
+determined by quantities from all four randomization steps: the label
+subset $\mathcal{S} = \{Y^{(1)},\hdots, Y^{(k)}\}$, the training
+samples $\hat{F}_{Y^{(1)}},\hdots, \hat{F}_{Y^{(k)}}$, and the test
+point $(X^*, Y^*)$.  Formally, we write
+\[
+L = C(\mathcal{F}(\{\hat{F}_y\}_{y \in \mathcal{S}})(X^*), Y^*).
+\]
+Now note that the $k$-class, $r$-repeat average risk is the expected loss,
+\begin{equation}\label{eq:avrisk_EL}
+\text{AvRisk}_{k, r, \nu}(\mathcal{F}) = \E[L] = \E[C(\mathcal{F}(\{\hat{F}_y\}_{y \in \mathcal{S}})(X^*), Y^*)].
+\end{equation}
+where the expectation is taken over the joint distribution of all the
+quantities $\{Y^{(1)},\hdots,
+Y^{(k)}, \hat{F}_{Y^{(1)}},\hdots, \hat{F}_{Y^{(k)}}, (X^*, Y^*)\}$.
+
 Our strategy is to analyze the average risk \eqref{eq:avrisk_EL} by
 means of \emph{conditioning on} the true label and its training
 sample, $(y^*, \hat{F}_{y^*})$, and the test feature $x^*$
@@ -322,19 +149,9 @@ and hence
 L = C(\hat{Y}, y^*).
 \]
 \end{enumerate}
-Compared to four randomization steps listed in
-section \ref{sec:average_risk}, we have essentially conditioned on
-steps A3 and A4 and randomized over steps A1 and A2.
-
-%Let $G$ denote the joint distribution over $(X, Y)$ obtained by
-%drawing $Y \sim \pi_0$ and $X \sim F_Y$.  Since $Y^*$ has the marginal
-%distribution $\pi_0$, it follows that
-%\begin{equation}\label{eq:rk_eq}
-%\text{Average Risk}_k(\mathcal{F}) = \int \int R_k(y^*, x^*) dG(x^*, y^*).
-%\end{equation}
-%What we have done is to rewrite the average risk as the expectation of
-%$R_k$, which depends on $k$, according to a measure $G$ which does
-%\emph{not} depend on $k$.%
+Compared to four randomization steps for the average risk, we have
+essentially conditioned on steps A3 and A4 and randomized over steps
+A1 and A2.
 
 \begin{figure}[h]
 \centering
@@ -342,21 +159,17 @@ steps A3 and A4 and randomized over steps A1 and A2.
 \caption{Conditional average risk}\label{fig:conditional_risk}
 \end{figure}
 
-%However, we will further decompose $R_k$ into $k$-dependent and $k$-independent components.
-%Having defined the conditional average risk, we will now further
-%decompose it to expose its dependence on $k$.
 Now, in order to analyze the $k$-class behavior of the conditional
 average risk, we begin by considering the \emph{two-class} situation.
 
 In the two-class situation, we have a true label $y^*$ and one
-incorrect label, $Y$.  Define the \emph{U-function}
-$U_{x^*}(y^*, \hat{F}_{y^*})$ as the \emph{probability of correct
-classification} in the two-class case.
-The classification is correct if the margin
+incorrect label, $Y$.  Define the \emph{U-function} $U_{x^*}(y^*,
+\hat{F}_{y^*})$ as the \emph{probability of correct classification} in
+the two-class case.  The classification is correct if the margin
 $M_{y^*}(x^*)$ is greater than the margin $M_Y(x^*)$, and incorrect
-otherwise.  
-Since we are fixing $x^*$ and $(y^*, \hat{F}_{y^*})$, the
-probability of correct classification is obtained by taking an expectation:
+otherwise.  Since we are fixing $x^*$ and $(y^*, \hat{F}_{y^*})$, the
+probability of correct classification is obtained by taking an
+expectation:
 \begin{align}\label{eq:U_function}
 U_{x^*}(y^*, \hat{F}_{y^*}) &= \Pr[M_{y^*}(x^*) > \mathcal{M}(\hat{F}_Y)(x^*)]
 \\&= \int_{\mathcal{Y}} 
@@ -431,9 +244,9 @@ clearly isolated the part of the average risk which is independent of
 $k$--the univariate function $\bar{D}(u)$, and the part which is
 dependent on $k$--which is the density of $U_{max}$.
 
-In section \ref{sec:estimation}, we will develop estimators of
-$\bar{D}(u)$ in order to estimate the $k$-class average risk.
-But now let us return to the general case.
+In section \ref{sec:extrapolation_estimation}, we will develop
+estimators of $\bar{D}(u)$ in order to estimate the $k$-class average
+risk.  But now let us return to the general case.
 \newline
 
 \noindent \emph{General loss functions.}
@@ -510,7 +323,7 @@ practice to estimate $\text{Average Risk}_k$ requires some means of
 estimating the unknown function $\bar{D}$--which we discuss in the
 following.
 
-\section{Estimation}
+\section{Estimation}\label{sec:extrapolation_estimation}
 
 Now we address the problem of estimating $\text{AvRisk}_{k_2,
 r_{train}}$ from data.  As we have seen from
@@ -530,9 +343,6 @@ what kind of model we should assume for $\bar{D}$.  While a
 nonparametric approach may be ideal, for the case of general loss
 functions we will adopt a parametric model: that is the subject of
 this section.
-%On the other
-%hand, for the special case of zero-one loss
-%(Section \ref{sec:sp_case}), we take a nonparametric approach.
 
 Let us assume the linear model
 \begin{equation}\label{eq:linearKu}
@@ -540,15 +350,8 @@ Let us assume the linear model
 \end{equation}
 where $h_\ell(u)$ are known basis functions, and $\beta$ are the model
 parameters to be estimated. We can obtain \emph{unbiased} estimation
-of $\text{AvRisk}_{k_2, r_{train}}$
-%.  The first approach estimates the
-%coefficients $\beta$ 
-via the unbiased estimates of $k$-class average risk obtained from \eqref{eq:avtestrisk}.
-%The second approach estimates $\beta$ by
-%estimating $\bar{D}(u)$ directly.  However, the second approach
-%requires the use of the \emph{regression adjustment} method taken from
-%measurement error models, and therefore can only yield unbiased
-%estimates for \emph{polynomial} basis functions $h_\ell(u)$.
+of $\text{AvRisk}_{k_2, r_{train}}$ via the unbiased estimates of
+$k$-class average risk obtained from \eqref{eq:avtestrisk}.
 
 If we plug in the assumed linear model \eqref{eq:linearKu} into the
 identity \eqref{eq:avrisk_identity}, then we get
