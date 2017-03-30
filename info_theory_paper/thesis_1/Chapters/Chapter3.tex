@@ -28,8 +28,12 @@ development of a class of unbiased estimators of $\bar{D}(u)$,
 presented in section \ref{sec:extrapolation_estimation} given the
 assumption of a known parametric form for $\bar{D}(u)$.  We analyze
 the performance of the estimator in both the well-specified and
-misspecified case.  In Chapter 5 %% cite the specific section later
-we will see the application of the estimator to simulated and real-data examples.
+misspecified case.  We demonstrate our method to a face-recognition
+example in section \ref{sec:extrapolation_example}.  Additionally, in
+Chapter 5 %% cite the specific section later
+we will see the
+comparison of the estimator to an alternative, information-theory
+based estimator in simulated and real-data examples.
 
 \section{Analysis of average risk}
 
@@ -50,18 +54,11 @@ and \eqref{eq:Kbar}, we have
 
 The tie-breaking condition referred in the theorem is defined as follows.
 \begin{itemize}
-%\item 
-%\emph{Scaling property of margins}: if $\mathcal{M}(\hat{F}_1, \pi_1)(x) >
-%\mathcal{M}(\hat{F}_2, \pi_2)(x)$ then also $\mathcal{M}(\hat{F}_1,
-%c\pi_1)(x) > \mathcal{M}(\hat{F}_2, c\pi_2)(x)$.
 \item 
 \emph{Tie-breaking condition}: for all $x \in \mathcal{X}$,
 $\mathcal{M}(\hat{F}_Y)(x) = \mathcal{M}(\hat{F}_{Y'})(x)$
 with zero probability for $Y, Y'$ independently drawn from $\pi$.
 \end{itemize}
-%The scaling property of margins is satisfied by most of the marginal
-%classifiers which are used in practice, and as such we do not consider
-%it to be a strong assumption.  Meanwhile, 
 The tie-breaking condition is a technical assumption which allows us
 to neglect the specification of a tie-breaking rule in the case that
 margins are tied.  In practice, one can simply break ties randomly,
@@ -528,5 +525,5 @@ Therefore, the misspecified minimax error is of order
 \]
 
 
-\section{Examples}
+\section{Examples}\label{sec:extrapolation_example}
 
