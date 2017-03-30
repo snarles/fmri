@@ -909,7 +909,7 @@ Since we are fixing $x^*$ and $(y^*, \hat{F}_{y^*})$, the
 probability of correct classification is obtained by taking an expectation:
 \begin{align}\label{eq:U_function}
 U_{x^*}(y^*, \hat{F}_{y^*}) &= \Pr[M_{y^*}(x^*) > \mathcal{M}(\hat{F}_Y)(x^*)]
-\\&= \int_{\mathcal{Y}} 
+\\&= \int
 I\{
 M_{y^*}(x^*) > \mathcal{M}(\hat{F}_{y})(x)
 \}
@@ -1322,8 +1322,35 @@ $\sktwo$.
 \subsection{Proofs}
 
 \begin{lemma}\label{lemma:U_function}
-Defining $U_{y,\hat{F}_y}(x)$ as in \eqref{eq:U_function}.
+Suppose $\pi$, $\{F_y\}_{y \in \mathcal{Y}}$ and marginal classifier
+$\mathcal{F}$ satisfy the tie-breaking condition.  Take $x \in \mathcal{X}$.  Defining
+$U_{y,\hat{F}_y}(x)$ as in \eqref{eq:U_function}, and defining the
+random variable $U$ by
+\[U = U_{Y, \hat{F}_Y}(x)\]
+for $Y \sim \pi$, $\hat{F}_Y \sim \Pi_{Y, r}$,
+the distribution of $U$ is uniform on $[0,1]$, i.e.
+\[
+\Pr[U \leq u] = \text{max}\{u, 1\}.
+\]
 \end{lemma}
+
+\textbf{Proof.}
+It is clear from the definition \eqref{eq:U_function} that $U$ is
+bounded between 0 and 1.  Therefore, let us take $u \in [0,1]$.  We have
+\begin{align*}
+\Pr[U \leq u] &= \Pr[U_{Y, \hat{F}_Y}(x) \leq u]
+\\&= \Pr\left[\int 
+I\{\mathcal{M}(\hat{F}_{Y})(x) > \mathcal{M}(\hat{F}_{w})(x)\}
+d\Pi_{w, r}(\hat{F}_w)
+d\pi(w)
+\leq u\right]
+\\&= \int_{\mathcal{Y}} 
+I\{\mathcal{M}(\hat{F}_{y})(x) > \mathcal{M}(\hat{F}_{w})(x)\}
+d\Pi_{y, r}(\hat{F}_y)
+d\Pi_{w, r}(\hat{F}_w)
+d\pi(y)d\pi(w)
+dF_y(x)
+\end{align*}
 
 \subsection{Background: Multiclass terminology}
 
