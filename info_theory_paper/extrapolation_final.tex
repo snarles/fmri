@@ -493,7 +493,7 @@ L = C(\mathcal{F}(\{\hat{F}_y\}_{y \in \mathcal{S}})(X^*), Y^*).
 \]
 Now note that the $k$-class, $r$-repeat average risk is the expected loss,
 \begin{equation}\label{eq:avrisk_EL}
-\text{AvRisk}_{k, r, \nu}(\mathcal{F}) = \E[L] = \E[C(\mathcal{F}(\{\hat{F}_y\}_{y \in \mathcal{S}})(X^*), Y^*)].
+\text{AvRisk}_{k, r}(\mathcal{F}) = \E[L] = \E[C(\mathcal{F}(\{\hat{F}_y\}_{y \in \mathcal{S}})(X^*), Y^*)].
 \end{equation}
 where the expectation is taken over the joint distribution of all the
 quantities $\{Y^{(1)},\hdots,
@@ -841,9 +841,9 @@ means of \emph{conditioning on} the true label and its training
 sample, $(y^*, \hat{F}_{y^*})$, and the test feature $x^*$
 while \emph{averaging} over all the other random variables.  Define
 the \emph{conditional average risk} $\text{CondRisk}_k((y^*, \hat{F}_{y^*}), x^*)$ as
-\[
+\begin{equation}\label{eq:def_condrisk}
 \text{CondRisk}_k((y^*, \hat{F}_{y^*}), x^*) = \E[L|Y^*=y^*, X^* = x^*, \hat{F}_{Y^*} = \hat{F}_{y^*}].
-\]
+\end{equation}
 Figure \ref{fig:conditional_risk} illustrates the variables which are
 fixed under conditioning and the variables which are randomized.
 Compare to figure \ref{fig:average_risk}.
@@ -1037,9 +1037,9 @@ Again, since the conditional distribution of $\hat{Y}|U_{max}, x^*,
 function is also independent of $k$.
 
 With the conditional cost function and the distribution of $U_{max}$ both in hand, we can compute the average conditional risk
-\[
+\begin{equation}\label{eq:condrisk_identity}
 \text{CondRisk}_k((y^*, \hat{F}_{y^*}), x^*) = (k-1) \int D((y^*,\hat{F}_{y^*}), x^*, u) u^{k-2} du.
-\]
+\end{equation}
 Now the average risk can be obtained by integrating over $(Y^*, \hat{F}_{Y^*}),$ and $X^*$.
 \[
 \text{AvRisk}_{k, r} = (k-1) \int \bar{D}(u) u^{k-2} du.
@@ -1334,23 +1334,36 @@ the distribution of $U$ is uniform on $[0,1]$, i.e.
 \]
 \end{lemma}
 
-\textbf{Proof.}
-It is clear from the definition \eqref{eq:U_function} that $U$ is
-bounded between 0 and 1.  Therefore, let us take $u \in [0,1]$.  We have
+\textbf{Proof of Lemma A.1.}
+
+Define the variable $Z = \mathcal{M}(\hat{F}_Y)(x)$ for $Y \sim \pi$.
+By the tie-breaking condition, $Z$ has a continuous density on $[0,1]$.
+Consider the survivor function of $Z$, $g(z) = \Pr[Z \geq z]$.  From
+the definition \eqref{eq:U_function}, we see that 
+\[
+U = g(\mathcal{M}(\hat{F}_Y)(x)) = g(Z).
+\]
+Now note that the survivor function of any continuous random variable,
+when applied to itself, is uniformly distributed.
+$\Box$
+
+\textbf{Proof of Theorem 3.1.}
+
+By the property of conditional expectations, and by
+definitions \eqref{eq:def_condrisk} and \eqref{eq:avrisk_EL} and identity \eqref{eq:condrisk_identity} , 
+for $Y \sim \pi$, $\hat{F}_Y \sim \Pi_{Y, r}$ and $X \sim F_Y$ we have
 \begin{align*}
-\Pr[U \leq u] &= \Pr[U_{Y, \hat{F}_Y}(x) \leq u]
-\\&= \Pr\left[\int 
-I\{\mathcal{M}(\hat{F}_{Y})(x) > \mathcal{M}(\hat{F}_{w})(x)\}
-d\Pi_{w, r}(\hat{F}_w)
-d\pi(w)
-\leq u\right]
-\\&= \int_{\mathcal{Y}} 
-I\{\mathcal{M}(\hat{F}_{y})(x) > \mathcal{M}(\hat{F}_{w})(x)\}
-d\Pi_{y, r}(\hat{F}_y)
-d\Pi_{w, r}(\hat{F}_w)
-d\pi(y)d\pi(w)
-dF_y(x)
+\text{AvRisk}_{k,r} &= \E[\text{CondRisk}_k((Y, \hat{F}_Y), X)]
+\\&= \int \text{CondRisk}_k((y, \hat{F}_y), x) d\pi(y) dF_y(x) d\Pi_{y, r}(\hat{F}_y)
+\\&= (k-1) \int \int D((y^*,\hat{F}_{y^*}), x^*, u) u^{k-2} du d\pi(y) dF_y(x) d\Pi_{y, r}(\hat{F}_y)
+\\&= (k-1) \int \bar{D}(u) u^{k-2} du,
 \end{align*}
+where
+\[
+\bar{D}(u) = \int D((y^*,\hat{F}_{y^*}), x^*, u) \pi(y^*)dy dF_{y^*}(x^*) d\Pi_{y^*, r}(\hat{F}_{y^*}).
+\]
+$\Box$
+
 
 \subsection{Background: Multiclass terminology}
 
