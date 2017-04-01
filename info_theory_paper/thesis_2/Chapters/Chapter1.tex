@@ -15,26 +15,80 @@
 
 %----------------------------------------------------------------------------------------
 
+\section{Finding the correct representation}
+
+A fundamental question in the cognitive sciences is how humans and
+other organisms percieve complex stimuli, such as faces, objects, and
+sounds.  A highly related question in artificial intelligence is how
+to engineer systems that can learn how to identify objects, faces, and
+parse the meaning of language.  Through the last couple of decades,
+breakthroughs in both the understanding of cognition, and developments
+in artificial intelligence, both suggest that \emph{nonlinear
+  representations} are key for making sense of complex stimuli,
+regardless of whether the perciever is a biological or algorithmic.
+
+Let us begin with the biological case.  By looking at the neural
+pathways involved in mammalian vision, neuroscientists know that
+vision begins in the retina, where light-sensitive cells (rods and
+cones) detect incoming photons.  The signals from the rods and cones
+are aggregated by retinal cells, and then transmitted sequentially
+through a series of structures within the brain--the dominant pathway
+goes from the retina to the the optic chiasm, then to the lateral
+geniculate nucleus, and finally to the visual cortex (Figure
+\ref{fig:visual_pathway}).  The visual cortex, in turn, is divided
+into subregions V1 through V6.  It is an active area of research to
+study the specialized roles of each subregion with regards to visual
+processing.
+
+\begin{figure}
+\centering
+\includegraphics[scale = 1]{Figures/ERP_-_optic_cabling.jpg}
+\caption{Visual pathway in humans.  Image credit to Ratznium under CC 2.5 license.}
+\label{fig:visual_pathway}
+\end{figure}
+
+Functional MRI (fMRI) studies of vision provide one means of testing
+theories about the workings of the visual cortex.  In an exemplary
+study, \cite{Kay2008a} model the response of the BOLD fMRI signal (a
+proxy measure of neural activity) to greyscale natural images
+presented to a human subject.  The data takes the form of pairs
+$(\vec{z}_i, \vec{x}_i)$, where $\vec{z}_i$ is the pixel intensities
+of the presented image, and $\vec{x}_i$ is a three-dimensional map of
+BOLD signal, represented as a numerical vector with one real-valued
+intensity per voxel.
+
+Kay et al. test two different models for how visual information is
+\emph{represented} in the V1 area of the brain.  Models of this type
+are called \emph{encoding models} in the neuroscience literature.  One
+encoding model is the \emph{retinotopic} model, in which the raw image
+$\vec{z}_i$ is represented by a library of \emph{center-surround}
+receptive fields, which are image filters composed of the difference
+of two circular distributions centered around the same point.  The
+second encoding model that Kay et al. evaluated was the \emph{Gabor
+  filter} model, consisting of sinusoidal filters which are sensitive
+to position, frequency, and orientation (Figure \ref{fig:gabor}).
+
+\begin{figure}
+\centering
+\includegraphics[scale = 0.5]{Figures/Gabor.jpg}
+\caption{Examples of Gabor filters of varying size and orientation.  From \cite{haghighat2015cloudid}.}
+\label{fig:gabor}
+\end{figure}
+
+
 
 \section{Recognition tasks}
 
-The study of human intelligence, and the study of artificial
-intelligence, form two major intertwining areas of modern research.
-The attempt to algorithmically mimic or exceed human perceptual and
-cognitive capabilities not only advances the application of artificial
-intelligence for industrial applications, but also sheds light on the
-nature of biological intelligence, and the nature of intelligence in
-general.  One of the key capabilities of an intelligent system,
-natural or artificial, is the ability to recognize objects, agents,
-and signs in the environment based on input data.  Human brains have a
-remarkable ability to recognize objects, faces, spoken syllables and
-words, and written symbols or words, and this recognition ability is
-essential for everyday life.  While researchers in artificial
-intelligence have attempted to meet human benchmarks for these
-classical recognition tasks for the last X decades, only very recent
-advances in machine learning, such as deep neural networks, have
-allowed algorithmic recognition algorithms to approach or exceed human
-performance [CITE].
+One of the key capabilities of an intelligent system, natural or
+artificial, is the ability to recognize objects, agents, and signs in
+the environment based on input data.  Human brains have a remarkable
+ability to recognize objects, faces, spoken syllables and words, and
+written symbols or words, and this recognition ability is essential
+for everyday life.  While researchers in artificial intelligence have
+attempted to meet human benchmarks for these classical recognition
+tasks for the last X decades, only very recent advances in machine
+learning, such as deep neural networks, have allowed algorithmic
+recognition algorithms to approach or exceed human performance [CITE].
 
 Within the statistics and machine learning literature, the usual
 formalism for studying a recognition task is to pose it as a
