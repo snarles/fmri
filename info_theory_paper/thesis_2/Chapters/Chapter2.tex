@@ -8,48 +8,7 @@
 \section{Motivation}
 
 %\subsection{Facial recognition example}
-Facial recognition is an important technology with applications in
-security and in social media, such as automatic tagging of photographs
-on Facebook.  The basic problem is illustrated in Figure
-\ref{fig:face_rec}: given a collection of tagged and cropped
-photographs $\{(x_j^{(i)}), y^{(i)}\}$, where $y^{(i)}$ is the label,
-and $x_j^{(i)}$ is a vector containing the numeric features of the
-photograph (e.g. pixels), assign labels $y$ to untagged photographs
-$x_*$.  Here, the notation $x_j^{(i)}$ indicates the $j$th labelled
-photograph in the database belonging to the $i$th individual. One way
-to study the problem is to fit it into the multi-class classification
-framework, where the label set $\mathcal{Y}$ consists of all
-individuals in the data set, $\{y^{(1)},\hdots, y^{(k)}\}$.
 
-\begin{figure}
-\centering
-\begin{tabular}{|c|ccc|c|}
-\hline
-Label & & Training & & Test\\ \hline
-$y^{(1)}$=Amelia & 
-  $x_1^{(1)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Amelia_Vega_0001.png} &  
-  $x_2^{(1)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Amelia_Vega_0002.png} &  
-  $x_3^{(1)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Amelia_Vega_0003.png} &  
-  $x_*^{(1)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Amelia_Vega_0004.png} \\ \hline
-$y^{(2)}$=Jean-Pierre & 
-  $x_1^{(2)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Jean-Pierre_Raffarin_0001.png} &  
-  $x_2^{(2)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Jean-Pierre_Raffarin_0002.png} &  
-  $x_3^{(2)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Jean-Pierre_Raffarin_0003.png} &  
-  $x_*^{(2)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Jean-Pierre_Raffarin_0004.png} \\ \hline
-$y^{(3)}$=Liza & 
-  $x_1^{(3)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Liza_Minnelli_0001.png} &  
-  $x_2^{(3)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Liza_Minnelli_0002.png} &  
-  $x_3^{(3)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Liza_Minnelli_0003.png} &  
-  $x_4^{(3)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Liza_Minnelli_0004.png} \\ \hline
-$y^{(4)}$=Patricia & 
-  $x_1^{(4)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Patricia_Clarkson_0001.png} &  
-  $x_2^{(4)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Patricia_Clarkson_0002.png} &  
-  $x_3^{(4)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Patricia_Clarkson_0003.png} &  
-  $x_4^{(4)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Patricia_Clarkson_0004.png} \\ \hline
-\end{tabular}
-\caption{Face recognition problem}
-\label{fig:face_rec}
-\end{figure}
 
 However, the formalism of classification is inadequate for studying
 many practical questions related to the generalizability of the facial

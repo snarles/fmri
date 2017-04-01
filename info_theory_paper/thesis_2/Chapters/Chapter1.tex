@@ -27,6 +27,8 @@ in artificial intelligence, both suggest that \emph{nonlinear
   representations} are key for making sense of complex stimuli,
 regardless of whether the perciever is a biological or algorithmic.
 
+\subsection{Example: Receptive-field models for vision}
+
 Let us begin with the biological case.  By looking at the neural
 pathways involved in mammalian vision, neuroscientists know that
 vision begins in the retina, where light-sensitive cells (rods and
@@ -57,16 +59,17 @@ of the presented image, and $\vec{x}_i$ is a three-dimensional map of
 BOLD signal, represented as a numerical vector with one real-valued
 intensity per voxel.
 
-Kay et al. test two different models for how visual information is
-\emph{represented} in the V1 area of the brain.  Models of this type
-are called \emph{encoding models} in the neuroscience literature.  One
-encoding model is the \emph{retinotopic} model, in which the raw image
-$\vec{z}_i$ is represented by a library of \emph{center-surround}
-receptive fields, which are image filters composed of the difference
-of two circular distributions centered around the same point.  The
-second encoding model that Kay et al. evaluated was the \emph{Gabor
-  filter} model, consisting of sinusoidal filters which are sensitive
-to position, frequency, and orientation (Figure \ref{fig:gabor}).
+Kay et al. test two different models for the \emph{receptive field}
+(RF) of V1 voxels.  A receptive field model, in this case, specifies a
+specific set of transformations for explaining how visual information
+is \emph{represented} in the V1 area of the brain.  Under one RF
+model, the activity of V1 voxels can be explained by
+\emph{retinotopic} receptive fields, in which the raw image
+$\vec{z}_i$ is represented by a library of local luminance and
+contrast maps.  Under the second RF model, the activity of V1 voxels
+is explained by \emph{Gabor filter} receptive fields, consisting of
+sinusoidal filters which are sensitive to position, frequency, and
+orientation (Figure \ref{fig:gabor}).
 
 \begin{figure}
 \centering
@@ -75,7 +78,125 @@ to position, frequency, and orientation (Figure \ref{fig:gabor}).
 \label{fig:gabor}
 \end{figure}
 
+Each receptive field model corresponds to a family
+\emph{representations}, which is a family $\vec{g} = (g_1,\hdots,
+g_m)$ of linear or nonlinear transformations of the visual stimulus
+$\vec{z}$.  Let $z_j$ denote the intensity of the $j$th pixel in the
+visual stimulus, and let $\ell_j = (r_j, c_j)$ indicate the row and
+column coordinates of the $j$th pixel.  Under the retinotopic model,
+the transformations consist of locally-weighted mean-luminance and
+contrast operations,
+\[
+L(\vec{z}) = \frac{\sum_j w_j z_j}{\sum_j w_j}
+\]
+\[
+C(\vec{z}) = \sqrt{\frac{\sum_j w_j (z_j - L(\vec{z}))^2}{\sum_j w_j}}
+\]
+where $w_j$ are weights from a symmetric bivariate Gaussian
+distribution (but whose center $\mu$ and spread $\sigma^2$ are free parameters),
+\[
+w_j = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2\sigma^2}||\ell_j - \mu||^2}.
+\]
 
+Under the Gabor filter model, the transformations consist of local
+wavelet transforms of the form
+\[
+g(\vec{z}) = ||\sum_j e^{-i\langle\theta, \ell_j\rangle} w_j z_j||^2
+\]
+where $||\cdot||^2$ is the squared modulus of a complex number,
+$\theta$ is a free parameter which describes the frequency and
+orientation of the wavelet, and $w_j$ is defined the same way as in
+the retinotopic RF model.
+
+The retinotopic RF model is known in the literature to be a good model
+of receptive fields in early visual areas (such as the retina--hence
+the nomenclature.)  However, Kay et al. are interested in testing
+whether the Gabor filter model, which is a popular model for neurons
+in V1, is better supported by the data.
+
+In order to compare the two different RF models, each of the candidate
+RF models is used to fit an \emph{encoding model}--a forward model for
+predicting the voxel activations in V1, $\vec{x}^{V1}$, from the
+representations defined by the RF model, $\vec{g}(\vec{z})$.  Kay et
+al. consider sparse linear encoding models of the form
+\[
+\vec{x}^{V1} = \vec{g}(\vec{z})^T \bB + \vec{b} + \vec{\epsilon}
+\]
+where $\bB$, a sparse coefficient matrix and $\vec{b}$, a offset
+vector, are parameters to be estimated from the data, and
+$\vec{\epsilon}$ is a noise variable.  The quality of each encoding
+model is assessed using \emph{data-splitting} and the
+\emph{identification risk} of the model--these methods will be
+explained in the following background sections.  Kay et al. found that
+the encoding model based on Gabor filter receptive fields
+significantly outperformed the encoding model based on the retinotopic
+RF field--supporting the hypothesis that V1 \emph{represents} visual
+information primarily in the form of Gabor filters.
+
+\subsection{Example: Face-recognition algorithms}
+
+Facial recognition is an important technology with applications in
+security and in social media, such as automatic tagging of photographs
+on Facebook.  The basic problem is illustrated in Figure
+\ref{fig:face_rec}: given a collection of tagged and cropped
+photographs $\{(\vec{z}_j^{(i)}), y^{(i)}\}$, where $y^{(i)}$ is the label,
+and $\vec{z}_j^{(i)}$ is a vector containing the numeric features of the
+photograph (e.g. pixels), assign labels $y$ to untagged photographs
+$\vec{z}_*$.  Here, the notation $\vec{z}_j^{(i)}$ indicates the $j$th labelled
+photograph in the database belonging to the $i$th individual. One way
+to study the problem is to fit it into the multi-class classification
+framework, where the label set $\mathcal{Y}$ consists of all
+individuals in the data set, $\{y^{(1)},\hdots, y^{(k)}\}$.
+
+\begin{figure}
+\centering
+\begin{tabular}{|c|ccc|c|}
+\hline
+Label & & Training & & Test\\ \hline
+$y^{(1)}$=Amelia & 
+  $\vec{z}_1^{(1)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Amelia_Vega_0001.png} &  
+  $\vec{z}_2^{(1)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Amelia_Vega_0002.png} &  
+  $\vec{z}_3^{(1)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Amelia_Vega_0003.png} &  
+  $\vec{z}_*^{(1)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Amelia_Vega_0004.png} \\ \hline
+$y^{(2)}$=Jean-Pierre & 
+  $\vec{z}_1^{(2)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Jean-Pierre_Raffarin_0001.png} &  
+  $\vec{z}_2^{(2)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Jean-Pierre_Raffarin_0002.png} &  
+  $\vec{z}_3^{(2)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Jean-Pierre_Raffarin_0003.png} &  
+  $\vec{z}_*^{(2)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Jean-Pierre_Raffarin_0004.png} \\ \hline
+$y^{(3)}$=Liza & 
+  $\vec{z}_1^{(3)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Liza_Minnelli_0001.png} &  
+  $\vec{z}_2^{(3)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Liza_Minnelli_0002.png} &  
+  $\vec{z}_3^{(3)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Liza_Minnelli_0003.png} &  
+  $\vec{z}_4^{(3)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Liza_Minnelli_0004.png} \\ \hline
+$y^{(4)}$=Patricia & 
+  $\vec{z}_1^{(4)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Patricia_Clarkson_0001.png} &  
+  $\vec{z}_2^{(4)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Patricia_Clarkson_0002.png} &  
+  $\vec{z}_3^{(4)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Patricia_Clarkson_0003.png} &  
+  $\vec{z}_4^{(4)} = $\includegraphics[scale = 0.2]{../../proposal/face_photos/Patricia_Clarkson_0004.png} \\ \hline
+\end{tabular}
+\caption{Face recognition problem}
+\label{fig:face_rec}
+\end{figure}
+
+Decades of research into facial recognition has confirmed that careful
+\emph{feature-engineering} or \emph{representation-learning} is the
+key to acheiving human-level performance on the face recognition task.
+The feature-engineering approach involves crafting algorithms to
+locate landmarks in the image (the corners of the eyes, nose, mouth,
+etc.) and to use distances between landmarks as features.  The most
+sophisticated approaches extract features by means of first fitting a
+three-dimensional model of the face to the photograph.  
+
+More recently, fully automated feature-learning, or
+\emph{representation-learning}, using deep convolutional networks
+(CNN) has yielded record performance.  A deep CNN [include explanation
+  here].  Google's FaceNet (\cite{schroff2015facenet}), using learned
+features from a deep CNN, acheived an accuracy of $0.9964 \pm 0.0009$
+on the Labeled Faces in the Wild (LFW) benchmark dataset,
+outperforming Facebook's DeepFace (which uses both a deep CNN, and 3D
+modeling, with an accuracy of $0.9735 \pm 0.0025$,
+\cite{taigman2014deepface}) and a human benchmark (accuracy 0.9753,
+\cite{kumar2009attribute}).
 
 \section{Recognition tasks}
 
