@@ -1,0 +1,58 @@
+\documentclass{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\begin{document}
+\pagestyle{empty}
+
+
+% Define block styles
+\tikzstyle{block} = [rectangle, draw, fill=white, 
+    text width=5em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{cloud} = [ellipse, draw, fill=white, 
+    text width=5em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{line} = [draw, -latex']
+    
+
+\begin{tabular}{ccc}
+
+Multi-class classification & & Information Theory\\
+
+\begin{tikzpicture}[node distance = 2cm, auto]
+    % Place nodes
+    \node [block] (init1) {label $Y$};
+    \node [cloud, below of=init1] (init2) {distribution $F_{X|Y}$};
+    \node [block, below of=init2] (init3) {observation $X$};
+    \node [cloud, below of=init3] (init4) {classifier $h(X)$};
+    \node [block, below of=init4] (init5) {estimate $\hat{Y}$};
+    % Draw edges
+    \path [line] (init1) -- (init2);
+    \path [line] (init2) -- (init3);
+    \path [line] (init3) -- (init4);
+    \path [line] (init4) -- (init5);
+\end{tikzpicture} 
+
+& & 
+
+\begin{tikzpicture}[node distance = 2cm, auto]
+    % Place nodes
+    \node [block] (initA) {message $M$};
+    \node [cloud, below of=initA] (initB) {encoder $g(M)$};
+    \node [block, below of=initB] (init1) {encoded message $Y$};
+    \node [cloud, below of=init1] (init2) {noisy channel $F_{X|Y}$};
+    \node [block, below of=init2] (init3) {observation $X$};
+    \node [cloud, below of=init3] (init4) {decoder $d(X)$};
+    \node [block, below of=init4] (init5) {estimate $\hat{M}$};
+    % Draw edges
+    \path [line] (initA) -- (initB);
+    \path [line] (initB) -- (init1);
+    \path [line] (init1) -- (init2);
+    \path [line] (init2) -- (init3);
+    \path [line] (init3) -- (init4);
+    \path [line] (init4) -- (init5);
+\end{tikzpicture} 
+
+\end{tabular}
+
+\end{document}

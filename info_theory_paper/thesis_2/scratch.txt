@@ -1,0 +1,406 @@
+One practical implication of this is that performance on
+discrimination tasks can be predicted by measures of the
+\emph{information content} of the input. This was the basis of Claude
+Shannon's foundational work on information theory, and the definition
+of \emph{mutual information.}  However, another, less-studied
+application of this connection is that questions about the
+\emph{information} content of a signal can be addressed by using
+methods based on discrimination tasks.
+
+Take for instance the study of \cite{oram1998theideal}.
+Researchers showed a macaque monkey the image of a human face in
+varying view angles, while recording the response of 32 cells in the
+superior temporal to each view angle.  They then used a Bayesian
+decoder to build a disciminative model for the view angle from the
+data, and assessed its predictive accuracy for determining the view
+angle from the responses of the 32 recorded cells.  In nature, the
+brain of the macaque monkey infers the rotational angle of various
+objects using lower-level neural inputs; Oram et al. mimic the natural
+discriminatory behavior by training a model to achieve the same task
+from cell recoding data.  
+
+While the precise mechanisms by which low-level sensory inputs are
+aggregated into high-level concepts, such as rotational angle, are
+still not well-understood, the feasibility of \emph{artificially}
+discriminating the signal based on such data is scientifically
+meaningful, even if the artificial classifier employed has little
+resemblance to the actual dynamics driving cognition in the brain.  %%mammal brain? human brain?  
+This is because the existence of
+\emph{any} discriminative model which can infer the signal from the
+data is sufficient to establish that \emph{information} about the
+signal is contained within the sources of the data--e.g. the neurons
+measured.
+
+%% limitations of classification: e.g. can only provide lower bound?
+
+%% Multi-class classification was first studied by SHannon
+%% in random codes
+
+%While multi-class classification is a rapidly developing field within
+%machine learning, the problem of discriminating inputs according to
+%discrete classes had been studied even before the advent of artificial
+%intelligence: arguably, it was 
+
+That is to say, the concept of \emph{information} indicates the
+potentiality to achieve accurate discrimination.  This was first
+formalized by the pioneers of information theory, most notably Claude
+Shannon, who laid the foundation for the field in his seminal 1948
+paper ``A mathematical theory of communication.''  Shannon defined a
+quantity called the \emph{mutual information}, which measures the
+information carried by a recieved signal $X$ about a transmitted
+signal $Y$.  From Shannon's celebrated noisy channel theorem, we have
+a formal relationship between mutual information and discrimination:
+one that we will discuss in section \ref{sec:mi}.
+
+
+Shannon, along
+with other pioneers of information theory such as Robert M. Fano and
+Norbert Weiner, recognized that the information content of a signal
+depended on how many different messages it can plausibly convey.
+
+
+
+Furthermore, it was Shannon who first recognized that when the signal
+is corrupted by noise, the amount of information \emph{lost} depends
+on how reliably the original message can be recovered from the noisy
+input--in other words, how well the reciever can \emph{discriminate}
+the original message on the basis of the noise-corrupted recieved
+message.  %% maybe add more details, redundancy of English, etc.
+
+Indeed, we see that key to the development of information theory is
+the study of the \emph{noisy-channel decoding problem}, which is
+illustrated in figure \ref{fig:mcc_vs_it}.  % Shannon's key result: decoding accuracy and mutual information
+
+If we compare the discrimination tasks defined in multi-class
+classification and information theory, we find much similarity, but
+also a few important differences.  Figure \ref{fig:mcc_vs_it} displays
+the schematic diagrams of the general multi-class classification
+problem and the setup for the noisy channel considered by Shannon.
+%% If we put the figure here, probably will need some more explanation
+
+%% we should mention mutual information earlier
+From figure \ref{fig:mcc_vs_it}, we can see major similarities between
+the multi-class classification problem and the noisy decoding problem
+studied in information theory: both involve inferring some latent
+variable $Y$ on the basis of observed $X$.  We will go into great
+detail about the similarities and differences in section
+\ref{sec:rand_code_rand_class}.  However, despite these similarities,
+it has historically been the case that the machine learning literature
+and the information theory literature diverge in terms of the metric
+used to characterize performance in the discrimination task.  In
+multi-class learning, the performance is generally characterized by
+the \emph{accuracy} of the classification--the probability that the
+label is assigned correctly.  However, in information theory, a
+quantity called the \emph{mutual information}, which was invented by
+Claude Shannon, is used to characterize the quality of the noisy
+channel with regards to achievable decoding performance. %% jargony phrase, due to the idea being difficult to express
+
+
+
+
+
+Furthermore, as we might expect from the close connection between
+random codes and randomized classification, we are able to form links
+between multi-class classification and information theory.  Therefore,
+Chapters 4 and 5 leverage the link between randomized classification
+and information theory in order to develop new estimators of mutual
+information in high-dimensional datasets consisting of pairs ob
+observations $(X, Y)$.  While Chapter 4 works in a setting where a
+true, sparse relationship between $Y$ and $X$ is assumed to be known,
+Chapter 5 makes a different assumption, which is that $X$ is
+high-dimensional, and that its components are not too dependent.
+
+In the following sections, we review the relevant background for
+information theory, the applications of information theory to
+neuroscience, and multi-class classification, then introduce the
+connection between random code models in information theory and
+randomized classification.
+
+
+In multi-class classification, we may assume without loss of generality that the data has been generated in the following manner:
+\begin{enumerate}
+\item First, a label $Y$ is drawn according to some distribution from the label set $\{y_1,\hdots, y_k\}$.
+\item Secondly, the new observation $X$ is drawn according to the unknown conditional distribution $F_{X|Y}$.
+\item Finally, an estimated label $\hat{Y} = h(X)$ is obtained
+  according to a data-dependent classification rule, $h$.
+  Typically, $h$ is determined by fitting a model to training data.
+\end{enumerate}
+In the particular application, the above description may not match the
+\emph{causal relationship} between $X$ and $Y$: however, whether $X$
+is drawn conditional on $Y$, or $Y$ is drawn conditional on $X$, or
+that $(X, Y)$ are drawn from some joint distribution, makes no
+difference from the theoretical standpoint, since only the statistical
+(and not causal) properties of the joint distribution $(X, Y)$ are
+relevant for determining the peformance of the classification rule $h(X)$.
+
+
+While Shannon's theory of information was motivated by the problem of
+designing communications system, the applicability of mutual
+information was quickly recognized by neuroscientists.  Only four
+years after Shannon's seminal paper in information theory (1948),
+McKay and McCullough (1952) inaugurated the application of mutual
+information to neuroscience.  
+
+Since then, mutual information has enjoyed a
+celebrated position in both experimental and theoretical neuroscience.
+Experimentally, mutual information has been used to detect strong
+dependencies between stimulus features and features derived from
+neural recordings, which can be used to draw conclusions about the
+kinds of stimuli that a neural subsystem is designed to detect, or to
+distinguish between signal and noise in the neural output.
+Theoretically, the assumption that neural systems maximize mutual
+information between salient features of the stimulus and neural output
+has allowed scientists to predict neural codes from signal processing
+models: for instance, the center-surround structure of human retinal
+neurons matches theoretical constructions for the optimal filter based
+on correlations found in natural images [cite].
+
+In classification, $Y$ is a
+categorical vector: in \emph{binary} classification $Y$ can take one
+of two possible values, while in multi-class classification, $Y$ can
+take more than two values.  In \emph{regression}, another supervised
+learning task, $Y$ takes a numeric value.  In \emph{multiple-response
+  regression}, or \emph{multivariate regression}, $Y$ is a numeric
+vector.  In \emph{multi-label classification}, $Y$ is a vector of
+categorical values.
+
+In neuroscience studies, where $\bX$ is the controlled stimulus, and
+$\bY$ is the neural activity, the two mirror pairs \eqref{eq:ce_ident}
+and \eqref{eq:ce_ident2} have different interpretations.  Rather than
+providing a basis for practical estimation, \eqref{eq:ce_ident2}
+provides an \emph{interpretation} of the mutual information.  
+
+
+\section{Random codes and random classification}
+
+A random code model in information theory is one where given some
+distribution $\nu$ (typically a uniform distribution) on the space of
+transmittable signals $\mathcal{Y}$, we posit that the decoder $g(M)$
+is randomly generated, by letting $g(1),\hdots, g(m)$ be identically
+and independently assigned to random draws from $\nu$.  For example,
+when $\mathcal{Y}$ is the space of $m$-length binary strings, the
+encoder $g$ maps indices $1, \hdots, m$ to random $m$-length binary
+strings.  The purpose of the random code model is usually to establish
+a lower bound on achievable accuracy given some constraints on the
+signal space.
+
+Meanwhile, a randomized classification model is one where the label
+set $\{y^{(1)},\hdots, y^{(k)}\}$ is not fixed, but randomly sampled.
+One defines a label space $\mathcal{Y}$, a family of conditional
+distributions $\{F_{X|y}\}_{y \in \mathcal{Y}}$, and a distribution
+$\nu$ on $\mathcal{Y}$.  Then the randomized classification model is a
+classification task obtained by drawing labels $\{Y^{(1)},\hdots,
+Y^{(k)}\}$ iid from $\nu$, generating training data for those
+particular labels by drawing observations $X_i^{(j)} \sim
+F_{X|Y^{(j)}}$, and where the problem is to construct a classification
+rule for assigning new observations $X$ which are drawn from the
+mixture
+\[
+X \sim \frac{1}{k}\sum_{i=1}^k F_{X|Y^{(k)}}
+\]
+to one of the labels $\{Y^{(1)},\hdots, Y^{(k)}\}.$ As we will see
+throughout the thesis, the randomized classification model can be
+naturally applied to a large number of multi-class classification
+applications, such as facial recognition, where the labels
+(e.g. people) can be justifiably modelled as random draws from some
+population.  And, even in the majority of classification problems
+where the labels cannot be assumed to come from an iid sample,
+randomized classification models can still be applied to provide
+intuition for the original problem.
+
+The link between random code models and randomized classification
+models should now be apparent. Define $Y_i = g(i)$ in the random code
+model, so that $Y_i$ are iid drawn from $\nu$.  Fixing a particular
+realization of $Y_1,\hdots, Y_k$, the decoding problem is then
+evidently a multi-class classification problem with labels
+$\{Y_1,\hdots, Y_k\}$.  The only difference between the two models is
+that the conditional distributions $F_{X|Y}$ are assumed to be known
+in the random code model, and assumed unknown in the randomized
+classification model.
+
+But happens when we assume that $F_{X|Y}$ is known, in the multi-class
+classification problem?  In fact, it is common to consider the case of
+known $F_{X|Y}$ in the machine learning literature, because the
+resulting accruacy gives an \emph{upper bound} on achievable
+performance in the multi-class classification problem.  This is
+because once $F_{X|Y}$ is known, it is possible to define the
+\emph{optimal} classification rule, or \emph{Bayes} classification
+rule $h_{Bayes}$.  For example, supposing that the performance
+criterion is to minimize the zero-one risk $\Pr[\hat{Y} \neq Y]$, then
+the Bayes rule is to assign $X$ to the label with the highest
+posterior density,
+\[
+h_{Bayes}(X) = \text{argmax}_{y \in \{y_1, \hdots, y_k\}} f_{X|y}(x) \pi(y)
+\]
+where $\pi(y)$ is the prior probability of $Y = y$.  Therefore, it is
+the same thing to study the Bayes accuracy in a randomized
+classification model and the decoding accuracy of a randomized code in
+a noisy channel.
+
+Indeed, the analysis of the Bayes accuracy of a randomized
+classification model forms the subject of Chapters 2 and 3.  Due to
+the aforementioned equivalence, it can be said that a large body of
+work dealing with the Bayes accuracy of randomized classification
+problems exists in information theory: however, the majority of such
+works deal with the limit as $k \to \infty$, and to our knowledge no
+analysis has been done for the case of finite $k$, which is the
+relevant scenario for multi-class classification.  There is good
+reason for this lacuna in the information theory literature, which is
+that since information theorists are concerned with understanding the
+properties of \emph{optimal} coding schemes, it follows that
+randomized coding schemes are only interesting insofar as that they
+give good approximations to optimal coding schemes.  However, in the
+classification setting, we may be interested in studying randomized
+classification for its own sake, and not merely as a means to obtain
+lower bounds or estimates for another problem.  Therefore, Chapter 2
+presents novel results on the statistical properties of the Bayes
+accuracy in the randomized classification model.  Meanwhile, Chapter 3
+studies an interesting application of the randomized classification
+problem, which is to analyze the dependence of the classification
+accuracy on the size of the label set.  This analysis yields a novel
+method for `performance extrapolation' in real-world classification
+problems, meaning that our method can be used to estimate the
+classification accuracy on a large multi-class classification problem
+using data from only a subsample of the classes in the larger problem.
+
+The study of naturally intelligent systems, and the study and design
+of artificially intelligent systems, form two major intertwining
+domains of modern research.  Here, we take \emph{intelligence} to
+refer to the property of a system by which it can modulate its
+reaction to external inputs in a purposeful manner.  Therefore, by
+this definition, an amoeba which seeks food and avoids toxins is
+intelligent, as is a gene-regulation network, or a mammalian brain.
+Similarly, artificially intelligent algorithms which implement
+automated decision-making rules in response to external inputs also
+satisfy this definition of intelligence.
+
+A primitive organism may classify percieved objects in its environment
+as either beneficial (potential food and resources) or harmful (toxins
+and predators), and intelligently respond by means of pursuing the
+former and avoiding the latter.  %% note that this example is redundant
+Complex organisms, like humans, not
+only discriminate in order to make immediate decisions, but also
+categorize objects in the world in order to perform intermediate
+calculations and carry out contextual reasoning.
+%% example?
+
+
+%% Introduce examples of classification and multi-class classification
+
+Similarly, \emph{artificially intelligent} algorithms and agents will
+also discriminate input data into categories.  Very often, these types
+of classification and recognition tasks mimic and automate
+discrimination tasks that humans already perform, such as:
+\begin{itemize}
+\item Optical character recognition: recognizing characters from handwritten glyphs.
+\item Facial recognition: identifying individuals from images of their faces.
+\item Object recognition: identifying objects in photographs and labelling them with the appropriate keyword.
+\end{itemize}
+However, classification can also be performed on novel types of tasks
+where no human substitute exists, such as diagnosis of cancer
+phenotype based on thousands of gene expression levels.
+
+While a major use of artificially intelligent classifiers is to
+automate routine tasks or to categorize complex data, it is also
+scientifically interesting to compare the performance of naturally
+intelligent agents (human or animal subjects) versus artificially
+intelligent classifiers on discrimination tasks.  One reason is that human
+benchmarks on complex classification tasks, such as object
+recognition, are often non-trivial to beat, and provide a useful
+reference to quantify progress in machine learning.  Yet, another
+reason is that the attempt to engineer an artificially intelligent
+solution to a natural recognition problem provides insight into the
+nature of intelligence in human and animal brains.  We still cannot
+fully explain the human capability to quickly locate and identify
+objects in a natural scene, but research into the mechanisms of
+vision, and attempts to replicate human capabilities for object
+recognition, have already provided crucial insight into the
+hierarchical nature of mammalian vision.  %% needs citation
+
+However, a potentially puzzling aspect of this approach, is that the
+structure or dynamics of the artificially intelligent classifier need
+not imitate the dynamics of the biological system for the modelling
+approach to be useful.  Computational neuroscientists have developed
+biological realistic models of neural signalling activity which could
+be employed to simulate the neural decision-making process from input
+to output, at a very high level of versimilitude.  However, it is
+often more useful in practice to model the decision-making process
+with much simpler statistical models, such as linear regression.  Even
+relatively complex machine learning models, such as deep neural
+networks, represent a vast simplification from biological dynamics.
+Yet their use can often be justified by the assumption that the
+performance achieved on this task by the given classifier is
+reflective of the performance that would be achieved by a more
+biologically realistic model.  Indeed, this assumption can often be
+justified because, as is generally observed in real-world machine
+learning applications, several very different types of classifiers
+often end up achieving similar performance (when tuned correctly).
+
+How can we explain the correlation in the performance of very
+different families of classifiers across problems in a wide range of
+domains? In problems where it is hard to a given family of classifiers
+to perform well, it is also hard to other families of classifiers.  In
+problems where one classifier achieves very high accuracy, many other
+families of classifier can achieve high accuracy as well.  
+
+One explanation for this phenomenon is that the input contains a
+certain amount of \emph{information} about the output, and that the
+amount of information sets fundamental limits on what kind of
+classification accuracies can be achieved.  Indeed, the relationship
+between information and bounds on discrimination accuracy were first
+established by Claude Shannon, who gave the formula for the
+\emph{mutual information} between two random variables $X$ and $Y$,
+and whose proved in his noisy-channel theorem an asymptotic
+relationship between the mutual information and achievable
+discrimination accuracy.  Fano [CITE] followed this result with the
+equally classical Fano's inequality, which establishes an upper bound
+on accuracy as a function of mutual information.
+
+Neuroscientists have used the connection between information and
+discrimination in several ways.  One is to sidestep the application of
+classifiers altogether, and to directly estimate the mutual
+information between brain activity and the task of interest [CITE].  A
+second way to to proceed with training classifiers on the data, but
+then summarizing the performance of the classifier by the mutual
+information implied by the confusion matrix.  Hence, implied mutual
+information becomes a error metric for the classification--but one
+that is more readily comparable across different classification tasks.
+
+[OK, now what do we do?  We play around with the connection between MI
+  and discrimination some more, and find some things.]
+
+We list these properties of mutual information in preparation for
+section \ref{sec:axiom_info}, where we prepare a ``minimal'' set of
+properties for an information coefficient, and consider how much of
+the functionality of the mutual information would be preserved by an
+alternative information coefficient satisfying only those minimal
+properties.
+
+Having outlined the reasoning behind our assumptions, we will restate,
+clarify, and extend our model in the following section.
+
+  In most realistic applications,
+the label set is not going to be a \emph{uniform} sample over all
+possible humans, and two label sets will be drawn using different
+sampling distributions over $\mathcal{Y}$.  However, for the sake of
+developing the simplest possible theory, we will make the assumption
+that both of the label sets $\mathcal{S}_1$ and $\mathcal{S}_2$ are
+composed of i.i.d. samples (of size $k_1$ and $k_2$ respectively) from
+the population distribution $\mathcal{Y}$.  Here we have switched
+notation from $\mathcal{Y}_i$ to $\mathcal{S}_i$ to emphasize the fact
+that the label set is a subsample.
+
+Secondly, given that label sets overlap in two classification
+problems, we expect the conditional distributions to match for the
+overlapping labels.  This means that for each $y \in \mathcal{Y}$,
+there exists a unique distribution of features $F_y$, so that for both
+$G_1$ and $G_2$, the conditional distribution of $X$ given $Y = y$ is
+$F_y$.
+
+Finally, as a necessary simplification, we assume that the size of the
+training set is comparable in the two problems.  This assumption is
+made so that the resulting theory can be made to some extent
+independent of the details of the learning algorithm $\Lambda$.  We
+require that the sampling scheme be parameterized by $r$, the number
+of training instances drawn from each label $y \in \mathcal{S}_i$.
+
