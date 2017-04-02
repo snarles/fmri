@@ -54,8 +54,8 @@ theories about the workings of the visual cortex.  In an exemplary
 study, \cite{Kay2008a} model the response of the BOLD fMRI signal (a
 proxy measure of neural activity) to greyscale natural images
 presented to a human subject.  The data takes the form of pairs
-$(\vec{z}_i, \vec{x}_i)$, where $\vec{z}_i$ is the pixel intensities
-of the presented image, and $\vec{x}_i$ is a three-dimensional map of
+$(\vec{z}_i, \vec{y}_i)$, where $\vec{z}_i$ is the pixel intensities
+of the presented image, and $\vec{y}_i$ is a three-dimensional map of
 BOLD signal, represented as a numerical vector with one real-valued
 intensity per voxel.
 
@@ -116,11 +116,11 @@ in V1, is better supported by the data.
 
 In order to compare the two different RF models, each of the candidate
 RF models is used to fit an \emph{encoding model}--a forward model for
-predicting the voxel activations in V1, $\vec{x}^{V1}$, from the
+predicting the voxel activations in V1, $\vec{y}^{V1}$, from the
 representations defined by the RF model, $\vec{g}(\vec{z})$.  Kay et
 al. consider sparse linear encoding models of the form
 \[
-\vec{x}^{V1} = \vec{g}(\vec{z})^T \bB + \vec{b} + \vec{\epsilon}
+\vec{y}^{V1} = \vec{g}(\vec{z})^T \bB + \vec{b} + \vec{\epsilon}
 \]
 where $\bB$, a sparse coefficient matrix and $\vec{b}$, a offset
 vector, are parameters to be estimated from the data, and
@@ -189,14 +189,264 @@ three-dimensional model of the face to the photograph.
 
 More recently, fully automated feature-learning, or
 \emph{representation-learning}, using deep convolutional networks
-(CNN) has yielded record performance.  A deep CNN [include explanation
-  here].  Google's FaceNet (\cite{schroff2015facenet}), using learned
+(CNN) has yielded record performance.  
+Google's FaceNet (\cite{schroff2015facenet}), using learned
 features from a deep CNN, acheived an accuracy of $0.9964 \pm 0.0009$
 on the Labeled Faces in the Wild (LFW) benchmark dataset,
 outperforming Facebook's DeepFace (which uses both a deep CNN, and 3D
 modeling, with an accuracy of $0.9735 \pm 0.0025$,
 \cite{taigman2014deepface}) and a human benchmark (accuracy 0.9753,
 \cite{kumar2009attribute}).
+
+\begin{figure}
+\includegraphics[scale = 0.5]{Figures/triplet_loss.png}
+\caption{Triplet loss function for training face representations.  From \cite{amos2016openface}}
+\label{fig:triplet_loss}
+\end{figure}
+
+The method that FaceNet uses to learn a representation $\vec{g}(\vec{z})$ 
+(a collection of nonlinear mappings of the input image) is highly interesting.
+The representation $\vec{g}$ is parameterized by a deep CNN architecture:
+in other words, the basis functions $g_i$ are the end result of composing
+several layers of nonlinear transformations as specified by the hierarichical 
+architecture of the CNN.  However, for our purposes, the modeling and algorithmic details
+of the CNN are not important, and we refer the interested reader to [CITE]
+for a reference on principles of convolutional neural networks.
+At a higher level of abstraction, we can say that the representation $\vec{g}_\theta(\vec{z})$
+lies in a class of nonlinear functions, parameterized by some (possibly large) vector of
+parameters, $\theta$.  The triplet loss function used by FaceNet defines the objective function
+used to estimate $\theta$ and therefore find a good representation.
+
+The intuition behind the triplet loss function is that a good representation $\vec{g}(\vec{z})$
+should cause faces of the same person to cluster, as illustrated in Figure \ref{fig:triplet_loss}.
+Therefore, the triplet loss function encourages inputs $\vec{z}, \vec{z}'$ that belong to the
+same class (that is, faces which belong to the same person) to have a representations $\vec{g}(\vec{z}), \vec{g}(\vec{z}')$ that are close to each other in terms of Euclidean distance, while inputs $\vec{z}, \vec{z}^*$
+which belong to different classes are encouraged to have representations $\vec{g}(\vec{z}), \vec{g}(\vec{z}^*)$
+which are far apart in terms of Euclidean distance.   Note also that for the triplet loss,
+we require the representations $\vec{g}$ to be normalized to have unit norm, 
+so that the maximum distance between two representations is 2.
+
+Recall that the training data consists of images $\{\vec{z}_j^{(i)}\}$ where $i$ indexes the
+person (or class) and $j$ indexes the repeats from the same class.
+Define a \emph{triplet} as a triple consisting of an \emph{anchor}, a \emph{positive example} from the same class as the anchor, and a \emph{negative example} from a different class from the anchor,
+\[
+(\underbrace{\vec{z}_j^{(i)}}_{\text{anchor}}, \underbrace{\vec{z}_k^{(i)}}_{\text{positive example}}, \underbrace{\vec{z}_\ell^{(m)}}_{\text{negative example}})
+\]
+where $j \neq k$ and $m \neq i$.
+For instance, in a training set with $N$ classes and $M$ training examples per class, we can form $N(N-1)M^2(M-1)$ triplets.
+The triplet loss is then defined as
+\[
+\text{TripletLoss}_{\theta} = \sum_{j \neq k} \sum_{m \neq i} \sum_\ell 
+[||\vec{g}_\theta(\vec{z}_j^{(i)}) - \vec{g}_\theta(\vec{z}_k^{(i)})||^2 + \alpha
+ - ||\vec{g}_\theta(\vec{z}_j^{(i)}) - \vec{g}_\theta(\vec{z}_\ell^{(m)})||^2]_+
+\]
+where $\alpha$ is a tuning parameter 
+(defining the desired separation between inter-cluster distance and between-cluster distance).
+In the case of FaceNet, stochastic gradient descent with backpropagation is used to update
+the CNN parameters $\theta$ over mini-batches of triplets.
+
+\subsection{What makes a good representation?}
+
+One of the big questions in representation learning is how to 
+define or evaluate the quality of a representation\cite{bengio2013representation}.
+When, as in face recognition, the end goal of the representation learning
+is to obtain more accurate predictions or classifications within a machine learning pipeline,
+an obvious criterion for the quality of the representation is the
+prediction or classification accuracy that can be attained after using that particular
+representation as the feature set for a classification or regression model.
+
+However, this result-oriented approach to evaluating representations has two drawbacks.
+Firstly, it may be difficult to work with a performance metric 
+(such classification or regression accuracy) as
+a quality metric, since obtaining the performance metric
+requires training a model and then testing it on data,
+which can be computationally costly and may not yield a differentiable objective function.
+Secondly, one of the appealing qualities of a `good' representation is that
+it should enable good performance in a \emph{variety} of different tasks.
+Limiting the definition of `good' to performance on a single task seemingly
+ignores the requirement that a representation should be general across tasks.
+
+%% sufficient statistics in parametric stats?
+
+If we look at the two examples of `representation evaluation' that we just presented,
+one in neuroscience and one from facial recognition, then we see an intuition common
+to both cases which is that \emph{a good representation} captures the `signal',
+or meaningful information, in the raw input, while discarding the `noise'--which can
+either take the form of actual noise, or simply information that is not relevant to the task.
+
+In the case of facial recognition, the `signal' is the features of the face that persist across
+different perspectives and illumination, while the `noise' is the effect of pose, illumination,
+transient features such as hairstyle and makeup, and occlusive accesories such as sunglasses.
+One might imagine that an idealized representation for facial recognition
+is one that estimates the latent, persistent
+traits, such as the shape and size of facial features, while discarding the effects of `nuisance'
+parameters such as pose and lighting.
+The effect of extracting the signal while reducing the noise is to shrink inputs that
+share the same latent variables--faces from the same person--towards each other,
+as illustrated in Figure \ref{fig:triplet_loss}.
+
+Meanwhile, in the case of the functional MRI study, it is the V1 neurons themselves
+which define what is the `signal' and what is the `noise' in the input.  
+The V1 neurons only respond to certain features in the data, and ignore others.
+Therefore, the goal of the receptive field model is to extract the information in the
+data that is relevant to V1 (such as, perhaps, local angular frequencies in the image)
+and discard other information (e.g. intensities of individual pixels).
+
+In both examples, we have not have inputs $\vec{z}$ but also some form
+of \emph{side information} that helps us distinguish between signal and noise.
+In the case of facial recognition, the side information is the labels $y$ which label
+the photographs.  In the case of the functional MRI study, the side information is
+the V1 intensities $\vec{y}^{V1}$ which give us information as to what V1 neurons
+``care about'' in the image.
+
+The unifying theme of this thesis is how to evaluate (possibly nonlinear) representations
+$\vec{g}(\vec{z})$ of inputs $\vec{z}$ when we are given pairs $(\vec{z}_i, y_i)$
+of input vectors as well as some form of `side-information' $y_i$, which we will call
+\emph{the response variable}, that gives us some basis for 
+distinguishing signal from noise.  As we will explain further in the ensuring chapters,
+we consider three different methods for evaluating the quality of the representation.
+
+\begin{enumerate}
+\item The \emph{mutual information} $I(\vec{g}(\vec{Z}); Y)$ between the representation
+and the response variable.
+\item In the case of discrete response variables $Y$: 
+the $k$-class average classification accuracy.
+\item In the case of continuous response variables $Y$:
+the \emph{identification risk.}
+\end{enumerate}
+
+The mutual information is a classical measure of dependence that
+was first developed by Claude Shannon as one of the key concepts
+in information theory.  The $k$-class average classification accuracy
+is a concept that has not been (to our knowledge) previously introduced in the literature,
+but it is highly related to the \emph{identification risk}, which was introduced
+by the same functional MRI study of natural images (\cite{Kay2008a})
+that we have been discussing.  To our knowledge, we are the first to investigate
+the properties of the identification risk from a theoretical perspective.
+
+All three of these methods enable \emph{supervised evaluation of representations}
+because they define a quality metric which depends on a response variable $Y$.
+As in \emph{supervised learning}, the response $Y$ gives us a means of
+judging the quality of the representation $\vec{g}(\vec{z})$.
+
+Comparing these methods, the advantage of the $k$-class average classification
+error or identification risk is that they are relatively easy to compute,
+even in high-dimensional data,
+because one can make use of machine-learning methods for computing these quantities.
+Meanwhile, the mutual information is extremely difficult to estimate in high-dimensional data.
+However, the advantage of the mutual information is that it does not depend
+on arbitrary tuning parameters, while both the $k$-class average classification accuracy
+and identification risk depend on the choice of a tuning parameter $k$.
+
+However, one of the main theoretical contributions of this work is to show how
+all of these three methods: mutual information,
+$k$-class average classification accuracy, and identification risk, are highly related.
+In particular, we establish methods for lower-bounding the mutual information
+from either the $k$-class average classification accuracy or identification risk.
+
+\subsection{Related Work}
+
+As we hoped to convey in the introduction, the problem of finding and evaluating
+representations is an extremely hot topic in multiple disciplines, from
+neuroscience to machine learning.  Consequently, the space of possible
+approaches to the problem is vast.  We limit our study to a few highly interconnected
+and (in our opinion) interesting approaches to the problem of evaluating representations,
+in the special case when a \emph{response} variable $Y$ is available
+and where one wants to take advantage of the side-information provided by this response.
+
+However, many other ideas exist for evaluating representations.
+One extremely notable family of approaches, which lies totally outside
+the scope of this thesis, is \emph{unsupervised} methods for evaluating representations--
+methods which do not require access to an external response variable $Y$.
+Obviously, this is highly interesting, because in many applications
+one does not have easy access to such a response variable.
+One family of methods--including restricted Boltzmann machines and gaussian restricted Boltzmann machines--fits a parametric distribution to the inputs $\vec{z}$ [CITE].
+The representations are obtained as summary statistics of the latent variables in the model,
+and the quality of the representation is assessed via tha \emph{likelihood} of the parametric model.
+\emph{Auto-encoders} form another family of methods [CITE].
+Representations, or \emph{encoders} $\vec{g}$ are paired with \emph{decoders} $\vec{g}^{-1}$
+that infer the original input from the representation.
+The quality of the representation $\vec{g}$ is based on the reconstruction error
+obtained by comparing the original input to the inverse of the representation,
+\[
+||\vec{z} - \vec{g}^{-1}(\vec{g}(\vec{z}))||^2.
+\]
+In the case that $\vec{g}$ is of smaller dimensionality than $\vec{z}$,
+this forces the representation to extract highly explanatory `latent factors'
+that explain most of the variation in $\vec{z}$.  (If this sounds familiar,
+it may be because Principal Component Analysis can be interpreted as
+an auto-encoder model: the principal components minimize the 
+reconstruction error over all linear encoding/decoding rules.)
+However, one can also consider \emph{over-complete} representations
+of higher dimensionality than $\vec{z}$.  In order to prevent the identity map 
+(which would trivially have zero reconstruction error)
+from being the optimal representation, a variety of different approaches
+can be taken to modify the objective function.  One is to require
+the auto-encoder (the composition of the encoder and decoder)
+to recover the original input $\vec{z}$ from a \emph{noisy} input $\tilde{z} = \vec{z} + \vec{\epsilon}$.
+Another approach is to \emph{regularize} the encoder, for instance,
+requiring sparsity in the output of the encoder.
+
+With regards to \emph{supervised} evaluation of representations,
+one can find extremely similar ideas in
+the methodology of \emph{representation-similarity analysis},
+which was introduced by \cite{kriegeskorte2008representational} to the neuroscience community,
+and which has already grown incredibly popular within the field
+given the short span of time since its introduction.
+However, the methodology is based on much more classical work
+in statistics and psychometrics on \emph{distance-based inference}.
+The idea is that if one has multiple \emph{views} of the same object,
+say, the pixel values $\vec{z}_i$ of an image, a semantic labeling $y_i$ (`house' or `chair'),
+as well as a subject's response $\vec{x}_i$ to the image, as measured by fMRI,
+then all of these different views can be \emph{compared} by means of their
+\emph{inter-object distance matrices.}
+That is, if we have distinct objects indexed by $i = 1,\hdots, n$, then
+one can form an $n \times n$ distance matrix for each view: for instance, $D_{\vec{z}}$,
+the matrix of all pairwise Euclidean distances between pixel vectors;
+$D_{y}$, a binary matrix indicating pairs of identical labels with 0 and non-identical labels with 1;
+and $D_{\vec{x}}$, a matrix of pariwise Euclidean distances between fMRI images.
+One can then compare these resulting distance matrices (e.g. in terms of correlation)
+to determine which \emph{views} are similar to each other, and which are dissimilar.
+For instance, one may find that distances within `brain-space', $D_{\vec{x}}$, are much more similar
+to semantic distances $D_{y}$ than raw pixel distances $D_{\vec{z}}$.
+
+One could easily adapt the ideas in representational-similarity analysis
+towards the supervised evaluation of representations.
+A representation $\vec{g}$ is good if the resulting distance matrix $D_{\vec{g}}$ of pairwise
+distances between representations is similar to the distance matrix $D_y$ between responses.
+In fact, one could interpret the \emph{triplet-loss} objective function
+as enforcing a kind of \emph{representational similarity} between face representations $\vec{g}(\vec{z})$
+and labels $y$.
+Two faces with the same label have a distance of 0 within $D_y$,
+and therefore, they should have a small distance within $D_{\vec{g}}$.
+Two faces with different labels have distance 1 within $D_y$;
+therefore, they should have at least $\alpha$ distance within $D_{\vec{g}}$.
+
+However, the connection between representational-similarity analysis
+and supervised evaluation of representations remains unexplored in this work.
+We leave it to future research.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Recognition tasks}
 
