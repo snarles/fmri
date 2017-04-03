@@ -544,23 +544,32 @@ The leads us to consider the ideas in \emph{information geometry},
 which is the study of spaces of \emph{distributions}
 $\{f_\theta\}_{\theta \in \Theta}$ in which distance is measured by
 some type of statistical distance or divergence, e.g. Kullback-Liebler
-divergence (\cite{amari2007methods}).  To fit our problem into the framework of information
-geometry, we would consider the latent objects $\vec{t}$ as playing
-the role of the parameter $\theta$, and the induced distribution of
-$\vec{g}(\vec{z})$ as the distribution $f_\theta$.  An important
-concept in information geometry is the \emph{metric entropy} of a
-space $\Theta$, which is a measure of the \emph{volume} of the space
-according to statistical distance.  A ball $B_{\theta, r}$ centered at
-parameter $\theta$ and with radius $r$ is defined as the set of
-parameters $\theta'$ such that the statistical distance between $f_\theta$ and $f_{\theta'}$ is less than $r$:
+divergence (\cite{amari2007methods}).  To fit our problem into the
+framework of information geometry, we would consider the latent
+objects $\vec{t}$ as playing the role of the parameter $\theta$, and
+the induced distribution of $\vec{g}(\vec{z})$ as the distribution
+$f_\theta$.  It is important to note however, that this the emphasis
+on parameter spaces is complemented by the concept of \emph{duality}
+between the space of distributions and the space of observations.  The
+concept can be formalized in exponential families, where a sample from
+$f_\theta$ can be represented in the distributional space as the MLE
+estimate $f_{\hat{\theta}}$, and where the process of estimation is
+seen to correspond to projection operators.
+
+Within this framework, one can consider the \emph{metric
+  entropy} of a space $\Theta$, which is a measure of the
+\emph{volume} of the space according to statistical distance.  A ball
+$B_{\theta, r}$ centered at parameter $\theta$ and with radius $r$ is
+defined as the set of parameters $\theta'$ such that the statistical
+distance between $f_\theta$ and $f_{\theta'}$ is less than $r$:
 \[d(f_{\theta}, f_{\theta}) < r.\]
 The $\delta$-\emph{metric entropy} of the space $\Theta$ is defined as
 the minimum number of balls of radius $\delta$ needed to cover
 $\Theta$ (\cite{adler2009random}).  While we will not employ the
 formal tools of information theory in this work, we take inspiration
-from some of the intuitions developed in information geometry.
-Instead, we use \emph{information theory}, a closely related field, to
-provide much of the formalism for our theory.
+from some of the intuitions.  Instead, we use \emph{information
+  theory}, a closely related field, to provide much of the formalism
+for our theory.
 
 \emph{Subtheme: Information theory}.  Extremely similar notions of
 \emph{volume} appear in information theory, which is the study of how
@@ -583,12 +592,99 @@ and the conditional entropy of $R$ given $T$ (the transmitted message):
 \[
 I(T; R) \stackrel{def}{=} \underbrace{H(R)}_{\text{entropy}} - \underbrace{H(R|T)}_{\text{conditional entropy}}.
 \]
+Here the entropy $H(R)$ is analagous to the log-volume of the entire
+space, while the conditional entropy $H(R|T)$ measures to log-volume
+of the ball which is centered at the parameter $T$.  While mutual
+information is not defined explicitly in terms of packing or covering
+numbers, as we see in the Euclidean example for metric entropy, both
+packing and covering numbers are approximately equivalent to volume
+ratios.  Another difference between the mutual information and the
+metric entropy is that the mutual information is concerned with volume
+in the \emph{observation} space (the space of recieved messages $R$)
+rather than the \emph{parameter space}.  However, due to the concept
+of duality, we can see that one arrives at similar definitions of
+volume whether we choose to use the parameter space, or its dual, the
+observation space.
 
+\emph{Subtheme: Estimation of mutual information.}  Besides serving
+(in our case) as a measure of statistical volume, the mutual
+information enjoys numerous other desirable properties such as
+symmetry, invariance under bijections, and independent additivity, as
+we will review later in the chapter.  Due to these properties, the
+mutual information is an ideal measure of dependence for many
+problems; therefore, in a variety of applications, including many in
+neuroscience, it is desirable to estimate the mutual information of
+some empirically observed joint distribution.  However, this is a
+highly nontrivial functional estimation problem in high dimensions.
+By connecting mutual information to more easily estimated quantities
+such as average classification accuracy, our work provides novel
+estimators of mutual information, which we show to have better scaling
+properties in many high-dimensional problems than previous approaches
+for estimating mutual information.
 
+\emph{Subtheme: Connections between information theory and supervised
+  learning}.  Information theory, statistics, and machine learning
+have many interconnections, as testified by the many applications of
+information-theoretic inqualities in statistical and machine learning
+research.  By studying both information-theoretic and
+classification-based methods for evaluating representations, we
+uncover additional links between information theory and
+classification.  Fano's inequality, which bounds the mutual
+information in terms of Bayes accuracy of classification
+($\text{BA}$),
+\[
+\text{I}(X; Y) \geq = \log(k)-H(\text{BA}) - (1-\text{BA})\log(k-1),
+\] 
+is one of the earliest results bridging the two worlds of information
+theory and supervised learning.  However, its application is limited
+to \emph{discrete} and \emph{uniformly} distributed $X$.  Our work in
+Chapter 4 provides an extension of Fano's inequality to the case of
+continuous $(X, Y)$, through means of the Bayes accuracy of
+\emph{identification}.
 
-As we will see in another subtheme, a possible
-answer lies in thinking about the geometry of the representation
-space.
+\emph{Subtheme: Geometric inference from random samples.}  Regardless
+of which definition of `volume' one employs, a natural question is how
+to estimate this `volume' from empirical data.  That is, we wish to
+infer a geometric characteristic of the space--the volume--from a
+random sample of observations drawn from the space.  Meanwhile, a
+complementary question that was already extensively studied in
+information theory is the question of how to \emph{construct} a
+collection of points in the random space that \emph{optimizes} another
+geometric characteristic--the overlap between points.  It was
+established by Shannon that the \emph{randomization} method provides
+such a construction--a randomly drawn collection of points has
+asymptotically optimal properties in terms of maximum overlap (as
+measured by decoding error.)  In information theory, these random
+constructions pioneered by Shannon continued to be studied in the form
+of \emph{random code models}.
+
+Returning to the problem of inferring volume from samples, two
+questions arise--one being how to construct an estimator, and
+secondly, what is the variance of the estimator.  We define volume in
+terms of mutual information and develop estimators based on
+\emph{random classification tasks}, which specify the sampling
+mechanism.  Furthermore, we obtain preliminary results on the
+variability of such estimators.  We compare our results to existing
+results in information theory regarding random code models.
+
+\emph{Subtheme: Generalizability of experiments.} Two of our
+motivations for studying random classification tasks is (i) to
+evaluate representations, and (ii) as a model for recognition
+problems.  Yet a third application is for understanding the
+generalizability of experiments that can be modelled as random
+classification tasks.  For example, many task-fMRI experiments can be
+modelled random classification tasks, because the stimuli sets used in
+the experiment are composed of arbitrary (`random') exemplars, and
+therefore the stimuli set used by one lab may differ from the stimuli
+set used by another lab, even when they are presumably studying the
+same task.  Intuitively, using larger and more diverse stimuli sets
+should lead to better generalizability of results to the entire
+population of stimuli.  Our work on random classification--in
+particular, our variance bounds on the classification accuracy in
+randomized classification tasks--provides a theoretical basis for
+understanding how well the results of a random classification task
+allows inference to population parameters, such as the mutual
+information between the stimulus and the response.
 
 \subsection{Organization}
 
@@ -617,27 +713,22 @@ Yuval Benjamini.  Chapter 3 is based on joint work with Yuval
 Benjamini and Rakesh Achanta.  All theoretical results are due to the
 author.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \section{Information and Discrimination}
+
+%\subsection{Overview}
+
+We now begin our review of background material in supervised learning
+and information theory.  Therefore, a reader who is familiar to both
+fields could skip most of the following--with the exception of the
+explanation of \emph{identification risk} in section
+\ref{sec:ident_risk}, which is a relatively novel concept in
+the statistical literature.  Also, we hope that even the experienced
+reader will find some food for thought in our comparison of
+information theory and supervised learning, and our humble
+speculations about how current developments may increase the degree of
+interaction between the two areas.
+
+\subsection{Introduction}
 
 In studying the problem of evaluating representations, we make use of
 two closely related frameworks: firstly, the multi-class
@@ -1162,9 +1253,186 @@ n_2 \text{TestRisk}(h) \sim \text{Bernoulli}(n_2, \text{Risk}(h)).
 
 \subsubsection{Regression}
 
-\subsubsection{Identification}
+\begin{itemize}
+\item Suppose you observe $(\vec{X}^{(i)}, Y^{(i)})_{i=1}^n$ where $Y^{(i)} = f(\vec{X}^{(i)}) + \epsilon$, where $f$ is an unknown function and $\epsilon$ is noise.  (Also, assume $\E[\epsilon] = 0$.)
+\item The goal in regression is to recover the unknown function $f$.
+\item In \emph{linear regression}, we assume $f$ is linear. 
+\item if we do not assume a particular form for $f$, we can use \emph{nonparametric regression}.
+\end{itemize}
 
+\begin{itemize}
+\item When $\vec{X}$ is high dimensional, classical regression techniques perform poorly.
+\item If the true function $f$ only depends on a small number of components in $\vec{X}$, we can still do well if we use \emph{sparse} regression methods.
+\end{itemize}
+\begin{center}
+\begin{tabular}{c|c|c|}
+ & \emph{Classical} & \emph{Sparse} \\ \hline
+ \emph{Linear} & Ordinary Least-Squares  & Elastic net \\ 
+  & (Legendre 1805) & (Zou 2008)  \\\hline
+ \emph{Nonpar.} & LOWESS  & Random forests  \\ 
+   & (Cleveland 1979) & (Breiman 2001)  \\\hline
+\end{tabular}
+\end{center}
 
+\subsection{Identification risk}\label{sec:ident_risk}
+
+The identification task originated as a method for evaluating the
+quality of encoding models in neuroscience (Kay 2008).
+
+\subsection{Experimental design}
+
+We consider experiments in which a single subject is presented with a
+sequence of $T$ stimuli: each stimulus is presented during a `task
+window' of a fixed duration.  The stimuli are represented by
+real-valued feature vectors $\vec{X}$; let $p$ be the dimensionality
+of the feature space.  The brain activity of the subject is recorded,
+yielding a $q$-dimensional vector $\vec{Y}$: in practice, $\vec{Y}$
+could consist of discretized time series data or mean firing rates for
+spike-sorted neurons, or BOLD response for voxels, depending on the
+recording modality.  Let $\vec{X}^{(t)}$ denote the feature vector of
+the stimulus, and let $\vec{Y}^{(t)}$ denote the vector of intensities
+(e.g. BOLD response, mean spike) for the $t$th task window in the
+sequence.
+
+\subsection{Data splitting}
+
+The $T$ stimulus-response pairs $(\vec{X}, \vec{Y})$ are randomly
+partitioned into a \emph{training set} of size $N$ and a \emph{test
+  set} of size $M = T-N$.  Form the $N \times p$ data matrix
+$\bX^{tr}$ by stacking the features of the $N$ training set stimuli as
+row vectors, and stack the corresponding responses as row vectors to
+form the $N \times q$ matrix $\bY^{tr}$.  Similarly, define $\bX^{te}$
+as the $N \times p$ matrix of test stimuli and $\bY^{te}$ as the $N
+\times q$ matrix of corresponding test responses.
+
+\subsection{Probabilistic encoding model}
+
+The data is used to estimate a stimulus-based encoding
+model \cite{Kay2008a}\cite{Naselaris2011}\cite{Mitchell2008}.
+The conditional mean response $\E[\bY|\bX]$ is modelled as
+a linear transformation of the stimulus features,
+\[
+\vec{Y} = \bB^T \vec{X} + \bepsilon
+\]
+where $\bB$ is a $p \times q$ coefficient matrix and $\bepsilon$ is a
+noise variable with an assumed multivariate normal distribution,
+$\bepsilon \sim N(0, \Sigma)$.  Hence, the conditional density of
+$\vec{Y}|\vec{X}$ is given by the multivariate normal density
+\[
+p(\vec{y}|\vec{x}) = -\frac{1}{(2\pi |\Sigma|)^{-q/2}} \exp\left[-\frac{1}{2}(\vec{y} - \bB^T \vec{x})^T \Sigma^{-1} (\vec{y}-\bB^T \vec{x})\right].
+\]
+
+The coefficient $B$ can be estimated from the training set data
+$(\bX^{tr}, \bY^{tr})$ using a variety of methods for regularized
+regression, for instance, the elastic net \cite{Zou2005}, where each
+column of $\bB = (\beta_1,\hdots, \beta_q)$ is estimated via
+\[
+\hat{\beta}_i = \argmin_\beta ||\bY_i^{tr} - \bX^{tr} \beta||^2 + \lambda_1 ||\beta||_1 + \lambda_2 ||\beta||_2^2,
+\]
+where $\lambda_1$ and $\lambda_2$ are regularization parameters which
+can be chosen via cross-validation \cite{Hastie2009a} separately for
+each column $i$.
+
+After forming the estimated coefficient matrix $\hat{\bB} =
+(\hat{\beta}_1,\hdots, \hat{\beta}_q)$, we estimate the noise
+covariance $\Sigma$ via a shrunken covariance
+estimate\cite{Ledoit2004}\cite{Daniels2001} from the residuals,
+\[
+\hat{\Sigma} = \frac{1}{N} ((1-\lambda) S + \lambda \text{Diag}(S)) 
+\]
+where
+\[
+S = (\bY^{tr} - \bX^{tr} \bB)^T (\bY^{tr} - \bX^{tr} \bB).
+\]
+
+\subsection{Converting the encoding model to a decoding model}
+
+Bayes' rule can be used to convert a probabilistic encoding model into
+a decoding model \cite{Naselaris2011}.  The Bayesian decoding model
+gives the posterior probability of the stimulus given the response,
+\[
+p(\vec{x}|\vec{y}) = p(\vec{y}|\vec{x})\frac{p(\vec{x})}{p(\vec{y})}.
+\]
+In an \emph{identification task}\cite{Kay2008a}, a response $\by$ is
+generated by presenting the subject to a stimulus which is randomly
+chosen from a subset of $k$ stimuli, $S = (\vec{x}^{(1)},\hdots,
+\vec{x}^{(k)})$.  The decoder is used to select the stimulus in $S$
+which is most likely to have generated the response $\by$: the
+performance of the the decoder is measured by the probability of
+correct identification.  In the identification task, the prior
+probability $p(\vec{x})$ is uniform over the candidate set $S.$
+Therefore, the estimated log posterior probability of each candidate
+stimulus $\vec{x}^{(i)}$ is given by
+\[
+\log \hat{p}(\vec{x}|\vec{y}) = \log \hat{p}(\vec{y}|\vec{x}) + \text{const.}= -\frac{1}{2}(\vec{y} - \hat{\bB}^T \vec{x})^T \hat{\Sigma}^{-1} (\vec{y}-\hat{\bB}^T \vec{x}) + \text{const.}
+\]
+where we have elided the inconsequential constant terms.  Therefore,
+the chosen stimulus $\hat{\vec{x}}$ is the stimulus which minimizes
+the empirical Mahalanobis distance
+\[
+d_{\hat{\Sigma}}(\vec{y}, \hat{\bB}^T \vec{x}) = (\vec{y} - \hat{\bB}^T \vec{x})^T \hat{\Sigma}^{-1} (\vec{y}-\hat{\bB}^T \vec{x})
+\]
+among the stimuli in $S$, and supposing that the correcty stimulus has
+index $i$, the probability of correct identification is
+\[
+\Pr[\text{correct}] = \Pr[d_{\hat{\Sigma}}(\vec{y}, \hat{\bB}^T \vec{x}^{(i)}) \leq \min_{j \neq i} d_{\hat{\Sigma}}(\vec{y}, \hat{\bB}^T \vec{x}^{(j)}) ].
+\]
+
+\subsection{Computation of identification accuracy curve}
+
+The probability of correct identification varies depending on the
+choice of stimulus set $S$.  Therefore, to obtain a well-defined
+measure of decoder precision, we define the $k$-class
+\emph{identification risk} as the expected acccuracy when the set $S$
+is constructed by drawing $x^{(1)},\hdots, x^{(k)}$ independently from
+the prior distribution $p(\vec{x})$.
+
+An unbiased estimate of the $k$-class identification risk for any $k
+\leq M$ can be obtained, where $M$ is the number of test observations.
+The idea is to evaluate the empirical accuracy (the proportion of
+correct identifications) over all combinations of ${M}\choose{k}$
+stimulus subsets $S$ times all $k$ choices for the correct stimulus
+within $S$.  Yet, this empirical accuracy can be computed without
+explicitly looping over all $k{M}\choose{k}$ combinations via a
+computational trick.
+
+Suppose without loss of generality that the indices of the test
+observations are $i = 1,\hdots, M$.  Define
+\[
+M_{i,j} = \log \hat{p}(\vec{x}^{(j)}|\vec{y}^{(i)})
+\]
+Furthermore, define
+\[
+R_{i,j} = \sum_{\ell \neq j} I\{M_{i,\ell} \geq M_{i, j}\}.
+\]
+
+The computational trick is to look at each combination of test
+response $\vec{y}^{(i)}$ and stimulus $\vec{x}^{(\ell)}$, and to count
+count the number of subsets $N_{i, \ell}$ where (i) both $i$ and
+$\ell$ are included in $S$, and (ii) $\hat{x}^{(i)} =
+\vec{x}^{(\ell)}$.  One can then verify that the empirical accuracy
+over all subsets is equal to
+\begin{equation}\label{eq:avtestrisk}
+\text{EmpAcc}_k = 1 - \frac{1}{{{M}\choose{k}}}\frac{1}{k} \sum_{i=1}^{k} \sum_{\ell\neq i} C_{i\ell}N_{i, \ell}.
+\end{equation}
+Now it is just a matter of simple combinatorics to compute
+$N_{i,\ell}$.  We require both $\vec{x}^{(i)}$ and $\vec{x}^{(\ell)}$
+to be included in $S$.  This implies that if $M_{i,i} > M_{i,\ell}$,
+then $\vec{x}^{(\ell)}$ will never have the highest margin in any of
+those subsets, so $N_{i,\ell} = 0$.
+
+Otherwise, there are $R_{i,\ell} - 1$ elements with a lower margin
+than $\vec{x}^{(\ell)}$.  Since $i \neq \ell$, then there are $k-2$
+elements in $S \setminus \{i, \ell\}$, so therefore $N_{i, j, \ell} =
+{{R_{i,j,\ell} - 2}\choose{k - 2}}$.  Therefore, we can write
+\begin{equation}\label{eq:avtestrisk_nil}
+N_{i,\ell} = I\{R_{i,\ell} > R_{i,i}\}{{R_{i,\ell} -2}\choose{k - 2}}
+\end{equation}
+
+The \emph{identification accuracy curve} is defined as the function
+which maps $k \in 2,3,\hdots$ to the $k$-class identification risk.
+Therefore, an estimate of a portion of the curve can be obtained by
+estimating the $k$-class identification risk for $k = 2,\hdots, M$.
 
 \subsection{Information Theory}\label{sec:intro_mi}
 
@@ -1545,6 +1813,10 @@ which we motivate and analyze in the next chapter.
 
 
 %% Link back to Shannon and information theory.  We develop further links between randomized classification and information theory.
+
+%% omit this section 
+
+\iffalse
 
 \section{Neuroscience applications}
 
@@ -2024,4 +2296,5 @@ practical limitations of some of the methods that will be proposed in
 the later chapters.  However, we must leave this important work for
 future research.
 
+\fi
 
