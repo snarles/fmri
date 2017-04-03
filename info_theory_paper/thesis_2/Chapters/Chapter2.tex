@@ -4,13 +4,103 @@
 
 \label{Chapter2} % For referencing the chapter elsewhere, use \ref{Chapter1} 
 
+As we foreshadowed in the introduction, randomized classification is
+also one of the three methods we consider for evaluating
+representations.  Yet, two other applications of randomized
+classification are (i) for providing a formalism for evaluting
+\emph{recognition systems}, and (ii) for studying generalizability of
+certain classification-based experiments.  The application of
+recognition systems provides the most intuitive way of understanding
+the randomized classification task; therefore, in this chapter, we
+begin with a discussion in section \ref{sec:recog_tasks} of
+recognition tasks, and within this context, motivate the definition of
+a randomized classification task in section \ref{sec:rc_motivation}.
+We propose to use the randomized classification task to model the
+problem of recognition, and to evalaute performance via the
+\emph{average accuracy}.  Next, to put our ideas into practice, we
+need ways to estimate the average accuracy from data, which we address
+in \ref{sec:estimation_average_accuracy}.
 
-\section{Motivation}
+Meanwhile, the problem of generalizing classification experiments
+provides a natural motivation for studying the variance of
+classification accuracy within a randomized classification task, which
+we cover in section \ref{sec:average_bayes_accuracy}.  Meanwhile,
+another one of the methods we consider--the identification risk, is
+closely connected with the randomized classification task.  We discuss
+how our results in \ref{sec:average_bayes_accuracy} can also be
+applied to the identification case.
 
-%\subsection{Facial recognition example}
+\section{Recognition tasks}\label{sec:recog_tasks}
 
+Human brains have a remarkable ability to recognize objects, faces,
+spoken syllables and words, and written symbols or words, and this
+recognition ability is essential for everyday life.  While researchers
+in artificial intelligence have attempted to meet human benchmarks for
+these classical recognition tasks for the last X decades, only very
+recent advances in machine learning, such as deep neural networks,
+have allowed algorithmic recognition algorithms to approach or exceed
+human performance [CITE].
 
-However, the formalism of classification is inadequate for studying
+Within the statistics and machine learning literature, the usual
+formalism for studying a recognition task is to pose it as a
+\emph{multi-class classification} problem.  One delineates a finite
+set of distinct entities which are to be recognized and distinguished,
+which is the \emph{label set} $\mathcal{Y}$.  The input data is
+assumed to take the form of a finite-dimensional real \emph{feature
+  vector} $X \in \mathbb{R}^p$.  Each input instance is associated
+with exactly one true label $Y \in \mathcal{Y}$.  The solution to the
+classification problem takes the form of an algorithmically
+implemented \emph{classification rule} $h$ that maps vectors $X$ to
+predicted labels $\hat{Y} \in \mathcal{Y}$.  The classification rule
+can be constructed in a data-dependent way: that is, one collects a
+number of labelled \emph{training observations} $(X_1, Y_1)$ which is
+used to inform the construction of the classification rule $h$.  The
+success of the classification rule $h$ is measured by the \emph{expected loss} or \emph{risk},
+which in the case of zero-one loss takes the form
+\[
+\text{Risk}(h) = \Pr[h(X) \neq Y],
+\]
+where the probability is defined with reference to the unknown
+population joint distribution of $(X, Y)$.  
+%A common approach for
+%constructing a classifier $h$ is \emph{empirical risk minimization} [CITE],
+%which constructs $h$ by minimizing the objective function
+%\[
+%\text{EmpiricalRisk}_{h \in \mathcal{H}}(h) = \frac{1}{n} \sum_{i=1}^n I(h(X) \neq Y)
+%\]
+%where $\mathcal{H}$ is some pre-specified function class.
+
+However, a limitation of the usual multi-class classification
+framework for studying recognition problems is the assumption that the
+label set $\mathcal{Y}$ is finite and known in advance.  When
+considering human recognition capabilities, it is clear that this is
+not the case.  Our ability to recognize faces is not limited to some
+pre-defined, fixed set of faces; same with our ability to recognize
+objects in the environment.  Humans learn to recognize novel faces and
+objects on a daily basis.  And, if artificial intelligence is to fully
+match the human capability for recognition, it must also possess the
+ability to add new categories of entities to its label set over time;
+however, at present, there currently exists a void in the machine
+learning literature on the subject of the online learning of new
+classes in the data [CITE].
+
+The central theme of this thesis is the study of \emph{randomized
+  classification}, which can be motivated as an extension of the
+classical multi-class classification framework to accommodate the
+possibility of growing or infinite label sets $\mathcal{Y}$. The basic
+approach taken is to assume an infinite or even continuous label space
+$\mathcal{Y}$, and then to study the problem of classification on
+finite label sets $S$ which are randomly sampled from $\mathcal{Y}.$
+This, therefore defines a \emph{randomized classification} problem
+where the label set is finite but may vary from instance to instance.
+One can then proceed to answer questions about the variability of the
+performance due to randomness in the labels, or how performance
+changes depending on the size of the random label set.
+
+\section{Randomized classification}\label{sec:rc_motivation}
+
+\subsection{Motivation}
+The formalism of classification is inadequate for studying
 many practical questions related to the generalizability of the facial
 recognition system.  We can define a population risk (also called
 generalization error) for the classification rule, and make inferences
@@ -45,21 +135,7 @@ and what assumptions about the classifiers used, allow one to infer
 performance in one classification problem based on performance in
 another classification problem.
 
-Our solution to the problems (a) and (b) is to study the \emph{average
-  risk} of a learning algorithm on a \emph{randomized classification
-  task}.  We will motivate and define the concepts of \emph{average
-  risk} and \emph{randomized classification task} shortly.  In any
-case, we formalize the problem of generalizability between related
-classification tasks by formalizing it as the question of how to
-\emph{infer} average risk for a target regime given data from a
-different regime.  However, yet another application of our concepts is
-to understand the properties of \emph{identification risk}, which was
-introduced as a model-selection criteria for encoding models in a
-functional MRI study (\cite{Kay2008a}).  We introduce and analyze the
-identification risk using our concepts \ref{sec:identification}.
-
-\section{Setup}
-
+\subsection{Setup}
 By `recognition system,' we really mean a \emph{learning algorithm}
 $\Lambda$ which can take training data as input, and produce a
 classification rule for recognizing faces.  While a classification
@@ -314,7 +390,7 @@ Having defined the average risk for the randomized classification
 task, we begin to develop the theory of how to \emph{estimate} the
 average risk in the next section.
 
-\section{Estimation of average accuracy}
+\section{Estimation of average accuracy}\label{sec:estimation_average_accuracy}
 
 Suppose we have training and test data for a classification task $P_1$
 with $k_1$ classes, $r_1$-repeat training data and $r_2$-repeat test
@@ -452,7 +528,7 @@ our task in the following section is the understand the variability of
 the \emph{Bayes} risk, or equivalently, its, complement, the
 \emph{Bayes accuracy.}
 
-\section{Average Bayes accuracy}
+\section{Average Bayes accuracy}\label{sec:average_bayes_accuracy}
 
 %% todo: switch notations in this section
 
@@ -715,139 +791,3 @@ It remains to apply the variance bound for Bayes accuracy to obtain a lower conf
 \underline{\text{ABA}}_k = \underline{\text{BA}}_{\alpha/2} -  \frac{1}{\sqrt{2\alpha k}}
 \]
 
-%% need to fix up this section, maybe at the same time as working on ch 5
-
-\section{Identification task}\label{sec:identification}
-
-The identification task originated as a method for evaluating the quality of encoding models in neuroscience (Kay 2008).
-
-\subsection{Experimental design}
-
-We consider experiments in which a single subject is presented with a
-sequence of $T$ stimuli: each stimulus is presented during a `task
-window' of a fixed duration.  The stimuli are represented by
-real-valued feature vectors $\vec{X}$; let $p$ be the dimensionality of
-the feature space.  The brain activity of the subject is recorded,
-yielding a $q$-dimensional vector $\vec{Y}$: in practice, $\vec{Y}$ could
-consist of discretized time series data or mean firing rates for
-spike-sorted neurons, or BOLD response for voxels, depending on the
-recording modality.  Let $\vec{X}^{(t)}$ denote the feature vector of the
-stimulus, and let $\vec{Y}^{(t)}$ denote the vector of intensities
-(e.g. BOLD response, mean spike) for the $t$th task window in the
-sequence.
-
-\subsection{Data splitting}
-
-The $T$ stimulus-response pairs $(\vec{X}, \vec{Y})$ are randomly
-partitioned into a \emph{training set} of size $N$ and a \emph{test
-set} of size $M = T-N$.  Form the $N \times p$ data matrix $\bX^{tr}$
-by stacking the features of the $N$ training set stimuli as row
-vectors, and stack the corresponding responses as row vectors to form
-the $N \times q$ matrix $\bY^{tr}$.  Similarly, define $\bX^{te}$ as
-the $N \times p$ matrix of test stimuli and $\bY^{te}$ as the
-$N \times q$ matrix of corresponding test responses.
-
-\subsection{Probabilistic encoding model}
-
-The data is used to estimate a stimulus-based encoding
-model \cite{Kay2008a}\cite{Naselaris2011}\cite{Mitchell2008}.
-The conditional mean response $\E[\bY|\bX]$ is modelled as
-a linear transformation of the stimulus features,
-\[
-\vec{Y} = \bB^T \vec{X} + \bepsilon
-\]
-where $\bB$ is a $p \times q$ coefficient matrix and $\bepsilon$ is a
-noise variable with an assumed multivariate normal distribution, $\bepsilon \sim N(0, \Sigma)$.  
-Hence, the conditional density of $\vec{Y}|\vec{X}$ is given by the multivariate normal density
-\[
-p(\vec{y}|\vec{x}) = -\frac{1}{(2\pi |\Sigma|)^{-q/2}} \exp\left[-\frac{1}{2}(\vec{y} - \bB^T \vec{x})^T \Sigma^{-1} (\vec{y}-\bB^T \vec{x})\right].
-\]
-
-The coefficient $B$
-can be estimated from the training set data $(\bX^{tr}, \bY^{tr})$
-using a variety of methods for regularized regression, for instance,
-the elastic net \cite{Zou2005}, where each column of $\bB =
-(\beta_1,\hdots, \beta_q)$ is estimated via
-\[
-\hat{\beta}_i = \argmin_\beta ||\bY_i^{tr} - \bX^{tr} \beta||^2 + \lambda_1 ||\beta||_1 + \lambda_2 ||\beta||_2^2,
-\]
-where $\lambda_1$ and $\lambda_2$ are regularization parameters which
-can be chosen via cross-validation \cite{Hastie2009a} separately for
-each column $i$.
-
-After forming the estimated coefficient matrix $\hat{\bB} =
-(\hat{\beta}_1,\hdots, \hat{\beta}_q)$, we estimate the noise
-covariance $\Sigma$ via a shrunken covariance
-estimate\cite{Ledoit2004}\cite{Daniels2001} from the residuals,
-\[
-\hat{\Sigma} = \frac{1}{N} ((1-\lambda) S + \lambda \text{Diag}(S)) 
-\]
-where
-\[
-S = (\bY^{tr} - \bX^{tr} \bB)^T (\bY^{tr} - \bX^{tr} \bB).
-\]
-
-\subsection{Converting the encoding model to a decoding model}
-
-Bayes' rule can be used to convert a probabilistic encoding model into a decoding model \cite{Naselaris2011}.
-The Bayesian decoding model gives the posterior probability of the stimulus given the response,
-\[
-p(\vec{x}|\vec{y}) = p(\vec{y}|\vec{x})\frac{p(\vec{x})}{p(\vec{y})}.
-\]
-In an \emph{identification task}\cite{Kay2008a}, a response $\by$ is generated by presenting the subject to a stimulus which is randomly chosen from a 
-subset of $k$ stimuli, $S = (\vec{x}^{(1)},\hdots, \vec{x}^{(k)})$.  The decoder is used to select the stimulus in $S$ which is most likely to have generated the response $\by$: the performance of the the decoder is measured by the probability of correct identification.
-In the identification task, the prior probability $p(\vec{x})$ is uniform over the candidate set $S.$  Therefore, the estimated log posterior probability of each candidate stimulus $\vec{x}^{(i)}$ is given by
-\[
-\log \hat{p}(\vec{x}|\vec{y}) = \log \hat{p}(\vec{y}|\vec{x}) + \text{const.}= -\frac{1}{2}(\vec{y} - \hat{\bB}^T \vec{x})^T \hat{\Sigma}^{-1} (\vec{y}-\hat{\bB}^T \vec{x}) + \text{const.}
-\]
-where we have elided the inconsequential constant terms.
-Therefore, the chosen stimulus $\hat{\vec{x}}$ is the stimulus which minimizes the empirical Mahalanobis distance 
-\[
-d_{\hat{\Sigma}}(\vec{y}, \hat{\bB}^T \vec{x}) = (\vec{y} - \hat{\bB}^T \vec{x})^T \hat{\Sigma}^{-1} (\vec{y}-\hat{\bB}^T \vec{x})
-\]
-among the stimuli in $S$,
-and supposing that the correcty stimulus has index $i$, the probability of correct identification is
-\[
-\Pr[\text{correct}] = \Pr[d_{\hat{\Sigma}}(\vec{y}, \hat{\bB}^T \vec{x}^{(i)}) \leq \min_{j \neq i} d_{\hat{\Sigma}}(\vec{y}, \hat{\bB}^T \vec{x}^{(j)}) ].
-\]
-
-\subsection{Computation of identification accuracy curve}
-
-The probability of correct identification varies depending on the choice of stimulus set $S$.  Therefore, to obtain a well-defined measure of decoder precision, we define the $k$-class \emph{identification risk} as the expected acccuracy when the set $S$ is constructed by drawing $x^{(1)},\hdots, x^{(k)}$ independently from the prior distribution $p(\vec{x})$.  
-
-An unbiased estimate of the $k$-class identification risk for any $k \leq M$ can be obtained, where $M$ is the number of test observations.  The idea is to evaluate the empirical accuracy (the proportion of correct identifications) over all combinations of ${M}\choose{k}$ stimulus subsets $S$ times all $k$ choices for the correct stimulus within $S$.  Yet, this empirical accuracy can be computed without explicitly looping over all $k{M}\choose{k}$ combinations via a computational trick.
-
-Suppose without loss of generality that the indices of the test observations are $i = 1,\hdots, M$.
-Define
-\[
-M_{i,j} = \log \hat{p}(\vec{x}^{(j)}|\vec{y}^{(i)})
-\]
-Furthermore, define
-\[
-R_{i,j} = \sum_{\ell \neq j} I\{M_{i,\ell} \geq M_{i, j}\}.
-\]
-
-The computational trick is to look at each combination of test
-response $\vec{y}^{(i)}$ and stimulus $\vec{x}^{(\ell)}$, and to count
-count the number of subsets $N_{i, \ell}$ where (i) both $i$ and
-$\ell$ are included in $S$, and (ii) $\hat{x}^{(i)} = \vec{x}^{(\ell)}$.
-One can then verify that the empirical accuracy over all subsets is
-equal to
-\begin{equation}\label{eq:avtestrisk}
-\text{EmpAcc}_k = 1 - \frac{1}{{{M}\choose{k}}}\frac{1}{k} \sum_{i=1}^{k} \sum_{\ell\neq i} C_{i\ell}N_{i, \ell}.
-\end{equation}
-Now it is just a matter of simple combinatorics to compute
-$N_{i,\ell}$.  We require both $\vec{x}^{(i)}$ and $\vec{x}^{(\ell)}$ to be
-included in $S$.  This implies that if $M_{i,i} > M_{i,\ell}$,
-then $\vec{x}^{(\ell)}$ will never have the highest margin in any of those
-subsets, so $N_{i,\ell} = 0$.
-
-Otherwise, there are $R_{i,\ell} - 1$ elements
-with a lower margin than $\vec{x}^{(\ell)}$.  Since $i \neq \ell$, then there
-are $k-2$ elements in $S \setminus \{i, \ell\}$, so therefore $N_{i,
-j, \ell} = {{R_{i,j,\ell} - 2}\choose{k - 2}}$.  Therefore, we can write
-\begin{equation}\label{eq:avtestrisk_nil}
-N_{i,\ell} = I\{R_{i,\ell} > R_{i,i}\}{{R_{i,\ell} -2}\choose{k - 2}}
-\end{equation}
-
-The \emph{identification accuracy curve} is defined as the function which maps $k \in 2,3,\hdots$ to the $k$-class identification risk.  Therefore, an estimate of a portion of the curve can be obtained by estimating the $k$-class identification risk for $k = 2,\hdots, M$.
