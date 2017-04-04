@@ -476,27 +476,72 @@ subject of Chapter 3.
 
 \subsection{Variance bounds}
 
-By now we have developed unbiased estimators for average risk in the
+By now we have developed unbiased estimators for average generalization accuracy in the
 special case $k \leq k_1$, and the following chapter will present
 methods for the more difficult case $k > k_1$.  However, to get useful
 inference statements, we also have to understand the variance of these
 estimators.  For the large part, this is still work-in-progress.
 However, some first steps towards addressing this problem are
-described in the next section.  To make the problem of analyzing the
-variance of estimates $\hat{\text{AvRisk}}$ easier, we make the
-unrealistic assumption of \emph{infinite} training and test data.
-This simplifies the problem because then we can neglect the
-variability in the tdata, and isolate the contribution of the
-variability due to label subsampling.
+described in the next section.
 
-The effect of assuming infinite training and test data is equivalent
-to supposing that we have access to the \emph{Bayes classification
-  rule} and its risk for any given classification task.  Therefore,
-our task in the following section is the understand the variability of
-the \emph{Bayes} risk, or equivalently, its, complement, the
-\emph{Bayes accuracy.}
+\section{Reproducibility and Average Bayes accuracy}\label{sec:average_bayes_accuracy}
 
-\section{Average Bayes accuracy}\label{sec:average_bayes_accuracy}
+\subsection{Motivation}
+
+In task fMRI experiments, one typically obtains data of the form
+$(\vec{x}_i, y_i)$, where $\vec{x}_i$ are activity patterns obtained
+from the fMRI scan for a region of interest, and $y_i$ are categories
+for tasks.  The labels $y_i$ are limited to a discrete set
+$\{y^{(1)},\hdots, y^{(k)}\}$.  Data-splitting is used to obtain an
+estimated generalization accuracy $\hat{\text{GA}}$ for predicting $y$
+from $\vec{x}$.  The generalization accuracy is then interpreted as
+evidence for the specialization of that region of interest for the
+task at hand: a high accuracy suggests that the region is specialized
+for the task, while a low accuracy suggests that the region is not
+specialized for the task.
+
+However, a limitation of this approach is the poor reproducibility of
+the estimated generalization accuracy $\hat{\text{GA}}$.  Besides the
+dependence of $\hat{\text{GA}}$ on the particular subject
+participating in the experiment, the amount of training data, and the
+classifier used, but the classification task is often inconsistent
+from lab to lab.  That is because the task exemplars--that is, the set
+of labels $\{y^{(i)}\}_{i=1}^k$, may be arbitrarily specified, and
+therefore even ignoring the effect of subject, amount of training
+data, and classifier, the estimation target $\text{GA}$ depends on
+an arbitrary choice of exemplars.
+
+On the other hand, fixing in advance the set of exemplars
+$\{y^{(i)}\}_{i=1}^k$ is also not a satisfactory solution, since the
+objective of the experiment is to understand the general relation
+between the task and the region of interest, and not the relationship
+between a particular set of task exemplars $\{y^{(i)}\}_{i=1}^k$ and
+the region of interest.
+
+Randomized classification provides a solution for addressing both the
+variability in estimation target and generalization to the population,
+as long as one can justify the assumption that the labels
+$\{y^{(i)}\}_{i=1}^k$ are a random sample from some population of task
+exemplars $\pi$.  While the generalization accuracy $\text{GA}$ for
+any particular, fixed set of exemplars is \emph{not} a population
+parameter, the average generalization accuracy $\text{AGA}$ \emph{is}
+defined with reference to a population, albeit also dependent on a
+specific classifier and sampling scheme.  Meanwhile, the limitations
+on reproducibility due to differing choices of labels sets can be
+understood based on the variability properties of $\text{GA}$.
+
+However, one can argue that randomized classification does not go far
+enough to ensure generalizability of results, because $\text{AGA}$
+still depends on the sampling scheme (the amount of training data) and
+the choice of classifier, which are both arbitrary experimental
+choices.  Therefore, our proposal is to treat the average \emph{Bayes}
+accuracy as the estimation target of interest.  The average Bayes
+accuracy is defined independently of the classifier and sampling
+scheme, and we will develop tools for inferring probabilistic lower
+bounds (lower confidence bounds) of the average Bayes accuracy in this
+section.
+
+\subsection{Setup}
 
 %% todo: switch notations in this section
 
@@ -517,7 +562,7 @@ And due to Bayes' theorem, the optimal classification rule $f^*$ which
 achieves the Bayes accuracy can be given explicitly: it is the maximum a
 posteriori (MAP) rule
 \[
-f^*(y) = \argmax_{i=1}^k\ p(y|x^{(i)}).
+f^*(x) = \argmax_{i=1}^k\ p(x|y^{(i)}).
 \]
 Of course, it is not possible to construct this rule in practice since
 the joint distribution is unknown.  Instead, a reasonable approach is
@@ -525,145 +570,99 @@ to try a variety of classifiers, producing rules $f_1,\hdots, f_m$,
 and taking the best generalization accuracy as an estimate of the Bayes
 accuracy. 
 
-\subsection{Definitions}
-Suppose $X$ and $Y$ are continuous random variables (or vectors) which have a joint distribution with density $p(x, y)$.
-Let $p(x) = \int p(x,y) dy$ and $p(y) = \int p(x,y) dx$ denote the respective marginal distributions,
-and $p(y|x) = p(x,y)/p(x)$ denote the conditional distribution.
+Now consider a randomized classification task where the labels
+$\{Y^{(1)},\hdots, Y^{(k)}\}$ are drawn iid from a population $\pi$,
+and where the observations $X$ for label $Y$ are drawn from the
+conditional distribution $F_Y$.  In this case, the Bayes accuracy is a
+random variable depending on the label set, since
+\[
+\text{BA}(Y^{(1)},\hdots, Y^{(k)}) = \frac{1}{k} \sum_{i=1}^k \Pr[\argmax_{i=1}^k\ p(x|y^{(i)}) = i| X \sim F_{Y^{(i)}}].
+\]
+The $k$-class Average Bayes accuracy is defined as the average Bayes accuracy,
+\[
+\text{ABA}_k = \E[\text{BA}(Y^{(1)},\hdots, Y^{(k)})]
+\]
+where the expectation is taken over the joint distribution of $\{Y^{(1)},\hdots, Y^{(k)}\}$.
 
-$\text{ABA}_k$, or $k$-class Average Bayes accuracy is defined as follows.  Let $X_1,...,X_K$ be iid from $p(x)$,
-and draw $Z$ uniformly from $1,..,k$.  Draw $Y \sim p(y|X_Z)$.
-Then, the average Bayes accuracy is defined as
-\[
-\text{ABA}_k[p(x, y)] = \sup_f \Pr[f(X_1,...,X_k, Y) = Z] 
-\]
-where the supremum is taken over all functions $f$.  A function $f$ which achieves the supremum is
-\[
-f_{Bayes}(x_1,...,x_k, y) = \text{argmax}_{z \in \{1,...,k\}} p(y|x_z),
-\]
-where an arbitrary rule can be employed to break ties.
-Such a function $f_{Bayes}$ is called a \emph{Bayes classification rule}.
-It follows that $\text{ABA}_k$ is given explicitly by
-\[
-\text{ABA}_k = \frac{1}{k} \int \left[\prod_{i=1}^k p(x_i) dx_i \right] \int dy \max_i p(y|x_i),
-\]
-as stated in the following theorem.
+\subsection{Identities}
+
+The following theorem gives a convenient formula for computing $\text{ABA}_k$.
 
 \begin{theorem}
-For a joint distribution $p(x, y)$, define
+For a randomized classification task with $\{Y^{(1)},\hdots,
+Y^{(k)}\}$ are drawn iid from $\pi$, the $k$-class average Bayes
+accuracy can be computed as
 \[
-\text{ABA}_k[p(x, y)] = \sup_f \Pr[f(x_1,...,x_k, y) = Z] 
-\]
-where $X_1,...,X_K$ are iid from $p(x)$, $Z$ is uniform from $1,..,k$, and $Y \sim p(y|X_Z)$,
-and the supremum is taken over all functions $f: \mathcal{X}^k\times \mathcal{Y} \to \{1,...,k\}$.
-Then,
-\[
-\text{ABA}_k = \frac{1}{k} \int \left[\prod_{i=1}^k p(x_i) dx_i \right] \int dy \max_i p(y|x_i).
+\text{ABA}_k = \frac{1}{k} \int \left[\prod_{i=1}^k \pi(y_i) dy_i \right] \int dx \max_i p(x|y_i).
 \]
 \end{theorem}
 
 \noindent\textbf{Proof.}
-First, we claim that the supremum is attained by choosing
-\[
-f(x_1,...,x_k, y) = \text{argmax}_{z \in \{1,...,k\}} p(y|x_z).
-\]
-To show this claim, write
-\[
-\sup_f \Pr[f(X_1,...,X_k, Y) = Z] = \sup_f \frac{1}{k}\int p_X(x_1)\hdots p_X(x_k) p(y|x_{f(x_1,...,x_k, y)}) dx_1\hdots dx_k dy
-\]
-We see that maximizing $\Pr[f(X_1,...,X_k, Y) = Z]$ over functions $f$
-additively decomposes into infinitely many subproblems, where in each
-subproblem we are given $\{x_1,...,x_k,
-y\} \in \mathcal{X}^k \times \mathcal{Y}$, and our goal is to choose
-$f(x_1,...,x_k, y)$ from the set $\{1,...,k\}$ in order to maximize
-the quantity $p(y|x_{f(x_1,...,x_k, y)})$.  In each subproblem,
-the maximum is attained by setting $f(x_1,...,x_k,y) = \text{argmax}_z
-p(y|x_z)$--and the resulting function $f$ attains the supremum to the
-functional optimization problem.  This proves the claim.
-
-We therefore have
-\[
-p(y|x_{f(x_1,...,x_k, y)}) = \max_{i=1}^k p(y|x_i).
-\]
-
-Therefore, we can write
+Write
 \begin{align*}
-\text{ABA}_k[p(x, y)] &= \sup_f \Pr[f(X_1,...,X_k, Y) = Z]
-\\&=  \frac{1}{k} \int p_X(x_1)\hdots p_X(x_k) p(y|x_{f(x_1,...,x_k, y)})  dx_1\hdots dx_k dy.
-\\&=  \frac{1}{k} \int p_X(x_1)\hdots p_X(x_k) \max_{i=1}^k p(y|x_i)  dx_1\hdots dx_k dy.
+\text{ABA}_k[p(x, y)] &=  \E[\text{BA}(Y^{(1)},\hdots, Y^{(k)})]
+\\&= \frac{1}{k}\int \pi(y_1)\hdots \pi(y_k)   \sum_{i=1}^k  I\{\argmax_{i=1}^k\ p(x|y_i) = i\} p(x|y_i) dx dy_1\hdots dy_k
+\\&=  \frac{1}{k} \int \pi(y_1)\hdots \pi(y_k) p(x|y_{\argmax_{i=1}^k\ p(x|y_i)})  dy_1\hdots dy_k dx.
+\\&=  \frac{1}{k} \int \pi(y_1)\hdots \pi(y_k) \max_{i=1}^k p(x|y_i)  dy_1\hdots dy_k dx.
 \end{align*}
 
-\section{Variability of Bayes Accuracy}
-We have
-\[
-\text{ABA}_k = \E[\text{BA}(X_1,...,X_k)]
-\]
-where the expectation is over the independent sampling of $X_1,...,X_k$ from $p(x)$.
+\subsection{Variability of Bayes Accuracy}
 
-Therefore, $\text{BA}_k = \text{BA}(X_1,...,X_k)$ is already an
+By definition, $\text{BA}_k = \text{BA}(X_1,...,X_k)$ is already an
 unbiased estimator of $\text{ABA}_k$.  However, to get confidence
-intervals for $\text{ABA}_k$, we also need to know the variability.
+intervals for $\text{ABA}_k$, we also need to know the variability of
+$\text{BA}_k$.
 
 We have the following upper bound on the variability.
 
 \begin{theorem}
-Given joint density $p(x, y)$, for $X_1,...,X_k \stackrel{iid}{\sim} p(x)$, we have
+For a randomized classification task with $\{Y^{(1)},\hdots,
+Y^{(k)}\}$ are drawn iid from $\pi$, the variability of the Bayes
+accuracy can be bounded as
 \[
-\text{Var}[\text{BA}(X_1,...,X_k)] \leq \frac{1}{4k}.
+\text{Var}[\text{BA}(Y^{(1)},...,Y^{(k)})] \leq \frac{1}{4k}.
 \]
 \end{theorem}
 
 \noindent\textbf{Proof.}
 According to the Efron-Stein lemma,
 \[
-\text{Var}[\text{BA}(X_1,...,X_k)] \leq \sum_{i=1}^k \E[\text{Var}[\text{BA}|X_1,...,X_{i-1}, X_{i+1}, ..., X_k]].
+\text{Var}[\text{BA}(Y^{(1)},...,Y^{(k)})] \leq \sum_{i=1}^k \E[\text{Var}[\text{BA}|Y^{(1)},...,Y^{(i-1)}, Y^{(i+1)}, ..., Y^{(k)}]].
 \]
 which is the same as
 \[
-\text{Var}[\text{BA}(X_1,...,X_k)] \leq k \E[\text{Var}[\text{BA}|X_1,...,X_{k-1}]].
+\text{Var}[\text{BA}(Y^{(1)},...,Y^{(k)})] \leq k \E[\text{Var}[\text{BA}|Y^{(1)},...,Y^{(k-1)}]].
 \]
-The term $\text{Var}[\text{BA}|X_1,...,X_{k-1}]$ is the variance of $\text{BA}(X_1,...,X_k)$
-conditional on fixing the first $k-1$ curves $p(y|x_1),...,p(y|x_{k-1})$ and allowing the final curve $p(y|X_k)$ to vary randomly.
+The term $\text{Var}[\text{BA}|Y^{(1)},...,Y^{(k-1)}]$ is the variance
+of $\text{BA}(Y^{(1)},...,Y^{(k)})$ conditional on fixing the first
+$k-1$ curves $p(x|y^{(1)}),...,p(x|y^{(k-1)})$ and allowing the final
+curve $p(x|Y^{(k)})$ to vary randomly.
 
 Note the following trivial results
 \[
--p(y|x_k) + \max_{i=1}^k p(y|x_i)\leq \max_{i=1}^{k-1} p(y|x_i) \leq \max_{i=1}^k p(y|x_i).
+-p(x|y^{(k)}) + \max_{i=1}^k p(x|y^{(i)})\leq \max_{i=1}^{k-1} p(x|y^{(i)}) \leq \max_{i=1}^k p(x|y^{(i)}).
 \]
 This implies
 \[
-\text{BA}(X_1,...,X_k) - \frac{1}{k} \leq \frac{k-1}{k}\text{BA}(X_1,...,X_{k-1}) \leq \text{BA}(X_1,...,X_k).
+\text{BA}(Y^{(1)},...,Y^{(k)}) - \frac{1}{k} \leq \frac{k-1}{k}\text{BA}(Y^{(1)},...,Y^{(k-1)}) \leq \text{BA}(Y^{(1)},...,Y^{(k)}).
 \]
-i.e. conditional on $(X_1,...,X_{k-1})$, $\text{BA}_k$ is supported on an interval of size $1/k$.
+i.e. conditional on $(Y^{(1)},...,Y^{(k-1)})$, $\text{BA}_k$ is supported on an interval of size $1/k$.
 Therefore,
 \[
-\text{Var}[\text{BA}|X_1,...,X_{k-1}] \leq \frac{1}{4k^2}
+\text{Var}[\text{BA}|Y^{(1)},...,Y^{(k-1)}] \leq \frac{1}{4k^2}
 \]
 since $\frac{1}{4c^2}$ is the maximal variance for any r.v. with support of length $c$. $\Box$
 
 \subsection{Inference of average Bayes accuracy}
 
-\subsection{Classification without model selection}
-
-Recall the notation used in section 2.1: the $k$ stimuli exemplars are
-denoted $\{x^{(1)},\hdots, x^{(k)}\}$ and the $r$ responses for the
-$i$th class are given by $y^{(i), 1},\hdots, y^{(i), r}$.
-
-Recall that \emph{data-splitting}, one creates a \emph{training
-set} consisting of $r_1$ repeats per class,
+Recall the procedure used to estimate generalization error: by
+applying \emph{data-splitting}, one creates a \emph{training set}
+consisting of $r_1$ repeats per class, and a \emph{test set}
+consisting of the remaining $r_2 = r - r_1$ repeats.  One inputs the
+training data into the classifier to obtain the classification rule
+$f$, and computes the test accuracy,
 \[
-\{(x^{(1)}, y^{(1),1}),\hdots, (x^1,y^{(1), r_1}), \hdots, (x^{(k)}, y^{(k),1}),\hdots, (x^{(m)},y^{(m), r_1})\}
-\]
-and a \emph{test set} consisting of the remaining $r_2 = r - r_1$ repeats.
-\[
-\{(x^{(1)}, y^{(1), r_1 + 1}),\hdots, (x^{(1)},y^{(1),r}), \hdots, (x^{(k)}, y^{(k), r_1 + 1}),\hdots, (x^{(k)},y^{(k),r_1})\}.
-\]
-One inputs the training data into the classifier to obtain the classification rule $f$,
-\[
-f = \mathcal{F}(\{(x^{(1)}, y^{(1),1}),\hdots, (x^{(1)},y^{(1),r_1}), \hdots, (x^{(k)}, y^{(k),1},\hdots, (x^{(k)},y^{(k), r_1})\}).
-\]
-The test statistic of interest is the test error,
-defined as
-\[
-\widehat{\text{GA}} = \frac{1}{k r_2} \sum_{i=1}^k \sum_{j = r_1 + 1}^r \text{I}(f(y^{(i),j}) \neq i).
+\widehat{\text{GA}} = \frac{1}{k r_2} \sum_{i=1}^k \sum_{j = r_1 + 1}^r \text{I}(f(x_j^{(i)}) \neq i).
 \]
 Since $kr_2 \widehat{\text{GA}}$ is a sum of independent binary random
 variables, from Hoeffding's inequality, we have
@@ -677,13 +676,13 @@ Therefore,
 is a $(1-\alpha)$ lower confidence bound for $\text{GA}(f)$.
 But, since
 \[
-\text{GA}(f) \leq \text{BA}(x^{(1)},\hdots, x^{(k)}),
+\text{GA}(f) \leq \text{BA}(y^{(1)},\hdots, y^{(k)}),
 \]
 it follows that $\underline{GA}_\alpha$ is also a $(1-\alpha)$ lower confidence bound for $\text{BA}(x^{(1)},\hdots, x^{(k)})$.
 
 Next, consider the variance bound for $\text{BA}$.  From Chebyshev's inequality,
 \[
-\Pr[|\text{BA}(X^{(1)},\hdots, X^{(k)}) - \text{ABA}_k| > \frac{1}{\sqrt{4\alpha k}}] \leq \alpha.
+\Pr[|\text{BA}(Y^{(1)},\hdots, Y^{(k)}) - \text{ABA}_k| > \frac{1}{\sqrt{4\alpha k}}] \leq \alpha.
 \]
 
 Combining these facts, we get the following result.
@@ -693,69 +692,64 @@ The following is a $(1-\alpha)$ lower confidence bound for $\text{ABA}_k$:
 \[
 \underline{\text{ABA}}_k = \widehat{\text{GA}} - \sqrt{\frac{-\log(\alpha/4)}{2kr_2}} - \frac{1}{\sqrt{2\alpha k}}.
 \]
-That is, for all joint densities $p(x, y)$,
+That is, 
 \[
 \Pr[\underline{\text{ABA}}_K > \text{ABA}_k] \leq \alpha.
 \]
 \end{theorem}
 
 \textbf{Proof.}
-Suppose that both $\text{BA}(X^{(1)},\hdots,
-X^{(k)}) \leq \text{ABA}_k + \frac{1}{\sqrt{2\alpha k}}$ and
+Suppose that both $\text{BA}(Y^{(1)},\hdots,
+Y^{(k)}) \leq \text{ABA}_k + \frac{1}{\sqrt{2\alpha k}}$ and
 $\underline{\text{GA}}_{\alpha/2} \leq \text{GA}.$
 Then it follows that
 \[
-\underline{\text{GA}}_{\alpha/2} \leq \text{BA}(X^{(1)},\hdots,
-X^{(k)}) \leq \text{ABA}_k + \frac{1}{\sqrt{2\alpha k}}
+\underline{\text{GA}}_{\alpha/2} \leq \text{BA}(Y^{(1)},\hdots,
+Y^{(k)}) \leq \text{ABA}_k + \frac{1}{\sqrt{2\alpha k}}
 \]
 and hence
 \[
 \underline{\text{ABA}}_k = \underline{\text{GA}}_{\alpha/2} -  \frac{1}{\sqrt{2\alpha k}} \leq \text{ABA}_k.
 \]
 Therefore, in order for a type I error to occur, either
-$\text{BA}(X^{(1)},\hdots, X^{(k)}) > \text{ABA}_k
+$\text{BA}(Y^{(1)},\hdots, Y^{(k)}) > \text{ABA}_k
 + \frac{1}{\sqrt{2\alpha k}}$ or $\underline{\text{GA}}_{\alpha/2}
 > \text{GA}.$ But each of these two events has probability of at most
 $\alpha/2$, hence the union of the probabilities is at most
 $\alpha$. $\Box$
 
-\subsection{Classification with model selection}
+\subsection{Implications for reproducibility}
 
-In practice, it is common to evaluate multiple classifiers on the test
-set, ultimately \emph{selecting} the classifier with the best test
-performance.  Due to selection, the test accuracy
-$\widehat{\text{GA}}$ of the selected classifier becomes biased
-upwards with respect to the true generalization
-accuracy. Nevertheless, we can correct for the selection effect using
-the Bonferroni correction.
+Returning to the original problem of experimental reproducibility or
+generalizability to a larger population under the assuption that the
+task exemplars have been drawn from a population.  Then it follows
+from our analysis that both reproducibility and genralizability are
+assured if experimental parameters enable inference of a lower
+confidence bound $\underline{\text{ABA}}_k$ which is close to the true
+average Bayes accuracy.  This would require two conditions:
+\begin{enumerate}
+\item The training data is sufficiently large, and the classifier is
+  chosen so that the generalization accuracy is close to the Bayes
+  accuracy.
+\item The number of classes $k$ is sufficiently large so that the
+  Bayes accuracy $\text{BA}(Y^{(1)},\hdots, Y^{(k)})$ is close to the
+  average Bayes accuracy.
+\end{enumerate}
+Under those two conditions, the lower confidence bounds
+$\underline{\text{ABA}}_k$ have a distribution which is concentrated
+close to the true population parameter $\text{ABA}$, which ensures
+both reproducibility (in the estimates produced by two realizations of
+the same randomized classification task) and generalizability to the
+population parameter $\text{ABA}$.
 
-Suppose the investigator begins with classifiers
-$\mathcal{F}_1,\hdots, \mathcal{F}_\ell$, and obtains corresponding
-classification rules $f_1,\hdots, f_\ell$ via
-\[
-f_i = \mathcal{F}_i(\{(x^{(1)}, y^{(1),1}),\hdots, (x^{(1)},y^{(1),r_1}), \hdots, (x^{(k)}, y^{(k),1},\hdots, (x^{(k)},y^{(k), r_1})\}).
-\]
-for $i = 1,\hdots, \ell$.  Next, they evaluate the test accuracies
-$\widehat{\text{GA}}(f_i)$ according to \eqref{eq:ta}.
-Since $\text{BA}(x^{(1)},\hdots, x^{(k)}) \geq \max_i \text{GA}(f_i)$, we have the following lemma.
-
-\begin{lemma}
-The following is a $(1-\alpha)$ lower confidence bound for $\text{BA}(x^{(1)},\hdots, x^{(k)})$:
-\[
-\underline{BA}_\alpha(x^{(1)},\hdots, x^{(k)}) = \max_{i=1}^\ell \underline{\text{GA}}_{\alpha/\ell}(f_i) = \max_{i=1}^\ell \widehat{\text{GA}}(f_i) - \sqrt{\frac{-\log(\alpha/(2\ell))}{2kr_2}}.
-\]
-\end{lemma}
-
-\textbf{Proof.}
-In order for type I error to occur,
-$\underline{\text{GA}}_{\alpha/\ell}(f_i) \geq \text{BA}(x^{(1)},\hdots,
-x^{(k)}) \geq \text{GA}(f_i)$ for some $i = 1,\hdots, \ell$.  For each
-$i$, the event occurs with probability at most $\alpha/\ell$.
-Therefore, by the union bound, the probability of type I error is at
-most $\alpha$.  $\Box$
-
-It remains to apply the variance bound for Bayes accuracy to obtain a lower confidence bound for $\text{ABA}_k$:
-\[
-\underline{\text{ABA}}_k = \underline{\text{BA}}_{\alpha/2} -  \frac{1}{\sqrt{2\alpha k}}
-\]
-
+Our analysis of the variance of $\text{BA}_k$ gives an easy criterion
+for ensuring that $k$ is large enough, since $k$ needs to be inversely
+proportional to the desired variance.  However, we have not developed
+methods for checking condition 1.  In practice, when a large number of
+different classifiers achieve similar accuracies, and when performance
+is not particularly affected by training on a fractional subsample of
+the training data, this can be taken as evidence that the
+generalization accuracy is close to Bayes accuracy.  However, it
+remains to theoretically characterize the assumptions that make this
+possible (e.g. smoothness of the model, low signal-to-noise ratio) and
+to develop formal tests for convergence to Bayes accuracy.
