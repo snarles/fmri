@@ -6,293 +6,36 @@
 
 \section{Motivation}
 
-\subsection{Quantifying precision of decoding models}
+In the previous chapter, we saw that the identification risk of
+predicting $Y$ given $X$ can be used to yield a lower bound on
+$\text{I}(X; Y)$.  This relied on the inequality relating $k$-class
+average Bayes accuracy and mutual information.  However, because in
+some cases the mutual information may be much higher than the lower
+bound, the estimator $\hat{I}_{IR}$ may remain an underestimate of
+mutual information, even under favorable sample size conditions.  In
+other words, the estimator $\hat{I}_{IR}$ is not consistent.  On the
+other hand, the theory behind $\hat{I}_{IR}$ relies on extremely weak
+assumptions.  This makes the estimator quite generally applicable, but
+on the other hand, much better estimators may be available in certain
+applications where much stronger assumptions can be made.
 
-Both computational and cognitive neuroscience are concerned with
-understanding brain function: while computational neuroscience is
-concerned with understanding functionality at the level of the spiking
-behavior of individual neurons and small neural populations, cognitive
-neuroscience tends to emphasize functionality at the level of
-macroscale regions of the interest in the brain.  While the recording
-technologies, motivating questions, and analytical methodologies
-differ between the two subdisciplines, the conceptualization of brain
-functionality in terms of \emph{encoding} and \emph{decoding} models
-has been widely applied in both
-areas \cite{QuianQuiroga2009}\cite{Naselaris2011}.  In computational
-neuroscience, cell recording experiments are conducted to determine
-whether spike trains have a temporal and/or correlational
-code \cite{Nelken2005}\cite{Hatsopoulos1998}, to examine how the
-neural code adapts to changes in stimulus
-distribution \cite{Fairhall2001} and whether downstream neurons make
-use of higher-order correlations for decoding \cite{Oizumi2010}.
-Meanwhile, in neuroimaging studies, functional MRI experiments are
-employed to model the receptive fields of early visual areas in the
-human brain \cite{Kay2008a}, to examine the semantic encoding of words \cite{Mitchell2008}
-or objects \cite{Huth2012}.
+In this chapter we develop yet another estimator of mutual information
+based on identification risk, but this time making relatively strong
+assumptions relating to the dimensionality of the data and the
+dependence structure of the components.  As we will spell out in more
+detail in \ref{sec:ch5_assumptions}, we assume a setting where both
+$(X, Y)$ are high-dimensional, and where the true mutual information
+$I(X; Y)$ is relatively low.  Furthermore, we require the components
+of $X$ to have ``low dependence,'' in a certain sense.
 
-The dual perspectives of encoding and decoding originate naturally
-from the fact that in examining the link between brain activity and
-function, one can either start with brain activity on one end, or with
-external stimulation or behavioral observation on the other end.
-Starting by exposing the subject to sensory stimuli or prompting the
-subject to engage in particular motor tasks, one can search for areas
-in the brain which respond to the task: in other words, one can test
-to see which areas of the brain \emph{encode} the given stimulus.  In
-the other direction, one seeks to understand the functionality of a
-given brain region: in other words, how to \emph{decode} brain
-activity in that region.
+We expect that these assumptions are well-matched to applications such
+as fMRI data, where the effective dimensionality of the data is large,
+but where the noise level limits the mutual information between $X$
+and $Y$.
 
-Formulation of encoding models is relatively straightforward, since
-one needs only to characterize the observed brain response to a given
-stimulus.  One can further ask how to distinguish between signal and
-noise in the encoding mechanism \cite{Nelken2005}, or in complex
-stimuli, seek a linearizing feature set which reveals the nature of
-the brain representation \cite{Naselaris2011}.  However, the
-establishment of complete decoding models is much less amenable to
-experiemental manipulation, since to exhaustively characterize the
-functionality of a neuron, one would have to know in advance the type
-of information it encodes.  Early advances in decoding often depended
-on strokes of luck: Hubel \cite{Hubel1982} originally discovered the
-existence of neurons with orientation-sensitive receptive fields due
-to the vigorous response of a cell to the perfectly angled shadow of a
-glass slide that they were inserting into the ophthalmoscope.  Yet,
-even now, the goal of completely characterizing the function of a
-given brain region remains a difficult task, with the most promising
-approach being a \emph{reverse inference}
-procedure \cite{Poldrack2006} which aggregates information from the
-literature about activity-functionality relationships.
+\section{Theory}
 
-A more feasible goal is to establish the \emph{precision} with which a
-neuron can decode a particular type of feature.  This can be
-accomplished by first training an encoding model, and then inverting
-the encoding model using Bayes' rule to obtain a decoding
-model \cite{Oram1998}\cite{QuianQuiroga2009}\cite{Naselaris2011}.  
-
-By decoding \emph{precision}, we mean the specificity which we can
-identify or reconstruct the stimulus based on the neural response.  As
-such, in our view, the term decoder \emph{precision} is more or less
-synonymous with terms such as decoder \emph{performance} or
-decoder \emph{accuracy} as they are used in the literature.  However,
-we choose the word \emph{precision} in particular, because it
-communicates the idea that the essential quality of a good decoder is
-that it allows one to confidently and precisely infer the stimulus.
-
-Measures of decoding precision can be used to support several
-different kinds of scientific inferences.  When there exist multiple
-plausible encoding models--for instance, a model where stimulus
-information is encoded solely by average firing rate versus a model
-where inter-spike timings also carry information--the precision of the
-decoder can be used as a basis for deciding the best encoding model.
-For two encoding models with equal complexity, such as comparing two
-different types of receptive field models, the model with better
-decoding precision could be considered the more plausible model.  In
-the case where a more complex encoding model is compared to a strictly
-simpler model--such as comparing a model with a temporal code versus a
-model only incorporating average firing rate, a substantial
-improvement in decoding precision for the more complex model is needed
-to demonstrate its validity, since in the null hypothesis where the
-simpler model is correct, the more complex model should still have
-approximately equal decoding performance.
-
-Yet another application of decoding precision is to track the
-adaptivity of the neural code.  Fairhall \cite{Fairhall2001} recorded
-the output of a motion-sensitive neuron in a fly in response to a
-visual stimulus with changing angular velocity.  Changing the variance
-of the stimulus results in rapid adaptation: the neural code starts
-adapting to the change in stimulus distribution within tens of
-milliseconds, which is reflected by an increased or decreased
-precision (as measured by mutual information) in resolving angular
-velocity to match the variance of the stimulus.  More generally,
-comparisons of decoding precisions between different conditions can
-show how the encoded information increases or decreases across
-experimental conditions.  Kayser \cite{Kayser2010} demonstrated how
-the mutual information between a sound stimulus and neurons in the
-auditory cortex increased when the subjects were also presented a
-matching visual stimulus (e.g. showing a picture of a lion roaring
-while playing the sound of a lion's roar.)
-
-Differing types and parameterizations of stimuli naturally lead to
-differing measures of decoding precision.  For stimuli which can be
-parameterized by a scalar $x$, the precision can be measured by the
-squared correlation coefficient $R^2$ \cite{Abbott1994}.  However, the
-resulting measure of precision is not invariant to scaling of the
-parameterization: for instance, the choice of whether to parameterize
-volume on an absolute scale or a logarithmic scale.  The mutual
-information \cite{Shannon1948} between the stimulus and the predicted
-stimulus is invariant to the parameterization of the stimulus.  Due to
-its invariance and a number of other properties, the mutual
-information is widely used to measure the precision of the neural code
-in cell recording studies, both for single-neuron decoding
-models \cite{Borst1999} and for population coding
-models \cite{QuianQuiroga2009}\cite{Ince2010}.
-
-However, the difficulties of estimating mutual information in small
-samples has been widely recognized, with a large literature on bias
-correction methods \cite{Panzeri2007}\cite{Paninski}.  Methods for
-bias correction have been developed for three different sample size
-regimes: the moderate-sample regime, where the number of observations
-is larger than the number of stimulus-response
-pairs\cite{Miller1955}\cite{Strong1998}\cite{Treves1995}, the
-undersampled regime, where the number of observations is less than the
-number of stimulus-response pairs \cite{Nemenman2004}, and
-a \emph{stimulus-undersampled} regime, where only a small fraction of
-possible stimuli are sampled, but with a large number of observations
-for each of the sampled stimuli \cite{Gastpar2009}.  Nevertheless,
-even the bias-corrected estimates may be unusably inaccurate in
-problems of moderate dimensionality, since the cardinality of response
-space grows exponentially with the dimensionality.  In such cases,
-alternative approaches for estimating the mutual information include
-the assumption of a parametric model \cite{Brunel1998}\cite{Gastpar2009}\cite{Yarrow2012}, or usage of
-the maximum entropy principle to obtain bounds on the mutual
-information subject to the empirical moments of a certain
-order \cite{Ince2009}\cite{Globerson2009}.
-
-Perhaps due to the technical difficulties of estimating mutual
-information in high dimensions, mutual information has never, to our
-knowledge, been used as a measure of decoding precision in
-neuroimaging studies, although it has been proposed for the purpose of
-bypassing the modelling of the hemodynamic response function for
-single-voxel analyses \cite{FuhrmannAlpert2007}.  Instead, a variety
-of methods are employed to characterize the precision of decoding
-models, depending on the nature of the stimulus and the experimental
-setup.
-
-In task fMRI experiments where stimuli are drawn from a number of
-disjoint semantic categories-- for instance, `birds', `insects', and
-`mammals' as in \cite{Connolly2012}, it is natural to construct a
-decoder which outputs the predicted category of a stimulus as a
-function of the response.  Such a decoder is known as
-a \emph{classifier} in the machine learning
-literature \cite{Hastie2009a}, and a natural measure of classifier
-precision is the probability that the decoder outputs the correct
-category on a new, randomly drawn test example, which is
-the \emph{classification accuracy}.
-
-In experiments where the subject is presented a number of
-parameterized stimuli are drawn from a continuous distribution (such
-as natural images or sounds), there are two types of decoders which
-can be constructed.  In the first case, one constructs a decoder which
-estimates the parameters of the stimulus which we call
-a \emph{reconstructor}: the precision of such a decoder is measured by
-the correlation between the estimated and true parameter vector
-\cite{Pasley2012} \cite{Nishimoto2011}\cite{Naselaris2009}.
-In the second case, one constructs a decoder which picks the most
-likely stimulus from a finite library of examples \emph{which includes
-the true stimulus} \cite{Kay2008a}\cite{Mitchell2008}.  Since the true
-stimulus is included in the library, the task is to `identify' the
-correct stimulus from the library.  A natural measure of decoder
-performance is therefore the probability of correct identification.
-However, note that this probability is dependent on the arbitrary
-choice of the size of the exemplar library: a different choice for
-library size therefore results in a different measure of precision.
-We refer to the probability of correct classification for a library of
-$k$ exemplars as the \emph{$k$-example identification accuracy}.
-
-In their respective domains, these different measures of precision
-suffice to make inferences on many interesting scientific questions:
-to list a few examples, showing the superiority of a Gabor filters
-versus center-surround filters for modeling the receptive fields of V1
-and V2 neurons \cite{Kay2008a}, or demonstrating that brain activity
-in response to viewing an Engish noun can be predicted from word
-association frequencies \cite{Mitchell2008}.  
-
-A commonality to all applications of decoding models in neuroimaging
-is the pairwise comparison of two decoding models (Gabor
-vs. retinotopic) or the comparison of a single decoding model to
-chance accuracy.  Looking ahead to anticipate what kinds of analyses
-might be employed in the future based on neuroimaging data, it is
-suggestive to note that the earliest decoding studies in the cell
-recording literature also involved comparisons between two or three
-different decoders \cite{Eckhorn1976}.  However, as neuroscientists
-began to consider questions of population coding, analyses of the
-redundancy between neurons started to make use of comparisons between
-large numbers of decoders: for a population of $N$ neurons, one might
-compare the precision of a decoder (mutual information) based on the
-entire ensemble, compared to the precisions of decoders based on each
-of the $N$ individual neurons.  Furthermore, one can make the same
-comparison for a range of different ensemble sizes $N$.  As questions
-about the redundancy of the neural code are relevant on both the micro
-scale (the domain of cell recording studies) and the macro scale (the
-domain of neuroimaging), it is safe to assume that similar analyses,
-requiring comparisons of large numbers of decoders, will emerge in
-neuroimaging studies.  Already in the functional MRI literature, we
-see similar decompositions of decoding accuracy versus ensemble
-size \cite{Kay2008a}, but another possible type of decomposition would
-be to compare decoding performance as the number of stimulus features
-is varied, rather than the number of voxels.
-
-The scaling properties of mutual information are highly advantageous
-when comparing multiple decoders, which could potentially span a wide
-range of decoding precision: for instance, a single neuron versus an
-ensemble of thousands of neurons.  In contrast, classification
-accuracy, $k$-class identification accuracy and reconstruction
-accuracy all suffer from the issue of \emph{limited dynamic range}:
-that is, they are only effective at measuring precision within a
-certain range.
-
-Let us illustrate with the example of identification accuracy.  A low
-precision decoder, such as a decoder based on a single voxel, may have
-an accuracy which is so close to chance accuracy, $1/k$, as to be
-statistically indistinguishable from chance based on the data.  On the
-other hand, a sufficiently high-precision decoder may face the
-opposite problem, where it achieves perfect classification on the
-limited number of test examples.  Any empirical estimate of
-identification accuracy can only be used to accurately rank decoders
-which have accuracies sufficiently bounded away from both $1/k$ and 1.
-The same issue applies to reconstruction accuracy (bounded between 0
-and 1) and classification accuracy (bounded between $1/k$ and 1, where
-$k$ is the number of classes): any bounded measure of precision is
-ineffective at comparing decoders which are too close to either the
-upper bound or lower bound of achievable precision.
-
-In practice, the solution to this issue is to find a measure of
-precision which is well-suited for all of the decoders that needed to
-be compared.  If there are two encoding models which both achieve
-perfect classification on the test set, then perhaps the more
-demanding measure of reconstruction accuracy can be used to
-distinguish them.  However, this strategy begins to become impractical
-as the number of decoders to be compared increases.  One wishes to
-relate the decoding precision of an $N$-voxel ensemble for $N$
-spanning from 1 to 10000: however, any bounded measure of precision
-which is suitably stringent for distinguishing $N=9999$ from $N=10000$
-would fail for comparing $N=1$ to $N=2$, and vice-versa.
-
-We have seen that one solution to this predicament is to use an
-unbounded measure of precision which can remain sensitive to
-variations in precision across a large dynamic range: for instance,
-the mutual information.  Yet, given the difficulty of estimating the
-mutual information in high-dimensional settings, one might consider
-another approach: to develop a systematic means for comparing decoders
-by using multiple (easily estimated) precision measures, each of which
-may only capture a limited range of precisions, but which collectively
-span a sufficiently large range of precisions to include all of the
-decoders being compared.  
-
-Our contribution in this paper is to show
-that both of these approaches--the estimation of mutual information,
-and the comparison of decoders based on a range of decoding metrics,
-turn out to be the very same problem in high-dimensional settings.
-The \emph{identification accuracy curve}, which we define as the
-collection of all $k$-class identification accuracies for $k \geq 2$,
-can be used to compare a collection of decoders over a large span of
-precisions.  Yet, a recent theoretical result\cite{Zheng2016} shows
-that the identification accuracy curve for the Bayes decoder (the
-optimal decoder) is determined by the mutual information in a certain
-high-dimensional regime.  While it is generally not feasible to
-approximate the Bayes decoder in high-dimensional settings, we use
-this result to define the \emph{implied information} for a non-Bayes
-(suboptimal) decoder.  The implied information, $I_{implied}$, is not
-the true mutual information between the stimulus and response, but it
-provides a means of comparing two accuracy curves (estimate the
-implied information from each, and then compare the estimates), as
-well as providing an unbounded measure of decoding precision which,
-similar to mutual information, has desirable scaling properties for
-the purpose of comparing decoders spanning a range of precisions.
-
-
-\subsection{Kay et al. example}
-
-\section{Setup}
+\subsection{Assumptions}\ref{sec:ch5_assumptions}
 
 The theory applies to a high-dimensional limit where $I(X; Y)$ tends to a constant.
 
@@ -326,8 +69,7 @@ Another example is the multivariate logistic model, which we describe
 in section 3.  We further discuss the rationale behind A1-A4 in the
 supplement, along with the detailed proof.
 
-
-\section{Theory}
+\subsection{Limiting universality}
 
 We obtain the universality result in two steps.  First, we link the
 average Bayes error to the moments of some statistics $Z_i$.
