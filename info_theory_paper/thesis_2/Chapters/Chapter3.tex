@@ -10,18 +10,71 @@
 
 \section{Introduction}
 
-In this chapter, we address the question of how to estimate the
-$k$-class average accuracy, $\text{AGA}_{k, r}$, based on data from a
-problem $P_1$ with $k_1 < k$ classes, and $r = r_1$-repeat training
-data.  We continue with the framework introduced in Chapter 2,
-including the definition of the average risk and the marginal property
-of classifiers.
+In this chapter, we continue the discussion of Chapter 2, but focus
+specifically on the the question of how to estimate the $k$-class
+average accuracy, $\text{AGA}_{k, r}$, based on data from a problem
+$P_1$ with $k_1 < k$ classes, and $r = r_1$-repeat training data.
+This problem of \emph{prediction extrapolation} is especially
+interesting for a number of applied problems.
 
-We begin by continuing to analyze the average accuracy $\text{AGA}_{k,
-  r}$, which results in an explicit formula for the average accuracy.
-The formula reveals that all of the information needed to compute the
-average accuracy is contained in a one-dimensional function $\bar{D}(u)$,
-and therefore that estimation of the average accuracy can be accomplished
+\begin{itemize} 
+\item Example 1: A researcher develops a classifier for the purpose of labelling
+images in 10,000 classes. However, for a pilot study, her resources are sufficient to 
+tag only a smaller subset of these classes, perhaps 100. Can she estimate how well the algorithm 
+work on the full set of classes based on an initial "pilot" subsample of class labels?
+\item Example 2: A neuroscientist is interested in how well the brain
+  activity in various regions of the brain can discriminate between
+  different classes of stimuli.  \cite{Kay2008a} obtained fMRI brain
+  scans which record how a single subject's visual cortex responds to
+  natural images. They wanted to know how well the brain signals could
+  discriminate between different images. For a set of 1750
+  photographs, they constructed a classifier which achieved over 0.75
+  accuracy of classification. Based on exponential extrapolation, they
+  estimate that it would take on the order of $10^{9.5}$ classes
+  before the accuracy of the model drops below 0.10!  A theory of
+  performance extrapolation could be useful for the purpose of making
+  such extrapolations in a more principled way.
+\item The stories just described can be viewed as a metaphor for
+  typical paradigm of machine learning research, where academic
+  researchers, working under limited resources, develop novel
+  algorithms and apply them to relatively small-scale datasets. Those
+  same algorithms may then be adopted by companies and applied to much
+  larger datasets with many more classes. In this scenario, it would
+  be convenient if one could simply assume that performance on the
+  smaller-scale classification problems was highly representative of
+  performance on larger-scale problems.
+\end{itemize}
+
+Previous works have shown that generalizing from a small set of
+classes to a larger one is not straightforward. In a paper titled
+``What does classifying more than 10,000 Image Categories Tell Us,''
+Deng and co-authors compared the performance of four different
+classifiers on three different scales: a small-scale (1,000-class)
+problem, medium-scale (7,404-class) problem, and large-scale
+(10,184-class) problem (all from ImageNet.)  They found that while the
+nearest-neighbor classifier outperformed the support vector machine
+classifier (SVM) in the small and medium scale, the ranking switched
+in the large scale, where the SVM classifier outperformed
+nearest-neighbor.  As they write in their conclusion, ``we cannot
+always rely on experiments on small datasets to predict performance at
+large scale.'' Theory for performance extrapolation may therefore
+reveal models with bad scaling properties in the pilot stages of
+development.
+
+However, in order to formally develop a method for extrapolating
+performance, it is necessary to specify the model for how the
+small-scale problem is related to the larger-scale problem.  The
+framework of randomized classification introduced in Chapter 2 is one
+possible choice for such a model: the small-scale problem and
+large-scale problem are linked by having classes drawn from the same
+population.
+
+The rest of the chapter is organized as follows.  We begin by
+continuing to analyze the average accuracy $\text{AGA}_{k, r}$, which
+results in an explicit formula for the average accuracy.  The formula
+reveals that all of the information needed to compute the average
+accuracy is contained in a one-dimensional function $\bar{D}(u)$, and
+therefore that estimation of the average accuracy can be accomplished
 via estimation of the unknown function $\bar{D}(u)$.  This allows the
 development of a class of unbiased estimators of $\bar{D}(u)$,
 presented in section \ref{sec:extrapolation_estimation} given the
@@ -43,8 +96,7 @@ only changes the weighting.  The result is stated as follows.
 \begin{theorem}\label{theorem:avrisk_identity}
 Suppose $\pi$, $\{F_y\}_{y \in \mathcal{Y}}$ and marginal classifier
 $\mathcal{F}$ satisfy the tie-breaking condition.  Then, under the
-definitions \eqref{eq:U_function}, \eqref{eq:Kfunc},
-and \eqref{eq:Kbar}, we have
+definitions \eqref{eq:U_function} and \eqref{eq:Kbar}, we have
 \begin{equation}\label{eq:avrisk_identity}
 \text{AGA}_{k, r} = 1 - (k-1) \int \bar{D}(u) u^{k-2} du.
 \end{equation}
@@ -213,9 +265,9 @@ Or equivalently,
 \text{AGA}_{k, r}((y^*, \hat{F}_{y^*}), x^*) = 1 - (k-1) \int \bar{D}(u) u^{k-2} du.
 \]
 where $\bar{D}(u)$ denotes the cumulative distribution function of $U^*$ on $[0,1]$:
-\[
+\begin{equation}\label{eq:Kbar}
 \bar{D}(u) = \Pr[U_{x^*}(y^*, \hat{F}_{y^*}) \leq u].
-\]
+\end{equation}
 We have expressed the average risk expressed as a weighted integral of
 a certain function $\bar{D}(u)$ defined on $u \in [0,1]$.  We have
 clearly isolated the part of the average risk which is independent of

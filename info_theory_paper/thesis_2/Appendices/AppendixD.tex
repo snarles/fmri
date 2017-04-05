@@ -1,25 +1,540 @@
 % Appendix D
 
-\chapter{Frequently Asked Questions} % Main appendix title
+\chapter{Appendix for Chapter 4} % Main appendix title
 
 \label{AppendixD} % For referencing this appendix elsewhere, use \ref{AppendixA}
 
-\section{How do I change the colors of links?}
+\section{Proofs}
 
-The color of links can be changed to your liking using:
 
-{\small\verb!\hypersetup{urlcolor=red}!}, or
+\begin{lemma}\label{lemma:technical1}
+Let $f(t)$ be an increasing function from $[a, b] \to \mathbb{R}$, where $a < b$,
+and let $g(t)$ be a bounded continuous function from $[a, b] \to \mathbb{R}$.
+Define the set
+\[
+A = \{t: f(t) \neq g(t)\}.
+\]
+Then, we can write $A$ as a countable union of intervals
+\[
+A = \bigcup_{i=1}^\infty A_i
+\]
+where $A_i$ are mutually disjoint intervals, with $\inf A_i < \sup
+A_i$, and for each $i$, either $f(t) > g(t)$ for all $t \in A_i$ or
+$f(t) < g(t)$ for all $t \in A_i$.
+\end{lemma}
 
-{\small\verb!\hypersetup{citecolor=green}!}, or
+\textbf{Proof of Lemma \ref{lemma:technical1}.} (This will appear in the appendix of the paper.)
 
-{\small\verb!\hypersetup{allcolor=blue}!}.
+The function $h(t) = f(t) - g(t)$ is measurable, since all increasing
+functions are measurable.  Define $A^+ = \{t: f(t) > g(t)\}$ and $A^-
+= \{t: f(t) < g(t)\}$.  Since $A^+$ and $A^-$ are measurable subsets
+of $\mathbb{R}$, they both admit countable partitions consisting of open, closed, or half-open
+intervals.  Let $\mathcal{H}^+$ be the collection of all partitions of $A^+$ consisting of such intervals.
+There exists a least refined partition $\mathcal{A}^+$ within $\mathcal{H}^+$.
+Define $\mathcal{A}^-$ analogously, and let
+\[
+\mathcal{A} = \mathcal{A}^+ \cup \mathcal{A}^-
+\]
+and enumerate the elements
+\[
+\mathcal{A} = \{A_i\}_{i=1}^\infty.
+\]
 
-\noindent If you want to completely hide the links, you can use:
+We claim that the partitions $\mathcal{A}^+$ and $\mathcal{A}^-$ have
+the the property that for all $t \in A^\pm$, ther interval
+$I \in \mathcal{A}^\pm$ containing $t$ has endpoints $l \leq u$
+defined by
+\[
+l = \inf_{x \in [a,b]} \{x: \text{Sign}(h([x, t])) = \{\text{Sign}(h(t))\} \}
+\]
+and
+\[
+u = \sup_{x \in a[,b]} \{x: \text{Sign}(h([t, x])) = \{\text{Sign}(h(t))\}\}.
+\]
+We prove the claim for the partition $\mathcal{A}^+$.  Take $t \in
+A^+$ and define $l$ and $u$ as above.  It is clear that $(l, u) \in
+A^+$, and furthermore, there is no $l' < l$ and $u' > u$ such that
+$(l', x) \in A^+$ or $(x, u') \in A^+$ for any $x \in I$.  Let
+$\mathcal{H}$ be any other partition of $A^+$.  Some disjoint union of
+intervals $H_i \in \mathcal{H}$ necessarily covers $I$ for $i =
+1,...$, and we can further require that none of the $H_i$ are disjoint
+with $I$.  Since each $H_i$ has nonempty intersection with $I$, and
+$I$ is an interval, this implies that $\cup_i H_i$ is also an
+interval.  Let $l'' \leq u''$ be the endpoints of $\cup_i H_i$ Since
+$I \subseteq \cup_i H_i$, we have $l'' \leq l \leq u \leq u''$.
+However, since also $I \in A^+$, we must have $l \leq l'' \leq
+u'' \leq u$.  This implies that $l''=l$ and $u''=u$.  Since $\cup_i
+H_i = I$, and this holds for any $I \in \mathcal{A}^+$, we conclude
+that $\mathcal{H}$ is a refinement of $\mathcal{A}^+$. The proof of
+the claim for $\mathcal{A}^-$ is similar.
 
-{\small\verb!\hypersetup{allcolors=.}!}, or even better: 
+It remains to show that there are not isolated points in
+$\mathcal{A}$, i.e. that for all $I \in \mathcal{A}$ with endpoints
+$l \leq u$, we have $l < u$.  Take $I \in \mathcal{A}$ with endpoints
+$l \leq u$ and let $t = \frac{l+u}{2}$.  By definition, we have
+$h(t) \neq 0$.  Consider the two cases $h(t) > 0$ and $h(t) < 0$.
 
-{\small\verb!\hypersetup{hidelinks}!}.
+If $h(t) > 0$, then $t' = g^{-1}(h(t)) > t$, and for all $x \in [t,
+t']$ we have $h(x) > 0$.  Therefore, it follows from definition that
+$[t, t'] \in I$, and since $l \leq t < t' \leq u$, this implies that
+$l < u$.  The case $h(t) < 0$ is handled similarly. $\Box$
 
-\noindent If you want to have obvious links in the PDF but not the printed text, use:
+\begin{lemma}\label{lemma:technical2}
+Let $f(t)$ be a measurable function from $[a,b] \to \mathbb{R}$, where $a < b.$
+Then there exists sets $\mathcal{B}_0$ and $\mathcal{B}_1$, satisfying the following properties:
+\begin{itemize}
+\item  $\mathcal{B} = \mathcal{B}_0 \cup \mathcal{B}_1$ is countable partition of $[a,b]$,
+\item  $f(t)$ is constant on all $B \in \mathcal{B}_0$, but not constant on any proper superinterval $B' \supset B$, and
+\item $B \in \mathcal{B}_1$ contains no positive-length subinterval where $f(t)$ is constant.
+\end{itemize}
+\end{lemma}
 
-{\small\verb!\hypersetup{colorlinks=false}!}.
+\textbf{Proof of Lemma \ref{lemma:technical2}.} (This will appear in the appendix of the paper.)
+To construct the interval, define
+\[
+l(t) = \inf \{x \in [0,1]: f([x,t]) = \{f(t)\}\}
+\]
+\[
+u(t) = \sup \{x \in [0,1]: f([t,x]) = \{f(t)\}\},
+\]
+Let $B_0$ be the set of all $t$ such that $l(t) < u(t)$,
+and let $B_1$ be the set of all $t$ such that $l(t) = t = u(t)$.
+For all $t \in B_0$, define
+\[
+I(t) = (l(t), u(t)) \cup \{x \in \{l(t), u(t)\}: f(x) = f(t)\}.
+\]
+Then we claim
+\[
+\mathcal{B}_0 = \{I(t): t \in B_0\}
+\]
+is a countable partition of $B_0$.  The claim follows since the
+members of $\mathcal{B}_0$ are disjoint intervals of nonzero length,
+and $B_0$ has finite length.    It follows from definition that for any $B \in B_0$, that $f$ is not
+constant on any proper superinterval $B' \supset B$.
+
+Meanwhile, let $\mathcal{B}_1$ be a countable partition of $B_1$ into
+intervals.
+
+Next, we show that for all $I \in \mathcal{B}_1$, $I$ does not contain
+a subinterval $I'$ of nonzero length such that $f$ is constant on
+$I'$.  Suppose to the contrary, we could find such an interval $I$ and
+subinterval $I'$.  Then for any $t \in I'$, we have $t \in B_0$.
+However, this implies that $t \notin B_1$, a contradiction.
+
+Since $t \in [a,b]$ belongs to either $B_0$ or $B_1$,
+letting $\mathcal{B} = \mathcal{B}_0 \cup \mathcal{B}_1$
+yields the desired partition of $[a,b]$. $\Box$.
+
+\begin{lemma}\label{lemma:mono_entropy}
+Define an exponential family on $[0,1]$ by the density function
+\[
+q_\beta(t) = \exp[\beta t^{k-1} - \log Z(\beta)]
+\]
+where
+\[
+Z(\beta) = \int_0^1 \exp[\beta t^{k-1}] dt.
+\]
+Then, the negative entropy
+\[
+I(\beta) = \int_0^1 q_\beta(t) \log q_\beta(t) dt
+\]
+is decreasing in $\beta$ on the interval $(-\infty, 0]$.
+and increasing on the interval $[0, \infty)$.
+
+Furthermore, for any $\iota \in (0,\infty)$, there exist two solutions
+to $I(\beta) = \iota$: one positive and one negative.
+\end{lemma}
+
+\textbf{Proof of Lemma \ref{lemma:mono_entropy}.}
+
+Define $\beta(\mu)$ as the solution to
+\[
+\mu = \int_0^1 t q_\beta(t) dt.
+\]
+By [Wainwright and Jordan 2008], the function $\beta(\mu)$ is
+well-defined.  Furthermore, since the sufficient statistic $t^{k-1}$
+is increasing in $t$, it follows that $\beta(\mu)$ is increasing.
+
+Define the negative entropy as a function of $\mu$,
+\[
+N(\mu) = \int_0^1 q_{\beta(\mu)}(t) \log q_{\beta(\mu)}(t) dt.
+\]
+
+By Theorem 3.4 of [Wainwright and Jordan 2008], $N(\mu)$ is convex in
+$\mu$.  We claim that the derivative of $N(\mu) = 0$ at $\mu
+= \frac{1}{2}$.  This implies that $N(\mu)$ is decreasing in $\mu$ for
+$\mu \leq \frac{1}{2}$ and increasing for $\mu \geq \frac{1}{2}$.
+Since $I(\beta(\mu)) = N(\mu)$, $\beta$ is increasing in $\mu$, and
+$\beta(\frac{1}{2}) = 0$, this implies that $I(\beta)$ is decreasing
+in $\beta$ for $\beta \leq 0$ and increasing for $\beta \geq 0$.
+
+We will now prove the claim.  Write
+\[
+\frac{d}{d\mu} N(\mu)\bigg|_{\mu = 1/2} = \frac{d}{d\beta} I(\beta(\mu)) \bigg|_{\beta = 0} \frac{d\beta}{d\mu} \bigg|_{\mu = 1/2}.
+\]
+We have
+\[
+\frac{d}{d\beta} I(\beta) = \beta \int q_\beta t^{k-1} dt - \log Z(\beta).
+\]
+Meanwhile, $Z(0) = 1$ so $\log Z(0) = 0$.  Therefore,
+\[
+\frac{d}{d\beta} I(\beta) \bigg|_{\beta = 0} = 0.
+\]
+This implies that $\frac{d}{d\mu} N(\mu) |_{\mu = 1/2} = 0$, as needed.  
+
+For the final statement of the lemma, note that $I(0) = 0$ since $q_0$ is the uniform distribution.
+Meanwhile, since $q_\beta$ tends to a point mass as either $\beta \to \infty$ or $\beta \to -\infty$,
+we have 
+\[
+\lim_{\beta \to \infty} I(\beta) = \lim_{\beta \to -\infty} I(\beta) = \infty.
+\]
+And, as we can check that $I(\beta)$ is continuous in $\beta$, this means that
+\[
+I((-\infty, 0]) = I([0,\infty)) = [0, \infty)
+\]
+by the mean-value theorem.  Combining this fact with the monotonicity
+of $I(\beta)$ restricted to either the positive and negative half-line
+yields the fact that for any $\iota > 0$, there exists $\beta_1 < 0
+< \beta_2$ such that $I(\beta_1) = I(\beta_2) = \iota$.  $\Box$.
+
+\begin{lemma}\label{lemma:variational}
+For any measure $G$ on $[0, \infty]$,
+let $G^k$ denote the measure defined by
+\[
+G^k(A) = G(A)^k,
+\]
+and define
+\[
+E[G] = \int x dG(x).
+\]
+\[
+I[G] = \int x \log x dG(x)
+\]
+and
+\[
+\psi_k[G] = \int x d(G^k)(x).
+\]
+Then, defining $Q_c$ and $c_\iota$ as in Theorem 1, we have
+\[
+\sup_{G: E[G] = 1, I[G] \leq \iota} \psi_k[G] = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt.
+\]
+Furthermore, the supremum is attained by a measure $G$ that has cdf
+equal to $Q_c^{-1}$, and thus has a density $g$ with respect to
+Lesbegue measure.
+\end{lemma}
+
+\textbf{Proof of Lemma \ref{lemma:variational}.} (This will appear in the appendix of the paper.)
+
+Consider the quantile function $Q(t) = \inf_{x \in [0,1]}: G((-\infty,
+x]) \geq t.$ $Q(t)$ must be a monotonically increasing function from
+$[0,1]$ to $[0,\infty).$ Let $\mathcal{Q}$ denote the collection of
+all such quantile functions.
+
+We have
+\[
+E[G] = \int_0^1 Q(t) dt
+\]
+\[
+\psi_k[G] = \int_0^1 Q(t) x^{k-1} dt.
+\]
+and
+\[
+I[G] = \int_0^1 Q(t) \log Q(t) dt.
+\]
+
+For any given $\iota$, let $P_\iota$ denote the class of probability
+distributions $G$ on $[0, \infty]$ such that $E[G]=1$ and
+$I[G] \leq \iota.$  From Markov's inequality, for any $G \in P_\iota$
+we have
+\[
+G([x, \infty]) \leq x^{-1}
+\]
+for any $x \geq 0$, hence $P_\iota$ is tight.  From tightness, we
+conclude that $P_\iota$ is closed under limits with respect to weak
+convergence.  Hence, since $\psi_k$ is a continuous function, there
+exists a distribution $G^* \in P_\iota$ which attains the supremum
+\[\sup_{G \in P_\iota} \psi_k[G].\]
+Let $\mathcal{Q}_\iota$ denote the collection of quantile functions of
+distributions in $P_\iota.$ Then, $\mathcal{Q}_\iota$ consists of monotonic functions
+$Q: [0,1] \to [0, \infty]$ which
+satisfy
+\[
+E[Q] = \int_0^1 Q(t) dt = 1,
+\]
+and
+\[
+I[Q] = \int_0^1 Q(t) \log Q(t) dt \leq \iota.
+\]
+Let $\mathcal{Q}$ denote the collection of \emph{all} quantile functions from measures on $[0,\infty]$.
+And letting $Q^*$ be the quantile function for $G^*$, we have that
+$Q^*$ attains the supremum
+\begin{equation}\label{eq:constrained_optim}
+\sup_{Q \in \mathcal{Q}_\iota} \phi_k[Q] = \sup_{Q \in \mathcal{Q}_\iota} \int_0^1 Q(t) t^{k-1} dt.
+\end{equation}
+Therefore, there exist Lagrange multipliers
+$\lambda \geq 0$ and $\nu \geq 0$ such that defining
+\[
+\mathcal{L}[Q] = -\phi_k[Q] + \lambda E[Q] + \nu I[Q]= \int_0^1 Q(t) (-t^{k-1} + \lambda + \nu \log Q(t)) dt,
+\]
+$Q^*$ attains the infimum of $\mathcal{L}[Q]$ over \emph{all} quantile functions,
+\[
+\mathcal{L}[Q^*] = \inf_{Q \in \mathcal{Q}}\mathcal{L}[Q].
+\]
+The global minimizer $Q^*$ is also necessarily a stationary point:
+that is, for any perturbation function $\xi: [0,1] \to \mathbb{R}$
+such that $Q^* + \xi \in \mathcal{Q}$, we have $\mathcal{L}[Q^*]\leq \mathcal{L}[Q^* + \xi]$.
+For sufficiently small $\xi$, we have
+\begin{equation}\label{eq:Lperturb}
+\mathcal{L}[Q + \xi] \approx \mathcal{L}[Q] + \int_0^1 \xi(t) (-t^{k-1} + \lambda + \nu + \nu \log Q(t)) dt.
+\end{equation}
+Define
+\begin{equation}\label{eq:nablaQ}
+\nabla \mathcal{L}_{Q^*}(t) = -t^{k-1} + \lambda + \nu + \nu \log Q(t).
+\end{equation}
+The function $\nabla \mathcal{L}_{Q^*}(t)$ is a \emph{functional derivative} of the Lagrangian.
+Note that if we were able to show that $\nabla \mathcal{L}_{Q^*}(t) = 0$,
+this immediately yields
+\begin{equation}\label{eq:Qstareq}
+Q^*(t) = \exp[-1 -\lambda\nu^{-1} + \nu^{-1}  t^{k-1}].
+\end{equation}
+At this point, we know that the right-hand side of \eqref{eq:Qstareq}
+gives a stationary point of $\mathcal{L}$, but we cannot be sure that
+it gives the global minimzer.  The reason is because the optimization
+occurs on a constrained space.  We will show that \eqref{eq:Qstareq}
+indeed gives the global minimizer $Q^*$, but we do so by showing that
+the set of points $t$ where $\nabla \mathcal{L}_{Q^*}(t) \neq 0$ is of
+zero measure.  Since sets of zero measure don't affect the integrals
+defining the optimization problem \eqref{eq:constrained_optim}, we
+conclude there exists a global optimal solution with
+$\nabla \mathcal{L}_{Q^*}(t) = 0$ everywhere, which is therefore given
+explicitly by \eqref{eq:Qstareq} for some $\lambda \in \mathbb{R}$, $\nu \geq 0.$
+
+We will need the following result: that for $\iota
+> 0$, any solution to \eqref{eq:constrained_optim} satisfies
+$\phi_k[Q] < 1$.  This follows from the fact that
+\[
+E[Q] - \phi_k[Q] = \int_0^1 (1-t^{k-1}) Q(t) dt,
+\]
+where the term $(1-t^{k-1})$ is negative, except for the one point $t
+= 1$.  Therefore, in order for $\phi_k[Q] = 1 = E[Q]$, we must have
+$Q(t) = 0$ for $t < 1$.  However, this yields a contradiction since
+$Q(t) = 0$ for $t < 1$ implies that $E[Q] = 0$, a violation of the
+hard constraint $E[Q] = 1$.
+
+Let us establish that $\nu > 0$: in other words, the constraint $I[Q]
+= \iota$ is tight.  Suppose to the contrary, that for
+some $\iota > 0$, the global optimum $Q^*$ minimizes a Lagrangian with
+$\nu = 0$.  Let $\phi^* = \phi_k[Q^*] < 1.$ However, if we define
+$Q_\kappa(t) = I\{t \geq 1 - \frac{1}{\kappa}\} \kappa$, we have
+$E[Q_\kappa] = 1$, and also for some sufficiently large $\kappa > 0$,
+$\phi_k[Q_\kappa] > \phi^*$.  But since the Lagrangian lacks a term
+corresponding to $I[Q]$, we conclude that $\mathcal{L}[Q_\kappa]
+< \mathcal{L}[Q^*]$, a contradiction.
+
+The rest of the proof proceeds as follows.  We will use
+Lemmas \ref{lemma:technical1} and \ref{lemma:technical2} to define a
+decomposition $A = D_0 \cup D_1 \cup D_2$, where $D_2$ is of measure
+zero.  First, we show that assuming the existence of $t \in D_0$
+yields a contradiction, and hence $D_0 = \emptyset$.  Then, again
+using argument from contradiction we establish that $D_1 = \emptyset$.
+Finally, since $D_2$ is a set of zero measure, this allows us to
+conclude that the $Q^*(t) = 0$ on all but a set of zero measure.
+
+We will now apply the Lemmas to obtain the necessary ingredients for
+constructing the sets $D_i$.  Since $\nabla \mathcal{L}_{Q^*}(t)$ is a difference
+between an increasing function and a continuous stricly increasing
+function, we can apply Lemma \ref{lemma:technical1} to conclude that
+there exists a countable partition $\mathcal{A}$ of the set
+$A: \{t \in [0,1]: \nabla \mathcal{L}_{Q^*}(t) \neq 0\}$ into intervals such that
+for all $J \in \mathcal{A}$, $|\text{Sign}(\nabla Q^*(J))| = 1$ and
+$\inf J < \sup I$ .  Applying Lemma \ref{lemma:technical2} we get a
+countable partition $\mathcal{B} = \mathcal{B}_0 \cup \mathcal{B}_1$
+of $[0,1]$ so that each element $J \in \mathcal{B}_0$ is an interval
+such that $\nabla \mathcal{L}_{Q^*}(t)$ is constant on $J$, and furthermore is not
+properly contained in any interval with the same property, and each
+element $J \in \mathcal{B}_1$ is an interval, such that $J$ contains
+no positive-length subinterval where $\nabla \mathcal{L}_{Q^*}(t)$ is constant.
+Also define $B_i$ as the union of the sets in $\mathcal{B}_i$ for $i =
+0,1$.
+
+Note that $B_0$ is necessarily a subset of $A$.  That is because if
+$\nabla \mathcal{L}_{Q^*}(t) = 0$ on any interval $J$, then that $Q^*(t)$ is
+necessarily not constant on the interval.  
+
+We will construct a new countable partition of $A$, called $\mathcal{D}$.
+The partition $\mathcal{D}$ is constructed by taking the union of three families of intervals,
+\[
+\mathcal{D} = \mathcal{D}_0 \cup \mathcal{D}_1 \cup \mathcal{D}_2.
+\]
+Define $D_i$ to be the union of intervals in $\mathcal{D}_i$ for $i = 0,1,2$.
+
+Define $\mathcal{D}_0 = \mathcal{B}_0$,
+Define a countable partition $\mathcal{D}_1$ by
+\[
+\mathcal{D}_1 = \{J \cap L: J \in \mathcal{A}, L \in \mathcal{B}_1, \text{ and } |L| > 1\},
+\]
+in order words, $\mathcal{D}_1$ consists of positive-length intervals where $\nabla
+Q^*(t)$ is entirely positive or negative and is not constant.
+Define
+\[
+\mathcal{D}_2 = \{J \in \mathcal{B}_1: J \subset A \text{ and } |J| = 1 \},
+\]
+i.e. $\mathcal{D}_2$ consists of isolated points in $A$.
+
+One verifies that $\mathcal{D}$ is indeed a partition of $A$ by
+checking that $D_0 = B_0$, $D_1 \cup D_2 = B_1 \cap A$, so that
+$D_0 \cup D_2 \cup D_2 = A$: it is also easy to check that elements of
+$\mathcal{D}$ are disjoint.  Furthermore, as we mentioned earlier, the
+set $D_2$ is indeed of zero measure, since it consists of countably
+many isolated points.
+
+Now we will show that the existence of $t \in D_0$ implies a contradiction.
+Take $t \in D$ for $D \in \mathcal{D}_0$, and let $a = \inf D$ and $b
+= \sup D$.  Define
+\[
+\xi^+ = I\{t \in D\} (Q^*(b) - Q^*(t))
+\]
+and
+\[
+\xi^- = I\{t \in D\} (Q^*(a) - Q^*(t)).
+\]
+Observe that $Q + \epsilon \xi^+ \in \mathcal{Q}$ and $Q
++ \epsilon \xi^- \in \mathcal{Q}$ for any $\epsilon \in [0,1]$.  Now,
+if $\nabla \mathcal{L}_{Q^*}(t)$ is strictly positive on $D$, then for some
+$\epsilon > 0$ we would have $\mathcal{L}[Q^* + \epsilon \xi^-]
+< \mathcal{L}[Q^*]$, a contradiction.  A similar argument with $\xi^+$
+shows that $\nabla \mathcal{L}_{Q^*}(t)$ cannot be strictly negative on $D$ either.
+From this pertubation argument, we conclude that $\nabla \mathcal{L}_{Q^*}(t) = 0$.
+Since this argument applies for all $t \in D_0$, we conclude that $D_0
+= \emptyset$: therefore, on the set $[0,1] \setminus (D_1 \cup D_2)$,
+we have $\nabla \mathcal{L}_{Q^*}(t) = 0.$
+
+The following observation is needed for the next stage of the proof.
+If we look at the function $Q^*(t)$, then up so sets of neglible
+measure, it is given by the expression \eqref{eq:Qstareq} on the set
+$[0,1]\setminus D_1$, and it is piecewise constant in-between.  But
+since \eqref{eq:Qstareq} gives a strictly increasing function, and
+since $Q^*$ is increasing, this implies that $Q^*$ is discontinuous at
+the boundary of $D_1$.
+
+Now we are prepared to show that $\nabla \mathcal{L}_{Q^*}(t) = 0$ for $t \in D_1$.
+Take $t \in D$ for $D \in \mathcal{D}_1$, and let $a = \inf D$ and $b
+= \sup D$.  From the previous argument, there is a discontinuity at
+both $a$ and $b$, so that $\lim_{u \to a^-} Q(u) < Q(t) < \lim_{u \to
+b^+} Q(u)$.  Therefore, for any $\xi(t)$ which is increasing on $D$
+and zero elsewhere, there exists $\epsilon > 0$ such that $\nabla Q^*
++ \epsilon \xi \in \mathcal{Q}.$ It remains to find such a
+perturbation $\xi$ such that $\mathcal{L}[Q + \epsilon \xi]
+< \mathcal{L}[Q]$.
+
+Also, since by definition $\nabla \mathcal{L}_{Q^*}(t)$ is constant on $D$, follows from\eqref{eq:nablaQ} that
+$\nabla Q^*$ is strictly decreasing, and thus either
+\begin{itemize}
+\item Case 1: $\nabla \mathcal{L}_{Q^*}(t) \geq 0$ on $D$,
+\item Case 2: $\nabla \mathcal{L}_{Q^*}(t) \leq 0$ on $D$, or
+\item Case 3: $\nabla \mathcal{L}_{Q^*}(t) \geq 0$ for all $t \in D \cap [a, t_0]$ and $\nabla \mathcal{L}_{Q^*}(t) \leq 0$ for all $t \in D \cap [t_0, b]$.
+\end{itemize}
+
+Depending on the case, we construct a suitable perturbation $\xi$:
+\begin{itemize}
+\item Case 1: Construct $\xi(t) = -I\{t \in D\}$.
+\item Case 2: Construct $\xi(t) = I\{t \in D\}$
+\item Case 2: Construct
+\[
+\xi(t) = \begin{cases}
+-1 & \text{ for }t \in D \cap [a, t_0],\\
+0 & \text{ otherwise. }
+\end{cases}
+\]
+\end{itemize}
+In all three cases, given the corresponding construction for $\xi(t)$ we get
+\[
+\int_0^1 \xi(t) \nabla \mathcal{L}_{Q^*}(t) dt < 0.
+\]
+Therefore, from \eqref{eq:Lperturb}, there exists some $\epsilon > 0$
+such that $\mathcal{L}[Q + \epsilon \xi] < \mathcal{L}[Q]$, a
+contradiction.  Again, since the contradiction applies for all $t \in
+D_1$, we conclude that $D_1 = \emptyset$.
+
+By now we have established that a global optimum
+for \eqref{eq:constrained_optim} exists, and is given
+by \eqref{eq:Qstareq} for some $\lambda \in \mathbb{R}$, $\nu > 0$.  It remains
+to determine the values of $\lambda$ and $\nu$.
+
+Reparameterize $\alpha = \exp[-1-\lambda\nu^{-1}]$ and $\beta = \nu^{-1}$.
+Therefore,
+\[
+Q^*(t) = \alpha \exp[\beta t^{k-1}]
+\]
+for $\alpha > 0$, $\beta > 0$.  There is a one-to-one mapping from
+$(\alpha, \beta) \in (0, \infty)^2$ to $(\lambda, \nu) \in
+\mathbb{R} \times (0,\infty)$.
+
+Now, from the constraint
+\[
+1 = E[Q^*] = \int_0^1 \alpha \exp[\beta t^{k-1}] dt.
+\]
+we conclude that
+\[
+\alpha = \frac{1}{\int_0^1 \exp[\beta t^{k-1}] dt.}
+\]
+Therefore, we have reduced the set of possible solutions $Q^*$ to a one-parameter family,
+\[
+Q^*(t) = \frac{\exp[\beta t^{k-1}]}{Z(\beta)}.
+\]
+where
+\[
+Z(\beta) = \int_0^1 \exp[\beta t^{k-1}] dt.
+\]
+
+Next, note that
+\[
+I[Q^*] = \int_0^1 Q^*(t) \log Q^*(t) = \beta \mu_\beta - \log Z(\beta),
+\]
+as a function of $\beta$, is completely characterized by Lemma \ref{lemma:mono_entropy}.
+Let us define $c_\iota$ as the unique positive solution to the equation
+\[
+c_\iota \mu_{c_\iota} - \log Z(c_\iota) = \iota
+\]
+given by Lemma \ref{lemma:mono_entropy}.
+We therefore have
+\[
+Q^*(t) = \frac{\exp[c_\iota t^{k-1}]}{\int_0^1 \exp[c_\iota t^{k-1}]},
+\]
+as needed. $\Box$
+
+
+\begin{lemma}\label{lemma:concave}
+The map
+\[
+\iota \to \int_0^1 Q_{c_\iota}(t) t^{k-1} dt
+\]
+is concave in $\iota > 0$.
+\end{lemma}
+
+\textbf{Proof of Lemma \ref{lemma:concave}.}
+It is equivalent to show that the inverse function
+\[
+C^{-1}_k(p) = \inf_{G: E[G] = 1, \phi_k[G] = p} I[G]
+\]
+is convex.  Let $p_1, p_2 \in [0,1]$.  From
+lemma \ref{lemma:variational}, we can find measures $G_1$, $G_2$ on
+$[0,\infty)$ which minimize $I[G_i]$ subject to $E[G_i] = 1$ and
+$\phi_k[G_i] = p_i$.  Define the measure
+\[
+H = \frac{G_1 + G_2}{2}.
+\]
+Since $\phi_k$ is a linear functional,
+\[
+\phi_k[H] = \frac{\phi_k[G_1] + \phi_k[G_2]}{2} = \frac{p_1 + p_2}{2}.
+\]
+But since $I$ is a convex functional,
+\[
+I[H] \leq \frac{I[G_1] + I[G_2]}{2}.
+\]
+
+Therefore,
+\[
+C^{-1}_k\left(\frac{p_1 + p_2}{2}\right) \leq I[H] = \frac{I[G_1] + I[G_2]}{2} = \frac{C^{-1}_k(p_1) + C^{-1}_k(p_2)}{2}.
+\]
+$\Box$.

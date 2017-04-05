@@ -6,11 +6,73 @@
 
 \section{Motivation}
 
-\subsection{Gene expression dataset example}
+As we discussed in the introduction, the mutual information $I(X; Y)$
+provides one method for the supervised evaluation of representations.
+Recall that Shannon's mutual information $I(X; Y)$ is fundamentally a
+measure of dependence between random variables $X$ and $Y$, defined as
+\[
+I(X;Y) = \int p(x, y) \log \frac{p(x, y)}{p(x)p(y)}dxdy.
+\]
+Various properties of $I(\vec{g}(\vec{Z}); Y)$, such as sensitivity to
+nonlinear relationships, symmetry, and invariance to bijective
+transformations, make it ideal for quantifying the information between
+a representation of an input vector $\vec{g}(\vec{Z})$ and a response
+$Y$ which is possible vector-valued.  However, current methods
+estimating mutual information for high-dimensional data require large
+and over-parameterized generative models.  For instance, one can
+tractably estimate mutual information by assuming a multivariate
+Gaussian model: however, this approach essentially assumes a linear
+relationship between the input and output, and hence fails to quantify
+nonlinear dependencies.  
 
-\section{Identification loss}
+Hence, a popular approach which combines the strengths of the machine
+learning approach for modeling high-dimensional data and the
+advantages of the information theoretic approach is to obtain a lower
+bound on the mutual information by using the confusion matrix of a
+classifier.  This is the most popular approach for estimating mutual
+information in neuroimaging studies, but suffers from known
+shortcomings (Gastpar 2010, Quiroga 2009).  The idea of linking
+classification performance to mutual information dates back to the
+beginnings of information theory: Shannon's original motivation was to
+characterize the minimum achievable error probability of a noisy
+communication channel.  More explicitly, Fano's inequality provides a
+lower bound on mutual information in relation to the optimal
+prediction error, or Bayes error.  Fano's inequality can be further
+refined to obtain a tighter lower bound on mutual information (Tebbe
+and Dwyer 1968.)  However, a shortcoming to the classification-based
+approach is that it requires either for the response $Y$ to already be
+discrete, or to discretize the response $Y$ into finitely many
+classes.
 
-\section{Average Bayes accuracy and Mutual information}
+In this paper, we develop an analogue of Fano's inequality for the
+\emph{identification task}, rather than the classification task, which
+can therefore be applied to the case of a continuous response $Y$.  In
+this way, we derive a new machine-learning based estimator of mutual
+information $I(X; Y)$ which can be applied without the need to
+discretize a continuous response.
+
+As we saw in Chapter 2, the identification task is highly related to
+the randomized classification framework.  Therefore, we analyse the
+identification risk by means of the $k$-class average Bayes accuracy,
+which provides an upper bound to identification accuracy.  Our main
+theoretical contributions are (i) the derivation of a tight lower
+bound on mutual information as a function of $k$-class average Bayes
+accuracy, and (ii) the derivation of an asymptotic relationship
+between the $K$-class average Bayes accuracy and the mutual
+information. Our method therefore estimates of the $K$-class Bayes
+identification accuracy to be translated into estimate of the mutual
+information.
+
+The rest of the chapter is organized as follows.  Section
+\ref{sec:ch4_theory} establishes the theoretical results linking
+average Bayes accuracy and mutual information, and section
+\ref{sec:ch4_estimation} describes our proposed identification-based
+estimator of mutual information based on the theory.  We see some
+examples of applications in the next chapter, where the estimator
+developed here is compared to an alternative estimator, which is based
+on high-dimensional asymptotics.
+
+\section{Average Bayes accuracy and Mutual information}\label{sec:ch4_theory}
 
 \subsection{Problem formulation and result}
 
@@ -380,9 +442,7 @@ which completes the proof. $\Box$
 
 
 
-\section{Lower confidence bound}
+\section{Estimation method}\label{sec:ch4_estimation}
 
-Get lower confidence bound for ABA then plug into result.
 
-\section{Example}
 
