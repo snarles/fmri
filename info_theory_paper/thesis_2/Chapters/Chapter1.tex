@@ -370,7 +370,7 @@ and the response variable.
 \item In the case of discrete response variables $Y$: 
 the $k$-class average classification accuracy.
 \item In the case of continuous response variables $Y$:
-the \emph{identification risk.}
+the \emph{identification accuracy.}
 \end{enumerate}
 
 The mutual information is a classical measure of dependence that was
@@ -378,10 +378,10 @@ first developed by Claude Shannon as one of the key concepts in
 information theory.  The $k$-class average classification accuracy is
 a concept that has not been (to our knowledge) previously introduced
 in the literature, but it is highly related to the
-\emph{identification risk}, which was introduced by the same
+\emph{identification accuracy}, which was introduced by the same
 functional MRI study of natural images (\cite{Kay2008a}) that we have
 been discussing.  To our knowledge, we are the first to investigate
-the properties of the identification risk from a theoretical
+the properties of the identification task from a theoretical
 perspective.
 
 All three of these methods enable \emph{supervised evaluation of
@@ -391,7 +391,7 @@ response $Y$ gives us a means of judging the quality of the
 representation $\vec{g}(\vec{z})$.
 
 Comparing these methods, the advantage of the $k$-class average
-classification error or identification risk is that they are
+classification accuracy or identification accuracy is that they are
 relatively easy to compute, even in high-dimensional data, because one
 can make use of machine-learning methods for computing these
 quantities.  Meanwhile, the mutual information is extremely difficult
@@ -403,10 +403,10 @@ $k$.
 
 However, one of the main theoretical contributions of this work is to
 show how all of these three methods: mutual information, $k$-class
-average classification accuracy, and identification risk, are highly
-related.  In particular, we establish methods for lower-bounding the
-mutual information from either the $k$-class average classification
-accuracy or identification risk.
+average classification accuracy, and identification accuracy, are
+highly related.  In particular, we establish methods for
+lower-bounding the mutual information from either the $k$-class
+average classification accuracy or identification accuracy.
 
 \subsection{Related Work}
 
@@ -720,7 +720,7 @@ author.
 We now begin our review of background material in supervised learning
 and information theory.  Therefore, a reader who is familiar to both
 fields could skip most of the following--with the exception of the
-explanation of \emph{identification risk} in section
+explanation of \emph{identification accuracy} in section
 \ref{sec:ident_risk}, which is a relatively novel concept in
 the statistical literature.  Also, we hope that even the experienced
 reader will find some food for thought in our comparison of
@@ -1274,55 +1274,52 @@ n_2 \text{TestRisk}(h) \sim \text{Bernoulli}(n_2, \text{Risk}(h)).
 \end{tabular}
 \end{center}
 
-\subsection{Identification risk}\label{sec:ident_risk}
+\subsection{Identification accuracy}\label{sec:ident_risk}
 
-The identification task originated as a method for evaluating the
-quality of encoding models in neuroscience (Kay 2008).
+The identification accuracy originated as a method for evaluating the
+quality of encoding models in neuroscience (\cite{Kay2008a}).
+However, it can generally be applied to evaluate any regression model
+with a multivariate response $\vec{Y}$.  Furthermore, we argue that it
+can be an ideal method for evaluating the quality of multivariate
+representations $\vec{g}(\vec{X})$ given a continuous multivariate
+response $\vec{Y}$.
 
-\subsection{Experimental design}
+Suppose that we have pairs of vector-valued observations $(\vec{X}_i,
+\vec{Y}_i)_{i=1}^T$, where the features $\vec{X}$ are $p$-dimensional,
+and the response vectors $\vec{Y}$ are $q$-dimensional.  For instance,
+in the Kay et al. study of natural images, the features $\vec{X}$ are
+a basis of 10,921 Gabor filters coefficients for the presented images,
+and the response vectors $\vec{Y}$ are a 3000-dimensional vector of
+activation coefficients from the visual cortex.
 
-We consider experiments in which a single subject is presented with a
-sequence of $T$ stimuli: each stimulus is presented during a `task
-window' of a fixed duration.  The stimuli are represented by
-real-valued feature vectors $\vec{X}$; let $p$ be the dimensionality
-of the feature space.  The brain activity of the subject is recorded,
-yielding a $q$-dimensional vector $\vec{Y}$: in practice, $\vec{Y}$
-could consist of discretized time series data or mean firing rates for
-spike-sorted neurons, or BOLD response for voxels, depending on the
-recording modality.  Let $\vec{X}^{(t)}$ denote the feature vector of
-the stimulus, and let $\vec{Y}^{(t)}$ denote the vector of intensities
-(e.g. BOLD response, mean spike) for the $t$th task window in the
-sequence.
+\subsubsection{Step 1. Fitting the forward model}
 
-\subsection{Data splitting}
+We would like to fit a linear\footnote{The discussion applies equally
+  well to nonlinear regression models, but for expositional purposes
+  we focus on the special case of linear models.} multivariate
+regression model of the form
+\[
+\E[\vec{Y}|\vec{X} = \vec{x}] = \vec{x}^T B
+\]
+where $B$ is a $p \times q$ coefficient matrix.  Data-splitting is
+used to partition the data into a training and test set, so that the
+training set can be used to obtain an estimate of the coefficient
+matrix, $\hat{B}$, while the test set can be used to evaluate the
+quality of the regression model.
 
-The $T$ stimulus-response pairs $(\vec{X}, \vec{Y})$ are randomly
-partitioned into a \emph{training set} of size $N$ and a \emph{test
-  set} of size $M = T-N$.  Form the $N \times p$ data matrix
+To be specific, the $T$ stimulus-response pairs $(\vec{X}, \vec{Y})$
+are randomly partitioned into a \emph{training set} of size $N$ and a
+\emph{test set} of size $M = T-N$.  Form the $N \times p$ data matrix
 $\bX^{tr}$ by stacking the features of the $N$ training set stimuli as
 row vectors, and stack the corresponding responses as row vectors to
 form the $N \times q$ matrix $\bY^{tr}$.  Similarly, define $\bX^{te}$
 as the $N \times p$ matrix of test stimuli and $\bY^{te}$ as the $N
-\times q$ matrix of corresponding test responses.
+\times q$ matrix of corresponding test responses.  Without loss of
+generality, let us suppose that the indices $i = 1,\hdots, M$
+correspond to the test set, so that the test observations are
+$(\vec{x}_i, \vec{y}_i)_{i=1}^M$.
 
-\subsection{Probabilistic encoding model}
-
-The data is used to estimate a stimulus-based encoding
-model \cite{Kay2008a}\cite{Naselaris2011}\cite{Mitchell2008}.
-The conditional mean response $\E[\bY|\bX]$ is modelled as
-a linear transformation of the stimulus features,
-\[
-\vec{Y} = \bB^T \vec{X} + \bepsilon
-\]
-where $\bB$ is a $p \times q$ coefficient matrix and $\bepsilon$ is a
-noise variable with an assumed multivariate normal distribution,
-$\bepsilon \sim N(0, \Sigma)$.  Hence, the conditional density of
-$\vec{Y}|\vec{X}$ is given by the multivariate normal density
-\[
-p(\vec{y}|\vec{x}) = -\frac{1}{(2\pi |\Sigma|)^{-q/2}} \exp\left[-\frac{1}{2}(\vec{y} - \bB^T \vec{x})^T \Sigma^{-1} (\vec{y}-\bB^T \vec{x})\right].
-\]
-
-The coefficient $B$ can be estimated from the training set data
+Next, the coefficient $B$ can be estimated from the training set data
 $(\bX^{tr}, \bY^{tr})$ using a variety of methods for regularized
 regression, for instance, the elastic net \cite{Zou2005}, where each
 column of $\bB = (\beta_1,\hdots, \beta_q)$ is estimated via
@@ -1330,13 +1327,13 @@ column of $\bB = (\beta_1,\hdots, \beta_q)$ is estimated via
 \hat{\beta}_i = \argmin_\beta ||\bY_i^{tr} - \bX^{tr} \beta||^2 + \lambda_1 ||\beta||_1 + \lambda_2 ||\beta||_2^2,
 \]
 where $\lambda_1$ and $\lambda_2$ are regularization parameters which
-can be chosen via cross-validation \cite{Hastie2009a} separately for
+can be chosen via cross-validation (\cite{Hastie2009a}) separately for
 each column $i$.
 
 After forming the estimated coefficient matrix $\hat{\bB} =
 (\hat{\beta}_1,\hdots, \hat{\beta}_q)$, we estimate the noise
 covariance $\Sigma$ via a shrunken covariance
-estimate\cite{Ledoit2004}\cite{Daniels2001} from the residuals,
+estimate (\cite{Ledoit2004}, \cite{Daniels2001}) from the residuals,
 \[
 \hat{\Sigma} = \frac{1}{N} ((1-\lambda) S + \lambda \text{Diag}(S)) 
 \]
@@ -1345,94 +1342,150 @@ where
 S = (\bY^{tr} - \bX^{tr} \bB)^T (\bY^{tr} - \bX^{tr} \bB).
 \]
 
-\subsection{Converting the encoding model to a decoding model}
+\subsubsection{Step 2. Evaluating the forward model}
 
-Bayes' rule can be used to convert a probabilistic encoding model into
-a decoding model \cite{Naselaris2011}.  The Bayesian decoding model
-gives the posterior probability of the stimulus given the response,
+A usual means of evaluating the linear model specified by the estimate
+$\hat{B}$ is to evaluate the mean-squared error on the test set,
 \[
-p(\vec{x}|\vec{y}) = p(\vec{y}|\vec{x})\frac{p(\vec{x})}{p(\vec{y})}.
+\text{TMSE} = \frac{1}{M}||\bY^{te} - \bX^{te} B||^2_F,
 \]
-In an \emph{identification task}\cite{Kay2008a}, a response $\by$ is
-generated by presenting the subject to a stimulus which is randomly
-chosen from a subset of $k$ stimuli, $S = (\vec{x}^{(1)},\hdots,
-\vec{x}^{(k)})$.  The decoder is used to select the stimulus in $S$
-which is most likely to have generated the response $\by$: the
-performance of the the decoder is measured by the probability of
-correct identification.  In the identification task, the prior
-probability $p(\vec{x})$ is uniform over the candidate set $S.$
-Therefore, the estimated log posterior probability of each candidate
-stimulus $\vec{x}^{(i)}$ is given by
-\[
-\log \hat{p}(\vec{x}|\vec{y}) = \log \hat{p}(\vec{y}|\vec{x}) + \text{const.}= -\frac{1}{2}(\vec{y} - \hat{\bB}^T \vec{x})^T \hat{\Sigma}^{-1} (\vec{y}-\hat{\bB}^T \vec{x}) + \text{const.}
-\]
-where we have elided the inconsequential constant terms.  Therefore,
-the chosen stimulus $\hat{\vec{x}}$ is the stimulus which minimizes
-the empirical Mahalanobis distance
-\[
-d_{\hat{\Sigma}}(\vec{y}, \hat{\bB}^T \vec{x}) = (\vec{y} - \hat{\bB}^T \vec{x})^T \hat{\Sigma}^{-1} (\vec{y}-\hat{\bB}^T \vec{x})
-\]
-among the stimuli in $S$, and supposing that the correcty stimulus has
-index $i$, the probability of correct identification is
-\[
-\Pr[\text{correct}] = \Pr[d_{\hat{\Sigma}}(\vec{y}, \hat{\bB}^T \vec{x}^{(i)}) \leq \min_{j \neq i} d_{\hat{\Sigma}}(\vec{y}, \hat{\bB}^T \vec{x}^{(j)}) ].
-\]
+where a lower $\text{TMSE}$ indicates a better model.  Intuitively,
+the mean-squared error is the average squared distance between an
+observation $\vec{Y}$ and its model prediction, $\hat{Y}$
+as illustrated in Figure \ref{fig:mse_vs_ia}(a).
 
-\subsection{Computation of identification accuracy curve}
+\begin{figure}
+\centering
+\begin{tabular}{cc}
+a & b\\
+\includegraphics[scale = 0.3]{../../diagram/idloss2a.png} &
+\includegraphics[scale = 0.3]{../../diagram/idloss2b.png} \\
+\end{tabular}
+\caption{Mean-squared error (a) versus identification accuracy (b) for
+  evaluting a multivariate predictive model.}
+\label{fig:mse_vs_ia}
+\end{figure}
 
-The probability of correct identification varies depending on the
-choice of stimulus set $S$.  Therefore, to obtain a well-defined
-measure of decoder precision, we define the $k$-class
-\emph{identification risk} as the expected acccuracy when the set $S$
-is constructed by drawing $x^{(1)},\hdots, x^{(k)}$ independently from
-the prior distribution $p(\vec{x})$.
-
-An unbiased estimate of the $k$-class identification risk for any $k
-\leq M$ can be obtained, where $M$ is the number of test observations.
-The idea is to evaluate the empirical accuracy (the proportion of
-correct identifications) over all combinations of ${M}\choose{k}$
-stimulus subsets $S$ times all $k$ choices for the correct stimulus
-within $S$.  Yet, this empirical accuracy can be computed without
-explicitly looping over all $k{M}\choose{k}$ combinations via a
-computational trick.
-
-Suppose without loss of generality that the indices of the test
-observations are $i = 1,\hdots, M$.  Define
+However, an alternative criterion for evaluting the multivariate
+linear model was proposed by \cite{Kay2008a}.  In an
+\emph{identification task}\cite{Kay2008a}, as illustrated in Figure
+\ref{fig:mse_vs_ia}(b), the model is first used to make predictions
 \[
-M_{i,j} = \log \hat{p}(\vec{x}^{(j)}|\vec{y}^{(i)})
+\hat{y}_i = B^T \vec{x}_i
 \]
-Furthermore, define
+for all features $\{\vec{x}_i\}_{i=1}^M$ in the test set Next, each of the
+observations $\vec{y}_i$ in the test set is \emph{assigned} to the
+closest prediction $\{\hat{y}_j\}_{j=1}^M$ within the test set.
+Here, `closest' is defined in terms of the 
+the empirical Mahalanobis distance.
 \[
-R_{i,j} = \sum_{\ell \neq j} I\{M_{i,\ell} \geq M_{i, j}\}.
+d_{\hat{\Sigma}}(\vec{y}, \hat{y}) = (\vec{y} - \hat{y})^T \hat{\Sigma}^{-1} (\vec{y}-\hat{y})
+\]
+Finally, the $M$-point test identification accuracy is defined as the fraction
+of observations which are assigned to the correct prediction,
+\[
+\text{TIA}_M = \frac{1}{M}\sum_{i=1}^M I(d_{\hat{\Sigma}}(\vec{y}_i, \hat{y}_i) \leq \min_{j \neq i} d_{\hat{\Sigma}}(\vec{y}_i, \hat{y}_i)).
 \]
 
-The computational trick is to look at each combination of test
-response $\vec{y}^{(i)}$ and stimulus $\vec{x}^{(\ell)}$, and to count
-count the number of subsets $N_{i, \ell}$ where (i) both $i$ and
-$\ell$ are included in $S$, and (ii) $\hat{x}^{(i)} =
-\vec{x}^{(\ell)}$.  One can then verify that the empirical accuracy
-over all subsets is equal to
-\begin{equation}\label{eq:avtestrisk}
-\text{EmpAcc}_k = 1 - \frac{1}{{{M}\choose{k}}}\frac{1}{k} \sum_{i=1}^{k} \sum_{\ell\neq i} C_{i\ell}N_{i, \ell}.
-\end{equation}
-Now it is just a matter of simple combinatorics to compute
-$N_{i,\ell}$.  We require both $\vec{x}^{(i)}$ and $\vec{x}^{(\ell)}$
-to be included in $S$.  This implies that if $M_{i,i} > M_{i,\ell}$,
-then $\vec{x}^{(\ell)}$ will never have the highest margin in any of
-those subsets, so $N_{i,\ell} = 0$.
+\subsubsection{Advantages of identification accuracy over MSE}
 
-Otherwise, there are $R_{i,\ell} - 1$ elements with a lower margin
-than $\vec{x}^{(\ell)}$.  Since $i \neq \ell$, then there are $k-2$
-elements in $S \setminus \{i, \ell\}$, so therefore $N_{i, j, \ell} =
-{{R_{i,j,\ell} - 2}\choose{k - 2}}$.  Therefore, we can write
-\begin{equation}\label{eq:avtestrisk_nil}
-N_{i,\ell} = I\{R_{i,\ell} > R_{i,i}\}{{R_{i,\ell} -2}\choose{k - 2}}
-\end{equation}
+A major reason why identification accuracy was adopted for fMRI
+studies is because it provides an intuitive demonstration of how much
+information about the stimulus $\vec{X}$ is contained in the response
+$\vec{Y}$, in a way that mean-squared error cannot.  We formalize this
+idea by explicitly showing how the empirical identification accuracy
+can be used to obtain a lower bound of mutual information (Chapter 4).
+However, some of the intuition can be demonstrated much more simply
+via a toy example.
 
-The \emph{identification accuracy curve} is defined as the function
-which maps $k \in 2,3,\hdots$ to the $k$-class identification risk.
-Therefore, an estimate of a portion of the curve can be obtained by
-estimating the $k$-class identification risk for $k = 2,\hdots, M$.
+Suppose that the response $\vec{Y}$ and predictor $\vec{X}$ are both
+three-dimensional.  The predictor $\vec{X}$ is generated from a standard
+multivariate normal distribution, and then $\vec{Y}$ is generated
+according to the linear model
+\[
+\vec{Y} = B^T \vec{X} + \epsilon
+\]
+where $\epsilon$ is multivariate normal
+\[
+\epsilon \sim N(0, \sigma^2 I).
+\]
+
+Now consider two different scenarios.  In scenario 1, we have
+the model 
+\[
+\vec{Y}^{(1)} = B^{(1)T} \vec{X} + \epsilon
+\]
+with
+\[
+B^{(1)} = \begin{pmatrix}
+1 & 1 & 1\\
+0 & 0 & 0\\
+0 & 0 & 0
+\end{pmatrix}
+\]
+That is, the responses $\vec{Y}$ are only related to the \emph{first}
+component of $\vec{X}$.  There is no information in $\vec{Y}$ abut the
+other two components of $\vec{X}$, since $\vec{Y}$ is independent of
+$(X_2, X_3)$.
+
+In scenario 2, we have the model
+\[
+\vec{Y}^{(2)} = B^{(2)T} \vec{X} + \epsilon
+\]
+with
+\[
+B^{(2)} = \begin{pmatrix}
+1 & 0 & 0\\
+0 & 1 & 0\\
+0 & 0 & 1
+\end{pmatrix}
+\]
+Unlike in scenario 1, now each component $Y_i$ contains information
+about a different component $X_i$ of $\vec{X}$.  Therefore, $\vec{Y}$
+contains information about all components of $\vec{X}$,
+
+Assume that a large amount of training data is available, so that
+there is practically no estimation error for $\hat{B}$.  Suppose the
+test set consists of eight points, $(\vec{x}_i, \vec{y}_i)_{i=1}^8$,
+where
+
+\[
+\begin{matrix}
+\vec{x}_1 = (-1, -1, -1) &
+\vec{x}_5 = (+1, -1, -1) \\
+\vec{x}_2 = (-1, -1, +1) &
+\vec{x}_6 = (+1, -1, +1) \\
+\vec{x}_3 = (-1, +1, -1) &
+\vec{x}_7 = (+1, +1, -1) \\
+\vec{x}_4 = (-1, +1, +1) & 
+\vec{x}_8 = (+1, +1, +1) \\
+\end{matrix}
+\]
+
+Let us compare the two scenarios in terms of what happens when we
+evaluate the model using mean-squared error.  In both cases, the
+mean-squared error will be approximately $3\sigma^2$.  Therefore, MSE
+does not distinguish between a low-information situation (Scenario 1)
+and a high-information situation (Scenario 2).  Furthermore, since the
+expected squared norm of $Y$ is the same in both cases, the
+multivariate $R^2$ similarly fails to distinguish the two scenarios.
+
+Now consider the identification accuracy.  In scenario 1, the fact
+that $\vec{Y}$ only contains information about $X_1$ means that it can
+only separate the two sets $\{\vec{x}_1,\hdots, \vec{x}_4\}$ and
+$\{\vec{x}_5,\hdots, \vec{x}_8\}$ from each other, but it cannot
+discriminate between stimuli $\vec{x}, \vec{x}'$ which have the same
+first component.  It follows that regardless of how small $\sigma^2$
+is--even in the noiseless case, the identification accuracy can be at
+most $\frac{1}{4}$.  On the other hand, in scenario 2, it is clear
+that as $\sigma^2$ goes to zero, that the accuracy increases to 1.  In
+figure [] we have computed the identification accuracy for the two
+scenarios as a function of $\sigma^2$.
+
+
+\subsubsection{Cross-validated identification accuracy}
+
+
 
 \subsection{Information Theory}\label{sec:intro_mi}
 
