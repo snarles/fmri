@@ -33,9 +33,73 @@ as fMRI data, where the effective dimensionality of the data is large,
 but where the noise level limits the mutual information between $X$
 and $Y$.
 
+The estimator of mutual information we develop in this chapter is
+based on exploiting a universality property that arises in
+high-dimensions.  This universality phenomenon allows us to establish
+a relationship between the mutual information $I(X; Y)$ and the
+$k$-class average Bayes accuracy, $\text{ABA}_k$.  In short, we will
+identify a function $\pi_k$ (which depends on $k$),
+\begin{equation}\label{abepi}
+\text{ABA}_k \approx \pi_k(\sqrt{2 I(X; Y)})
+\end{equation}
+and that this approximation becomes accurate under a limit where $I(X;
+Y)$ is small relative to the dimensionality of $X$, and under the
+condition that the components of $X$ are approximately independent.
+The function $\pi_k$ is given by
+\[
+\pi_k(c) = \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
+\]
+This formula is not new to the information theory literature: it
+appears as the error rate of an orthogonal constellation [CITE].  What
+is surprising is that the same formula can be used to approximate the
+error rate in much more general class of classification
+problems\footnote{An intuitive explanation for this fact is that
+  points from any high-dimensional distribution lie in an orthogonal
+  configuration with high probability.}--this is precisely the
+universality result which provides the basis for our proposed
+estimator.
+
+Figure \ref{fig:pi} displays the plot of $\pi_k$ for several values of
+$k$.  For all values of $k$, $\pi_k(\mu)$ is monotonically decreasing
+in $\mu$, and tends to zero as $\mu \to \infty$, which is what we
+expect since if $I(X; Y)$ is large, then the average Bayes error
+should be small.  Another intuitive fact is that $ \pi_k(0) = 1 -
+\frac{1}{k}, $ since after all, an uninformative response cannot lead
+to above-chance classification accuracy.
+
+
+\begin{figure}
+\centering
+\begin{tabular}{ccrl}
+\multirow{5}{*}{\includegraphics[scale = 0.5, clip=true, trim=0 0.2in 0 0.5in]{../arxiv_info_theory/illus_piK_flat.pdf}} &
+\multirow{5}{*}{\includegraphics[scale = 0.5, clip=true, trim=0 0.2in 0.4in 0.5in]{../arxiv_info_theory/ihat_comp.pdf}} & & \\
+& & & \\
+& & \crule[color3]{0.2cm}{0.2cm} & $\hat{I}_{HD}$\\
+& & \crule[color1]{0.2cm}{0.2cm} & $\hat{I}_{Fano}$\\
+& & & \\
+& & & \\
+& & & \\
+& & & 
+\end{tabular}
+\caption{Left: The function $pi_k(\mu)$ for $k = \{2, 10\}$.
+Right: $\hat{I}_{HD}$ with $\hat{I}_{Fano}$ as functions of $\hat{e}_{gen}$, for $k = 3$.
+While $\hat{I}_{Fano}$ is bounded from above by $\log(k)$ (dotted line), $\hat{I}_{HD}$ is unbounded.
+[NOTE: 1-$\pi_k$ is displayed, rather than $\pi_k$. Figure to be fixed!]}
+\label{fig:pi}
+\end{figure}
+
+The estimator we propose is
+\[
+\hat{I}_{HD} = \frac{1}{2}(\pi_{k}^{-1}(\text{ABA}_k))^2,
+\]
+obtained by inverting the relation \eqref{abepi}, then substituting
+an estimate of the identification accuracy $\text{TA}_k$ for the $\text{ABA}_k$.  As such,
+our estimator can be directly compared to the $\hat{I}_{Fano}$, since
+both are functions of $\text{ABA}_k$ (Figure \ref{fig:pi}.)
+
 \section{Theory}
 
-\subsection{Assumptions}\ref{sec:ch5_assumptions}
+\subsection{Assumptions}\label{sec:ch5_assumptions}
 
 The theory applies to a high-dimensional limit where $I(X; Y)$ tends to a constant.
 
@@ -73,19 +137,19 @@ supplement, along with the detailed proof.
 
 We obtain the universality result in two steps.  First, we link the
 average Bayes error to the moments of some statistics $Z_i$.
-Secondly, we use taylor approximation in order to express $I(X; Y)$ in
+Secondly, we use Taylor approximation in order to express $I(X; Y)$ in
 terms of the moments of $Z_i$.  Connecting these two pieces yields the
 formula \eqref{abepi}.
 
 Let us start by rewriting the average Bayes error:
 \[
-e_{ABE, k} = \Pr[p(Y|X_1) \leq \max_{j \neq 1} p(Y|X_j)| X = X_1].
+\text{ABA}_k = \Pr[p(Y|X_1) = \max_{j \neq 1} p(Y|X_j)| X = X_1].
 \]
 Defining the statistic $Z_i = \log p(Y|X_i) - \log p(Y|X_1)$, where $Y
 \sim p(y|X_1)$, we obtain $ e_{ABE} = \Pr[\max_{j > 1} Z_i > 0].  $
 The key assumption we need is that $Z_2,\hdots, Z_k$ are
 asymptotically multivariate normal.  If so, the following lemma allows
-us to obtain a formula for the misclassification rate.
+us to obtain a formula for the average Bayes accuracy.
 
 \textbf{Lemma 1. }
 \emph{
@@ -110,8 +174,10 @@ where $W \sim N(\mu, \nu^2)$ and $M_{k-1}$ is the maximum of $k-1$
 independent standard normal variates, which are independent of $W$.
 }
 
-To see why the assumption that $Z_2,\hdots, Z_k$ are multivariate normal might be justified, suppose that $X$ and $Y$ have the same dimensionality $d$, and that
-joint density factorizes as
+\emph{Remark.}
+To see why the assumption that $Z_2,\hdots, Z_k$ are multivariate
+normal might be justified, suppose that $X$ and $Y$ have the same
+dimensionality $d$, and that joint density factorizes as
 \[
 p(x^{(j)}, y) = \prod_{i=1}^d p_i(x^{(j)}_i, y_i)
 \]
@@ -129,6 +195,31 @@ to a multivariate normal distribution.  While the componentwise
 independence condition is not a realistic assumption, the key property
 of multivariate normality of $(Z_2,\hdots, Z_k)$ holds under more
 general conditions, and appears reasonable in practice.
+
+\textbf{Proof.}
+We can construct independent normal variates $G_1$, $G_2,\hdots, G_k$
+such that
+\[
+G_1 \sim N(0, \beta + \epsilon - 2 \gamma)
+\]
+\[
+G_i \sim N(0, \delta - \epsilon)\text{ for }i > 1
+\]
+such that
+\[
+Z_1 - Z_i = \alpha + G_1 + G_i \text{ for }i > 1.
+\]
+Hence
+\begin{align*}
+\Pr[Z_1 < \max_{i=2}^k Z_i] &= \Pr[\min_{i > 1} Z_1 - Z_i < 0].
+\\&= \Pr[\min_{i=2}^{k} G_1 + G_i + \alpha < 0]
+\\&= \Pr[\min_{i=2}^{k} G_i < -\alpha - G_1]
+\\&= \Pr[\min_{i=2}^{k} \frac{G_i}{\sqrt{\delta - \epsilon}} < -\frac{\alpha - G_1}{\sqrt{\delta - \epsilon}}].
+\end{align*}
+Since $\frac{G_i}{\sqrt{\delta - \epsilon}}$ are iid standard normal variates, and since
+$-\frac{\alpha - G_1}{\sqrt{\delta - \epsilon}} \sim N(\mu,\nu^2)$ for $\mu$ and $\nu^2$ given in the statement of the Lemma, the proof is completed via a straightforward computation.  $\Box$
+
+
 
 It remains to link the moments of $Z_i$ to $I(X;Y)$.  This is accomplished by approximating the logarithmic term by the Taylor expansion
 \[
@@ -160,50 +251,109 @@ converges in distribution to a univariate normal distribution.
 \item[A4.] For all $i \neq k$,
 \[\lim_{d \to \infty}\Cov[u^{[d]}(X^{(i)}, Y^{(j)}), u^{[d]}(X^{(k)}, Y^{(j)})] = 0.\]
 \end{itemize}
-Then for $e_{ABE, k}$ as defined above, we have
+Then for $\text{ABA}_k$ as defined above, we have
 \[
-\lim_{d \to \infty} e_{ABE, k} = \pi_k(\sqrt{2 \iota})
+\lim_{d \to \infty} \text{ABA}_k = \pi_k(\sqrt{2 \iota})
 \]
 where
 \[
-\pi_k(c) = 1 - \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz
+\pi_k(c) = \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz
 \]
 where $\phi$ and $\Phi$ are the standard normal density function and
 cumulative distribution function, respectively.}
 
-\section{Estimator}
 
-Define the Bayes risk as the identification risk of the optimal decoder.  The result of ZB 2016 says that under certain regularity conditions, for for sufficiently high-dimensional $p(\vec{x}, \vec{y})$, we have
-\[
-\text{BayesAcc}_k \approx \bar{\pi}_k(\sqrt{2 I(\vec{x}; \vec{y})})
-\]
-where $\bar{\pi}_k$ is the function
-\[
-\bar{\pi}_k(c) = \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
-\]
-and where $I(\vec{x}; \vec{y})$ is the Shannon information
-\[
-I(\vec{X};\vec{Y}) = \int p(\vec{x}, \vec{y}) \log \frac{p(\vec{x}, \vec{y})}{p(\vec{x})p(\vec{y})}dxdy.
-\]
+\textbf{Proof.}
 
-This is an important result because it implies that the entire identification accuracy curve can be summarized by a single parameter--the mutual information.  This means that in the asymptotic regime specified by ZB 2016, (i) any portion of the curve can be used to estimate the mutual information and therefore reconstruct the entire curve, and (ii) that there exists a strict ordering over identification accuracy curves: for any two curves $A_k$ and $A_k'$, one dominates the other for all $k$: either $A_k \geq A_k'$ for all $k \geq 2$, or $A_k' \geq A_k$ for all $k \geq 2$.
-
-However, the result in ZB 2016 only applies to the optimal decoder, or \emph{Bayes decoder}.  Yet, it is impossible to obtain the Bayes decoder in practice, since constructing the Bayes decoder requires knowing $p(\vec{x}, \vec{y})$.  Therefore, we propose that under similar conditions to those stipulated in ZB 2016, for a certain class of classifiers\footnote{We leave it to future work to specify the conditions on the joint density and classifiers needed to formally establish the desired property.}, we have
+For $i = 2,\hdots, k$, define
 \[
-\text{IdAcc}_k \approx \bar{\pi}_k(\sqrt{2 I_{implied}})
+Z_i = \log p(Y^{(1)}|X^{(i)}) - \log p(Y^{(1)}|X^{(1)}).
 \]
-where $\text{IdRisk}_k$ is the $k$-class identification risk for a given classifier trained from the training set,
-and where $I_{implied}$ is a real-valued attribute of the classifier called the \emph{implied information}.
-Furthermore, since $\text{IdAcc}_k \leq \text{BayesAcc}_k$ by definition (as $\text{BayesAcc}_k$ is the best achievable accuracy), we have
+Then, we claim that $\vec{Z} = (Z_2,\hdots, Z_k)$ converges in distribution to
 \[
-I_{implied} \leq I(\vec{X}; \vec{Y}).
+\vec{Z} \sim N\left(-2\iota, 
+\begin{bmatrix}
+4\iota & 2\iota & \cdots & 2\iota\\
+2\iota & 4\iota & \cdots & 2\iota\\
+\vdots & \vdots & \ddots & \vdots\\
+2\iota & 2\iota & \cdots & 4\iota
+\end{bmatrix}
+\right).
 \]
+Combining the claim with the lemma (stated below this proof) yields the
+desired result.
 
-In order to estimate the implied information, we can rely on the fact that the empirical identification accuracy curve $\text{EmpAcc}_k$ is an unbiased estimate of the true identification accuracy curve $\text{IdAcc}_k$.  Therefore, we can estimate $I_{implied}$ by finding the theoretical curve which gives the best fit to the empirical accuracies in terms of mean-squared error.  Thus, define $\hat{I}_{implied}$ as the nonlinear least-squares estimator
+To prove the claim, it suffices to derive the limiting moments
+\[\E[Z_i] \to -2\iota,\]
+\[\Var[Z_i] \to 4\iota,\]
+\[\Cov[Z_i, Z_j] \to 2\iota,\]
+for $i \neq j$,
+since then assumption A2 implies the existence of a multivariate normal
+limiting distribution with the given moments.
+
+Before deriving the limiting moments, note the following identities.
+Let $X' = X^{(2)}$ and $Y = Y^{(1)}$.
 \[
-\hat{I}_{implied} = \text{argmin}_{\iota \geq 0} \sum_{k=2}^{M} (\text{EmpAcc}_k - \bar{\pi}_k(\sqrt{2 \iota}))^2.
+\E[e^{u(X', Y)}] = \int p(x) p(y) e^{u(x, y)} dx dy = \int p(x, y) dx dy = 1.
 \]
+Therefore, from assumption A3 and the formula for gaussian exponential
+moments, we have
+\[
+\lim_{d \to \infty} \E[u(X', Y)]-\frac{1}{2}\Var[u(X', Y)] = 0.
+\]
+Let $\sigma^2 = \lim_{d \to \infty} \Var[u(X', Y)]$.
+Meanwhile, by applying assumption A2,
+\begin{align*}
+\lim_{d \to \infty} I(X; Y) &= \lim_{d \to \infty} \int p(x, y) u(x, y) dx dy 
+= \lim_{d \to \infty} \int p(x) p(y) e^{u(x, y)} u(x, y) dx dy
+\\&= \lim_{d \to \infty}  \E[e^{u(X, Y')}u(X, Y')]
+\\&= \int_{\mathbb{R}} e^z z \frac{1}{\sqrt{2\pi \sigma^2}} 
+e^{-\frac{(z + \sigma^2/2)^2}{2\sigma^2}} \text{ (applying A2)}
+\\&= \int_{\mathbb{R}} z \frac{1}{\sqrt{2\pi \sigma^2}} 
+e^{-\frac{(z - \sigma^2/2)^2}{2\sigma^2}}
+\\&= \frac{1}{2}\sigma^2.
+\end{align*}
+Therefore,
+\[
+\sigma^2 = 2\iota,
+\]
+and
+\[
+\lim_{d \to \infty} \E[u(X', Y)] = -\iota.
+\]
+Once again by applying A2, we get
+\begin{align*}
+\lim_{d \to \infty} \Var[u(X, Y)] 
+&= \lim_{d \to \infty} \int (u(x, y) - \iota)^2 p(x, y) dx dy
+\\&= \lim_{d \to \infty} \int (u(x, y) - \iota)^2 e^{u(x, y)} p(x) p(y) dx dy
+\\&= \lim_{d \to \infty} \E[(u(X', Y) - \iota)^2 e^{u(X', Y)}] 
+\\&= \int (z - \iota)^2 e^z \frac{1}{\sqrt{4\pi\iota}} e^{-\frac{(z+\iota)^2}{4\iota}} dz \text{ (applying A2)}
+\\&= \int (z - \iota)^2 \frac{1}{\sqrt{4\pi\iota}} e^{-\frac{(z-\iota)^2}{4\iota}} dz
+\\&= 2\iota.
+\end{align*}
 
+
+We now proceed to derive the limiting moments.
+We have
+\begin{align*}
+\lim_{d \to \infty} \E[Z] 
+&= \lim_{d \to \infty} \E[ \log p(Y|X') - \log p(Y|X)]
+\\&= \lim_{d \to \infty} \E[ u(X', Y) - u(X, Y) ] = -2\iota.
+\end{align*}
+Also,
+\begin{align*}
+\lim_{d \to \infty} \Var[Z]
+ &= \lim_{d \to \infty} \Var[ u(X', Y) - u(X, Y) ]
+\\&= \lim_{d \to \infty} \Var[ u(X', Y)] +\Var[ u(X, Y) ]\text{ (using assumption A4) }
+\\&= 4\iota,
+\end{align*}
+and similarly
+\begin{align*}
+\lim_{d \to \infty} \Cov[Z_i, Z_j]
+&= \lim_{d \to \infty} \Var[ u(X, Y)]\text{ (using assumption A4) }
+\\&= 2\iota.
+\end{align*}
+This concludes the proof. $\Box$.
 
 \section{Examples}
 
