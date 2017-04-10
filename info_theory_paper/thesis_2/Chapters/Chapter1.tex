@@ -1479,13 +1479,44 @@ first component.  It follows that regardless of how small $\sigma^2$
 is--even in the noiseless case, the identification accuracy can be at
 most $\frac{1}{4}$.  On the other hand, in scenario 2, it is clear
 that as $\sigma^2$ goes to zero, that the accuracy increases to 1.  In
-figure [] we have computed the identification accuracy for the two
-scenarios as a function of $\sigma^2$.
+figure \ref{fig:ch1_example} we have computed the identification
+accuracy for the two scenarios as a function of $\sigma^2$.  As we can
+see, for a large range of $\sigma^2$ values, the identification
+accuracy is greater in scenario 2 (reflecting greater information)
+than scenario 1.
+
+\begin{figure}
+\centering
+\includegraphics[scale = 0.5]{../../diagram/ch1_example.pdf}
+\caption{Identification accuracies in toy example}
+\label{fig:ch1_example}
+\end{figure}
 
 
 \subsubsection{Cross-validated identification accuracy}
 
+Notice that the procedure described earlier for computing the
+empirical identification is non-deterministic, because of the
+randomness in data-splitting.  Therefore, it is extremely useful in
+practice to repeat the computation of identification accuracy for
+multiple data splits of the same size, and then average the result.
 
+Concretely, define the leave-$k$-out cross-validated estimate of
+identification accuracy as follows:
+\begin{enumerate}
+\item Let $L$ be a large number of Monte Carlo trials.  For $i =
+  1,\hdots, L$, carry out data-splitting to create a training set of
+  size $T - k$, and a test set of size $K$.  Let $\text{TA}^{(i)}$ be the
+  identification accuracy on the test set.
+\item Define the cross-validated identification accuracy as the
+  average over the $L$ quantities computed,
+\begin{equation}\label{eq:def_cv_ident}
+\text{TA}_{k, CV} = \frac{1}{L} \sum_{i=1}^L \text{TA}^{(i)}.
+\end{equation}
+\end{enumerate}
+
+We describe some applications of cross-validated identification
+accuracy to the inference of mutual information in Chapters 4 and 5.
 
 \subsection{Information Theory}\label{sec:intro_mi}
 

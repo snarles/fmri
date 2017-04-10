@@ -31,7 +31,9 @@ pts <- as.matrix(gen.factorial(rep(res, 3)))/res * 7
 lala <- mvdnorm(pts, rep(0, 3), 1)
 delta^3 * sum(lala)
 
-sigmas <- 1:100/10
+t1 <- proc.time()
+
+sigmas <- (1:500)/10
 
 ans <- t(sapply(sigmas, function(s) {
   c(s, 
@@ -39,4 +41,12 @@ ans <- t(sapply(sigmas, function(s) {
    delta^3 * sum(max_d(pts, Y2, s))/8)
 }))
 
-matplot(ans[, 1], ans[, 2:3], ylim = c(0, 1))
+
+proc.time() - t1
+
+pdf("diagram/ch1_example.pdf")
+matplot(ans[, 1], ans[, 2:3], ylim = c(0, 1), type = "l",
+        col = c("blue", "green"), lty = 1, lwd = 2,
+        xlab = expression(sigma^2), ylab = "accuracy")
+legend(24, 0.99, c("Scenario 1", "Scenario 2"), col = c("blue", "green"), lwd = 2)
+dev.off()

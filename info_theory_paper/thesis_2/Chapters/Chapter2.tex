@@ -753,3 +753,72 @@ generalization accuracy is close to Bayes accuracy.  However, it
 remains to theoretically characterize the assumptions that make this
 possible (e.g. smoothness of the model, low signal-to-noise ratio) and
 to develop formal tests for convergence to Bayes accuracy.
+
+\subsection{Application to identification task}
+
+In the same way that average Bayes accuracy provides an upper bound
+for the average generalization error in the randomized classification
+task, the average Bayes accuracy can also bound the expected
+cross-validated identification accuracy \eqref{eq:def_cv_ident}.
+
+This is clear if we define a \emph{generalized identification task},
+which is constructed as follows:
+
+\noindent\emph{Generalized identification task}
+\begin{enumerate}
+\item Draw $\vec{X}_1,\hdots, \vec{X}_k$ from the marginal distribution of $\vec{X}$.
+\item Draw index $J$ uniformly from $\{1,\hdots, k\}$.
+\item Generate $\vec{Y}$ from the conditional distribution $p(\vec{y}|\vec{X} = \vec{x}_j)$.
+\item Let $g$ be a function which takes a response vector $\vec{Y}$
+  and $k$ feature vectors $\vec{X}_1,\hdots, \vec{X}_k$ and outputs an index in $\{1,\hdots, k\}$
+\[
+g: \mathcal{Y} \times \mathcal{X}^k \to \{1,\hdots, k\}.
+\]
+Define the \emph{identification generalization accuracy} of $g$ as
+\[
+\Pr[g(\vec{Y}; \vec{X}_1,\hdots, \vec{X}_k) = J]
+\]
+under the above setup.
+\end{enumerate}
+
+We will now claim the following.  \emph{Claim 1:} the identification
+task introduced in section \ref{sec:ident_risk} is a special case of
+the generalized identification task.  \emph{Claim 2:} one can define a
+randomized classification task such that the $k$-class average Bayes
+accuracy is an upper bound of the identification generalization
+accuracy.
+
+Claim 1 can be argued as follows.  In the identification task
+introduced in section \ref{sec:ident_risk}, when we fix a training
+set, the expected test identification accuracy is equivalent to the
+identification generalization accuracy of a rule $g$, which can be writen as
+\[
+g(\vec{Y}; \vec{X}_1,\hdots, \vec{X}_k) = \text{argmin}_j (\vec{Y} - f(\vec{X}_j))^T \hat{\Sigma}^{-1} (\vec{Y} - f(\vec{X}_j)).
+\]
+where $f(\vec{x})$ is the estimate of the regression function
+$\E[\vec{Y}|\vec{X}=\vec{x}]$, and $\hat{\Sigma}$ is the estimated
+covariance matrix of the noise.
+
+Claim 2 follows because the Bayes identification rule,
+\[
+g(\vec{Y}; \vec{X}_1,\hdots, \vec{X}_k) = \text{argmax}_j p(\vec{Y}|\vec{X} = \vec{x})
+\]
+maximizes the identification generalization accuracy over all
+functions $g$.  But now consider a randomized classification task
+where $\vec{X}$ are the labels, and $\vec{Y}$ are the feature vectors
+(not that this is the reverse of the convention used in the rest of
+the chapter.)  Then we see that the Bayes identification rule $g$ is
+also the Bayes classification rule for the label set $\{\vec{X}_1,
+\hdots, \vec{X}_k\}$.
+
+Since the average Bayes accuracy is an upper-bound for the expected
+identification accuracy over any training-test split, it follows that
+$\text{ABA}_K$ is also an upper bound for the expected
+CV-identification accuracy: that is,
+\begin{equation}\label{eq:aba_cv_ident_bound}
+\text{ABA}_k \geq \E[\text{TA}_{k, CV}]
+\end{equation}
+for $\text{TA}_{k, CV}$ as defined in \eqref{eq:def_cv_ident}.
+
+We use this fact in Chapters 4 and 5 to link identification accuracy
+to mutual information via the average Bayes accuracy.
