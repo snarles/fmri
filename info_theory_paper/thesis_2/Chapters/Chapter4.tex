@@ -67,10 +67,12 @@ The rest of the chapter is organized as follows.  Section
 \ref{sec:ch4_theory} establishes the theoretical results linking
 average Bayes accuracy and mutual information, and section
 \ref{sec:ch4_estimation} describes our proposed identification-based
-estimator of mutual information based on the theory.  We see some
-examples of applications in the next chapter, where the estimator
-developed here is compared to an alternative estimator, which is based
-on high-dimensional asymptotics.
+estimator of mutual information based on the theory.  We present one
+simulation example in section \ref{sec:ch4_simulation}, but will we
+also see some real data applications in the next chapter.
+%, where the
+%estimator developed here is compared to an alternative estimator,
+%which is based on high-dimensional asymptotics.
 
 \section{Average Bayes accuracy and Mutual information}\label{sec:ch4_theory}
 
@@ -442,7 +444,43 @@ which completes the proof. $\Box$
 
 
 
-\section{Estimation method}\label{sec:ch4_estimation}
+\section{Estimation}\label{sec:ch4_estimation}
+
+Now let us return to the problem of estimating the mutual information
+$I(X; Y)$ based on observations $(x_i, y_i)_{i=1}^n$ drawn iid from
+the joint distribution.
+
+\subsection{Estimate}
+
+We would like to use the cross-validated identication accuracy
+\eqref{eq:def_cv_ident} as a basis for constructing interval estimates
+the mutual information.  How this works is as follows.
+
+Define the $k$-class average identification accuracy as the expected
+value of the cross-validated identification accuracy \eqref{eq:def_cv_ident},
+\[
+\text{AIA}_k \stackrel{def}{=} \E[\text{TA}_{k, CV}].
+\]
+As we argued in section \ref{sec:ident_to_aba}, the $k$-class average identification accuracy
+is a lower bound for the $k$-class average Bayes accuracy,
+\[
+\text{AIA}_k \leq \text{ABA}_k.
+\]
+Finally, applying the theorem \ref{theorem:Cunif}, we have
+\[
+I(X; Y) \geq C^{-1}_k(\text{ABA}_k) \geq C^{-1}_k(\text{AIA}_k).
+\]
+Since we use a lower bounding theorem to obtain the estimate, the
+estimated mutual information tends to be an underestimate of the true
+result.  Therefore, we get a better estimate if we choose a regression
+model which maximizes the identification accuracy.
 
 
+
+\subsection{Variance Properties}
+
+
+
+
+\section{Simulation}\label{sec:ch4_simulation}
 

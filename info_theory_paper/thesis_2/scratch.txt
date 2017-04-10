@@ -1,3 +1,37 @@
+Now suppose that we have a $(1-\alpha)$ lower-confidence bound for
+$\text{AIA}_k$; that is, a statistic $\underbar{\text{AIA}}_k$ with the property that
+\[
+\Pr[\underbar{\text{AIA}}_k \leq \text{AIA}_k] \geq 1-\alpha.
+\]
+Then it follows that
+\[
+\underbar{I}_{Ident}(X; Y) \stackrel{def}{=} C^{-1}_k(\underbar{\text{AIA}}_k)
+\]
+is a $(1-\alpha)$ lower-confidence bound for $I(X; Y).$
+
+It remains to construct the lower confidence bound
+$\underbar{\text{AIA}}_k$.  Since $\text{TA}_{k, CV}$ is unbiased for
+$\underbar{\text{AIA}}_k$, it remains to bound the variance of
+$\text{TA}_{k, CV}$.  Let $m = \lfloor \frac{n}{k}\rfloor$, and let
+$(\sigma_1,\hdots, \sigma_n)$ be a random permutation drawn uniformly
+at random.  Define subsets $S_i = (\sigma_{(i - 1)k + 1},\hdots,
+\sigma_{ik})$ for $i = 1,\hdots, m$.  Each subset $S_i$ is of size
+$k$, and they are mutually disjoint.  Then, define the 
+
+
+One can show that the maximal variance of
+$\text{TA}_{k, CV}$ is less than the maximal variance of
+$\text{BA}_k$.  Therefore, one can apply Theorem \ref{thm:aba_var} to
+conclude that
+\[
+\text{Var}{\text{TA}_{k, CV}} \leq 
+\]
+
+
+
+
+
+
 One practical implication of this is that performance on
 discrimination tasks can be predicted by measures of the
 \emph{information content} of the input. This was the basis of Claude
