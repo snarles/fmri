@@ -345,3 +345,165 @@ from \eqref{eq:avrisk_linear}, via
 
 \section{Examples}\label{sec:extrapolation_example}
 
+\subsection{Facial recognition example}
+
+From the ``Labeled Faces in the Wild'' dataset (\cite{LFWTech}), we
+selected 1672 individuals with at least 2 face photos.  We form a
+dataset consisting of photo-label pairs $(\vec{z}_j^{(i)}, y^{(i)})$
+for $i = 1,\hdots, 1672$ and $j = 1,2$ by randomly selecting 2 face
+photos for each of the 1672 individuals.
+
+We implement a face recognition system based on one nearest-neighbor
+and OpenFace (\cite{amos2016openface}) for feature extraction.  For
+each photo $\vec{z}$, a 128-dimensional feature vector $\vec{x}$ is
+obtained as follows.
+\begin{enumerate}
+\item The computer vision library DLLib is used to detect landmarks in
+  $\vec{z}$, and to apply a nonlinear transformation to align
+  $\vec{z}$ to a template.
+\item The aligned photograph is downsampled to a $96 \times 96$ input,
+  which is fed into a pre-trained deep convolutional neural network to
+  obtain the 128-dimensional feature vector $\vec{x}$.
+\end{enumerate}
+Therefore, we obtain feature-label pairs $(\vec{z}_j^{(i)}, y^{(i)})$
+for $i = 1,\hdots, 1672$ and $j = 1,2$.
+
+The recognition system then works as follows.  Suppose we want to
+perform facial recognition on a subset of the individuals, $I \subset
+\{1,\hdots, 1672\}$.  Then, for all $i \in I$, we load one feature
+vector-label pair, into the system, $(\vec{x}_1^{(i)}, y^{(i)})$.  In
+order to identify a new photo $\vec{z}^*$, we obtain the feature
+vector $\vec{x}^*$, and guess the label $\hat{y}$ based on example
+with the minimal distance to $\vec{x}^*$,
+\[
+\hat{y} = y^{(i^*)}
+\]
+where
+\[
+i^* = \text{argmin}_I d(\vec{x}, \vec{x}_1^{(i)}).
+\]
+The test accuracy is assessed on the unused repeat for all individuals
+in $I$.  Note that the assumptions of our estimation method are met in
+this example because one-nearest neighbor is a marginal classifier.
+One can define the margin functions as
+\[
+(\mathcal{M}(\vec{x}))(\vec{x}^*) = -||\vec{x} - \vec{x}^*||^2.
+\]
+However, $k$-nearest neighbor for $k > 1$ is not marginal.
+
+While we can apply our extrapolation method to estimate the average
+accuracy for any number of faces $k$, it will not be possible to
+validate our estimates if we use the full dataset.  Therefore, we take
+the average accuracies computed using the subsampling method
+\eqref{eq:avtestrisk} on the full dataset as a \emph{ground truth} to
+compare to the average accuracy estimated from a \emph{subsampled}
+dataset.  Therefore, we simulate the problem of performance
+extrapolation from a database of $K$ faces by subsampling a
+dataset of size $K$ from the LFW dataset.
+
+\begin{figure}
+\centering
+\begin{tabular}{cc}
+a & b\\
+\includegraphics[scale = 0.5]{../../facerec/acc_plot1.pdf} &
+\includegraphics[scale = 0.5]{../../facerec/acc_plot2.pdf}
+\end{tabular}
+\caption{(a) The estimated average accuracy for $k = 2,\hdots,
+  400$ given a dataset of 400 faces subsampled from Labeled Faces in
+  the Wild.  (b) Estimated average accuracy for $k > 400$ on the
+  same dataset, compared to the ground truth (estimated AGA using all
+  1672 classes).}
+\label{fig:lfw_extrapolation1}
+\end{figure}
+
+To do the performance extrapolation, we use a linear
+spline basis,
+\[
+h_\ell(u) = \left[u - \frac{\ell - 1}{m}\right]_+
+\]
+for $\ell = 1,\hdots, m$.  Here we take $m = 10000$.  We model the
+function $\bar{D}(u)$ as a non-negative linear combination of basis
+functions,
+\[
+\bar{D}(u) = \sum_{\ell = 1}^m \beta_\ell h_\ell(u),
+\]
+with $\beta_\ell \geq 0$.  The resulting estimated generalization
+accuracies, computed using \eqref{eq:avrisk_identity}, are plotted in
+Figure \eqref{fig:lfw_extrapolation1} (b).  As we already mentions, to
+assess the quality of the estimated average accuracy, we compare them
+to the `ground truth' accuracy curve obtained by using all 1672
+examples to compute the the average test risk.
+
+
+
+To get an idea of the accuracy and variance of the accuracy curve
+estimates for varying sample sizes $K$, we repeat this procedure
+multiple times for $K \in \{100,200,400, 800\}$.  The results, again
+compared to the ground truth computed from the full data set, is
+illustrated in figure \ref{fig:lfw_extrapolation2}.
+
+\begin{figure}
+\centering
+\begin{tabular}{cc}
+\includegraphics[scale = 0.4]{../../facerec/sub_100.pdf} &
+\includegraphics[scale = 0.4]{../../facerec/sub_200.pdf} \\
+\includegraphics[scale = 0.4]{../../facerec/sub_400.pdf} &
+\includegraphics[scale = 0.4]{../../facerec/sub_800.pdf} 
+\end{tabular}
+\caption{Estimated average accuracy using subsampled datasets of size
+  $k$, compared to the ground truth (estimated AGA using all 1672
+  classes).}
+\label{fig:lfw_extrapolation2}
+\end{figure}
+
+\subsection{Telugu OCR example}
+
+While the previous example was a perfect fit to the assumptions of the
+framework, we also want to see how well the method works when some of
+the assumptions may be violated.  Toward this end we apply performance
+extrapolation in an optical character recognition example
+(\cite{achanta2015telugu}) for predicting the accuracy on 400 classes
+of Telugu characters from a subsample of size $K = 20$.  We consider
+the use of five different classifiers: Naive Bayes, logistic
+regression, SVM, $\epsilon$-nearest neighbors\footnote{$k$-nearest
+  neighbors with $k = \epsilon n$ for fixed $\epsilon > 0$}, and a
+deep convolutional neural network\footnote{The network architecture is
+  as follows: {\tt
+    48x48-4C3-MP2-6C3-8C3-MP2-32C3-50C3-MP2-200C3-SM.}}.  Of the five
+classifiers, only Naive Bayes satisfies the marginal classifier
+assumption.  Again, we compare the result of our model to the ground
+truth obtained by using the full dataset.
+
+\begin{table}
+\centering
+\begin{tabular}{|c||c|c|c|}\hline
+Classifier      & Test $\text{acc}^{(20)}$ & Test $\text{acc}^{(400)}$ & $\hat{AGA}_{400}$ \\ \hline
+Naive Bayes     & 0.951                   & 0.601                   & 0.858     \\ \hline
+Logistic        & 0.922                   & 0.711                   & 0.812     \\ \hline
+SVM             & 0.860                   & 0.545                   & 0.687     \\ \hline
+$\epsilon$-NN   & 0.951                   & 0.591                   & 0.410     \\ \hline
+Deep neural net & 0.995                   & 0.986                   & 0.907     \\ \hline
+\end{tabular}
+\caption{Performance extrapolation: predicting the accuracy on 400 classes using data from 20 classes on a Telugu character dataset.
+$\epsilon = 0.002$ for $\epsilon$-nearest neighbors.}
+\label{tab:telugu}
+\end{table}
+
+The results are displayed in Table \ref{tab:telugu}.  To our surprise,
+the worst absolute difference between ground truth and estimated
+average accuracy was in the case of Naive bayes $(|\delta| = 0.257)$
+which satisfies the marginal property.  All other classifiers had
+absolute errors less than 0.2.  It is also interesting to note that,
+even though Naive Bayes and $\epsilon$-nearest neighbors have the same
+test accuracy on the subset, that the predicted accuracy on 400
+differs greatly between then (0.858 vs 0.400).  Furthermore, the
+difference is in the right direction: Naive Bayes is predicted to work
+better on 400 classes than $\epsilon$-nearest neighbors, which appears
+to be the case based on the 400-class test accuracy.
+
+While further work is still needed to better understand the
+performance of the proposed performance extrapolation method, both for
+marginal classifiers (which satisfy the theoretical assumptions) and
+non-marginal classifiers (which do not), the results obtained in these
+two examples are encouraging in that sense that useful predictions
+were obtained both for marginal and non-marginal classifiers.
