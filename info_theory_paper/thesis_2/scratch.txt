@@ -447,3 +447,29 @@ independent of the details of the learning algorithm $\Lambda$.  We
 require that the sampling scheme be parameterized by $r$, the number
 of training instances drawn from each label $y \in \mathcal{S}_i$.
 
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{figure}
+\centering
+\begin{tabular}{ccc}
+\includegraphics[scale = 0.5]{../../}
+\end{tabular}
+\caption{}
+\label()
+\end{figure}
+
+
+
+
+
+
