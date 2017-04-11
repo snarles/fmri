@@ -1,0 +1,102 @@
+% Chapter 6
+
+\chapter{Discussion} % Main chapter title
+
+\label{Chapter6} % For referencing the chapter elsewhere, use \ref{Chapter1} 
+
+In this thesis, we considered the problem of evaluating the quality of
+a feature embedding, or representation $\vec{g}(\vec{x})$ using
+side-information from a response $y$.  As we showed in the
+introduction, the problem of supervised evaluation of representations
+occurs in both machine learning and neuroscience; therefore, our work
+is relevant for both areas, but also yields tools that may be useful
+for other disciplines as well.
+
+We investigated three closely related approaches for doing so: mutual
+information $I(\vec{g}(\vec{X}); Y)$, average accuracy for randomized
+classification, and identification accuracy.  The identification
+accuracy is based on the same fundamental prediction task as
+randomized classification, which is to assign a feature vector $X$ to
+one of $k$ discrete classes.  Therefore, the average Bayes accuracy,
+defined in Chapter 2, is an upper bound for both average accuracy for
+randomized classification and identification accuracy.  The mutual
+information can be linked, via Shannon's coding theorem, to the
+decoding accuracy achievable using a random codebook, and therefore it
+is not surprising that we can link mutual information to average Bayes
+accuracy for randomized classification, as we showed in Chapter 4.
+
+Thus, by combining all of these results, we can convert estimates of
+average accuracy or estimates of identification accuracy into
+estimates of mutual information.  This provides a useful tool for
+several reasons.  One is that for the purpose of assessing
+representations, both the average accuracy and the identification
+accuracy have a dependence on an arbitrary tuning parameter $k$.  To
+eliminate the dependence, we can convert either to an estimate of
+mutual information, which can be interpreted without knowing $k$.  Of
+course, the estimation procedure itself might still depend on the
+choice of $k$, as we saw in the example of section
+\ref{sec:real_data}--but it is possible that future work may provide a
+remedy.
+
+Secondly, for users interested in estimating the mutual information
+$I(X; Y)$, the possibility of obtaining such estimates from average
+accuracy or identification accuracy greatly expands the arsenal of
+mutual information estimators.  This is because one can exploit a
+variety of different types of problem-specific assumptions, such as
+sparsity, in the training of the regression or classification model
+used to compute average accuracy or identification risk.
+
+On the other hand, because there is always some loss when converting
+one statistic to another non-equivalent statistic, one may choose to
+work with the average accuracy or identification accuracy directly.
+Rather than trying to eliminate the parameter $k$, we can try to
+understand its effect.  For this purpose, the theory of average
+accuracy (which also applies to identification accuracy) developed in
+Chapter 3, is invaluable.  We see that the $k$-class average accuracy
+is simply a $k-1$th moment of a \emph{conditional accuracy}
+distribution; and this can be used to estimate average accuracy at
+arbitrary $k$.  Understanding how the average accuracy scales with $k$
+also yields practical benefits: it allows us to understand how
+recognition systems might scale under larger problems, and it allows
+us to compare two different feature representations on the basis of
+the entire average accuracy curve rather than the average accuracy at
+a single $k$.
+
+While we showed mathematically how mutual information is connected to
+average accuracy and identification accuracy, from an intuitive
+perspective, they can all be seen to correspond to some notion of
+information-theoretic volume in the embedding space.  We already saw
+how mutual information can be related to metric entropy in Chapter 1;
+but the average accuracy (or equivalently, the identification
+accuracy) can also be used to measure volume, if we define the
+$\epsilon$-\emph{capacity} of an embedding to be the maximal number of classes $k$
+where the average accuracy is above some threshold $\epsilon$.  This
+concept of volume differs slightly from metric entropy or covering
+numbers because it refers to the spacing properties of random sets of
+points, rather than an optimized set of points.  Still, we expect that
+the different ways of defining volume can all be connected in a more
+formal sense, and we anticipate that lower or upper bounds of metric
+entropy can be stated in terms of average Bayes accuracy or mutual
+information.
+
+Two obvious areas of development for our methods is to obtain (i)
+formal checks of the assumptions (e.g. the high-dimensionality
+assumption in Ch. 5) which our methods depend on, and (ii) to
+characterize the quality of the estimators in a decision-theoretic
+framework, and (iii) to develop interval estimates of mutual
+information or $\epsilon$-capacity.  We have made initial progress
+towards developing the understanding necessary to develop these
+methods, e.g. the variance bounds on Bayes accuracy in Chapter 2.
+
+Yet, another important research direction would be to apply these
+methods to more practical real-life examples.  Applications always
+reveal surprising insights about what kind of models are needed, or
+what kind of properties are most desirable for a statistical
+procedure.  In this thesis, we discussed the use of our methods in
+predicting the performance of face-recognition systems, understanding
+the generalizability of neuroscience experiments, and estimating
+mutual information in high-dimensional settings; further exploration
+of any of these particular applications could motivate new refinements
+and extensions of our methods, but there may also be many additional
+applications where our ideas can be applied.
+

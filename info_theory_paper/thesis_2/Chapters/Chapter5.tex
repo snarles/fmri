@@ -89,9 +89,9 @@ While $\hat{I}_{Fano}$ is bounded from above by $\log(k)$ (dotted line), $\hat{I
 \end{figure}
 
 The estimator we propose is
-\[
+\begin{equation}\label{eq:hat_i_hd}
 \hat{I}_{HD} = \frac{1}{2}(\pi_{k}^{-1}(\text{ABA}_k))^2,
-\]
+\end{equation}
 obtained by inverting the relation \eqref{abepi}, then substituting
 an estimate of the identification accuracy $\text{TA}_k$ for the $\text{ABA}_k$.  As such,
 our estimator can be directly compared to the $\hat{I}_{Fano}$, since
@@ -357,6 +357,72 @@ This concludes the proof. $\Box$.
 
 \section{Examples}
 
+We demonstrate the application of our proposed estimators,
+$\hat{I}_{Ident}$, which was introduced in the previous chapter, and
+the estimator $\hat{I}_{HD}$ based on high-dimensional asymptotics, as
+defined in \eqref{eq:hat_i_hd}.
+
+We compare our methods to a number of existing methods for mutual
+information.  For any $k$-class classification task, define the $k
+\times k$ \emph{confusion matrix} $M$ as the matrix whose $i, j$
+counts how many times a output in the $i$th class was classified to
+the $j$th class.
+
+The estimator $\hat{I}_{Fano}$ is based on Fano's inequality, which reads
+\[
+H(Z|Y) \leq H(1-\text{BA}) + (1-\text{BA}) \log ||\mathcal{Z}| - 1|
+\]
+where $\text{BA}$ is Bayes accuracy, and $H(e)$ is the entropy of a
+Bernoulli random variable with probability $e$.  Replacing $H(Z|Y)$
+with $H(X|Y)$ and replacing $\text{BA}$ with the test accuracy $\text{TA}$,
+we get the estimator
+\[
+\hat{I}_{Fano} = log(K) - (1-\text{TA}) log(K-1) + (1-\text{TA}) log(1-\text{TA}) + \text{TA} log(\text{TA}).
+\]
+Meanwhile, the confusion matrix estimator computes
+\[
+\hat{I}_{CM} = \frac{1}{k^2} \sum_{i=1}^k \sum_{j=1}^k \log \frac{M_{ij}}{r/k},
+\]
+which is the empirical mutual information of the discrete joint
+distribution $(Z, f(Y))$.
+
+The estimator $\hat{I}_0$ is the so-called `naive' estimate of mutual information, based on the identity
+\[
+I(X;Y) = H(Y) - H(Y|X).
+\]
+Given any nonparametric estimator of entropy $\hat{H}$, we obtain
+\[
+\hat{I}_0 = \hat{H}(Y) - \sum_{i=1}^k \hat{H}(Y|X^{(i)}).
+\]
+We use the polynomial-based entropy estimator introduced by
+\cite{jiao2015minimax} as the estimator of entropy.  
+
+It is known that $\hat{I}_0$ tends to underestimate the mutual
+information.  Therefore, Gastpar et al. introduced the anthropic
+correction estimator $\hat{I}_\alpha$ which adds a bias-correction
+term \footnote{However, without a principled approach to choose the
+  parameter $\alpha \in (0,1]$, $\hat{I}_\alpha$ could still vastly
+underestimate or overestimate the mutual information.}to $\hat{I}_0$.
+
+\subsection{Simulation}
+
+We compare the estimators $\hat{I}_{CM}$, $\hat{I}_{Fano}$,
+$\hat{I}_{HD}$ with a nonparametric estimator $\hat{I}_\alpha$
+(\cite{Gastpar2009}) in the following simulation, and the correctly
+specified parametric estimator $\hat{I}_{MLE}$.  We generate data
+according to a multiple-response logistic regression model, where $ X
+\sim N(0, I_p) $, and $Y$ is a binary vector with conditional
+distribution
+\[
+Y_i|X = x \sim \text{Bernoulli}(x^T B_i)
+\]
+where $B$ is a $p \times q$ matrix.  We generate training data with
+$r$ responses per stimulus $X^{(i)}$.  One application of this model
+might be modeling neural spike count data $Y$ arising in response to
+environmental stimuli $X$ (\cite{banerjee2012parametric}).  We choose
+the naive Bayes for the classifier $\mathcal{F}$: it is consistent for
+estimating the Bayes rule.
+
 \begin{figure}
 \centering
 \begin{tabular}{cc}
@@ -368,12 +434,106 @@ a & b\\
 \label{fig:gaussian_sim}
 \end{figure}
 
+Figure \ref{fig:gaussian_sim} displays the simulation results for two
+cases: 
+\begin{itemize}
+\item[(a).] A low-dimensional example with $\{p = 3$, $q = 3$, $B = \frac{4}{\sqrt{3}} I_3$, $K = 20$, $r = 40\}$
+\item[(b).] A high-dimenaional example with $\{p = 50$, $q = 50$, $B = \frac{4}{\sqrt{50}} I_{50}$, $K = 20$, $r = 8000\}$
+\end{itemize}
+We see that in the low-dimensional example, the na\"{i}ve estimator
+$\hat{I}_0$ achieves the best performance, with both of our proposed
+estimators $\hat{I}_{Ident}$ and $\hat{I}_{HD}$ biased downwards.
+However, in the high-dimensional example, which approximately
+satisfies the assumptions of our high-dimensional theory, we see that
+all estimators of mutual information become highly concentrated.
+Therefore, it is the amount of bias in the estimator that mainly
+determines estimation performance.  We see heavy bias in estimators
+except for $\hat{I}_{HD}$, which is to be expected since the
+nonparametric estimators $\hat{I}_\alpha$ scale poorly in high
+dimensions, while $\hat{I}_{CM}, \hat{I}_{Fano}$ and $\hat{I}_{Ident}$
+are based on lower bounds and therefore should have a downward bias.
+
+\subsection{Real data example}\label{sec:real_data}
+
+\cite{Kay2008a} employed a randomized stimuli design in their 2008 paper,
+``Identifying Natural Images from Human Brain Activity.''  The
+experiment was designed in order to investigate how visual information
+from natural images is encoded in the V1 through V3 brain regions.
+The stimulus space, $\mathcal{X}$, consists of $128 \times 128$-pixel
+grayscale photographs.  The response data consists of BOLD response in
+regions V1, V2, and V3 from a single subject.  The raw time series were
+processed to yield a single averaged response vector $y^{(i)}$ for each
+stimulus $x^{(i)}$, for $i = 1,\hdots, 1870$.
+The dimensionality of $y^{(i)}$ varies depending on which regions of interest
+we are discussing, and whether we consider a subset of the voxels in those regions.
+Let $v$ denote the dimensionality (number of voxels) of $y$.
+
+Let $x^{(i)}$ denote the native $128 \times 128$-pixel representation
+of the image (i.e. a $16384$-dimensional vector with entries between 0
+and 1.)  One of the goals of the Kay et al. paper is to evaluate
+competing encoding models.  In the context of the study,
+an \emph{encoding model} is a vector-valued function from the stimulus
+to a $p$-dimensional space,
+\[
+\vec{g}(x) = (g_1(x),\hdots, g_{p}(x)).
+\]
+One of the encoding models studied by Kay et al. is the Gabor wavelet pyramid,
+$\vec{g}_{Gabor}$, with $p = 10921$.
+Using a \emph{training} subset of the stimulus-response pairs $(x_i, y_i)$, $i = 1,\hdots, 1750$,
+Kay et al. fit a regularized linear model
+\[
+y^{(i)} \approx B^T \vec{g}(x^{(i)})
+\]
+where $B$ is a $10921 \times v$-dimensional matrix, which is to be fit
+to the data.  Then they computed the identification accuracy for $k$
+(number of stimulus classes) ranging from 2 to 1000.
+
+Using the Kay et al. data, we sort voxels in V1 according to estimated
+signal-to-noise ratio (\cite{benjamini2013shuffle}).  Then, using
+cross-validated elastic net on the top $p = \{100, 200, 300, 400,
+500\}$ voxels, we compute the identification accuracy for $k =
+\{20,\hdots, 240\}$ classes.  The test identification accuracy was
+used to estimate mutual information using both $\hat{I}_{Ident}$ and
+$\hat{I}_{HD}$.  Due to the dimensionality of the data, we expected
+$\hat{I}_{HD}$ to yield more accurate estimates of mutual information.
+
+The estimated mutual information using $k = 240$ is displayed in
+Figure \ref{fig:n_voxels_vs_mi}.  Both estimators indicate a large
+jump in the mutual information when going from 100 to 200 voxels,
+almost no increase from 200 to 400, then a slight increase in
+information from 400 to 500.  The two estimators $\hat{I}_{Ident}$ and
+$\hat{I}_{HD}$ differ significantly for all numbers of voxels. We see
+from this that it is important to choose the estimator which is best
+suited for the application: if the high-dimensional assumption can be
+justified, $\hat{I}_{HD}$ can yield a much better estimate; but if not
+justified, then it could be a significant overestimate of the mutual
+information, and it would be preferable to use $\hat{I}_{Ident}$.
+
 \begin{figure}
 \centering
 \includegraphics[scale = 0.5]{../../Yuval/info_infer.pdf}
 \caption{Estimated mutual information for different subsets of V1 voxels}
 \label{fig:n_voxels_vs_mi}
 \end{figure}
+
+Next, let us examine the sensitivity of the point estimates to the
+choice of the tuning parameter $k$.  Figure \ref{fig:dependence_k}
+shows how the estimates displayed in the previous figure depend on the
+choice of $k$.  For all numbers of voxels, we see that $k$ does have
+an appreciable affect on the resulting estimate of mutual information.
+This is predicted from the theory for $\hat{I}_{Ident}$, but under the
+high-dimensionality assumptions $\hat{I}_{HD}$ should not be
+significantly depend on $k$.  Therefore, the sensitivity of
+$\hat{I}_{HD}$ we see, especially for the 500-voxel case, indicates a
+detectable violation of the asymptotic assumptions.
+
+Given such evidence for violation of assumptions, the conservative
+approach would be to abandon $\hat{I}_{HD}$ in this situation and
+choose $\hat{I}_{Ident}$ as the estimator. Since $\hat{I}_{Ident}$ is
+an underestimate for all $k$, one should choose the $k$ which
+maximizes the estimated mutual information.  However, even then, as we
+see from the earlier simulation, we can expect $\hat{I}_{Ident}$ to
+significantly underestimate the true mutual information.
 
 \begin{figure}
 \centering
@@ -386,3 +546,5 @@ a & b\\
 \caption{Dependence of estimated mutual information on $k$}
 \label{fig:dependence_k}
 \end{figure}
+
+
