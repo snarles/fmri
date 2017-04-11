@@ -1,3 +1,12 @@
+
+Since our proposed mutual information estimator is based on an
+inequality, and is not consistent, it is important to check how much
+of a gap exists between the lower bound and the actual mutual
+information for realistic examples.
+
+
+
+
 Now suppose that we have a $(1-\alpha)$ lower-confidence bound for
 $\text{AIA}_k$; that is, a statistic $\underbar{\text{AIA}}_k$ with the property that
 \[
