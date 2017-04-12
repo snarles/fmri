@@ -78,8 +78,8 @@ orientation (Figure \ref{fig:gabor}).
 \label{fig:gabor}
 \end{figure}
 
-Each receptive field model corresponds to a family
-\emph{representations}, which is a family $\vec{g} = (g_1,\hdots,
+Each receptive field model corresponds to a family of
+\emph{representations}, which is a collection $\vec{g} = (g_1,\hdots,
 g_m)$ of linear or nonlinear transformations of the visual stimulus
 $\vec{z}$.  Let $z_j$ denote the intensity of the $j$th pixel in the
 visual stimulus, and let $\ell_j = (r_j, c_j)$ indicate the row and
@@ -121,7 +121,7 @@ predicting the voxel activations in V1, $\vec{y}^{V1}$, from the
 representations defined by the RF model, $\vec{g}(\vec{z})$.  Kay et
 al. consider sparse linear encoding models of the form
 \[
-\vec{y}^{V1} = \vec{g}(\vec{z})^T \bB + \vec{b} + \vec{\epsilon}
+\vec{y}^{V1} = \bB^T \vec{g}(\vec{z})  + \vec{b} + \vec{\epsilon}
 \]
 where $\bB$, a sparse coefficient matrix and $\vec{b}$, a offset
 vector, are parameters to be estimated from the data, and
@@ -145,10 +145,11 @@ label, and $\vec{z}_j^{(i)}$ is a vector containing the numeric
 features of the photograph (e.g. pixels), assign labels $y$ to
 untagged photographs $\vec{z}_*$.  Here, the notation
 $\vec{z}_j^{(i)}$ indicates the $j$th labelled photograph in the
-database belonging to the $i$th individual. One way to study the
-problem is to fit it into the multi-class classification framework,
-where the label set $\mathcal{Y}$ consists of all individuals in the
-data set, $\{y^{(1)},\hdots, y^{(k)}\}$.
+database belonging to the $i$th individual. 
+%One way to study the
+%problem is to fit it into the multi-class classification framework,
+%where the label set $\mathcal{Y}$ consists of all individuals in the
+%data set, $\{y^{(1)},\hdots, y^{(k)}\}$.
 
 \begin{figure}
 \centering
@@ -214,7 +215,7 @@ functions $g_i$ are the end result of composing several layers of
 nonlinear transformations as specified by the hierarichical
 architecture of the CNN.  However, for our purposes, the modeling and
 algorithmic details of the CNN are not important, and we refer the
-interested reader to [CITE] for a reference on principles of
+interested reader to \cite{lecun2013deep} for a reference on principles of
 convolutional neural networks.  At a higher level of abstraction, we
 can say that the representation $\vec{g}_\theta(\vec{z})$ lies in a
 class of nonlinear functions, parameterized by some (possibly large)
@@ -263,7 +264,7 @@ triplets.
 
 One of the big questions in representation learning is how to define
 or evaluate the quality of a
-representation\cite{bengio2013representation}.  When, as in face
+representation (\cite{bengio2013representation}).  When, as in face
 recognition, the end goal of the representation learning is to obtain
 more accurate predictions or classifications within a machine learning
 pipeline, an obvious criterion for the quality of the representation
@@ -298,15 +299,16 @@ observed data $\vec{z}$.  Presumably, for the task at hand,
 e.g. identifying the person, only the latent objects $\vec{t}$ are
 important, and not the nuisance parameters.  However, it is worth
 noting that for a different task, such as `pose identification'
-(rather than face identification) it may be the case that the roles of
-the nusiance parameters $\vec{\xi}$ and the latent objects $\vec{t}$
-are switched--as the saying goes, one man's signal is another man's
-noise.
+(rather than face identification), it may be the case that the roles
+of the nusiance parameters $\vec{\xi}$ and the latent objects
+$\vec{t}$ are switched--as the saying\footnote{The quotation is
+  commonly attributed to Edward Ng, 1990.} goes, ``one man's noise
+is another man's signal''.
 
 \cite{bengio2013representation} suggest that an ideal representation,
-rather than discriminating between `signal' and `noise', would serve
-to \emph{disentangle} the effects of \emph{all factors} without
-throwing away any information.  In other words, an ideal
+rather than discriminating between `signal' and `noise', would
+\emph{disentangle} the effects of \emph{all factors} while discarding
+a minimum amount of information.  In other words, an ideal
 representation would map $\vec{z}$ onto some estimate of $(\vec{t},
 \vec{\xi})$ which separates the effect of the latent objects from
 nuisance parameters, and also allows for \emph{reconstruction} of
@@ -327,7 +329,7 @@ fMRI data.
 In the case of facial recognition, the `signal' is the features of the
 face that persist across different perspectives and illumination,
 while the `noise' is the effect of pose, illumination, transient
-features such as hairstyle and makeup, and occlusive accesories such
+features such as hairstyle and makeup, and occlusive accessories such
 as sunglasses.  
 %One might imagine that an idealized representation for
 %facial recognition is one that estimates the latent, persistent
@@ -390,16 +392,15 @@ on a response variable $Y$.  As in \emph{supervised learning}, the
 response $Y$ gives us a means of judging the quality of the
 representation $\vec{g}(\vec{z})$.
 
-Comparing these methods, the advantage of the $k$-class average
-classification accuracy or identification accuracy is that they are
-relatively easy to compute, even in high-dimensional data, because one
-can make use of machine-learning methods for computing these
-quantities.  Meanwhile, the mutual information is extremely difficult
-to estimate in high-dimensional data.  However, the advantage of the
-mutual information is that it does not depend on arbitrary tuning
-parameters, while both the $k$-class average classification accuracy
-and identification risk depend on the choice of a tuning parameter
-$k$.
+Comparing these methods, the advantage of both the $k$-class average
+classification accuracy and the identification accuracy is that they
+are relatively easy to compute, even in high-dimensional data, because
+they are both based on error metrics for supervised learning tasks.
+Meanwhile, the mutual information is extremely difficult to estimate
+in high-dimensional data.  However, the advantage of the mutual
+information is that it does not depend on arbitrary tuning parameters,
+while both the $k$-class average classification accuracy and
+identification risk depend on the choice of a tuning parameter $k$.
 
 However, one of the main theoretical contributions of this work is to
 show how all of these three methods: mutual information, $k$-class
@@ -411,14 +412,13 @@ average classification accuracy or identification accuracy.
 \subsection{Related Work}
 
 As we hoped to convey in the introduction, the problem of finding and
-evaluating representations is an extremely hot topic in multiple
-disciplines, from neuroscience to machine learning.  Consequently, the
-space of possible approaches to the problem is vast.  We limit our
-study to a few highly interconnected and (in our opinion) interesting
-approaches to the problem of evaluating representations, in the
-special case when a \emph{response} variable $Y$ is available and
-where one wants to take advantage of the side-information provided by
-this response.
+evaluating representations is a hot topic in multiple disciplines,
+from neuroscience to machine learning.  Consequently, the space of
+possible approaches to the problem is vast.  We limit our study to a
+few highly interconnected and (in our opinion) interesting approaches
+to the problem of evaluating representations, in the special case when
+a \emph{response} variable $Y$ is available and where one wants to
+take advantage of the side-information provided by this response.
 
 However, many other ideas exist for evaluating representations.  One
 extremely notable family of approaches, which lies totally outside the
@@ -428,11 +428,11 @@ response variable $Y$.  Obviously, this is highly interesting, because
 in many applications one does not have easy access to such a response
 variable.  One family of methods--including restricted Boltzmann
 machines and gaussian restricted Boltzmann machines--fits a parametric
-distribution to the inputs $\vec{z}$ [CITE].  The representations are
+distribution to the inputs $\vec{z}$ (\cite{hinton2006reducing}).  The representations are
 obtained as summary statistics of the latent variables in the model,
 and the quality of the representation is assessed via tha
 \emph{likelihood} of the parametric model.  \emph{Auto-encoders} form
-another family of methods [CITE].  Representations, or \emph{encoders}
+another family of methods (\cite{baldi2012autoencoders}).  Representations, or \emph{encoders}
 $\vec{g}$ are paired with \emph{decoders} $\vec{g}^{-1}$ that infer
 the original input from the representation.  The quality of the
 representation $\vec{g}$ is based on the reconstruction error obtained
@@ -703,7 +703,8 @@ estimation of mutual information in continuous data: chapter 4 derives
 a lower confidence bound for mutual information under very weak
 assumptions, while chapter 5 works within an asymptotic
 high-dimensional framework which leads to a more powerful but less
-robust estimator estimate of mutual information.
+robust estimator estimate of mutual information.  We conclude the
+thesis with a discussion in Chapter 6.
 
 
 \subsection{Note on attribution}
@@ -736,14 +737,14 @@ classification framework from the statistics and machine learning
 literature, and secondly, the concepts of information theory.  From a
 broader perspective, this is hardly unusual, since concepts such as
 entropy, divergence, and mutual information are commonly applied in
-theoretical statistics and machine learning.  Furthermore, information
-theory, theoretical statistics, and machine learning are based on the
-same foundation: measure-theoretic probability theory; one could even
-say that all three disciplines are subfields of applied probability.
-However, while the three sub-fields may appear very similar from a
-mathematical perspective, some differences arise if we examine the
-kinds of intuitions and assumptions that are characteristic of the
-literature in each area.
+theoretical statistics and machine learning.  Furthermore, since
+information theory, theoretical statistics, and machine learning are
+based on the same foundation--measure-theoretic probability theory,
+one could go as far as to say that all three disciplines are subfields
+of applied probability.  However, while the three sub-fields may
+appear very similar from a mathematical perspective, some differences
+arise if we examine the kinds of intuitions and assumptions that are
+characteristic of the literature in each area.
 
 A common problem to all three subfields is the inference of some
 unobserved quantity on the basis of observed quantities.  In classical
@@ -770,8 +771,9 @@ data-geenrating mechanism.
 %% have to reorder the next para, 
 The concepts of \emph{information} and \emph{discrimination} are quite
 distinct from an intuitive standpoint; however, they are linked at a
-fundamental level.  This link can be seen throughout statistics and
-machine learning, and in the way we think about statistical problems.
+fundamental level.  
+%This link can be seen throughout statistics and
+%machine learning, and in the way we think about statistical problems.
 A statistical hypothesis test is \emph{informative} because it
 provides evidence that the data behaves according to a certain
 hypothesis rather than another.  %% slightly redundant with prev para.
@@ -1253,18 +1255,31 @@ n_2 \text{TestRisk}(h) \sim \text{Bernoulli}(n_2, \text{Risk}(h)).
 
 \subsubsection{Regression}
 
-\begin{itemize}
-\item Suppose you observe $(\vec{X}^{(i)}, Y^{(i)})_{i=1}^n$ where $Y^{(i)} = f(\vec{X}^{(i)}) + \epsilon$, where $f$ is an unknown function and $\epsilon$ is noise.  (Also, assume $\E[\epsilon] = 0$.)
-\item The goal in regression is to recover the unknown function $f$.
-\item In \emph{linear regression}, we assume $f$ is linear. 
-\item if we do not assume a particular form for $f$, we can use \emph{nonparametric regression}.
-\end{itemize}
+\emph{Regression models} predict a continuous response $Y$ as a function of a vector-valued predictor $\vec{X}$.
+The model assumed is written as
+\[
+Y = f(\vec{X}) + \epsilon
+\]
+where $\epsilon$ is additive noise with zero mean, $\E[\epsilon] = 0$.
+The function $f$ is called the \emph{regression function} since
+\[
+f(\vec{x}) = \E[Y|\vec{X} = \vec{x}].
+\]
+The goal in regression is to recover the unknown function $f$.
 
-\begin{itemize}
-\item When $\vec{X}$ is high dimensional, classical regression techniques perform poorly.
-\item If the true function $f$ only depends on a small number of components in $\vec{X}$, we can still do well if we use \emph{sparse} regression methods.
-\end{itemize}
-\begin{center}
+In \emph{linear regression}, we assume $f$ is linear. However, if we
+do not assume a particular form for $f$, we can use
+\emph{nonparametric regression}.
+
+When $\vec{X}$ is high dimensional, classical regression techniques
+perform poorly.  Yet, if the true function $f$ only depends on a small
+number of components in $\vec{X}$, we can still do well if we use
+\emph{sparse} regression methods. Table \ref{tab:regression} shows
+some examples of different regression procedures proposed in the
+literature which are suited for different scenarios.
+
+\begin{figure}
+\centering
 \begin{tabular}{c|c|c|}
  & \emph{Classical} & \emph{Sparse} \\ \hline
  \emph{Linear} & Ordinary Least-Squares  & Elastic net \\ 
@@ -1272,7 +1287,9 @@ n_2 \text{TestRisk}(h) \sim \text{Bernoulli}(n_2, \text{Risk}(h)).
  \emph{Nonpar.} & LOWESS  & Random forests  \\ 
    & (Cleveland 1979) & (Breiman 2001)  \\\hline
 \end{tabular}
-\end{center}
+\caption{Different variants of regression models}
+\label{tab:regression}
+\end{figure}
 
 \subsection{Identification accuracy}\label{sec:ident_risk}
 
@@ -1368,12 +1385,12 @@ a & b\\
 
 However, an alternative criterion for evaluting the multivariate
 linear model was proposed by \cite{Kay2008a}.  In an
-\emph{identification task}\cite{Kay2008a}, as illustrated in Figure
+\emph{identification task}, as illustrated in Figure
 \ref{fig:mse_vs_ia}(b), the model is first used to make predictions
 \[
 \hat{y}_i = B^T \vec{x}_i
 \]
-for all features $\{\vec{x}_i\}_{i=1}^M$ in the test set Next, each of the
+for all features $\{\vec{x}_i\}_{i=1}^M$ in the test set. Next, each of the
 observations $\vec{y}_i$ in the test set is \emph{assigned} to the
 closest prediction $\{\hat{y}_j\}_{j=1}^M$ within the test set.
 Here, `closest' is defined in terms of the 
