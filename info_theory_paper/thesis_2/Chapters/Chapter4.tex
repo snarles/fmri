@@ -16,35 +16,34 @@ I(X;Y) = \int p(x, y) \log \frac{p(x, y)}{p(x)p(y)}dxdy.
 Various properties of $I(\vec{g}(\vec{Z}); Y)$, such as sensitivity to
 nonlinear relationships, symmetry, and invariance to bijective
 transformations, make it ideal for quantifying the information between
-a representation of an input vector $\vec{g}(\vec{Z})$ and a response
-$Y$ which is possible vector-valued.  However, current methods
-estimating mutual information for high-dimensional data require large
-and over-parameterized generative models.  For instance, one can
-tractably estimate mutual information by assuming a multivariate
-Gaussian model: however, this approach essentially assumes a linear
-relationship between the input and output, and hence fails to quantify
-nonlinear dependencies.  
+a representation of an input vector $\vec{g}(\vec{Z})$ and a (possibly
+vector-valued) response $Y$.  
 
-Hence, a popular approach which combines the strengths of the machine
-learning approach for modeling high-dimensional data and the
-advantages of the information theoretic approach is to obtain a lower
-bound on the mutual information by using the confusion matrix of a
-classifier.  This is the most popular approach for estimating mutual
+However, current methods estimating mutual information for
+high-dimensional data either require large and over-parameterized
+generative models, or work only for discrete responses.  For
+continuous $(X, Y)$, one can tractably estimate mutual information by
+assuming a multivariate Gaussian model: however, this approach
+essentially assumes a linear relationship between the input and
+output, and hence fails to quantify nonlinear dependencies.
+Meanwhile, in the case of a discrete response $Y$, one can obtain a
+lower bound on the mutual information by using the confusion matrix of
+a classifier.  This is the most popular approach for estimating mutual
 information in neuroimaging studies, but suffers from known
-shortcomings (Gastpar 2010, Quiroga 2009).  The idea of linking
-classification performance to mutual information dates back to the
-beginnings of information theory: Shannon's original motivation was to
-characterize the minimum achievable error probability of a noisy
-communication channel.  More explicitly, Fano's inequality provides a
-lower bound on mutual information in relation to the optimal
-prediction error, or Bayes error.  Fano's inequality can be further
-refined to obtain a tighter lower bound on mutual information (Tebbe
-and Dwyer 1968.)  However, a shortcoming to the classification-based
-approach is that it requires either for the response $Y$ to already be
-discrete, or to discretize the response $Y$ into finitely many
-classes.
+shortcomings (\cite{Gastpar2009}, \cite{QuianQuiroga2009}).  The idea
+of linking classification performance to mutual information dates back
+to the beginnings of information theory: Shannon's original motivation
+was to characterize the minimum achievable error probability of a
+noisy communication channel.  More explicitly, Fano's inequality
+(\cite{fano1961transmission}) provides a lower bound on mutual
+information in relation to the optimal prediction error, or Bayes
+error.  Fano's inequality can be further refined to obtain a tighter
+lower bound on mutual information (\cite{tebbe1968uncertainty}.)
+However, a shortcoming to all of these classification-based approaches
+is that if $Y$ is not already discrete, the discretization of the
+response $Y$ necessarily loses information.
 
-In this paper, we develop an analogue of Fano's inequality for the
+In this chapter, we develop an analogue of Fano's inequality for the
 \emph{identification task}, rather than the classification task, which
 can therefore be applied to the case of a continuous response $Y$.  In
 this way, we derive a new machine-learning based estimator of mutual

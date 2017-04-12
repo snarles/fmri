@@ -340,7 +340,7 @@ is unbiased for $\beta$, under any choice of positive weights $w_k$.
 The estimate of $\text{AGA}_{k_2,r_1}$ is similarly obtained
 from \eqref{eq:avrisk_linear}, via
 \begin{equation}\label{eq:avrisk_hat}
-\widehat{\text{AGA}_{k_2,r_1}} = \sum_{\ell=1}^m \hat{\beta}_\ell H_{\ell, k_2}.
+\widehat{\text{AGA}_{k_2,r_1}} = 1 - \sum_{\ell=1}^m \hat{\beta}_\ell H_{\ell, k_2}.
 \end{equation}
 
 \section{Examples}\label{sec:extrapolation_example}
@@ -411,8 +411,8 @@ a & b\\
 \caption{(a) The estimated average accuracy for $k = 2,\hdots,
   400$ given a dataset of 400 faces subsampled from Labeled Faces in
   the Wild.  (b) Estimated average accuracy for $k > 400$ on the
-  same dataset, compared to the ground truth (estimated AGA using all
-  1672 classes).}
+  same dataset, compared to the ground truth (average $k$-class test accuracy
+  using all 1672 classes).}
 \label{fig:lfw_extrapolation1}
 \end{figure}
 
@@ -429,7 +429,7 @@ functions,
 \]
 with $\beta_\ell \geq 0$.  The resulting estimated generalization
 accuracies, computed using \eqref{eq:avrisk_identity}, are plotted in
-Figure \eqref{fig:lfw_extrapolation1} (b).  As we already mentions, to
+Figure \eqref{fig:lfw_extrapolation1} (b).  As we already mentioned, to
 assess the quality of the estimated average accuracy, we compare them
 to the `ground truth' accuracy curve obtained by using all 1672
 examples to compute the the average test risk.
@@ -439,7 +439,7 @@ examples to compute the the average test risk.
 To get an idea of the accuracy and variance of the accuracy curve
 estimates for varying sample sizes $K$, we repeat this procedure
 multiple times for $K \in \{100,200,400, 800\}$.  The results, again
-compared to the ground truth computed from the full data set, is
+compared to the ground truth computed from the full data set, are
 illustrated in figure \ref{fig:lfw_extrapolation2}.
 
 \begin{figure}
@@ -451,8 +451,8 @@ illustrated in figure \ref{fig:lfw_extrapolation2}.
 \includegraphics[scale = 0.4]{../../facerec/sub_800.pdf} 
 \end{tabular}
 \caption{Estimated average accuracy using subsampled datasets of size
-  $k$, compared to the ground truth (estimated AGA using all 1672
-  classes).}
+  $k$, compared to the ground truth (average $k$-class test accuracy
+  using all 1672 classes).}
 \label{fig:lfw_extrapolation2}
 \end{figure}
 
@@ -460,7 +460,7 @@ illustrated in figure \ref{fig:lfw_extrapolation2}.
 
 While the previous example was a perfect fit to the assumptions of the
 framework, we also want to see how well the method works when some of
-the assumptions may be violated.  Toward this end we apply performance
+the assumptions may be violated.  Towards this end we apply performance
 extrapolation in an optical character recognition example
 (\cite{achanta2015telugu}) for predicting the accuracy on 400 classes
 of Telugu characters from a subsample of size $K = 20$.  We consider

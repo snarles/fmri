@@ -25,10 +25,10 @@ Meanwhile, the problem of generalizing classification experiments
 provides a natural motivation for studying the variance of
 classification accuracy within a randomized classification task, which
 we cover in section \ref{sec:average_bayes_accuracy}.  Meanwhile,
-another one of the methods we consider--the identification risk, is
+another one of the methods we consider--the identification task, is
 closely connected with the randomized classification task.  We discuss
 how our results in \ref{sec:average_bayes_accuracy} can also be
-applied to the identification case.
+applied to the identification accuracy.
 
 \section{Recognition tasks}\label{sec:recog_tasks}
 
@@ -92,19 +92,18 @@ changes depending on the size of the random label set.
 \section{Randomized classification}\label{sec:rc_motivation}
 
 \subsection{Motivation}
-The formalism of classification is inadequate for studying
-many practical questions related to the generalizability of the facial
-recognition system.  We can define a population risk (also called
-generalization error) for the classification rule, and make inferences
-about the population risk based on the test performance.  However, the
-population risk and associated inferences apply only to the particular
-collection of individuals $\{y^{(1)},\hdots, y^{(k)}\}$.  If we were
-to add a new individual $y^{(k+1)}$ to the dataset, for instance, when
-photographs are uploaded on Facebook containing a new user, this
-defines a totally new classification problem because the expanded set
-of labels $\{y^{(1)},\hdots, y^{(k+1)}\}$ defines a different response
-space than the old set of labels $\{y^{(1)},\hdots, y^{(k)}\}$.  Yet,
-these two classification problems are clearly linked.  To take another
+The formalism of classification is inadequate for studying many
+practical questions related to the generalizability of the facial
+recognition system.  Using test data, we estimate the generalization
+accuracy of a recognition system.  However, these estimated accuracies
+apply only to the particular collection of individuals
+$\{y^{(1)},\hdots, y^{(k)}\}$.  If we were to add a new individual
+$y^{(k+1)}$ to the dataset, for instance, when photographs are
+uploaded on Facebook containing a new user, this defines a totally new
+classification problem because the expanded set of labels
+$\{y^{(1)},\hdots, y^{(k+1)}\}$ defines a different response space
+than the old set of labels $\{y^{(1)},\hdots, y^{(k)}\}$.  Yet, these
+two classification problems are clearly linked.  To take another
 example, a client might want to run the facial recognition system on
 their own database of individuals.  In this case, there might be no
 overlap between the first set of labels (the people in my database)

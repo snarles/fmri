@@ -6,24 +6,24 @@
 
 \section{Motivation}
 
-In the previous chapter, we saw that the identification risk of
+In the previous chapter, we saw that the identification accuracy of
 predicting $Y$ given $X$ can be used to yield a lower bound on
 $\text{I}(X; Y)$.  This relied on the inequality relating $k$-class
 average Bayes accuracy and mutual information.  However, because in
 some cases the mutual information may be much higher than the lower
-bound, the estimator $\hat{I}_{IR}$ may remain an underestimate of
+bound, the estimator $\hat{I}_{Ident}$ may remain an underestimate of
 mutual information, even under favorable sample size conditions.  In
-other words, the estimator $\hat{I}_{IR}$ is not consistent.  On the
-other hand, the theory behind $\hat{I}_{IR}$ relies on extremely weak
+other words, the estimator $\hat{I}_{Ident}$ is not consistent.  On the
+other hand, the theory behind $\hat{I}_{Ident}$ relies on extremely weak
 assumptions.  This makes the estimator quite generally applicable, but
 on the other hand, much better estimators may be available in certain
 applications where much stronger assumptions can be made.
 
 In this chapter we develop yet another estimator of mutual information
-based on identification risk, but this time making relatively strong
+based on identification accuracy, but this time making relatively strong
 assumptions relating to the dimensionality of the data and the
 dependence structure of the components.  As we will spell out in more
-detail in \ref{sec:ch5_assumptions}, we assume a setting where both
+detail in section \ref{sec:ch5_assumptions}, we assume a setting where both
 $(X, Y)$ are high-dimensional, and where the true mutual information
 $I(X; Y)$ is relatively low.  Furthermore, we require the components
 of $X$ to have ``low dependence,'' in a certain sense.
@@ -50,7 +50,7 @@ The function $\pi_k$ is given by
 \pi_k(c) = \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
 \]
 This formula is not new to the information theory literature: it
-appears as the error rate of an orthogonal constellation [CITE].  What
+appears as the error rate of an orthogonal constellation (\cite{cioffi2014}).  What
 is surprising is that the same formula can be used to approximate the
 error rate in much more general class of classification
 problems\footnote{An intuitive explanation for this fact is that
@@ -60,12 +60,12 @@ universality result which provides the basis for our proposed
 estimator.
 
 Figure \ref{fig:pi} displays the plot of $\pi_k$ for several values of
-$k$.  For all values of $k$, $\pi_k(\mu)$ is monotonically decreasing
-in $\mu$, and tends to zero as $\mu \to \infty$, which is what we
-expect since if $I(X; Y)$ is large, then the average Bayes error
-should be small.  Another intuitive fact is that $ \pi_k(0) = 1 -
-\frac{1}{k}, $ since after all, an uninformative response cannot lead
-to above-chance classification accuracy.
+$k$.  For all values of $k$, $\pi_k(\mu)$ is monotonically increasing
+in $\mu$, and tends to 1 as $\mu \to \infty$, which is what we expect
+since if $I(X; Y)$ is large, then we should be able to achieve perfect
+accuracy.  Another intuitive fact is that $ \pi_k(0) = \frac{1}{k}, $
+since after all, an uninformative response cannot lead to above-chance
+classification accuracy.
 
 
 \begin{figure}
