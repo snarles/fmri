@@ -1,0 +1,195 @@
+%\documentclass[12pt,twoside]{report}
+\documentclass[12pt]{report}
+
+%% last modification is June 4, 2016, Emma Pease
+
+% note that the document can be single or double sided.  
+% note that the Registrar's office now allows 10pt, 11pt, or 12pt
+
+\usepackage{suthesis-2e}
+% default is now online June/2016 version
+%\usepackage[online]{suthesis-2e}
+%\usepackage[hardcopy]{suthesis-2e}
+% the following is for doing engineering theses. 
+% I am definitely not sure of the wording on the signature page so check
+%\usepackage[engineer]{suthesis-2e}
+
+\usepackage[backend=bibtex,style=authoryear]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
+\usepackage{amssymb, amsmath}
+\usepackage{epsfig}
+\usepackage{array}
+\usepackage{ifthen}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{chngcntr}
+\usepackage{apptools}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+
+% one can change the default font to Times Roman but note that most
+% ways of creating pdf files from latex automatically embed (which btw
+% is a good idea even with the standard fonts)
+
+    \title{Supervised Evaluation of Representations}
+    \author{Charles Zheng}
+    \dept{Statistics}
+    \principaladviser{Trevor Hastie}
+    \coprincipaladviser{Jonathan Taylor}
+    \firstreader{Bradley Efron}
+    \secondreader{Russell Poldrack (Psychology)}
+
+%% one can also have a \thirdreader and \fourthreader
+
+%% note that certain departments and types of theses have other requirements
+%% For instance theses in the departments of 
+%% Asian Languages
+%% French and Italian
+%% Spanish and Portuguese
+%% need to define the \dept, \dualthesis, and the actual language
+%\dualthesis
+%\languagemajor{Chinese}
+%% 
+%% Those for Graduate Program in Humanities need to define 
+%\humanitiesthesis
+%\jointprogram{Arts and Crafts}
+%% 
+%% For submission to a committee or program (no department)
+% \committeethesis
+% \programthesis
+%%
+%% For School of Education or Business or Law
+% \educationthesis
+% \businessthesis
+% \lawthesis  (law actually isn't listed in the official documents, 2013/1014)
+
+
+\addbibresource{example.bib} % The filename of the bibliography
+
+
+
+
+
+\newcommand{\tr}{\text{tr}}
+\newcommand{\E}{\textbf{E}}
+\newcommand{\diag}{\text{diag}}
+\newcommand{\argmax}{\text{argmax}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\argmin}{\text{argmin}}
+\newcommand{\Vol}{\text{Vol}}
+\newcommand{\comm}[1]{}
+\newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+\newcommand{\Cor}{\text{Cor}}
+\newcommand{\bx}{\boldsymbol{x}}
+\newcommand{\by}{\boldsymbol{y}}
+\newcommand{\bX}{\boldsymbol{X}}
+\newcommand{\bY}{\boldsymbol{Y}}
+\newcommand{\bS}{\boldsymbol{S}}
+\newcommand{\bu}{\boldsymbol{u}}
+\newcommand{\bv}{\boldsymbol{v}}
+\newcommand{\bU}{\boldsymbol{U}}
+\newcommand{\bV}{\boldsymbol{V}}
+\newcommand{\bB}{\boldsymbol{B}}
+\newcommand{\bepsilon}{\boldsymbol{\epsilon}}
+\newcommand{\bH}{\boldsymbol{H}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{definition}{Definition}[section]
+
+\newcommand\crule[3][black]{\textcolor{#1}{\rule{#2}{#3}}}
+\definecolor{color1}{RGB}{128,13,13}
+\definecolor{color2}{RGB}{70,128,13}
+\definecolor{color3}{RGB}{13,128,128}
+\definecolor{color4}{RGB}{70,13,128}
+
+\begin{document}
+
+% for a variety of reasons this is an all in one document; however,
+% when actually doing the thesis it is strongly recommended that each
+% chapter be in a separate file and use \include to include in the
+% main file.
+
+%% the \beforepreface command produces the title page
+%% in the online version it skips the copyright (page 2) and signature (page 3) pages 
+%% in the non-online version these would be included
+    \beforepreface
+
+
+%% Abstract can be any number of pages
+    \prefacesection{Abstract}
+
+\newpage
+
+%% one can also have a prefacesection that is a Preface instead of
+%% Acknowledgements.   The thematic purpose is the same (thanks).
+    \prefacesection{Acknowledgements}
+      Placeholder!
+
+%% afterpreface produces a table of contents and any other tables
+%% wanted. At the end pagenumbering changes from roman to arabic and
+%% is restarted
+    \afterpreface
+
+\include{Chapters/Chapter1}
+\include{Chapters/Chapter2} 
+\include{Chapters/Chapter3}
+\include{Chapters/Chapter4} 
+\include{Chapters/Chapter5} 
+\include{Chapters/Chapter6} 
+
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - APPENDICES
+%----------------------------------------------------------------------------------------
+
+\appendix % Cue to tell LaTeX that the following "chapters" are Appendices
+
+% Include the appendices of the thesis as separate files from the Appendices folder
+% Uncomment the lines as you write the Appendices
+
+%\include{Appendices/AppendixA}
+%\include{Appendices/AppendixB}
+\include{Appendices/AppendixC}
+\include{Appendices/AppendixD}
+%\include{Appendices/AppendixE}
+
+ 
+
+\printbibliography[heading=bibintoc]
+
+\end{document}
+
+%% Normally the \chapter and any text would be in a separate file and included.
+
+%% for Bibliography I would recommend a separate .bib file (bibtex) instead of inline as here.
+%\nocite{astl2,perry1,pollardsag1}
+%\nocite{*}
+    \bibliographystyle{plain}
+%    \bibliography{suthesis}
+
+\begin{thebibliography}{1}
+
+\bibitem{revelation}
+{John of Patnos}.
+\newblock Revelation of {St.} {John}.
+\newblock In {\em Bible}. King James, 1611.
+
+\bibitem{genesis}
+Moses.
+\newblock Genesis.
+\newblock In {\em Bible}. King James, 1611.
+
+\bibitem{preacher}
+Preacher.
+\newblock Ecclesiastes.
+\newblock In {\em Bible}. King James, 1611.
+
+\end{thebibliography}
+
+
+\end{document}
