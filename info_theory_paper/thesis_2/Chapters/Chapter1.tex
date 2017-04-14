@@ -27,7 +27,7 @@ in artificial intelligence, both suggest that \emph{nonlinear
   representations} are key for making sense of complex stimuli,
 regardless of whether the perciever is a biological or algorithmic.
 
-\subsection{Example: Receptive-field models for vision}
+\subsection{Example: Receptive-field models for vision}\label{sec:kay2008}
 
 Let us begin with the biological case.  By looking at the neural
 pathways involved in mammalian vision, neuroscientists know that
@@ -212,7 +212,7 @@ $\vec{g}(\vec{z})$ (a collection of nonlinear mappings of the input
 image) is highly interesting.  The representation $\vec{g}$ is
 parameterized by a deep CNN architecture: in other words, the basis
 functions $g_i$ are the end result of composing several layers of
-nonlinear transformations as specified by the hierarichical
+nonlinear transformations as specified by the hierarchical
 architecture of the CNN.  However, for our purposes, the modeling and
 algorithmic details of the CNN are not important, and we refer the
 interested reader to \cite{lecun2013deep} for a reference on principles of
@@ -220,8 +220,9 @@ convolutional neural networks.  At a higher level of abstraction, we
 can say that the representation $\vec{g}_\theta(\vec{z})$ lies in a
 class of nonlinear functions, parameterized by some (possibly large)
 vector of parameters, $\theta$.  The triplet loss function used by
-FaceNet defines the objective function used to estimate $\theta$ and
-therefore find a good representation.
+FaceNet defines the objective function used to estimate $\theta$;
+in other words, the triplet loss function measures the quality of the
+representation $\vec{g}_\theta(\vec{z})$.
 
 The intuition behind the triplet loss function is that a good
 representation $\vec{g}(\vec{z})$ should cause faces of the same
@@ -313,18 +314,18 @@ representation would map $\vec{z}$ onto some estimate of $(\vec{t},
 \vec{\xi})$ which separates the effect of the latent objects from
 nuisance parameters, and also allows for \emph{reconstruction} of
 observation from the representation.  We will come across similar
-ideas when we discuss \emph{auto-encoders} in the related work
-section.
+ideas when we discuss \emph{auto-encoders} in section
+\ref{sec:related_work}.
 
 However, in this work, we take a more simplistic approach, where we
 \emph{enforce} a distinction between one set of factors, $\vec{t}$, as
-the `signal', and $\vec{\xi}$ as the `noise', and where we are happy
-with a representation that keeps the signal while discarding the
-noise. The `signal-only' approach to representations is sufficient for
-most current applications, including the two examples of
-`representation evaluation' that we just presented--the facial
-recognition problem, and the evaluation of receptive field models in
-fMRI data.
+the `signal', and the other factors, $\vec{\xi}$, as the `noise', and
+where we consider an ideal representation to be one that keeps the
+signal while discarding the noise. The `signal-only' approach to
+representations is sufficient for most current applications, including
+the two examples of `representation evaluation' that we just
+presented--the facial recognition problem, and the evaluation of
+receptive field models in fMRI data.
 
 In the case of facial recognition, the `signal' is the features of the
 face that persist across different perspectives and illumination,
@@ -354,17 +355,21 @@ of \emph{side information} that helps us distinguish between signal
 and noise.  In the case of facial recognition, the side information is
 the labels $y$ which label the photographs.  In the case of the
 functional MRI study, the side information is the V1 intensities
-$\vec{y}^{V1}$ which give us information as to what V1 neurons ``care
-about'' in the image.
+$\vec{y}^{V1}$ which allow us to infer which features of the image 
+are salient to V1 neurons.
 
-The unifying theme of this thesis is how to evaluate (possibly
+Thus, the unifying theme of this thesis is how to evaluate (possibly
 nonlinear) representations $\vec{g}(\vec{z})$ of inputs $\vec{z}$ when
 we are given pairs $(\vec{z}_i, y_i)$ of input vectors as well as some
 form of `side-information' $y_i$, which we will call \emph{the
   response variable}, that gives us some basis for distinguishing
-signal from noise.  As we will explain further in the ensuring
-chapters, we consider three different methods for evaluating the
-quality of the representation.
+signal from noise.  In analogy with the terminology of
+\emph{supervised learning}, wherein a response $y$ is available to
+provide feedback to the learning algorithm, we use the terminology
+\emph{supervised evaluation of representations} to refer to methods
+for evaluating representations with the aid of a response $y$.  In
+this work, we consider three particular methods for supervised
+evaluation of representations.
 
 \begin{enumerate}
 \item The \emph{mutual information} $I(\vec{g}(\vec{Z}); Y)$ between the representation
@@ -381,17 +386,16 @@ information theory.  The $k$-class average classification accuracy is
 a concept that has not been (to our knowledge) previously introduced
 in the literature, but it is highly related to the
 \emph{identification accuracy}, which was introduced by the same
-functional MRI study of natural images (\cite{Kay2008a}) that we have
-been discussing.  To our knowledge, we are the first to investigate
-the properties of the identification task from a theoretical
-perspective.
+functional MRI study of natural images (\cite{Kay2008a}) that we
+discussed in section \ref{sec:kay2008}.  To our knowledge, we are the
+first to investigate the properties of the identification task from a
+theoretical perspective.
 
-All three of these methods enable \emph{supervised evaluation of
-  representations} because they define a quality metric which depends
-on a response variable $Y$.  As in \emph{supervised learning}, the
-response $Y$ gives us a means of judging the quality of the
-representation $\vec{g}(\vec{z})$.
-
+%All three of these methods enable \emph{supervised evaluation of
+%  representations} because they define a quality metric which depends
+%on a response variable $Y$.  As in \emph{supervised learning}, the
+%response $Y$ gives us a means of judging the quality of the
+%representation $\vec{g}(\vec{z})$.
 Comparing these methods, the advantage of both the $k$-class average
 classification accuracy and the identification accuracy is that they
 are relatively easy to compute, even in high-dimensional data, because
@@ -409,7 +413,7 @@ highly related.  In particular, we establish methods for
 lower-bounding the mutual information from either the $k$-class
 average classification accuracy or identification accuracy.
 
-\subsection{Related Work}
+\subsection{Related Work}\label{sec:related_work}
 
 As we hoped to convey in the introduction, the problem of finding and
 evaluating representations is a hot topic in multiple disciplines,
@@ -518,7 +522,7 @@ representations are also highly linked because one way to define `what
 makes a good representation?' is that a good representation should
 enable accurate recognition.  However, one issue that a formal
 definition of how to evaluate the quality of a recognition system has
-been missing in the literature.  Our proposals for modelling
+been missing in the literature.  Our proposal for modelling
 recognition problems, and for evaluating recognition systems, is
 through the formalism of \emph{randomized classification}, which
 defines parameters for multi-class classification problems (think of
@@ -562,12 +566,12 @@ Within this framework, one can consider the \emph{metric
 $B_{\theta, r}$ centered at parameter $\theta$ and with radius $r$ is
 defined as the set of parameters $\theta'$ such that the statistical
 distance between $f_\theta$ and $f_{\theta'}$ is less than $r$:
-\[d(f_{\theta}, f_{\theta}) < r.\]
+\[d(f_{\theta}, f_{\theta'}) < r.\]
 The $\delta$-\emph{metric entropy} of the space $\Theta$ is defined as
 the minimum number of balls of radius $\delta$ needed to cover
 $\Theta$ (\cite{adler2009random}).  While we will not employ the
-formal tools of information theory in this work, we take inspiration
-from some of the intuitions.  Instead, we use \emph{information
+formal tools of information geometry in this work, we take inspiration
+from some of their intuitions.  Instead, we use \emph{information
   theory}, a closely related field, to provide much of the formalism
 for our theory.
 
@@ -587,13 +591,13 @@ space.  The channel capacity is defined in terms of \emph{mutual
 Euclidean case for metric entropy: the log-metric entropy is closely
 related to the difference of the log-volume of the space and the
 log-volume of the ball $B_{\theta, \delta}$.  Meanwhile, mutual
-information $I(T; R)$ is defined as the difference between the entropy of $R$ (the recived message)
+information $I(T; R)$ is defined as the difference between the entropy of $R$ (the recieved message)
 and the conditional entropy of $R$ given $T$ (the transmitted message):
 \[
 I(T; R) \stackrel{def}{=} \underbrace{H(R)}_{\text{entropy}} - \underbrace{H(R|T)}_{\text{conditional entropy}}.
 \]
 Here the entropy $H(R)$ is analagous to the log-volume of the entire
-space, while the conditional entropy $H(R|T)$ measures to log-volume
+space, while the conditional entropy $H(R|T)$ measures the log-volume
 of the ball which is centered at the parameter $T$.  While mutual
 information is not defined explicitly in terms of packing or covering
 numbers, as we see in the Euclidean example for metric entropy, both
@@ -673,8 +677,8 @@ evaluate representations, and (ii) as a model for recognition
 problems.  Yet a third application is for understanding the
 generalizability of experiments that can be modelled as random
 classification tasks.  For example, many task-fMRI experiments can be
-modelled random classification tasks, because the stimuli sets used in
-the experiment are composed of arbitrary (`random') exemplars, and
+modelled as random classification tasks, because the stimuli sets used
+in the experiment are composed of arbitrary (`random') exemplars, and
 therefore the stimuli set used by one lab may differ from the stimuli
 set used by another lab, even when they are presumably studying the
 same task.  Intuitively, using larger and more diverse stimuli sets
@@ -682,8 +686,8 @@ should lead to better generalizability of results to the entire
 population of stimuli.  Our work on random classification--in
 particular, our variance bounds on the classification accuracy in
 randomized classification tasks--provides a theoretical basis for
-understanding how well the results of a random classification task
-allows inference to population parameters, such as the mutual
+understanding how the results of a random classification task
+allow inference of population parameters, such as the mutual
 information between the stimulus and the response.
 
 \subsection{Organization}
@@ -739,7 +743,7 @@ broader perspective, this is hardly unusual, since concepts such as
 entropy, divergence, and mutual information are commonly applied in
 theoretical statistics and machine learning.  Furthermore, since
 information theory, theoretical statistics, and machine learning are
-based on the same foundation--measure-theoretic probability theory,
+based on the same foundation of measure-theoretic probability theory,
 one could go as far as to say that all three disciplines are subfields
 of applied probability.  However, while the three sub-fields may
 appear very similar from a mathematical perspective, some differences
@@ -766,7 +770,7 @@ accurate \emph{discrimination} of the input $X$ according to labels
 $Y$.  Similarly, if we specialize to the problem of hypothesis testing
 within statistics, the the problem is again to \emph{discriminate}
 between two (or more) different hypotheses regarding the
-data-geenrating mechanism.
+data-generating mechanism.
 
 %% have to reorder the next para, 
 The concepts of \emph{information} and \emph{discrimination} are quite
@@ -897,9 +901,10 @@ theory.
 
 \subsection{Supervised learning}
 
-Up until now we have been discussing \emph{classification}, which is a
-particular type of \emph{prediction task}.  However, the most general
-recipe for a prediction task involves:
+\emph{Supervised learning} refers to the training of predictive
+models; both \emph{classification} and \emph{regression} are special
+cases of supervised learning.  But let us bein with the most general
+recipe for a prediction task, which involves:
 
 \begin{itemize}
 \item A predictor space $\mathcal{X}$ defining the possible values the
@@ -913,6 +918,14 @@ recipe for a prediction task involves:
   the loss for making the prediction $\hat{Y}$ when the truth is $Y$
   is given by $C(Y; \hat{Y})$.
 \end{itemize}
+
+The prediction task can be viewed as a game between two players:
+nature and the statistician.  Nature draws an observation $(\vec{X},
+Y)$ from the joint distribution $G$.  The statistician only gets to
+see $\vec{X}$, and has to make a prediction $\hat{Y}$ for the response
+$Y$.  Later on, the true value $Y$ is revealed, and the statistician
+pays the cost $C(Y; \hat{Y})$ depending on how well their prediction
+matched the actual value of $Y$.
 
 The various types of prediction tasks include classification,
 regression, and multivariate variants: such as multi-label
@@ -1003,12 +1016,12 @@ Y|\vec{X} \sim N(\vec{X}^T \beta, \Sigma_\epsilon).
 \]
 The learning algorithm $\Lambda$ proceeds by first fitting the
 parametric model to estimate the parameter $\hat{\theta}$.  A variety
-of methods may be chosen to estimate $\theta$: maximimum likelihood,
-penalized maximum likelihood, or Bayesian estimation.  Given the
-fitted statistical model, we can obtain the conditional distribution
-of $Y$ given $\vec{X}$.  The prediction rule $h(\vec{x})$ is then
-constructed using this conditional distribution; for instance, taking
-$h(\vec{x})$ to be the conditional mean of $Y$ given $\vec{X} =
+of methods may be chosen to estimate $\theta$, such as maximum
+likelihood, penalized maximum likelihood, or Bayesian estimation.
+Given the fitted statistical model, we can obtain the conditional
+distribution of $Y$ given $\vec{X}$.  The prediction rule $h(\vec{x})$
+is then constructed using this conditional distribution; for instance,
+taking $h(\vec{x})$ to be the conditional mean of $Y$ given $\vec{X} =
 \vec{x}$.
 %Note also that
 %in many cases, such as regression, not all parameters of the model
@@ -1052,8 +1065,8 @@ and then constructs the prediction rule
 h(\vec{x}) = \vec{x}^T \beta.
 \]
 %% No explanation of L1 norm notation
-Here, the L1-penalty constant $\lambda$ needs to be specified by the
-user.  In practice, one can either use prior knowledge or
+Here, the $L_1$-penalty constant $\lambda$ needs to be specified by
+the user.  In practice, one can either use prior knowledge or
 theoretically-justified rules to select $\lambda$; or, more commonly,
 one uses various procedures to automatically tune $\lambda$ based on
 the training data.  The most common procedure for automatically
@@ -1204,7 +1217,7 @@ m_y(\vec{x}) = w^T \vec{x}
 \]
 result in \emph{linear decision boundaries.}  These include:
 \begin{itemize}
-\item \emph{Linear support vector machines} [CITE].
+\item \emph{Linear support vector machines} (\cite{Hastie2009a}).
 \item \emph{Multinomial logistic regression}.
 \item \emph{Fisher's linear discriminant analysis}.
 \end{itemize}
@@ -1401,7 +1414,7 @@ d_{\hat{\Sigma}}(\vec{y}, \hat{y}) = (\vec{y} - \hat{y})^T \hat{\Sigma}^{-1} (\v
 Finally, the $M$-point test identification accuracy is defined as the fraction
 of observations which are assigned to the correct prediction,
 \[
-\text{TIA}_M = \frac{1}{M}\sum_{i=1}^M I(d_{\hat{\Sigma}}(\vec{y}_i, \hat{y}_i) \leq \min_{j \neq i} d_{\hat{\Sigma}}(\vec{y}_i, \hat{y}_i)).
+\text{TIA}_M = \frac{1}{M}\sum_{i=1}^M I(d_{\hat{\Sigma}}(\vec{y}_i, \hat{y}_i) \leq \min_{j \neq i} d_{\hat{\Sigma}}(\vec{y}_i, \hat{y}_j)).
 \]
 
 \subsubsection{Advantages of identification accuracy over MSE}
@@ -1412,8 +1425,8 @@ information about the stimulus $\vec{X}$ is contained in the response
 $\vec{Y}$, in a way that mean-squared error cannot.  We formalize this
 idea by explicitly showing how the empirical identification accuracy
 can be used to obtain a lower bound of mutual information (Chapter 4).
-However, some of the intuition can be demonstrated much more simply
-via a toy example.
+However, some of the intuition can be demonstrated via the following
+toy example.
 
 Suppose that the response $\vec{Y}$ and predictor $\vec{X}$ are both
 three-dimensional.  The predictor $\vec{X}$ is generated from a standard
@@ -1561,12 +1574,12 @@ alphabet (e.g. ``dots'' and ``dashes'') from the sender to reciever,
 and \emph{noisy} channels, which transmit symbols from a discrete
 symbol space $\mathcal{Y}$ to a possibly different symbol space
 $\mathcal{X}$ in a stochastic fashion.  That is, for each input symbol
-$y \in \mathcal{Y}$, the transmitted symbol output $X$ is drawn from a
-distribution $F_y$ that depends on $y$\footnote{Note that here we
+$y \in \mathcal{Y}$, the transmitted symbol\footnote{Note that here we
   have flipped the usual convention in information theory, in which
   the letter $X$ commonly denotes the input and $Y$ denotes the
   output.  However, we flip the notation in order to match the
-  convention in multi-class classification.}.  It is the study of
+  convention in multi-class classification.} output $X$ is drawn from a
+distribution $F_y$ that depends on $y$.  It is the study of
 noisy channels that is of primary interest to us.
 
 We allow the sender to transmit a sequence of $L$ input symbols over
@@ -1624,12 +1637,13 @@ is defined as
 \[
 \text{I}(\bX;\bY) = \int p(\bx, \by) \log \frac{p(\bx, \by)}{p(\bx)p(\by)}d\mu_x(\bx) d\mu_y(\by).
 \]
-where $p(\bx)$ and $p(\by)$ are the marginal densities with respect to
-$\mu_x$ and $\mu_y$\footnote{Note that the mutual information is
-  invariant with respect to change-of-measure.}.  When the reference
-measure $\mu_x \times \mu_y$ is unambiguous, note that $\text{I}(\bX;\bY)$ is
-simply a functional of the joint density $p(\bx, \by)$.  Therefore, we
-can also use the \emph{functional} notation
+where $p(\bx)$ and $p(\by)$ are the marginal densities with
+respect\footnote{Note that the mutual information is invariant with
+  respect to change-of-measure.} to $\mu_x$ and $\mu_y$.  When the
+reference measure $\mu_x \times \mu_y$ is unambiguous, note that
+$\text{I}(\bX;\bY)$ is simply a functional of the joint density
+$p(\bx, \by)$.  Therefore, we can also use the \emph{functional}
+notation
 \[
 \text{I}[p(\bx, \by)] = \int p(\bx, \by) \log \frac{p(\bx, \by)}{p(\bx)p(\by)}d\mu_x(\bx) d\mu_y(\by).
 \]
@@ -1653,7 +1667,7 @@ properties.
 \end{enumerate}
 Three additional consequences result from the data-processing inequality:
 \begin{itemize}
-\item \emph{Stochastic data-processing inequality}  If $\vec{f}$ is a stochastic function independent of both $\bX$ and $\bY$, then
+\item \emph{Stochastic data-processing inequality.}  If $\vec{f}$ is a stochastic function independent of both $\bX$ and $\bY$, then
 \[
 \text{I}(\bX; \vec{f}(\bY)) \leq \text{I}(\bX; \bY).
 \]
@@ -1718,9 +1732,18 @@ The following identities characterize mutual information in terms of entropy:
 \text{I}(\bX; \bY) = \text{H}_{\mu_x \times \mu_y}((\bX, \bY)) - \text{H}_{\mu_x}(\bX) - \text{H}_{\mu_y}(\bY).
 \]
 \begin{equation}\label{eq:ce_ident}
-\text{I}(\bX; \bY) = \text{H}_\mu(\bY) - \text{H}_\mu(\bY|\bX).
+\text{I}(\bX; \bY) = \text{H}_{\mu_y}(\bY) - \text{H}_{\mu_y}(\bY|\bX).
 \end{equation}
-The second identity \eqref{eq:ce_ident} is noteworthy
+Loosely speaking, $\text{H}_{\mu_y}(\bY)$ is the uncertainty of $\bY$
+before having observed $\bX$, and $\text{H}_{\mu_y}(\bY|\bX)$ is the
+uncertainty of $\bY$ after having observed $\bX$, hence
+$\text{H}_{\mu_y}(\bY) - \text{H}_{\mu_y}(\bY|\bX)$ is how much the
+observation of $\bX$ has \emph{reduced} the uncertainty of $\bY$.
+Stated in words,
+\[
+\text{I}(\bX; \bY) = \text{average reduction of uncertainty about $\bY$ upon observing $\bX$}.
+\]
+The identity \eqref{eq:ce_ident} is also noteworthy
 as being practically important for estimation of mutual information.
 Since the entropies in question only depend on the marginal and
 conditional distributions of $\bY$, the problem of estimating
@@ -1730,19 +1753,6 @@ $\dim(\bY)$-dimensional problem: hence this identity is a basis of
 several methods of estimation used in neuroscience, such as Gastpar
 (2014).
 
-However, by symmetry, we also have the flipped identity
-\begin{equation}\label{eq:ce_ident2}
-\text{I}(\bX; \bY) = \text{H}_\mu(\bX) - \text{H}_\mu(\bX|\bY).
-\end{equation}
-Loosely speaking, $\text{H}_\mu(\bX)$ is the uncertainty of $\bX$
-before having observed $\bY$, and $\text{H}_\mu(\bX|\bY)$ is the
-uncertainty of $\bX$ after having observed $\bY$, hence
-$\text{H}_\mu(\bX) - \text{H}_\mu(\bX|\bY)$ is how much the
-observation of $\bY$ has \emph{reduced} the uncertainty of $\bX$.
-Stated in words,
-\[
-\text{I}(\bX; \bY) = \text{average reduction of uncertainty about $\bX$ upon observing $\bY$}.
-\]
 
 \subsubsection{Channel capacity and randomized codebooks}
 
@@ -1762,13 +1772,12 @@ S$.
 However, how can the idea of channel capacity be generalized to the
 noisy case?  At first glance, it would seem like no comparison is
 possible, because no matter how many symbols $L$ the sender is allowed
-to transmit, it may \emph{never} be possible for the reciever to
-deterministically infer the original message.  Consider the bit-flip
-channel, where $X = Y$ with probability $1-\epsilon$ and $X = 1-Y$
-otherwise.  Given two different messages, $M \in \{1,2\}$, a
-reasonable encoding scheme is for the sender to transmit a string of
-$L$ repeated zeros for $M = 1$, and an string of $L$ repeated ones for
-$M = 2$.
+to transmit, the probability of decoding error may remain nonzero.
+Consider the bit-flip channel, where $X = Y$ with probability
+$1-\epsilon$ and $X = 1-Y$ otherwise.  Given two different messages,
+$M \in \{1,2\}$, a reasonable encoding scheme is for the sender to
+transmit a string of $L$ repeated zeros for $M = 1$, and an string of
+$L$ repeated ones for $M = 2$.
 \[
 Y_1 = Y_2 = \cdots = Y_L = M-1.
 \]
@@ -1781,7 +1790,7 @@ Shannon's idea was to invent an asymptotic definition of channel
 capacity.  Consider a sequence of problems where the number of
 messages $M$ is increasing to infinity.  In the $m$th coding problem,
 where $M = m$, let $(g_m, d_m)$ be an encoder/decoder pair (or \emph{protocol}), where
-$g_m$ produces strings of length $L_m$.  Let $e_m$ be the maximimum
+$g_m$ produces strings of length $L_m$.  Let $e_m$ be the maximum
 error probability over all messages $1,\hdots, m$ when using the
 protocol $(g_m, d_m)$.  Now, let us require that we choose $(g_m,
 d_m)$ so that the error probability vanishes in the limit:
@@ -1823,18 +1832,19 @@ realized in the channel.
 
 To show that $C = \max_p I[p(y, x)]$ is the noisy channel capacity,
 then, (i) we need to show that there exists a sequence of codes with
-length $L = \frac{\log M}{C}$ which achieves vanishing decoding error
-as $M \to \infty$\footnote{Shannon's noisy channel capacity theorem
-  shows a much stronger property--that the \emph{maximum} decoding
-  error over all messages has to vanish.  However, for our purposes,
-  we will limit our discussion to a weaker form of the noisy channel
-  capacity theorem which is only concerned with average decoding error
-  over all messages.}, and (ii) we need to show that any code with a
-shorter length has non-vanishing decoding error.  We omit the proof of
-(i) and (ii), which can be found in any textbook on information
-theory, such as \cite{Cover2006}.  However, for our purposes, it is
-very much worth discussing the construction that shows direction (i)
-of the proof--the achievability of channel capacity.
+length $L = \frac{\log M}{C}$ which achieves
+vanishing\footnote{Shannon's noisy channel capacity theorem shows a
+  much stronger property--that the \emph{maximum} decoding error over
+  all messages has to vanish.  However, for our purposes, we will
+  limit our discussion to a weaker form of the noisy channel capacity
+  theorem which is only concerned with average decoding error over all
+  messages.} decoding error as $M \to \infty$, and (ii) we need to
+show that any code with a shorter length has non-vanishing decoding
+error.  We omit the proof of (i) and (ii), which can be found in any
+textbook on information theory, such as \cite{Cover2006}.  However,
+for our purposes, it is very much worth discussing the construction
+that shows direction (i) of the proof--the achievability of channel
+capacity.
 
 For a given channel $\{F_y\}$, let $p^* \in \mathcal{P}$ be the
 distribution which maximizes $I[p(y, x)]$.  Let $p^*_y$ be the
