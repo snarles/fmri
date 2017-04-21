@@ -19,6 +19,10 @@
 \usepackage{chngcntr}
 \usepackage{apptools}
 \AtAppendix{\counterwithin{lemma}{section}}
+\usepackage[backend=bibtex,style=authoryear]{biblatex}
+
+
+\addbibresource{example.bib} % The filename of the bibliography
 
 \newcommand\crule[3][black]{\textcolor{#1}{\rule{#2}{#3}}}
 
@@ -1182,6 +1186,9 @@ marginal classifiers (which satisfy the theoretical assumptions) and
 non-marginal classifiers (which do not), the results obtained in these
 two examples are encouraging in that sense that useful predictions
 were obtained both for marginal and non-marginal classifiers.
+
+
+\printbibliography[heading=bibintoc]
 
 \end{document}
 
