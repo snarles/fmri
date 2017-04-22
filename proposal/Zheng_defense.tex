@@ -149,7 +149,7 @@
 % https://alexanderskv.wordpress.com/2012/06/04/facial-recognition/
 % https://medium.com/@ageitgey/machine-learning-is-fun-part-4-modern-face-recognition-with-deep-learning-c3cffc121d78#.fzgvan3ii
 
-\title[Defense]{Thesis Defense}
+\title[Defense]{Supervised Evaluation of Representations}
 
 \author{Charles Zheng} % Your name
 \institute[Stanford] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
@@ -165,386 +165,49 @@
 
 \section{Introduction}
 
+%\begin{frame}
+%\sectionpage
+%\end{frame}
+
 \begin{frame}
-\frametitle{Research interests}
+\frametitle{What is a representation?}
 \begin{itemize}
-\item Statistical analysis of neuroimaging data
-\begin{center}
-\includegraphics[scale = 0.2]{3D_fit_DTI_NNLS_EBP.pdf}
-\end{center}
-\item Applications of machine learning in statistical inference
-\begin{center}
-\includegraphics[scale = 0.2]{dnn_sx.png}
-\end{center}
+\item It is often hypothesized that \emph{complex objects} (images, sounds, etc.) can be mapped into a \emph{low-dimensional} space
+\item A \emph{representation} is a nonlinear, dimensionality-reducing mapping
 \end{itemize}
 \end{frame}
 
 \begin{frame}
-\frametitle{Functional neuroimaging}
-\begin{minipage}[t][.8\textheight]{\textwidth}
-\vspace{0.6in}
-
-\begin{center}
-\includegraphics[scale = 0.3]{intro1.png}
-\end{center}
-\end{minipage}
-{\small Image adapted from Quiroga et al (2009)}
-\end{frame}
-
-\begin{frame}
-\frametitle{Functional neuroimaging}
-\begin{center}
-\includegraphics[scale = 0.3]{intro2.png}
-\end{center}
-\end{frame}
-
-\begin{frame}
-\frametitle{Functional neuroimaging}
-\begin{center}
-\includegraphics[scale = 0.3]{intro3.png}
-\end{center}
-\end{frame}
-
-\begin{frame}
-\frametitle{Classification/Decoding}
-\begin{center}
-\includegraphics[scale = 0.3]{intro4.png}
-\end{center}
+\frametitle{Why do we care?}
 \begin{itemize}
-\item Response $Z = \{0 \text{ (apple)}, 1 \text{ (banana)}\}$.
-\item Predictors $Y_1,..., Y_p$ (voxels)
-\item Classifier $f: (Y_1,...,Y_p) \to \{0, 1\}$ guesses the class.
-\item Generalization accuracy
-\[
-\text{A}(f) = \Pr[f(Y_1,...,Y_p) = Z].
-\]
+\item Application 1: Neuroscience.  Different regions of the brain have different representations of the same sensory stimuli.
+\item Application 2: Machine learning.  A good representation leads to more accurate prediction.
 \end{itemize}
 \end{frame}
 
 \begin{frame}
-\frametitle{What's the parameter?}
-\begin{center}
-\includegraphics[scale = 0.3]{intro4.png}
-\end{center}
+\frametitle{Example: Facial recognition}
 \begin{itemize}
-\item The classifier is chosen from some class $\mathcal{F}$, e.g. maximizing empirical accuracy
-\[
-\hat{f} = \sup_{f \in \mathcal{F}} \frac{1}{n}\sum_{i=1}^n I\{\hat{f}(X^{(i)}_1,...,X^{(i)}_p) = Z^{(i)}\}.
-\]
-\item Generalization accuracy $\text{A}(\hat{f})$ varies depending on data.
+\item Used to tag images in software, security \pause
+\item Preprocessing
+\includegraphics[scale = 0.4]{face_alignment.png}
+\pause
+\item Feature extraction
+\includegraphics[scale = 0.4]{facerec_features.jpg}
 \end{itemize}
 \end{frame}
 
 \begin{frame}
-\frametitle{What's the parameter?}
-\begin{center}
-\includegraphics[scale = 0.3]{intro4.png}
-\end{center}
-\begin{itemize}
-\item Define Bayes accuracy
-\[
-\text{BA} = \sup_f \text{A}(f).
-\]
-\item Under smoothness conditions on $p(x, y)$,
-\[\lim_{n \to \infty} \text{A}(\hat{f}) \to \text{BA}(\hat{f})\]
-for a variety of classifiers, e.g. $k$-nearest neighbors (Fukunaga 2009.)
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Inferring Bayes accuracy}
-\begin{center}
-\includegraphics[scale = 0.3]{ta_to_ba.png}
-\end{center}
-\begin{itemize}
-\item Given $m$ test observations,
-\[
-\underline{\text{GA}}_\alpha(\hat{f}) = \text{TA} - z_\alpha\sqrt{\frac{\text{TA}(1-\text{TA})}{m}}
-\]
-is a an $(1-\alpha)$ lower confidence bound for $\text{BA}$.
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Inferring Bayes accuracy}
-\begin{center}
-\includegraphics[scale = 0.3]{ta_to_ba.png}
-\end{center}
-\begin{itemize}
-\item Since $\text{BA} \geq \text{GA}$ by definition,
-\[
-\underline{\text{BA}}_\alpha = \underline{\text{GA}}(\hat{f})
-\]
-is an $(1-\alpha)$ lower confidence bound for $\text{BA}$.
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Inferring Bayes accuracy under model selection}
-\begin{center}
-\begin{tabular}{ccc}
-$\hat{f}_1$ & $\hat{f}_2$ & $\hat{f}_3$\\
-\includegraphics[scale = 0.2]{model1.png} &
-\includegraphics[scale = 0.2]{model2.png} &
-\includegraphics[scale = 0.2]{model3.png}
-\end{tabular}
-\end{center}
-\begin{itemize}
-\item Or, if $\hat{f}_1,...,\hat{f}_d$ result from $d$ different procedures,
-\[
-\underline{\text{BA}}_\alpha = \min_{i=1}^d \underline{\text{GA}}_{\frac{\alpha}{d}}(\hat{f}_i)
-\]
-is also an $(1-\alpha)$ lower confidence bound for $\text{BA}$ (using Bonferroni's inequality).
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Dependence of classification accuracy on stimuli}
-\begin{multicols}{2}
-%\begin{columns}
-%\begin{column}{0.6\textwidth}
-\begin{tabular}{cc}
-\multirow{4}{*}{\includegraphics[scale = 0.3]{model2.png}}
-& \includegraphics[scale = 0.2]{img1.png} \\
-& \includegraphics[scale = 0.2]{img2.png} \\
-& \includegraphics[scale = 0.2]{img3.png} \\ 
-\end{tabular}
-%\end{column}
-%\begin{column}{0.4\textwidth}
-\columnbreak
-
-
-\begin{tabular}{cc}
-\multirow{4}{*}{\includegraphics[scale = 0.3]{four_class.png}} 
-& \includegraphics[scale = 0.2]{img5.png} \\
-& \includegraphics[scale = 0.2]{img6.png} \\
-& \includegraphics[scale = 0.2]{img7.png} \\
-& \includegraphics[scale = 0.2]{img8.png} 
-\end{tabular}
-
-%\end{column}
-%\end{columns}
-\end{multicols}
-\begin{itemize}
-\item Different stimuli sets lead to different \emph{Bayes accuracy}.
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Generalizing beyond the design}
-
-\begin{columns}
-\begin{column}{0.6\textwidth}
-\begin{center}
-\includegraphics[scale = 1]{imagenet_sub.png}
-\end{center}
-\end{column}
-\begin{column}{0.4\textwidth}
-\includegraphics[scale = 0.5]{smbrain2.png}
-\end{column}
-\end{columns}
-
-Scientists are not innately interested in the Bayes accuracy of a \emph{particular} stimuli set, which is often chosen arbitrarily...
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Generalizing beyond the design}
-
-\begin{columns}
-\begin{column}{0.6\textwidth}
-\begin{center}
-\includegraphics[scale = 0.1]{imagenet.jpg}
-\end{center}
-\end{column}
-\begin{column}{0.4\textwidth}
-\includegraphics[scale = 0.5]{smbrain2.png}
-\end{column}
-\end{columns}
-\vspace{0.2in}
-But it would be more interesting to be able to make inferences from the data about a \emph{larger} class of stimuli...
+\frametitle{What defines a good representation?}
 
 \end{frame}
 
 
-\section{Randomized classification and Average Bayes accuracy}
+\section{Randomized classification and extrapolation}
 
 \begin{frame}
 \sectionpage
 \end{frame}
-
-\begin{frame}
-\frametitle{Randomized classification}
-\begin{tabular}{c|c|c}
-1. Population of stimuli $p(x)$ & 
-2. Subsample $k$ stimuli &
-3. Data\\
-\includegraphics[scale = 0.05]{imagenet.jpg} &
-\includegraphics[scale = 0.5]{imagenet_sub.png} &
-\includegraphics[scale = 0.3]{smbrain2.png}
-\end{tabular}
-
-\vspace{0.2in}
-4. Train a classifier
-
-\vspace{0.2in}
-5. Estimate generalization accuracy (which is lower bound for the \emph{random} Bayes accuracy $\text{BA}_k$)
-\end{frame}
-
-\begin{frame}
-\frametitle{Average Bayes accuracy}
-\begin{center}
-\begin{tabular}{c|c|c|c}
-& Experiment 1 & Experiment 2 & Experiment 3\\\hline
-&\includegraphics[scale = 0.15, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1a.png} &
-\includegraphics[scale = 0.15, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1b.png} &
-\includegraphics[scale = 0.15, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1c.png}\\\hline
-Bayes accuracy & 0.55 & 0.65 & 0.52 \\
-\end{tabular}
-\end{center}
-\begin{itemize}
-\item Bayes accuracy depends on the stimuli drawn.
-\item Therefore, define $k$-class \emph{average Bayes accuracy} as the expected Bayes accuracy for $X_1,..,X_k \stackrel{iid}{\sim} p(x)$.
-\[
-\text{ABA}_k = \E[BA(X_1,...,X_k)]
-\]
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Average Bayes accuracy}
-\includegraphics[scale = 0.45, clip = true, trim = 0in 1in 0.5in 1in]{ta_to_aba.png}
-\end{frame}
-
-\begin{frame}
-\frametitle{Inferring average Bayes accuracy}
-
-\begin{itemize}
-\item $\text{BA}_k \stackrel{def}{=} \text{BA}(X_1,..,X_k)$ is unbiased estimate of
-\[
-\text{ABA}_k = \E[BA_k]
-\]
-by definition.
-\item But what is the variance?
-\[
-\text{Var}[\text{BA}(X_1,...,X_k)]
-\]
-\item \emph{Theoretical result}. Maximal variability is of order $1/k$.
-\item Therefore, it is feasbile to get a good idea of $\text{ABA}_k$ by choosing a sufficiently large sample size $k$.
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Two intuitions for variability result}
-Why does variability decrease with $k$?
-\begin{itemize}
-\item 1. Bayes accuracy behaves like an average of $k$ i.i.d random variables. (Also gives correct $1/k$ rate.)
-\item 2. Bayes accuracy behaves like a max of $k$ i.i.d. random variables.
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Intuition 1: averaging}
-\begin{center}
-\begin{tabular}{c|c|c|c}
-& Experiment 1 & Experiment 2 & Experiment 3\\\hline
-&\includegraphics[scale = 0.15, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1a.png} &
-\includegraphics[scale = 0.15, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1b.png} &
-\includegraphics[scale = 0.15, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1c.png}\\\hline
-Bayes accuracy & 0.55 & 0.65 & 0.52 \\
-\end{tabular}
-\end{center}
-Average of $k$ gaussian probability integrals... (which are asympt. uncorrelated.)
-\end{frame}
-
-\begin{frame}
-\frametitle{Intuition 2: An identity}
-\begin{itemize}
-\item It is a well-known result from Bayesian inference that the optimal classifier $f$ is defined as
-\[
-f(y) = \text{argmax}_{i=1}^k p(y|x_i),
-\]
-since the prior class probabilities are uniform.
-\item Therefore,
-\begin{align*}
-\text{BA}(x_1,...,x_k) &= \Pr[\text{argmax}_{i=1}^k p(y|x_i) = Z| x_1,...,x_k] 
-\\&= \frac{1}{k}\int \max_{i=1}^k p(y|x_i) \prod_{i=1}^k p(x_i) dx_{i} dy.
-\end{align*}
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Intuition behind identity}
-\begin{columns}
-\begin{column}{0.5\textwidth}
-\begin{center}
-\includegraphics[scale = 0.35, clip = true, trim = 1.2in 1.3in 0in 1in]{var_ba.png}
-\end{center}   
-\end{column}
-\begin{column}{0.5\textwidth}  %%<--- here
-\begin{align*}
-\text{BA}&(x_1,x_2,x_3) \\&= \sum_i \Pr[x_i]\Pr_{Y \sim p(y|x_i)}[Y \in \text{zone }i]
-\\&= \sum_i \frac{1}{k} \text{Area under curve $i$ in zone $i$}
-\\&\ \ \ = \frac{1}{k} \text{Area under } \max_{i=1}^k p(y|x_i)
-\end{align*}
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}
-\frametitle{Variability of Bayes accuracy}
-
-\emph{Theoretical result}. In the max formulation of $\text{BA}_k$, we
-can apply Efron-Stein inequality to get
-\[
-\text{sd}[\text{BA}_k] \leq \frac{1}{2\sqrt{k}}
-\]
-\vspace{0.2in}
-\emph{Empirical results}. (searching for worst-case stimuli).
-\begin{tabular}{c||c|c|c|c|c|c|c}
-k & 2 & 3 & 4 & 5 & 6 & 7 & 8\\\hline
-$\frac{1}{2\sqrt{k}}$ & 0.353 & 0.289 & 0.250 & 0.223 & 0.204 & 0.189 & 0.177\\\hline
-Worst-case sd & 0.25 & 0.194 & 0.167 & 0.150 & 0.136 & 0.126 & 0.118
-\end{tabular}
-\end{frame}
-
-\begin{frame}
-\frametitle{Inferring average Bayes error}
-For now, return to the world of finite data...
-\begin{enumerate}
-\item \emph{Experimental design}: draw $k$ stimuli $X_1,...,X_k$ iid from $p(x)$.  Then collect data $(X_i, Y_i^j)$.
-\item \emph{Supervised learning}: train a classifier and obtain a test accuracy $\text{TA}_k$.
-\item \emph{Generalization accuracy}: if $n_{test}$ is the size of the test set,
-\[
-\underline{\text{GA}_k} = \text{TA}_k - \frac{z_{\alpha/2}\sqrt{\text{TA}_k (1-\text{TA}_k)}}{\sqrt{n_{test}}}
-\]
- is a lower confidence bound for $\text{GA}_k$
-\item \emph{Bayes accuracy}:
-\[
-\underline{\text{BA}}_k =  \underline{\text{GA}}_k
-\]
-is a lower confidence bound for $\text{BA}_k$
-\item \emph{Average Bayes accuracy}
-\[
-\underline{\text{ABA}}_k =  \underline{\text{BA}}_k - \frac{1}{2\sqrt{\alpha k}}
-\]
-is a lower confidence bound for $\text{ABA}_k$.
-\end{enumerate}
-\end{frame}
-
-\begin{frame}
-\frametitle{Extension: Undersampled regime}
-Do you actually have to collect data from $k$ different classes to infer $\text{ABA}_k$?
-See Z., Achanta and Benjamini (2016).
-\begin{figure}
-\centering
-\includegraphics[scale = 0.4]{../info_theory_paper/cifar_example.pdf}
-\end{figure}
-\end{frame}
-
-\section{Extrapolation}
-
-\sectionpage
 
 \begin{frame}
 \frametitle{Multi-class classification}
@@ -567,17 +230,6 @@ See Z., Achanta and Benjamini (2016).
 \end{columns}
 \end{frame}
 
-\begin{frame}
-\frametitle{Facial recognition}
-\begin{itemize}
-\item Used to tag images in software, security \pause
-\item Preprocessing
-\includegraphics[scale = 0.4]{face_alignment.png}
-\pause
-\item Feature extraction
-\includegraphics[scale = 0.4]{facerec_features.jpg}
-\end{itemize}
-\end{frame}
 
 
 \begin{frame}
