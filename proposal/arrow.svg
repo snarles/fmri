@@ -1,0 +1,25 @@
+<?xml version="1.0"?><svg width="686.6666666666666" height="336" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <linearGradient id="linearGradient1694">
+   <stop stop-color="#ffffff" stop-opacity="0" offset="0" id="stop1695"/>
+   <stop stop-color="#ffffff" offset="1" id="stop1696"/>
+  </linearGradient>
+  <linearGradient id="linearGradient1683">
+   <stop stop-color="#0c1fdb" offset="0" id="stop1684"/>
+   <stop stop-color="#062d76" offset="1" id="stop1685"/>
+  </linearGradient>
+  <linearGradient y2="636.25543" y1="1035.3337" xlink:href="#linearGradient1683" x2="242.39842" x1="242.39842" id="linearGradient1686" gradientUnits="userSpaceOnUse" gradientTransform="scale(1.475472,0.677749)"/>
+  <linearGradient y2="1038.9441" y1="635.74658" xlink:href="#linearGradient1683" x2="240.86183" x1="240.86183" id="linearGradient1690" gradientUnits="userSpaceOnUse" gradientTransform="scale(1.475472,0.677749)"/>
+  <linearGradient y2="646.06177" y1="827.01349" xlink:href="#linearGradient1694" x2="244.8598" x1="244.8598" id="linearGradient1692" gradientUnits="userSpaceOnUse" gradientTransform="scale(1.479463,0.675921)"/>
+  <linearGradient y2="0.022912" y1="0.977087" xlink:href="#linearGradient1683" x2="0.505379" x1="0.505379" id="linearGradient1700"/>
+  <linearGradient y2="0.98572" y1="0.021695" xlink:href="#linearGradient1683" x2="0.501707" x1="0.501707" id="linearGradient1701"/>
+  <linearGradient y2="-0.084188" y1="0.771726" xlink:href="#linearGradient1694" x2="0.508533" x1="0.508533" id="linearGradient1702"/>
+ </defs>
+ <g>
+  <title>Layer 1</title>
+  <g transform="matrix(-1 0 0 1 643.514 0)" id="g1269">
+   <path fill="#000000" fill-rule="evenodd" stroke="#000000" stroke-width="8.75" stroke-linejoin="round" stroke-miterlimit="4" id="path1061" d="m13.019249,158.509827l174.562172,142.974609l0,-70.86615l442.913391,0l0,-141.7323l-442.913391,0l0,-70.866119l-174.562172,140.48996z"/>
+   <path fill="#000000" fill-rule="evenodd" stroke="#000000" stroke-width="8.75" stroke-miterlimit="4" id="path1691" d="m30.395298,159.272217l146.490154,25.636719l442.050522,0l0,-83.749298l-442.050522,0l0,-59.149445l-146.490154,117.262024z"/>
+  </g>
+ </g>
+</svg>

@@ -1,0 +1,662 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="297mm"
+   height="210mm"
+   id="svg4117"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="flowcharts.svg">
+  <sodipodi:namedview
+     inkscape:document-units="mm"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.43415836"
+     inkscape:cx="490"
+     inkscape:cy="-1186.2488"
+     inkscape:current-layer="layer1"
+     id="namedview4121"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1215"
+     inkscape:window-height="1000"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <defs
+     id="defs4119" />
+  <metadata
+     id="metadata4123">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       sodipodi:type="arc"
+       style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path4644"
+       sodipodi:cx="852.22357"
+       sodipodi:cy="281.12976"
+       sodipodi:rx="204.99432"
+       sodipodi:ry="204.99432"
+       d="m 1057.2179,281.12976 a 204.99432,204.99432 0 1 1 -409.98865,0 204.99432,204.99432 0 1 1 409.98865,0 z"
+       transform="matrix(0.80479912,0,0,0.80479912,172.11306,90.881341)"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:48px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       x="796.33759"
+       y="337.35782"
+       id="text4130"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan4132"
+         x="796.33759"
+         y="337.35782">Signal</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:2.50511575;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect4134"
+       width="242.34212"
+       height="242.34212"
+       x="47.818699"
+       y="200.26659"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:48px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       x="96.738892"
+       y="343.66113"
+       id="text4126"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan4128"
+         x="96.738892"
+         y="343.66113"
+         style="fill:#ffffff">Object</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:35.43307114;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:none"
+       d="m 336.28282,338.71244 271.79023,0"
+       id="path4646"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       id="g5398"
+       transform="translate(-863.57181,-379.7511)">
+      <g
+         id="g5355">
+        <g
+           id="_x33__12_">
+          <g
+             id="g5358">
+            <path
+               id="path5360"
+               d="M 526.599,603.244 420.918,708.628 V 83.353 l 105.681,105.384 c 9.725,9.7 25.511,9.7 35.235,0 9.724,-9.699 9.724,-25.437 0,-35.136 L 414.855,7.067 C 409.659,1.896 402.78,-0.306 396,0.04 389.196,-0.331 382.317,1.871 377.121,7.067 L 230.167,153.6 c -9.724,9.7 -9.724,25.437 0,35.137 9.725,9.699 25.511,9.699 35.235,0 L 371.083,83.353 V 708.628 L 265.402,603.244 c -9.724,-9.699 -25.511,-9.699 -35.235,0 -9.724,9.7 -9.724,25.437 0,35.137 l 146.954,146.558 c 5.196,5.171 12.075,7.373 18.855,7.027 6.805,0.346 13.684,-1.856 18.855,-7.027 L 561.784,638.381 c 9.725,-9.7 9.725,-25.437 0,-35.137 -9.699,-9.699 -25.461,-9.699 -35.185,0 z"
+               inkscape:connector-curvature="0" />
+          </g>
+        </g>
+      </g>
+      <g
+         id="g5362" />
+      <g
+         id="g5364" />
+      <g
+         id="g5366" />
+      <g
+         id="g5368" />
+      <g
+         id="g5370" />
+      <g
+         id="g5372" />
+      <g
+         id="g5374" />
+      <g
+         id="g5376" />
+      <g
+         id="g5378" />
+      <g
+         id="g5380" />
+      <g
+         id="g5382" />
+      <g
+         id="g5384" />
+      <g
+         id="g5386" />
+      <g
+         id="g5388" />
+      <g
+         id="g5390" />
+    </g>
+    <g
+       id="g5398-3"
+       transform="translate(-898.12144,677.46681)">
+      <g
+         id="g5355-5">
+        <g
+           id="_x33__12_-6">
+          <g
+             id="g5358-2">
+            <path
+               id="path5360-9"
+               d="m 420.918,83.353 105.681,105.384 c 9.725,9.7 25.511,9.7 35.235,0 9.724,-9.699 9.724,-25.437 0,-35.136 L 414.855,7.067 C 409.659,1.896 402.78,-0.306 396,0.04 389.196,-0.331 382.317,1.871 377.121,7.067 L 230.167,153.6 c -9.724,9.7 -9.724,25.437 0,35.137 9.725,9.699 25.511,9.699 35.235,0 L 371.083,83.353 c 24.12927,-16.033132 25.31562,-13.985614 49.835,0 z"
+               inkscape:connector-curvature="0"
+               sodipodi:nodetypes="cccccccccccc" />
+          </g>
+        </g>
+      </g>
+      <g
+         id="g5362-1" />
+      <g
+         id="g5364-2" />
+      <g
+         id="g5366-7" />
+      <g
+         id="g5368-0" />
+      <g
+         id="g5370-9" />
+      <g
+         id="g5372-3" />
+      <g
+         id="g5374-6" />
+      <g
+         id="g5376-0" />
+      <g
+         id="g5378-6" />
+      <g
+         id="g5380-2" />
+      <g
+         id="g5382-6" />
+      <g
+         id="g5384-1" />
+      <g
+         id="g5386-8" />
+      <g
+         id="g5388-7" />
+      <g
+         id="g5390-9" />
+    </g>
+    <g
+       id="g5398-3-2"
+       transform="matrix(0,0.55346773,-0.55346773,0,644.61953,118.24151)"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         id="g5355-5-0">
+        <g
+           id="_x33__12_-6-2">
+          <g
+             id="g5358-2-3">
+            <path
+               id="path5360-9-7"
+               d="m 420.918,83.353 105.681,105.384 c 9.725,9.7 25.511,9.7 35.235,0 9.724,-9.699 9.724,-25.437 0,-35.136 L 414.855,7.067 C 409.659,1.896 402.78,-0.306 396,0.04 389.196,-0.331 382.317,1.871 377.121,7.067 L 230.167,153.6 c -9.724,9.7 -9.724,25.437 0,35.137 9.725,9.699 25.511,9.699 35.235,0 L 371.083,83.353 c 24.12927,-16.033132 25.31562,-13.985614 49.835,0 z"
+               inkscape:connector-curvature="0"
+               sodipodi:nodetypes="cccccccccccc" />
+          </g>
+        </g>
+      </g>
+      <g
+         id="g5362-1-5" />
+      <g
+         id="g5364-2-9" />
+      <g
+         id="g5366-7-2" />
+      <g
+         id="g5368-0-2" />
+      <g
+         id="g5370-9-8" />
+      <g
+         id="g5372-3-9" />
+      <g
+         id="g5374-6-7" />
+      <g
+         id="g5376-0-3" />
+      <g
+         id="g5378-6-6" />
+      <g
+         id="g5380-2-1" />
+      <g
+         id="g5382-6-2" />
+      <g
+         id="g5384-1-9" />
+      <g
+         id="g5386-8-3" />
+      <g
+         id="g5388-7-1" />
+      <g
+         id="g5390-9-9" />
+    </g>
+    <path
+       sodipodi:type="arc"
+       style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path4644-4"
+       sodipodi:cx="852.22357"
+       sodipodi:cy="281.12976"
+       sodipodi:rx="204.99432"
+       sodipodi:ry="204.99432"
+       d="m 1057.2179,281.12976 a 204.99432,204.99432 0 1 1 -409.98865,0 204.99432,204.99432 0 1 1 409.98865,0 z"
+       transform="matrix(0.80479912,0,0,0.80479912,150.38331,794.23834)"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:48px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       x="774.60779"
+       y="1040.7148"
+       id="text4130-7"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan4132-8"
+         x="774.60779"
+         y="1040.7148">Signal</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:2.50511575;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect4134-4"
+       width="242.34212"
+       height="242.34212"
+       x="26.088919"
+       y="903.6236"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:48px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       x="75.009148"
+       y="1047.0181"
+       id="text4126-5"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan4128-0"
+         x="75.009148"
+         y="1047.0181"
+         style="fill:#ffffff">Object</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:35.43307114;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:none"
+       d="m 314.55307,1042.0694 271.79019,0"
+       id="path4646-3"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       id="g5398-3-2-6"
+       transform="matrix(0,0.55346773,-0.55346773,0,622.88976,821.59851)"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         id="g5355-5-0-1">
+        <g
+           id="_x33__12_-6-2-0">
+          <g
+             id="g5358-2-3-6">
+            <path
+               id="path5360-9-7-3"
+               d="m 420.918,83.353 105.681,105.384 c 9.725,9.7 25.511,9.7 35.235,0 9.724,-9.699 9.724,-25.437 0,-35.136 L 414.855,7.067 C 409.659,1.896 402.78,-0.306 396,0.04 389.196,-0.331 382.317,1.871 377.121,7.067 L 230.167,153.6 c -9.724,9.7 -9.724,25.437 0,35.137 9.725,9.699 25.511,9.699 35.235,0 L 371.083,83.353 c 24.12927,-16.033132 25.31562,-13.985614 49.835,0 z"
+               inkscape:connector-curvature="0"
+               sodipodi:nodetypes="cccccccccccc" />
+          </g>
+        </g>
+      </g>
+      <g
+         id="g5362-1-5-2" />
+      <g
+         id="g5364-2-9-0" />
+      <g
+         id="g5366-7-2-6" />
+      <g
+         id="g5368-0-2-1" />
+      <g
+         id="g5370-9-8-5" />
+      <g
+         id="g5372-3-9-5" />
+      <g
+         id="g5374-6-7-4" />
+      <g
+         id="g5376-0-3-7" />
+      <g
+         id="g5378-6-6-6" />
+      <g
+         id="g5380-2-1-5" />
+      <g
+         id="g5382-6-2-6" />
+      <g
+         id="g5384-1-9-9" />
+      <g
+         id="g5386-8-3-3" />
+      <g
+         id="g5388-7-1-7" />
+      <g
+         id="g5390-9-9-4" />
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:35.43307114;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 322.46299,1435.3898 c 69.0992,-13.8198 97.15442,-30.3472 96.73889,-76.009 -1.01319,-111.3374 -64.4926,-260.2738 66.7959,-306.3399 58.72205,-20.6042 87.52567,-13.8198 87.52567,-13.8198"
+       id="path5665"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cssc"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       sodipodi:type="star"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:10.62992096;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path5667"
+       sodipodi:sides="20"
+       sodipodi:cx="-614.98297"
+       sodipodi:cy="1326.8312"
+       sodipodi:r1="145.27277"
+       sodipodi:r2="96.58831"
+       sodipodi:arg1="0.44237422"
+       sodipodi:arg2="0.59945386"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m -483.69448,1389.0205 -51.54095,-7.695 25.89769,45.2216 -46.64048,-23.2454 10.65593,51.0111 -37.17452,-36.5204 -5.62891,51.8073 -24.06965,-46.2204 -21.36275,47.5322 -8.60868,-51.3962 -35.00546,38.6044 7.69497,-51.541 -45.22158,25.8977 23.24538,-46.6405 -51.01111,10.656 36.52037,-37.1746 -51.80731,-5.6289 46.22049,-24.0696 -47.53225,-21.3628 51.39624,-8.6087 -38.60441,-35.0054 51.54095,7.695 -25.89768,-45.2216 46.64048,23.2454 -10.65593,-51.0112 37.17451,36.5204 5.62892,-51.8073 24.06965,46.2205 21.36275,-47.5322 8.60868,51.3962 35.00546,-38.6044 -7.69497,51.5409 45.22158,-25.8977 -23.24538,46.6405 51.01111,-10.6559 -36.52037,37.1745 51.80731,5.6289 -46.2205,24.0697 47.53225,21.3627 -51.39623,8.6087 z"
+       transform="matrix(1.1464666,0,0,1.1464666,851.31741,-105.65911)"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot5669"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Ubuntu;font-style:normal;font-weight:normal;font-size:48px;line-height:125%;letter-spacing:0px;word-spacing:0px;-inkscape-font-specification:Ubuntu;font-stretch:normal;font-variant:normal"><flowRegion
+         id="flowRegion5671"><rect
+           id="rect5673"
+           width="331.67621"
+           height="221.11748"
+           x="-499.81763"
+           y="1179.4196" /></flowRegion><flowPara
+         id="flowPara5675" /></flowRoot>    <text
+       xml:space="preserve"
+       style="font-size:48px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff8080;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       x="52.066151"
+       y="1429.9965"
+       id="text5677"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5679"
+         x="52.066151"
+         y="1429.9965"
+         style="fill:#ff8080">Nuisance</tspan></text>
+    <path
+       sodipodi:type="arc"
+       style="fill:none;stroke:#000000;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path4644-4-5"
+       sodipodi:cx="852.22357"
+       sodipodi:cy="281.12976"
+       sodipodi:rx="204.99432"
+       sodipodi:ry="204.99432"
+       d="m 1057.2179,281.12976 a 204.99432,204.99432 0 1 1 -409.98865,0 204.99432,204.99432 0 1 1 409.98865,0 z"
+       transform="matrix(0.80479912,0,0,0.80479912,228.28593,1732.0183)"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:48px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       x="852.51044"
+       y="1936.4948"
+       id="text4130-7-2"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan4132-8-5"
+         x="852.51044"
+         y="1936.4948">Signal</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:2.50511575;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect4134-4-4"
+       width="242.34212"
+       height="242.34212"
+       x="103.99152"
+       y="1841.4034"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:48px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       x="152.91176"
+       y="1942.798"
+       id="text4126-5-7"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan4128-0-4"
+         x="152.91176"
+         y="1942.798"
+         style="fill:#ffffff">Object</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:35.43307114;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:none"
+       d="m 392.45566,1979.8494 271.7902,0"
+       id="path4646-3-4"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       id="g5398-3-2-6-3"
+       transform="matrix(0,0.55346773,-0.55346773,0,700.79236,1759.3785)"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         id="g5355-5-0-1-0">
+        <g
+           id="_x33__12_-6-2-0-7">
+          <g
+             id="g5358-2-3-6-8">
+            <path
+               id="path5360-9-7-3-6"
+               d="m 420.918,83.353 105.681,105.384 c 9.725,9.7 25.511,9.7 35.235,0 9.724,-9.699 9.724,-25.437 0,-35.136 L 414.855,7.067 C 409.659,1.896 402.78,-0.306 396,0.04 389.196,-0.331 382.317,1.871 377.121,7.067 L 230.167,153.6 c -9.724,9.7 -9.724,25.437 0,35.137 9.725,9.699 25.511,9.699 35.235,0 L 371.083,83.353 c 24.12927,-16.033132 25.31562,-13.985614 49.835,0 z"
+               inkscape:connector-curvature="0"
+               sodipodi:nodetypes="cccccccccccc" />
+          </g>
+        </g>
+      </g>
+      <g
+         id="g5362-1-5-2-8" />
+      <g
+         id="g5364-2-9-0-8" />
+      <g
+         id="g5366-7-2-6-4" />
+      <g
+         id="g5368-0-2-1-3" />
+      <g
+         id="g5370-9-8-5-1" />
+      <g
+         id="g5372-3-9-5-4" />
+      <g
+         id="g5374-6-7-4-9" />
+      <g
+         id="g5376-0-3-7-2" />
+      <g
+         id="g5378-6-6-6-0" />
+      <g
+         id="g5380-2-1-5-6" />
+      <g
+         id="g5382-6-2-6-8" />
+      <g
+         id="g5384-1-9-9-9" />
+      <g
+         id="g5386-8-3-3-2" />
+      <g
+         id="g5388-7-1-7-6" />
+      <g
+         id="g5390-9-9-4-6" />
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:35.43307114;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 400.36566,2373.1698 c 69.0992,-13.8198 97.1544,-30.3472 96.7388,-76.009 -1.0131,-111.3374 -64.4926,-260.2738 66.7959,-306.3399 58.7221,-20.6042 87.5257,-13.8198 87.5257,-13.8198"
+       id="path5665-4"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cssc"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       sodipodi:type="star"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:10.62992096;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path5667-9"
+       sodipodi:sides="20"
+       sodipodi:cx="-614.98297"
+       sodipodi:cy="1326.8312"
+       sodipodi:r1="145.27277"
+       sodipodi:r2="96.58831"
+       sodipodi:arg1="0.44237422"
+       sodipodi:arg2="0.59945386"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m -483.69448,1389.0205 -51.54095,-7.695 25.89769,45.2216 -46.64048,-23.2454 10.65593,51.0111 -37.17452,-36.5204 -5.62891,51.8073 -24.06965,-46.2204 -21.36275,47.5322 -8.60868,-51.3962 -35.00546,38.6044 7.69497,-51.541 -45.22158,25.8977 23.24538,-46.6405 -51.01111,10.656 36.52037,-37.1746 -51.80731,-5.6289 46.22049,-24.0696 -47.53225,-21.3628 51.39624,-8.6087 -38.60441,-35.0054 51.54095,7.695 -25.89768,-45.2216 46.64048,23.2454 -10.65593,-51.0112 37.17451,36.5204 5.62892,-51.8073 24.06965,46.2205 21.36275,-47.5322 8.60868,51.3962 35.00546,-38.6044 -7.69497,51.5409 45.22158,-25.8977 -23.24538,46.6405 51.01111,-10.6559 -36.52037,37.1745 51.80731,5.6289 -46.2205,24.0697 47.53225,21.3627 -51.39623,8.6087 z"
+       transform="matrix(1.1464666,0,0,1.1464666,929.22006,832.12086)"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:48px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff8080;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       x="123.96877"
+       y="2323.7766"
+       id="text5677-5"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5679-0"
+         x="123.96877"
+         y="2323.7766"
+         style="fill:#ff8080">Nuisance</tspan></text>
+    <g
+       id="g6231"
+       transform="matrix(2.053479,0,0,2.053479,-408.4563,1322.6225)"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         word-spacing="normal"
+         letter-spacing="normal"
+         font-size-adjust="none"
+         font-stretch="normal"
+         font-weight="normal"
+         font-variant="normal"
+         font-style="normal"
+         stroke-miterlimit="10.433"
+         xml:space="preserve"
+         transform="matrix(1.0629921,0,0,-1.0629921,-186.02362,789.27165)"
+         id="content"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"><path
+           id="path6234"
+           d="m 479.15,444.96 -0.07,-0.06 -0.07,-0.07 -0.08,-0.07 -0.08,-0.07 -0.08,-0.08 -0.09,-0.08 -0.09,-0.09 -0.1,-0.08 -0.09,-0.09 -0.1,-0.09 -0.2,-0.2 -0.19,-0.19 -0.19,-0.2 -0.09,-0.11 -0.09,-0.1 -0.09,-0.1 -0.08,-0.1 -0.08,-0.11 -0.08,-0.1 -0.07,-0.1 -0.07,-0.1 -0.05,-0.1 -0.06,-0.1 -0.04,-0.1 -0.04,-0.09 -0.03,-0.09 -0.03,-0.09 -0.01,-0.09 -0.01,-0.09 c 0,-0.5 0.5,-1 1,-1 0.46,0 0.71,0.36 0.96,0.66 0.59,0.75 1.73,2.14 3.94,3.23 0.34,0.21 0.84,0.46 0.84,1.05 0,0.5 -0.34,0.75 -0.7,1 -1.1,0.75 -1.64,1.64 -2.05,2.83 -0.09,0.45 -0.3,1.11 -0.99,1.11 -0.7,0 -1,-0.66 -1,-1.05 0,-0.25 0.4,-1.84 1.19,-2.89 h -16.78 c -0.84,0 -1.75,0 -1.75,-1 0,-1 0.91,-1 1.75,-1 z"
+           inkscape:connector-curvature="0"
+           style="fill:#ffffff;stroke:#ffffff;stroke-width:0" /><path
+           id="path6236"
+           d="m 465.79,426.12 h 4.68 c 0.99,0 1.49,0 1.49,1 0,0.55 -0.5,0.55 -1.39,0.55 h -4.39 c 1.79,7.08 2.04,8.08 2.04,8.37 0,0.85 -0.59,1.35 -1.43,1.35 -0.16,0 -1.55,-0.05 -2,-1.8 l -1.94,-7.92 h -4.69 c -1,0 -1.5,0 -1.5,-0.94 0,-0.61 0.41,-0.61 1.41,-0.61 h 4.37 c -3.58,-14.14 -3.78,-14.98 -3.78,-15.89 0,-2.69 1.89,-4.58 4.58,-4.58 5.08,0 7.92,7.27 7.92,7.67 0,0.5 -0.39,0.5 -0.59,0.5 -0.46,0 -0.5,-0.15 -0.75,-0.7 -2.14,-5.17 -4.78,-6.37 -6.47,-6.37 -1.05,0 -1.55,0.65 -1.55,2.29 0,1.19 0.09,1.55 0.3,2.39 z"
+           inkscape:connector-curvature="0"
+           style="fill:#ffffff;stroke:#ffffff;stroke-width:0" /></g>    </g>
+    <g
+       transform="matrix(1.8096115,0,0,1.8096115,-345.01881,1779.364)"
+       id="g6520"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+         id="g6522"
+         transform="matrix(1.0629921,0,0,-1.0629921,-186.02362,789.27165)"
+         xml:space="preserve"
+         stroke-miterlimit="10.433"
+         font-style="normal"
+         font-variant="normal"
+         font-weight="normal"
+         font-stretch="normal"
+         font-size-adjust="none"
+         letter-spacing="normal"
+         word-spacing="normal"><path
+           style="fill:#ff0000;stroke:#ff0000;stroke-width:0"
+           inkscape:connector-curvature="0"
+           d="m 483.59,448.92 -0.07,-0.06 -0.07,-0.07 -0.08,-0.07 -0.08,-0.07 -0.08,-0.08 -0.09,-0.08 -0.09,-0.09 -0.1,-0.08 -0.09,-0.09 -0.1,-0.09 -0.19,-0.19 -0.2,-0.2 -0.19,-0.2 -0.09,-0.11 -0.09,-0.1 -0.09,-0.1 -0.08,-0.1 -0.08,-0.11 -0.08,-0.1 -0.07,-0.1 -0.06,-0.1 -0.06,-0.1 -0.06,-0.1 -0.04,-0.1 -0.04,-0.09 -0.03,-0.09 -0.03,-0.09 -0.01,-0.09 0,-0.09 c 0,-0.5 0.5,-1 1,-1 0.45,0 0.7,0.36 0.95,0.66 0.59,0.75 1.73,2.14 3.94,3.24 0.34,0.2 0.84,0.45 0.84,1.04 0,0.5 -0.34,0.75 -0.7,1 -1.1,0.75 -1.64,1.64 -2.05,2.83 -0.09,0.45 -0.3,1.11 -0.98,1.11 -0.71,0 -1,-0.66 -1,-1.05 0,-0.25 0.39,-1.84 1.18,-2.89 h -16.78 c -0.84,0 -1.75,0 -1.75,-1 0,-1 0.91,-1 1.75,-1 z"
+           id="path6524" /><path
+           style="fill:#ff0000;stroke:#ff0000;stroke-width:0"
+           inkscape:connector-curvature="0"
+           d="m 463.19,421.45 -0.5,-0.34 -0.47,-0.35 -0.45,-0.35 -0.42,-0.35 -0.4,-0.36 -0.38,-0.36 -0.36,-0.36 -0.33,-0.37 -0.32,-0.36 -0.29,-0.37 -0.28,-0.36 -0.25,-0.36 -0.24,-0.36 -0.22,-0.36 -0.21,-0.35 -0.18,-0.35 -0.17,-0.34 -0.16,-0.34 -0.14,-0.33 -0.13,-0.32 -0.11,-0.32 -0.1,-0.3 -0.09,-0.3 -0.07,-0.28 -0.07,-0.28 -0.05,-0.26 -0.05,-0.25 -0.03,-0.24 -0.03,-0.22 -0.02,-0.21 -0.01,-0.19 0,-0.17 c 0,-2.39 1.34,-3.8 1.45,-3.94 1.6,-1.66 2.05,-1.84 5.78,-3.25 l 6.02,-2.33 c 0.75,-0.36 1.75,-0.7 1.75,-2.16 0,-1.14 -0.89,-2.64 -2.44,-2.64 -2.18,0 -3.84,1.21 -4.39,1.61 -0.29,0.19 -0.34,0.24 -0.54,0.24 -0.4,0 -0.5,-0.35 -0.5,-0.55 0,-0.59 2.64,-2.39 5.43,-2.39 3.1,0 5.17,2.89 5.17,5.34 0,2.39 -1.84,3.29 -2.39,3.54 -0.68,0.25 -2.39,0.89 -3.03,1.14 -1,0.4 -2,0.79 -3.04,1.15 l -2.99,1.19 c -2.23,0.91 -3.73,2.34 -3.73,4.44 0,2.04 1.93,6.37 6.12,8.47 1.85,-0.66 3.35,-0.66 4.39,-0.66 1.49,0 4.63,0 4.63,1.55 0,1.25 -2.14,1.34 -4.08,1.34 l -0.05,-1.09 c 1.74,0 1.94,-0.05 2.83,-0.3 -0.39,-0.2 -0.89,-0.39 -3.19,-0.39 -1.14,0 -1.59,0 -2.48,0.39 h 0 c 1.14,0.3 2.23,0.3 2.84,0.3 l 0.05,1.09 c -0.91,0 -2.34,0 -4.19,-0.59 -1.29,1.29 -1.5,2.93 -1.5,3.89 0,2.78 1.8,6.62 5.53,8.47 0.91,-1.1 2.05,-1.1 3.19,-1.1 l 0.06,1.1 c -0.95,0 -1.54,0 -2.09,0.45 h 0 c 0.8,0.25 1.84,0.25 2.39,0.25 1.69,0 1.89,-0.06 2.78,-0.31 -0.39,-0.14 -0.89,-0.39 -3.08,-0.39 l -0.06,-1.1 c 1.25,0 4.44,0 4.44,1.55 0,1.3 -2.19,1.34 -4.14,1.34 -0.64,0 -1.85,0 -3.13,-0.25 -0.15,0.44 -0.25,0.8 -0.25,1.64 0,0.71 0.25,1.75 0.25,1.85 0,0.39 -0.25,0.64 -0.61,0.64 -0.89,0 -0.89,-2.28 -0.89,-2.44 0,-1 0.3,-1.73 0.35,-1.94 -5.33,-1.5 -8.72,-5.48 -8.72,-9.31 0,-1.84 0.9,-3.94 3.23,-5.28 z"
+           id="path6526" /></g>    </g>
+    <g
+       id="g6818"
+       transform="matrix(2.6803653,0,0,2.6803653,68.63193,1100.5007)"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/object_signal_nuisance2.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         word-spacing="normal"
+         letter-spacing="normal"
+         font-size-adjust="none"
+         font-stretch="normal"
+         font-weight="normal"
+         font-variant="normal"
+         font-style="normal"
+         stroke-miterlimit="10.433"
+         xml:space="preserve"
+         transform="matrix(1.0629921,0,0,-1.0629921,-186.02362,789.27165)"
+         id="g6820"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;letter-spacing:normal;word-spacing:normal;text-anchor:start;fill:none;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10.43299961;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"><path
+           id="path6822"
+           d="m 481.43,435.84 -0.07,-0.06 -0.07,-0.07 -0.08,-0.07 -0.08,-0.07 -0.08,-0.08 -0.09,-0.08 -0.09,-0.09 -0.1,-0.08 -0.09,-0.09 -0.1,-0.1 -0.19,-0.19 -0.2,-0.19 -0.19,-0.21 -0.09,-0.1 -0.09,-0.1 -0.09,-0.1 -0.08,-0.11 -0.08,-0.1 -0.08,-0.1 -0.07,-0.1 -0.06,-0.1 -0.06,-0.1 -0.06,-0.1 -0.04,-0.1 -0.04,-0.09 -0.03,-0.09 -0.03,-0.1 -0.01,-0.08 0,-0.09 c 0,-0.5 0.5,-1 1,-1 0.45,0 0.7,0.36 0.95,0.66 0.59,0.75 1.73,2.14 3.94,3.23 0.34,0.21 0.84,0.46 0.84,1.05 0,0.5 -0.34,0.75 -0.7,1 -1.1,0.75 -1.64,1.64 -2.05,2.83 -0.09,0.45 -0.3,1.11 -0.98,1.11 -0.71,0 -1,-0.66 -1,-1.05 0,-0.25 0.39,-1.84 1.18,-2.89 h -16.78 c -0.84,0 -1.75,0 -1.75,-1 0,-1 0.91,-1 1.75,-1 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /><path
+           id="path6824"
+           d="m 462.14,410.34 0.25,0.27 0.24,0.25 0.24,0.25 0.22,0.24 0.23,0.23 0.21,0.22 0.21,0.22 0.21,0.21 0.2,0.2 0.2,0.19 0.19,0.19 0.19,0.19 0.18,0.17 0.18,0.18 0.35,0.33 0.34,0.32 0.34,0.3 0.33,0.29 0.32,0.29 0.65,0.56 0.32,0.29 0.34,0.28 c 0,0.05 3.08,2.69 4.87,4.49 4.74,4.64 5.83,7.03 5.83,7.21 0,0.5 -0.45,0.5 -0.55,0.5 -0.34,0 -0.5,-0.09 -0.75,-0.54 -1.48,-2.39 -2.53,-3.19 -3.73,-3.19 -1.2,0 -1.8,0.75 -2.55,1.59 -0.93,1.16 -1.78,2.14 -3.43,2.14 -3.74,0 -6.02,-4.62 -6.02,-5.67 0,-0.25 0.14,-0.54 0.59,-0.54 0.46,0 0.55,0.25 0.64,0.54 0.96,2.3 3.85,2.35 4.24,2.35 1.05,0 2,-0.36 3.14,-0.75 2,-0.75 2.55,-0.75 3.84,-0.75 -1.79,-2.14 -5.98,-5.74 -6.92,-6.53 l -4.48,-4.18 c -3.39,-3.34 -5.14,-6.18 -5.14,-6.53 0,-0.5 0.5,-0.5 0.59,-0.5 0.41,0 0.5,0.1 0.8,0.64 1.15,1.75 2.64,3.1 4.23,3.1 1.16,0 1.66,-0.46 2.89,-1.89 0.86,-1.05 1.75,-1.85 3.19,-1.85 4.94,0 7.83,6.33 7.83,7.67 0,0.25 -0.21,0.5 -0.6,0.5 -0.45,0 -0.54,-0.29 -0.7,-0.65 -1.14,-3.24 -4.33,-4.17 -5.98,-4.17 -0.99,0 -1.89,0.29 -2.94,0.64 -1.69,0.64 -2.44,0.84 -3.49,0.84 -0.09,0 -0.89,0 -1.34,-0.14 z"
+           inkscape:connector-curvature="0"
+           style="fill:#000000;stroke-width:0" /></g>    </g>
+  </g>
+</svg>
