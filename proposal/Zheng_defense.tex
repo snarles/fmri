@@ -230,34 +230,79 @@ Assume there exists a function $\psi$ that maps objects and nuisance parameters 
 
 \begin{frame}
 \frametitle{What is a representation?}
-\begin{itemize}
-\item It is often hypothesized that \emph{complex objects} (images, sounds, etc.) can be mapped into a \emph{low-dimensional} space
-\item A \emph{representation} is a nonlinear, dimensionality-reducing mapping
-\end{itemize}
+\begin{center}
+\includegraphics[scale = 0.2]{defense_diagrams/representation1.png}
+\end{center}
+A dimensionality-reducing mapping $\vec{g}$ of the signal.
 \end{frame}
+
+\begin{frame}
+\frametitle{A good representation...}
+\begin{center}
+\includegraphics[scale = 0.4]{defense_diagrams/geometry1.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{A good representation...}
+\begin{center}
+\includegraphics[scale = 0.4]{defense_diagrams/geometry1a.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{A good representation...}
+\begin{center}
+\includegraphics[scale = 0.4]{defense_diagrams/geometry2.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{...captures the object space geometry}
+\begin{center}
+\includegraphics[scale = 0.4]{defense_diagrams/geometry2a.png}
+\end{center}
+\end{frame}
+
+
 
 \begin{frame}
 \frametitle{Why do we care?}
 \begin{itemize}
-\item Application 1: Neuroscience.  Different regions of the brain have different representations of the same sensory stimuli.
-\item Application 2: Machine learning.  A good representation leads to more accurate prediction.
+\item 1) Neuroscience.  The brain is hypothesized to use representations for cognitive purposes \pause
+\item 2) Machine learning.  Representations turn out to be useful for many Machine Learning tasks!
 \end{itemize}
 \end{frame}
 
 \begin{frame}
-\frametitle{Example: Facial recognition}
+\frametitle{How can we tell if a representation is good?}
 \begin{itemize}
-\item Used to tag images in software, security \pause
-\item Preprocessing
-\includegraphics[scale = 0.4]{face_alignment.png}
-\pause
-\item Feature extraction
-\includegraphics[scale = 0.4]{facerec_features.jpg}
+\item Method 1: \emph{Ground truth}. If we happen to know the object parameters $\vec{t}$ (e.g. we simulated the data). \pause
+\item Method 2: \emph{End result}. By the performance of the representation on a machine learning task. \pause
+\item Method 3: \emph{Supervised}.  If we have a \emph{response variable} $Y$ which can be used to infer distances in $\vec{t}$.
 \end{itemize}
 \end{frame}
 
 \begin{frame}
-\frametitle{What defines a good representation?}
+\frametitle{Supervised evaluation of representations}
+\begin{center}
+\includegraphics[scale = 0.25]{defense_diagrams/supervised_eval.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Example: face recognition}
+\begin{center}
+\includegraphics[scale = 0.15]{defense_diagrams/face_3.png}
+\end{center}
+\begin{itemize}
+\item The ID of the individual is an appropriate \emph{response} variable...\pause
+\item ...because two photos labeled with the same ID must belong to the same object $\vec{t}$ \pause
+\item That is, for $d(y, y')$ being the zero-one distance,
+\[
+d(y, y') = 0 \Leftrightarrow d(\vec{t}, \vec{t}') = 0.
+\]
+\end{itemize}
 
 \end{frame}
 
