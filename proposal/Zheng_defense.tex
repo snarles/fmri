@@ -578,42 +578,6 @@ the $k$-class average risk is given by
 \end{frame}
 
 \begin{frame}
-\frametitle{Defining the $U$-function}
-Define $U_x(y)$ as follows:
-\begin{itemize}
-\item Suppose we have test instance (face) $x$ whose true label (person) is $y$.
-\item Let $Y'$ be a random \emph{incorrect} label (person).
-\item Use the classifier to guess whether $x$ belongs to $y$ or $Y'$.
-\item Define $U_x(y)$ as the probabilility of success (randomizing over training data).
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Toy example}
-\begin{center}
-\includegraphics[scale = 0.5]{../extrapolation/illus_ufunc_0_7.pdf}
-\end{center}
-\[
-U_y(x) = \Pr[d(x, \rho Y') > d(x, \rho y)],\text{ for }Y' \sim N(0,1).
-\]
-\end{frame}
-
-\begin{frame}
-\frametitle{Defining $\bar{D}(u)$}
-\begin{itemize}
-\item Define random variable as $U_Y(X)$ for $(Y, X)$ drawn from the joint distribution.\pause
-\item $\bar{D}(u)$ is the cumulative distribution function of $U$,
-\[
-\bar{D}(u) = \Pr[U_Y(X) \leq u].
-\]
-\pause
-\end{itemize}
-\begin{center}
-\includegraphics[scale = 0.45]{../extrapolation/illus_kfunc_0_7.pdf}
-\end{center}
-\end{frame}
-
-\begin{frame}
 \frametitle{Computing average risk}
 \[
 \text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
