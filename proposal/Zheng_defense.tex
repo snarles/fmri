@@ -306,6 +306,489 @@ d(y, y') = 0 \Leftrightarrow d(\vec{t}, \vec{t}') = 0.
 
 \end{frame}
 
+\begin{frame}
+\frametitle{Outline}
+\begin{itemize}
+\item \emph{Previous work}. Identification accuracy, a method for evaluating representations
+\item \emph{Contribution 1}.  Extrapolation of identification accuracy. 
+\item \emph{Contribution 2}.  Link between identification accuracy and mutual information.
+%\item \emph{Discussion}.  Geometric intuitions and further connections.
+\end{itemize}
+\end{frame}
+
+\section{Identification}
+
+\begin{frame}
+\sectionpage
+\end{frame}
+
+\begin{frame}
+\frametitle{Identifying natural images from fMRI data}
+Kay, Naselaris, Prenger and Gallant (2008), \emph{Nature}.
+\begin{center}
+\includegraphics[scale = 0.25]{defense_diagrams/ident1.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Comparing two different natural image bases}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\includegraphics[scale = 0.2]{rbf.png}
+
+Retinotopic (Gaussian) basis
+\end{column}
+\begin{column}{0.5\textwidth}
+\includegraphics[scale = 0.2]{../info_theory_paper/thesis_2/Figures/Gabor.jpg}
+
+Gabor filter basis
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Identifying natural images from fMRI data}
+Kay et al. used \emph{identification accuracy} as a metric for the quality of the representation
+\begin{center}
+\includegraphics[scale = 0.25]{kay_extrapolation.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Multiple-response regression}
+\begin{itemize}
+\item Pairs $(x_i,y_i)_{i=1}^n$, where $X$ is $p$-dimensional and $Y$ is $q$-dimensional.
+\item Data matrices $\bX_{n \times p}$, $\bY_{n \times q}$.
+\item For each column of $Y$, fit sparse model $Y^{(i)} \approx X^T \beta^{(i)}  + \epsilon$, e.g. by using elastic net (Zou 2008), 
+\[
+\hat{\beta}^{(i)} = \text{argmin}_\beta ||\bX^T \beta^{(i)} - Y^{(i)}||^2 + \lambda_2 ||\beta^{(i)}||_2^2 + \lambda_1 ||\beta^{(i)}||_1
+\]
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Regression vs Identification accuracy}
+\begin{itemize}
+\item Independent \emph{test set} $(x_i^*, y_i^*)_{i=1}^k$. 
+\item Use model to predict $\hat{y}_i^* = (x_i^*)^T \hat{B}$ for $i = 1,\hdots, k$.
+\end{itemize}
+Two ways to evaluate the predictive accuracy of the regression model:
+\begin{itemize}
+\item Regression (mean squared-error) loss:
+\[
+\text{MSE} = \frac{1}{k} \sum_{i=1}^k ||y_i^* - \hat{y}_i^*||^2.
+\]
+\item Identification accuracy (Kay 2008):
+\[
+\text{IdAcc}_k = \frac{1}{k} \sum_{i=1}^k I\{\hat{y}_i^* \text{ is nearest neighbor of }y_i^*\}.
+\]
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Regression vs Identification accuracy}
+\begin{center}
+\includegraphics[scale = 0.5]{../diagram/idloss1.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Mean-squared error}
+\begin{center}
+\includegraphics[scale = 0.5]{../diagram/idloss2a.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Identification accuracy}
+\begin{center}
+\includegraphics[scale = 0.5]{../diagram/idloss2b.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Identification accuracy for comparing representations}
+\begin{itemize}
+\item Suppose you have two different representation models:
+\begin{itemize}
+\item $\vec{g}_1$, the retinotopic model
+\item $\vec{g}_2$, Gabor filters \pause
+\end{itemize}
+\item For each model, train a linear model
+\[
+\vec{Y} = B^T \vec{g}(\vec{Z}) + \epsilon
+\]
+\end{itemize}
+\vspace{1.01in}
+\end{frame}
+
+\begin{frame}
+\frametitle{Identification accuracy for comparing representations}
+\begin{itemize}
+\item Suppose you have two different representation models:
+\begin{itemize}
+\item $\vec{g}_1$, the retinotopic model
+\item $\vec{g}_2$, Gabor filters
+\end{itemize}
+\item For each model, train a linear model
+\[
+\underbrace{\vec{Y}}_{\text{brain response}} = \underbrace{B^T}_{\text{coefficient matrix}} \underbrace{\vec{g}}_{representation}(\underbrace{\vec{Z}}_{pixels}) + \epsilon
+\]
+\pause
+\item Evaluate the identification accuracy on $k$ test images. \pause
+\item You can use a test set which is larger than $k$, and average the identification accuracy over $k$-sized subsamples
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Identifying natural images from fMRI data}
+Gabor filters yields consistently higher accuracy than retinotopic model
+\begin{center}
+\includegraphics[scale = 0.25]{kay_extrapolation.png}
+\end{center}
+\pause
+\emph{Q}: Is this always the case? or could you also have intersecting curves?
+\end{frame}
+
+\section{Extrapolation}
+
+\begin{frame}
+\sectionpage
+\end{frame}
+
+\begin{frame}
+\frametitle{Randomized multi-class classification}
+
+\begin{center}
+\begin{tabular}{c|c}
+1. Population of categories $\pi(y)$ & 
+2. Subsample $k$ labels, $y_1,\hdots, y_k$\\
+\includegraphics[scale = 0.2]{photo_folders.png} &
+\includegraphics[scale = 0.2]{photo_folders2.png}
+\end{tabular}
+\end{center}
+
+\emph{Identification} is a special case of a \emph{randomized classification} task.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Toy example}
+
+\begin{center}
+\includegraphics[scale = 0.5, clip = true, trim = 0 0.8in 0 0.8in]{../extrapolation/illus_example1a.pdf}
+\end{center}
+
+\begin{itemize}
+\item Suppose $k=3$, and we draw $Y_1, Y_2, Y_3$.
+\item The \emph{Bayes rule} is the optimal classifier and depends on knowing the true densities:
+\[
+\hat{y}(x) = \text{argmax}_{y_i} p(x|y_i)
+\]
+\item The \emph{Bayes Risk}, which is the misclassification rate of the optimal classifier.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Toy example}
+
+\begin{center}
+\includegraphics[scale = 0.5, clip = true, trim = 0 0 0 0.5in]{../extrapolation/illus_example1b.pdf}
+\end{center}
+
+\begin{itemize}
+\item The \emph{Bayes Risk} is the expected test error of the Bayes rule,
+\[
+\frac{1}{k} \sum_{i=1}^k \Pr[\hat{y}(x) \neq Y| Y = y_i]
+\]
+\end{itemize}
+% = 1 - \frac{1}{k}\int \max_{i=1}^k p(x|y_i) dx.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Toy example}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\includegraphics[scale = 0.5]{../extrapolation/autoplots/box4_1.pdf}
+\end{column}
+\begin{column}{0.5\textwidth}
+\includegraphics[scale = 0.5]{../extrapolation/autoplots/dens4_1.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Toy example}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\includegraphics[scale = 0.5]{../extrapolation/autoplots/box4_2.pdf}
+\end{column}
+\begin{column}{0.5\textwidth}
+\includegraphics[scale = 0.5]{../extrapolation/autoplots/dens4_2.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Toy example}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\includegraphics[scale = 0.5]{../extrapolation/autoplots/box4_3.pdf}
+\end{column}
+\begin{column}{0.5\textwidth}
+\includegraphics[scale = 0.5]{../extrapolation/autoplots/dens4_3.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Toy example}
+\begin{center}
+\includegraphics[scale = 0.5]{../extrapolation/autoplots/all_box.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Toy example}
+\begin{center}
+\includegraphics[scale = 0.5]{../extrapolation/illus_err_0_7.pdf}
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Theoretical Result}
+
+\textbf{Theorem. (Z.}, Achanta, Benjamini.)
+Suppose $\pi$, $\{F_y\}_{y \in \mathcal{Y}}$ and marginal classifier
+$\mathcal{F}$ satisfy \emph{(some regularity condition)}.  Then, 
+there exists some function $\bar{D}(u)$ on $[0,1] \to [0,1]$ such that
+the $k$-class average risk is given by
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+\pause
+\vspace{1in}
+
+\emph{Remark.} This result also applies to the \emph{Bayes identification risk}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Defining the $U$-function}
+Define $U_x(y)$ as follows:
+\begin{itemize}
+\item Suppose we have test instance (face) $x$ whose true label (person) is $y$.
+\item Let $Y'$ be a random \emph{incorrect} label (person).
+\item Use the classifier to guess whether $x$ belongs to $y$ or $Y'$.
+\item Define $U_x(y)$ as the probabilility of success (randomizing over training data).
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Toy example}
+\begin{center}
+\includegraphics[scale = 0.5]{../extrapolation/illus_ufunc_0_7.pdf}
+\end{center}
+\[
+U_y(x) = \Pr[d(x, \rho Y') > d(x, \rho y)],\text{ for }Y' \sim N(0,1).
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Defining $\bar{D}(u)$}
+\begin{itemize}
+\item Define random variable as $U_Y(X)$ for $(Y, X)$ drawn from the joint distribution.\pause
+\item $\bar{D}(u)$ is the cumulative distribution function of $U$,
+\[
+\bar{D}(u) = \Pr[U_Y(X) \leq u].
+\]
+\pause
+\end{itemize}
+\begin{center}
+\includegraphics[scale = 0.45]{../extrapolation/illus_kfunc_0_7.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Computing average risk}
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+\begin{center}
+($k$ = 2)
+\includegraphics[scale = 0.4, clip=true, trim=0 0.1in 0 0.7in]{../extrapolation/rho_0_7_fmla2.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Computing average risk}
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+\begin{center}
+($k$ = 3)
+\includegraphics[scale = 0.4, clip=true, trim=0 0.1in 0 0.7in]{../extrapolation/rho_0_7_fmla3.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Computing average risk}
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+\begin{center}
+($k$ = 4)
+\includegraphics[scale = 0.4, clip=true, trim=0 0.1in 0 0.7in]{../extrapolation/rho_0_7_fmla4.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Computing average risk}
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+\begin{center}
+($k$ = 5)
+\includegraphics[scale = 0.4, clip=true, trim=0 0.1in 0 0.7in]{../extrapolation/rho_0_7_fmla5.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Computing average risk}
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+\begin{center}
+($k$ = 6)
+\includegraphics[scale = 0.4, clip=true, trim=0 0.1in 0 0.7in]{../extrapolation/rho_0_7_fmla6.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Computing average risk}
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+\begin{center}
+($k$ = 7)
+\includegraphics[scale = 0.4, clip=true, trim=0 0.1in 0 0.7in]{../extrapolation/rho_0_7_fmla7.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Computing average risk}
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+\begin{center}
+($k$ = 8)
+\includegraphics[scale = 0.4, clip=true, trim=0 0.1in 0 0.7in]{../extrapolation/rho_0_7_fmla8.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Computing average risk}
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+\begin{center}
+($k$ = 9)
+\includegraphics[scale = 0.4, clip=true, trim=0 0.1in 0 0.7in]{../extrapolation/rho_0_7_fmla9.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Computing average risk}
+\[
+\text{AvRisk}_k = (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+\begin{center}
+($k$ {\tiny =}\hspace{0.025in}10)
+\includegraphics[scale = 0.4, clip=true, trim=0 0.1in 0 0.7in]{../extrapolation/rho_0_7_fmla10.png}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Implication: estimate $\bar{D}(u)$ to predict risk}
+\begin{itemize}
+\item Theoretical result links $k$-class average risk to $\bar{D}(u)$ function
+\item In real data, we do not know $\bar{D}(u)$ since it depends on the unknown joint distribution
+\item However, given a model, we can estimate $\bar{D}(u)$
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{So... can accuracy curves intersect?}
+\begin{itemize}
+\item In general, the answer is \emph{yes}.\pause
+\item However, we will see in the next section that under \emph{high-dimension} assumptions, the Bayes accuracy curves do \emph{not} intersect.
+\pause
+\item Therefore, a single parameter, the \emph{mutual information}, suffices to summarize the entire curve.
+\end{itemize}
+\end{frame}
+
+\section{Mutual Information}
+
+\begin{frame}
+\sectionpage
+\end{frame}
+
+\begin{frame}
+\frametitle{Mutual information $I(X; Y)$}
+\begin{center}
+\includegraphics[scale = 0.23]{shannon_claude.png}
+\hspace{0.2in}
+\includegraphics[scale = 0.2]{kinney2.png}
+\end{center}
+Introduced in Shannon's 1948 paper, ``A mathematical theory of communication''
+\[
+I(X; Y) = \int \log \left(\frac{p(x, y)}{p(x)p(y)}\right) p(x, y) dx dy
+\]
+
+\vspace{0.2in}
+\tiny{Image credit Kinney et al. 2014.}
+\end{frame}
+
+\begin{frame}
+\frametitle{Result 1. Lower bound for mutual information}
+\begin{itemize}
+\item Define the identification risk as the expected identification loss
+\[
+\text{IdRisk}_k = \E[\text{IdLoss}_k]
+\]
+\item \textbf{Theorem.} (Z., Benjamini 2017) There exists a function $h_k$ such that
+\[I(\vec{g}(\vec{Z}); \vec{Y}) \geq h_k(\text{IdRisk}_k).\]
+\end{itemize}
+\begin{center}
+\begin{tabular}{cc}
+$h_3$ & $h_4$\\
+\includegraphics[scale = 0.4, clip=true, trim=0 0 0 0.55in]{../idloss/g3.pdf} &
+\includegraphics[scale = 0.4, clip=true, trim=0 0 0 0.55in]{../idloss/g4.pdf}
+\end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Result 2. Limiting behavior of accuracy curves} 
+Define
+$\text{ABA}_k$ as the Bayes identification accuracy (or average Bayes
+classification accuracy).  Then under a particular high-dimensional
+limit,
+\begin{equation}\label{abepi}
+\text{ABA}_k \approx \pi_k(\sqrt{2 I(X; Y)})
+\end{equation}
+The function $\pi_k$ is given by
+\[
+\pi_k(c) = \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
+\]
+\begin{center}
+\includegraphics[scale = 0.2]{piK.png}
+\end{center}
+\end{frame}
 
 \section*{Acknowledgements}
 
@@ -317,23 +800,23 @@ d(y, y') = 0 \Leftrightarrow d(\vec{t}, \vec{t}') = 0.
 \begin{center}
 \includegraphics[scale = 0.04]{IMG_0703.JPG}
 
-\includegraphics[scale = 0.6]{Taylor_2010.jpg}
+\includegraphics[scale = 0.2]{JonathanTreeRot.jpg}
 \end{center}
 \end{frame}
 
 \begin{frame}
 \begin{center}
 \begin{tabular}{c}
-\includegraphics[scale = 0.7]{2014_Efron-indoors.jpg}\\
-\includegraphics[scale = 0.16]{poldrack_photo2_400.jpg}\\
-\includegraphics[scale = 0.16]{tsachypic.jpg}
+\includegraphics[scale = 0.8]{2014_Efron-indoors.jpg}\\
+\includegraphics[scale = 0.19]{poldrack_photo2_400.jpg}\\
+\includegraphics[scale = 0.19]{tsachypic.jpg}
 \end{tabular}
 \end{center}
 \end{frame}
 
 \begin{frame}
 \begin{center}
-\includegraphics[scale = 0.3]{DSCN3964.JPG}
+\includegraphics[scale = 0.09]{DSCN3957-HDR.jpg}
 \end{center}
 \end{frame}
 
