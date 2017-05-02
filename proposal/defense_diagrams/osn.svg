@@ -83,7 +83,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1238,7 +1238,10 @@
        xml:space="preserve"
        id="flowRoot15740"
        style="font-size:48px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
-       transform="matrix(3.5920179,0,0,3.5920179,2014.4849,-6323.1668)"><flowRegion
+       transform="matrix(3.5920179,0,0,3.5920179,2014.4849,-6323.1668)"
+       inkscape:export-filename="/home/snarles/github/fmri/proposal/defense_diagrams/ident1.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><flowRegion
          id="flowRegion15742"><rect
            id="rect15744"
            width="234.93732"
