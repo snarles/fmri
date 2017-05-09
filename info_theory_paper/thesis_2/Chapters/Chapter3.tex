@@ -11,7 +11,7 @@
 \section{Introduction}
 
 In this chapter, we continue the discussion of Chapter 2, but focus
-specifically on the the question of how to estimate the $k$-class
+specifically on the question of how to estimate the $k$-class
 average accuracy, $\text{AGA}_{k, r}$, based on data from a problem
 $P_1$ with $k_1 < k$ classes, and $r = r_1$-repeat training data.
 This problem of \emph{prediction extrapolation} is especially
@@ -21,7 +21,7 @@ interesting for a number of applied problems.
 \item Example 1: A researcher develops a classifier for the purpose of labelling
 images in 10,000 classes. However, for a pilot study, her resources are sufficient to 
 tag only a smaller subset of these classes, perhaps 100. Can she estimate how well the algorithm 
-work on the full set of classes based on an initial "pilot" subsample of class labels?
+will work on the full set of classes based on an initial "pilot" subsample of class labels?
 \item Example 2: A neuroscientist is interested in how well the brain
   activity in various regions of the brain can discriminate between
   different classes of stimuli.  \cite{Kay2008a} obtained fMRI brain
@@ -83,7 +83,7 @@ the performance of the estimator in both the well-specified and
 misspecified case.  We demonstrate our method to a face-recognition
 example in section \ref{sec:extrapolation_example}.  Additionally, in
 Chapter 5 %% cite the specific section later we will see the
-comparison of the estimator to an alternative, information-theory
+we compare the estimator to an alternative, information-theory
 based estimator in simulated and real-data examples.
 
 \section{Analysis of average risk}
@@ -166,10 +166,10 @@ conditioning on $Y^* = y^*.$ Therefore, the conditional risk can be
 obtained via the following alternative order of randomizations:
 \begin{enumerate}
 \item[C0.] 
-Fix $y^*, \hat{F}_y^*,$ and $x^*$.  Note that $M_{y^*}(x^*)
+Fix $y^*, \hat{F}_{y^*},$ and $x^*$.  Note that $M_{y^*}(x^*)
 = \mathcal{M}(\hat{F}_{y^*})(x^*)$ is also fixed.
 \item[C1.]
-Draw the \emph{incorrect labels} $Y^{(1)},\hdots, Y^{(k)}$ i.i.d. from
+Draw the \emph{incorrect labels} $Y^{(1)},\hdots, Y^{(k-1)}$ i.i.d. from
 $\pi$.  (Note that $Y^{(i)} \neq y^*$ with probability 1 due to the
 continuity assumptions on $\mathcal{Y}$ and $\pi$.)
 \item[C2.]
@@ -203,7 +203,7 @@ are fixing $x^*$ and $(y^*, \hat{F}_{y^*})$, the probability of
 correct classification is obtained by taking an expectation:
 \begin{align}\label{eq:U_function}
 U_{x^*}(y^*, \hat{F}_{y^*}) &= \Pr[M_{y^*}(x^*) > \mathcal{M}(\hat{F}_Y)(x^*)]
-\\&= \int_{\mathcal{Y}} 
+\\&= \int_{\mathcal{Y} \times \mathcal{P}_{\mathcal{Y}}} 
 I\{
 M_{y^*}(x^*) > \mathcal{M}(\hat{F}_{y})(x)
 \}
@@ -247,7 +247,7 @@ U_{max, k-1} \sim \text{Beta}(k-1, 1).
 
 Therefore, in the general case, the conditional accuracy is
 \[
-\text{CondAcc}_k((y^*, \hat{F}_{y^*}), x^*) = \Pr[U_{max} > u^*] = 1 - \int_{u^*}^1 (k-1) u^{k-2} du.
+\text{CondAcc}_k((y^*, \hat{F}_{y^*}), x^*) = \Pr[U_{max} \leq u^*] = \int_0^{u^*} (k-1) u^{k-2} du.
 \]
 Now the average accuracy can be obtained by integrating over the
 distribution of $U^* = U_{x^*}(y^*, \hat{F}_{y^*})$, which we state in
@@ -256,9 +256,9 @@ the following proof of theorem \ref{theorem:avrisk_identity}.
 \noindent\textbf{Proof of Theorem \ref{theorem:avrisk_identity}}.
 We have
 \begin{align*}
-\text{AGA}_{k,r} &= \E[ 1 - \int_{U^*}^1 (k-1) u^{k-2} du] 
-\\&= 1 - \E[\int_0^1 I\{u \geq U^*\} (k-1) u^{k-2} du ]
-\\&= (k-1) \int_0^1 \Pr[U^* \leq u] u^{k-2} du.
+\text{AGA}_{k,r} &= \E[\int_0^{U^*} (k-1) u^{k-2} du] 
+\\&= \E[\int_0^1 I\{u \leq U^*\} (k-1) u^{k-2} du ]
+\\&= (k-1) \int_0^1 \Pr[U^* \geq u] u^{k-2} du.
 \end{align*}
 Or equivalently,
 \[
@@ -317,13 +317,13 @@ $k$-class average risk obtained from \eqref{eq:avtestrisk}.
 If we plug in the assumed linear model \eqref{eq:linearKu} into the
 identity \eqref{eq:avrisk_identity}, then we get
 \begin{align}
-1 - \text{AGA}_{k, r_{train}} &= (k-2)\int \bar{D}(u) u^{k-2} du
-\\&= (k-2)\int_0^1 \sum_{\ell = 1}^m \beta_\ell h_\ell(u) u^{k-2} du
+1 - \text{AGA}_{k, r_{train}} &= (k-1)\int \bar{D}(u) u^{k-2} du
+\\&= (k-1)\int_0^1 \sum_{\ell = 1}^m \beta_\ell h_\ell(u) u^{k-2} du
 \\&= \sum_{\ell = 1}^m \beta_\ell H_{\ell,k} \label{eq:avrisk_linear}
 \end{align}
 where
 \begin{equation}
-H_{\ell,k} = (k-2) \int_0^1 h_\ell(u) u^{k-2} du.
+H_{\ell,k} = (k-1) \int_0^1 h_\ell(u) u^{k-2} du.
 \end{equation}
 The constants $H_{\ell, k}$ are moments of the basis function
 $h_\ell$: hence we call this method the \emph{moment method.}  Note
