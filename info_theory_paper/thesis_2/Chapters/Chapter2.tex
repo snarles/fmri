@@ -67,7 +67,7 @@ framework for studying recognition problems is the assumption that the
 label set $\mathcal{Y}$ is finite and known in advance.  When
 considering human recognition capabilities, it is clear that this is
 not the case.  Our ability to recognize faces is not limited to some
-pre-defined, fixed set of faces; same with our ability to recognize
+pre-defined, fixed set of faces; similarly with our ability to recognize
 objects in the environment.  Humans learn to recognize novel faces and
 objects on a daily basis.  And, if artificial intelligence is to fully
 match the human capability for recognition, it must also possess the
@@ -154,7 +154,7 @@ where $h$ is produced by applying $\Lambda$ to the training data,
 sampled by $S$.  The expectation is taken over the randomness in the
 generation of the training data.
 
-At this point we have defined an extremely general transfer learning
+At this point we have defined a general transfer learning
 problem: given two different classification problems $P_1 =
 (\mathcal{Y}_1, \mathcal{X}_1, G_1, S_1)$ and $P_2 = (\mathcal{Y}_2,
 \mathcal{X}_2, G_2, S_2)$, what can we say about the relationship
@@ -615,7 +615,7 @@ Write
 \\&=  \frac{1}{k} \int \pi(y_1)\hdots \pi(y_k) \max_{i=1}^k p(x|y_i)  dy_1\hdots dy_k dx.
 \end{align*}
 
-\subsection{Variability of Bayes Accuracy}
+\subsection{Variability of Bayes Accuracy}\label{sec:variability_aba}
 
 By definition, $\text{BA}_k = \text{BA}(X_1,...,X_k)$ is already an
 unbiased estimator of $\text{ABA}_k$.  However, to get confidence
@@ -703,7 +703,7 @@ The following is a $(1-\alpha)$ lower confidence bound for $\text{ABA}_k$:
 \]
 That is, 
 \[
-\Pr[\underline{\text{ABA}}_K > \text{ABA}_k] \leq \alpha.
+\Pr[\underline{\text{ABA}}_k > \text{ABA}_k] \leq \alpha.
 \]
 \end{theorem}
 
@@ -746,7 +746,7 @@ average Bayes accuracy.  This would require two conditions:
 \end{enumerate}
 Under those two conditions, the lower confidence bounds
 $\underline{\text{ABA}}_k$ have a distribution which is concentrated
-close to the true population parameter $\text{ABA}$, which ensures
+close to the true population parameter $\text{ABA}_k$, which ensures
 both reproducibility (in the estimates produced by two realizations of
 the same randomized classification task) and generalizability to the
 population parameter $\text{ABA}$.
@@ -822,7 +822,7 @@ also the Bayes classification rule for the label set $\{\vec{X}_1,
 
 Since the average Bayes accuracy is an upper-bound for the expected
 identification accuracy over any training-test split, it follows that
-$\text{ABA}_K$ is also an upper bound for the expected
+$\text{ABA}_k$ is also an upper bound for the expected
 CV-identification accuracy: that is,
 \begin{equation}\label{eq:aba_cv_ident_bound}
 \text{ABA}_k \geq \E[\text{TA}_{k, CV}]

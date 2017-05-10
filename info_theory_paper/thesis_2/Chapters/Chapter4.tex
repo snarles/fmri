@@ -148,8 +148,8 @@ reduced space.
 
 Let $p(x, y)$ be a density supported on
 $\mathcal{X} \times \mathcal{Y}$, where $\mathcal{X}$ is a subset of
-$\mathbb{R}^{d_1}$ and $\mathcal{Y}$ is a subset of
-$\mathbb{R}^{d_2}$, and such that $p(x)$ is uniform on $\mathcal{X}$
+$\mathbb{R}^{d_1}$ with a non-empty interior, and $\mathcal{Y}$ is a subset of
+$\mathbb{R}^{d_2}$, also with non-empty interior, and such that $p(x)$ is uniform on $\mathcal{X}$
 and $p(y)$ is uniform on $\mathcal{Y}$.
 
 Now let $\mathcal{P}^{unif}$ denote the set of such distributions:
@@ -157,8 +157,8 @@ in other words, $\mathcal{P}^{unif}$ is the space of joint densities in Euclidea
 with uniform marginals over the marginal supports.
 In this section, we prove that
 \[
-C_k(\iota) =\inf_{p \in \mathcal{P}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)] = 
-\inf_{p \in \mathcal{P}^{unif}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)],
+C_k(\iota) =\sup_{p \in \mathcal{P}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)] = 
+\sup_{p \in \mathcal{P}^{unif}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)],
 \]
 thus reducing the problem of optimizing over the space of all
 densities to the problem of optimizing over densities with uniform
@@ -172,8 +172,8 @@ Since uniform distributions can only be defined over sets of finite volume, we h
 
 Therefore, it is necessary to first show that
 \[
-\inf_{p \in \mathcal{P}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)] = 
-\inf_{p \in \mathcal{P}^{bounded}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)].
+\sup_{p \in \mathcal{P}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)] = 
+\sup_{p \in \mathcal{P}^{bounded}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)].
 \]
 
 This is accomplished via the following lemma.
@@ -357,8 +357,8 @@ Combining these lemmas gives the needed reduction, given by the following theore
 
 \begin{theorem}\label{theorem:reduction} (Reduction.)
 \[
-\inf_{p \in \mathcal{P}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)] = 
-\inf_{p \in \mathcal{P}^{unif}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)].
+\sup_{p \in \mathcal{P}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)] = 
+\sup_{p \in \mathcal{P}^{unif}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)].
 \]
 \end{theorem}
 
@@ -378,7 +378,7 @@ The proof is trivial given the previous two lemmas.
 
 Using Theorem \ref{theorem:reduction}, we have
 \[
-C_k(\iota) = \inf_{p \in \mathcal{P}^{unif}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)].
+C_k(\iota) = \sup_{p \in \mathcal{P}^{unif}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)].
 \]
 
 Define $f(\iota) = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt$: our goal is to

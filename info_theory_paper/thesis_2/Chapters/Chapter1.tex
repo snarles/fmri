@@ -34,7 +34,7 @@ pathways involved in mammalian vision, neuroscientists know that
 vision begins in the retina, where light-sensitive cells (rods and
 cones) detect incoming photons.  The signals from the rods and cones
 are aggregated by retinal cells, and then transmitted sequentially
-through a series of structures within the brain--the dominant pathway
+through a series of structures within the brain.  The dominant pathway
 goes from the retina to the the optic chiasm, then to the lateral
 geniculate nucleus, and finally to the visual cortex (Figure
 \ref{fig:visual_pathway}).  The visual cortex, in turn, is divided
@@ -130,7 +130,7 @@ model is assessed using \emph{data-splitting} and the
 \emph{identification risk} of the model--these methods will be
 explained in the following background sections.  Kay et al. found that
 the encoding model based on Gabor filter receptive fields
-significantly outperformed the encoding model based on the retinotopic
+clearly outperformed the encoding model based on the retinotopic
 RF field--supporting the hypothesis that V1 \emph{represents} visual
 information primarily in the form of Gabor filters.
 
@@ -215,7 +215,7 @@ functions $g_i$ are the end result of composing several layers of
 nonlinear transformations as specified by the hierarchical
 architecture of the CNN.  However, for our purposes, the modeling and
 algorithmic details of the CNN are not important, and we refer the
-interested reader to \cite{lecun2013deep} for a reference on principles of
+interested reader to (\cite{lecun2013deep}) for a reference on principles of
 convolutional neural networks.  At a higher level of abstraction, we
 can say that the representation $\vec{g}_\theta(\vec{z})$ lies in a
 class of nonlinear functions, parameterized by some (possibly large)
@@ -350,7 +350,9 @@ field model is to extract the information in the data that is relevant
 to V1 (such as, perhaps, local angular frequencies in the image) and
 discard other information (e.g. intensities of individual pixels).
 
-In both examples, we have not have inputs $\vec{z}$ but also some form
+\subsection{Supervised evaluation of representations}
+
+In both examples, we not only have inputs $\vec{z}$ but also some form
 of \emph{side information} that helps us distinguish between signal
 and noise.  In the case of facial recognition, the side information is
 the labels $y$ which label the photographs.  In the case of the
@@ -552,7 +554,7 @@ divergence (\cite{amari2007methods}).  To fit our problem into the
 framework of information geometry, we would consider the latent
 objects $\vec{t}$ as playing the role of the parameter $\theta$, and
 the induced distribution of $\vec{g}(\vec{z})$ as the distribution
-$f_\theta$.  It is important to note however, that this the emphasis
+$f_\theta$.  It is important to note however, that this emphasis
 on parameter spaces is complemented by the concept of \emph{duality}
 between the space of distributions and the space of observations.  The
 concept can be formalized in exponential families, where a sample from
@@ -637,7 +639,7 @@ classification.  Fano's inequality, which bounds the mutual
 information in terms of Bayes accuracy of classification
 ($\text{BA}$),
 \[
-\text{I}(X; Y) \geq = \log(k)-H(\text{BA}) - (1-\text{BA})\log(k-1),
+\text{I}(X; Y) \geq  \log(k)-H(\text{BA}) - (1-\text{BA})\log(k-1),
 \] 
 is one of the earliest results bridging the two worlds of information
 theory and supervised learning.  However, its application is limited
@@ -668,7 +670,7 @@ secondly, what is the variance of the estimator.  We define volume in
 terms of mutual information and develop estimators based on
 \emph{random classification tasks}, which specify the sampling
 mechanism.  Furthermore, we obtain preliminary results on the
-variability of such estimators.  We compare our results to existing
+variability of such estimators in section \ref{sec:variability_aba}.  We compare our results to existing
 results in information theory regarding random code models.
 
 \emph{Subtheme: Generalizability of experiments.} Two of our
@@ -711,12 +713,7 @@ robust estimator estimate of mutual information.  We conclude the
 thesis with a discussion in Chapter 6.
 
 
-\subsection{Note on attribution}
 
-The content in chapters 1,2, 4, and 5 is based on joint work with
-Yuval Benjamini.  Chapter 3 is based on joint work with Yuval
-Benjamini and Rakesh Achanta.  All theoretical results are due to the
-author.
 
 \section{Information and Discrimination}
 
@@ -768,7 +765,7 @@ the reciever's recieved message $Y$.  If we specialize within machine
 learning to the study of classification, then we are concerned with
 accurate \emph{discrimination} of the input $X$ according to labels
 $Y$.  Similarly, if we specialize to the problem of hypothesis testing
-within statistics, the the problem is again to \emph{discriminate}
+within statistics, the problem is again to \emph{discriminate}
 between two (or more) different hypotheses regarding the
 data-generating mechanism.
 
@@ -818,7 +815,7 @@ This link between the information content of the input and the
 achievable discrimination accuracy was first quantified by Claude
 Shannon via the concept of \emph{mutual information.}  The mutual
 information $I(X; Y)$ quantifies the information content that an input
-$X$ holds abut a target of interest, $Y$.  For instance, in the case
+$X$ holds about a target of interest, $Y$.  For instance, in the case
 of facial identification, the discrimination target $Y$ is a label
 corresponding to the identity of the person, and $X$ is an image of
 the individual's face.  An image corrupted by noise holds less
@@ -903,7 +900,7 @@ theory.
 
 \emph{Supervised learning} refers to the training of predictive
 models; both \emph{classification} and \emph{regression} are special
-cases of supervised learning.  But let us bein with the most general
+cases of supervised learning.  But let us begin with the most general
 recipe for a prediction task, which involves:
 
 \begin{itemize}
@@ -1055,7 +1052,7 @@ classification, where $C$ is zero-one loss, but $\tilde{C}$ is the logistic loss
 \end{itemize}
 Further complicating the picture is the fact that often the learning
 algorithm requires specification of various \emph{hyperparameters}.
-For instance, lasso regression is a penalized generative model which
+For instance, lasso regression (\cite{Hastie2009a}) is a penalized generative model which
 finds $\beta$ minimizing the objective function
 \[
 \beta = \text{argmin}_\beta \frac{1}{2}\sum_{i=1}^{n_1}(y_i - \vec{x}_i^T \beta)^2 + \lambda ||\beta||_1.
@@ -1307,7 +1304,7 @@ literature which are suited for different scenarios.
 \subsection{Identification accuracy}\label{sec:ident_risk}
 
 The identification accuracy originated as a method for evaluating the
-quality of encoding models in neuroscience (\cite{Kay2008a}).
+quality of encoding models in neuroscience (\cite{Kay2008a}, \cite{Mitchell2008}).
 However, it can generally be applied to evaluate any regression model
 with a multivariate response $\vec{Y}$.  Furthermore, we argue that it
 can be an ideal method for evaluating the quality of multivariate
@@ -1401,7 +1398,7 @@ linear model was proposed by \cite{Kay2008a}.  In an
 \emph{identification task}, as illustrated in Figure
 \ref{fig:mse_vs_ia}(b), the model is first used to make predictions
 \[
-\hat{y}_i = B^T \vec{x}_i
+\hat{y}_i = \hat{B}^T \vec{x}_i
 \]
 for all features $\{\vec{x}_i\}_{i=1}^M$ in the test set. Next, each of the
 observations $\vec{y}_i$ in the test set is \emph{assigned} to the
@@ -1454,7 +1451,7 @@ B^{(1)} = \begin{pmatrix}
 \end{pmatrix}
 \]
 That is, the responses $\vec{Y}$ are only related to the \emph{first}
-component of $\vec{X}$.  There is no information in $\vec{Y}$ abut the
+component of $\vec{X}$.  There is no information in $\vec{Y}$ about the
 other two components of $\vec{X}$, since $\vec{Y}$ is independent of
 $(X_2, X_3)$.
 
@@ -1662,7 +1659,7 @@ properties.
 \item Symmetry: $\text{I}(\bX; \bY) = \text{I}(\bY; \bX)$.
 \item Independent additivity: if $(\bX_1,\bY_1)$ is independent of $(\bX_2, \bY_2)$, then
 \[
-\text{I}((\bX_1,\bY_1); (\bX_2, \bY_2)) = \text{I}(\bX_1; \bY_1) + \text{I}(\bX_2; \bY_2).
+\text{I}((\bX_1,\bX_2); (\bY_1, \bY_2)) = \text{I}(\bX_1; \bY_1) + \text{I}(\bX_2; \bY_2).
 \]
 \end{enumerate}
 Three additional consequences result from the data-processing inequality:
@@ -1860,7 +1857,7 @@ establishing (i).
 
 \subsection{Comparisons}
 
-We see that in both the multi-class classification problem and the
+We see that both the multi-class classification problem and the
 noisy channel model present examples of discrimination problems where
 one must recover some latent variable $Y$ from observations $X$, where
 $X$ is related to $Y$ through the family of conditional distributions
@@ -1874,7 +1871,7 @@ the broader research context, machine learning research has
 traditionally focused on multi-class problems with relatively few
 classes, while information theory tends to consider problems in
 asymptotic regimes where the number of possible messages $m$ is taken
-to infinity. These differences were sufficient to explain why little
+to infinity. These differences are perhaps sufficient to explain why little
 overlap exists in the respective literatures between multi-class
 classification and the noisy channel model.
 
