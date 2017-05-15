@@ -70,21 +70,8 @@ classification accuracy.
 
 \begin{figure}
 \centering
-\begin{tabular}{ccrl}
-\multirow{5}{*}{\includegraphics[scale = 0.5, clip=true, trim=0 0.2in 0 0.5in]{../arxiv_info_theory/illus_piK_flat.pdf}} &
-\multirow{5}{*}{\includegraphics[scale = 0.5, clip=true, trim=0 0.2in 0.4in 0.5in]{../arxiv_info_theory/ihat_comp.pdf}} & & \\
-& & & \\
-& & \crule[color3]{0.2cm}{0.2cm} & $\hat{I}_{HD}$\\
-& & \crule[color1]{0.2cm}{0.2cm} & $\hat{I}_{Fano}$\\
-& & & \\
-& & & \\
-& & & \\
-& & & 
-\end{tabular}
-\caption{Left: The function $\pi_k(\mu)$ for $k = \{2, 10\}$.
-Right: $\hat{I}_{HD}$ with $\hat{I}_{Fano}$ as functions of $\hat{e}_{gen}$, for $k = 3$.
-While $\hat{I}_{Fano}$ is bounded from above by $\log(k)$ (dotted line), $\hat{I}_{HD}$ is unbounded.
-[NOTE: 1-$\pi_k$ is displayed, rather than $\pi_k$. Figure to be fixed!]}
+\includegraphics[scale = 0.7, clip=true, trim=0 0.2in 0 0.5in]{Figures/illus_piK_flat_flipped.pdf}
+\caption{Left: The function $\pi_k(\mu)$ for $k = \{2, 10\}$.}
 \label{fig:pi}
 \end{figure}
 
@@ -93,9 +80,10 @@ The estimator we propose is
 \hat{I}_{HD} = \frac{1}{2}(\pi_{k}^{-1}(\text{ABA}_k))^2,
 \end{equation}
 obtained by inverting the relation \eqref{abepi}, then substituting
-an estimate of the identification accuracy $\text{TA}_k$ for the $\text{ABA}_k$.  As such,
-our estimator can be directly compared to the $\hat{I}_{Fano}$, since
-both are functions of $\text{ABA}_k$ (Figure \ref{fig:pi}.)
+an estimate of the identification accuracy $\text{TA}_k$ for the $\text{ABA}_k$.  
+%As such,
+%our estimator can be directly compared to the $\hat{I}_{Fano}$, since
+%both are functions of $\text{ABA}_k$ (Figure \ref{fig:pi}.)
 
 \section{Theory}
 
@@ -511,7 +499,7 @@ information, and it would be preferable to use $\hat{I}_{Ident}$.
 
 \begin{figure}
 \centering
-\includegraphics[scale = 0.5]{../../Yuval/info_infer.pdf}
+\includegraphics[scale = 0.5]{../../Yuval/info_infer_edited.pdf}
 \caption{Estimated mutual information for different subsets of V1 voxels}
 \label{fig:n_voxels_vs_mi}
 \end{figure}
@@ -538,10 +526,10 @@ significantly underestimate the true mutual information.
 \begin{figure}
 \centering
 \begin{tabular}{cc}
-\includegraphics[scale = 0.4]{../../Yuval/ident_infer1.pdf} &
-\includegraphics[scale = 0.4]{../../Yuval/ident_infer3.pdf} \\
-\includegraphics[scale = 0.4]{../../Yuval/ident_infer4.pdf} &
-\includegraphics[scale = 0.4]{../../Yuval/ident_infer5.pdf}
+\includegraphics[scale = 0.4]{../../Yuval/ident_infer1_edited.pdf} &
+\includegraphics[scale = 0.4]{../../Yuval/ident_infer3_edited.pdf} \\
+\includegraphics[scale = 0.4]{../../Yuval/ident_infer4_edited.pdf} &
+\includegraphics[scale = 0.4]{../../Yuval/ident_infer5_edited.pdf}
 \end{tabular}
 \caption{Dependence of estimated mutual information on $k$}
 \label{fig:dependence_k}
