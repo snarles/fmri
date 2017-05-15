@@ -131,32 +131,33 @@ formula \eqref{abepi}.
 
 Let us start by rewriting the average Bayes error:
 \[
-\text{ABA}_k = \Pr[p(Y|X_1) = \max_{j \neq 1} p(Y|X_j)| X = X_1].
+\text{ABA}_k = \Pr[p(X|Y^{(1)}) > \max_{j = 2}^k p(X|Y^{(j)})].
 \]
-Defining the statistic $Z_i = \log p(Y|X_i) - \log p(Y|X_1)$, where $Y
-\sim p(y|X_1)$, we obtain $ e_{ABE} = \Pr[\max_{j > 1} Z_i > 0].  $
-The key assumption we need is that $Z_2,\hdots, Z_k$ are
-asymptotically multivariate normal.  If so, the following lemma allows
-us to obtain a formula for the average Bayes accuracy.
+where the expectation is taken over the joint distribution
+$Y^{(1)},\hdots, Y^{(k)} \sim \pi$ and $X \sim F_{Y^{(1)}}$.  Defining
+the statistic $Z_i = \log p(X|Y^{(i)}) - \log p(X|Y^{(1)})$, we obtain
+$ \text{ABA}_k = \Pr[\max_{j = 2}^k Z_j < 0].  $ The key assumption we
+need is that $Z_2,\hdots, Z_k$ are asymptotically multivariate normal.
+If so, the following lemma allows us to obtain a formula for the
+average Bayes accuracy.
 
 \textbf{Lemma 1. }
 \emph{
-Suppose $(Z_1, Z_2, \hdots, Z_k)$ are jointly multivariate normal, with 
-$\E[Z_1 - Z_i]= \alpha$, 
-$\Var(Z_1) = \beta \geq 0$, 
-$\Cov(Z_1, Z_i) = \gamma$, 
-$\Var(Z_i)= \delta$, and $\Cov(Z_i, Z_j) = \epsilon$ for all $i, j = 2, \hdots,
-k$, such that $\beta + \epsilon - 2\gamma > 0$.  Then, letting
+Suppose $(\zeta_1, \zeta_2, \hdots, \zeta_\ell)$ are jointly multivariate normal, with 
+$\E[\zeta_i]= -\alpha$ 
+$\Var(\zeta_i) = \beta \geq 0$, 
+$\Cov(\zeta_i, \zeta_j) = \gamma$ for $i = 1,\hdots,\ell$ and $j = 1,\hdots, \ell$ with $i \neq j$. 
+Then, letting
 \[
-\mu = \frac{\E[Z_1 - Z_i]}{\sqrt{\frac{1}{2}\Var(Z_i - Z_j)}} = \frac{\alpha}{\sqrt{\delta - \epsilon}},
+\mu = \frac{\E[-\zeta_1]}{\sqrt{\frac{1}{2}\Var(\zeta_1 - \zeta_2)}} = \frac{\alpha}{\sqrt{\beta - \gamma}},
 \]
 \[
-\nu^2 = \frac{\Cov(Z_1 -Z_i, Z_1 - Z_j)}{\frac{1}{2}\Var(Z_i - Z_j)} = \frac{\beta + \epsilon - 2\gamma}{\delta - \epsilon},
+\nu^2 = \frac{\Cov(\zeta_1, \zeta_2)}{\frac{1}{2}\Var(\zeta_1 - \zeta_2)} = \frac{\gamma}{\beta - \gamma},
 \]
 we have
 \begin{align*}
-\Pr[Z_1 < \max_{i=2}^k Z_i] &= \Pr[W < M_{k-1}]
-\\&= 1 - \int \frac{1}{\sqrt{2\pi\nu^2}} e^{-\frac{(w-\mu)^2}{2\nu^2}} \Phi(w)^{k-1} dw,
+\Pr[0 > \max_{i=1}^k \zeta_i] &= \Pr[W > M_{k-1}]
+\\&= \int \frac{1}{\sqrt{2\pi\nu^2}} e^{-\frac{(w-\mu)^2}{2\nu^2}} \Phi(w)^{k-1} dw,
 \end{align*}
 where $W \sim N(\mu, \nu^2)$ and $M_{k-1}$ is the maximum of $k-1$
 independent standard normal variates, which are independent of $W$.
@@ -167,16 +168,16 @@ To see why the assumption that $Z_2,\hdots, Z_k$ are multivariate
 normal might be justified, suppose that $X$ and $Y$ have the same
 dimensionality $d$, and that joint density factorizes as
 \[
-p(x^{(j)}, y) = \prod_{i=1}^d p_i(x^{(j)}_i, y_i)
+p(x, y) = \prod_{i=1}^d p_i(x_i, y_i)
 \]
-where $x_i^{(j)}, y_i$ are the $i$th scalar components of the vectors $x^{(j)}$ and $y$.
+where $x_i^{(j)}, y_i$ are the $i$th scalar components of the vectors $x$ and $y$.
 Then,
 \[
-Z_i = \sum_{m=1}^d \log p_m(y_m | x^{(i)}_m) - \log p_m(y_m | x^{(m)}_1)
+Z_i = \sum_{m=1}^d \log p_m(x_m | y^{(i)}_m) - \log p_m(x_m | y^{(1)}_m).
 \]
-where $x_{i, j}$ is the $i$th component of $x_j$.  The $d$ terms $\log
-p_m(y_m | x_{m, i}) - \log p_m(y_m | x_{m, 1})$ are independent across
-the indices $m$, but dependent between the $i = 1,\hdots, k$.
+The $d$ terms $\log
+p_m(x_m | y^{(i)}_m) - \log p_m(x_m | y^{(1)}_m)$ are independent across
+the indices $m$, but dependent between the $i = 2,\hdots, k$.
 Therefore, the multivariate central limit theorem can be applied to
 conclude that the vector $(Z_2,\hdots, Z_k)$ can be scaled to converge
 to a multivariate normal distribution.  While the componentwise
@@ -185,27 +186,26 @@ of multivariate normality of $(Z_2,\hdots, Z_k)$ holds under more
 general conditions, and appears reasonable in practice.
 
 \textbf{Proof.}
-We can construct independent normal variates $G_1$, $G_2,\hdots, G_k$
+We can construct independent normal variates $G_0$, $G_1,\hdots, G_k$
 such that
 \[
-G_1 \sim N(0, \beta + \epsilon - 2 \gamma)
+G_0 \sim N(0, \gamma)
 \]
 \[
-G_i \sim N(0, \delta - \epsilon)\text{ for }i > 1
+G_i \sim N(0, \beta - \gamma)\text{ for }i =1,\hdots, \ell
 \]
 such that
 \[
-Z_1 - Z_i = \alpha + G_1 + G_i \text{ for }i > 1.
+\zeta_i = -\alpha + G_0 + G_i \text{ for }i =1,\hdots,\ell
 \]
 Hence
 \begin{align*}
-\Pr[Z_1 < \max_{i=2}^k Z_i] &= \Pr[\min_{i > 1} Z_1 - Z_i < 0].
-\\&= \Pr[\min_{i=2}^{k} G_1 + G_i + \alpha < 0]
-\\&= \Pr[\min_{i=2}^{k} G_i < -\alpha - G_1]
-\\&= \Pr[\min_{i=2}^{k} \frac{G_i}{\sqrt{\delta - \epsilon}} < -\frac{\alpha - G_1}{\sqrt{\delta - \epsilon}}].
+\Pr[0 > \max_{i=1}^k \zeta_i] &= \Pr[\min_{i=1}^{k} G_0 + G_i - \alpha > 0]
+\\&= \Pr[\min_{i=1}^{k} G_i > \alpha - G_1]
+\\&= \Pr[\min_{i=1}^{k} \frac{G_i}{\sqrt{\beta - \gamma}} > \frac{\alpha - G_0}{\sqrt{\beta - \gamma}}].
 \end{align*}
-Since $\frac{G_i}{\sqrt{\delta - \epsilon}}$ are iid standard normal variates, and since
-$-\frac{\alpha - G_1}{\sqrt{\delta - \epsilon}} \sim N(\mu,\nu^2)$ for $\mu$ and $\nu^2$ given in the statement of the Lemma, the proof is completed via a straightforward computation.  $\Box$
+Since $\frac{G_i}{\sqrt{\beta - \gamma}}$ are iid standard normal variates, and since
+$-\frac{\alpha - G_0}{\sqrt{\beta - \gamma}} \sim N(\mu,\nu^2)$ for $\mu$ and $\nu^2$ given in the statement of the Lemma, the proof is completed via a straightforward computation.  $\Box$
 
 
 
@@ -217,28 +217,10 @@ A number of assumptions are needed to ensure that needed
 approximations are sufficiently accurate; and additionally, in order
 to apply the central limit theorem, we need to consider a
 \emph{limiting sequence} of problems with increasing dimensionality.
-We now state the theorem.
+We now state a theorem.
 
 \textbf{Theorem 1.} \emph{Let $p^{[d]}(x, y)$ be a sequence of joint densities
-for $d = 1,2,\hdots$.  Further assume that
-\begin{itemize}
-\item[A1.] $\lim_{d \to \infty} I(X^{[d]}; Y^{[d]}) = \iota < \infty.$
-\item[A2.] There exists a sequence of scaling constants $a_{ij}^{[d]}$
-and $b_{ij}^{[d]}$ such that the random vector $(a_{ij}\ell_{ij}^{[d]} +
-b_{ij}^{[d]})_{i, j = 1,\hdots, k}$ converges in distribution to a
-multivariate normal distribution,
-where $\ell_{ij} = \log p(y^{(i)}|x^{(i)})$ for independent $y^{(i)} \sim p(y|x^{(i)})$.
-\item[A3.] Define \[
-u^{[d]}(x, y) = \log p^{[d]}(x, y) - \log p^{[d]}(x) - \log p^{[d]}(y).
-\]
-There exists a sequence of scaling constants $a^{[d]}$, $b^{[d]}$ such that
-\[
-a^{[d]}u^{[d]}(X^{(1)}, Y^{(2)}) + b^{[d]}
-\]
-converges in distribution to a univariate normal distribution.
-\item[A4.] For all $i \neq k$,
-\[\lim_{d \to \infty}\Cov[u^{[d]}(X^{(i)}, Y^{(j)}), u^{[d]}(X^{(k)}, Y^{(j)})] = 0.\]
-\end{itemize}
+for $d = 1,2,\hdots$.  Further assume conditions A1 - A4.
 Then for $\text{ABA}_k$ as defined above, we have
 \[
 \lim_{d \to \infty} \text{ABA}_k = \pi_k(\sqrt{2 \iota})
@@ -255,7 +237,7 @@ cumulative distribution function, respectively.}
 
 For $i = 2,\hdots, k$, define
 \[
-Z_i = \log p(Y^{(1)}|X^{(i)}) - \log p(Y^{(1)}|X^{(1)}).
+Z_i = \log p(X|Y^{(i)}) - \log p(X|Y^{(1)}).
 \]
 Then, we claim that $\vec{Z} = (Z_2,\hdots, Z_k)$ converges in distribution to
 \[
@@ -280,16 +262,16 @@ since then assumption A2 implies the existence of a multivariate normal
 limiting distribution with the given moments.
 
 Before deriving the limiting moments, note the following identities.
-Let $X' = X^{(2)}$ and $Y = Y^{(1)}$.
+Let $Y' = Y^{(2)}$.
 \[
-\E[e^{u(X', Y)}] = \int p(x) p(y) e^{u(x, y)} dx dy = \int p(x, y) dx dy = 1.
+\E[e^{u(X, Y')}] = \int p(x) p(y) e^{u(x, y)} dx dy = \int p(x, y) dx dy = 1.
 \]
 Therefore, from assumption A3 and the formula for gaussian exponential
 moments, we have
 \[
-\lim_{d \to \infty} \E[u(X', Y)]-\frac{1}{2}\Var[u(X', Y)] = 0.
+\lim_{d \to \infty} \E[u(X, Y')]-\frac{1}{2}\Var[u(X, Y')] = 0.
 \]
-Let $\sigma^2 = \lim_{d \to \infty} \Var[u(X', Y)]$.
+Let $\sigma^2 = \lim_{d \to \infty} \Var[u(X, Y')]$.
 Meanwhile, by applying assumption A2,
 \begin{align*}
 \lim_{d \to \infty} I(X; Y) &= \lim_{d \to \infty} \int p(x, y) u(x, y) dx dy 
@@ -314,7 +296,7 @@ Once again by applying A2, we get
 \lim_{d \to \infty} \Var[u(X, Y)] 
 &= \lim_{d \to \infty} \int (u(x, y) - \iota)^2 p(x, y) dx dy
 \\&= \lim_{d \to \infty} \int (u(x, y) - \iota)^2 e^{u(x, y)} p(x) p(y) dx dy
-\\&= \lim_{d \to \infty} \E[(u(X', Y) - \iota)^2 e^{u(X', Y)}] 
+\\&= \lim_{d \to \infty} \E[(u(X, Y') - \iota)^2 e^{u(X, Y')}] 
 \\&= \int (z - \iota)^2 e^z \frac{1}{\sqrt{4\pi\iota}} e^{-\frac{(z+\iota)^2}{4\iota}} dz \text{ (applying A2)}
 \\&= \int (z - \iota)^2 \frac{1}{\sqrt{4\pi\iota}} e^{-\frac{(z-\iota)^2}{4\iota}} dz
 \\&= 2\iota.
@@ -325,14 +307,14 @@ We now proceed to derive the limiting moments.
 We have
 \begin{align*}
 \lim_{d \to \infty} \E[Z] 
-&= \lim_{d \to \infty} \E[ \log p(Y|X') - \log p(Y|X)]
-\\&= \lim_{d \to \infty} \E[ u(X', Y) - u(X, Y) ] = -2\iota.
+&= \lim_{d \to \infty} \E[ \log p(X|Y') - \log p(X|Y)]
+\\&= \lim_{d \to \infty} \E[ u(X, Y') - u(X, Y) ] = -2\iota.
 \end{align*}
 Also,
 \begin{align*}
 \lim_{d \to \infty} \Var[Z]
- &= \lim_{d \to \infty} \Var[ u(X', Y) - u(X, Y) ]
-\\&= \lim_{d \to \infty} \Var[ u(X', Y)] +\Var[ u(X, Y) ]\text{ (using assumption A4) }
+ &= \lim_{d \to \infty} \Var[ u(X, Y') - u(X, Y) ]
+\\&= \lim_{d \to \infty} \Var[ u(X, Y')] +\Var[ u(X, Y) ]\text{ (using assumption A4) }
 \\&= 4\iota,
 \end{align*}
 and similarly
@@ -398,17 +380,17 @@ We compare the estimators $\hat{I}_{CM}$, $\hat{I}_{Fano}$,
 $\hat{I}_{HD}$ with a nonparametric estimator $\hat{I}_\alpha$
 (\cite{Gastpar2009}) in the following simulation, and the correctly
 specified parametric estimator $\hat{I}_{MLE}$.  We generate data
-according to a multiple-response logistic regression model, where $ X
-\sim N(0, I_p) $, and $Y$ is a binary vector with conditional
+according to a multiple-response logistic regression model, where $ Y
+\sim N(0, I_p) $, and $X$ is a binary vector with conditional
 distribution
 \[
-Y_i|X = x \sim \text{Bernoulli}(x^T B_i)
+X_i|Y = y \sim \text{Bernoulli}(y^T B_i)
 \]
 where $B$ is a $p \times q$ matrix.  We generate training data with
-$r$ responses per stimulus $X^{(i)}$.  One application of this model
-might be modeling neural spike count data $Y$ arising in response to
-environmental stimuli $X$ (\cite{banerjee2012parametric}).  We choose
-the naive Bayes for the classifier $\mathcal{F}$: it is consistent for
+$r$ responses per stimulus $Y^{(i)}$.  One application of this model
+might be modeling neural spike count data $X$ arising in response to
+environmental stimuli $Y$ (\cite{banerjee2012parametric}).  We choose
+the naive Bayes for the classifier: it is consistent for
 estimating the Bayes rule.
 
 \begin{figure}
@@ -477,13 +459,17 @@ to the data.  Then they computed the identification accuracy for $k$
 (number of stimulus classes) ranging from 2 to 1000.
 
 Using the Kay et al. data, we sort voxels in V1 according to estimated
-signal-to-noise ratio (\cite{benjamini2013shuffle}).  Then, using
-cross-validated elastic net on the top $p = \{100, 200, 300, 400,
-500\}$ voxels, we compute the identification accuracy for $k =
-\{20,\hdots, 240\}$ classes.  The test identification accuracy was
-used to estimate mutual information using both $\hat{I}_{Ident}$ and
-$\hat{I}_{HD}$.  Due to the dimensionality of the data, we expected
-$\hat{I}_{HD}$ to yield more accurate estimates of mutual information.
+signal-to-noise ratio\footnote{We are using the same data for variable
+  selection and for training the classifier: therefore, the test error
+  estimates are biased.  However, the sample size is sufficiently
+  large that the bias should be minor, and we neglect this effect.}
+(\cite{benjamini2013shuffle}).  Then, using cross-validated elastic
+net on the top $p = \{100, 200, 300, 400, 500\}$ voxels, we compute
+the identification accuracy for $k = \{20,\hdots, 240\}$ classes.  The
+test identification accuracy was used to estimate mutual information
+using both $\hat{I}_{Ident}$ and $\hat{I}_{HD}$.  Due to the
+dimensionality of the data, we expected $\hat{I}_{HD}$ to yield more
+accurate estimates of mutual information.
 
 The estimated mutual information using $k = 240$ is displayed in
 Figure \ref{fig:n_voxels_vs_mi}.  Both estimators indicate a large

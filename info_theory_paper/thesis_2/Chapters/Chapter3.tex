@@ -222,8 +222,34 @@ the definition.
 An important property of the U-function, and the basis for its name,
 is that the random variable $U_x(Y, \hat{F}_Y)$ for $Y \sim \pi$ and
 $\hat{F}_Y \sim \Pi_{Y, r}$ is uniformly distributed for all
-$x \in \mathcal{X}$.  This is proved in Lemma \ref{lemma:U_function}
-in Appendix C.
+$x \in \mathcal{X}$.  This is proved in the following Lemma.
+
+\begin{lemma}\label{lemma:U_function}
+Suppose $\pi$, $\{F_y\}_{y \in \mathcal{Y}}$ and marginal classifier
+$\mathcal{F}$ satisfy the tie-breaking condition.  Take $x \in \mathcal{X}$.  Defining
+$U_{y,\hat{F}_y}(x)$ as in \eqref{eq:U_function}, and defining the
+random variable $U$ by
+\[U = U_{Y, \hat{F}_Y}(x)\]
+for $Y \sim \pi$, $\hat{F}_Y \sim \Pi_{Y, r}$,
+the distribution of $U$ is uniform on $[0,1]$, i.e.
+\[
+\Pr[U \leq u] = \text{max}\{u, 1\}.
+\]
+\end{lemma}
+
+\textbf{Proof of Lemma.}
+
+Define the variable $Z = \mathcal{M}(\hat{F}_Y)(x)$ for $Y \sim \pi$.
+By the tie-breaking condition, $Z$ has a continuous density on $[0,1]$.
+Consider the survivor function of $Z$, $g(z) = \Pr[Z \geq z]$.  From
+the definition \eqref{eq:U_function}, we see that 
+\[
+U = g(\mathcal{M}(\hat{F}_Y)(x)) = g(Z).
+\]
+Now note that the survivor function of any continuous random variable,
+when applied to itself, is uniformly distributed.
+$\Box$
+
 
 Now, we will see how the U-function allows us to understand the
 $k$-class case.  Suppose we have true label $y^*$ and incorrect labels
@@ -405,8 +431,8 @@ dataset of size $K$ from the LFW dataset.
 \centering
 \begin{tabular}{cc}
 a & b\\
-\includegraphics[scale = 0.5]{../../facerec/acc_plot1.pdf} &
-\includegraphics[scale = 0.5]{../../facerec/acc_plot2.pdf}
+\includegraphics[height = 3in]{../../facerec/acc_plot1.pdf} &
+\includegraphics[height = 3in]{../../facerec/acc_plot2.pdf}
 \end{tabular}
 \caption{(a) The estimated average accuracy for $k = 2,\hdots,
   400$ given a dataset of 400 faces subsampled from Labeled Faces in

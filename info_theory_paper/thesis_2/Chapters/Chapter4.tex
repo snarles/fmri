@@ -58,7 +58,7 @@ theoretical contributions are (i) the derivation of a tight lower
 bound on mutual information as a function of $k$-class average Bayes
 accuracy, and (ii) the derivation of an asymptotic relationship
 between the $K$-class average Bayes accuracy and the mutual
-information. Our method therefore estimates of the $K$-class Bayes
+information. Our method therefore estimates the $K$-class Bayes
 identification accuracy to be translated into estimate of the mutual
 information.
 
@@ -243,11 +243,14 @@ Let $f_i$ denote the Bayes $k$-class classifier for $\tilde{p}_i(x, y)$
 and
 $f_\infty$ the Bayes $k$-class classifier for $p(x, y)$: recall that by definition,
 \[
-\text{ABA}_k[\tilde{p}_i] = \Pr_{\tilde{p}_i}[f_i(X^{(1)},...,X^{(k)}, Y) = Z]
+\text{ABA}_k[\tilde{p}_i] = \Pr_{\tilde{p}_i}[f_i(Y^{(1)},...,Y^{(k)}, X) = Y^{(1)}]
 \]
+where the probability is taken with respect to the joint distribution
+of $Y^{(1)},\hdots, Y^{(k)}$ drawn from $\pi$, and $X$ drawn from the
+conditional distribution $F_{Y^{(1)}}.$
 Define
 \[
-\epsilon_i = \Pr_p[(X^{(1)},...,X^{(k)}, Y)\notin \mathcal{X}_i^k \times \mathcal{Y}_i];
+\epsilon_i = \Pr_p[(Y^{(1)},...,Y^{(k)}, X)\notin \mathcal{Y}_i^k \times \mathcal{X}_i ];
 \]
 by continuity of probability we have $\lim_i \epsilon_i \to 0$.
 We claim that
@@ -260,17 +263,17 @@ and defining $\mathcal{X} = \mathcal{X}_i$, $\mathcal{Y} = \mathcal{Y}_i$.
 Consider using $f_i$ to obtain a classification rule for $p(x, y)$:
 define
 \[
-\tilde{f}_i = \begin{cases}f_i(x^{(1)},...,x^{(k)}, y) & \text{ when } (x^{(1)},...,x^{(k)}, y) \in \mathcal{X}_i^k \times \mathcal{Y}\\
+\tilde{f}_i = \begin{cases}f_i(y^{(1)},\hdots,y^{(k)}, x) & \text{ when } (y^{(1)},\hdots,y^{(k)}, x) \in \mathcal{X}_i^k \times \mathcal{Y}_i\\
 0 & \text{ otherwise.} 
 \end{cases}
 \]
 We have
 \begin{align*}
-\text{ABA}_k[p] =& \sup_f \Pr_p[f(X^{(1)},...,X^{(k)}, Y) = Z]
+\text{ABA}_k[p] =& \sup_f \Pr_p[f(Y^{(1)},\hdots,Y^{(k)}, X) = Y^{(1)}]
 \\ \geq& 
-\\=& (1-\epsilon_i)\Pr_p[f_i(X^{(1)},...,X^{(k)}, Y) = Z|(X^{(1)},...,X^{(k)}, Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i]
-\\&+ \epsilon_i \Pr_p[f_i(X^{(1)},...,X^{(k)}, Y) = Z|(X^{(1)},...,X^{(k)}, Y)\notin \mathcal{X}_i^k \times \mathcal{Y}_i]
-\\=& (1-\epsilon_i)\Pr_{\tilde{p}}[f_i(X^{(1)},...,X^{(k)}, Y) = Z]
+\\=& (1-\epsilon_i)\Pr_p[f_i(Y^{(1)},\hdots,Y^{(k)}, X) = Y^{(1)}|(Y^{(1)},\hdots,Y^{(k)}, X)\in \mathcal{X}_i^k \times \mathcal{Y}_i]
+\\&+ \epsilon_i \Pr_p[f_i(Y^{(1)},\hdots,Y^{(k)}, X) = Y^{(1)}|(Y^{(1)},\hdots,Y^{(k)}, X)\notin \mathcal{X}_i^k \times \mathcal{Y}_i]
+\\=& (1-\epsilon_i)\Pr_{\tilde{p}}[f_i(Y^{(1)},\hdots,Y^{(k)}, X) = Y^{(1)}]
 + \epsilon_i 0
 \\=& (1-\epsilon_i) \text{ABA}_k[\tilde{p}_i] \geq \text{ABA}_k[\tilde{p}_i] - \epsilon_i.
 \end{align*}
@@ -281,15 +284,15 @@ when the data is generated under $p$.
 Now consider the reverse scenario of using $f_p$ to perform
 classification under $\tilde{p}_i$.  This is equivalent to generating
 data under $p(x, y)$, performing classification using $f$, then only
-evaluating classification accuracy conditional on $(X^{(1)},...,X^{(k)},
-Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i$.  Therefore,
+evaluating classification accuracy conditional on $(Y^{(1)},...,Y^{(k)},
+X)\in \mathcal{X}_i^k \times \mathcal{Y}_i$.  Therefore,
 
 \begin{align*}
-\text{ABA}_k[\tilde{p}_i] =& \sup_f \Pr_{\tilde{p}_i}[f(X^{(1)},...,X^{(k)}, Y) = Z]
-\\\geq &  \Pr_{\tilde{p}_i}[f_p(X^{(1)},...,X^{(k)}, Y) = Z]
-\\=& \Pr_p[f_p(X^{(1)},...,X^{(k)}, Y) = Z| (X^{(1)},...,X^{(k)}, Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i]
-\\=& \frac{1}{1-\epsilon_i} \Pr_p[I\{(X^{(1)},...,X^{(k)}, Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i\} \text{ and }f_p(X^{(1)},...,X^{(k)}, Y) = Z]
-\\\geq & \frac{1}{1-\epsilon_i} \left(1 - \Pr_p[I\{(X^{(1)},...,X^{(k)}, Y)\notin \mathcal{X}_i^k \times \mathcal{Y}_i\}] - \Pr_p[f_p(X^{(1)},...,X^{(k)}, Y) \neq Z]]\right)
+\text{ABA}_k[\tilde{p}_i] =& \sup_f \Pr_{\tilde{p}_i}[f(Y^{(1)},\hdots,Y^{(k)}, X) = Y^{(1)}]
+\\\geq &  \Pr_{\tilde{p}_i}[f_i(Y^{(1)},\hdots,Y^{(k)}, X) = Y^{(1)}]
+\\=& \Pr_p[f_i(Y^{(1)},\hdots,Y^{(k)}, X) = Y^{(1)}| (Y^{(1)},\hdots,Y^{(k)}, X)\in \mathcal{X}_i^k \times \mathcal{Y}_i]
+\\=& \frac{1}{1-\epsilon_i} \Pr_p[I\{(X^{(1)},...,X^{(k)}, Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i\} \text{ and }f_i(Y^{(1)},\hdots,Y^{(k)}, X) = Y^{(1)}]
+\\\geq & \frac{1}{1-\epsilon_i} \left(1 - \Pr_p[I\{(Y^{(1)},...,Y^{(k)}, X)\notin \mathcal{X}_i^k \times \mathcal{Y}_i\}] - \Pr_p[f_p(Y^{(1)},\hdots,Y^{(k)}, X) \neq Y^{(1)}]]\right)
 \\&= \frac{\text{ABA}_k[p] - \epsilon_i}{1-\epsilon_i} \geq \text{ABA}_k[p] - \epsilon_i.
 \end{align*}
 In other words, when $\tilde{p}_i$ is close to $p$, the Bayes
@@ -381,9 +384,9 @@ Using Theorem \ref{theorem:reduction}, we have
 C_k(\iota) = \sup_{p \in \mathcal{P}^{unif}: \text{I}[p(x,y)] \leq \iota} \text{ABA}_k[p(x,y)].
 \]
 
-Define $f(\iota) = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt$: our goal is to
-establish that $C_k(\iota) = f(\iota)$.  
-Note that $f(\iota)$
+Define $\sigma(\iota) = \int_0^1 Q_{c_\iota}(t) t^{k-1} dt$: our goal is to
+establish that $C_k(\iota) = \sigma(\iota)$.  
+Note that $\sigma(\iota)$
 is the same function which appears in Lemma \ref{lemma:concave} and
 the same bound as established in Lemma \ref{lemma:variational}.
 
@@ -413,42 +416,42 @@ It remains to show that for all $p \in \mathcal{P}^{unif}$ with
 $\text{I}[p] \leq \iota$, that $\text{ABA}_k[p] \leq \text{ABA}_k[p_\iota]$.
 
 Take $p \in \mathcal{P}^{unif}$ such that $\text{I}[p] \leq \iota$.
-Letting $X^{(1)},...,X^{(k)} \sim \text{Unif}[0,1]$, and $Y \sim \text{Unif}[0,1]$ define $Z_i(y) = p(y|X_i)$.
-We have $\E(Z(y)) = 1$ and,
+Letting $Y^{(1)},...,Y^{(k)} \sim \text{Unif}[0,1]$, and $X \sim \text{Unif}[0,1]$ define $Z_i(x) = p(x|Y_i)$.
+We have $\E(Z_1(x))$ and,
 \[
-\text{I}[p(x,y)] = \E(Z(Y) \log Z(Y))
+\text{I}[p(x,y)] = \E(Z_1(X) \log Z_1(X))
 \]
 while
 \[
-\text{ABA}_k[p(x,y)] = k^{-1}\E(\max_i Z_i(Y)).
+\text{ABA}_k[p(x,y)] = k^{-1}\E(\max_i Z_i(X)).
 \]
 
-Letting $G_y$ be the distribution of $Z(y)$, we have
+Letting $G_x$ be the distribution of $Z(x)$, we have
 \[
-E[G_y] = 1
+E[G_x] = 1
 \]
 \[
-\text{I}[p(x,y)] = \E(I[G_Y])
+\text{I}[p(x,y)] = \E(I[G_X])
 \]
 \[
-\text{ABA}_k[p(x,y)] = \E(\psi_k[G_Y])
+\text{ABA}_k[p(x,y)] = \E(\psi_k[G_X])
 \]
-where the expectation is taken over $Y \sim \text{Unif}[0,1]$ and
+where the expectation is taken over $X \sim \text{Unif}[0,1]$ and
 where $E[G]$, $I[G]$, and $\psi_k[G]$ are defined as in
 Lemma \ref{lemma:variational}.
 
 Define the random variable $J = I[G_Y]$.
 We have
 \begin{align*}
-\text{ABA}_k[p(x,y)] &= \E(\psi_k[G_Y])
-\\&= \int_0^1 \psi_k[G_y] dy
-\\&\leq \int_0^1 \left(\sup_{G: I[G] \leq I[G_y]} \psi_k[G]\right) dy
-\\&= \int_0^1 f(I[G_y]) dy = \E[f(J)].
+\text{ABA}_k[p(x,y)] &= \E(\psi_k[G_X])
+\\&= \int_0^1 \psi_k[G_X] dy
+\\&\leq \int_0^1 \left(\sup_{G: I[G] \leq I[G_x]} \psi_k[G]\right) dy
+\\&= \int_0^1 \sigma(I[G_x]) dy = \E[\sigma(J)].
 \end{align*}
 Now, since $f$ is concave by Lemma \ref{lemma:concave},
 we can apply Jensen's inequality to conclude that
 \[
-\text{ABA}_k[p(x,y)] = \E[f(J)] \leq f(\E[J]) = f(\iota),
+\text{ABA}_k[p(x,y)] = \E[\sigma(J)] \leq \sigma(\E[J]) = \sigma(\iota),
 \]
 which completes the proof. $\Box$
 

@@ -598,11 +598,12 @@ where the expectation is taken over the joint distribution of $\{Y^{(1)},\hdots,
 The following theorem gives a convenient formula for computing $\text{ABA}_k$.
 
 \begin{theorem}
-For a randomized classification task with $\{Y^{(1)},\hdots,
+Suppose $(X, Y)$ have a joint distribution with a density $p(x,y)$, with a marginal density $\pi(y)$.
+Then for a randomized classification task with $\{Y^{(1)},\hdots,
 Y^{(k)}\}$ are drawn iid from $\pi$, the $k$-class average Bayes
 accuracy can be computed as
 \[
-\text{ABA}_k = \frac{1}{k} \int \left[\prod_{i=1}^k \pi(y_i) dy_i \right] \int dx \max_i p(x|y_i).
+\text{ABA}_k[p(x,y)] = \frac{1}{k} \int \left[\prod_{i=1}^k \pi(y_i) dy_i \right] \int dx \max_i p(x|y_i).
 \]
 \end{theorem}
 
