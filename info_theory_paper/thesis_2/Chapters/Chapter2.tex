@@ -198,8 +198,8 @@ for classification problems.
 The randomized classification model we study has the following
 features.  We assume that there exists an infinite (or even
 continuous) label space $\mathcal{Y}$ and a response space
-$\mathcal{X} \in \mathbb{R}^p$.  For each label $y \in \mathcal{Y}$,
-there exists a distribution of features $F_y$.  That is to say, that
+$\mathcal{X} \in \mathbb{R}^p$.  Let $\mathcal{P}(\mathcal{X})$ be the space of probability distributions over $\mathcal{X}$. For each label $y \in \mathcal{Y}$,
+there exists a distribution of features $F_y \in \mathcal{P}(\mathcal{X})$.  That is to say, that
 for a feature-label pair $(X, Y)$, that the conditional distribution
 of $X$ given $Y = y$ is given by $F_y$.  Furthermore, we assume that
 there exists a prior distribution $\pi$ on the label space $\mathcal{Y}$.
@@ -245,8 +245,14 @@ where the function $m_y$ maps $\mathcal{X}$ to $\mathbb{R}$.
 \item Define a marginal model $\mathcal{M}$ as a mapping from empirical distributions
 to margin functions,
 \[
-\mathcal{M}(\hat{F}_y) = m_y(x).
+\mathcal{M}: \mathcal{P}(\mathcal{X}) \to \mathcal{R}(\mathcal{X})
 \]
+where $\mathcal{R}(\mathcal{X})$ is the space of real-valued functions on $\mathcal{X}$.
+That is, if we write
+\[
+m_y = \mathcal{M}(\hat{F}_y),
+\]
+then $m_y(x)$ is a real-valued function with domain $x \in \mathcal{X}$.
 \item A classifier that produces marginal classification rules
 \[
 h(x) = \text{argmax}_{y \in \mathcal{S}} m_y(x),
@@ -318,17 +324,16 @@ If we \emph{fix} a particular realization of the random label set
 $\mathcal{S} = \{y^{(1)}, \hdots, y^{(k)}\}$ as well as the training
 set $\{\hat{F}_{y^{(i)}}\}_{i=1}^k$, then the classifier $h(x)$ is
 fixed, and only the third source of randomness (in test risk) applies.
-However, the true generalization accuracy of the classifier is deterministic:
+However, the true generalization accuracy of the classifier is deterministic\footnote{Although $h$ is data-dependent and therefore random, for a fixed $h$, the generalization accuracy is a deterministic parameter which depends on $h$ and the opulation.}:
 \begin{align*}
-\text{GA}(h) &= \Pr[Y = h(X)|Y \sim \text{Unif}(\mathcal{S}),
+\text{GA}(h) &= \Pr[Y = h(X)|
   \mathcal{S}, \{\hat{F}_{y^{(i)}}\}_{i=1}^k] 
 \\&= \frac{1}{k}
-\sum_{i=1}^k \Pr[m_{y^{(i)}}(x) = \max_j m_{y^{(j)}}(x)|X \sim
-  F_{y^{(i)}}, \mathcal{S}, \{\hat{F}_{y^{(i)}}\}_{i=1}^k].  
+\sum_{i=1}^k \Pr[m_{y^{(i)}}(X^{(i)}) = \max_j m_{y^{(j)}}(X^{(i)})|\mathcal{S}, \{\hat{F}_{y^{(i)}}\}_{i=1}^k].  
 \\&= \frac{1}{k}
 \sum_{i=1}^k \int_{\mathcal{X}} I(m_{y^{(i)}}(x) = \max_j m_{y^{(j)}}(x)) dF_{y^{(i)}}(x),
 \end{align*}
-recalling that $m_{y^{(i)}}(x) \stackrel{def}{=}
+where the probabilities are evalutated with respect to the joint distribution of $Y \sim \text{Unif}(\mathcal{S})$ and $X^{(i)} \sim F_{Y^{(i)}}$ for $i = 1,\hdots, k$; also recalling that $m_{y^{(i)}}(x) \stackrel{def}{=}
 \mathcal{M}(\hat{F}_{y^{(i)}})(x)$ is the margin function obtained
 from the training data of the $i$th class.
 
@@ -341,12 +346,13 @@ $\hat{F}_y$ constructed from sample size $r$ as $\Pi_{y, r}$.  The
 accuracy of the classifier $\mathcal{M}$ on label set $\mathcal{S}$ is
 given by
 \begin{align*}
-\text{GA}_{\mathcal{S}}(\mathcal{M}) &= \Pr[Y = h(X)|Y \sim
-  \text{Unif}(\mathcal{S}), \hat{F}_{y^{(i)}} \sim \Pi_{y^{(i)}, r_1}] \\&= \frac{1}{k} \sum_{i=1}^k \int
+\text{GA}_{\mathcal{S}}(\mathcal{M}) &= \Pr[Y = h(X)] \\&= \frac{1}{k} \sum_{i=1}^k \int
 I(\mathcal{M}(\hat{F}_{y^{(i)}})(x) = \max_j
 \mathcal{M}(\hat{F}_{y^{(j)}})(x)) dF_{y^{(i)}}(x) \prod_{\ell=1}^k
-d\Pi_{y^{(\ell)}, r_1}(\hat{F}_{y^{(\ell)}}).
+d\Pi_{y^{(\ell)}, r_1}(\hat{F}_{y^{(\ell)}})
 \end{align*}
+where the probability is taken with respect to the joint distribution of $Y \sim
+  \text{Unif}(\mathcal{S}), \hat{F}_{y^{(i)}} \sim \Pi_{y^{(i)}, r_1}$.
 The calculation of the accuracy (for fixed label set $\mathcal{S}$) is
 illustrated in figure \ref{fig:risk}.
 
@@ -362,7 +368,7 @@ classes, and $r_1$, the number of repeats in the training set.
 Then the $k$-class, $r$-repeat \emph{average generalization accuracy} of
 a marginal classifier $\mathcal{M}$ is defined as
 \begin{align*}
-\text{AGA}_{k,r_1}(\mathcal{M}) &= \E[\text{GA}_{\mathcal{S}}(\mathcal{M})|Y^{(1)}, \hdots, Y^{(k)} \sim \pi]
+\text{AGA}_{k,r_1}(\mathcal{M}) &= \E[\text{GA}_{\mathcal{S}}(\mathcal{M})]
 \\&= \frac{1}{k} \sum_{i=1}^k \int
 I(\mathcal{M}(\hat{F}_{y^{(i)}})(x) = \max_j
 \mathcal{M}(\hat{F}_{y^{(j)}})) dF_{y^{(i)}}(x) \prod_{\ell=1}^k
@@ -372,6 +378,7 @@ I(\mathcal{M}(\hat{F}_{y^{(1)}})(x) = \max_j
 \mathcal{M}(\hat{F}_{y^{(j)}})) dF_{y^{(1)}}(x) \prod_{\ell=1}^k
 d\Pi_{y^{(\ell)}, r_1}(\hat{F}_{y^{(\ell)}}) d\pi(y^{(\ell)}).
 \end{align*}
+where the probability is taken with respect to the distribution of $Y^{(1)}, \hdots, Y^{(k)} \sim \pi$, and
 where the last line follows from noting that all $k$ summands in the previous line are identical.
 The definition of average generalization accuracy is illustrated in Figure \ref{fig:average_risk}.
 
@@ -585,8 +592,9 @@ and where the observations $X$ for label $Y$ are drawn from the
 conditional distribution $F_Y$.  In this case, the Bayes accuracy is a
 random variable depending on the label set, since
 \[
-\text{BA}(Y^{(1)},\hdots, Y^{(k)}) = \frac{1}{k} \sum_{i=1}^k \Pr[\argmax_{i=1}^k\ p(x|y^{(i)}) = i| X \sim F_{Y^{(i)}}].
+\text{BA}(y^{(1)},\hdots, y^{(k)}) = \frac{1}{k} \sum_{i=1}^k \Pr[\argmax_{i=1}^k\ p(X^{(i)}|y^{(i)}) = i].
 \]
+where the probabilities inside the sum are taken with respect to the distribution of $X^{(i)} \sim F_{y^{(i)}}$ for each $i = 1,\hdots, k$.
 The $k$-class Average Bayes accuracy is defined as the average Bayes accuracy,
 \[
 \text{ABA}_k = \E[\text{BA}(Y^{(1)},\hdots, Y^{(k)})]
@@ -816,8 +824,8 @@ g(\vec{Y}; \vec{X}_1,\hdots, \vec{X}_k) = \text{argmax}_j p(\vec{Y}|\vec{X} = \v
 maximizes the identification generalization accuracy over all
 functions $g$.  But now consider a randomized classification task
 where $\vec{X}$ are the labels, and $\vec{Y}$ are the feature vectors
-(not that this is the reverse of the convention used in the rest of
-the chapter.)  Then we see that the Bayes identification rule $g$ is
+(note that this is the reverse of the convention previously used in
+this chapter.)  Then we see that the Bayes identification rule $g$ is
 also the Bayes classification rule for the label set $\{\vec{X}_1,
 \hdots, \vec{X}_k\}$.
 
