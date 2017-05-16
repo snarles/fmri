@@ -1,0 +1,26 @@
+Variability of GA (around AGA)
+
+reduces to the following problem
+
+I have real numbers a_1,...,a_n
+
+And subsets S_1,...,S_m of {1,...,n}
+
+with |S_j| = k for j = 1,..,m
+
+and sum_j I(i in S_j) = l for i = 1,..,n
+
+(therefore n * l = k * m)
+
+Define X_j = sum_{i in S_j} a_i 
+
+Define X as random variable for J unif in 1....m
+
+Then what is maximum of E[X^2]?
+
+Claim: E[X^2] is maximized when there is a total ordering on S_1,...,S_m
+
+Suppose not.  Then there is S_i, S_j where we can find a "swap" that increases E[X^2]
+* this needs to be shown and it might not be true
+* But if it is true, then it greatly reduces the set of possibly optimal collections {S_i}
+
