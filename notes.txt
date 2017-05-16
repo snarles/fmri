@@ -1,6 +1,14 @@
 Variability of GA (around AGA)
 
-reduces to the following problem
+can be shown using Stein's method
+
+GA=f(Y_1,..,Y_k)
+
+Consider Var(GA_k|Y_1....Y_{k-1}) to bound Var(GA_k)
+
+
+[prvious notes, no longer neede below]
+
 
 I have real numbers a_1,...,a_n
 
