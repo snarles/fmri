@@ -20,7 +20,8 @@ Then what is maximum of E[X^2]?
 
 Claim: E[X^2] is maximized when there is a total ordering on S_1,...,S_m
 
-Suppose not.  Then there is S_i, S_j where we can find a "swap" that increases E[X^2]
-* this needs to be shown and it might not be true
-* But if it is true, then it greatly reduces the set of possibly optimal collections {S_i}
+Suppose not.  Then there is S_i, S_j where we can find a "swap" that increases E[X^2].
+* Suppose the set difference is of size 2 * j.
+* Then make S_i have the j largest elements in the set difference, and S_j have the j smallest elements in the set difference.
 
+Consequence: we know that S_1 = ... = S_l = {1,...,k}, and S_{l+1},...,S_{2*l} = {k+1,...,2*k}, etc.
