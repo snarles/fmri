@@ -275,7 +275,7 @@ classification or regression model.
 
 However, this result-oriented approach to evaluating representations
 has two drawbacks.  Firstly, it may be difficult to work with a
-performance metric (such classification or regression accuracy) as a
+performance metric (such as classification or regression accuracy) as a
 quality metric, since obtaining the performance metric requires
 training a model and then testing it on data, which can be
 computationally costly and may not yield a differentiable objective
@@ -386,7 +386,7 @@ The mutual information is a classical measure of dependence that was
 first developed by Claude Shannon as one of the key concepts in
 information theory.  The $k$-class average classification accuracy is
 a concept that has not been (to our knowledge) previously introduced
-in the literature, but it is highly related to the
+in the literature, but it is closely related to the
 \emph{identification accuracy}, which was introduced by the same
 functional MRI study of natural images (\cite{Kay2008a}) that we
 discussed in section \ref{sec:kay2008}.  To our knowledge, we are the
@@ -411,7 +411,7 @@ identification risk depend on the choice of a tuning parameter $k$.
 However, one of the main theoretical contributions of this work is to
 show how all of these three methods: mutual information, $k$-class
 average classification accuracy, and identification accuracy, are
-highly related.  In particular, we establish methods for
+closely related.  In particular, we establish methods for
 lower-bounding the mutual information from either the $k$-class
 average classification accuracy or identification accuracy.
 
@@ -467,9 +467,9 @@ encoder.
 With regards to \emph{supervised} evaluation of representations, one
 can find extremely similar ideas in the methodology of
 \emph{representation-similarity analysis}, which was introduced by
-\cite{kriegeskorte2008representational} to the neuroscience community,
+(\cite{kriegeskorte2008representational}) to the neuroscience community,
 and which has already grown incredibly popular within the field given
-the short span of time since its introduction.  However, the
+the short span of time since its introduction.  However, this
 methodology is based on much more classical work in statistics and
 psychometrics on \emph{distance-based inference}.  The idea is that if
 one has multiple \emph{views} of the same object, say, the pixel
@@ -511,9 +511,9 @@ this work.  We leave it to future research.
 
 \subsection{Theme and variations}
 
-We have seen that the main \emph{theme} of the thesis is the
+We have seen that the main theme of the thesis is the
 supervised evaluation of representations.  However, a number
-of \emph{subthemes} arise from similar problems in related
+of subthemes arise from similar problems in related
 disciplines, and additional applications of our methods.
 
 \emph{Subtheme: Recognition systems}.  We have seen that
@@ -546,7 +546,7 @@ determining whether the representations originate from the same latent objects,
 \[
 H_0: \vec{t} = \vec{t}'.
 \]
-The leads us to consider the ideas in \emph{information geometry},
+This leads us to consider the ideas in \emph{information geometry},
 which is the study of spaces of \emph{distributions}
 $\{f_\theta\}_{\theta \in \Theta}$ in which distance is measured by
 some type of statistical distance or divergence, e.g. Kullback-Liebler
@@ -571,13 +571,13 @@ distance between $f_\theta$ and $f_{\theta'}$ is less than $r$:
 \[d(f_{\theta}, f_{\theta'}) < r.\]
 The $\delta$-\emph{metric entropy} of the space $\Theta$ is defined as
 the minimum number of balls of radius $\delta$ needed to cover
-$\Theta$ (\cite{adler2009random}).  While we will not employ the
+$\Theta$ (c.f. \cite{adler2009random}).  While we will not employ the
 formal tools of information geometry in this work, we take inspiration
 from some of their intuitions.  Instead, we use \emph{information
   theory}, a closely related field, to provide much of the formalism
 for our theory.
 
-\emph{Subtheme: Information theory}.  Extremely similar notions of
+\emph{Subtheme: Information theory}.  Similar notions of
 \emph{volume} appear in information theory, which is the study of how
 to design systems for transmitting messages between a sender and a
 reciever over a possibly noisy channel.  We will review more of the
@@ -631,7 +631,7 @@ for estimating mutual information.
 \emph{Subtheme: Connections between information theory and supervised
   learning}.  Information theory, statistics, and machine learning
 have many interconnections, as testified by the many applications of
-information-theoretic inqualities in statistical and machine learning
+information-theoretic inequalities in statistical and machine learning
 research.  By studying both information-theoretic and
 classification-based methods for evaluating representations, we
 uncover additional links between information theory and
@@ -683,14 +683,15 @@ modelled as random classification tasks, because the stimuli sets used
 in the experiment are composed of arbitrary (`random') exemplars, and
 therefore the stimuli set used by one lab may differ from the stimuli
 set used by another lab, even when they are presumably studying the
-same task.  Intuitively, using larger and more diverse stimuli sets
-should lead to better generalizability of results to the entire
-population of stimuli.  Our work on random classification--in
-particular, our variance bounds on the classification accuracy in
-randomized classification tasks--provides a theoretical basis for
-understanding how the results of a random classification task
-allow inference of population parameters, such as the mutual
-information between the stimulus and the response.
+same task.  Intuitively, holding all else fixed (such as the sample
+size per class), using larger and more diverse stimuli sets should
+lead to better generalizability of results to the entire population of
+stimuli.  Our work on random classification--in particular, our
+variance bounds on the classification accuracy in randomized
+classification tasks--provides a theoretical basis for understanding
+how the results of a random classification task allow inference of
+population parameters, such as the mutual information between the
+stimulus and the response.
 
 \subsection{Organization}
 
@@ -705,9 +706,9 @@ dependence of classification accuracy on the label set size in
 randomized classification, and a practical method for predicting the
 accuracy-versus-label set size curve from real data.  Chapter 4 and 5
 deal with the applications of randomized classification to the
-estimation of mutual information in continuous data: chapter 4 derives
+estimation of mutual information in continuous data: Chapter 4 derives
 a lower confidence bound for mutual information under very weak
-assumptions, while chapter 5 works within an asymptotic
+assumptions, while Chapter 5 works within an asymptotic
 high-dimensional framework which leads to a more powerful but less
 robust estimator estimate of mutual information.  We conclude the
 thesis with a discussion in Chapter 6.
@@ -843,7 +844,8 @@ comparison illustrated in the figure, but for now, one can note that
 both the multi-class classification problem and the noisy-channel
 decoding problem involves the inference of a latent variable $Y$ from
 an observation $X$, where $X$ is linked to $Y$ through a conditional
-distribution $F_Y$.
+distribution $F_Y$.  Here, $F_y$ is the conditional distribution of
+$X$ given $Y=y$.
 
 \tikzstyle{block} = [rectangle, draw, fill=white, 
     text width=5em, text centered, rounded corners, minimum height=4em]

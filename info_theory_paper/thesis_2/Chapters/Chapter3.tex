@@ -12,8 +12,8 @@
 
 In this chapter, we continue the discussion of Chapter 2, but focus
 specifically on the question of how to estimate the $k$-class
-average accuracy, $\text{AGA}_{k, r}$, based on data from a problem
-$P_1$ with $k_1 < k$ classes, and $r = r_1$-repeat training data.
+average accuracy, $\text{AGA}_{k, r_1}$, based on data from a problem
+$P_1$ with $k_1 < k$ classes, and $r_1$-repeat training data.
 This problem of \emph{prediction extrapolation} is especially
 interesting for a number of applied problems.
 
@@ -78,9 +78,11 @@ therefore that estimation of the average accuracy can be accomplished
 via estimation of the unknown function $\bar{D}(u)$.  This allows the
 development of a class of unbiased estimators of $\bar{D}(u)$,
 presented in section \ref{sec:extrapolation_estimation} given the
-assumption of a known parametric form for $\bar{D}(u)$.  We analyze
-the performance of the estimator in both the well-specified and
-misspecified case.  We demonstrate our method to a face-recognition
+assumption of a known parametric form for $\bar{D}(u)$.  
+%We analyze
+%the performance of the estimator in both the well-specified and
+%misspecified case.  
+We demonstrate our method to a face-recognition
 example in section \ref{sec:extrapolation_example}.  Additionally, in
 Chapter 5 %% cite the specific section later we will see the
 we compare the estimator to an alternative, information-theory
@@ -141,9 +143,9 @@ As we can see from Figure \ref{fig:average_risk}, the average accuracy is
 obtained by averaging over four randomizations:
 \begin{enumerate}
 \item[A1.] Drawing the label subset $\mathcal{S}$.
-\item[A2.] Drawing the training dataset.
+\item[A2.] Drawing the training dataset, $\hat{F}_{Y^{(1)}},\hdots, \hat{F}_{Y^{k}}.$
 \item[A3.] Drawing $Y^*$ uniformly at random from $\mathcal{S}$.
-\item[A4.] Drawing $X^*$ from $F_{X^*}$.
+\item[A4.] Drawing $X^*$ from $F_{Y^*}$.
 \end{enumerate}
 
 
@@ -153,7 +155,7 @@ sample, $(y^*, \hat{F}_{y^*})$, and the test feature $x^*$
 while \emph{averaging} over all the other random variables.  Define
 the \emph{conditional accuracy} $\text{CondAcc}_k((y^*, \hat{F}_{y^*}), x^*)$ as
 \[
-\text{CondAcc}_k((y^*, \hat{F}_{y^*}), x^*) = \Pr[\argmax_{y \in \mathcal{S}} \mathcal{M}(\{\hat{F}_y\})(X^*) = Y^* |Y^*=y^*, X^* = x^*, \hat{F}_{Y^*} = \hat{F}_{y^*}].
+\text{CondAcc}_k((y^*, \hat{F}_{y^*}), x^*) = \Pr[\argmax_{y \in \mathcal{S}} \mathcal{M}(\hat{F}_y)(X^*) = Y^* |Y^*=y^*, X^* = x^*, \hat{F}_{Y^*} = \hat{F}_{y^*}].
 \]
 Figure \ref{fig:conditional_risk} illustrates the variables which are
 fixed under conditioning and the variables which are randomized.
@@ -194,22 +196,38 @@ Now, in order to analyze the $k$-class behavior of the conditional
 accuracy, we begin by considering the \emph{two-class} situation.
 
 In the two-class situation, we have a true label $y^*$, a training
-sample $\hat{F}_{y^*}$, and one incorrect label, $Y$.  Define the
-\emph{U-function} $U_{x^*}(y^*, \hat{F}_{y^*})$ as the conditional
-accuracy (the probability of correct classification) in the two-class
-case.  The classification is correct if the margin $M_{y^*}(x^*)$ is
-greater than the margin $M_Y(x^*)$, and incorrect otherwise.  Since we
-are fixing $x^*$ and $(y^*, \hat{F}_{y^*})$, the probability of
-correct classification is obtained by taking an expectation:
+sample $\hat{F}_{y^*}$, and one incorrect label, $Y$.  
+In this case, we obtain the margin functions for both classes from the training data,
+\[
+M_{y^*} = \mathcal{M}(\hat{F}_{y^*}),
+\]
+for the correct label,
+and
+\[
+M_Y = \mathcal{M}(\hat{F}_Y)
+\]
+for the random incorrect label.  The classification is correct if and
+only if \[M_{y^*}(x^*) \geq M_Y(x^*),\] that is, if the score of the
+incorrect class is larger than the score of the correct class for
+observation $x^*$.
+
+Define the \emph{U-function} $U_{x^*}(y^*, \hat{F}_{y^*})$ as the
+conditional accuracy (the probability of correct classification) in
+the two-class case.  Since we are fixing $x^*$ and $(y^*,
+\hat{F}_{y^*})$, the probability of correct classification is obtained
+by taking an expectation:
 \begin{align}\label{eq:U_function}
 U_{x^*}(y^*, \hat{F}_{y^*}) &= \Pr[M_{y^*}(x^*) > \mathcal{M}(\hat{F}_Y)(x^*)]
 \\&= \int_{\mathcal{Y} \times \mathcal{P}_{\mathcal{Y}}} 
 I\{
-M_{y^*}(x^*) > \mathcal{M}(\hat{F}_{y})(x)
+M_{y^*}(x^*) > \mathcal{M}(\hat{F}_{y})(x^*)
 \}
 d\Pi_{y, r}(\hat{F}_y)
 d\pi(y).
 \end{align}
+Recall that $\Pi_{y,r}$ is the distribution of $\hat{F}_y$, where
+$\hat{F}_y$ is the empirical distribution of a sample of size $r$ from
+label $y$ (that is, $\Pi_{y,r}$ is a distribution over distributions), as we defined in section 2.2.3.
 See also figure \ref{fig:U_function} for an graphical illustration of
 the definition.
 
@@ -220,35 +238,50 @@ the definition.
 \end{figure}
 
 An important property of the U-function, and the basis for its name,
-is that the random variable $U_x(Y, \hat{F}_Y)$ for $Y \sim \pi$ and
-$\hat{F}_Y \sim \Pi_{Y, r}$ is uniformly distributed for all
-$x \in \mathcal{X}$.  This is proved in the following Lemma.
+is that the random variable $U_X(Y, \hat{F}_Y)$ for $Y \sim \pi$ and
+$\hat{F}_Y \sim \Pi_{Y, r}$ and $X \sim F_Y$, is uniformly distributed
+conditional on $X=x$, for all fixed $x \in \mathcal{X}$.  This is
+proved in the following Lemma.
 
 \begin{lemma}\label{lemma:U_function}
 Suppose $\pi$, $\{F_y\}_{y \in \mathcal{Y}}$ and marginal classifier
 $\mathcal{F}$ satisfy the tie-breaking condition.  Take $x \in \mathcal{X}$.  Defining
 $U_{y,\hat{F}_y}(x)$ as in \eqref{eq:U_function}, and defining the
 random variable $U$ by
-\[U = U_{Y, \hat{F}_Y}(x)\]
-for $Y \sim \pi$, $\hat{F}_Y \sim \Pi_{Y, r}$,
-the distribution of $U$ is uniform on $[0,1]$, i.e.
+\[U = U_{Y, \hat{F}_Y}(X)\]
+for $Y \sim \pi$, $\hat{F}_Y \sim \Pi_{Y, r}$ and $X \sim F_Y$.  Then
+the conditional distribution of $U$ given $X = x$ for any $x \in
+\mathcal{X}$ is uniform on $[0,1]$, i.e.
 \[
-\Pr[U \leq u] = \text{max}\{u, 1\}.
+\Pr[U \leq u|X =x] = \text{min}\{u, 1\}.
 \]
 \end{lemma}
 
 \textbf{Proof of Lemma.}
 
-Define the variable $Z = \mathcal{M}(\hat{F}_Y)(x)$ for $Y \sim \pi$.
-By the tie-breaking condition, $Z$ has a continuous density on $[0,1]$.
-Consider the survivor function of $Z$, $g(z) = \Pr[Z \geq z]$.  From
-the definition \eqref{eq:U_function}, we see that 
+%Define the variable $Z = \mathcal{M}(\hat{F}_Y)(x)$ for $Y \sim \pi$.
+%By the tie-breaking condition, $Z$ has a continuous density on $[0,1]$.
+%Consider the survivor function of $Z$, $g(z) = \Pr[Z \geq z]$.  From
+%the definition \eqref{eq:U_function}, we see that 
+%\[
+%U = g(\mathcal{M}(\hat{F}_Y)(x)) = g(Z).
+%\]
+%Now note that the survivor function of any continuous random variable,
+%when applied to itself, is uniformly distributed.
+
+The result follows from the fact that the conditional probability
+$\Pr[W > W'|W]$ is uniformly distributed for any $W, W'$ which are
+i.i.d. with a continuous distribution.  
+
+Define $Z = \mathcal{M}(\hat{F}_{Y})(x)$ and $Z' =
+\mathcal{M}(\hat{F}_{Y'})(x)$ for $Y, Y' \stackrel{i.i.d.}{\sim} \pi$.
+Then, conditional on $X = x$, we have
 \[
-U = g(\mathcal{M}(\hat{F}_Y)(x)) = g(Z).
+U = \Pr[Z > Z'|Z].
 \]
-Now note that the survivor function of any continuous random variable,
-when applied to itself, is uniformly distributed.
-$\Box$
+The tie-breaking conditional implies that $Z$ has a continuous
+distribution, so therefore $U$ is uniformly distributed conditional on
+$X = x$.  $\Box$
 
 
 Now, we will see how the U-function allows us to understand the
