@@ -80,7 +80,7 @@ The estimator we propose is
 \hat{I}_{HD} = \frac{1}{2}(\pi_{k}^{-1}(\text{TA}_{k,CV}))^2,
 \end{equation}
 obtained by inverting the relation \eqref{abepi}, then substituting
-an estimate of the identification accuracy $\text{TA}_k$ for the $\text{ABA}_k$.  
+an estimate of the identification accuracy $\text{TA}_{k, CV}$ for $\text{ABA}_k$.  
 %As such,
 %our estimator can be directly compared to the $\hat{I}_{Fano}$, since
 %both are functions of $\text{ABA}_k$ (Figure \ref{fig:pi}.)
@@ -95,7 +95,7 @@ $p^{[d]}(x, y)$ for $d = 1,2,\hdots$, where the following conditions hold.
 \begin{itemize}
 \item[A1.] The mutual information converges to a finite constant: $\lim_{d \to \infty} I[p^{[d]}(x, y)] = \iota < \infty.$
 \end{itemize}
-For any integer $k > 2$, we also require the following assumptions to
+For all integers $k > 2$, we also require the following assumptions A2-A4 to
 hold.  For $d = 1,\hdots$, let $(X^{(i)}, Y^{(i)})$ be drawn
 i.i.d. from $p^{[d]}(x, y)$, for $i = 1,\hdots, k$.  
 Define \[\ell_{ij} = \log p^{[d]}(X^{(i)}|Y^{(i)})\]
@@ -280,7 +280,7 @@ moments, we have
 \lim_{d \to \infty} \E[u^{[d]}(X, Y')]-\frac{1}{2}\Var[u^{[d]}(X, Y')] = 0.
 \]
 In other words, $u^{[d]}(X, Y')$ converges in distribution to $N(-\frac{\sigma^2}{2}, \sigma^2)$,
-where $\sigma^2 = \lim_{d \to \infty} \Var[u(X, Y')]$.
+where we define \[\sigma^2 = \lim_{d \to \infty} \Var[u^{[d]}(X, Y')].\]
 
 Meanwhile, by applying assumption A2,
 \begin{align*}
@@ -362,7 +362,7 @@ Bernoulli random variable with probability $e$.  Replacing $H(Z|Y)$
 with $H(X|Y)$ and replacing $\text{BA}$ with the test accuracy $\text{TA}$,
 we get the estimator
 \[
-\hat{I}_{Fano} = log(K) - (1-\text{TA}) log(K-1) + (1-\text{TA}) log(1-\text{TA}) + \text{TA} log(\text{TA}).
+\hat{I}_{Fano} = \log(K) - (1-\text{TA}) \log(K-1) + (1-\text{TA}) \log(1-\text{TA}) + \text{TA} \log(\text{TA}).
 \]
 Meanwhile, the confusion matrix estimator computes
 \[
