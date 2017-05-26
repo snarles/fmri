@@ -57,8 +57,8 @@ which provides an upper bound to identification accuracy.  Our main
 theoretical contributions are (i) the derivation of a tight lower
 bound on mutual information as a function of $k$-class average Bayes
 accuracy, and (ii) the derivation of an asymptotic relationship
-between the $K$-class average Bayes accuracy and the mutual
-information. Our method therefore estimates the $K$-class Bayes
+between the $k$-class average Bayes accuracy and the mutual
+information. Our method therefore estimates the $k$-class Bayes
 identification accuracy to be translated into estimate of the mutual
 information.
 
@@ -75,7 +75,7 @@ efficiency of estimation in high-dimensional settings.
 
 The rest of the chapter is organized as follows.  Section
 \ref{sec:ch4_theory} establishes the theoretical results linking
-average Bayes accuracy and mutual information, and section
+average Bayes accuracy and mutual information, and Section
 \ref{sec:ch4_estimation} describes our proposed identification-based
 estimator of mutual information based on the theory.  We present one
 simulation example in section \ref{sec:ch4_simulation}, but will we
@@ -120,8 +120,7 @@ nor upper bound for mutual information in terms of average Bayes error, since
 \]
 regardless of $\iota$.
 
-The goal of this work is to attempt to compute or approximate the functions $C_k$ and $C_k^{-1}$.
-
+%The goal of this work is to attempt to compute or approximate the functions $C_k$ and $C_k^{-1}$.
 In the following sections we determine the value of $C_k(\iota)$,
 leading to the following result.
 
@@ -179,9 +178,9 @@ Therefore, it is necessary to first show that
 This is accomplished via the following lemma.
 
 \begin{lemma}\label{lemma:truncation} (Truncation).
-Let $p(x, y)$ be a density on
-$\mathbb{R}^{d_x} \times \mathbb{R}^{d_y}$.  For all $\epsilon > 0$,
-there exists a subset $\mathcal{X} \subset \mathbb{R}^{d_x}$ with
+Let $p(x, y)$ be a density on $\mathbb{R}^{d_x} \times
+\mathbb{R}^{d_y}$ with $\text{I}[p(x, y)] < \infty$.  For all $\epsilon >
+0$, there exists a subset $\mathcal{X} \subset \mathbb{R}^{d_x}$ with
 finite volume with respect to $d_x$-dimensional Lesbegue measure, and
 a subset $\mathcal{Y} \subset \mathbb{R}^{d_y}$ with finite volume
 with respect to $d_y$-dimensional Lesbegue measure, such that defining
@@ -246,8 +245,8 @@ $f_\infty$ the Bayes $k$-class classifier for $p(x, y)$: recall that by definiti
 \text{ABA}_k[\tilde{p}_i] = \Pr_{\tilde{p}_i}[f_i(Y^{(1)},...,Y^{(k)}, X) = Y^{(1)}]
 \]
 where the probability is taken with respect to the joint distribution
-of $Y^{(1)},\hdots, Y^{(k)}$ drawn from $\pi$, and $X$ drawn from the
-conditional distribution $F_{Y^{(1)}}.$
+of $Y^{(1)},\hdots, Y^{(k)}$ drawn from $p(y)$, and $X$ drawn from the
+conditional distribution $p(x|Y^{(1)}).$
 Define
 \[
 \epsilon_i = \Pr_p[(Y^{(1)},...,Y^{(k)}, X)\notin \mathcal{Y}_i^k \times \mathcal{X}_i ];
@@ -270,7 +269,7 @@ define
 We have
 \begin{align*}
 \text{ABA}_k[p] =& \sup_f \Pr_p[f(Y^{(1)},\hdots,Y^{(k)}, X) = Y^{(1)}]
-\\ \geq& 
+\\ \geq& \Pr_p[\tilde{f}_i(Y^{(1)},\hdots,Y^{(k)}, X) = Y^{(1)}]
 \\=& (1-\epsilon_i)\Pr_p[f_i(Y^{(1)},\hdots,Y^{(k)}, X) = Y^{(1)}|(Y^{(1)},\hdots,Y^{(k)}, X)\in \mathcal{X}_i^k \times \mathcal{Y}_i]
 \\&+ \epsilon_i \Pr_p[f_i(Y^{(1)},\hdots,Y^{(k)}, X) = Y^{(1)}|(Y^{(1)},\hdots,Y^{(k)}, X)\notin \mathcal{X}_i^k \times \mathcal{Y}_i]
 \\=& (1-\epsilon_i)\Pr_{\tilde{p}}[f_i(Y^{(1)},\hdots,Y^{(k)}, X) = Y^{(1)}]
@@ -285,14 +284,14 @@ Now consider the reverse scenario of using $f_p$ to perform
 classification under $\tilde{p}_i$.  This is equivalent to generating
 data under $p(x, y)$, performing classification using $f$, then only
 evaluating classification accuracy conditional on $(Y^{(1)},...,Y^{(k)},
-X)\in \mathcal{X}_i^k \times \mathcal{Y}_i$.  Therefore,
+X)\in \mathcal{Y}_i^k \times \mathcal{X}_i$.  Therefore,
 
 \begin{align*}
 \text{ABA}_k[\tilde{p}_i] =& \sup_f \Pr_{\tilde{p}_i}[f(Y^{(1)},\hdots,Y^{(k)}, X) = Y^{(1)}]
 \\\geq &  \Pr_{\tilde{p}_i}[f_i(Y^{(1)},\hdots,Y^{(k)}, X) = Y^{(1)}]
-\\=& \Pr_p[f_i(Y^{(1)},\hdots,Y^{(k)}, X) = Y^{(1)}| (Y^{(1)},\hdots,Y^{(k)}, X)\in \mathcal{X}_i^k \times \mathcal{Y}_i]
-\\=& \frac{1}{1-\epsilon_i} \Pr_p[I\{(X^{(1)},...,X^{(k)}, Y)\in \mathcal{X}_i^k \times \mathcal{Y}_i\} \text{ and }f_i(Y^{(1)},\hdots,Y^{(k)}, X) = Y^{(1)}]
-\\\geq & \frac{1}{1-\epsilon_i} \left(1 - \Pr_p[I\{(Y^{(1)},...,Y^{(k)}, X)\notin \mathcal{X}_i^k \times \mathcal{Y}_i\}] - \Pr_p[f_p(Y^{(1)},\hdots,Y^{(k)}, X) \neq Y^{(1)}]]\right)
+\\=& \Pr_p[f_i(Y^{(1)},\hdots,Y^{(k)}, X) = Y^{(1)}| (Y^{(1)},\hdots,Y^{(k)}, X)\in \mathcal{Y}_i^k \times \mathcal{X}_i]
+\\=& \frac{1}{1-\epsilon_i} \Pr_p[I\{(X^{(1)},...,X^{(k)}, Y)\in \mathcal{Y}_i^k \times \mathcal{X}_i\} \text{ and }f_i(Y^{(1)},\hdots,Y^{(k)}, X) = Y^{(1)}]
+\\\geq & \frac{1}{1-\epsilon_i} \left(1 - \Pr_p[I\{(Y^{(1)},...,Y^{(k)}, X)\notin \mathcal{Y}_i^k \times \mathcal{X}_i\}] - \Pr_p[f_p(Y^{(1)},\hdots,Y^{(k)}, X) \neq Y^{(1)}]]\right)
 \\&= \frac{\text{ABA}_k[p] - \epsilon_i}{1-\epsilon_i} \geq \text{ABA}_k[p] - \epsilon_i.
 \end{align*}
 In other words, when $\tilde{p}_i$ is close to $p$, the Bayes
@@ -305,12 +304,12 @@ Combining the two directions gives $|\text{ABA}_k[\tilde{p}_i]
 One can go from bounded-volume sets to uniform distributions by adding
 auxillary variables.  To illustrate the intution, consider a density
 $p(x)$ on a set of bounded volume, $\mathcal{X}$.  Introduce a
-variable $W$ such that conditional on $X = x$, we have $w$ uniform on
+variable $W$ such that conditional on $X = x$, we have $W$ uniform on
 $[0, p(x)]$.  It follows that the joint density $p(x, w) = 1$ and is
 supported on a set $\mathcal{X}' = \mathcal{X} \times [0,\infty]$.
 Furthermore, $\mathcal{X}'$ is of bounded volume (in fact, of volume 1) since
 \[
-\int_{\mathcal{X}'} dx = \int_{\mathcal{X}'} p(x, w) dx = 1.
+\int_{\mathcal{X}'} dx dw = \int_{\mathcal{X}'} p(x, w) dx dw= 1.
 \]
 
 Therefore, to accomplish the reduction from $\mathcal{P}$ to
@@ -327,8 +326,13 @@ error; this is the content of the next lemma.
 Suppose $X$, $Y$, $W$, $Z$ are continuous random variables, and that
 $W\perp Y|Z$, $Z \perp X|Y$, and $W \perp Z|(X,Y)$.  Then,
 \[
-\text{I}[p(x, y)] = \text{I}[p((x,w), (y,z))]
+\text{I}[p(x, y)] = \text{I}[p((x,w), (y,z))],
 \]
+and also for all $k \in\{2,3,\hdots,\}$,
+\[
+\text{ABA}_k[p(x, y)] = \text{ABA}_k[p((x,w), (y,z))].
+\]
+
 \end{lemma}
 \textbf{Proof.}
 Due to conditional independence relationships, we have
@@ -483,9 +487,9 @@ Finally, applying the theorem \ref{theorem:Cunif}, we have
 I(X; Y) \geq C^{-1}_k(\text{ABA}_k) \geq C^{-1}_k(\text{AIA}_k).
 \]
 Replacing $\text{AIA}_k$ with its estimate, $\text{TA}_{k, CV}$, yields the estimator
-\[
+\begin{equation}\label{eq:hat_I_Ident}
 \hat{I}_{Ident}(X; Y) \stackrel{def}{=} C^{-1}_k(\text{TA}_{k, CV}) 
-\]
+\end{equation}
 
 Since we use a lower bounding theorem to obtain the estimate, the
 estimated mutual information tends to be an underestimate of the true
@@ -498,8 +502,10 @@ to obtain the identification accuracy.
 
 \section{Simulation}\label{sec:ch4_simulation}
 
-In order to demonstrate the advantages of our estimator, we ran a simple simulation study under relatively ideal conditions.
-Our simulation model was a sparse multivariate linear model of the form
+In order to demonstrate the advantages of our identification-based
+estimator of mutual information, we ran a simple simulation study
+under relatively ideal conditions.  Our simulation model was a sparse
+multivariate linear model of the form
 \[
 (Y_1, Y_2) = (X_1, X_2)^T B + \epsilon
 \]
@@ -517,15 +523,22 @@ nearest-neighbor method and our method, for both OLS and LASSO perform
 similarly.  As $p$ increases to 10, the nearest neighbor estimator
 rapidly deteriorates, while OLS and LASSO-based estimators remain at
 similar levels.  For $p$ larger than 100, the LASSO-based estimator
-begins to outperform the OLS-based estimator, as it better exploits
-sparsity.  We see that the LASSO-based estimator is highly robust to
-addition of noise predictors up to $p = 600$.
+begins to outperform the OLS-based estimator, as LASSO better
+leverages the sparsity of the data.  We see that the LASSO-based
+estimator is highly robust to addition of noise predictors up to the
+largest dimensionality we attempted in the simulation, $p = 600$.
 
 \begin{figure}
 \centering
 \includegraphics[scale = 0.8]{Figures/sim2a_fig1_edited.png}
 \includegraphics[scale = 0.8]{Figures/sim2a_fig3_edited.png}
-\caption{Estimation of mutual information in simulated example.}
+\caption{Estimation of mutual information in simulated example.
+  Comparison of $\hat{I}_{Ident}$ using $k=\{10,20\}$ and using OLS or
+  LASSO for regression of $Y$ on $X$, to nonparametric
+  nearest-neighbors estimator (\cite{Mnatsakanov2008}).  The
+  dimensionality of $X$ is varied by adding noise predictors, up to
+  $p=600$.  Top plot: $p = 2$ (no noise predictors) to $p=10$.  Bottom
+  plot: $p=100$ to $p=600$.}
 \label{fig:ch4_simulation}
 \end{figure}
 

@@ -11,7 +11,7 @@ predicting $Y$ given $X$ can be used to yield a lower bound on
 $\text{I}(X; Y)$.  This relied on the inequality relating $k$-class
 average Bayes accuracy and mutual information.  However, because in
 some cases the mutual information may be much higher than the lower
-bound, the estimator $\hat{I}_{Ident}$ may remain an underestimate of
+bound, the estimator $\hat{I}_{Ident}$ \eqref{eq:hat_I_Ident} may remain an underestimate of
 mutual information, even under favorable sample size conditions.  In
 other words, the estimator $\hat{I}_{Ident}$ is not consistent.  On the
 other hand, the theory behind $\hat{I}_{Ident}$ relies on extremely weak
@@ -50,7 +50,7 @@ The function $\pi_k$ is given by
 \pi_k(c) = \int_{\mathbb{R}} \phi(z - c)  \Phi(z)^{k-1} dz.
 \]
 This formula is not new to the information theory literature: it
-appears as the error rate of an orthogonal constellation (\cite{cioffi2014}).  What
+appears in the error rate of an orthogonal constellation (\cite{cioffi2014}).  What
 is surprising is that the same formula can be used to approximate the
 error rate in much more general class of classification
 problems\footnote{An intuitive explanation for this fact is that
@@ -77,7 +77,7 @@ classification accuracy.
 
 The estimator we propose is
 \begin{equation}\label{eq:hat_i_hd}
-\hat{I}_{HD} = \frac{1}{2}(\pi_{k}^{-1}(\text{ABA}_k))^2,
+\hat{I}_{HD} = \frac{1}{2}(\pi_{k}^{-1}(\text{TA}_{k,CV}))^2,
 \end{equation}
 obtained by inverting the relation \eqref{abepi}, then substituting
 an estimate of the identification accuracy $\text{TA}_k$ for the $\text{ABA}_k$.  
@@ -89,15 +89,22 @@ an estimate of the identification accuracy $\text{TA}_k$ for the $\text{ABA}_k$.
 
 \subsection{Assumptions}\label{sec:ch5_assumptions}
 
-The theory applies to a high-dimensional limit where $I(X; Y)$ tends to a constant.
+Our asymptotic theory applies to an infinite sequence of densities
+$p^{[d]}(x, y)$ for $d = 1,2,\hdots$, where the following conditions hold.
 
 \begin{itemize}
-\item[A1.] $\lim_{d \to \infty} I(X^{[d]}; Y^{[d]}) = \iota < \infty.$
+\item[A1.] The mutual information converges to a finite constant: $\lim_{d \to \infty} I[p^{[d]}(x, y)] = \iota < \infty.$
+\end{itemize}
+For any integer $k > 2$, we also require the following assumptions to
+hold.  For $d = 1,\hdots$, let $(X^{(i)}, Y^{(i)})$ be drawn
+i.i.d. from $p^{[d]}(x, y)$, for $i = 1,\hdots, k$.  
+Define \[\ell_{ij} = \log p^{[d]}(X^{(i)}|Y^{(i)})\]
+Then:
+\begin{itemize}
 \item[A2.] There exists a sequence of scaling constants $a_{ij}^{[d]}$
 and $b_{ij}^{[d]}$ such that the random vector $(a_{ij}\ell_{ij}^{[d]} +
 b_{ij}^{[d]})_{i, j = 1,\hdots, k}$ converges in distribution to a
-multivariate normal distribution,
-where $\ell_{ij} = \log p(y^{(i)}|x^{(i)})$ for independent $y^{(i)} \sim p(y|x^{(i)})$.
+multivariate normal distribution.
 \item[A3.] Define \[
 u^{[d]}(x, y) = \log p^{[d]}(x, y) - \log p^{[d]}(x) - \log p^{[d]}(y).
 \]
@@ -118,8 +125,9 @@ where $X$ and $E$ are independent.  Then, if $d \Sigma_d$ and
 $\Sigma_e$ have limiting spectra $H$ and $G$ respectively, the joint
 densities $p(x, y)$ for $d = 1,\hdots, $ satisfy assumptions A1 - A4.
 Another example is the multivariate logistic model, which we describe
-in section 3.  We further discuss the rationale behind A1-A4 in the
-supplement, along with the detailed proof.
+in section 5.3.1.  
+%We further discuss the rationale behind A1-A4 in the
+%supplement, along with the detailed proof.
 
 \subsection{Limiting universality}
 
@@ -134,7 +142,7 @@ Let us start by rewriting the average Bayes error:
 \text{ABA}_k = \Pr[p(X|Y^{(1)}) > \max_{j = 2}^k p(X|Y^{(j)})].
 \]
 where the expectation is taken over the joint distribution
-$Y^{(1)},\hdots, Y^{(k)} \sim \pi$ and $X \sim F_{Y^{(1)}}$.  Defining
+$Y^{(1)},\hdots, Y^{(k)} \stackrel{i.i.d.}{\sim} p(y)$ and $X \sim p(x|Y^{(1)})$.  Defining
 the statistic $Z_i = \log p(X|Y^{(i)}) - \log p(X|Y^{(1)})$, we obtain
 $ \text{ABA}_k = \Pr[\max_{j = 2}^k Z_j < 0].  $ The key assumption we
 need is that $Z_2,\hdots, Z_k$ are asymptotically multivariate normal.
@@ -168,10 +176,12 @@ To see why the assumption that $Z_2,\hdots, Z_k$ are multivariate
 normal might be justified, suppose that $X$ and $Y$ have the same
 dimensionality $d$, and that joint density factorizes as
 \[
-p(x, y) = \prod_{i=1}^d p_i(x_i, y_i)
+p^{[d]}(x, y) = \prod_{i=1}^d p_i(x_i, y_i)
 \]
-where $x_i^{(j)}, y_i$ are the $i$th scalar components of the vectors $x$ and $y$.
-Then,
+where $x_i^{(j)}, y_i$ are the $i$th scalar components of the vectors
+$x$ and $y$.  Further assume that
+\[\sup_{i = 1}^\infty \E[p_i(X_i,Y_i)^2] < \infty.\]
+  Then,
 \[
 Z_i = \sum_{m=1}^d \log p_m(x_m | y^{(i)}_m) - \log p_m(x_m | y^{(1)}_m).
 \]
@@ -191,6 +201,7 @@ such that
 \[
 G_0 \sim N(0, \gamma)
 \]
+and
 \[
 G_i \sim N(0, \beta - \gamma)\text{ for }i =1,\hdots, \ell
 \]
@@ -201,7 +212,7 @@ such that
 Hence
 \begin{align*}
 \Pr[0 > \max_{i=1}^k \zeta_i] &= \Pr[\min_{i=1}^{k} G_0 + G_i - \alpha > 0]
-\\&= \Pr[\min_{i=1}^{k} G_i > \alpha - G_1]
+\\&= \Pr[\min_{i=1}^{k} G_i > \alpha - G_0]
 \\&= \Pr[\min_{i=1}^{k} \frac{G_i}{\sqrt{\beta - \gamma}} > \frac{\alpha - G_0}{\sqrt{\beta - \gamma}}].
 \end{align*}
 Since $\frac{G_i}{\sqrt{\beta - \gamma}}$ are iid standard normal variates, and since
@@ -213,11 +224,7 @@ It remains to link the moments of $Z_i$ to $I(X;Y)$.  This is accomplished by ap
 \[
 \log \frac{p(x, y)}{p(x) p(y)} \approx \frac{p(x, y) - p(x) p(y)}{p(x) p(y)} - \left(\frac{p(x, y) - p(x) p(y)}{p(x) p(y)}\right)^2 + \hdots.
 \]
-A number of assumptions are needed to ensure that needed
-approximations are sufficiently accurate; and additionally, in order
-to apply the central limit theorem, we need to consider a
-\emph{limiting sequence} of problems with increasing dimensionality.
-We now state a theorem.
+The is the intuition behind the theorem which establishes \eqref{abepi}, which we now state.
 
 \textbf{Theorem 1.} \emph{Let $p^{[d]}(x, y)$ be a sequence of joint densities
 for $d = 1,2,\hdots$.  Further assume conditions A1 - A4.
@@ -237,11 +244,11 @@ cumulative distribution function, respectively.}
 
 For $i = 2,\hdots, k$, define
 \[
-Z_i = \log p(X|Y^{(i)}) - \log p(X|Y^{(1)}).
+Z_i^{[d]} = \log p^{[d]}(X|Y^{(i)}) - \log p^{[d]}(X|Y^{(1)}).
 \]
-Then, we claim that $\vec{Z} = (Z_2,\hdots, Z_k)$ converges in distribution to
+Then, we claim that as $d \to \infty$, $\vec{Z}^{[d]} = (Z_2^{[d]},\hdots, Z_k^{[d]})$ converges in distribution to
 \[
-\vec{Z} \sim N\left(-2\iota, 
+\vec{Z}^{[d]} \sim N\left(-2\iota, 
 \begin{bmatrix}
 4\iota & 2\iota & \cdots & 2\iota\\
 2\iota & 4\iota & \cdots & 2\iota\\
@@ -250,53 +257,61 @@ Then, we claim that $\vec{Z} = (Z_2,\hdots, Z_k)$ converges in distribution to
 \end{bmatrix}
 \right).
 \]
-Combining the claim with the lemma (stated below this proof) yields the
+Combining the claim with Lemma 1 yields the
 desired result.
 
 To prove the claim, it suffices to derive the limiting moments
-\[\E[Z_i] \to -2\iota,\]
-\[\Var[Z_i] \to 4\iota,\]
-\[\Cov[Z_i, Z_j] \to 2\iota,\]
+\[\lim_{d \to \infty} \E[Z_i^{[d]}]= -2\iota,\]
+\[\lim_{d \to \infty} \Var[Z_i^{[d]}] = 4\iota,\]
+\[\lim_{d \to \infty} \Cov[Z_i^{[d]}, Z_j^{[d]}]= 2\iota,\]
 for $i \neq j$,
 since then assumption A2 implies the existence of a multivariate normal
 limiting distribution with the given moments.
 
 Before deriving the limiting moments, note the following identities.
-Let $Y' = Y^{(2)}$.
+Let $Y = Y^{(1)}$ and $Y' = Y^{(2)}$.
+Then for all $d \geq 1$,
 \[
-\E[e^{u(X, Y')}] = \int p(x) p(y) e^{u(x, y)} dx dy = \int p(x, y) dx dy = 1.
+\E[e^{u^{[d]}(X, Y')}] = \int p^{[d]}(x) p^{[d]}(y) e^{u^{[d]}(x, y)} dx dy = \int p^{[d]}(x, y) dx dy = 1.
 \]
 Therefore, from assumption A3 and the formula for gaussian exponential
 moments, we have
 \[
-\lim_{d \to \infty} \E[u(X, Y')]-\frac{1}{2}\Var[u(X, Y')] = 0.
+\lim_{d \to \infty} \E[u^{[d]}(X, Y')]-\frac{1}{2}\Var[u^{[d]}(X, Y')] = 0.
 \]
-Let $\sigma^2 = \lim_{d \to \infty} \Var[u(X, Y')]$.
+In other words, $u^{[d]}(X, Y')$ converges in distribution to $N(-\frac{\sigma^2}{2}, \sigma^2)$,
+where $\sigma^2 = \lim_{d \to \infty} \Var[u(X, Y')]$.
+
 Meanwhile, by applying assumption A2,
 \begin{align*}
-\lim_{d \to \infty} I(X; Y) &= \lim_{d \to \infty} \int p(x, y) u(x, y) dx dy 
-= \lim_{d \to \infty} \int p(x) p(y) e^{u(x, y)} u(x, y) dx dy
-\\&= \lim_{d \to \infty}  \E[e^{u(X, Y')}u(X, Y')]
-\\&= \int_{\mathbb{R}} e^z z \frac{1}{\sqrt{2\pi \sigma^2}} 
-e^{-\frac{(z + \sigma^2/2)^2}{2\sigma^2}} \text{ (applying A2)}
-\\&= \int_{\mathbb{R}} z \frac{1}{\sqrt{2\pi \sigma^2}} 
-e^{-\frac{(z - \sigma^2/2)^2}{2\sigma^2}}
-\\&= \frac{1}{2}\sigma^2.
+\iota = \lim_{d \to \infty} I[p^{[d]}(x, y)] &= \lim_{d \to \infty} \int p^{[d]}(x, y) u^{[d]}(x, y) dx dy 
+= \lim_{d \to \infty} \int p^{[d]}(x) p^{[d]}(y) e^{u^{[d]}(x, y)} u^{[d]}(x, y) dx dy
+\\&= \lim_{d \to \infty}  \E[e^{u^{[d]}(X, Y')}u^{[d]}(X, Y')]
 \end{align*}
+
+Now note that for $Z \sim N(\mu,\sigma^2)$, we have $\E[Ze^Z] = (\mu + \sigma^2)e^{\mu + \frac{\sigma^2}{2}}$.
+Since $u^{[d]}(X, Y')$ converges in distribution to $N(-\frac{\sigma^2}{2}, \sigma^2)$, we get
+\[
+\iota =  \lim_{d \to \infty}  \E[e^{u^{[d]}(X, Y')}u^{[d]}(X, Y')] = \frac{1}{2}\sigma^2.
+\]
 Therefore,
 \[
 \sigma^2 = 2\iota,
 \]
-and
+and it follows that
 \[
-\lim_{d \to \infty} \E[u(X', Y)] = -\iota.
+\lim_{d \to \infty} \E[u^{[d]}(X', Y)] = -\iota.
 \]
+
+Meanwhile, since $I[p^{[d]}(X, Y)] = \E[u^{[d]}(X, Y)]$, we have
+\[\lim_{d \to \infty} \E[u^{[d]}(X, Y)] = \iota.\]
+
 Once again by applying A2, we get
 \begin{align*}
-\lim_{d \to \infty} \Var[u(X, Y)] 
-&= \lim_{d \to \infty} \int (u(x, y) - \iota)^2 p(x, y) dx dy
-\\&= \lim_{d \to \infty} \int (u(x, y) - \iota)^2 e^{u(x, y)} p(x) p(y) dx dy
-\\&= \lim_{d \to \infty} \E[(u(X, Y') - \iota)^2 e^{u(X, Y')}] 
+\lim_{d \to \infty} \Var[u^{[d]}(X, Y)] 
+&= \lim_{d \to \infty} \int (u^{[d]}(x, y) - \iota)^2 p^{[d]}(x, y) dx dy
+\\&= \lim_{d \to \infty} \int (u^{[d]}(x, y) - \iota)^2 e^{u^{[d]}(x, y)} p^{[d]}(x) p^{[d]}(y) dx dy
+\\&= \lim_{d \to \infty} \E[(u^{[d]}(X, Y') - \iota)^2 e^{u^{[d]}(X, Y')}] 
 \\&= \int (z - \iota)^2 e^z \frac{1}{\sqrt{4\pi\iota}} e^{-\frac{(z+\iota)^2}{4\iota}} dz \text{ (applying A2)}
 \\&= \int (z - \iota)^2 \frac{1}{\sqrt{4\pi\iota}} e^{-\frac{(z-\iota)^2}{4\iota}} dz
 \\&= 2\iota.
@@ -306,21 +321,21 @@ Once again by applying A2, we get
 We now proceed to derive the limiting moments.
 We have
 \begin{align*}
-\lim_{d \to \infty} \E[Z] 
-&= \lim_{d \to \infty} \E[ \log p(X|Y') - \log p(X|Y)]
-\\&= \lim_{d \to \infty} \E[ u(X, Y') - u(X, Y) ] = -2\iota.
+\lim_{d \to \infty} \E[Z^{[d]}_i] 
+&= \lim_{d \to \infty} \E[ \log p^{[d]}(X|Y') - \log p^{[d]}(X|Y)]
+\\&= \lim_{d \to \infty} \E[ u^{[d]}(X, Y') - u^{[d]}(X, Y) ] = -2\iota.
 \end{align*}
 Also,
 \begin{align*}
-\lim_{d \to \infty} \Var[Z]
- &= \lim_{d \to \infty} \Var[ u(X, Y') - u(X, Y) ]
-\\&= \lim_{d \to \infty} \Var[ u(X, Y')] +\Var[ u(X, Y) ]\text{ (using assumption A4) }
+\lim_{d \to \infty} \Var[Z^{[d]}]
+ &= \lim_{d \to \infty} \Var[ u^{[d]}(X, Y') - u^{[d]}(X, Y) ]
+\\&= \lim_{d \to \infty} \Var[ u^{[d]}(X, Y')] +\Var[ u^{[d]}(X, Y) ]\text{ (using assumption A4) }
 \\&= 4\iota,
 \end{align*}
 and similarly
 \begin{align*}
-\lim_{d \to \infty} \Cov[Z_i, Z_j]
-&= \lim_{d \to \infty} \Var[ u(X, Y)]\text{ (using assumption A4) }
+\lim_{d \to \infty} \Cov[Z_i^{[d]}, Z_j^{[d]}]
+&= \lim_{d \to \infty} \Var[ u^{[d]}(X, Y)]\text{ (using assumption A4) }
 \\&= 2\iota.
 \end{align*}
 This concludes the proof. $\Box$.
@@ -476,7 +491,7 @@ Figure \ref{fig:n_voxels_vs_mi}.  Both estimators indicate a large
 jump in the mutual information when going from 100 to 200 voxels,
 almost no increase from 200 to 400, then a slight increase in
 information from 400 to 500.  The two estimators $\hat{I}_{Ident}$ and
-$\hat{I}_{HD}$ differ significantly for all numbers of voxels. We see
+$\hat{I}_{HD}$ differ greatly for all numbers of voxels. We see
 from this that it is important to choose the estimator which is best
 suited for the application: if the high-dimensional assumption can be
 justified, $\hat{I}_{HD}$ can yield a much better estimate; but if not
@@ -486,7 +501,7 @@ information, and it would be preferable to use $\hat{I}_{Ident}$.
 \begin{figure}
 \centering
 \includegraphics[scale = 0.5]{../../Yuval/info_infer_edited.png}
-\caption{Estimated mutual information for different subsets of V1 voxels}
+\caption{Estimated mutual information for different subsets of V1 voxels, using $\hat{I}_{Ident}$ and $\hat{I}_{HD}$, both with multivariate ridge regression for predicting $Y$ from $\vec{g}(X)$.}
 \label{fig:n_voxels_vs_mi}
 \end{figure}
 
@@ -517,7 +532,7 @@ significantly underestimate the true mutual information.
 \includegraphics[scale = 0.4]{../../Yuval/ident_infer4_edited.png} &
 \includegraphics[scale = 0.4]{../../Yuval/ident_infer5_edited.png}
 \end{tabular}
-\caption{Dependence of estimated mutual information on $k$}
+\caption{Dependence of estimated mutual information on $k$, using $\hat{I}_{Ident}$ and $\hat{I}_{HD}$, both with multivariate ridge regression for predicting $Y$ from $\vec{g}(X)$.}
 \label{fig:dependence_k}
 \end{figure}
 

@@ -47,21 +47,40 @@ assumptions, such as sparsity, in the training of the regression or
 classification model used to compute average accuracy or
 identification risk.
 
-On the other hand, because there is always some loss when converting
-one statistic to another non-equivalent statistic, one may choose to
-work with the average accuracy or identification accuracy directly.
-Rather than trying to eliminate the parameter $k$, we can try to
-understand its effect.  For this purpose, the theory of average
-accuracy (which also applies to identification accuracy) developed in
-Chapter 3, is invaluable.  We see that the $k$-class average accuracy
-is simply a $k-1$th moment of a \emph{conditional accuracy}
-distribution; and this can be used to estimate average accuracy at
-arbitrary $k$.  Understanding how the average accuracy scales with $k$
-also yields practical benefits: it allows us to understand how
-recognition systems might scale under larger problems, and it allows
-us to compare two different feature representations on the basis of
-the entire average accuracy curve rather than the average accuracy at
-a single $k$.
+Thirdly, there is the interesting possibility of converting
+$k_1$-class accuracy into an estimate of mutual information, and then
+converting the estimated mutual information into an estimate of
+$k_2$-class accuracy, for some $k_2 > k_1$.  We have not addressed
+this possibility in the current work, but it provides an
+information-based means of extrapolating classification accuracy,
+which could be compared to the unbiased estimation method for the same
+problem that we developed in Chapter 3.
+
+On the other hand, one may choose to work with the average accuracy or
+identification accuracy directly.  Rather than trying to eliminate the
+parameter $k$, we can try to understand its effect.  For this purpose,
+the theory of average accuracy (which also applies to identification
+accuracy) developed in Chapter 3, is invaluable.  We see that the
+$k$-class average accuracy is simply a $(k-1)$th moment of a
+\emph{conditional accuracy} distribution; and this can be used to
+estimate average accuracy at arbitrary $k$.  Understanding how the
+average accuracy scales with $k$ also yields practical benefits: it
+allows us to understand how recognition systems might scale under
+larger problems, and it allows us to compare two different feature
+representations on the basis of the entire average accuracy curve
+rather than the average accuracy at a single $k$.
+
+In the ideal case, however, the mutual information and average
+accuracy curve give equivalent information--which is to say that the
+mutual information is a perfect summary of the average accuracy curve.
+We saw in Chapter 5 that such a situation occurs in a particular
+high-dimensional limit where the true mutual information tends to a
+constant.  This limit may be a good fit to many applied
+high-dimensional problems.  However, in lower-dimensional problems,
+there is a tradeoff between working with $k$-class average accuracy or
+average identification directly, which are easy to estimate but which
+depend on the choice of $k$, or getting rid of $k$ by converting to an
+estimate of mutual information.
 
 While we showed mathematically how mutual information is connected to
 average accuracy and identification accuracy, from an intuitive
@@ -89,7 +108,7 @@ information or $\epsilon$-capacity.  We have made initial progress
 towards developing the understanding necessary to develop these
 methods, e.g. the variance bounds on Bayes accuracy in Chapter 2.
 
-Yet, another important research direction would be to apply these
+Another important research direction would be to apply these
 methods to more practical real-life examples.  Applications always
 reveal surprising insights about what kind of models are needed, or
 what kind of properties are most desirable for a statistical
