@@ -27,6 +27,9 @@
 \usepackage{chngcntr}
 \usepackage{apptools}
 \usepackage{tikz}
+\usepackage[final]{pdfpages}
+
+
 \usetikzlibrary{shapes,arrows}
 
 % one can change the default font to Times Roman but note that most
@@ -299,6 +302,10 @@ author.
 
 \printbibliography[heading=bibintoc]
 
+
+\includepdf[pages=-]{Figures/perm1.pdf}
+\includepdf[pages=-]{../../proposal/copyright2.pdf}
+
 \end{document}
 
 %% Normally the \chapter and any text would be in a separate file and included.
@@ -327,6 +334,7 @@ Preacher.
 \newblock In {\em Bible}. King James, 1611.
 
 \end{thebibliography}
+
 
 
 \end{document}
