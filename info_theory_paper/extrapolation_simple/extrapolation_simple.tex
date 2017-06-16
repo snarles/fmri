@@ -1135,15 +1135,16 @@ classifiers, only Naive Bayes satisfies the marginal classifier
 assumption.  Again, we compare the result of our model to the ground
 truth obtained by using the full dataset.
 
+
 \begin{table}
 \centering
 \begin{tabular}{|c||c|c|c|}\hline
-Classifier      & Test $\text{acc}^{(20)}$ & Test $\text{acc}^{(400)}$ & $\hat{AGA}_{400}$ \\ \hline
-Naive Bayes     & 0.951                   & 0.601                   & 0.858     \\ \hline
-Logistic        & 0.922                   & 0.711                   & 0.812     \\ \hline
-SVM             & 0.860                   & 0.545                   & 0.687     \\ \hline
-$\epsilon$-NN   & 0.951                   & 0.591                   & 0.410     \\ \hline
-Deep neural net & 0.995                   & 0.986                   & 0.907     \\ \hline
+Classifier      & Test 1-$\text{acc}^{(100)}$ & Test 1-$\text{acc}^{(400)}$ & 1-$\hat{AGA}_{400}$ \\ \hline
+Naive Bayes     & 0.217                   & 0.399                   & 0.501     \\ \hline
+Logistic        & 0.151                   & 0.289                   & 0.341     \\ \hline
+SVM             & 0.242                   & 0.455                   & 0.491     \\ \hline
+$\epsilon$-NN   & 0.209                   & 0.409                   & 0.621     \\ \hline
+Deep neural net & 0.001                   & 0.014                   & 0.031     \\ \hline
 \end{tabular}
 \caption{Performance extrapolation: predicting the accuracy on 400 classes using data from 20 classes on a Telugu character dataset.
 $\epsilon = 0.002$ for $\epsilon$-nearest neighbors.}
