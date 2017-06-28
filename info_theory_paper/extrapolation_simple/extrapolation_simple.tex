@@ -371,66 +371,16 @@ for these classes, which comes from the use of a finite training
 set. Third, there is the randomness in the estimated risk when
 testing the classifier on a test set.
 
-If we \emph{fix} a particular realization of the random label set
-$\mathcal{S} = \{y^{(1)}, \hdots, y^{(k)}\}$ as well as the training
-set $\{\hat{F}_{y^{(i)}}\}_{i=1}^k$, then the classifier $h(x)$ is
-fixed, and only the third source of randomness (in test risk) applies.
-However, the true generalization accuracy of the classifier is deterministic:
+Suppose we specify $k$ but do not fix any of the random quantities in the
+classification task.
+Then the $k$-class \emph{average generalization accuracy} of
+a classifier is the expected accuracy resulting from a random set of $k$ labels, $Y^{(1)}, \hdots, Y^{(k)} \stackrel{iid}{\sim \pi}$, and their associated score functions:
 \begin{align*}
-\text{GA}(h) &= \Pr[Y = h(X)|
-  \mathcal{S}, \{\hat{F}_{y^{(i)}}\}_{i=1}^k] 
-\\&= \frac{1}{k}
-\sum_{i=1}^k \Pr[m_{y^{(i)}}(X^{(i)}) = \max_j m_{y^{(j)}}(X^{(i)})|\mathcal{S}, \{\hat{F}_{y^{(i)}}\}_{i=1}^k].  
-\\&= \frac{1}{k}
-\sum_{i=1}^k \int_{\mathcal{X}} I(m_{y^{(i)}}(x) = \max_j m_{y^{(j)}}(x)) dF_{y^{(i)}}(x),
+\text{AGA}_k &= \frac{1}{k} \sum_{i=1}^k \Pr[M_{Y^{(i)}})(X^{(i)}) = \max_j
+M_{Y^{(j)}}(X^{(i)}))]
+\\&= \Pr[M_{Y^{(1)}})(X^{(1)}) = \max_j M_{Y^{(j)}}(X^{(1)})].
 \end{align*}
-where the probabilities are evaluated with respect to the joint distribution of $Y \sim \text{Unif}(\mathcal{S})$ and $X^{(i)} \sim F_{Y^{(i)}}$ for $i = 1,\hdots, k$; also recalling that $m_{y^{(i)}}(x) \stackrel{def}{=}
-\mathcal{M}(\hat{F}_{y^{(i)}})(x)$ is the margin function obtained
-from the training data of the $i$th class.
-
-If we \emph{fix} a particular realization of the random label set
-$\mathcal{S} = \{y^{(1)}, \hdots, y^{(k)}\}$, then we can define the
-(generalization) accuracy specific to that label set.  However, the
-training data $\{\hat{F}_{y^{(i)}}\}_{i=1}^k$ will be random.  Let us
-denote the \emph{distribution} of the empirical distribution
-$\hat{F}_y$ constructed from sample size $r$ as $\Pi_{y, r}$.  The
-accuracy of the classifier $\mathcal{M}$ on label set $\mathcal{S}$ is
-given by
-\begin{align*}
-\text{GA}_{\mathcal{S}}(\mathcal{M}) &= \Pr[Y = h(X)] \\&= \frac{1}{k} \sum_{i=1}^k \int
-I(\mathcal{M}(\hat{F}_{y^{(i)}})(x) = \max_j
-\mathcal{M}(\hat{F}_{y^{(j)}})(x)) dF_{y^{(i)}}(x) \prod_{\ell=1}^k
-d\Pi_{y^{(\ell)}, r_1}(\hat{F}_{y^{(\ell)}})
-\end{align*}
-where the probability is taken with respect to the joint distribution of $Y \sim
-  \text{Unif}(\mathcal{S}), \hat{F}_{y^{(i)}} \sim \Pi_{y^{(i)}, r_1}$.
-The calculation of the accuracy (for fixed label set $\mathcal{S}$) is
-illustrated in figure \ref{fig:risk}.
-
-\begin{figure}[h]
-\centering
-\includegraphics[scale = 0.3]{risk.png}
-\caption{Generalization accuracy}\label{fig:risk}
-\end{figure}
-
-Finally, suppose we do not fix any of the random quantities in the
-classification task $P$, and merely specify $k$, the number of
-classes, and $r_1$, the number of repeats in the training set.  
-Then the $k$-class, $r$-repeat \emph{average generalization accuracy} of
-a marginal classifier $\mathcal{M}$ is defined as
-\begin{align*}
-\text{AGA}_{k,r_1}(\mathcal{M}) &= \E[\text{GA}_{\mathcal{S}}(\mathcal{M})]
-\\&= \frac{1}{k} \sum_{i=1}^k \int
-I(\mathcal{M}(\hat{F}_{y^{(i)}})(x) = \max_j
-\mathcal{M}(\hat{F}_{y^{(j)}})) dF_{y^{(i)}}(x) \prod_{\ell=1}^k
-d\Pi_{y^{(\ell)}, r_1}(\hat{F}_{y^{(\ell)}}) d\pi(y^{(\ell)}).
-\\&= \int
-I(\mathcal{M}(\hat{F}_{y^{(1)}})(x) = \max_j
-\mathcal{M}(\hat{F}_{y^{(j)}})) dF_{y^{(1)}}(x) \prod_{\ell=1}^k
-d\Pi_{y^{(\ell)}, r_1}(\hat{F}_{y^{(\ell)}}) d\pi(y^{(\ell)}).
-\end{align*}
-where the probability is taken with respect to the distribution of $Y^{(1)}, \hdots, Y^{(k)} \sim \pi$, and
-where the last line follows from noting that all $k$ summands in the previous line are identical.
+The last line follows from noting that all $k$ summands in the previous line are identical.
 The definition of average generalization accuracy is illustrated in Figure \ref{fig:average_risk}.
 
 
