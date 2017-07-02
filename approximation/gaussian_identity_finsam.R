@@ -41,7 +41,7 @@ mc_ident_fs <- function(p, sigma2, sigma2_tr, K, mc.reps = 1000) {
   mean(mcs)
 }
 
-acc_ident_fs_curve <- function(p, sigma2, sigma2_tr, K, mc.reps = 100) {
+mc_ident_fs_curve <- function(p, sigma2, sigma2_tr, K, mc.reps = 100) {
   mcs <- sapply(1:mc.reps,
                 function(i) {
                   mus <- randn(K, p)
@@ -54,23 +54,23 @@ acc_ident_fs_curve <- function(p, sigma2, sigma2_tr, K, mc.reps = 100) {
 }
 
 ### Which is faster?
-
-p <- 3
-sigma2 <- 0.1
-sigma2_tr <- 0.1
-K <- 150
-mc.reps <- 10
-
-t1 <- proc.time()
-res1 <- numeric(K)
-for (k in 2:K) res1[k] <- mc_ident_fs(p, sigma2, sigma2_tr, k, mc.reps)
-proc.time() - t1
-
-t1 <- proc.time()
-res2 <- acc_ident_fs_curve(p, sigma2, sigma2_tr, K, mc.reps)
-proc.time() - t1
-
-plot(res1); points(res2, col= "red")
+# 
+# p <- 3
+# sigma2 <- 0.1
+# sigma2_tr <- 0.1
+# K <- 500
+# mc.reps <- 10
+# 
+# t1 <- proc.time()
+# res1 <- numeric(K)
+# for (k in 2:K) res1[k] <- mc_ident_fs(p, sigma2, sigma2_tr, k, mc.reps)
+# proc.time() - t1
+# 
+# t1 <- proc.time()
+# res2 <- mc_ident_fs_curve(p, sigma2, sigma2_tr, K, mc.reps)
+# proc.time() - t1
+# 
+# plot(res1); points(res2, col= "red")
 
 
 

@@ -13,23 +13,24 @@ meanexp <- function(v) {
 
 #' Function which computes a Gaussian probability
 #' 
-#' Computes the probability that a normal with mean mu is smaller than the max of K-1 other iid Gaussian
+#' Computes the probability that a normal with mean mu and variance sigma2 is smaller than the max of K-1 other iid Gaussian
 #' @param mus Mean mu, can be vectorized.
 #' @param K Number of independent gaussians.
 #' @param mc.reps Numerical resolution (larger for more precision.)
+#' @param sigma2 Variance, default 1
 #' @return A probability
 #' @export
 #' @examples 
 #' piK(3, 10)
-piK <- function(mus, K, mc.reps = 1e4) {
+piK <- function(mus, K, mc.reps = 1e4, sigma2 = 1) {
   samp <- qnorm(((1:mc.reps) - 0.5)/mc.reps)
   if (length(K) == 1) {
-    sampmat <- repmat(t(samp), length(mus), 1) - mus# one row per mu  
+    sampmat <- (repmat(t(samp), length(mus), 1) - mus) * sqrt(sigma2)# one row per mu  
     temp <- log(1 - pnorm(sampmat))
     return(1 - apply((K-1) * temp, 1, meanexp))
   }
   if (length(mus) == 1) {
-    samp <- samp - mus
+    samp <- (samp - mus) * sqrt(sigma2)
     temp <- log(1-pnorm(samp))
     tmat <- repmat(temp, length(K), 1)
     return(1 - apply((K-1) * tmat, 1, meanexp))

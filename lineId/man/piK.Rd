@@ -4,7 +4,7 @@
 \alias{piK}
 \title{Function which computes a Gaussian probability}
 \usage{
-piK(mus, K, mc.reps = 10000)
+piK(mus, K, mc.reps = 10000, sigma2 = 1)
 }
 \arguments{
 \item{mus}{Mean mu, can be vectorized.}
@@ -12,12 +12,14 @@ piK(mus, K, mc.reps = 10000)
 \item{K}{Number of independent gaussians.}
 
 \item{mc.reps}{Numerical resolution (larger for more precision.)}
+
+\item{sigma2}{Variance, default 1}
 }
 \value{
 A probability
 }
 \description{
-Computes the probability that a normal with mean mu is smaller than the max of K-1 other iid Gaussian
+Computes the probability that a normal with mean mu and variance sigma2 is smaller than the max of K-1 other iid Gaussian
 }
 \examples{
 piK(3, 10)
