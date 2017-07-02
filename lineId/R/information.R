@@ -25,12 +25,12 @@ meanexp <- function(v) {
 piK <- function(mus, K, mc.reps = 1e4, sigma2 = 1) {
   samp <- qnorm(((1:mc.reps) - 0.5)/mc.reps)
   if (length(K) == 1) {
-    sampmat <- (repmat(t(samp), length(mus), 1) - mus) * sqrt(sigma2)# one row per mu  
+    sampmat <- (repmat(t(samp), length(mus), 1)* sqrt(sigma2)) - mus # one row per mu  
     temp <- log(1 - pnorm(sampmat))
     return(1 - apply((K-1) * temp, 1, meanexp))
   }
   if (length(mus) == 1) {
-    samp <- (samp - mus) * sqrt(sigma2)
+    samp <- (samp* sqrt(sigma2)) - mus 
     temp <- log(1-pnorm(samp))
     tmat <- repmat(temp, length(K), 1)
     return(1 - apply((K-1) * tmat, 1, meanexp))
