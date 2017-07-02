@@ -11,10 +11,16 @@ source("info_theory_sims/fit_ident_curve.R")
 
 load("Yuval/scores.RData")  ## obtained by running Yuval/identification2a.R
 
+mugrid <- seq(2.5, 4, 0.05)
+sigma2grid <- seq(0.8, 1.6, 0.05)
+length(mugrid) * length(sigma2grid)
+
+
 i <- 1
 plot(1:250, acs, type = "l", ylim = c(0, 1))
 lines(1:250, 1-piK(K = 1:250, mc.reps = 1000, mus = 2.9, sigma2 = 1), col = "red")
 lines(1:250, 1-piK(K = 1:250, mc.reps = 1000, mus = 3.0, sigma2 = 1.5), col = "blue")
+lines(1:250, 1-piK(K = 1:250, mc.reps = 1000, mus = 2.8, sigma2 = 0.7), col = "green")
 
 i <- 2
 plot(1:250, acs, type = "l", ylim = c(0, 1))
