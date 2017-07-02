@@ -26,6 +26,11 @@ plot(1:250, acs, type = "l", ylim = c(0, 1))
 lines(1:250, 1-piK(K = 1:250, mc.reps = 1000, mus = 3.43, sigma2 = 1), col = "red")
 lines(1:250, 1-piK(K = 1:250, mc.reps = 1000, mus = 3.6, sigma2 = 1.4), col = "blue")
 
+i <- 4
+plot(1:250, acs, type = "l", ylim = c(0, 1))
+lines(1:250, 1-piK(K = 1:250, mc.reps = 1000, mus = 3.45, sigma2 = 1), col = "red")
+lines(1:250, 1-piK(K = 1:250, mc.reps = 1000, mus = 3.65, sigma2 = 1.4), col = "blue")
+
 for (i in 1:10) {
   dmat <- scoreZ[[i]]
   nte <- 250
