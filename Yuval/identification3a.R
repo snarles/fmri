@@ -2,6 +2,7 @@ library(MASS)
 library(pracma)
 library(glmnet)
 library(lineId)
+library(e1071)
 
 load('Yuval/v1_data.RData')
 load('Yuval/pred_rules.RData')
@@ -116,6 +117,11 @@ for (nvox in nvoxs) {
 
 save(scoreZ, file = "Yuval/scores_MSE_c.RData")
 
+## norm of Y
+
+nmY <- diag(testpred %*% ridgeinv %*% t(testpred))
+hist(nmY)
+
 ## look at the distributions
 
 sumstats_0 <- matrix(0, 10, 8)
@@ -131,7 +137,8 @@ for (i in 1:10) {
   plot(z_stars, z_other)
   hist(z_stars)
   hist(z_off)
-  library(e1071)
+  #z_stars <- z_stars[sample(length(z_stars), replace = TRUE)]
+  #z_off <- z_off[sample(length(z_off), replace = TRUE)]
   sumstats_0[i, ] <- c(summary(z_stars), Sd = sd(z_stars), Skew = skewness(z_stars))
   sumstats_1[i, ] <- c(summary(z_off), Sd = sd(z_off), Skew = skewness(z_off))
 }
