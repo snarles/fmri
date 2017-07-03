@@ -5,37 +5,38 @@
 
 library(pracma)
 library(lineId)
+library(parallel)
 source("info_theory_sims/fit_ident_curve.R")
 
 ## low-dim
 
 load("Yuval/scores.RData")  ## obtained by running Yuval/identification2a.R
 
-mugrid <- seq(2.5, 4, 0.05)
-sigma2grid <- seq(0.8, 1.6, 0.05)
+mugrid <- seq(2.7, 6, 0.01)
+sigma2grid <- seq(1, 5, 0.025)
 length(mugrid) * length(sigma2grid)
 
+parmat <- cbind(mu = rep(mugrid, each = length(sigma2grid)),
+                sigma2 = rep(sigma2grid, length(mugrid)))
 
-i <- 1
-plot(1:250, acs, type = "l", ylim = c(0, 1))
-lines(1:250, 1-piK(K = 1:250, mc.reps = 1000, mus = 2.9, sigma2 = 1), col = "red")
-lines(1:250, 1-piK(K = 1:250, mc.reps = 1000, mus = 3.0, sigma2 = 1.5), col = "blue")
-lines(1:250, 1-piK(K = 1:250, mc.reps = 1000, mus = 2.8, sigma2 = 0.7), col = "green")
+nrow(parmat)
 
-i <- 2
-plot(1:250, acs, type = "l", ylim = c(0, 1))
-lines(1:250, 1-piK(K = 1:250, mc.reps = 1000, mus = 3.35, sigma2 = 1), col = "red")
-lines(1:250, 1-piK(K = 1:250, mc.reps = 1000, mus = 3.45, sigma2 = 1.4), col = "blue")
+t1 <- proc.time()
+par_res <- mclapply(1:nrow(parmat), function(i) {
+  mu <- parmat[i, 1]
+  sigma2 <- parmat[i, 2]
+  1-piK(K = 1:250, mc.reps = 1000, mu, sigma2)
+}, mc.cores = 2)
+proc.time() - t1
 
-i <- 3
-plot(1:250, acs, type = "l", ylim = c(0, 1))
-lines(1:250, 1-piK(K = 1:250, mc.reps = 1000, mus = 3.43, sigma2 = 1), col = "red")
-lines(1:250, 1-piK(K = 1:250, mc.reps = 1000, mus = 3.6, sigma2 = 1.4), col = "blue")
+precomputed_curves <- do.call(cbind, par_res)
+save(parmat, precomputed_curves, file = "Yuval/ident_curve_precomp.rda")
 
-i <- 4
-plot(1:250, acs, type = "l", ylim = c(0, 1))
-lines(1:250, 1-piK(K = 1:250, mc.reps = 1000, mus = 3.45, sigma2 = 1), col = "red")
-lines(1:250, 1-piK(K = 1:250, mc.reps = 1000, mus = 3.65, sigma2 = 1.4), col = "blue")
+
+
+
+fitted_pars <- matrix(0, 10, 2)
+fitted_mus <- numeric(10)
 
 for (i in 1:10) {
   dmat <- scoreZ[[i]]
@@ -45,18 +46,28 @@ for (i in 1:10) {
   #plot(acs, type = "l")
   k_sub <- 125
   
-  plot(1:250, acs, type = "l", ylim = c(0, 1))
+  ## find best 2-parameter fit
+  dd <- colSums((precomputed_curves - acs)[1:k_sub, ]^2)
+  pars <- parmat[which.min(dd), ]
+  acs_hat_2p <- precomputed_curves[, which.min(dd)]
   
-  (I_implied <- fit_I_to_curve(acs[1:k_sub], wt_exp = 0))
-  acs_hat <- acs_curve(I_implied, 1:nte)
+  ## find best fit with sigma=1
+  dd[parmat[, "sigma2"] != 1] <- Inf
+  mu_fit <- parmat[which.min(dd), 1]
+  acs_hat_1p <- precomputed_curves[, which.min(dd)]
+
   pdf(paste0("Yuval/ident_extrap", i, ".pdf"))
-  plot(1:nte, acs, type = "l", ylim = c(0, 1),
-       xlab = "k", ylab = "accuracy")
-  legend(150, 0.5, col = c("black", "red"), lwd = 1, 
-         legend = c("empirical", "extrapolated"))
-  lines(acs_hat, col = "red"); abline(v = k_sub)
-  m_err <- sqrt(mean(((acs_hat - acs)^2)[-(1:k_sub)]))
-  title(paste(i * 100, "top voxels"), 
-        sub = paste("RMSE =", m_err))
+  plot(1:250, acs, type = "l", ylim = c(0, 1))
+  lines(acs_hat_2p, col = "blue")
+  lines(acs_hat_1p, col = "red")
+  abline(v = k_sub)
+  legend(150, 0.5, col = c("black", "red", "blue"), lwd = 1, 
+         legend = c("empirical", "1par", "2par"))
+  title(paste(i * 100, "top voxels"))
   dev.off()
+  
+  fitted_pars[i, ] <- pars
+  fitted_mus[i] <- mu_fit
 }
+
+cbind(mu_1 = fitted_mus, mu_2 = fitted_pars[, 1], sigma2 = fitted_pars[, 2])
