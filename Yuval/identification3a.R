@@ -118,17 +118,30 @@ save(scoreZ, file = "Yuval/scores_MSE_c.RData")
 
 ## look at the distributions
 
-i <- 2
-dmat <- -scoreZ[[1]]
-z_stars <- diag(dmat)
-z_other <- dmat[cbind(1:250, c(250, 1:249))]
-z_other <- dmat[cbind(1:250, (((1:250) + 5) %% 250) + 1)]
-z_off <- dmat[row(dmat) != col(dmat)]
-cor(cbind(z_stars, z_other))
-plot(z_stars, z_other)
-hist(z_stars)
-hist(z_off)
-library(e1071)
+sumstats_0 <- matrix(0, 10, 8)
+sumstats_1 <- sumstats_0
 
-c(summary(z_stars), Sd = sd(z_stars), Skew = skewness(z_stars))
-c(summary(z_off), Sd = sd(z_off), Skew = skewness(z_off))
+for (i in 1:10) {
+  dmat <- -scoreZ[[i]]
+  z_stars <- diag(dmat)
+  z_other <- dmat[cbind(1:250, c(250, 1:249))]
+  z_other <- dmat[cbind(1:250, (((1:250) + 5) %% 250) + 1)]
+  z_off <- dmat[row(dmat) != col(dmat)]
+  cor(cbind(z_stars, z_other))
+  plot(z_stars, z_other)
+  hist(z_stars)
+  hist(z_off)
+  library(e1071)
+  sumstats_0[i, ] <- c(summary(z_stars), Sd = sd(z_stars), Skew = skewness(z_stars))
+  sumstats_1[i, ] <- c(summary(z_off), Sd = sd(z_off), Skew = skewness(z_off))
+}
+
+plot(sumstats_0[, 8])
+plot(sumstats_1[, 8])
+
+plot(sumstats_0[, 7])
+plot(sumstats_1[, 7])
+
+plot(sumstats_0[, 4])
+plot(sumstats_1[, 4])
+
