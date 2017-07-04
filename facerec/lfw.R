@@ -119,12 +119,18 @@ for (nsub in nsubs) {
   dev.off()
 }
 
-nreps <- 50
+library(parallel)
+
+set.seed(0)
+t1 <- proc.time()
+nreps <- 300
 accs_final <- list()
 for (nsub in nsubs) {
-  accs <- sapply(1:nreps, function(i) min(draw_sub_accs(nsub)))
+  accs <- unlist(mclapply(1:nreps, function(i) min(draw_sub_accs(nsub)),
+                 mc.cores = 2))
   accs_final[[paste(nsub)]] <- accs
 }
+proc.time() - t1
 
 boxplot(accs_final, ylim = c(0, 1), main = "Predicted accuracy (1672)")
 abline(h = min(accs_full), col = "blue")
