@@ -1,6 +1,7 @@
 library(class)
 library(pracma)
 library(lineId)
+library(parallel)
 source("extrapolation/ku_source.R")
 
 # x <- read.csv("facerec/reps.csv", header = FALSE)
@@ -21,6 +22,7 @@ head(y2s)
 filt <- y %in% y2s
 xf <- x[filt, ]; yf <- y[filt]
 
+set.seed(0)
 split_inds <- sapply(unique(yf), function(x) sample(which(yf==x), 2))
 length(split_inds)
 split_ind_m <- matrix(split_inds, nrow = 2)
@@ -74,11 +76,11 @@ acs_hat <- 1 - as.numeric(MM %*% bt)
 
 pdf("facerec/acc_plot2.pdf")
 plot(accs_full, type = "l", ylim = c(0, 1), xlab = "faces", ylab = "accuracy",
-     main = "Full set (1672)", cex.lab = 1.5, col = "blue")
-lines(1:nsub, accs, col = "black", lwd = 3)
+     main = "Full set (1672)", cex.lab = 1.5, col = "black")
+#lines(1:nsub, accs, col = "black", lwd = 3)
 lines(acs_hat, col = "red")
 abline(v = nsub, lty = 2, col = "red")
-legend(500, 0.3, c("sub400", "estimate", "full1672"), col = c("black", "red", "blue"), 
+legend(500, 0.3, c("estimate", "full1672"), col = c("red", "black"), 
        lwd = c(2, 1, 1), cex = 1.5)
 dev.off()
 
@@ -107,19 +109,19 @@ draw_sub_accs <- function(nsub) {
 }
 
 nreps <- 20
-nsubs <- c(50, 100, 200, 400, 800)
+nsubs <- c(100, 200, 400, 800)
 #nsub <- 400
 
 for (nsub in nsubs) {
   pdf(paste0("facerec/sub_", nsub, ".pdf"))
   plot(accs_full, type = "l", ylim = c(0, 1), xlab = "faces", ylab = "accuracy",
-       main = paste(nsub), cex.lab = 1.5, col = "blue", lwd = 3)
+       main = paste(nsub), cex.lab = 1.5, col = "black", lwd = 3)
   abline(v = nsub, lty = 2)
   for (i in 1:nreps) lines(draw_sub_accs(nsub), col = "red")
+  lines(accs_full, col = "black", lwd = 3)
   dev.off()
 }
 
-library(parallel)
 
 set.seed(0)
 t1 <- proc.time()
@@ -136,3 +138,5 @@ boxplot(accs_final, ylim = c(0, 1), main = "Predicted accuracy (1672)")
 abline(h = min(accs_full), col = "blue")
 
 saveRDS(accs_final, file = "lfw_sub_preds.rds")
+
+(true_acc <- min(accs_full))
