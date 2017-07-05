@@ -1,0 +1,1003 @@
+\documentclass[twoside,11pt]{article}
+
+% Any additional packages needed should be included after jmlr2e.
+% Note that jmlr2e.sty includes epsfig, amssymb, natbib and graphicx,
+% and defines many common macros, such as 'proof' and 'example'.
+%
+% It also sets the bibliographystyle to plainnat; for more information on
+% natbib citation styles, see the natbib documentation, a copy of which
+% is archived at http://www.jmlr.org/format/natbib.pdf
+
+\usepackage{jmlr2e}
+% packages with special commands
+\usepackage{amssymb, amsmath}
+\usepackage{epsfig}
+\usepackage{array}
+\usepackage{ifthen}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{csquotes}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{chngcntr}
+\usepackage{apptools}
+\AtAppendix{\counterwithin{lemma}{section}}
+%\usepackage[comma,authoryear]{natbib}
+
+%\addbibresource{example.bib} % The filename of the bibliography
+
+
+
+% Definitions of handy macros can go here
+\newcommand{\skone}{\mathcal{S}_{k_1}}
+\newcommand{\sktwo}{\mathcal{S}_{k_2}}
+
+\newcommand{\tr}{\text{tr}}
+\newcommand{\E}{\textbf{E}}
+\newcommand{\diag}{\text{diag}}
+\newcommand{\argmax}{\text{argmax}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\argmin}{\text{argmin}}
+\newcommand{\Vol}{\text{Vol}}
+\newcommand{\comm}[1]{}
+\newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+\newcommand{\Cor}{\text{Cor}}
+\newcommand{\bZ}{\boldsymbol{Z}}
+\newcommand{\bz}{\boldsymbol{z}}
+\newcommand{\bx}{\boldsymbol{x}}
+\newcommand{\bX}{\boldsymbol{X}}
+
+\newcommand{\bH}{\boldsymbol{H}}
+
+
+\newcommand{\fracpartial}[2]{\frac{\partial #1}{\partial  #2}}
+
+% Heading arguments are {volume}{year}{pages}{submitted}{published}{author-full-names}
+
+\jmlrheading{0}{00}{0-00}{0/00}{00/00}{zheng00}{Charles Zheng and Rakesh Achanta and Yuval Benjamini}
+
+% Short headings should be running head and authors last names
+
+\ShortHeadings{Extrapolating expected accuracies}{Zheng, Achanta and Benjamini}
+\firstpageno{1}
+
+\begin{document}
+
+\title{Extrapolating expected accuracies for recognition tasks}
+
+\editor{No One Yet}
+
+\author{\name Charles Zheng \email charles.y.zhang@gmail.com \\
+       \addr Department of Statistics\\
+       Stanford University\\
+       Palo Alto, CA 
+       \AND
+       \name Rakesh Achanta \email  \\
+       \addr Department of Statistics\\
+       Stanford University\\
+       Palo Alto, CA 
+       \AND
+       \name Yuval Benjamini \email yuval.benjamini@mail.huji.ac.il \\
+       \addr Department of Statistics\\
+       The Hebrew University of Jerusalem,
+       Jerusalem, Israel}
+
+\maketitle
+
+\begin{abstract}%   <- trailing '%' for backward compatibility of .sty file
+The difficulty of multi-class classification generally increases with
+the number of classes.  Using data from a subset of the classes, can
+we predict how well a classifier will scale with an increased number
+of classes?  Under the assumption that the classes are sampled
+exchangeably, and under the assumption that the classifier is
+generative (e.g. QDA or Naive Bayes), we show that the expected
+accuracy when the classifier is trained on $k$ classes is the $k-1$st
+moment of a \emph{conditional accuracy distribution}, which can be
+estimated from data.  This provides the theoretical foundation for
+performance extrapolation based on pseudolikelihood, unbiased
+estimation, and high-dimensional asymptotics.  We investigate the
+robustness of our methods to non-generative classifiers in simulations
+and one optical character recognition example.
+\end{abstract}
+
+\begin{keywords}
+Multiclass classification
+\end{keywords}
+\section{Introduction}\label{sec:recog_tasks}
+
+Multi-class classification is often applied to problems with large and complex label sets.
+These large multi-class problems are encountered when there exists a large domain of objects or categories to be recognized from data.
+Leading examples include detecting the speaker from his voice patterns [[ Roberto Togneri ;  Daniel Pullella]], 
+identifying the author from her written text[[Stamatatos 2014]], or labeling the object 
+category from its image[[Oquab 2014]], \cite{duygulu2002object}, \cite{deng2010does}. 
+
+In many of these applications, the set of labels is to some degree random or arbitrary.
+The categories in object recognition tasks, are often also assembled by compiling lists of arbitrarily or randomly selected keywords and collecting matching images [[Caltech-101 and Caltech-256]].
+In face recognition, authorship, fingerprint identification and other tasks the label set 
+is an arbitrary set of individuals representing some larger, potentially infinite, population [[cite]].
+However, on any individual experiment of the recognition system, the number of labels is fixed.
+Comparisons on the generalizability of small-set performance to larger-set performance can found in the literature [[Caltech-256, Oquab et. al. 2014]]. Indeed, when developing a specific system, it more affordable to collect data on a small set of classes, even if the long term goal is for the system to generalize to large sets. 
+A natural question, then, is how changing the number of  possible labels affects the classification accuracy.
+Therefore, it would be useful to have a theory to understand how classification performance on a smaller, representative sample of the labels extends to performance on a larger set.
+
+More technically, we consider a sequence of classification
+problems on finite label subsets
+$|\mathcal{S}_k| < \cdots < |\mathcal{S}_K|, \mathcal{S}_i \subset \mathcal{Y}$,
+where in the $k$-th task, one constructs the classification rule
+$h^{(k)}:\mathcal{X} \to \mathcal{S}_k$.  Supposing that $(X, Y)$ have
+a joint distribution, define the generalization accuracy for the
+$k$-th problem as
+\begin{equation}\label{eq:ga_k}
+\text{GA}_k = \Pr[h^{(k)}(X) = Y|Y \in \mathcal{S}_k].
+\end{equation}
+The problem of \emph{performance extrapolation} is the following: using data
+from only $\mathcal{S}_k$, can one predict the accuracy 
+ for the larger label set $\mathcal{S}_K$?
+Note that unlike other extrapolations from a smaller sample to a larger population, 
+the classification problem becomes harder as the number of distractor classes
+increases. 
+
+Posing this question rigorously requires some effort. 
+Within the statistics and machine learning literature, the usual
+formalism for studying a recognition task is to pose it as a
+\emph{multi-class classification} problem. [[Citations]] One delineates a finite
+set of distinct entities which are to be recognized and distinguished,
+which is the \emph{label set} $\mathcal{S}$. 
+
+However, under this setup, it is usually assumed that the
+label set $\mathcal{S}$ is a finite and specific set of categories, which is known in advance [[Citations YB]]. For human recognition systems, a fixed and finite label set is not always appropriate: humans can easily learn to recognize new objects. Similarly, we think about success of recognition systems as a property that is more general than accuracy on any individual set of classes. Therefore we need to extend the notion of accuracy to deal with multiple but related classification tasks.
+[[Some citations of people doing mildly similar things YB: e.g. one-shot learning, transfer learning]] 
+
+
+Accurate answers to this problem are not only of theoretical interest, but also have practical implications:
+
+Example 1:
+
+Facial recognition is an important technology with applications in
+security and in social media, such as automatic tagging of photographs
+on Facebook.  The basic problem is illustrated in Figure
+\ref{fig:face_rec}: given a collection of tagged and cropped
+photographs $\{(x_j^{(i)}), y^{(i)}\}$, where $y^{(i)}$ is the
+label, and $x_j^{(i)}$ is a vector containing the pixel intensities, assign labels $y$ to
+untagged photographs $x_*$.  Here, the notation
+$x_j^{(i)}$ indicates the $j$th labelled photograph in the
+database belonging to the $i$th individual. 
+
+A client might want to run a facial recognition system
+developed by lab A on their own database of individuals.  In this
+case, there might be no overlap between the people in lab A's database
+and the people in the client's database.  And yet, the client might
+still expect the performance figures reported by lab A to be
+informative of how well the recognition system will do on their own
+database!
+%One way to study the
+%problem is to fit it into the multi-class classification framework,
+%where the label set $\mathcal{Y}$ consists of all individuals in the
+%data set, $\{y^{(1)},\hdots, y^{(k)}\}$.
+
+\begin{figure}
+\centering
+\begin{tabular}{|c|ccc|c|}
+\hline
+Label & & Training & & Test\\ \hline
+$y^{(1)}$=Amelia & 
+  $x_1^{(1)} = $\includegraphics[scale = 0.2]{face_photos/Amelia_Vega_0001.png} &  
+  $x_2^{(1)} = $\includegraphics[scale = 0.2]{face_photos/Amelia_Vega_0002.png} &  
+  $x_3^{(1)} = $\includegraphics[scale = 0.2]{face_photos/Amelia_Vega_0003.png} &  
+  $x_*^{(1)} = $\includegraphics[scale = 0.2]{face_photos/Amelia_Vega_0004.png} \\ \hline
+$y^{(2)}$=Jean-Pierre & 
+  $x_1^{(2)} = $\includegraphics[scale = 0.2]{face_photos/Jean-Pierre_Raffarin_0001.png} &  
+  $x_2^{(2)} = $\includegraphics[scale = 0.2]{face_photos/Jean-Pierre_Raffarin_0002.png} &  
+  $x_3^{(2)} = $\includegraphics[scale = 0.2]{face_photos/Jean-Pierre_Raffarin_0003.png} &  
+  $x_*^{(2)} = $\includegraphics[scale = 0.2]{face_photos/Jean-Pierre_Raffarin_0004.png} \\ \hline
+$y^{(3)}$=Liza & 
+  $x_1^{(3)} = $\includegraphics[scale = 0.2]{face_photos/Liza_Minnelli_0001.png} &  
+  $x_2^{(3)} = $\includegraphics[scale = 0.2]{face_photos/Liza_Minnelli_0002.png} &  
+  $x_3^{(3)} = $\includegraphics[scale = 0.2]{face_photos/Liza_Minnelli_0003.png} &  
+  $x_4^{(3)} = $\includegraphics[scale = 0.2]{face_photos/Liza_Minnelli_0004.png} \\ \hline
+$y^{(4)}$=Patricia & 
+  $x_1^{(4)} = $\includegraphics[scale = 0.2]{face_photos/Patricia_Clarkson_0001.png} &  
+  $x_2^{(4)} = $\includegraphics[scale = 0.2]{face_photos/Patricia_Clarkson_0002.png} &  
+  $x_3^{(4)} = $\includegraphics[scale = 0.2]{face_photos/Patricia_Clarkson_0003.png} &  
+  $x_4^{(4)} = $\includegraphics[scale = 0.2]{face_photos/Patricia_Clarkson_0004.png} \\ \hline
+\end{tabular}
+\caption{Face recognition problem}
+\label{fig:face_rec}
+\end{figure}
+
+Example 2: A neuroscientist is interested in how well the brain
+  activity in various regions of the brain can discriminate between
+  different classes of stimuli.  \cite{Kay2008a} obtained fMRI brain
+  scans which record how a single subject's visual cortex responds to
+  natural images. They wanted to know how well the brain signals could
+  discriminate between different images. For a set of 1750
+  photographs, they constructed a classifier which achieved over 0.75
+  accuracy of classification. Based on exponential extrapolation, they
+  estimate that it would take on the order of $10^{9.5}$ classes
+  before the accuracy of the model drops below 0.10!  A theory of
+  performance extrapolation could be useful for the purpose of making
+  such extrapolations in a more principled way.
+  
+Both examples refer to the typical development of a recognition system. 
+Recognition systems are first tested on small datasets, even 
+if the longer-term goal is to deploy them on large datasets with many more classes.
+The question is how much decay in the performance should we expect for the larger problem compared to the smaller problem. [Cite What Does Classifying...]
+Theory for performance extrapolation may therefore
+reveal models with bad scaling properties in the pilot stages of
+development.
+
+Our primary goal in this paper is to formulate this question, and
+identify scenarios where answers are possible. 
+The most important condition is that the smaller problem would be 
+representative of the larger one. For simplicity, we
+assume that both $\mathcal{S}_K$ and $\mathcal{S}_k$ are iid samples
+from a population (or distribution) of labels. (Other sampling 
+mechanisms would require some modification). 
+The condition of i.i.d. sampling of labels ensures that the
+separation of labels in a random set $\mathcal{S}_K$ can be inferred by
+looking at the empirical separation in $\mathcal{S}_k$, and
+therefore that some estimate of the achievable accuracy on
+$\mathcal{S}_K$ can be obtained.
+
+Our analysis considers a restricted set of classifiers,
+\emph{marginal classifiers}, which train a separate model for each class. 
+This convenient property allows us to
+characterize the accuracy of the classifier by selectively
+conditioning on one class at a time.  In section \ref{sec:extrapolation}, we use this
+technique to reveal that the expected risk for classifying on the
+label set $\mathcal{Y}_k$, for all $k$, is governed by a
+specific function - the \emph{conditional risk} -  
+that depends on the true distributions and the classifier. 
+As long as one can recover the conditional risk
+function $\bar{D}(u)$, one can compute the average risk for any number
+of classes. In section \label{sec:extrapolation_example}, we
+empirically study the performance curves of classifiers on sequences
+of classification tasks. 
+
+
+
+The central theme of this thesis is the study of \emph{randomized
+  classification}, which can be motivated as an extension of the
+classical multi-class classification framework to accommodate the
+possibility of growing or infinite label sets $\mathcal{Y}$. The basic
+approach taken is to assume an infinite or even continuous label space
+$\mathcal{Y}$, and then to study the problem of classification on
+finite label sets $S$ which are randomly sampled from $\mathcal{Y}.$
+This, therefore defines a \emph{randomized classification} problem
+where the label set is finite but may vary from instance to instance.
+One can then proceed to answer questions about the variability of the
+performance due to randomness in the labels, or how performance
+changes depending on the size of the random label set.
+
+
+\subsection{Related work}
+
+Most of the existing work in this area focuses on the computational challenges of optimizing together the many parameters required for these models [[K. Crammer and Y. Singer, Y. Lee, Y. Lin, and G. Wahba, J. Weston and C. Watkins]]: these works are tied to a specific algorithm for classification.  Gupta and Bengio [[Citation?]] presents a method for estimating the generalization accuracy of a classifier which can be used to improve performance for general classifiers.
+
+Our work deals more with the question of how to link performance between two different but
+related classification tasks, which falls under the subject of transfer learning [[Pan and Wang 2009]].
+The transfer learning problem we study is one where the source task has labeled data for label set $\mathcal{S}_{k_1}$, and where we want to use the first task to predict our performance on a target task which has labeled data for $\mathcal{S}_{k_2}$.  Under Pan and Wang's terminology, our setup is an example of multi-task learning.  In the object recognition literature, we found several examples of transfer learning from one label set to another.  [[Oquab et al. 2014]], [[Daonahue et al]], [[Razavian et al.]] make use of mid-level CNN features learned from one image dataset in order to classify annother image dataset.
+
+The theoretical framework we adopt is one where there exists a family of classification problems with increasing number of classes.  We are far from the first to consider such a framework: Shannon's foundational paper on information theory [[Shannon 1948]] considered the error rate of a random codebook, which is a special case of the randomized classification setup that we study.  More recently, a number of authors have considered the problem of high-dimensional feature selection for multiclass classification with a large number of classes [[Pan, Wang and Li, 2016]] [[Abramovich and Pennsky 2017]] [[Davis, Pennsky, Crampton 2011]].  All of these works assume specific distributional models for classification.  In contrast, the setting we study is more general; however, we do not deal with the problem of feature selection.
+
+
+
+
+\section{Randomized classification}\label{sec:rc_motivation}
+
+
+\subsection{Setup}
+
+The randomized classification model we study has the following
+features.  We assume that there exists an infinite, perhaps continuous, label space $\mathcal{Y}$ and a example space $\mathcal{X} \in \mathbb{R}^p$.  
+We assume there exists a prior distribution $\pi$ on the label space $\mathcal{Y}$.
+And for each label $y \in \mathcal{Y}$,
+there exists a distribution of examples $F_y$. In other words, for an example-label pair $(X, Y)$, the conditional distribution
+of $X$ given $Y = y$ is given by $F_y$.  
+%Furthermore, we assume that
+%there exists a prior distribution $\pi$ on the label space $\mathcal{Y}$.
+
+A random classification task can be generated as follows.  The
+label set $\mathcal{S} = \{Y^{(1)},\hdots, Y^{(k)}\}$ is generated by
+drawing labels $Y^{(1)},\hdots, Y^{(k)}$ i.i.d. from $\pi$.  
+For each label, we sample a training set and a
+test set.  The training set is obtained by sampling $r_{train}$ observations
+$X_{j, train}^{(i)}$ i.i.d. from $F_{Y^{(i)}}$ for $j = 1,\hdots,
+r_{train}$ and $i = 1,\hdots, k$.  The test set is likewise obtained by sampling $r$
+observations $X_j^{(i)}$ i.i.d. from $F_{Y^{(i)}}$ for $j = 1,\hdots,
+r$.  
+
+We assume that the classifier $h(x)$ works by assigning a score to each label $y^{(i)} \in \mathcal{S}$, then choosing the label with the highest score.  That is, there exist real-valued \emph{score functions} $m_{y^{(i)}}(x)$ for each label $y^{(i)} \in \mathcal{S}$.
+Since the classifier is allowed to depend on the training data, it is convenient to view it (and its associated score functions) as random.  We write $H(x)$ when we wish to work with the classifier as a random function, and likewise $M_y(x)$ to denote the score functions when they are considered as random.
+
+For a fixed instance of the classification task with labels $\mathcal{S} = \{y^{(i)}\}_{i=1}^k$ and associated score functions $\{m_{y^{(i)}}\}_{i=1}^k$, recall the definition of the $k$-class generalization error \eqref{eq:ga_k}.  Assuming that there are no ties, it can be written in terms of score functions as
+\[
+\text{GA}_k(h) = \frac{1}{k} \sum_{i=1}^k  \Pr[m_{y^{(i)}}(X^{(i)}) = \max_j
+m_{y^{(j)}}(X^{(i)})],
+\]
+where $X^{(i)} \sim F_{y^{(i)}}$ for $i =1,\hdots, k$.
+However, when we consider the labels $\{Y^{(i)}\}_{i=1}^k$ and associated score functions to be random, the generalization accuracy also becomes a random variable.
+
+Suppose we specify $k$ but do not fix any of the random quantities in the
+classification task.  Then the $k$-class \emph{average generalization accuracy} of
+a classifier is the expected value of the generalization accuracy $\text{GA}_k(H)$ resulting from a random set of $k$ labels, $Y^{(1)}, \hdots, Y^{(k)} \stackrel{iid}{\sim \pi}$, and their associated score functions:
+\begin{align*}
+\text{AGA}_k &= \frac{1}{k} \sum_{i=1}^k \Pr[M_{Y^{(i)}}(X^{(i)}) = \max_j
+M_{Y^{(j)}}(X^{(i)})]
+\\&= \Pr[M_{Y^{(1)}}(X^{(1)}) = \max_j M_{Y^{(j)}}(X^{(1)})].
+\end{align*}
+The last line follows from noting that all $k$ summands in the previous line are identical.
+[The definition of average generalization accuracy is illustrated in Figure \ref{fig:average_risk}.]
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale = 0.3]{average_risk.png}
+\caption{Average generalization accuracy}\label{fig:average_risk}
+\end{figure}
+
+\subsubsection{Marginal classifier}
+
+In our analysis, we do not
+want the classifier to rely too strongly on complicated interactions
+between the labels in the set. We therefore propose the following
+property of marginal separability for classification models:
+
+\begin{definition}
+The classifier $H(x)$ is called a \emph{marginal classifier} if the score 
+function $M_{y^{(i)}}(x)$
+only depends on the label $y^{(i)}$ and the class training set $X_{j, train}^{(i)}$.
+\[M_{y^{(i)}}(x) = g(x; y^{(i)},X_{1, train}^{(i)},...,X_{r_{train}, train}^{(i)})\]
+\end{definition}
+This means that the score function for $y^{(i)}$ does not depend on other labels $y^{(j)}$ or their training 
+samples.  Therefore, each $M_y$ can be considered to have been drawn from a distribution $\nu_y$.
+Classes ``compete'' only through selecting the highest score, 
+but not in constructing the score functions. 
+The operation of a marginal classifier is illustrated in figure
+\ref{fig:classification_rule}.
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale = 0.4]{classification_rule.png}
+\caption{Classification rule [to be updated]}\label{fig:classification_rule}
+\end{figure}
+
+The \emph{marginal} property allows us to prove
+strong results about the accuracy of the classifier under
+i.i.d. sampling assumptions.
+
+
+\textbf{Comments:}
+\begin{enumerate}
+\item If $H$ is a marginal classifier then 
+$M_{Y^{(i)}}$ is independent of $Y^{(j)}$ and $M_{Y^{(j)}}$ for $i \neq j$.
+\item Estimated Bayes
+classifier are a primary example of a marginal classifier. Let $\hat{f_y}$ be a density estimate of the example distribution under label $y$ obtained from the
+empirical distribution $\hat{F_y}$. Then, we can use the estimated
+density to produce the score functions:
+\[ m^{EB}_y(x) = \log(\hat{f_{y}}(x)).\]
+The resulting empirical approximation for the Bayes classifier would be
+\[ h^{EB}(x) = \text{argmax}_{y \in \mathcal{S}}(m^{EB}_y(x)).\]
+\item Both the Quadratic Discriminant Analysis and the naive Bayes classifiers can be seen as specific instances of an estimated Bayes classifier
+\footnote{QDA is the special case of the estimated Bayes classifier when $\hat{f_y}$ is obtained as
+the multivariate Gaussian density with mean and covariance parameters estimated from the data.
+Naive Bayes is the estimated Bayes classifier when $\hat{f_y}$ is obtained as the product of estimated componentwise marginal distributions
+of $p(x_i|y)$}. 
+For QDA, the score function is
+given by
+\[
+m_y^{QDA}(x) = -(x - \mu(\hat{F}_y))^T \Sigma(\hat{F}_y)^{-1} (x-\mu(\hat{F}_y)) - \log\det(\Sigma(\hat{F}_y)),
+\]
+where $\mu(F) = \int y dF(y)$ and $\Sigma(F) = \int (y-\mu(F))(y-\mu(F))^T dF(y)$.
+In Naive Bayes, the score function is
+\[
+m^{NB}_y(x) = \sum_{j=1}^p \log \hat{f}_{y, j}(x),
+\]
+where $\hat{f}_{y, j}$ is a density estimate for the $j$-th component of
+$\hat{F}_y$.
+\item For some classifiers, $M_y$ is a deterministic function of $y$ (and therefore $\nu_y$ is degenerate). A prime example is when exists fixed or pre-trained embeddings $g, \tilde{g}$ that map labels $y$ and examples $x$ into
+ $R^p$. Then 
+\begin{equation}
+M_y^{embed} = -\|g(y) - \tilde{g}(x)\|_2.
+\end{equation}
+This describes, for example, a 1-nearest neighbor classifier.
+\item There are many classifiers which do not satisfy the marginal property, such as multinomial logistic regression, multilayer neural networks, decision trees, and k-nearest neighbors.
+\end{enumerate}
+
+\emph{Notational remark.}  Henceforth, we shall relax the assumption that the classifier $H(x)$ is based on a training set.  Instead, we assume that there exist score functions $\{M_{Y^{(i)}}\}_{i=1}^k$ associated with the random label set $\{Y^{(i)}\}_{i=1}^k$, and that the score functions $M_{Y^{(i)}}$ are independent of the test set.  The classifier $H(x)$ is marginal if and only if $M_{Y^{(i)}}$ are independent of both $Y^{(j)}$ and $M_{Y^{(j)}}$ for $j \neq i$.
+
+\subsection{Estimation of average accuracy}\label{sec:estimation_average_accuracy}
+
+Suppose we have test data for a classification task with $k_1$ classes.  That is, we have a label set $\mathcal{S}_{k_1} =
+\{y^{(i)}\}_{i=1}^{k_1}$ and its associated set of score functions
+ $M_{y^{(i)}}$, as well as test observations $(x_1^{(i)},\hdots, x_{r}^{(i)})$ for $i =
+1,\hdots, k_1$.  What would be the predicted accuracy for 
+a new randomly sampled set of $k_2 \leq k_1$ labels? 
+
+Note that $\text{AGA}_{k_2}$
+is the expected value of the accuracy on the
+new set of $k_2$ labels.  Therefore, any unbiased estimator of $\text{AGA}_{k_2}$ will be an unbiased predictor for the accuracy on the new set.
+
+Let us start with the case $k_2 = k_1 = k$.  For each test observation $x_j^{(i)}$, define the ranks of the candidate classes $\ell = 1,\hdots, k$ by
+\[
+R_{j}^{i, \ell} = \sum_{s = 1}^k I\{m_{y^{(\ell)}}(x_j^{(i)}) \geq m_{y^{(s)}}(x_j^{(i)})\}.
+\]
+The test accuracy is the fraction of observations for which the correct class also has the highest rank
+\begin{equation}\label{eq:test_risk}
+\text{TA}_k = \frac{1}{r k} \sum_{i=1}^{k} \sum_{j=1}^{r} I\{R_j^{i,i} = k\}.
+\end{equation}
+Taking expectations over both the test set and the random labels, the expected value of the test accuracy is $\text{AGA}_k$; hence, $\text{TA}_k$ provides the desired estimator.
+
+Next, let us consider the case where $k_2 < k_1$.  
+Consider label set $\mathcal{S}_{k_2}$ obtained
+by sampling $k_2$ labels uniformly without replacement from
+$\mathcal{S}_{k_1}$. Since $\mathcal{S}_{k_2}$ is unconditionally an i.i.d. sample from 
+the population of labels $\pi$, the test accuracy of $\mathcal{S}_{k_2}$ is an unbiased estimator of $\text{AGA}_{k_2}$.
+However, we can get a better unbiased estimate of
+$\text{AGA}_{k_2}$ by averaging over all the possible subsamples
+$\mathcal{S}_{k_2} \subset \mathcal{S}_{k_1}$. 
+This defines the average test accuracy over subsampled tasks, $\text{ATA}_{k_2}$.
+
+\emph{Remark.}
+Na\"{i}vely, computing $\text{ATA}_{k_2}$ requires us to train and evaluate
+${k_1}\choose{k_2}$ classification rules.  However, for marginal classifiers, retraining the classifier is not necessary.
+Looking at the rank $R_{j}^{i,i}$ of the correct label $i$ for $x_j^{(i)}$,
+allows us to determine how many subsets $\mathcal{S}_2$
+will result in a correct classification. Specifically,
+there are $R_{j}^{i,i} - 1$ labels with a lower score than the correct
+label $i$.  Therefore, as long as one of the classes in
+$\mathcal{S}_2$ is $i$, and the other $k_2-1$ labels are from the set of
+$R_{j}^{i,i}-1$ labels with lower score than $i$, the classification of
+$x_j^{(i)}$ will be correct.  This implies that there are
+${R_{j}^{i,i}-1}\choose{k_2-1}$ such subsets $\mathcal{S}_2$ where
+$x_j^{(i)}$ is classified correctly, and therefore the average test risk for all ${k_1}\choose{k_2}$ subsets $\mathcal{S}_2$ is
+\begin{equation}\label{eq:avtestrisk}
+\text{ATA}_{k_2} = \frac{1}{{{k_1}\choose{k_2}}}\frac{1}{r k_2} \sum_{i=1}^{k_1} \sum_{j=1}^{r} {{R_{j}^{i,i}-1}\choose{k_2-1}}.
+\end{equation}
+
+\subsection{Toy Example: Bivariate normals}
+\label{sec:toyExA}
+
+Let us illustrate these ideas using a toy example.
+Let $(Y, X)$ have a bivariate normal joint distribution,
+\[
+(Y, X) \sim N\left(\begin{pmatrix}0 \\0\end{pmatrix}, \begin{pmatrix}1 & \rho \\ \rho & 1\end{pmatrix}\right),
+\]
+as illustrated in figure \ref{fig:toy1}(a).
+Therefore, for a given randomly drawn label $Y$, the conditional
+distribution of $X$ for that label is univariate normal with mean $\rho Y$ and variance $1-\rho^2$:
+\[
+X|Y = y \sim N(\rho Y, 1-\rho^2).
+\]
+Supposing we draw $k = 3$ labels $y_1,y_2, y_3$, the classification
+problem will be to assign a test instance $X^*$ to the correct label.
+The test instance $X^*$ would be drawn with equal probability from one of three conditional distributions
+$ X | Y=y^{(i)}$, as illustrated in figure \ref{fig:toy1}(b, top).
+The Bayes rule assigns $X^*$
+to the class with the highest density $p(x|y_i)$, as illustrated by
+figure \ref{fig:toy1}(b, bottom): it is therefore a marginal classifier, with
+score function
+\[
+M_{y^{(i)}}(x) = \log(p(x|y^{(i)})) = -\frac{(x - \rho y)^2}{2(1-\rho^2)}  + \text{const.}
+\]
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{cc}
+\multirow{3}{*}{\includegraphics[scale = 0.5, clip = true, trim = 0 0 0 0.5in]{illus_rho_0_7.pdf}} & \\
+& \includegraphics[scale = 0.5, clip = true, trim = 0 0.8in 0 0.8in]{illus_example1a.pdf}\\
+ &  \includegraphics[scale = 0.5, clip = true, trim = 0 0 0 0.5in]{illus_example1b.pdf}\\
+(a) & (b)
+\end{tabular}
+
+\caption{
+(a) The joint distribution of $(X, Y)$ is bivariate normal with correlation $\rho = 0.7$.
+(b) A typical classification problem instance from the bivariate normal model with $k = 3$ classes.
+Top: the conditional density of $X$ given label $Y$, for $Y = \{y_1, y_2, y_3\}$.
+Bottom: the Bayes classification regions for the three classes.}\label{fig:toy1}
+\end{figure}
+
+For this model, the generalization accuracy of the Bayes rule for any label set $\{y^{(1)},\hdots, y^{(k)}\}$ is given by
+\begin{align*}
+\text{GA}_k(y_1,\hdots, y_k) &= \frac{1}{k}\sum_{i=1}^k \Pr_{X \sim p(x|y_i)}[p(X|y_i) = \max_{j=1}^k p(X|y_j)]
+\\&= \frac{1}{k}\sum_{i=1}^k \Phi\left(\frac{y^{[i+1]} - y^{[i]}}{2\sqrt{1-\rho^2}}\right) - \Phi\left(\frac{y^{[i-1]} - y^{[i]}}{2\sqrt{1-\rho^2}}\right)
+\end{align*}
+where $\Phi$ is the standard normal cdf, $y^{[1]} < \cdots < y^{[k]}$ are the sorted labels, and $y^{[0]} = -\infty$ and $y^{[k+1]} = \infty$.
+We numerically computed $\text{GA}_k(y_1,\hdots, y_k)$ for randomly
+drawn labels $Y_1,\hdots, Y_k \stackrel{iid}{\sim} N(0, 1)$; the
+distributions of $\text{GA}_k$ for $k = 2,\hdots, 10$
+are illustrated in figure \ref{fig:toy2}.  The mean of the distribution of $\text{GA}_k$ is the $k$-class average risk,
+$\text{AGA}_k$. The theory
+presented in the next section deals with how to analyze the
+average risk $\text{AGA}_k$ as a function of $k$. 
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale = 0.7, clip = true, trim = 0 0 0 0.5in]{illus_err_0_7.pdf}
+
+\caption{[change figure]The distribution of the classification risk for $k = 2,3,\hdots, 10$ for the bivariate normal model with $\rho = 0.7$.
+Circles indicate the average classificatin risk; the red curve is the theoretically computed average risk.}\label{fig:toy2}
+\end{figure}
+\section{Extrapolation}
+
+The section is organized as follows.  We begin by introducing an explicit formula for the average accuracy $\text{AGA}_{k}$.  The formula reveals that $\text{AGA}_{k}$ is determined by moments of a one-dimensional function $\bar{D}(u)$.
+Through this formula, therefore, we can infer through subsample accuracies 
+estimates of $\bar{D}(u)$. 
+These estimates allow us to extrapolate the average generalization
+accuracy to an arbitrary number of labels.
+
+The result of our analysis is to expose the average accuracy
+$\text{AGA}_{k}$ as the weighted average of a function
+$\bar{D}(u)$, where $\bar{D}(u)$ is independent of $k$, and where $k$
+only changes the weighting.  The result is stated as follows.
+
+\begin{theorem}\label{theorem:avrisk_identity}
+Suppose $\pi$, $\{F_y\}_{y \in \mathcal{Y}}$ and score functions $M_y$ satisfy the tie-breaking condition.  Then, there exists a cumulative distribution function $\bar{D}(u)$ defined on the interval $[0,1]$ such that
+\begin{equation}\label{eq:avrisk_identity}
+\text{AGA}_{k} = 1 - (k-1) \int \bar{D}(u) u^{k-2} du.
+\end{equation}
+\end{theorem}
+
+The tie-breaking allows us
+to neglect specifying the case when
+margins are tied.
+\begin{definition}
+\emph{Tie-breaking condition}: for all $x \in \mathcal{X}$,
+$M_Y(x) \neq M_{Y'}(x)$
+with probability one for $Y, Y'$ independently drawn from $\pi$.
+\end{definition}
+In practice, one can simply break ties randomly,
+which is mathematically equivalent to adding a small amount of random
+noise $\epsilon$ to the function $\mathcal{M}$.
+
+\subsection{Analysis of average accuracy}
+
+For the following discussion, we often consider a random label with its associated score function and example vector. Explicitly, this sampling can be written:
+\[Y \sim \pi,\, M_{Y}|Y \sim \nu_{Y},\, X|Y \sim F_{Y}. \]
+%\[Y^* \sim \pi,\, M_{Y^*}|Y^* \sim \nu_{Y^*},\, X^*|Y^* \sim F_{Y^*},\, \]
+%\[Y' \sim \pi,\, M_{Y'}|Y' \sim \nu_{Y'}\, X'|Y' \sim F_{Y'},\, \]
+Similarly we use $(Y',M_{Y'},X')$ and $(Y^*,M_{Y^*},X^*)$ for two more triplets with independent and identical distributions. Specifically, $X^*$ will typically note the test example, and therefore $Y^*$ the true label and $M_{Y^*}$ its score function. 
+
+The function $\bar{D}$ is related to a favorability function. Favorability measures the probability that the score for 
+the example $x^*$ is going to be maximized by the score function $m_y$, compared to a random competitor $M_{Y'}$. 
+Formally, we write:
+\begin{equation}\label{eq:U_function}
+U_{x^*}(m_{y}) = \Pr[m_{y}(x^*) > M_{Y'}(x^*)].
+\end{equation}
+
+Note that for fixed example $x^*$, favorability is monotonically increasing in $m_{y}(x^*)$.  If $m_y(x^*) > m_{y^\dagger}(x^*)$, then $U_{x^*}(y) > U_{x^*}(y^\dagger)$, because the event $\{m_{y}(x^*) > M_{Y'}(x^*)\}$ contains the event $\{m_{y^\dagger}(x^*) > M_{Y'}(x^*)\}$.
+
+Therefore, given labels $y^{(1)},\hdots,y^{(k)}$ and test instance $x^*$,
+we can think of the classifier as choosing the label with the greatest favorability:
+\[
+\hat{y} = \argmax_{y^{(i)} \in \mathcal{S}} m_{y^{(i)}}(x^*) = \argmax_{y^{(i)} \in \mathcal{S}} U_{x^*}(m_{y^{(i)}}).
+\]
+Furthermore, via a conditioning argument, we see that this is still the case even when the test instance and labels are random:
+\[
+\hat{Y} = \argmax_{Y^{(i)} \in \mathcal{S}} M_{Y^{(i)}}(X^*) = \argmax_{Y^{(i)} \in \mathcal{S}} U_{X^*}(M_{Y^{(i)}}).
+\]
+
+
+The favorability takes values between 0 and 1, and when any of its arguments are random, it becomes a random variable with a distribution supported on $[0,1]$.
+In particular, we consider the following two random variables:
+\begin{itemize}
+\item[a.] the \emph{incorrect-label} favorability $U_{x^*}(M_Y)$ between a given fixed test instance $x^*$, and the score function of a random incorrect label $M_{Y}$, and
+\item[b.] the \emph{correct-label} favorability $U_{X^*}(M_{Y^*})$ between a random test instance $X^*$, and the score function of the correct label, $M_{Y^*}$.
+\end{itemize}
+\subsubsection{Incorrect-label favorability}
+The incorrect-label favorability can be written explicitly as 
+\begin{equation}
+U_{x^*}(M_Y) = \Pr[M_{Y}(x^*) > M_{Y'}(x^*)|M_{Y}].
+\end{equation}
+Note that $M_Y$ and $M_{Y'}$ are identically distributed, and are both are unrelated to $x^*$ that is fixed. This leads to the following result: 
+\begin{lemma}\label{lemma:U_function}
+Under the tie-breaking condition, the incorrect-label favorability $U_{x^*}(M_Y)$ is uniformly distributed for any $x^* \in \mathcal{X}$, and \begin{equation}\label{eq:Uniform}
+\Pr[U_{x^*}(M_Y) \leq u] = u.
+\end{equation}
+\end{lemma}
+Proof is in the appendix. 
+
+\subsubsection{Correct-label favorability}
+
+The correct-label favorability is 
+\begin{equation}
+U^* = U_{X^*}(M_{Y^*}) = \Pr[M_{Y^*}(X^*) > M'_{Y'}(X^*)|Y^*,M_{Y^*},X^*].
+\end{equation}
+The distribution of $U^*$ will depend on $\pi$, $F_y$ and $\nu_y$,
+and generally cannot be written in a closed form.  
+However, this distribution is central to our analysis--indeed, we will see that the function $\bar{D}$ appearing in theorem \ref{theorem:avrisk_identity} is defined as the cumulative distribution function of $U^*$.
+
+The special case of $k=2$ shows the relation between the distribution of $U^*$ and the average generalization accuracy, $\text{AGA}_2$. In the two-class case, the average generalization accuracy is the probability that a random correct label score function gives a larger value than a random distractor:
+\[
+\text{AGA}_2 = \Pr[M_{Y^*}(X^*) > M_{Y'}(X^*)].
+\]
+where $Y^*$ is the correct label, and $Y'$ is a random incorrect label.
+If we condition on $Y^* = y^*$, $M_{Y^*} = m_{y^*}$ and $X^* = x^*$, we get
+\[
+\text{AGA}_2 = \E[\Pr[M_{Y^*}(X^*) > M_{Y'}(X^*)|Y^*, M_{Y^*}, X^*]].
+\]
+Here, the conditional probability inside the expectation is the correct-label favorability.  Therefore,
+\[
+\text{AGA}_2 = \E[U^*] = \int \bar{D}(u) du,
+\]
+where $\bar{D}(u)$ is the cumulative distribution function of $U^*$, $\bar{D}(u) = \Pr[U^* \leq u]$.
+Theorem \ref{theorem:avrisk_identity} extends this to general $k$; we now give the proof.\newline
+
+
+\noindent\textbf{Proof of Theorem \ref{theorem:avrisk_identity}}.
+
+Without loss of generality, suppose that the true label is $Y^*$ and the incorrect labels are $Y^{(1)},\hdots, Y^{(k-1)}$.
+We have
+\[
+\text{AGA}_k = \Pr[M_{Y^*}(X^*) > \max_{i=1}^{k-1} M_{Y^{(i)}}(X^*)]
+= \Pr[U^* > \max_{i=1}^{k-1} U_{X^*}(M_{Y^{(i)}})]
+\]
+recalling that $U^* = U_{X^*}(M_{Y^*})$.
+Now, if we condition on $X^* = x^*$, $Y^* = y^*$ and $M_{Y^*} = m_{y^*}$,
+then the random variable $U^*$ becomes fixed, with value
+\[
+u^* = U_{x^*}(m_{y^*}).
+\]
+Therefore,
+\begin{align*}
+\text{AGA}_k &=\E[\Pr[U^* > \max_{i=1}^{k-1} U_{X^*}(M_{Y^{(i)}})|X^* = x^*, Y^* = y^*, M_{Y^*} = y^*]]
+\\&= \E[\Pr[U^* > \max_{i=1}^{k-1} U_{X^*}(M_{Y^{(i)}})|X^* = x^*, U^* = u^*]]
+\end{align*}
+Now define $U_{max, k-1} = \max_{i=1}^{k-1} U_{X^*}(M_{Y^{(i)}})$. 
+Since by Lemma \ref{lemma:U_function},
+$U_{X^*}(M_{Y^{(i)}})$ are i.i.d. uniform conditional on $X^* = x^*$, we know that
+\begin{equation}\label{eq:umax_beta}
+U_{max, k-1}|X^* = x^* \sim \text{Beta}(k-1, 1). 
+\end{equation}
+Furthermore, $U_{max, k-1}$ is independent of $U^*$ conditional on $X^*$.
+Therefore, the conditional probability can be computed as
+\[
+\Pr[U^* > U_{max, k-1}|X^* = x^*, U^* = u^*] = \int_{u^*}^1 (k-1) u^{k-2} du.
+\]
+Consequently,
+\begin{align*}
+\text{AGA}_k &= \E[\Pr[U^* > \max_{i=1}^{k-1} U_{x^*}(M_{Y^{(i)}})|X^* = x^*, U^* = u^*]]
+\\&= \E[\int_0^{U^*} (k-1) u^{k-2} du|U^* = u^*]
+\\&= \E[\int_0^1 I\{u \leq U^*\} (k-1) u^{k-2} du ]
+\\&= (k-1) \int_0^1 \Pr[U^* \geq u] u^{k-2} du.
+\end{align*}
+Or equivalently,
+\[
+\text{AGA}_k = 1 - (k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+where $\bar{D}(u)$ denotes the cumulative distribution function of $U^*$ on $[0,1]$:
+\begin{equation}\label{eq:Kbar}
+\bar{D}(u) = \Pr[U_{X^*}(M_{Y^*}) \leq u].
+\end{equation}
+
+$\Box$.
+
+
+Theorem \ref{theorem:avrisk_identity} expresses the average accuracy as a weighted integral of the function $\bar{D}(u)$.
+Having this theoretical result allows us to understand how the
+expected $k$-class risk scales with $k$ in problems where all the
+relevant densities are known.  However, applying this result in
+practice to estimate $\text{AGA}_k$ requires some means of
+estimating the unknown function $\bar{D}$--which we discuss in the
+section ?.
+
+\subsection{Favorability and average accuracy for the toy example}
+
+Recall that for the toy example from Section \ref{sec:toyExA}, 
+the score function $M_{y}$ was a non-random function of $y$ that measures the distance between $x$ and $\rho y$ 
+\[
+M_{y}(x^*) = \log(p(x^*|y)) = -\frac{(x^* - \rho y)^2}{2(1-\rho^2)} 
+\]
+
+For this model, the favorability function $U_{x^*}(m_y)$ compares the distance between $x^*$ and $\rho y$ to the distance between $x^*$ and $\rho Y'$ for a randomly chosen distractor $ Y'\sim N(0,1)$:
+\begin{align*}
+U_{x^*}(m_y) &= \Pr[|\rho y - x^*|> |\rho Y' - x^*|] 
+\\&= \Phi\left(\frac{x^* + |\rho y - x^*|}{\rho}\right) - \Phi\left(\frac{x^* - |\rho y - x^*|}{\rho}\right),
+\end{align*}
+where $\Phi$ is the standard normal cumulative distribution function.
+Figure \ref{fig:toy3}(a) illustrates the level sets of the function
+$U_{x^*}(m_y)$.  The highest values of $U_{x^*}(m_y)$ are near the line $x^* = \rho
+y$ corresponding the to conditional mean of $X|Y$: as one moves
+farther from the line, $U_{x^*}(m_y)$ decays.  Note however that large
+values of $x^*$ and $y$ (with the same sign) result in larger values of
+$U_{x^*}(m_y)$ since it becomes unlikely for $Y' \sim N(0,1)$ to exceed
+$Y = y$.
+
+Using the formula above, we can calculate the correct-label favorability $U^* = U_{X^*}(M_{Y^*})$ and its cumulative distribution function $\bar{D}(u)$.
+The function $\bar{D}$ is illustrated in
+figure \ref{fig:toy3}(b) for the current example with $\rho = 0.7$.
+The red curve in figure \ref{fig:toy2} was computed using the formula
+\[
+\text{AGA}_k = 1-(k-1) \int \bar{D}(u) u^{k-2} du.
+\]
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{cc}
+\includegraphics[scale = 0.6, clip = true, trim = 0.1in 0 0 0.8in]{illus_ufunc_0_7.pdf} &
+\includegraphics[scale = 0.65, clip = true, trim = 0 -0.3in 0 0.5in]{illus_kfunc_0_7.pdf}\\
+(a) & (b)
+\end{tabular}
+
+\caption{
+(a) The level curves of the function $U_{x^*}(m_y)$ in the bivariate normal model with $\rho = 0.7$.
+(b) The function $\bar{D}(u)$, which gives the cumulative distribution function of the random variable $U_{X^*}(M_Y)$.}\label{fig:toy3}
+\end{figure}
+
+It is illuminating to consider how the average accuracy curves and the
+$\bar{D}(u)$ functions vary as we change the parameter $\rho$.  Higher
+correlations $\rho$ lead to higher accuracy, as seen in
+figure \ref{fig:toy4}(a), where the accuracy curves are shifted upward as
+$\rho$ increases from 0.3 to 0.9.  The favorability $U_{x^*}(m_y)$
+tends to be higher on average as well, which leads to lower values of
+the cumulative distribution function--as we see in
+figure \ref{fig:toy4}(b), where the function $\bar{D}(u)$ becomes smaller
+as $\rho$ increases.
+
+
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{ccc}
+\includegraphics[scale = 0.45, clip = true, trim = 0.05in 0 0.2in 0.6in]{illus_rhos_avrisk.pdf} &
+\includegraphics[scale = 0.45, clip = true, trim = 0.05in 0 0.2in 0.6in]{illus_rhos_Kfunc.pdf} &
+\includegraphics[scale = 0.45, clip = true, trim = 0.05in 0 0.2in 0.6in]{illus_approx_errors.pdf}\\
+(a) & (b) & (c)
+\end{tabular}
+
+\caption{
+[figure change]The (a) average risk, (b) $\bar{D}(u)$ function for $k = 2,\hdots, 7$ for the bivariate normal model with $\rho \in \{0.3, 0.5, 0.7, 0.9\}$.
+(c) The $d$-degree $\ell_\infty$ polynomial approximation error for $\bar{D}(u)$ for the bivariate normal model with $\rho \in \{0.3, 0.5, 0.7, 0.9\}$.
+}\label{fig:toy4}
+\end{figure}
+
+\section{Estimation}\label{sec:extrapolation_estimation}
+
+Next, we discuss how to use data from smaller classification tasks to extrapolate average accuracy.
+Assume that we have data from a $k_1$-class random classification task, 
+and would like to estimate the average accuracy $\text{AGA}_{k_2}$ for $k_2>k_1$ classes.
+Our estimation method will use the $k$-class average test accuracies, $\text{ATA}_2,...,\text{ATA}_{k_1}$ (see Eq \ref{eq:avtestrisk}), for its inputs.
+
+The key to understanding the behavior of the average accuracy $\text{AGA}_k$ is the function $\bar{D}$.  
+We adopt a linear model
+\begin{equation}\label{eq:linearKu}
+\bar{D}(u) = \sum_{\ell = 1}^m \beta_\ell h_\ell(u),
+\end{equation}
+where $h_\ell(u)$ are known basis functions, and $\beta_\ell$ are the linear coefficients to be estimated. 
+
+Conveniently, the $\text{AGA}_k$ can also be expressed in terms of the $\beta_\ell$ coefficients.
+If we plug in the assumed linear model \eqref{eq:linearKu} into the
+identity \eqref{eq:avrisk_identity}, then we get
+\begin{align}
+1 - \text{AGA}_k &= (k-1)\int \bar{D}(u) u^{k-2} du
+\\&= (k-1)\int_0^1 \sum_{\ell = 1}^m \beta_\ell h_\ell(u) u^{k-2} du
+\\&= \sum_{\ell = 1}^m \beta_\ell H_{\ell,k} \label{eq:avrisk_linear}
+\end{align}
+where
+\begin{equation}
+H_{\ell,k} = (k-1) \int_0^1 h_\ell(u) u^{k-2} du.
+\end{equation}
+The constants $H_{\ell, k}$ are moments of the basis function
+$h_\ell$: hence we call this method the \emph{moment method.}  Note
+that $H_{\ell, k}$ can be precomputed numerically for any $k \geq 2$.
+
+Now, since the test accuracies $\text{ATA}_k$ are unbiased estimates of
+$\text{AGA}_{k}$, this implies that the regression
+estimate
+\[
+\hat{\beta} = \argmin_\beta \sum_{k=2}^{k_1} \left( (1 - \text{ATA}_k) - \sum_{\ell=1}^m \beta_\ell H_{\ell, k}\right)^2
+\]
+is unbiased for $\beta$. The estimate of $\text{AGA}_{k_2}$ is similarly obtained
+from \eqref{eq:avrisk_linear}, via
+\begin{equation}\label{eq:avrisk_hat}
+\widehat{\text{AGA}_{k_2}} = 1 - \sum_{\ell=1}^m \hat{\beta}_\ell H_{\ell, k_2}.
+\end{equation}
+
+\section{Face recognition example}\label{sec:extrapolation_example}
+
+We demonstrate the extrapolation of average accuracy by predicting  the accuracy of a face recognition on a large set of labels from the system's accuracy on a smaller subset. 
+
+\subsection{Data}
+From the ``Labeled Faces in the Wild'' dataset (\cite{LFWTech}), we
+selected the 1672 individuals with at least 2 face photos.  We form a
+dataset consisting of photo-label pairs $(x_j^{(i)}, y^{(i)})$
+for $i = 1,\hdots, 1672$ and $j = 1,2$ by randomly selecting 2 face
+photos for each individual. 
+
+\subsection{Classifier}
+We implement a two-step face recognition system based on a precomputed neural-network based embedding followed by a one nearest neighbor classifier.
+
+We used the OpenFace  (\cite{amos2016openface}) embedding for feature extraction.  For each photo $x$, a 128-dimensional feature vector $g(x)$ is
+obtained as follows.
+The computer vision library DLLib is used to detect landmarks in $x$, and to apply a nonlinear transformation to align
+ $x$ to a template.
+The aligned photograph is then downsampled to a $96 \times 96$ image. The downsampled image is fed into a pre-trained deep convolutional neural network to  obtain the 128-dimensional feature vector $g(x)$. More details are found in (\cite{amos2016openface}).
+
+The recognition system then works as follows.  Suppose we want to
+perform facial recognition on a subset of the individuals, $I \subset
+\{1,\hdots, 1672\}$.  Then, for all $i \in I$, we load one example-label pair, into the system, $(x_1^{(i)}, y^{(i)})$.  In
+order to identify a new photo $\vec{z}^*$, we obtain the feature
+vector $g(x^*)$, and guess the label $\hat{y}$
+with the minimal Euclidean distance between $g(y^{(i)})$ and $g(x^*)$,
+which implies a score function
+\[
+M_{y^{(i)}}(x^*) = -||g(x_1^{(i)}) - g(x^*)||^2.
+\]
+
+
+The test accuracy is assessed on the unused repeat for all individuals
+in $I$.  Note that the assumptions of our estimation method are met in
+this example because one-nearest neighbor is a marginal classifier.
+We note that $m$-nearest neighbor for $m > 1$ is not marginal.
+
+\subsection{Experimental Details}
+We treat the full data-set of $1672$ as our population of labels. In each experiment, we choose a random subset of size $k_1<1672$, for which we observe both training and test data. From this data, we will estimate $\text{AGA}_{k_2}$ for $k_2$ between $k_2 = k_1+1,...,1672$. We use $k_1 = 100,200,400,800$, with $B = 300$ repeats for each subset size.
+
+For the selected subset of size $k_1$, we can estimate the test accuracy at every $k \leq k_1$, getting the vector $(\text{ATA}_2,...,\text{ATA}_{k_1})$.
+Specifically, we use a linear
+spline basis,
+\[
+h_\ell(u) = \left[u - \frac{\ell - 1}{m}\right]_+
+\]
+for $\ell = 1,\hdots, m$.  Here we take $m = 10000$. 
+We fit the $\beta$ coefficient vector using non-negative least squares: 
+\[
+\hat{\beta} = \argmin_{\beta: \beta_\ell \geq 0} \sum_{k=2}^{k_1} \left( (1 - \text{ATA}_k) - \sum_{\ell=1}^m \beta_\ell H_{\ell, k}\right)^2
+\]
+The non-negativity constraint on the
+coefficients $\beta$, combined with the linear spline basis, ensures
+that $\bar{D}(u)$ is a monotonic and convex function on $[0,1]$. 
+
+Based on the $\beta$ coefficients, we can compute the prediction for the full dataset $\hat{AGA}_{1672}$.
+We compare the prediction to the observed accuracy on full dataset $\text{TA}_{1672}$, which approximates the ground truth.
+
+
+\begin{figure}
+\centering
+\begin{tabular}{cc}
+a & b\\
+\includegraphics[scale = 0.5]{acc_plot1.pdf} &
+\includegraphics[scale = 0.5]{acc_plot2.pdf}
+\end{tabular}
+\caption{(a) The estimated average accuracy for $k = 2,\hdots,
+  400$ given a dataset of 400 faces subsampled from Labeled Faces in
+  the Wild.  (b) Estimated average accuracy for $k > 400$ on the
+  same dataset, compared to the ground truth (average $k$-class test accuracy
+  using all 1672 classes).}
+\label{fig:lfw_extrapolation1}
+\end{figure}
+
+\subsection{Results}
+
+The extrapolation results can be seen in Figures \ref{fig:lfw_extrapolation1}  and \ref{fig:lfw_extrapolation2}. In the first, we show a extrapolation estimate for $k_1 = 400$. In the second, we see multiple instances for different values of $k_1$. As can be seen, both the accuracy as well as the variances decrease rapidly as $k_1$ increases. In general, for $k_1>400$ the paths of the different extrapolation curves are not very different. The root-mean-square errors between at $k_2=1672$ can be seen in Table [[MISSING]].
+
+\begin{figure}
+\centering
+\begin{tabular}{cc}
+\includegraphics[scale = 0.4]{sub_100.pdf} &
+\includegraphics[scale = 0.4]{sub_200.pdf} \\
+\includegraphics[scale = 0.4]{sub_400.pdf} &
+\includegraphics[scale = 0.4]{sub_800.pdf} 
+\end{tabular}
+\caption{Estimated average accuracy using subsampled datasets of size
+  $k$, compared to the ground truth (average $k$-class test accuracy
+  using all 1672 classes).}
+\label{fig:lfw_extrapolation2}
+\end{figure}
+
+\begin{table}
+\centering
+\begin{tabular}{c||c|c|c|c}
+$k_1$ & 100 & 200 & 300 & 400 \\
+MSE & 0.0844 & 0.0356 & 0.00465 & 0.000415
+\end{tabular}
+\caption{MSE on predicting $\text{TA}_{1672}$ from $\widehat{\text{AGA}_{k_1}}$}
+\end{table}
+
+\section{Discussion}
+
+\begin{itemize}
+\item Hierarchical setup
+\end{itemize}
+
+Consider approximating
+$\bar{D}(u)$ by polynomials, or some other function basis, it becomes
+relevant to consider how well $\bar{D}(u)$ can be approximated by such
+bases in realistic problems.  We see in figure \ref{fig:toy4}(c) that,
+at least in this toy problem, $\bar{D}(u)$ is well-aproximated by
+low-order polynomials.  However, the approximation becomes less
+adequate as $\rho$ increases.  We can see visually why this is the
+case: as $\rho$ increases, the curvature of $\bar{D}(u)$ near $u = 1$
+increases.  Hence, higher-degree polynomials become needed to capture
+the behavior near $u = 1$.  More generally, we observe that in cases
+where classes are relatively well-separated, it becomes necessary to
+use increasingly precise approximations in order to extrapolate the
+average risk.
+
+ We
+have found that in many simulated examples, $D(u)$ appears to be
+monotone and convex, and we have also found that including the
+monotonicity and convexity constraint in the estimation procedure
+improves performance in practical examples.
+
+
+While further work is still needed to better understand the
+performance of the proposed performance extrapolation method, both for
+marginal classifiers (which satisfy the theoretical assumptions) and
+non-marginal classifiers (which do not), the results obtained in these
+two examples are encouraging in that sense that useful predictions
+were obtained both for marginal and non-marginal classifiers.
+
+\acks{We would like to acknowledge support for XXX }
+
+\bibliography{example}
+
+\end{document}
+\section{Introduction}
+
+Probabilistic inference has become a core technology in AI,
+largely due to developments in graph-theoretic methods for the 
+representation and manipulation of complex probability 
+distributions~\citep{pearl:88}.  Whether in their guise as 
+directed graphs (Bayesian networks) or as undirected graphs (Markov 
+random fields), \emph{probabilistic graphical models} have a number 
+of virtues as representations of uncertainty and as inference engines.  
+Graphical models allow a separation between qualitative, structural
+aspects of uncertain knowledge and the quantitative, parametric aspects 
+of uncertainty...\\
+
+{\noindent \em Remainder omitted in this sample. See http://www.jmlr.org/papers/ for full paper.}
+
+% Acknowledgements should go at the end, before appendices and references
+
+
+% Manual newpage inserted to improve layout of sample file - not
+% needed in general before appendices/bibliography.
+
+\newpage
+
+\appendix
+\section*{Appendix A.}
+\label{app:theorem}
+
+% Note: in this sample, the section number is hard-coded in. Following
+% proper LaTeX conventions, it should properly be coded as a reference:
+
+%In this appendix we prove the following theorem from
+%Section~\ref{sec:textree-generalization}:
+
+In this appendix we prove the following theorem from
+Section~6.2:
+
+\noindent
+{\bf Theorem} {\it Let $u,v,w$ be discrete variables such that $v, w$ do
+not co-occur with $u$ (i.e., $u\neq0\;\Rightarrow \;v=w=0$ in a given
+dataset $\dataset$). Let $N_{v0},N_{w0}$ be the number of data points for
+which $v=0, w=0$ respectively, and let $I_{uv},I_{uw}$ be the
+respective empirical mutual information values based on the sample
+$\dataset$. Then
+\[
+	N_{v0} \;>\; N_{w0}\;\;\Rightarrow\;\;I_{uv} \;\leq\;I_{uw}
+\]
+with equality only if $u$ is identically 0.} \hfill\BlackBox
+
+\noindent
+{\bf Proof}. We use the notation:
+\[
+P_v(i) \;=\;\frac{N_v^i}{N},\;\;\;i \neq 0;\;\;\;
+P_{v0}\;\equiv\;P_v(0)\; = \;1 - \sum_{i\neq 0}P_v(i).
+\]
+These values represent the (empirical) probabilities of $v$
+taking value $i\neq 0$ and 0 respectively.  Entropies will be denoted
+by $H$. We aim to show that $\fracpartial{I_{uv}}{P_{v0}} < 0$....\\
+
+{\noindent \em Remainder omitted in this sample. See http://www.jmlr.org/papers/ for full paper.}
+
+
+\vskip 0.2in
+
+\end{document}
