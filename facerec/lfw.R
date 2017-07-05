@@ -140,3 +140,6 @@ abline(h = min(accs_full), col = "blue")
 saveRDS(accs_final, file = "lfw_sub_preds.rds")
 
 (true_acc <- min(accs_full))
+
+mses <- sapply(accs_final, function(v) mean((v - true_acc)^2))
+mses
