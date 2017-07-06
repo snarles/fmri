@@ -49,6 +49,29 @@ mc_ident_fs_curve <- function(p, sigma2, sigma2_tr, K, mc.reps = 100) {
                   ys <- mus + sqrt(sigma2) * randn(K, p)
                   mu_hats <- mus + sqrt(sigma2_tr) * randn(K, p)
                   pmat <- -pdist2(mu_hats, ys)
+                  # z_stars <- diag(pmat)
+                  # z_off1 <- pmat[cbind(1:K, (((1:K) + 2) %% K) + 1)]
+                  # z_off2 <- pmat[cbind(1:K, (((1:K) + 3) %% K) + 1)]
+                  # cov(cbind(z_stars, z_off1, z_off2))
+                  get_sub_errs(pmat, 1:K, 1:K)
+                })
+  rowMeans(mcs)
+}
+
+
+mc_ident_fs_curve_mix <- function(p, sigma2, sigma2_tr, K, mc.reps = 100) {
+  mcs <- sapply(1:mc.reps,
+                function(i) {
+                  mus <- randn(K, p)
+                  ys <- mus + sqrt(sigma2) * randn(K, p)
+                  ys[sample(K, floor(K/2)), ] <- randn(floor(K/2), p)+ 
+                    sqrt(sigma2) * randn(floor(K/2), p)
+                  mu_hats <- mus + sqrt(sigma2_tr) * randn(K, p)
+                  pmat <- -pdist2(mu_hats, ys)
+                  # z_stars <- diag(pmat)
+                  # z_off1 <- pmat[cbind(1:K, (((1:K) + 2) %% K) + 1)]
+                  # z_off2 <- pmat[cbind(1:K, (((1:K) + 3) %% K) + 1)]
+                  # cov(cbind(z_stars, z_off1, z_off2))
                   get_sub_errs(pmat, 1:K, 1:K)
                 })
   rowMeans(mcs)
@@ -106,38 +129,37 @@ mc_ident2 <- function(p, sigma2, K, mc.reps = 1000) {
 
 ## fitting the piK function
 
-mugrid <- seq(0.1, 5, 0.1)
-sigma2grid <- seq(0.1, 5, 0.1)
-length(mugrid) * length(sigma2grid)
-
-parmat <- cbind(mu = rep(mugrid, each = length(sigma2grid)),
-                sigma2 = rep(sigma2grid, length(mugrid)))
-
-nrow(parmat)
-
-t1 <- proc.time()
-par_res <- mclapply(1:nrow(parmat), function(i) {
-  mu <- parmat[i, 1]
-  sigma2 <- parmat[i, 2]
-  1-piK(K = 1:250, mc.reps = 1000, mu, sigma2)
-}, mc.cores = 2)
-proc.time() - t1
+# mugrid <- seq(0.1, 5, 0.1)
+# sigma2grid <- seq(0.1, 5, 0.1)
+# length(mugrid) * length(sigma2grid)
+# 
+# parmat <- cbind(mu = rep(mugrid, each = length(sigma2grid)),
+#                 sigma2 = rep(sigma2grid, length(mugrid)))
+# 
+# nrow(parmat)
+# 
+# t1 <- proc.time()
+# par_res <- mclapply(1:nrow(parmat), function(i) {
+#   mu <- parmat[i, 1]
+#   sigma2 <- parmat[i, 2]
+#   1-piK(K = 1:250, mc.reps = 1000, mu, sigma2)
+# }, mc.cores = 2)
+# proc.time() - t1
 
 precomputed_curves <- do.call(cbind, par_res)
 save(parmat, precomputed_curves, file = "approximation/ident_curve_precomp.rda")
+load("approximation/ident_curve_precomp.rda", verbose = TRUE)
 
 K <- 250
-k_sub <- 125
-p <- 3
-sigma2 <- 0.1
+k_sub <- 250
+p <- 50
+sigma2 <- 2.8
 mc.reps <- 100
-acs <- 1-mc_ident_fs_curve(p, sigma2, 0, K, mc.reps)
-
+acs <- 1-mc_ident_fs_curve_mix(p, sigma2, 0, K, mc.reps)
 ## find best 2-parameter fit
 dd <- colSums((precomputed_curves - acs)[1:k_sub, ]^2)
 (pars <- parmat[which.min(dd), ])
 acs_hat_2p <- precomputed_curves[, which.min(dd)]
-
 ## find best fit with sigma=1
 dd[parmat[, "sigma2"] != 1] <- Inf
 mu_fit <- parmat[which.min(dd), 1]
