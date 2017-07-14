@@ -547,10 +547,10 @@ average risk $\text{AGA}_k$ as a function of $k$.
 \centering
 \includegraphics[scale = 0.7, clip = true, trim = 0 0 0 0.5in]{illus_err_0_7.pdf}
 
-\caption{[change figure]The distribution of the classification risk
+\caption{The distribution of the generalization accuracy
   for $k = 2,3,\hdots, 10$ for the bivariate normal model with $\rho =
-  0.7$.  Circles indicate the average classificatin risk; the red
-  curve is the theoretically computed average risk.}\label{fig:toy2}
+  0.7$.  Circles indicate the average generalization accuracy $\text{AGA}_k$; the red
+  curve is the theoretically computed average accuracy.}\label{fig:toy2}
 \end{figure}
 \section{Extrapolation}
 
@@ -787,7 +787,7 @@ The red curve in figure \ref{fig:toy2} was computed using the formula
 \centering
 \begin{tabular}{cc}
 \includegraphics[scale = 0.6, clip = true, trim = 0.1in 0 0 0.8in]{illus_ufunc_0_7.pdf} &
-\includegraphics[scale = 0.65, clip = true, trim = 0 -0.3in 0 0.5in]{illus_kfunc_0_7.pdf}\\
+\includegraphics[scale = 0.65, clip = true, trim = 0.22in -0.3in 0 0.5in]{illus_kfunc_0_7.pdf}\\
 (a) & (b)
 \end{tabular}
 
@@ -811,13 +811,13 @@ as $\rho$ increases.
 \begin{figure}[h]
 \centering
 \begin{tabular}{cc}
-\includegraphics[scale = 0.45, clip = true, trim = 0.05in 0 0.2in 0.6in]{illus_rhos_avrisk.pdf} &
-\includegraphics[scale = 0.45, clip = true, trim = 0.05in 0 0.2in 0.6in]{illus_rhos_Kfunc.pdf} \\
+\includegraphics[scale = 0.45, clip = true, trim = 0.0in 0 0.2in 0.6in]{illus_rhos_avrisk.pdf} &
+\includegraphics[scale = 0.45, clip = true, trim = 0.22in 0 0.2in 0.6in]{illus_rhos_Kfunc.pdf} \\
 (a) & (b) 
 \end{tabular}
 
 \caption{
-[figure change]The (a) average risk, (b) $\bar{D}(u)$ function for $k = 2,\hdots, 7$ for the bivariate normal model with $\rho \in \{0.3, 0.5, 0.7, 0.9\}$.
+The (a) average accuracy $\text{AGA}_k$, (b) $\bar{D}(u)$ function for for the bivariate normal model with $\rho \in \{0.3, 0.5, 0.7, 0.9\}$.
 }\label{fig:toy4}
 \end{figure}
 
@@ -968,15 +968,8 @@ approximates the ground truth.
 
 \begin{figure}
 \centering
-\begin{tabular}{cc}
-a & b\\
-\includegraphics[scale = 0.5]{acc_plot1.pdf} &
 \includegraphics[scale = 0.5]{acc_plot2.pdf}
-\end{tabular}
-\caption{(a) The estimated average accuracy for $k = 2,\hdots,
-  400$ given a dataset of 400 faces subsampled from Labeled Faces in
-  the Wild.  (b) Estimated average accuracy for $k > 400$ on the
-  same dataset, compared to the ground truth (average $k$-class test accuracy
+\caption{Estimated average accuracy for $k > 400$ on the Labeled Faces in the Wild dataset, compared to the ground truth (average $k$-class test accuracy
   using all 1672 classes).}
 \label{fig:lfw_extrapolation1}
 \end{figure}
@@ -1010,10 +1003,13 @@ root-mean-square errors between at $k_2=1672$ can be seen in Table
 \begin{table}
 \centering
 \begin{tabular}{c||c|c|c|c}
-$k_1$ & 100 & 200 & 300 & 400 \\
-MSE & 0.0844 & 0.0356 & 0.00465 & 0.000415
+\hline
+$k_1$ & 100 & 200 & 300 & 400 \\\hline
+Bias & -0.090 & -0.062 & -0.016 & -0.001\\\hline
+sd & 0.277 & 0.178 & 0.066 & 0.020 \\ \hline
+RMSE & 0.291 & 0.189 & 0.068 & 0.020 \\\hline
 \end{tabular}
-\caption{MSE on predicting $\text{TA}_{1672}$ from $\widehat{\text{AGA}_{k_1}}$}\label{tab:lfw_accuracy}
+\caption{Bias, standard deviation, and RMSE on predicting $\text{TA}_{1672}$ from $\widehat{\text{AGA}_{k_1}}$}\label{tab:lfw_accuracy}
 \end{table}
 
 \section{Discussion}

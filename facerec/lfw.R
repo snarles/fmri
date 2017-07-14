@@ -141,5 +141,9 @@ saveRDS(accs_final, file = "lfw_sub_preds.rds")
 
 (true_acc <- min(accs_full))
 
+(bias <- sapply(accs_final, function(v) mean((v - true_acc))))
+(sd <- sapply(accs_final, sd))
+
+
 mses <- sapply(accs_final, function(v) mean((v - true_acc)^2))
-mses
+sqrt(mses)
