@@ -58,6 +58,17 @@ mc_ident_fs_curve <- function(p, sigma2, sigma2_tr, K, mc.reps = 100) {
   rowMeans(mcs)
 }
 
+sample_u_fs <- function(p, sigma2, sigma2_tr, mc.reps = 1000, log.p = FALSE) {
+  mus <- randn(mc.reps, p)
+  ys <- mus + sqrt(sigma2) * randn(mc.reps, p)
+  mus2 <- mus + sqrt(sigma2_tr) * randn(mc.reps, p)
+  true_dists <- rowSums((ys - mus2)^2)
+  nm_ys <- rowSums(ys^2)
+  true_dists_nmlz <- true_dists/(1 + sigma2_tr)
+  nm_ys_nmlz <- nm_ys/(1 + sigma2_tr)
+  pchisq(true_dists_nmlz, p, nm_ys_nmlz, lower.tail = FALSE, log.p = log.p)
+}
+
 
 mc_ident_fs_curve_mix <- function(p, sigma2, sigma2_tr, K, mc.reps = 100) {
   mcs <- sapply(1:mc.reps,
@@ -146,28 +157,28 @@ mc_ident2 <- function(p, sigma2, K, mc.reps = 1000) {
 # }, mc.cores = 2)
 # proc.time() - t1
 
-precomputed_curves <- do.call(cbind, par_res)
-save(parmat, precomputed_curves, file = "approximation/ident_curve_precomp.rda")
-load("approximation/ident_curve_precomp.rda", verbose = TRUE)
-
-K <- 250
-k_sub <- 250
-p <- 50
-sigma2 <- 2.8
-mc.reps <- 100
-acs <- 1-mc_ident_fs_curve_mix(p, sigma2, 0, K, mc.reps)
-## find best 2-parameter fit
-dd <- colSums((precomputed_curves - acs)[1:k_sub, ]^2)
-(pars <- parmat[which.min(dd), ])
-acs_hat_2p <- precomputed_curves[, which.min(dd)]
-## find best fit with sigma=1
-dd[parmat[, "sigma2"] != 1] <- Inf
-mu_fit <- parmat[which.min(dd), 1]
-acs_hat_1p <- precomputed_curves[, which.min(dd)]
-
-plot(1:250, acs, type = "l", ylim = c(0, 1))
-lines(acs_hat_2p, col = "blue")
-lines(acs_hat_1p, col = "red")
-abline(v = k_sub)
-legend(150, 0.5, col = c("black", "red", "blue"), lwd = 1, 
-       legend = c("empirical", "1par", "2par"))
+# precomputed_curves <- do.call(cbind, par_res)
+# save(parmat, precomputed_curves, file = "approximation/ident_curve_precomp.rda")
+# load("approximation/ident_curve_precomp.rda", verbose = TRUE)
+# 
+# K <- 250
+# k_sub <- 250
+# p <- 50
+# sigma2 <- 2.8
+# mc.reps <- 100
+# acs <- 1-mc_ident_fs_curve_mix(p, sigma2, 0, K, mc.reps)
+# ## find best 2-parameter fit
+# dd <- colSums((precomputed_curves - acs)[1:k_sub, ]^2)
+# (pars <- parmat[which.min(dd), ])
+# acs_hat_2p <- precomputed_curves[, which.min(dd)]
+# ## find best fit with sigma=1
+# dd[parmat[, "sigma2"] != 1] <- Inf
+# mu_fit <- parmat[which.min(dd), 1]
+# acs_hat_1p <- precomputed_curves[, which.min(dd)]
+# 
+# plot(1:250, acs, type = "l", ylim = c(0, 1))
+# lines(acs_hat_2p, col = "blue")
+# lines(acs_hat_1p, col = "red")
+# abline(v = k_sub)
+# legend(150, 0.5, col = c("black", "red", "blue"), lwd = 1, 
+#        legend = c("empirical", "1par", "2par"))
