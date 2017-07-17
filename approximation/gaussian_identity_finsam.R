@@ -9,7 +9,7 @@ library(lineId) ## use devtools::install('lineId')
 
 
 binmom <- function(succ, tot, k) {
-  choose(succ, k)/choose(tot, k)
+  exp(lchoose(succ, k)-lchoose(tot, k))
 }
 
 ## log 1+x
