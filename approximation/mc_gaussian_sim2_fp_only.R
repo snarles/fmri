@@ -1,3 +1,6 @@
+library(parallel)
+mcc <- 40
+
 source("approximation/gaussian_identity_finsam.R")
 source("extrapolation/ku_source.R")
 
@@ -5,8 +8,8 @@ p <- 10
 sigma2 <- 0.3
 sigma2_tr <- sigma2 ## equivalent to 1 nn
 K <- 2000
-ksubs <- 10 * 1:200
-mc.reps <- 2
+ksubs <- 50 * 1:40
+mc.reps <- 10
 
 # mus <- randn(K, p)
 # ys <- mus + sqrt(sigma2) * randn(K, p)
@@ -52,6 +55,7 @@ all_accs <- matrix(0, mc.reps, K)
 t1 <- proc.time()
 
 for (repno in 1:mc.reps) {
+  set.seed(repno)
   mus <- randn(K, p)
   ys <- mus + sqrt(sigma2) * randn(K, p)
   mu_hats <- mus + sqrt(sigma2_tr) * randn(K, p)
@@ -59,17 +63,34 @@ for (repno in 1:mc.reps) {
   accs <- 1 - resample_misclassification(pmat, 1:K, 1:K)
   all_accs[repno, ] <- accs
   
-  for (j in 1:length(ksubs)) {
+  subfun <- function(j) {
     ksub <- ksubs[j]
     pmat_sub <- pmat[1:ksub, 1:ksub]
     accs_sub <- 1 - resample_misclassification(pmat_sub, 1:ksub, 1:ksub)
+    preds <- numeric(length(basis_vecs))
     for (ind in 1:length(basis_vecs)) {
       MM <- basis_vecs[[ind]]
       bt <- nnls::nnls(MM[1:ksub, ], 1- accs_sub)
-      pred <- 1 - (MM[K, , drop = FALSE] %*% bt$x)
-      all_final_preds[repno, j, ind] <- pred
+      preds[ind] <- 1 - (MM[K, , drop = FALSE] %*% bt$x)
     }
+    preds
   }
+  
+  # for (j in 1:length(ksubs)) {
+  #   ksub <- ksubs[j]
+  #   pmat_sub <- pmat[1:ksub, 1:ksub]
+  #   accs_sub <- 1 - resample_misclassification(pmat_sub, 1:ksub, 1:ksub)
+  #   for (ind in 1:length(basis_vecs)) {
+  #     MM <- basis_vecs[[ind]]
+  #     bt <- nnls::nnls(MM[1:ksub, ], 1- accs_sub)
+  #     pred <- 1 - (MM[K, , drop = FALSE] %*% bt$x)
+  #     all_final_preds[repno, j, ind] <- pred
+  #   }
+  # }
+  
+  preds <- mclapply(1:length(ksubs), subfun, mc.cores = mcc)
+  preds2 <- do.call(rbind, preds)
+  all_final_preds[repno, , ] <- preds2
 }
 
 proc.time() - t1
