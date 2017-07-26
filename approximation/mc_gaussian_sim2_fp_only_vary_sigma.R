@@ -121,9 +121,9 @@ dev.off()
 
 pdf("approximation/fig_mcgs2fovs_02.pdf", width = 6, height = 4)
 #final_pred_err_mat <- apply(errs[, , sample(80, replace = TRUE)], c(1, 2), mean)
-matplot(sqrt(sigma2s), log(final_pred_err_mat), 
-        type = "l", lwd = 3, ylab = "log MSE", xlab = expression(sigma))
-legend(0.62, -3.7, legend = names(basis_vecs), col = 1:6, lty = 1:6, lwd =2 )
+matplot(sqrt(sigma2s), sqrt(final_pred_err_mat), 
+        type = "l", lwd = 3, ylab = "RMSE", xlab = expression(sigma))
+legend(0.62, 0.16, legend = names(basis_vecs), col = 1:6, lty = 1:6, lwd =2 )
 dev.off()
 
 #save(all_accs, errs, true_accs, all_final_preds, final_pred_err_mat, file = "approximation/mcgs2fovs.rda")

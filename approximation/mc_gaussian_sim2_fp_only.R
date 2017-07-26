@@ -102,8 +102,9 @@ final_pred_err_mat <- apply(errs, c(2, 3), mean)
 #final_pred_err_mat <- apply(errs[sample(50, replace = TRUE), , ], c(2, 3), mean)
 #load("approximation/mcgs2f.rda")
 pdf("approximation/fig_mcgs2f.pdf", width = 6, height = 4)
-matplot(ksubs, log(final_pred_err_mat), 
-        type = "l", lwd = 3, ylab = "log MSE", xlab = expression(k[1]))
+matplot(ksubs, sqrt(final_pred_err_mat), 
+        type = "l", lwd = 3, ylab = "RMSE", xlab = expression(k[1]), xlim = c(250, 2000),
+        ylim = c(0, 0.5))
 legend(1500, 1.5, legend = names(basis_vecs), col = 1:6, lty = 1:6, lwd = 3)
 dev.off()
 
