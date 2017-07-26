@@ -116,7 +116,7 @@ abline(0, 1, col = "grey", lwd = 3)
 matplot(log(final_pred_err_mat), type = "l", lwd = 3)
 legend(10, 0, legend = names(basis_vecs), col = 1:6, lty = 1:6)
 
-save(all_accs, errs, true_accs, all_final_preds, final_pred_err_mat, file = "approximation/mcgs2fovs.rds")
+save(all_accs, errs, true_accs, all_final_preds, final_pred_err_mat, file = "approximation/mcgs2fovs.rda")
 
 
 
