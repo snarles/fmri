@@ -100,10 +100,14 @@ errs <- (all_final_preds - true_accs[K])^2
 
 final_pred_err_mat <- apply(errs, c(2, 3), mean)
 #final_pred_err_mat <- apply(errs[sample(50, replace = TRUE), , ], c(2, 3), mean)
-matplot(log(final_pred_err_mat), type = "l", lwd = 3)
-legend(10, 0, legend = names(basis_vecs), col = 1:6, lty = 1:6)
+#load("approximation/mcgs2f.rda")
+pdf("approximation/fig_mcgs2f.pdf", width = 6, height = 4)
+matplot(ksubs, log(final_pred_err_mat), 
+        type = "l", lwd = 3, ylab = "log MSE", xlab = expression(k[1]))
+legend(1500, 1.5, legend = names(basis_vecs), col = 1:6, lty = 1:6, lwd = 3)
+dev.off()
 
-save(all_accs, errs, true_accs, final_pred_err_mat, file = "approximation/mcgs2f.rda")
+#save(all_accs, errs, true_accs, final_pred_err_mat, file = "approximation/mcgs2f.rda")
 
 
 
