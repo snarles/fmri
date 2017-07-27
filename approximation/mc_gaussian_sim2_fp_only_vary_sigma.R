@@ -109,15 +109,7 @@ errs <- (all_final_preds - true_accs[, K])^2
 final_pred_err_mat <- apply(errs, c(1, 2), mean)
 
 load("approximation/mcgs2fovs.rda")
-pred_mat <- apply(all_final_preds, c(1, 2), mean)
 
-pdf("approximation/fig_mcgs2fovs_01.pdf")
-matplot(true_accs[, K], pred_mat, type = "l", xlim = c(0, 1), ylim = c(0, 1), lwd = 3, 
-        xlab = "true accuracy", ylab = "predicted acc", asp = 1)
-abline(0, 1, col = "grey", lwd = 3)
-matplot(true_accs[, K], pred_mat, type = "l", xlim = c(0, 1), ylim = c(0, 1), lwd = 3, add = TRUE)
-legend(0.6, 0.5, legend = names(basis_vecs), col = 1:6, lty = 1:6, lwd = 3)
-dev.off()
 
 pdf("approximation/fig_mcgs2fovs_02.pdf", width = 6, height = 4)
 source("approximation/mcgs2_colscheme.R")
@@ -126,6 +118,31 @@ matplot(sqrt(sigma2s), sqrt(final_pred_err_mat),
         type = "l", lwd = 3, ylab = "RMSE", xlab = expression(sigma), col = cols, lty = ltys)
 legend(0.62, 0.15, legend = names(basis_vecs), col = cols, lty = ltys, lwd =2 )
 dev.off()
+
+
+dim(final_pred_err_mat)
+(oo <- order(colMeans((final_pred_err_mat))))
+nms[oo]
+
+pred_mat <- apply(all_final_preds, c(1, 2), mean)
+l_mat <- apply(all_final_preds, c(1, 2), quantile, 0.1)
+u_mat <- apply(all_final_preds, c(1, 2), quantile, 0.9)
+
+pdf("approximation/fig_mcgs2fovs_01.pdf")
+plot(NA, NA, ylim = c(0, 1), xlim = c(0, 1), asp = 1, xlab = "true accuracy", ylab = "predicted acc")
+abline(0, 1, col = "black", lwd = 3)
+
+
+matplot(true_accs[, K], pred_mat, type = "l", col = cols, lty = ltys, add = TRUE, lwd = 3)
+#matplot(true_accs[, K], l_mat, type = "l", col = cols, lty = ltys, add = TRUE, lwd = 3)
+#matplot(true_accs[, K], u_mat, type = "l", col = cols, lty = ltys, add = TRUE, lwd = 3)
+
+matplot(true_accs[, K], pred_mat, type = "l", xlim = c(0, 1), ylim = c(0, 1), lwd = 3, 
+        xlab = "true accuracy", ylab = "predicted acc", asp = 1)
+matplot(true_accs[, K], pred_mat, type = "l", xlim = c(0, 1), ylim = c(0, 1), lwd = 3, add = TRUE)
+legend(0.6, 0.5, legend = names(basis_vecs), col = 1:6, lty = 1:6, lwd = 3)
+dev.off()
+
 
 #save(all_accs, errs, true_accs, all_final_preds, final_pred_err_mat, file = "approximation/mcgs2fovs.rda")
 
