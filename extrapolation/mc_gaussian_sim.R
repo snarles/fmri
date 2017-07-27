@@ -45,7 +45,7 @@ for (si in 1:length(sigma2s)) {
 #hist(exp(us))
 #hist(us)
 #plot(ecdf(us))
-pdf("approximation/fig_mgs2.pdf")
+pdf("approximation/fig_mgs2.pdf", width = 6, height = 4)
 plot(ecdf(exp(usS[[1]])), xlim = c(0,1), main = "", xlab = "u", ylab = "D(u)", col = 1)
 for (i in 2:length(sigma2s)) {
   plot(ecdf(exp(usS[[i]])), col = i, lty = i, add = TRUE)

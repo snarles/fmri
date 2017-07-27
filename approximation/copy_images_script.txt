@@ -1,0 +1,4 @@
+cp approximation/fig_mcgs2f.pdf info_theory_paper/extrapolation_simple/
+cp approximation/fig_mgs2.pdf info_theory_paper/extrapolation_simple/
+cp approximation/fig_mcgs2fovs_02.pdf info_theory_paper/extrapolation_simple/
+cp approximation/mcgs2_oneplot.pdf info_theory_paper/extrapolation_simple/
