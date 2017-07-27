@@ -54,7 +54,12 @@ knts <- seq(0, 1, length.out = nsplines + 2)
 knts <- rev(1 - knts[-c(1, nsplines + 2)]^2)
 MM_4_sq <- spline1_moments(knts, 1:K)
 
-basis_vecs <- list(mm2 = MM_2, mm2sq =MM_2_sq, mm3 = MM_3, mm3sq = MM_3_sq, mm4 = MM_4, mm4sq = MM_4_sq)
+basis_vecs <- list(lin2 = MM_2, 
+                   lin2q =MM_2_sq, 
+                   lin3 = MM_3, 
+                   lin3q = MM_3_sq, 
+                   lin4 = MM_4, 
+                   lin4q = MM_4_sq)
 
 t1 <- proc.time()
 repno <- 1
@@ -76,7 +81,18 @@ for (ind in 1:length(basis_vecs)) {
 }
 proc.time() - t1
 
-matplot(1:K, t(preds), type = "l")
-lines(1:K, true_accs, lwd = 3)
 
 save(true_accs, preds, file = "approximation/mcgs2_oneplot.rda")
+
+pdf("approximation/mcgs2_oneplot.pdf", height = 4, width = 6)
+orig_cols <- hsv(1:3/3,
+                 rep(1, 3),
+                 0.3 + 0.7 * (1:3/3))
+cols <- rep(orig_cols, each = 2)
+ltys <- rep(c(2, 3), 3)
+
+plot(1:K, true_accs, type = 'l', lwd = 3, xlab = "k", ylab = "AGA", ylim = c(0, 1))
+matplot(ksub:K, t(preds[, ksub:K]), type = "l", col = cols, lty = ltys, lwd = 2, add = TRUE)
+abline(v = ksub, lty = 2)
+legend(1000, 1, c("true", names(basis_vecs)), col = c("black", cols), lty = c(1, ltys), lwd = 2)
+dev.off()
