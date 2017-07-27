@@ -48,7 +48,12 @@ knts <- seq(0, 1, length.out = nsplines + 2)
 knts <- rev(1 - knts[-c(1, nsplines + 2)]^2)
 MM_4_sq <- spline1_moments(knts, 1:K)
 
-basis_vecs <- list(mm2 = MM_2, mm2sq =MM_2_sq, mm3 = MM_3, mm3sq = MM_3_sq, mm4 = MM_4, mm4sq = MM_4_sq)
+basis_vecs <- list(lin2 = MM_2, 
+                   lin2q =MM_2_sq, 
+                   lin3 = MM_3, 
+                   lin3q = MM_3_sq, 
+                   lin4 = MM_4, 
+                   lin4q = MM_4_sq)
 all_final_preds <- array(0, dim = c(mc.reps, length(ksubs), length(basis_vecs)))
 all_accs <- matrix(0, mc.reps, K)
 
@@ -102,10 +107,11 @@ final_pred_err_mat <- apply(errs, c(2, 3), mean)
 #final_pred_err_mat <- apply(errs[sample(50, replace = TRUE), , ], c(2, 3), mean)
 #load("approximation/mcgs2f.rda")
 pdf("approximation/fig_mcgs2f.pdf", width = 6, height = 4)
+source("approximation/mcgs2_colscheme.R")
 matplot(ksubs, sqrt(final_pred_err_mat), 
-        type = "l", lwd = 3, ylab = "RMSE", xlab = expression(k[1]), xlim = c(250, 2000),
-        ylim = c(0, 0.5))
-legend(1500, 1.5, legend = names(basis_vecs), col = 1:6, lty = 1:6, lwd = 3)
+        type = "l", ylab = "RMSE", xlab = expression(k[1]), xlim = c(250, 2000),
+        ylim = c(0, 0.5), col = cols, lty = ltys, lwd = 3)
+legend(1500, 0.5, legend = nms, col = cols, lty = ltys, lwd = 3)
 dev.off()
 
 #save(all_accs, errs, true_accs, final_pred_err_mat, file = "approximation/mcgs2f.rda")

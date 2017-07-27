@@ -82,17 +82,13 @@ for (ind in 1:length(basis_vecs)) {
 proc.time() - t1
 
 
-save(true_accs, preds, file = "approximation/mcgs2_oneplot.rda")
+#save(true_accs, preds, file = "approximation/mcgs2_oneplot.rda")
+#load("approximation/mcgs2_oneplot.rda")
 
 pdf("approximation/mcgs2_oneplot.pdf", height = 4, width = 6)
-orig_cols <- hsv(1:3/3,
-                 rep(1, 3),
-                 0.3 + 0.7 * (1:3/3))
-cols <- rep(orig_cols, each = 2)
-ltys <- rep(c(2, 3), 3)
-
+source("approximation/mcgs2_colscheme.R")
 plot(1:K, true_accs, type = 'l', lwd = 3, xlab = "k", ylab = "AGA", ylim = c(0, 1))
 matplot(ksub:K, t(preds[, ksub:K]), type = "l", col = cols, lty = ltys, lwd = 2, add = TRUE)
 abline(v = ksub, lty = 2)
-legend(1000, 1, c("true", names(basis_vecs)), col = c("black", cols), lty = c(1, ltys), lwd = 2)
+legend(1000, 1, c("true", nms), col = c("black", cols), lty = c(1, ltys), lwd = 2)
 dev.off()

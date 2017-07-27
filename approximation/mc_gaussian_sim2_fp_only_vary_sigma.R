@@ -120,10 +120,11 @@ legend(0.6, 0.5, legend = names(basis_vecs), col = 1:6, lty = 1:6, lwd = 3)
 dev.off()
 
 pdf("approximation/fig_mcgs2fovs_02.pdf", width = 6, height = 4)
+source("approximation/mcgs2_colscheme.R")
 #final_pred_err_mat <- apply(errs[, , sample(80, replace = TRUE)], c(1, 2), mean)
 matplot(sqrt(sigma2s), sqrt(final_pred_err_mat), 
-        type = "l", lwd = 3, ylab = "RMSE", xlab = expression(sigma))
-legend(0.62, 0.16, legend = names(basis_vecs), col = 1:6, lty = 1:6, lwd =2 )
+        type = "l", lwd = 3, ylab = "RMSE", xlab = expression(sigma), col = cols, lty = ltys)
+legend(0.62, 0.15, legend = names(basis_vecs), col = cols, lty = ltys, lwd =2 )
 dev.off()
 
 #save(all_accs, errs, true_accs, all_final_preds, final_pred_err_mat, file = "approximation/mcgs2fovs.rda")
