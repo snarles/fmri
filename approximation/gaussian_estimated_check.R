@@ -17,7 +17,7 @@ TR2 <- function(a) sum(diag(a %*% a))
 mc.reps <- 1e2
 
 cc <- 1
-p <- 20; r <- 100; K <- 3
+p <- 20; r <- 10; K <- 3
 Omega <- 0.5 * cov(randn(10*p, p)) +  p * eye(p)
 Omega <- Omega * TR(solve(Omega))/cc
 #Omega <- eye(p) * p/cc
@@ -28,8 +28,10 @@ OmegaH <- cov(mvrnorm(K * r, rep(0, p), Omega))
 XiH <- OmegaH/r
 f2(Omega, OmegaH)
 
-A <- solve(eye(p) + OmegaH - solve(eye(p) + XiH))
-B <- solve(eye(p) + XiH)
+#A <- solve(eye(p) + OmegaH - solve(eye(p) + XiH))
+A <- eye(p)
+#B <- solve(eye(p) + XiH)
+B <- eye(p)
 
 p <- dim(Omega)[1]
 
