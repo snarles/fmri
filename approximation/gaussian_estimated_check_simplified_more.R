@@ -23,7 +23,8 @@ Omega <- Omega * TR(solve(Omega))/cc
 #Omega <- eye(p) * p/cc
 c(TR(solve(Omega)), TR2(solve(Omega)))
 #Xi <- Omega/r
-Xi <-  0.5 * cov(randn(10*p, p)) +  p * eye(p)
+alph <- 1/2
+Xi <-  Omega * alph
 
 p <- dim(Omega)[1]
 
@@ -53,6 +54,13 @@ dd <- 2 * TR2(2*eye(p) + Omega +  Xi)
 ee <- 2 * TR2(eye(p) + Omega)
 m <- -aa/sqrt(dd- ee)
 v <- (bb + ee - 2 * cc)/(dd - ee)
+
+tr1 <- TR(Omega)
+tr2 <- TR2(Omega)
+m_sp <- 2*p/sqrt(2 * (3*p + (alph^2 + 2*alph)*tr2 + (2 + 4*alph)*tr1))
+v_sp <- (p + (alph^2 + 2*alph)*tr2 + 2*tr1)/(3*p + (alph^2 + 2*alph)*tr2 + (2 + 4*alph)*tr1)
+c(m_sp, m)
+c(v_sp, v)
 
 dim(nms_s)
 emp_m <- colMeans(nms_s)
