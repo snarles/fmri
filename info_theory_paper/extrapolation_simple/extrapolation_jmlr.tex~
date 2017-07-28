@@ -106,14 +106,14 @@ Multiclass classification
 \end{keywords}
 \section{Introduction}\label{sec:recog_tasks}
 
-Many machine learning tasks are interested in recognizing or
-identifying an individual instance within a large set of possible
-candidates. These problems are usually modeled as multi-class
-classification problems, with a large and possibly complex label
-set. Leading examples include detecting the speaker from his voice
-patterns \citep{togneri2011overview}, identifying the author from her
-written text \citep{stamatatos2014overview}, or labeling the object
-category from its image
+Multi-class classification is often applied to problems with large and
+complex label sets.  [[These large multi-class problems are
+    encountered when there exists a large domain of objects or
+    categories to be recognized from data.]]  Leading examples include
+detecting the speaker from his voice patterns
+\citep{togneri2011overview}, identifying the author from her written
+text \citep{stamatatos2014overview}, or labeling the object category
+from its image
 \citep{duygulu2002object,deng2010does,oquab2014learning}.  In all
 these examples, the algorithm observes an input $x$, and uses the
 classifier function $h$ to guess the label $y$ from a large label set
@@ -121,16 +121,16 @@ $\mathcal{S}$.
 
 There are multiple practical challenges in developing recognition
 systems for large label sets. Collecting high quality training data is
-perhaps the main obstacle, as the costs scale with the number of
-classes.  It can be affordable to first collect data for a small set
-of classes, even if the long-term goal is to generalize to a larger
-set.  Furthermore, classifier development can be accelerated by
-training first on fewer classes, as each training cycle may require
-substantially less resources.  Indeed, due to interest in how
-small-set performance generalizes to larger sets, such comparisons can
-found in the literature \citep{oquab2014learning, griffin2007caltech}.
-A natural question is how does changing the size of the label set
-affect the classification accuracy?
+perhaps the main obstacle: for a specific system, it is more
+affordable to collect data on a small set of classes first, even if
+the long-term goal is to generalize to large sets.  Furthermore, the
+classifier development stage can also be accelerated by training first
+on small sets of classes, because each training cycle may require
+substantially less resources.  Indeed, comparisons studying how
+small-set performance generalizes to larger-set performance can found
+in the literature \citep{oquab2014learning, griffin2007caltech}.  [[A
+    natural question, then, is how does changing the size of the label
+    set affects the classification accuracy?]]
 
 Technically, we consider a pair of classification problems on finite
 label sets: a source task with label set $\mathcal{S}_{k_1}$ of size
@@ -144,11 +144,11 @@ accuracy for label set $\mathcal{S}_k$ as
 \text{GA}_k = \Pr[h^{(k)}(X^*) = Y^*].
 \end{equation}
 The problem of \emph{performance extrapolation} is the following:
-using data from only the source task $\mathcal{S}_{k_1}$, 
-predict the accuracy for a target task with a larger unobserved 
-label set $\mathcal{S}_{k_2}$.
+using data from only the source task $\mathcal{S}_{k_1}$, can one
+predict the accuracy for a target task with a larger label set
+$\mathcal{S}_{k_2}$?
 
-A natural use case for performance extrapolation would be in the
+A natural use case for this accuracy prediction would be in the
 deployment of a facial recognition system.  Suppose a system was
 developed in the lab on a database of $k_1$ individuals. Clients would
 like to deploy this system on a new larger set of $k_2$
@@ -181,12 +181,12 @@ population.  Not only does the assumption of randomness capture the
 ambiguity of actual label sets, but it also provides a powerful
 formalism for answering the question of how to extrapolate.
 Furthermore, we assume that both $\mathcal{S}_{k_1}$ and
-$\mathcal{S}_{k_2}$ are independent identically distributed (i.i.d.)
-samples from a population (or distribution) of labels $ \pi$, which is
-defined on the label space $\mathcal{Y}$.  Since the label set is
-random, the generalization accuracy of a given classifier becomes a
-random variable.  Performance extrapolation then becomes the problem
-of estimating the average generalization accuracy $\text{AGA}_k$ of an
+$\mathcal{S}_{k_2}$ are i.i.d. samples from a population (or
+distribution) of labels $ \pi$, which is defined on the label space
+$\mathcal{Y}$.  Since the label set is random, the generalization
+accuracy of a given classifier becomes a random variable.  We can
+formalize the problem of performance extrapolation as the problem of
+estimating the average generalization accuracy $\text{AGA}_k$ of an
 i.i.d. label set $\mathcal{S}_k$ of size $k$.  The condition of
 i.i.d. sampling of labels ensures that the separation of labels in a
 random set $\mathcal{S}_{k_2}$ can be inferred by looking at the
@@ -199,70 +199,74 @@ conditioning on one class at a time.
 
 Our paper presents two main contributions.  The first is a formula for
 calculating the $k$-class average accuracy of a marginal classifier.
-The only unknown quantity in the formula is a function ${D}$ which
+The only unknown quantity in the formula is a function $\bar{D}$ which
 is determined by properties of the data distribution and the
 classifier.  The second is a method for extrapolating the average
 accuracy curve from $k_1$-class data to a larger number of classes.
-The method is based on estimating the unknown function ${D}$, and
+The method is based on estimating the unknown function $\bar{D}$, and
 under certain conditions it has the property of being an unbiased
 estimator of the average accuracy.
 
 The paper is organized as follows.  In the rest of this section, we
 discuss related work.  The framework of randomized classification is
-introduced in Section \ref{sec:rc_motivation}, and there we also
-introduce a toy example which is revisited throughout the
-paper. Section \ref{sec:extrapolation} develops our theory of
-extrapolation, and Section \ref{sec:extrapolation_estimation} we
-suggest an estimation method. In Section
-\ref{sec:extrapolation_example}, we demonstrate our method on a facial
+introduced in Section 2, and there we also introduce a toy example
+which is revisited throughout the paper. Section 3 contains our theory
+of extrapolation, and section 4 introduces our proposed estimation
+method.  In Section 5, we demonstrate our method on a facial
 recognition problem, making use of the OpenFace feature extraction
-network \cite{amos2016openface}. In Section \ref{sec:discussion} we
-discuss modeling choices and limitations of our theory, as well as
-potential extensions.
+network \cite{amos2016openface}.
+
+
 
 \subsection{Related work}
 
-Most existing works on classification for large label sets deal with the
+Existing work on classification for large label sets deals with the
 computational challenges of jointly optimizing the many parameters
-required for these models: \citep{crammer2001algorithmic,
-  lee2004multicategory, weston1999support} are tied to a
-specific algorithm for classification, whereas \cite{gupta2014training}
+required for these models \citep{crammer2001algorithmic,
+  lee2004multicategory, weston1999support}: these works are tied to a
+specific algorithm for classification.  \cite{gupta2014training}
 present a method for estimating the accuracy of a classifier which can
 be used to improve performance for general classifiers.
 
-Linking performance between two different but related classification
-tasks can be considered an instance of transfer learning
-\citep{pan2010survey}. Under \citeauthor{pan2010survey}'s terminology,
-our setup is an example of multi-task learning, because the source
-task has labeled data, which is used to predict performance on a
-target task that also has labeled data.  Examples of transfer learning
-from one label set to another include \cite{oquab2014learning},
-\cite{donahue2014decaf}, \cite{sharif2014cnn}.
+Our work deals more with the question of how to link performance
+between two different but related classification tasks, which falls
+under the subject of transfer learning \citep{pan2010survey}.  The
+transfer learning problem we study is one where the source task has
+labeled data for label set $\mathcal{S}_{k_1}$, and where we want to
+use the first task to predict our performance on a target task which
+has labeled data for $\mathcal{S}_{k_2}$.  Under Pan and Wang's
+terminology, our setup is an example of multi-task learning.  Examples
+of transfer learning from one label set to another include
+\cite{oquab2014learning}, \cite{donahue2014decaf},
+\cite{sharif2014cnn}.
 
-An example that deals with extrapolation of classification error to a
-larger number of classes can be found in \cite{Kay2008a}. They tested
-a model for classifying natural images based on a subject's fMRI brain
-scan, achieving over 0.75 accuracy of classification on a set of $k_1
-= 1000$ natural stimuli. From these results, they estimated the
-maximum size of the stimuli set before the model accuracy drops below
-0.10. Specifically, they estimated the density function of
-incorrect-label scores for each example in the test dataset, and then
-computed the probability of correct classification assuming that
-future labels were drawn from the estimated density.  However, as we
-will discuss, their method suffers from bios due to failing to account
-for the error in the estimated density.
+There do exist instances in the literature of the extrapolation of
+classification error for a larger number of classes, but we are aware
+of no methods that are theoretically justified.  \cite{Kay2008a}
+tested a model for classifying natural images based on a subject's
+fMRI brain scan, achieving over 0.75 accuracy of classification on a
+set of $k_1 = 1750$ natural stimuli and fit an exponential model to
+the curve in order to determine that it would take a hypothetical set
+of size $k_2 = 10^{9.5}$ before the accuracy of their model drops
+below 0.10.  However, we are aware of no theoretical backing for an
+exponential extrapolation.
 
 The theoretical framework we adopt is one where there exists a family
-of classification problems with increasing number of classes. This
-framework can be traced back to \cite{Shannon1948}, who considered the
-error rate of a random codebook, which is a special case of randomized
-classification. More recently, a number of authors have considered the
-problem of high-dimensional feature selection for multiclass
-classification with a large number of classes \citep{pan2016ultrahigh,
+of classification problems with increasing number of classes.  We are
+far from the first to consider such a framework: Shannon's
+foundational paper on information theory \citep{Shannon1948}
+considered the error rate of a random codebook, which is a special
+case of the randomized classification setup that we study.  More
+recently, a number of authors have considered the problem of
+high-dimensional feature selection for multiclass classification with
+a large number of classes \citep{pan2016ultrahigh,
   abramovich2015feature, davis2011bayesian}.  All of these works
-assume specific distributional models for classification compared to
-our more general setup. However, we do not deal with the problem of
-feature selection.
+assume specific distributional models for classification.  In
+contrast, the setting we study is more general; however, we do not
+deal with the problem of feature selection.
+
+
+
 
 \section{Randomized classification}\label{sec:rc_motivation}
 
@@ -333,7 +337,7 @@ previous line are identical.  [The definition of average
 \begin{figure}[h]
 \centering
 \includegraphics[scale = 0.3]{average_risk.png}
-\caption{\textbf{Average generalization accuracy:} A diagram of the random quantities underlying the average generalization accuracy for $k$ labels ($\text{AGA}_k$). At the training stage (left), a set of $k$ labels $\mathcal{S}$ is sampled from the prior $\pi$, and score functions are trained from examples for these classes. At the test stage (right), one true class $Y^*$ is sampled uniformly from $\mathcal{S}$, as well as a test example $X^*$. $\text{AGA}_k$ measures the expected accuracy over these random variables.}\label{fig:average_risk}
+\caption{Average generalization accuracy}\label{fig:average_risk}
 \end{figure}
 
 \subsubsection{Marginal classifier}
@@ -361,10 +365,7 @@ a marginal classifier is illustrated in figure
 \begin{figure}[h]
 \centering
 \includegraphics[scale = 0.4]{classification_rule.png}
-\caption{\textbf{Classification rule:} Top: Score functions for three classes for a one-dimensional example space. Bottom: The classification rule chooses between $y^{(1)},y^{(2)}$ or $y^{(3)}$ by choosing the maximal score function. 
-%A classifier is marginal if each score function does not depend on labels or training samples for other classes. 
-}
-\label{fig:classification_rule}
+\caption{Classification rule}\label{fig:classification_rule}
 \end{figure}
 
 The \emph{marginal} property allows us to prove
@@ -518,10 +519,10 @@ M_{y^{(i)}}(x) = \log(p(x|y^{(i)})) = -\frac{(x - \rho y)^2}{2(1-\rho^2)}  + \te
 (a) & (b)
 \end{tabular}
 
-\caption{\textbf{Toy example:}
+\caption{
 (a) The joint distribution of $(X, Y)$ is bivariate normal with correlation $\rho = 0.7$.
 (b) A typical classification problem instance from the bivariate normal model with $k = 3$ classes.
-Top: the conditional density of $X$ given label $Y$, for $Y = \{y^{(1)}, y^{(2)}, y^{(3)}\}$.
+Top: the conditional density of $X$ given label $Y$, for $Y = \{y_1, y_2, y_3\}$.
 Bottom: the Bayes classification regions for the three classes.}\label{fig:toy1}
 \end{figure}
 
@@ -546,34 +547,33 @@ average risk $\text{AGA}_k$ as a function of $k$.
 \centering
 \includegraphics[scale = 0.7, clip = true, trim = 0 0 0 0.5in]{illus_err_0_7.pdf}
 
-\caption{\textbf{Generalization accuracy for toy example:} The distribution of the generalization accuracy
+\caption{The distribution of the generalization accuracy
   for $k = 2,3,\hdots, 10$ for the bivariate normal model with $\rho =
   0.7$.  Circles indicate the average generalization accuracy $\text{AGA}_k$; the red
   curve is the theoretically computed average accuracy.}\label{fig:toy2}
 \end{figure}
 \section{Extrapolation}
-\label{sec:extrapolation}
 
 The section is organized as follows.  We begin by introducing an
 explicit formula for the average accuracy $\text{AGA}_{k}$.  The
 formula reveals that $\text{AGA}_{k}$ is determined by moments of a
-one-dimensional function ${D}(u)$.  Through this formula,
+one-dimensional function $\bar{D}(u)$.  Through this formula,
 therefore, we can infer through subsample accuracies estimates of
-${D}(u)$.  These estimates allow us to extrapolate the average
+$\bar{D}(u)$.  These estimates allow us to extrapolate the average
 generalization accuracy to an arbitrary number of labels.
 
 The result of our analysis is to expose the average accuracy
-$\text{AGA}_{k}$ as the weighted average of a function ${D}(u)$,
-where ${D}(u)$ is independent of $k$, and where $k$ only changes
+$\text{AGA}_{k}$ as the weighted average of a function $\bar{D}(u)$,
+where $\bar{D}(u)$ is independent of $k$, and where $k$ only changes
 the weighting.  The result is stated as follows.
 
 \begin{theorem}\label{theorem:avrisk_identity}
 Suppose $\pi$, $\{F_y\}_{y \in \mathcal{Y}}$ and score functions $M_y$
 satisfy the tie-breaking condition.  Then, there exists a cumulative
-distribution function ${D}(u)$ defined on the interval $[0,1]$
+distribution function $\bar{D}(u)$ defined on the interval $[0,1]$
 such that
 \begin{equation}\label{eq:avrisk_identity}
-\text{AGA}_{k} = 1 - (k-1) \int {D}(u) u^{k-2} du.
+\text{AGA}_{k} = 1 - (k-1) \int \bar{D}(u) u^{k-2} du.
 \end{equation}
 \end{theorem}
 
@@ -591,9 +591,7 @@ noise $\epsilon$ to the function $\mathcal{M}$.
 
 \subsection{Analysis of average accuracy}
 
-For the following discussion, we often consider a random label with
-its associated score function and example vector. Explicitly, this
-sampling can be written:
+For the following discussion, we often consider a random label with its associated score function and example vector. Explicitly, this sampling can be written:
 \[Y \sim \pi,\, M_{Y}|Y \sim \nu_{Y},\, X|Y \sim F_{Y}. \]
 %\[Y^* \sim \pi,\, M_{Y^*}|Y^* \sim \nu_{Y^*},\, X^*|Y^* \sim F_{Y^*},\, \]
 %\[Y' \sim \pi,\, M_{Y'}|Y' \sim \nu_{Y'}\, X'|Y' \sim F_{Y'},\, \]
@@ -602,7 +600,7 @@ triplets with independent and identical distributions. Specifically,
 $X^*$ will typically note the test example, and therefore $Y^*$ the
 true label and $M_{Y^*}$ its score function.
 
-The function ${D}$ is related to a favorability
+The function $\bar{D}$ is related to a favorability
 function. Favorability measures the probability that the score for the
 example $x^*$ is going to be maximized by the score function $m_y$,
 compared to a random competitor $M_{Y'}$.  Formally, we write:
@@ -666,7 +664,7 @@ U^* = U_{X^*}(M_{Y^*}) = \Pr[M_{Y^*}(X^*) > M'_{Y'}(X^*)|Y^*,M_{Y^*},X^*].
 The distribution of $U^*$ will depend on $\pi$, $F_y$ and $\nu_y$, and
 generally cannot be written in a closed form.  However, this
 distribution is central to our analysis--indeed, we will see that the
-function ${D}$ appearing in theorem \ref{theorem:avrisk_identity}
+function $\bar{D}$ appearing in theorem \ref{theorem:avrisk_identity}
 is defined as the cumulative distribution function of $U^*$.
 
 The special case of $k=2$ shows the relation between the distribution
@@ -686,10 +684,10 @@ x^*$, we get
 Here, the conditional probability inside the expectation is the
 correct-label favorability.  Therefore,
 \[
-\text{AGA}_2 = \E[U^*] = \int {D}(u) du,
+\text{AGA}_2 = \E[U^*] = \int \bar{D}(u) du,
 \]
-where ${D}(u)$ is the cumulative distribution function of $U^*$,
-${D}(u) = \Pr[U^* \leq u]$.  Theorem \ref{theorem:avrisk_identity}
+where $\bar{D}(u)$ is the cumulative distribution function of $U^*$,
+$\bar{D}(u) = \Pr[U^* \leq u]$.  Theorem \ref{theorem:avrisk_identity}
 extends this to general $k$; we now give the proof.\newline
 
 
@@ -732,24 +730,24 @@ Consequently,
 \end{align*}
 Or equivalently,
 \[
-\text{AGA}_k = 1 - (k-1) \int {D}(u) u^{k-2} du.
+\text{AGA}_k = 1 - (k-1) \int \bar{D}(u) u^{k-2} du.
 \]
-where ${D}(u)$ denotes the cumulative distribution function of
+where $\bar{D}(u)$ denotes the cumulative distribution function of
 $U^*$ on $[0,1]$:
 \begin{equation}\label{eq:Kbar}
-{D}(u) = \Pr[U_{X^*}(M_{Y^*}) \leq u].
+\bar{D}(u) = \Pr[U_{X^*}(M_{Y^*}) \leq u].
 \end{equation}
 
 $\Box$.
 
 
 Theorem \ref{theorem:avrisk_identity} expresses the average accuracy
-as a weighted integral of the function ${D}(u)$.  Having this
+as a weighted integral of the function $\bar{D}(u)$.  Having this
 theoretical result allows us to understand how the expected $k$-class
 risk scales with $k$ in problems where all the relevant densities are
 known.  However, applying this result in practice to estimate
 $\text{AGA}_k$ requires some means of estimating the unknown function
-${D}$--which we discuss in the section ?.
+$\bar{D}$--which we discuss in the section ?.
 
 \subsection{Favorability and average accuracy for the toy example}
 
@@ -778,11 +776,11 @@ N(0,1)$ to exceed $Y = y$.
 
 Using the formula above, we can calculate the correct-label
 favorability $U^* = U_{X^*}(M_{Y^*})$ and its cumulative distribution
-function ${D}(u)$.  The function ${D}$ is illustrated in figure
-\ref{fig:toy3}(b) for the current example with $\rho = 0.7$.  The red
-curve in figure \ref{fig:toy2} was computed using the formula
+function $\bar{D}(u)$.  The function $\bar{D}$ is illustrated in
+figure \ref{fig:toy3}(b) for the current example with $\rho = 0.7$.
+The red curve in figure \ref{fig:toy2} was computed using the formula
 \[
-\text{AGA}_k = 1-(k-1) \int {D}(u) u^{k-2} du.
+\text{AGA}_k = 1-(k-1) \int \bar{D}(u) u^{k-2} du.
 \]
 
 \begin{figure}[h]
@@ -793,20 +791,20 @@ curve in figure \ref{fig:toy2} was computed using the formula
 (a) & (b)
 \end{tabular}
 
-\caption{\textbf{Favorability for toy example:}
+\caption{
 (a) The level curves of the function $U_{x^*}(m_y)$ in the bivariate normal model with $\rho = 0.7$.
-(b) The function ${D}(u)$ gives the cumulative distribution function of the random variable $U_{X^*}(M_Y)$.}\label{fig:toy3}
+(b) The function $\bar{D}(u)$, which gives the cumulative distribution function of the random variable $U_{X^*}(M_Y)$.}\label{fig:toy3}
 \end{figure}
 
 It is illuminating to consider how the average accuracy curves and the
-${D}(u)$ functions vary as we change the parameter $\rho$.  Higher
-correlations $\rho$ lead to higher accuracy, as seen in figure
-\ref{fig:toy4}(a), where the accuracy curves are shifted upward as
+$\bar{D}(u)$ functions vary as we change the parameter $\rho$.  Higher
+correlations $\rho$ lead to higher accuracy, as seen in
+figure \ref{fig:toy4}(a), where the accuracy curves are shifted upward as
 $\rho$ increases from 0.3 to 0.9.  The favorability $U_{x^*}(m_y)$
 tends to be higher on average as well, which leads to lower values of
-the cumulative distribution function--as we see in figure
-\ref{fig:toy4}(b), where the function ${D}(u)$ becomes smaller as
-$\rho$ increases.
+the cumulative distribution function--as we see in
+figure \ref{fig:toy4}(b), where the function $\bar{D}(u)$ becomes smaller
+as $\rho$ increases.
 
 
 
@@ -818,25 +816,22 @@ $\rho$ increases.
 (a) & (b) 
 \end{tabular}
 
-\caption{\textbf{Average accuracy with different $\rho$'s:}
-The (a) average accuracy $\text{AGA}_k$, (b) ${D}(u)$ function for for the bivariate normal model with $\rho \in \{0.3, 0.5, 0.7, 0.9\}$.
+\caption{
+The (a) average accuracy $\text{AGA}_k$, (b) $\bar{D}(u)$ function for for the bivariate normal model with $\rho \in \{0.3, 0.5, 0.7, 0.9\}$.
 }\label{fig:toy4}
 \end{figure}
 
 \section{Estimation}\label{sec:extrapolation_estimation}
 
-Next, we discuss how to use data from smaller classification tasks to
-extrapolate average accuracy.  Assume that we have data from a
-$k_1$-class random classification task, and would like to estimate the
-average accuracy $\text{AGA}_{k_2}$ for $k_2>k_1$ classes.  Our
-estimation method will use the $k$-class average test accuracies,
-$\text{ATA}_2,...,\text{ATA}_{k_1}$ (see Eq \ref{eq:avtestrisk}), for
-its inputs.
+Next, we discuss how to use data from smaller classification tasks to extrapolate average accuracy.
+Assume that we have data from a $k_1$-class random classification task, 
+and would like to estimate the average accuracy $\text{AGA}_{k_2}$ for $k_2>k_1$ classes.
+Our estimation method will use the $k$-class average test accuracies, $\text{ATA}_2,...,\text{ATA}_{k_1}$ (see Eq \ref{eq:avtestrisk}), for its inputs.
 
-The key to understanding the behavior of the average accuracy
-$\text{AGA}_k$ is the function ${D}$.  We adopt a linear model
+The key to understanding the behavior of the average accuracy $\text{AGA}_k$ is the function $\bar{D}$.  
+We adopt a linear model
 \begin{equation}\label{eq:linearKu}
-{D}(u) = \sum_{\ell = 1}^m \beta_\ell h_\ell(u),
+\bar{D}(u) = \sum_{\ell = 1}^m \beta_\ell h_\ell(u),
 \end{equation}
 where $h_\ell(u)$ are known basis functions, and $\beta_\ell$ are the linear coefficients to be estimated. 
 
@@ -844,7 +839,7 @@ Conveniently, the $\text{AGA}_k$ can also be expressed in terms of the $\beta_\e
 If we plug in the assumed linear model \eqref{eq:linearKu} into the
 identity \eqref{eq:avrisk_identity}, then we get
 \begin{align}
-1 - \text{AGA}_k &= (k-1)\int {D}(u) u^{k-2} du
+1 - \text{AGA}_k &= (k-1)\int \bar{D}(u) u^{k-2} du
 \\&= (k-1)\int_0^1 \sum_{\ell = 1}^m \beta_\ell h_\ell(u) u^{k-2} du
 \\&= \sum_{\ell = 1}^m \beta_\ell H_{\ell,k} \label{eq:avrisk_linear}
 \end{align}
@@ -856,8 +851,9 @@ The constants $H_{\ell, k}$ are moments of the basis function
 $h_\ell$: hence we call this method the \emph{moment method.}  Note
 that $H_{\ell, k}$ can be precomputed numerically for any $k \geq 2$.
 
-Now, since the test accuracies $\text{ATA}_k$ are unbiased estimates
-of $\text{AGA}_{k}$, this implies that the regression estimate
+Now, since the test accuracies $\text{ATA}_k$ are unbiased estimates of
+$\text{AGA}_{k}$, this implies that the regression
+estimate
 \[
 \hat{\beta} = \argmin_\beta \sum_{k=2}^{k_1} \left( (1 - \text{ATA}_k) - \sum_{\ell=1}^m \beta_\ell H_{\ell, k}\right)^2
 \]
@@ -866,10 +862,6 @@ from \eqref{eq:avrisk_linear}, via
 \begin{equation}\label{eq:avrisk_hat}
 \widehat{\text{AGA}_{k_2}} = 1 - \sum_{\ell=1}^m \hat{\beta}_\ell H_{\ell, k_2}.
 \end{equation}
-
-
-
-
 
 \section{Face recognition example}\label{sec:extrapolation_example}
 
@@ -965,7 +957,7 @@ We fit the $\beta$ coefficient vector using non-negative least squares:
 \hat{\beta} = \argmin_{\beta: \beta_\ell \geq 0} \sum_{k=2}^{k_1} \left( (1 - \text{ATA}_k) - \sum_{\ell=1}^m \beta_\ell H_{\ell, k}\right)^2
 \]
 The non-negativity constraint on the coefficients $\beta$, combined
-with the linear spline basis, ensures that ${D}(u)$ is a monotonic
+with the linear spline basis, ensures that $\bar{D}(u)$ is a monotonic
 and convex function on $[0,1]$.
 
 Based on the $\beta$ coefficients, we can compute the prediction for
@@ -1020,102 +1012,40 @@ RMSE & 0.291 & 0.189 & 0.068 & 0.020 \\\hline
 \caption{Bias, standard deviation, and RMSE on predicting $\text{TA}_{1672}$ from $\widehat{\text{AGA}_{k_1}}$}\label{tab:lfw_accuracy}
 \end{table}
 
-\section{Simulation study}\label{sec:simulation_study}
-
-\begin{figure}
-\centering
-\begin{tabular}{cc}
-a & b\\
-\includegraphics[scale = 0.4]{mcgs2_oneplot.pdf} &
-\includegraphics[scale = 0.4]{fig_mcgs2f.pdf}\\
-c & d\\
-\includegraphics[scale = 0.4]{fig_mcgs2fovs_02.pdf} &
-\includegraphics[scale = 0.4]{fig_mcgs2f.pdf}\\ 
-\end{tabular}
-\caption{ Comparison of various linear spline bases for extrapolation,
-  in multivariate Gaussian simulation with $Y \sim N(0, I_{10})$, $X|Y
-  \sim N(Y, \sigma^2 I_{10})$, and $r=1$ training set.  The spline
-  bases are lin2 (100 knots), lin3 (1000 knots) and lin4 (10000) knots
-  with uniform knot spacings from [0,1], and lin2q, lin3q, and lin4q
-  are corresponding bases with quadratic spacing of knots (more
-  densely packed near 1).  (a) Extrapolating from $k_1 = 500$ up to $k
-  = 2000$ compared to true accuracy, with $\sigma = 0.55$. (b) The
-  RMSE of $\widehat{\text{AGA}_{2000}}$ for varying $k_1$ and $\sigma
-  = 0.55$. (c) The RMSE of $\widehat{\text{AGA}_{2000}}$ for $k_1 =
-  500$ and varying $\sigma$. (d) The actual distribution functions
-  $D(u)$ for varying $\sigma$.}
-\label{fig:sim_study}
-\end{figure}
-
-
 \section{Discussion}
-\label{sec:discussion}
-In this work, we suggest treating the class set in a classification
-task as random, in order to extrapolate classification performance on
-a small task to the expected performance on a larger unobserved task.
-We show that average generalized accuracy decreases with increased
-class-set size like the $(k-1)$th moment of a distribution function.
-Furthermore, we introduce an algorithm for estimating this underlying
-distribution, that allows efficient computation of higher order
-moments.  There are many choices and simplifying assumptions used in
-the description of the method.  In this discussion, we discuss these
-decisions and map some alternative models or strategies for future
-work.
 
-\subsubsection*{Comparison to Kay et al.}
-The extrapolation method of \citep{Kay2008a} can be described in our
-framework as follows.  Let $F_x$ be the cumulative distribution
-function of $M_{Y'}(x)$ for a random label $Y' \sim \pi$.  For each
-test instance $x^{(i)}_j$, let
-$\hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$ be an estimate of
-$F_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$.  The particular estimation
-method recommended by \citep{Kay2008a} is to estimate the density
-$f_{x^{(i)}_j}$ by using kernel-density estimation with a gaussian
-kernel and a bandwidth chosen via pseudolikelihood cross-validation
-\citep{cao1994comparative}; however, our criticism is not specific to
-the use of a particular estimator for $\hat{F}_x$.  Extrapolate using
-the formula
-\[
-\widehat{\text{AGA}_k} = \frac{1}{k_1 r} \sum_{i=1}^k \sum_{j=1}^r \hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))^{k-1}
-\]
-While no justification is given for the method in (\cite{Kay2008a}),  one possible justificiation is the fact that
-\[\text{AGA}_k = \E[F_X(M_{Y}(X))^{k-1}].\]
-Therefore, the method can give good extrapolations when the estimated
-probabilities $\hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$ are close
-to the true probabilities $F_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$.
-However, the method ignores the bias introduced by exponentiation.
-That is, even if $\hat{p}$ is an unbiased estimator of $p$, $\hat{p}^k$ may \emph{not} be a very good estimate of $p^k$, since
-\[
-p^k = \E[\hat{p}]^k \neq \E[\hat{p}^k].
-\]
-unless $\hat{p}$ is a degenerate random variable
-(constant). Otherwise, for large $k$, $\hat{p}^k$ may be an extremely
-biased estimate of $p$.  Our proposed method avoids this source of
-bias by estimating the $(k-1)$st moment of $D(u)$ directly.
+In this work, we did not develop the theory needed to understand how
+the choice of basis functions $\{h_\ell\}$, or also how the adoption
+of constraints on the fitted function $\bar{D}(u)$ may affect
+estimation.  Based on our experience with simulated and real data
+examples, we can offer a couple of practical suggestions.
 
-\subsubsection*{Fitting  ${D}(u)$}
-Estimation accuracy of ${D}(u)$ will depend on how well it is
-approximated by basis functions $h_\ell(u)$, and penalty and
-constraints used for fitting the regression.  Based on our experience
-with simulated and real data examples, we can offer a couple of
-practical suggestions for the fitting procedure.
-
-\begin{itemize}
-\item Although ${D}(u)$ is unknown, it has to be monotone and bounded by one,
+We know that $\bar{D}(u)$ has to be monotone and bounded by one,
 because it is a cumulative distribution function.  Furthermore, in
-many real and simulated examples, ${D}(u)$ also has the property
-of convexity.  We have found that including the monotonicity and
+many real and simulated examples, $\bar{D}(u)$ also has the property
+of convexity.  We have also found that including the monotonicity and
 convexity constraint in the estimation procedure improves estimation
-performance.  A convenient way to impose both is to choose $\{h_\ell\}$ to be a family of
+performance.
+
+A convenient way to impose both the monotonicity and the convexity
+constraint on $\bar{D}(u)$ is to choose $\{h_\ell\}$ to be a family of
 linear splines, $h_\ell(u) = [u - u_\ell]_+$, and then to require that
-the spline coefficients $\beta_\ell$ are non-negative (see Section \ref{sec:exp_details}). 
-We expect that higher-order spline
-bases should also do well, although it may be harder to impose the 
-convexity and monotonicity constraints.
-\item The number and location of knots for the spline basis is also
-important.  When attempting to extrapolate to a large number of
-classes, the behavior of ${D}(u)$ for $u$ close to 1 is far more
-important than the shape of ${D}(u)$ in the rest of the interval.
+the spline coefficients $\beta_\ell$ are non-negative, as we described
+in section \ref{sec:exp_details}.  We expect that higher-order spline
+bases should also do well, although it would be slightly less
+straightforward to impose the convexity and monotonicity constraints.
+
+The number and location of knots for the spline basis is also quite
+important.  In the totally unconstrained linear model, controlling the
+number of basis functions is crucial for preventing overfitting.  When
+at least one of either the monotonicity or convexity constraint is
+adopted, however, the fit is less sensitive to the number of basis
+functions, as long as the knots form a sufficiently fine
+discretization of the unit interval.  Yet, even then, for
+computational reasons, it can be helpful to choose the location of the
+knots carefully.  When attempting to extrapolate to a large number of
+classes, the behavior of $\bar{D}(u)$ for $u$ close to 1 is far more
+important than the shape of $\bar{D}(u)$ in the rest of the interval.
 This is because the weighting density $\text{Beta}(k-1, 1)$ used to
 compute the higher moments is concentrated near 1 for large $k$.  A
 good heuristic is to consider that the mean of the weighting density
@@ -1123,43 +1053,37 @@ is $\frac{k-1}{k}$, which suggests that the scale of discretization
 near 1 should be smaller than $1/k_2$ when the goal is to estimate the
 average accuracy for $k_2$ classes.  Meanwhile, the standard deviation
 of the weighing density is approximately $1/k$, meaning that the
-behavior of ${D}(u)$ for $u$ smaller than $1 - \frac{5}{k_2}$
+behavior of $\bar{D}(u)$ for $u$ smaller than $1 - \frac{5}{k_2}$
 (that is, $u$ which are more than 4 standard deviations away from the
 mean of the weighting density) has negligible effect on the
 extrapolation.  Therefore, a coarser discretization can be used for
 knots while are smaller than $1 - \frac{5}{k_2}$.  Still, the overall
 discretization should not be coarser than order $1/k_1$, so that the
 model has sufficient degrees of freedom to explain the subsampled
-accuracy curve. 
-We found that controlling the number of basis functions is crucial for preventing overfitting in the unconstrained linear model. When
-at least one of either the monotonicity or convexity constraint is
-adopted, however, the fit is less sensitive to the number of basis
-functions, as long as the knots form a sufficiently fine
-discretization of the unit interval.  Even then, careful choice of knots can reduce the computational load.
-\item An alternative to a linear basis representation is to
-consider parametric families for the function ${D}(u)$.  When the
+accuracy curve.
+
+An alternative to the linear model (or variations thereof) is to
+consider parametric families for the function $\bar{D}(u)$.  When the
 family is a good fit to the the data, this can considerably improve
 extrapolation power, especially when the size of the dataset is
-limited.  We discuss parametric models for ${D}(u)$ in
+limited.  We discuss some parametric models for $\bar{D}(u)$ in
 forthcoming work.
-\end{itemize}
 
-\subsubsection*{Marginal classifiers}
-One limitation of our analysis of average accuracy is that it applies
+A limitation of our analysis of average accuracy is that it applies
 only to marginal classifiers.  Theoretically, it may be possible to
 extend the analysis to certain non-marginal classifiers, for instance,
-by showing that in the large-$k$ limit such classifiers become
-``asymptotically'' marginal, in some sense. Furthermore,  
-there is no obstacle in testing the extrapolation method to
-see how well it would recover accuracy curves for non-marginal classifiers. 
+by showing that in the large-$k$ limit, such classifiers, become
+``asymptotically'' marginal, in some sense.  However, practically
+speaking, there is no obstacle to applying our extrapolation method to
+a non-marginal classifier.  It would be interesting to see how well
+our proposed method still works for some non-marginal classifiers.
 
-\subsubsection*{Sampling}
-Our analysis is currently restricted to
+Another limitation of our analysis is that it applies only to
 randomized classification problems with i.i.d. sampling of classes.
 Extension to other sampling mechanisms, such as cluster sampling, may
 be possible if one can work out how the dependence between classes
 translates into dependence between the favorabilities
-$U_{X^*}(m_{Y^{(k)}})$. 
+$U_{X^*}(m_{Y^{(k)}})$.
 
 More broadly, the assumption that the labels in $\mathcal{S}_k$ are a
 random sample from a distribution $\pi$ may be inappropriate.  Many
@@ -1167,13 +1091,8 @@ natural classification problems arise from hierarchically partitioning
 a space of instances into a set of labels.  Therefore, rather than
 modeling $\mathcal{S}_k$ as a random sample, it may be more suitable
 to model it as a random hierarchical partition of $\mathcal{Y}$ (for
-instance, arising from an optional P{\'o}lya tree process,
-\cite{wong2010optional}).
-Finally, note that we assume no knowledge about the new class-set
-except for its size. Better accuracy might be achieved if some partial information 
-is known.
-
-\subsubsection*{Arbitrary cost functions}
+instance, arising from an optional P{\'o}lya tree process
+\citep{wong2010optional}.)
 
 In the current paper, we only discussed extrapolating the
 classification accuracy--or equivalently, the risk for the zero-one
@@ -1181,21 +1100,12 @@ cost function.  However, it is possible to extend our analysis to risk
 functions with arbitrary cost functions, which is the subject of
 forthcoming work.
 
-\subsubsection*{Predicting the generalization accuracy}
-In this work, our focus was on estimating the average generalization accuracy.  However, rather being interested in the average accuracy for a new label set, one might be interested in predicting the generalization accuracy on a particular problem.  When the source task and target tasks are independent, then the average generalization accuracy is also Bayes estimate which minimizes mean-squared prediction error.  However, it may be known that there is overlap between the labels or data used in the source task or target task.  Conditioning on this information may yield a more accurate prediction.  However, we leave this problem to future work.
-
-\subsubsection*{Confidence and prediction intervals}
-In many of the applications discussed in the introduction, it would be useful to construct either confidence intervals for the average generalization accuracy $\text{AGA}_k$, or prediction intervals for the generalization accuracy, $\text{GA}_k$.
-The key to constructing such intervals is to understand the variability properties of the inputs to our estimation procedure, the average test accuracies $\text{ATA}_k$.  We discuss the issue of constructing confidence and prediction intervals in forthcoming work.
-
-\subsubsection*{Other transfer learning setups}
-In our analysis, we also limited the training set sizes to be the same in both the source and target tasks.  It would be very nice to be able to relax this assumption, since in most practical applications, the training set sizes are varied within label sets as well as between tasks.  The idea of extrapolating from learning curves \citep{cortes1994learning} may be one way to adjust for varying training set sizes.  
-
+In our analysis, we also limited the training set sizes to be the same in both the source and target tasks.  It would be very nice to be able to relax this assumption, since in most practical applications, the training set sizes are varied within label sets as well as between tasks.  The idea of extrapolating from learning curves \citep{cortes1994learning} may be one way to adjust for varying training set sizes.
 
 Many other aspects of transfer learning could also be considered in
 conjunction with the issue of transferring from one label set to
 another, such as transfer to a different domain, or transfer to a
-target task without training data \citep{pan2010survey}. 
+target task without training data \citep{pan2010survey}.
 
 % \begin{itemize}
 % \item Basis function (and convexity)
@@ -1212,10 +1122,9 @@ target task without training data \citep{pan2010survey}.
 \acks{We thank Jonathan Taylor, Trevor Hastie, John Duchi, Steve
   Mussmann, Qingyun Sun, Robert Tibshirani for useful discussion.  CZ
   is supported by an NSF graduate research fellowship, and would also
-  like to thank the European Research Council under the ERC grant agreement n° [PSARPS-294519]  for travel support.
+  like to thank the Hebrew University (??? grant) for travel support.
 }
 
 \bibliography{example}
 
 \end{document}
-
