@@ -45,12 +45,12 @@ for (si in 1:length(sigma2s)) {
 #hist(exp(us))
 #hist(us)
 #plot(ecdf(us))
-pdf("approximation/fig_mgs2.pdf", width = 6, height = 4)
+pdf("approximation/fig_mgs2.pdf", width = 5, height = 4)
 plot(ecdf(exp(usS[[1]])), xlim = c(0,1), main = "", xlab = "u", ylab = "D(u)", col = 1)
 for (i in 2:length(sigma2s)) {
   plot(ecdf(exp(usS[[i]])), col = i, lty = i, add = TRUE)
 }
-legend(0, 0.8, col = 1:5, lwd = 2, legend = paste("sigma =", sqrt(sigma2s)))
+legend(-0.05, 1.05, col = 1:5, lwd = 2, legend = paste("sigma =", sqrt(sigma2s)))
 dev.off()
 
 

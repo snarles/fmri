@@ -976,7 +976,7 @@ approximates the ground truth.
 
 \begin{figure}
 \centering
-\includegraphics[scale = 0.5]{acc_plot2.pdf}
+\includegraphics[scale = 0.5, clip = true, trim = 0 0 0 0.6in]{acc_plot2.pdf}
 \caption{Estimated average accuracy for $k > 400$ on the Labeled Faces in the Wild dataset, compared to the ground truth (average $k$-class test accuracy
   using all 1672 classes).}
 \label{fig:lfw_extrapolation1}
@@ -1029,8 +1029,8 @@ a & b\\
 \includegraphics[scale = 0.4]{mcgs2_oneplot.pdf} &
 \includegraphics[scale = 0.4]{fig_mcgs2f.pdf}\\
 c & d\\
-\includegraphics[scale = 0.4]{fig_mcgs2fovs_02.pdf} &
-\includegraphics[scale = 0.4]{fig_mgs2.pdf}\\ 
+\includegraphics[scale = 0.4]{fig_mgs2.pdf} &
+\includegraphics[scale = 0.4]{fig_mcgs2fovs_02.pdf}\\ 
 \end{tabular}
 \caption{ Comparison of various linear spline bases for extrapolation,
   in multivariate Gaussian simulation with $Y \sim N(0, I_{10})$, $X|Y
@@ -1041,9 +1041,8 @@ c & d\\
   densely packed near 1).  (a) Extrapolating from $k_1 = 500$ up to $k
   = 2000$ compared to true accuracy, with $\sigma = 0.55$. (b) The
   RMSE of $\widehat{\text{AGA}_{2000}}$ for varying $k_1$ and $\sigma
-  = 0.55$. (c) The RMSE of $\widehat{\text{AGA}_{2000}}$ for $k_1 =
-  500$ and varying $\sigma$. (d) The actual distribution functions
-  $D(u)$ for varying $\sigma$.}
+  = 0.55$. (c) The actual distribution functions
+  $D(u)$ for varying $\sigma$.} (d) The RMSE of $\widehat{\text{AGA}_{2000}}$ for $k_1 = 500$ and varying $\sigma$. 
 \label{fig:sim_study}
 \end{figure}
 
@@ -1062,36 +1061,7 @@ the description of the method.  In this discussion, we discuss these
 decisions and map some alternative models or strategies for future
 work.
 
-\subsubsection*{Comparison to Kay et al.}
-The extrapolation method of \citep{Kay2008a} can be described in our
-framework as follows.  Let $F_x$ be the cumulative distribution
-function of $M_{Y'}(x)$ for a random label $Y' \sim \pi$.  For each
-test instance $x^{(i)}_j$, let
-$\hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$ be an estimate of
-$F_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$.  The particular estimation
-method recommended by \citep{Kay2008a} is to estimate the density
-$f_{x^{(i)}_j}$ by using kernel-density estimation with a gaussian
-kernel and a bandwidth chosen via pseudolikelihood cross-validation
-\citep{cao1994comparative}; however, our criticism is not specific to
-the use of a particular estimator for $\hat{F}_x$.  Extrapolate using
-the formula
-\[
-\widehat{\text{AGA}_k} = \frac{1}{k_1 r} \sum_{i=1}^k \sum_{j=1}^r \hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))^{k-1}
-\]
-While no justification is given for the method in (\cite{Kay2008a}),  one possible justificiation is the fact that
-\[\text{AGA}_k = \E[F_X(M_{Y}(X))^{k-1}].\]
-Therefore, the method can give good extrapolations when the estimated
-probabilities $\hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$ are close
-to the true probabilities $F_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$.
-However, the method ignores the bias introduced by exponentiation.
-That is, even if $\hat{p}$ is an unbiased estimator of $p$, $\hat{p}^k$ may \emph{not} be a very good estimate of $p^k$, since
-\[
-p^k = \E[\hat{p}]^k \neq \E[\hat{p}^k].
-\]
-unless $\hat{p}$ is a degenerate random variable
-(constant). Otherwise, for large $k$, $\hat{p}^k$ may be an extremely
-biased estimate of $p$.  Our proposed method avoids this source of
-bias by estimating the $(k-1)$st moment of $D(u)$ directly.
+
 
 \subsubsection*{Fitting  ${D}(u)$}
 Estimation accuracy of ${D}(u)$ will depend on how well it is
@@ -1143,6 +1113,37 @@ extrapolation power, especially when the size of the dataset is
 limited.  We discuss parametric models for ${D}(u)$ in
 forthcoming work.
 \end{itemize}
+
+\subsubsection*{Comparison to Kay et al.}
+The extrapolation method of \citep{Kay2008a} can be described in our
+framework as follows.  Let $F_x$ be the cumulative distribution
+function of $M_{Y'}(x)$ for a random label $Y' \sim \pi$.  For each
+test instance $x^{(i)}_j$, let
+$\hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$ be an estimate of
+$F_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$.  The particular estimation
+method recommended by \citep{Kay2008a} is to estimate the density
+$f_{x^{(i)}_j}$ by using kernel-density estimation with a gaussian
+kernel and a bandwidth chosen via pseudolikelihood cross-validation
+\citep{cao1994comparative}; however, our criticism is not specific to
+the use of a particular estimator for $\hat{F}_x$.  Extrapolate using
+the formula
+\[
+\widehat{\text{AGA}_k} = \frac{1}{k_1 r} \sum_{i=1}^k \sum_{j=1}^r \hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))^{k-1}
+\]
+While no justification is given for the method in (\cite{Kay2008a}),  one possible justificiation is the fact that
+\[\text{AGA}_k = \E[F_X(M_{Y}(X))^{k-1}].\]
+Therefore, the method can give good extrapolations when the estimated
+probabilities $\hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$ are close
+to the true probabilities $F_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$.
+However, the method ignores the bias introduced by exponentiation.
+That is, even if $\hat{p}$ is an unbiased estimator of $p$, $\hat{p}^k$ may \emph{not} be a very good estimate of $p^k$, since
+\[
+p^k = \E[\hat{p}]^k \neq \E[\hat{p}^k].
+\]
+unless $\hat{p}$ is a degenerate random variable
+(constant). Otherwise, for large $k$, $\hat{p}^k$ may be an extremely
+biased estimate of $p$.  Our proposed method avoids this source of
+bias by estimating the $(k-1)$st moment of $D(u)$ directly.
 
 \subsubsection*{Marginal classifiers}
 One limitation of our analysis of average accuracy is that it applies

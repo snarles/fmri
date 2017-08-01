@@ -85,10 +85,10 @@ proc.time() - t1
 #save(true_accs, preds, file = "approximation/mcgs2_oneplot.rda")
 #load("approximation/mcgs2_oneplot.rda")
 
-pdf("approximation/mcgs2_oneplot.pdf", height = 4, width = 6)
+pdf("approximation/mcgs2_oneplot.pdf", height = 4, width = 5)
 source("approximation/mcgs2_colscheme.R")
 plot(1:K, true_accs, type = 'l', lwd = 3, xlab = "k", ylab = "AGA", ylim = c(0, 1))
 matplot(ksub:K, t(preds[, ksub:K]), type = "l", col = cols, lty = ltys, lwd = 2, add = TRUE)
 abline(v = ksub, lty = 2)
-legend(1000, 1, c("true", nms), col = c("black", cols), lty = c(1, ltys), lwd = 2)
+#legend(1000, 1, c("true", nms), col = c("black", cols), lty = c(1, ltys), lwd = 2)
 dev.off()
