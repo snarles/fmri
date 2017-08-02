@@ -55,6 +55,8 @@
 
 \newcommand{\fracpartial}[2]{\frac{\partial #1}{\partial  #2}}
 
+\newenvironment{myfont}{\fontfamily{phv}\selectfont}{\par}
+
 % Heading arguments are {volume}{year}{pages}{submitted}{published}{author-full-names}
 
 \jmlrheading{0}{00}{0-00}{0/00}{00/00}{zheng00}{Charles Zheng and Rakesh Achanta and Yuval Benjamini}
@@ -512,6 +514,8 @@ M_{y^{(i)}}(x) = \log(p(x|y^{(i)})) = -\frac{(x - \rho y)^2}{2(1-\rho^2)}  + \te
 \begin{figure}[h]
 \centering
 \begin{tabular}{cc}
+\begin{myfont}Joint distribution of $(X, Y)$\end{myfont} & 
+\begin{myfont}Problem instance with $k = 3$\end{myfont}\\
 \multirow{3}{*}{\includegraphics[scale = 0.5, clip = true, trim = 0 0 0 0.5in]{illus_rho_0_7.pdf}} & \\
 & \includegraphics[scale = 0.5, clip = true, trim = 0 0.8in 0 0.8in]{illus_example1a.pdf}\\
  &  \includegraphics[scale = 0.5, clip = true, trim = 0 0 0 0.5in]{illus_example1b.pdf}\\
@@ -519,10 +523,10 @@ M_{y^{(i)}}(x) = \log(p(x|y^{(i)})) = -\frac{(x - \rho y)^2}{2(1-\rho^2)}  + \te
 \end{tabular}
 
 \caption{\textbf{Toy example:}
-(a) The joint distribution of $(X, Y)$ is bivariate normal with correlation $\rho = 0.7$.
-(b) A typical classification problem instance from the bivariate normal model with $k = 3$ classes.
-Top: the conditional density of $X$ given label $Y$, for $Y = \{y^{(1)}, y^{(2)}, y^{(3)}\}$.
-Bottom: the Bayes classification regions for the three classes.}\label{fig:toy1}
+\emph{Left:} The joint distribution of $(X, Y)$ is bivariate normal with correlation $\rho = 0.7$.
+\emph{Right:} A typical classification problem instance from the bivariate normal model with $k = 3$ classes.
+\emph{(Top):} the conditional density of $X$ given label $Y$, for $Y = \{y^{(1)}, y^{(2)}, y^{(3)}\}$.
+\emph{(Bottom):} the Bayes classification regions for the three classes.}\label{fig:toy1}
 \end{figure}
 
 For this model, the generalization accuracy of the Bayes rule for any
@@ -788,14 +792,16 @@ curve in figure \ref{fig:toy2} was computed using the formula
 \begin{figure}[h]
 \centering
 \begin{tabular}{cc}
+\begin{myfont}$U_x^*(m_y)$ for $\rho=0.7$\end{myfont}
+& 
+\begin{myfont}$D(u)$ for $\rho = 0.7$\end{myfont}\\
 \includegraphics[scale = 0.6, clip = true, trim = 0.1in 0 0 0.8in]{illus_ufunc_0_7.pdf} &
-\includegraphics[scale = 0.65, clip = true, trim = 0.22in -0.3in 0 0.5in]{illus_kfunc_0_7.pdf}\\
-(a) & (b)
+\includegraphics[scale = 0.65, clip = true, trim = 0.22in -0.3in 0 0.5in]{illus_kfunc_0_7.pdf}
 \end{tabular}
 
 \caption{\textbf{Favorability for toy example:}
-(a) The level curves of the function $U_{x^*}(m_y)$ in the bivariate normal model with $\rho = 0.7$.
-(b) The function ${D}(u)$ gives the cumulative distribution function of the random variable $U_{X^*}(M_Y)$.}\label{fig:toy3}
+\emph{Left:} The level curves of the function $U_{x^*}(m_y)$ in the bivariate normal model with $\rho = 0.7$.
+\emph{Right:} The function ${D}(u)$ gives the cumulative distribution function of the random variable $U_{X^*}(M_Y)$.}\label{fig:toy3}
 \end{figure}
 
 It is illuminating to consider how the average accuracy curves and the
@@ -813,13 +819,14 @@ $\rho$ increases.
 \begin{figure}[h]
 \centering
 \begin{tabular}{cc}
-\includegraphics[scale = 0.45, clip = true, trim = 0.22in 0 0.2in 0.6in]{illus_rhos_Kfunc.pdf} &
-\includegraphics[scale = 0.45, clip = true, trim = 0.0in 0 0.2in 0.6in]{illus_rhos_avrisk.pdf} \\
-(a) & (b) 
+\begin{myfont}\hspace{0.2in}$D(u)$\end{myfont} &
+\begin{myfont}\hspace{0.4in}Average Accuracy\end{myfont} \\
+\includegraphics[scale = 0.6, clip = true, trim = 0.22in 0 0.2in 0.6in]{illus_rhos_Kfunc.pdf} &
+\includegraphics[scale = 0.6, clip = true, trim = 0.0in 0 0.2in 0.6in]{illus_rhos_avrisk.pdf}
 \end{tabular}
 
 \caption{\textbf{Average accuracy with different $\rho$'s:}
-The (a) average accuracy $\text{AGA}_k$, (b) ${D}(u)$ function for for the bivariate normal model with $\rho \in \{0.3, 0.5, 0.7, 0.9\}$.
+\emph{Left:} The average accuracy $\text{AGA}_k$. \emph{Right:} ${D}(u)$ function for the bivariate normal model with $\rho \in \{0.3, 0.5, 0.7, 0.9\}$.
 }\label{fig:toy4}
 \end{figure}
 
@@ -957,7 +964,7 @@ accuracy at every $k \leq k_1$, getting the vector
 $(\text{ATA}_2,...,\text{ATA}_{k_1})$.  Specifically, we use a linear
 spline basis,
 \[
-h_\ell(u) = \left[u - \frac{\ell - 1}{m}\right]_+
+h_\ell(u) = \left[u - \frac{\ell}{m + 1}\right]_+
 \]
 for $\ell = 1,\hdots, m$.  Here we take $m = 10000$. 
 We fit the $\beta$ coefficient vector using non-negative least squares: 
@@ -976,7 +983,10 @@ approximates the ground truth.
 
 \begin{figure}
 \centering
+\begin{tabular}{c}
+\begin{myfont}Predicting $\text{AGA}_{1672}$ from $k_1= 400$ classes\end{myfont}\\
 \includegraphics[scale = 0.5, clip = true, trim = 0 0 0 0.6in]{acc_plot2.pdf}
+\end{tabular}
 \caption{Estimated average accuracy for $k > 400$ on the Labeled Faces in the Wild dataset, compared to the ground truth (average $k$-class test accuracy
   using all 1672 classes).}
 \label{fig:lfw_extrapolation1}
@@ -997,10 +1007,14 @@ root-mean-square errors between at $k_2=1672$ can be seen in Table
 \begin{figure}
 \centering
 \begin{tabular}{cc}
-\includegraphics[scale = 0.4]{sub_100.pdf} &
-\includegraphics[scale = 0.4]{sub_200.pdf} \\
-\includegraphics[scale = 0.4]{sub_400.pdf} &
-\includegraphics[scale = 0.4]{sub_800.pdf} 
+\begin{myfont}$k_1 = 100$\end{myfont} & 
+\begin{myfont}$k_1 = 200$\end{myfont}\\
+\includegraphics[scale = 0.4, clip = true, trim = 0 0 0 0.6in]{sub_100.pdf} &
+\includegraphics[scale = 0.4, clip = true, trim = 0 0 0 0.6in]{sub_200.pdf} \\
+\begin{myfont}$k_1 = 400$\end{myfont} & 
+\begin{myfont}$k_1 = 800$\end{myfont}\\
+\includegraphics[scale = 0.4, clip = true, trim = 0 0 0 0.6in]{sub_400.pdf} &
+\includegraphics[scale = 0.4, clip = true, trim = 0 0 0 0.6in]{sub_800.pdf} 
 \end{tabular}
 \caption{Estimated average accuracy using subsampled datasets of size
   $k$, compared to the ground truth (average $k$-class test accuracy
@@ -1022,15 +1036,79 @@ RMSE & 0.291 & 0.189 & 0.068 & 0.020 \\\hline
 
 \section{Simulation study}\label{sec:simulation_study}
 
+We ran a simulation study in order to understand how well the proposed extrapolation method
+scales with different numbers of classes, $k_1$, and on problems of varying difficulty, on a large multi-class dataset,
+as well as how the performance depends on the choice of basis.
+Similarly to the toy example, we generated data according to a mixture of isotropic multivariate gaussian distributions.
+We generated the labels $Y \sim N(0, I_{10})$, and the distribution of examples for each label is
+$X|Y \sim N(Y, \sigma^2 I_{10})$, where $\sigma$ is a noise parameter that we vary in the simulations.
+Analagously to the real-data example, we consider a 1-nearest neighbor classifier which is given a single
+training instance per class.
+
+All of the spline bases that we consider are linear spline bases, of the form $h_\ell(u) = [u - t_\ell]_+$ for some set of knots $\{t_\ell\}_{\ell = 1}^m$.  However, we vary the number of knots, and the spacings of the knots.  One type of spacing is \emph{linear spacing}, which chooses knots $\{t_\ell\}_{\ell = 1}^m$ according to
+\[
+t_\ell = \frac{\ell}{m+1}.
+\]
+We also consider \emph{quadratic spacing}, which has an increased density of knots near 1:
+\[
+t_\ell = \left(1 - \frac{m + 1 -\ell}{m+1}\right)^2.
+\]
+The rationale for increasing the density of knots near 1 is that
+when attempting to extrapolate to a large number of
+classes, the behavior of ${D}(u)$ for $u$ close to 1 is far more
+important than the shape of ${D}(u)$ in the rest of the interval.
+This is because the weighting density $\text{Beta}(k-1, 1)$ used to
+compute the higher moments is concentrated near 1 for large $k$.
+
+
+We compare linear and quadratic spacings for spline bases of size $m = \{100,1000,10000\}$.
+For all spline bases, we fit the coefficients using a non-negativity constraint on $\beta$, 
+which enforces convexity of the estimated $\hat{D}(u).$
+
+In all simulations, we consider predicting the average accuracy for $k = 2000$ classes.  
+We vary the parameters $k_1$, the number of classes in the source task, and $\sigma$, 
+which controls the noise level, and hence the true average accuracy.
+The results are displayed in figure \ref{fig:sim_study}.  
+
+In figure \ref{fig:sim_study} (top right) we see how the accuracy of prediction
+improves as we increase the number of classes in the training set, $k_1=\{50,\hdots,2000\}$, while fixing $\sigma = 0.55$.
+We see that the performance curves of the spline bases can be roughly clustered into two groups.
+The {\tt lin2} spline basis with linear spacing and $m=100$ forms a group on its own,
+while the other spline bases form the other group.
+The first group enjoys better RMSE for $k_1 < 150$; however, for $k_1 > 400$ the second group has far better extrapolation peformance.
+The relatively poor performance of the {\tt lin2} spline basis can be explained by the fact that 
+the {\tt lin2} spline basis cannot approximate the true $D(u)$ function (bottom left of figure) to a sufficiently high resolution.
+When there is insufficient data to fit $D(u)$ with a more accurate model, such as when $k_1 < 150$,
+this may not be a disadvantage, but as more data becomes available and the variance of estimation
+decreases, models which can better fit $D(u)$ (and hence have lower bias) 
+demonstrate better convergence properties.
+However, it is worth noting that the {\tt lin2q} basis, which also has $m=100$ knots, but which
+are quadratically spaced rather than linearly spaced, matches the performance of much larger spline bases
+up to $k_1 = 2000$.  This suggests that a small spline basis with $m << k_1$ can perform almost as well
+as an optimally sized spline basis, as long as appropriate spacing is used for the knots.
+ 
+In the bottom right of figure \ref{fig:sim_study}, we see how the error depends on the true parameter 
+$\sigma=\{0.3,\hdots,0.7\}$ while fixing $k_1 = 500$,
+which allows us to evaluate the reliability of the extrapolation across a wide range of possible signal-to-noise ratios.
+The true average accuracy $\text{AGA}_{2000}$ varies from 0.838 for $\sigma = 0.3$ to 0.102 for $\sigma = 0.7$.
+In this case, the spline bases can be divided into three groups.
+Once again, {\tt lin2} forms a group by itself--the worst performing group, but {\tt lin3} with $m = 1000$ linearly spaced knots is also alone in the best group, and the other spline bases form the third group performing similarly to {\tt lin3}.
+We do not currently have an explanation of why {\tt lin3} has the best performance across all noise levels.
+
+
+
+
 \begin{figure}
 \centering
 \begin{tabular}{cc}
-a & b\\
-\includegraphics[scale = 0.4]{mcgs2_oneplot.pdf} &
-\includegraphics[scale = 0.4]{fig_mcgs2f.pdf}\\
-c & d\\
-\includegraphics[scale = 0.4]{fig_mgs2.pdf} &
-\includegraphics[scale = 0.4]{fig_mcgs2fovs_02.pdf}\\ 
+\begin{myfont}Predicting $\text{AGA}_{2000}$ from $k_1 = 500$\end{myfont} &
+\begin{myfont}Error versus $k_1$ ($\sigma = 0.55$)\end{myfont}\\
+\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0.6in]{mcgs2_oneplot.pdf} &
+\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0.6in]{fig_mcgs2f.pdf}\\
+\begin{myfont}Simulated $D(u)$ functions\end{myfont} &
+\begin{myfont}Error versus $\sigma$ ($k_1 = 500$)\end{myfont}\\
+\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0.6in]{fig_mgs2.pdf} &
+\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0.6in]{fig_mcgs2fovs_02.pdf}\\ 
 \end{tabular}
 \caption{ Comparison of various linear spline bases for extrapolation,
   in multivariate Gaussian simulation with $Y \sim N(0, I_{10})$, $X|Y
@@ -1038,11 +1116,11 @@ c & d\\
   bases are lin2 (100 knots), lin3 (1000 knots) and lin4 (10000) knots
   with uniform knot spacings from [0,1], and lin2q, lin3q, and lin4q
   are corresponding bases with quadratic spacing of knots (more
-  densely packed near 1).  (a) Extrapolating from $k_1 = 500$ up to $k
-  = 2000$ compared to true accuracy, with $\sigma = 0.55$. (b) The
+  densely packed near 1).  \emph{Top left:} Extrapolating from $k_1 = 500$ up to $k
+  = 2000$ compared to true accuracy, with $\sigma = 0.55$. \emph{Top right:} The
   RMSE of $\widehat{\text{AGA}_{2000}}$ for varying $k_1$ and $\sigma
-  = 0.55$. (c) The actual distribution functions
-  $D(u)$ for varying $\sigma$.} (d) The RMSE of $\widehat{\text{AGA}_{2000}}$ for $k_1 = 500$ and varying $\sigma$. 
+  = 0.55$. \emph{Bottom right:} The actual distribution functions
+  $D(u)$ for varying $\sigma$.} \emph{Bottom left:} The RMSE of $\widehat{\text{AGA}_{2000}}$ for $k_1 = 500$ and varying $\sigma$. 
 \label{fig:sim_study}
 \end{figure}
 
@@ -1073,7 +1151,8 @@ practical suggestions for the fitting procedure.
 \begin{itemize}
 \item Although ${D}(u)$ is unknown, it has to be monotone and bounded by one,
 because it is a cumulative distribution function.  Furthermore, in
-many real and simulated examples, ${D}(u)$ also has the property
+many real and simulated examples, including the examples of sections \ref{sec:simulation_study} and \ref{sec:extrapolation_example},
+${D}(u)$ also has the property
 of convexity.  We have found that including the monotonicity and
 convexity constraint in the estimation procedure improves estimation
 performance.  A convenient way to impose both is to choose $\{h_\ell\}$ to be a family of
@@ -1083,24 +1162,25 @@ We expect that higher-order spline
 bases should also do well, although it may be harder to impose the 
 convexity and monotonicity constraints.
 \item The number and location of knots for the spline basis is also
-important.  When attempting to extrapolate to a large number of
-classes, the behavior of ${D}(u)$ for $u$ close to 1 is far more
-important than the shape of ${D}(u)$ in the rest of the interval.
-This is because the weighting density $\text{Beta}(k-1, 1)$ used to
-compute the higher moments is concentrated near 1 for large $k$.  A
-good heuristic is to consider that the mean of the weighting density
-is $\frac{k-1}{k}$, which suggests that the scale of discretization
-near 1 should be smaller than $1/k_2$ when the goal is to estimate the
-average accuracy for $k_2$ classes.  Meanwhile, the standard deviation
-of the weighing density is approximately $1/k$, meaning that the
-behavior of ${D}(u)$ for $u$ smaller than $1 - \frac{5}{k_2}$
-(that is, $u$ which are more than 4 standard deviations away from the
-mean of the weighting density) has negligible effect on the
-extrapolation.  Therefore, a coarser discretization can be used for
-knots while are smaller than $1 - \frac{5}{k_2}$.  Still, the overall
-discretization should not be coarser than order $1/k_1$, so that the
-model has sufficient degrees of freedom to explain the subsampled
-accuracy curve. 
+important.  
+%When attempting to extrapolate to a large number of
+%classes, the behavior of ${D}(u)$ for $u$ close to 1 is far more
+%important than the shape of ${D}(u)$ in the rest of the interval.
+%This is because the weighting density $\text{Beta}(k-1, 1)$ used to
+%compute the higher moments is concentrated near 1 for large $k$.  A
+%good heuristic is to consider that the mean of the weighting density
+%is $\frac{k-1}{k}$, which suggests that the scale of discretization
+%near 1 should be smaller than $1/k_2$ when the goal is to estimate the
+%average accuracy for $k_2$ classes.  Meanwhile, the standard deviation
+%of the weighing density is approximately $1/k$, meaning that the
+%behavior of ${D}(u)$ for $u$ smaller than $1 - \frac{5}{k_2}$
+%(that is, $u$ which are more than 4 standard deviations away from the
+%mean of the weighting density) has negligible effect on the
+%extrapolation.  Therefore, a coarser discretization can be used for
+%knots while are smaller than $1 - \frac{5}{k_2}$.  Still, the overall
+%discretization should not be coarser than order $1/k_1$, so that the
+%model has sufficient degrees of freedom to explain the subsampled
+%accuracy curve. 
 We found that controlling the number of basis functions is crucial for preventing overfitting in the unconstrained linear model. When
 at least one of either the monotonicity or convexity constraint is
 adopted, however, the fit is less sensitive to the number of basis
