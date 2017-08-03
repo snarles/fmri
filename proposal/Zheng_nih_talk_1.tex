@@ -119,7 +119,7 @@
 %----------------------------------------------------------------------------------------
 
 
-\title[Inference through learning]{What does classification tell us about the brain? Statistical inference through machine learning}
+\title[tfMRI generalizability]{Using randomization in fMRI classification experiments to ensure generalizability}
 
 \author{Charles Zheng} % Your name
 \institute[Stanford] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
@@ -133,65 +133,110 @@
 (Joint work with Yuval Benjamini.)
 \end{frame}
 
-\section{Introduction}
+\section{Randomization and Generalization}
 
-%\begin{frame}
-%\frametitle{Dependence, distance, and information}
-%\begin{columns}
-%\begin{column}{0.5\textwidth}
-%\begin{center}
-%\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_1a.pdf}
-%\end{center}
-%\begin{itemize}
-%\item $X$ is independent of $Y$: 
-%\[X \perp Y\]
-%\item $X$ and $Y$ have no mutual information:
-%\[
-%I(X; Y) = 0
-%\]
-%\end{itemize}
-%\end{column}
-%\begin{column}{0.5\textwidth}
-%\end{column}
-%\end{columns}
-%\end{frame}
+\begin{frame}
+\frametitle{Reproducibility}
+\begin{center}
+\includegraphics[scale = 0.8]{code_clipart.jpg}
+\end{center}
+Transparency in sharing data, methods, code, etc.
+\end{frame}
+
+\begin{frame}
+\frametitle{Replicability}
+\begin{center}
+\includegraphics[scale = 0.7]{replicability.jpg} 
+\end{center}
+``The ability of a researcher to duplicate the results of a prior
+study if the same procedures are followed but new data are
+collected''--National Science Foundation
+\end{frame}
+
+\begin{frame}
+\frametitle{Generalizability}
+\begin{center}
+\begin{tabular}{ccc}
+\includegraphics[scale = 0.1]{Falling_ball.jpg} &
+\includegraphics[scale = 0.3]{right_arrow.jpg} &
+\includegraphics[scale = 0.3]{orbit-3.jpg} 
+\end{tabular}
+\end{center}
+Being able to predict results of new ``experiments'' or observations.
+\end{frame}
+
+\begin{frame}
+\frametitle{Problem of Induction}
+\begin{center}
+\includegraphics[scale = 0.6]{david_hume.jpg}
+
+David Hume (1711-1776)
+\end{center}
+Why is it that ``instances of which we have had no experience resemble
+those of which we have had experience''?
+\end{frame}
+
+\begin{frame}
+\frametitle{Peirceian Induction and Neyman-Pearson testing}
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[scale = 0.3]{peirce.jpg} &
+\includegraphics[scale = 0.8]{dmayo1.jpg} \\
+C. S. Pierce & Deborah Mayo
+\end{tabular}
+\end{center}
+Theories can be confirmed inductively via \emph{severe testing}.  The Neyman-Pearson (classical statistical) framework provides one such mechanism.
+\end{frame}
+
+\begin{frame}
+\frametitle{Generalizing from samples to population}
+\begin{center}
+\includegraphics[scale = 0.3]{extsamp.png}
+\end{center}
+Thanks to key results in probability theory (law of large numbers, central limit theorem), sampling from a defined population is a well-understood form of induction.
+\end{frame}
+
+\begin{frame}
+\frametitle{Randomized Experiments enable Generalization}
+\begin{center}
+\includegraphics[scale = 0.3]{RA_Fisher.jpg}
+\includegraphics[scale = 0.2]{RCT_Cartoon.png}
+\end{center}
+\begin{itemize}
+\item \emph{Design of Experiments} by R. A. Fisher introduced the concept of \emph{randomization}
+\item \emph{Randomized clinical trials} are the gold standard
+for inference of causal effects.
+\item Randomization + Law of Large Numbers implies quantitative replicability--a form of generalization to the population
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Random vs deterministic design in fMRI}
+For designing event-related sequences for task fMRI...
+\begin{itemize}
+\item Bura\v{c}as and Boynton (2001) showed that deterministic m-sequences are more efficient for estimating HRF than random designs by a large factor
+\begin{center}
+\includegraphics[scale = 0.2]{MLS_shiftregisters_L4.png}
+\end{center}
+\item However, as Friston (1999) points out, random designs may have advanatages in terms of psychological effects
+\item Theoretically speaking, deterministic designs are fine as long as one can rule out higher-order dependencies between measurements
+\item However, when no principled approach exists to cancel out possible biases, randomization guarantees it (on average)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Generalizing beyond the population?}
+\begin{center}
+\includegraphics[scale = 0.3]{weird_people.png}
+\end{center}
+\end{frame}
 
 
+\section{Classification experiments in fMRI}
 
-%\begin{frame}
-%\frametitle{Dependence, distance, and information}
-%\begin{columns}
-%\begin{column}{0.5\textwidth}
-%\begin{center}
-%\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_1a.pdf}
-%\end{center}
-%\begin{itemize}
-%\item $X$ is independent of $Y$: 
-%\[X \perp Y\]
-%\item $X$ and $Y$ have no mutual information:
-%\[
-%I(X; Y) = 0
-%\]
-%\end{itemize}
-%\end{column}
-%\begin{column}{0.5\textwidth}
-%\begin{center}
-%Classifying $\text{Sign}(X)$ from $Y$
-
-%\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.9in 0.1in 0.2in]{../diagram/ddi_1b.pdf}
-
-%\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_1c.pdf}
-%\end{center}
-%$KL(Y|X > 0, Y|X < 0) = 0.$
-
-%Bayes accuracy = 0.5.
-%\end{column}
-%\end{columns}
-%\end{frame}
-
-
-
-
+\begin{frame}
+\sectionpage
+\end{frame}
 
 \begin{frame}
 \frametitle{Studying the neural code}
@@ -505,6 +550,19 @@ is a lower confidence bound for $\text{BA}_k$
 \]
 is a lower confidence bound for $\text{ABA}_k$.
 \end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Future work}
+\begin{center}
+\includegraphics[scale = 0.3]{haxby_example.png}
+\end{center}
+\begin{itemize}
+\item Theory can be extended to handle discrimination between a fixed number of categories
+\item Category-based classification is equivalent to a cost function $C(y,y')$ which is equal to 0 if $y$ and $y'$ are from the same category, and 1 otherwise.
+\item Sampling of random exemplars is stratified by category, but amounts to a minor adjustment to the variance bounds
+\end{itemize}
 \end{frame}
 
 
