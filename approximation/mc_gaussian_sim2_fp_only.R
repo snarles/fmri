@@ -9,7 +9,7 @@ sigma2 <- 0.3
 sigma2_tr <- sigma2 ## equivalent to 1 nn
 K <- 2000
 ksubs <- 50 * 1:40
-mc.reps <- 50
+mc.reps <- 500
 
 # mus <- randn(K, p)
 # ys <- mus + sqrt(sigma2) * randn(K, p)
