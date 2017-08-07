@@ -23,14 +23,14 @@ thetas <- seq(0, 2 * pi, pi/100)
 circ <- cbind(cos(thetas), sin(thetas))
 nqs <- qnorm(seq(0, 0.5, 0.05))
 plot(0, 0, xlim = c(-2.5,2.5), asp = 1, col = "white",
-     xlab = "x", ylab = "y", main = "rho = 0.7")
+     xlab = "x*", ylab = "y", main = "rho = 0.7")
 for (i in rev(1:9)) {
   polygon(circ %*% S.5 * qnorm(0.5 + i/20), 
           border = "black",
           col = grey(i/10))
 }
 abline(0, 1/rho, lty = 2, col = "red", lwd = 2)
-legend(0.37, -2.4, col = "red", lty = 2, lwd = 2, legend = "E[X|Y=y]       ")
+#legend(0.37, -2.4, col = "red", lty = 2, lwd = 2, legend = "E[X|Y=y]       ")
 
 ## next plot adds onto ^^
 polygon(c(-9, 9, 9, -9), c(-9, -9, 9, 9), col = rgb(1,1,1,0.7))
@@ -82,14 +82,14 @@ for (rho in rhos) {
   lines(dsets[[paste(rho)]]$us, dsets[[paste(rho)]]$Kfunc,
         lwd = 2, col = cols[paste(rho)])
 }
-legend(0, 1, col = cols, legend = paste("rho = ", rhos, "  "), lwd = 2)
+legend(-0.05, 1.05, col = cols, legend = paste("rho = ", rhos, "  "), lwd = 2)
 
 plot(NA, NA, xlim = c(2,10), ylim = c(0,1), xlab = "k", ylab = expression(AGA[k]))
 for (rho in rhos) {
   lines(dsets[[paste(rho)]]$tabl[, "k"], 1-dsets[[paste(rho)]]$tabl[, "the.l"],
         lwd = 2, col = cols[paste(rho)], type = "o")
 }
-legend(6, 0.9, col = cols, legend = paste("rho", " = ", rhos, " "), lwd = 2, pch = "o")
+legend(5.3, 1.05, col = cols, legend = paste("rho", " = ", rhos, " "), lwd = 2, pch = "o")
 
 ## get polynomial approximation rates
 source("extrapolation/polynomial_approximation.R")

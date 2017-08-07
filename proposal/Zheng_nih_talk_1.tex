@@ -119,11 +119,11 @@
 %----------------------------------------------------------------------------------------
 
 
-\title[Inference through learning]{What does classification tell us about the brain? Statistical inference through machine learning}
+\title[tfMRI generalizability]{Using randomization in fMRI classification experiments to ensure generalizability}
 
 \author{Charles Zheng} % Your name
-\institute[Stanford] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
-{Stanford University}
+\institute[NIMH] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+{National Institute of Mental Health}
 \date{\today} % Date, can be changed to a custom date
 
 \begin{document}
@@ -133,65 +133,110 @@
 (Joint work with Yuval Benjamini.)
 \end{frame}
 
-\section{Introduction}
+\section{Randomization and Generalization}
 
-%\begin{frame}
-%\frametitle{Dependence, distance, and information}
-%\begin{columns}
-%\begin{column}{0.5\textwidth}
-%\begin{center}
-%\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_1a.pdf}
-%\end{center}
-%\begin{itemize}
-%\item $X$ is independent of $Y$: 
-%\[X \perp Y\]
-%\item $X$ and $Y$ have no mutual information:
-%\[
-%I(X; Y) = 0
-%\]
-%\end{itemize}
-%\end{column}
-%\begin{column}{0.5\textwidth}
-%\end{column}
-%\end{columns}
-%\end{frame}
+\begin{frame}
+\frametitle{Reproducibility}
+\begin{center}
+\includegraphics[scale = 0.8]{code_clipart.jpg}
+\end{center}
+Transparency in sharing data, methods, code, etc.
+\end{frame}
+
+\begin{frame}
+\frametitle{Replicability}
+\begin{center}
+\includegraphics[scale = 0.7]{replicability.jpg} 
+\end{center}
+``The ability of a researcher to duplicate the results of a prior
+study if the same procedures are followed but new data are
+collected''--National Science Foundation
+\end{frame}
+
+\begin{frame}
+\frametitle{Generalizability}
+\begin{center}
+\begin{tabular}{ccc}
+\includegraphics[scale = 0.1]{Falling_ball.jpg} &
+\includegraphics[scale = 0.3]{right_arrow.jpg} &
+\includegraphics[scale = 0.3]{orbit-3.jpg} 
+\end{tabular}
+\end{center}
+Being able to predict results of new ``experiments'' or observations.
+\end{frame}
+
+\begin{frame}
+\frametitle{Problem of Induction}
+\begin{center}
+\includegraphics[scale = 0.6]{david_hume.jpg}
+
+David Hume (1711-1776)
+\end{center}
+Why is it that ``instances of which we have had no experience resemble
+those of which we have had experience''?
+\end{frame}
+
+\begin{frame}
+\frametitle{Peirceian Induction and Neyman-Pearson testing}
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[scale = 0.3]{peirce.jpg} &
+\includegraphics[scale = 0.8]{dmayo1.jpg} \\
+C. S. Pierce & Deborah Mayo
+\end{tabular}
+\end{center}
+Theories can be confirmed inductively via \emph{severe testing}.  The Neyman-Pearson (classical statistical) framework provides one such mechanism.
+\end{frame}
+
+\begin{frame}
+\frametitle{Generalizing from samples to population}
+\begin{center}
+\includegraphics[scale = 0.3]{extsamp.png}
+\end{center}
+Thanks to key results in probability theory (law of large numbers, central limit theorem), sampling from a defined population is a well-understood form of induction.
+\end{frame}
+
+\begin{frame}
+\frametitle{Randomized Experiments enable Generalization}
+\begin{center}
+\includegraphics[scale = 0.3]{RA_Fisher.jpg}
+\includegraphics[scale = 0.2]{RCT_Cartoon.png}
+\end{center}
+\begin{itemize}
+\item \emph{Design of Experiments} by R. A. Fisher introduced the concept of \emph{randomization}\pause
+\item \emph{Randomized clinical trials} are the gold standard
+for inference of causal effects. \pause
+\item Randomization + Law of Large Numbers implies quantitative replicability--a form of generalization to the population
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Random vs deterministic design in fMRI}
+For designing event-related sequences for task fMRI...
+\begin{itemize}
+\item Bura\v{c}as and Boynton (2001) showed that deterministic m-sequences are more efficient for estimating HRF than random designs by a large factor
+\begin{center}
+\includegraphics[scale = 0.2]{MLS_shiftregisters_L4.png}
+\end{center}
+\item However, as Friston (1999) points out, random designs may have advanatages in terms of psychological effects \pause
+\item Theoretically speaking, deterministic designs are fine as long as one can rule out higher-order dependencies between measurements \pause
+\item However, when no principled approach exists to cancel out possible biases, randomization guarantees it (on average)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Generalizing beyond the population?}
+\begin{center}
+\includegraphics[scale = 0.3]{weird_people.png}
+\end{center}
+\end{frame}
 
 
+\section{Classification experiments in fMRI}
 
-%\begin{frame}
-%\frametitle{Dependence, distance, and information}
-%\begin{columns}
-%\begin{column}{0.5\textwidth}
-%\begin{center}
-%\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_1a.pdf}
-%\end{center}
-%\begin{itemize}
-%\item $X$ is independent of $Y$: 
-%\[X \perp Y\]
-%\item $X$ and $Y$ have no mutual information:
-%\[
-%I(X; Y) = 0
-%\]
-%\end{itemize}
-%\end{column}
-%\begin{column}{0.5\textwidth}
-%\begin{center}
-%Classifying $\text{Sign}(X)$ from $Y$
-
-%\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.9in 0.1in 0.2in]{../diagram/ddi_1b.pdf}
-
-%\includegraphics[scale = 0.4, clip = true, trim = 0.1in 0.1in 0.1in 0.2in]{../diagram/ddi_1c.pdf}
-%\end{center}
-%$KL(Y|X > 0, Y|X < 0) = 0.$
-
-%Bayes accuracy = 0.5.
-%\end{column}
-%\end{columns}
-%\end{frame}
-
-
-
-
+\begin{frame}
+\sectionpage
+\end{frame}
 
 \begin{frame}
 \frametitle{Studying the neural code}
@@ -219,7 +264,7 @@ Produces a map of ``informative'' regions of the brain (as measured by generaliz
 
 {
 \setbeamercolor{background canvas}{bg=}
-\includepdf[pages=1-2]{drawings_einstein.pdf}
+\includepdf[pages=1]{drawings_einstein.pdf}
 % from Razaida
 }
 
@@ -227,15 +272,17 @@ Produces a map of ``informative'' regions of the brain (as measured by generaliz
 \frametitle{Bayes accuracy}
 \begin{itemize}
 \item Discrete $Y \in \{1,...,k\}$, continuous or discrete $X$.
-\item A classifier is a function $f$ mapping $x$ to a label in $\{1,..,k\}$
+\item A classifier is a function $f$ mapping $x$ to a label in $\{1,..,k\}$ \pause
 \item Generalization accuracy of the classifier:
 \[
 \text{GA}(f) = \Pr[Y = f(x)]
 \]
+\pause
 \item Bayes accuracy:
 \[
 \text{BA} = \sup_f \Pr[Y = f(x)] = \Pr[Y = \text{argmax}_{i=1} p(X|Y=i)]
 \]
+\pause
 \item Since random guessing is correct with probability $1/k$,
 \[
 \text{BA} \in [1/k, 1]
@@ -245,7 +292,65 @@ Produces a map of ``informative'' regions of the brain (as measured by generaliz
 \end{frame}
 
 \begin{frame}
-\frametitle{Fixed classification task}
+\frametitle{Inferring Bayes accuracy}
+\begin{center}
+\includegraphics[scale = 0.3]{ta_to_ba.png}
+\end{center}
+\begin{itemize}
+\item Given $m$ test observations,
+\[
+\underline{\text{GA}}_\alpha(\hat{f}) = \text{TA} - z_\alpha\sqrt{\frac{\text{TA}(1-\text{TA})}{m}}
+\]
+is a an $(1-\alpha)$ lower confidence bound for $\text{BA}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Inferring Bayes accuracy}
+\begin{center}
+\includegraphics[scale = 0.3]{ta_to_ba.png}
+\end{center}
+\begin{itemize}
+\item Since $\text{BA} \geq \text{GA}$ by definition,
+\[
+\underline{\text{BA}}_\alpha = \underline{\text{GA}}(\hat{f})
+\]
+is an $(1-\alpha)$ lower confidence bound for $\text{BA}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Inferring Bayes accuracy under model selection}
+\begin{center}
+\begin{tabular}{ccc}
+$\hat{f}_1$ & $\hat{f}_2$ & $\hat{f}_3$\\
+\includegraphics[scale = 0.2]{model1.png} &
+\includegraphics[scale = 0.2]{model2.png} &
+\includegraphics[scale = 0.2]{model3.png}
+\end{tabular}
+\end{center}
+\begin{itemize}
+\item Or, if $\hat{f}_1,...,\hat{f}_d$ result from $d$ different procedures,
+\[
+\underline{\text{BA}}_\alpha = \min_{i=1}^d \underline{\text{GA}}_{\frac{\alpha}{d}}(\hat{f}_i)
+\]
+is also an $(1-\alpha)$ lower confidence bound for $\text{BA}$ (using Bonferroni's inequality).
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Can we get an \emph{upper bound} for Bayes accuracy?}
+\begin{itemize}
+\item Mathematically speaking, no, since for all we know there could be a \emph{super-complicated} classification rule (that is impossible to learn from data) that gets 100 percent accuracy. \pause
+\item However, if we can make some kind of smoothness assumption on the Bayes boundary, it might be possible \pause
+\item Some relevant work (Cortes et al 1994) but this is a wide-open problem in machine learning
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Problem with Bayes accuracy}
 \begin{columns}
 \begin{column}{0.6\textwidth}
 \begin{tabular}{cc}
@@ -264,7 +369,7 @@ Produces a map of ``informative'' regions of the brain (as measured by generaliz
 \end{frame}
 
 \begin{frame}
-\frametitle{Fixed classification task}
+\frametitle{Problem with Bayes accuracy}
 \begin{columns}
 \begin{column}{0.6\textwidth}
 \begin{tabular}{cc}
@@ -279,7 +384,7 @@ Produces a map of ``informative'' regions of the brain (as measured by generaliz
 \end{column}
 \end{columns}
 \begin{itemize}
-\item Different stimuli sets lead to different \emph{Bayes accuracy}.
+\item Different stimuli sets lead to different \emph{Bayes accuracy}. \pause
 \item Results are incomparable, even in the large-sample limit.
 \end{itemize}
 \end{frame}
@@ -356,7 +461,7 @@ Bayes accuracy & 0.55 & 0.65 & 0.52 \\
 \end{tabular}
 \end{center}
 \begin{itemize}
-\item Bayes accuracy depends on the stimuli drawn.
+\item Bayes accuracy depends on the stimuli drawn. \pause
 \item Therefore, define $k$-class \emph{average Bayes accuracy} as the expected Bayes accuracy for $X_1,..,X_k \stackrel{iid}{\sim} p(x)$.
 \[
 \text{ABA}_k = \E[BA(X_1,...,X_k)]
@@ -377,12 +482,13 @@ Bayes accuracy & 0.55 & 0.65 & 0.52 \\
 \[
 \text{ABA}_k = \E[BA_k]
 \]
-by definition.
+by definition. \pause
 \item But what is the variance?
 \[
 \text{Var}[\text{BA}(X_1,...,X_k)]
 \]
-\item \emph{Theoretical result}. Maximal variability is of order $1/k$.
+\pause
+\item \emph{Theoretical result}. Maximal variability is of order $1/k$. \pause
 \item Therefore, it is feasbile to get a good idea of $\text{ABA}_k$ by choosing a sufficiently large sample size $k$.
 \end{itemize}
 \end{frame}
@@ -397,54 +503,6 @@ Why does variability decrease with $k$?
 \end{frame}
 
 \begin{frame}
-\frametitle{Intuition 1: averaging}
-\begin{center}
-\begin{tabular}{c|c|c|c}
-& Experiment 1 & Experiment 2 & Experiment 3\\\hline
-&\includegraphics[scale = 0.15, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1a.png} &
-\includegraphics[scale = 0.15, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1b.png} &
-\includegraphics[scale = 0.15, clip = true, trim = 0.6in 0.2in 0.6in 0.2in]{../info_theory_paper/gaussian_figure1c.png}\\\hline
-Bayes accuracy & 0.55 & 0.65 & 0.52 \\
-\end{tabular}
-\end{center}
-Average of $k$ gaussian probability integrals... (which are asympt. uncorrelated.)
-\end{frame}
-
-\begin{frame}
-\frametitle{Intuition 2: An identity}
-\begin{itemize}
-\item It is a well-known result from Bayesian inference that the optimal classifier $f$ is defined as
-\[
-f(y) = \text{argmax}_{i=1}^k p(y|x_i),
-\]
-since the prior class probabilities are uniform.
-\item Therefore,
-\begin{align*}
-\text{BA}(x_1,...,x_k) &= \Pr[\text{argmax}_{i=1}^k p(y|x_i) = Z| x_1,...,x_k] 
-\\&= \frac{1}{k}\int \max_{i=1}^k p(y|x_i) dy.
-\end{align*}
-\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Intuition behind identity}
-\begin{columns}
-\begin{column}{0.5\textwidth}
-\begin{center}
-\includegraphics[scale = 0.35, clip = true, trim = 1.2in 1.3in 0in 1in]{var_ba.png}
-\end{center}   
-\end{column}
-\begin{column}{0.5\textwidth}  %%<--- here
-\begin{align*}
-\text{BA}&(x_1,x_2,x_3) \\&= \sum_i \Pr[x_i]\Pr_{Y \sim p(y|x_i)}[Y \in \text{zone }i]
-\\&= \sum_i \frac{1}{k} \text{Area under curve $i$ in zone $i$}
-\\&\ \ \ = \frac{1}{k} \text{Area under } \max_{i=1}^k p(y|x_i)
-\end{align*}
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}
 \frametitle{Variability of Bayes accuracy}
 
 \emph{Theoretical result}. In the max formulation of $\text{BA}_k$, we
@@ -452,7 +510,7 @@ can apply Efron-Stein inequality to get
 \[
 \text{sd}[\text{BA}_k] \leq \frac{1}{2\sqrt{k}}
 \]
-\vspace{0.2in}
+\vspace{0.2in}\pause
 \emph{Empirical results}. (searching for worst-case stimuli).
 \begin{tabular}{c||c|c|c|c|c|c|c}
 k & 2 & 3 & 4 & 5 & 6 & 7 & 8\\\hline
@@ -462,49 +520,66 @@ Worst-case sd & 0.25 & 0.194 & 0.167 & 0.150 & 0.136 & 0.126 & 0.118
 \end{frame}
 
 \begin{frame}
-\frametitle{Improving the variance bound?}
-\begin{itemize}
-\item All of the worst-case distributions take the form
-\[
-\mathcal{Y} = \mathcal{X} = \{1,...,d\} \text{ for some } d
-\]
-\[
-p(y|x) = \frac{1}{d}I\{x = y\}
-\]
-\item Sampling $k$ items from $d$ with replacement; $\text{BA}_k$ is the number of unique items divided by $k$.
-\item According to Birthday paradox, 
-\[\text{ABA}_k \approx (1-e^{-d/k})\]
-and 
-\[
-\text{Var}(\text{BA}_k) \approx \frac{1}{d}e^{-d/k}(1-e^{-d/k})
-\]
-\item ``Discreteness'' of the distribution seems to maximize variance?
-\item If we could prove that this is indeed the worst case, then we have a better constant for variance bound.
-\end{itemize}
-\end{frame}
-
-\begin{frame}
 \frametitle{Inferring average Bayes error}
 For now, return to the world of finite data...
 \begin{enumerate}
-\item \emph{Experimental design}: draw $k$ stimuli $X_1,...,X_k$ iid from $p(x)$.  Then collect data $(X_i, Y_i^j)$.
-\item \emph{Supervised learning}: train a classifier and obtain a test accuracy $\text{TA}_k$.
+\item \emph{Experimental design}: draw $k$ stimuli $X_1,...,X_k$ iid from $p(x)$.  Then collect data $(X_i, Y_i^j)$. \pause
+\item \emph{Supervised learning}: train a classifier and obtain a test accuracy $\text{TA}_k$. \pause
 \item \emph{Generalization accuracy}: if $n_{test}$ is the size of the test set,
 \[
 \underline{\text{GA}_k} = \text{TA}_k - \frac{z_{\alpha/2}\sqrt{\text{TA}_k (1-\text{TA}_k)}}{\sqrt{n_{test}}}
 \]
- is a lower confidence bound for $\text{GA}_k$
+ is a lower confidence bound for $\text{GA}_k$ \pause
 \item \emph{Bayes accuracy}:
 \[
 \underline{\text{BA}}_k =  \underline{\text{GA}}_k
 \]
-is a lower confidence bound for $\text{BA}_k$
+is a lower confidence bound for $\text{BA}_k$ \pause
 \item \emph{Average Bayes accuracy}
 \[
 \underline{\text{ABA}}_k =  \underline{\text{BA}}_k - \frac{1}{2\sqrt{\alpha k}}
 \]
-is a lower confidence bound for $\text{ABA}_k$.
+is a lower confidence bound for $\text{ABA}_k$. \pause
 \end{enumerate}
+\end{frame}
+
+
+
+
+
+\begin{frame}
+\frametitle{Back to fMRI experimental design...}
+How should one select the tasks for an experiment?
+\begin{center}
+\includegraphics[scale = 0.5]{procontable.png}
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Future work}
+\begin{center}
+\includegraphics[scale = 0.3]{haxby_example.png}
+\end{center}
+\begin{itemize}
+\item Theory can be extended to handle discrimination between a fixed number of categories
+\item Category-based classification is equivalent to a cost function $C(y,y')$ which is equal to 0 if $y$ and $y'$ are from the same category, and 1 otherwise.
+\item Sampling of random exemplars is stratified by category, but amounts to a minor adjustment to the variance bounds
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Conclusions}
+\begin{itemize}
+\item Classification accuracy is being used for a variety of downstream inferences and interpretations in fMRI \pause
+\item Test accuracy is hard to interpret for a variety of reasons \pause
+\item Using test accuracy as a means of \emph{lower-bounding} Bayes accuracy, we can make rigorous inferential statements, and this is more honest about what classification really tells us \pause
+\item It would be nice if we could also upper-bound Bayes accuracy, but more theory is needed. \pause
+\item Bayes accuracy, however, does not necessarily generalize beyond an arbitrary stimulus set. \pause
+\item One way to make sure it generalizes to a population is to use a
+  sufficiently large number of random samples, and our theory tells us
+  how many are needed for a given level of replicability
+\end{itemize}
 \end{frame}
 
 

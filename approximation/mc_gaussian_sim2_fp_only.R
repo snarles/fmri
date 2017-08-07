@@ -106,12 +106,12 @@ errs <- (all_final_preds - true_accs[K])^2
 final_pred_err_mat <- apply(errs, c(2, 3), mean)
 #final_pred_err_mat <- apply(errs[sample(50, replace = TRUE), , ], c(2, 3), mean)
 #load("approximation/mcgs2f.rda")
-pdf("approximation/fig_mcgs2f.pdf", width = 6, height = 4)
+pdf("approximation/fig_mcgs2f.pdf", width = 5, height = 4)
 source("approximation/mcgs2_colscheme.R")
 matplot(ksubs, sqrt(final_pred_err_mat), 
         type = "l", ylab = "RMSE", xlab = expression(k[1]), xlim = c(250, 2000),
         ylim = c(0, 0.5), col = cols, lty = ltys, lwd = 3)
-legend(1500, 0.5, legend = nms, col = cols, lty = ltys, lwd = 3)
+legend(1570, 0.53, legend = nms, col = cols, lty = ltys, lwd = 3)
 dev.off()
 
 #save(all_accs, errs, true_accs, final_pred_err_mat, file = "approximation/mcgs2f.rda")

@@ -14,22 +14,25 @@ source("approximation/pnorm_qnorm.R")
 TR <- function(a) sum(diag(a))
 TR2 <- function(a) sum(diag(a %*% a))
 
-mc.reps <- 1e2
+mc.reps <- 1e4
 
 cc <- 1
-p <- 20; r <- 100; K <- 3
+p <- 20; r <- 10; K <- 3
 Omega <- 0.5 * cov(randn(10*p, p)) +  p * eye(p)
 Omega <- Omega * TR(solve(Omega))/cc
 #Omega <- eye(p) * p/cc
 c(TR(solve(Omega)), TR2(solve(Omega)))
-Xi <- Omega/r
+#Xi <- Omega/r
+Xi <-  0.5 * cov(randn(10*p, p)) +  p * eye(p)
 OmegaH <- cov(mvrnorm(K * r, rep(0, p), Omega)) 
 #OmegaH <- Omega
 XiH <- OmegaH/r
 f2(Omega, OmegaH)
 
-A <- solve(eye(p) + OmegaH - solve(eye(p) + XiH))
-B <- solve(eye(p) + XiH)
+#A <- solve(eye(p) + OmegaH - solve(eye(p) + XiH))
+A <- eye(p)
+#B <- solve(eye(p) + XiH)
+B <- eye(p)
 
 p <- dim(Omega)[1]
 
@@ -60,12 +63,23 @@ for (i in 1:mc.reps) {
 ####
 
 aa <- -2 * TR(A %*% B)
-bb <- 2 * TR2(A %*% (eye(p) + Omega + B %*% (eye(p) + Omega/r) %*% B - 2 * B))
+bb <- 2 * TR2(A %*% (eye(p) + Omega + B %*% (eye(p) + Xi) %*% B - 2 * B))
 cc <- 2 * TR2(A %*% (eye(p) + Omega - B))
-dd <- 2 * TR2(A %*% (eye(p) + Omega + B %*% (eye(p) + Omega/r) %*% B))
+dd <- 2 * TR2(A %*% (eye(p) + Omega + B %*% (eye(p) + Xi) %*% B))
 ee <- 2 * TR2(A %*% (eye(p) + Omega))
 m <- -aa/sqrt(dd- ee)
 v <- (bb + ee - 2 * cc)/(dd - ee)
+
+dim(nms_s)
+emp_m <- colMeans(nms_s)
+c(emp_m[1] - emp_m[2], aa)
+
+Sigma <- diag(rep(dd - ee, K)) + ee
+Sigma[1, 1] <- bb
+Sigma[1, -1] <- cc; Sigma[-1, 1] <- cc
+list(cov(nms_s), Sigma)
+
+## formulas seem to work
 
 gm <- eigen(A %*% B)$values
 max(gm)
