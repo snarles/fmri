@@ -58,8 +58,8 @@ knts <- rev(1 - knts[-c(1, nsplines + 2)]^2)
 MM_4_sq <- spline1_moments(knts, 1:K)
 
 basis_vecs <- list(mm2 = MM_2, mm2sq =MM_2_sq, mm3 = MM_3, mm3sq = MM_3_sq, mm4 = MM_4, mm4sq = MM_4_sq)
-all_final_preds <- array(0, dim = c(mc.reps, length(ksubs), length(basis_vecs)))
-all_accs <- matrix(0, mc.reps, K)
+#all_final_preds <- array(0, dim = c(mc.reps, length(ksubs), length(basis_vecs)))
+#all_accs <- matrix(0, mc.reps, K)
 
 
 subfun <- function(repno) {
@@ -89,8 +89,10 @@ subfun <- function(repno) {
 }
 
 t1 <- proc.time()
-res <- mclapply(1:80, subfun, mc.cores = 10)
+res <- mclapply(1:4000, subfun, mc.cores = 10)
 proc.time() - t1
+## 1 hr for 180
+
 
 all_accs <- lapply(res, `[[`, "accsS")
 all_accs <- do.call(abind, c(all_accs, list(rev.along = 0)))
