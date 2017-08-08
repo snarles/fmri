@@ -1,5 +1,5 @@
 library(parallel)
-mcc <- 40
+mcc <- 20
 
 source("approximation/gaussian_identity_finsam.R")
 source("extrapolation/ku_source.R")
@@ -9,7 +9,7 @@ sigma2 <- 0.3
 sigma2_tr <- sigma2 ## equivalent to 1 nn
 K <- 2000
 ksubs <- 50 * 1:40
-mc.reps <- 50
+mc.reps <- 180
 
 # mus <- randn(K, p)
 # ys <- mus + sqrt(sigma2) * randn(K, p)
@@ -99,19 +99,26 @@ for (repno in 1:mc.reps) {
 }
 
 proc.time() - t1
+# "12.5 per hour"
 
 true_accs <- colMeans(all_accs)
 errs <- (all_final_preds - true_accs[K])^2
 
 final_pred_err_mat <- apply(errs, c(2, 3), mean)
-#final_pred_err_mat <- apply(errs[sample(50, replace = TRUE), , ], c(2, 3), mean)
+#final_pred_err_mat <- apply(errs, c(2, 3), median)
+#plot(all_final_preds[,40,5])
+#final_pred_err_mat <- apply(errs[sample(mc.reps, replace = TRUE), , ], c(2, 3), mean)
 #load("approximation/mcgs2f.rda")
 pdf("approximation/fig_mcgs2f.pdf", width = 5, height = 4)
 source("approximation/mcgs2_colscheme.R")
 matplot(ksubs, sqrt(final_pred_err_mat), 
         type = "l", ylab = "RMSE", xlab = expression(k[1]), xlim = c(250, 2000),
-        ylim = c(0, 0.5), col = cols, lty = ltys, lwd = 3)
-legend(1570, 0.53, legend = nms, col = cols, lty = ltys, lwd = 3)
+        ylim = c(0, 0.3), col = cols, lty = ltys, lwd = 3)
+# matplot(ksubs, sqrt(final_pred_err_mat), 
+#         type = "l", ylab = "RMSE", xlab = expression(k[1]),
+#         col = cols, lty = ltys, lwd = 3, ylim = c(0, 0.5))
+
+legend(1570, 0.32, legend = nms, col = cols, lty = ltys, lwd = 3)
 dev.off()
 
 #save(all_accs, errs, true_accs, final_pred_err_mat, file = "approximation/mcgs2f.rda")
