@@ -251,7 +251,7 @@ maximum size of the stimuli set before the model accuracy drops below
 incorrect-label scores for each example in the test dataset, and then
 computed the probability of correct classification assuming that
 future labels were drawn from the estimated density.  However, as we
-will discuss, their method suffers from bios due to failing to account
+will discuss, their method suffers from bias due to failing to account
 for the error in the estimated density.
 
 The theoretical framework we adopt is one where there exists a family
@@ -1224,7 +1224,7 @@ the formula
 \[
 \widehat{\text{AGA}_k} = \frac{1}{k_1 r} \sum_{i=1}^k \sum_{j=1}^r \hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))^{k-1}
 \]
-While no justification is given for the method in \cite{Kay2008a},  one possible justificiation is the fact that
+While no justification is given for the method in \cite{Kay2008a},  one possible justification is the fact that
 \[\text{AGA}_k = \E[F_X(M_{Y}(X))^{k-1}].\]
 Therefore, the method can give good extrapolations when the estimated
 probabilities $\hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$ are close
