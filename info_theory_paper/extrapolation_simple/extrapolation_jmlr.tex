@@ -1125,19 +1125,16 @@ noise levels.
 \end{tabular}
 \caption{\textbf{Simulation results:} Simulation study consisting of
   multivariate Gaussian $Y$ with nearest neighbor classifier.
-  Comparison of various linear spline bases for extrapolation, in
-  multivariate Gaussian simulation with $Y \sim N(0, I_{10})$, $X|Y
-  \sim N(Y, \sigma^2 I_{10})$, and $r=1$ training set.  The spline
-  bases are lin2 (100 knots), lin3 (1000 knots) and lin4 (10000) knots
-  with uniform knot spacings from [0,1], and lin2q, lin3q, and lin4q
-  are corresponding bases with quadratic spacing of knots (more
-  densely packed near 1).  \emph{Top left:} Extrapolating from $k_1 =
-  500$ up to $k = 2000$ compared to true accuracy, with $\sigma =
-  0.55$. \emph{Top right:} The RMSE of $\widehat{\text{AGA}_{2000}}$
-  for varying $k_1$ and $\sigma = 0.55$. \emph{Bottom right:} The
-  actual distribution functions $D(u)$ for varying $\sigma$.
-  \emph{Bottom left:} The RMSE of $\widehat{\text{AGA}_{2000}}$ for
-  $k_1 = 500$ and varying $\sigma$.}
+  Comparison of linear spline bases for extrapolation: lin2 (100
+  knots), lin3 (1000 knots) and lin4 (10000) knots with uniform knot
+  spacings, and lin2q, lin3q, and lin4q with quadratic spacing of
+  knots (more densely packed near 1).  \emph{Top left:} Extrapolating
+  from $k_1 = 500$ up to $k = 2000$ compared to true accuracy, with
+  $\sigma = 0.55$. \emph{Top right:} The RMSE of
+  $\widehat{\text{AGA}_{2000}}$ for varying $k_1$ and $\sigma =
+  0.55$. \emph{Bottom right:} The actual distribution functions $D(u)$
+  for varying $\sigma$.  \emph{Bottom left:} The RMSE of
+  $\widehat{\text{AGA}_{2000}}$ for $k_1 = 500$ and varying $\sigma$.}
 \label{fig:sim_study}
 \end{figure}
 
@@ -1308,9 +1305,9 @@ target task without training data \citep{pan2010survey}.
  
 
 \acks{We thank Jonathan Taylor, Trevor Hastie, John Duchi, Steve
-  Mussmann, Qingyun Sun, Robert Tibshirani for useful discussion.  CZ
+  Mussmann, Qingyun Sun, and Robert Tibshirani for useful discussion.  CZ
   is supported by an NSF graduate research fellowship, and would also
-  like to thank the European Research Council under the ERC grant agreement n° [PSARPS-294519]  for travel support.
+  like to thank the European Research Council under the ERC grant agreement $\text{n}^\circ$[PSARPS-294519]  for travel support.
 }
 
 \bibliography{example}
