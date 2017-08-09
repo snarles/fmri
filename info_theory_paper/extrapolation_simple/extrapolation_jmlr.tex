@@ -917,7 +917,7 @@ $y^{(4)}$=Patricia &
   $x_3^{(4)} = $\includegraphics[scale = 0.2]{face_photos/Patricia_Clarkson_0003.png} &  
   $x_4^{(4)} = $\includegraphics[scale = 0.2]{face_photos/Patricia_Clarkson_0004.png} \\ \hline
 \end{tabular}
-\caption{Face recognition problem}
+\caption{\textbf{Face recognition setup:} Examples of labels and features from the \emph{Labeled Faces in the Wild} dataset.}
 \label{fig:face_rec}
 \end{figure}
 
@@ -984,11 +984,11 @@ approximates the ground truth.
 \begin{figure}
 \centering
 \begin{tabular}{c}
-\begin{myfont}Predicting $\text{AGA}_{1672}$ from $k_1= 400$ classes\end{myfont}\\
+\begin{myfont}Predicting $\text{AGA}$ ($k_1= 400$) \end{myfont}\\
 \includegraphics[scale = 0.5, clip = true, trim = 0 0 0 0.6in]{acc_plot2.pdf}
 \end{tabular}
-\caption{Estimated average accuracy for $k > 400$ on the Labeled Faces in the Wild dataset, compared to the ground truth (average $k$-class test accuracy
-  using all 1672 classes).}
+\caption{\textbf{Estimated accuracy for face recognition:}
+Estimated average accuracy for $k > 400$ (red) compared to the ground truth (black). Estimation is based on observed accuracies using one subset of $k_1=400$ classes, whereas ground truth uses all 1672 classes. The results are for 1-NN classifier.}
 \label{fig:lfw_extrapolation1}
 \end{figure}
 
@@ -1016,9 +1016,8 @@ root-mean-square errors between at $k_2=1672$ can be seen in Table
 \includegraphics[scale = 0.4, clip = true, trim = 0 0 0 0.6in]{sub_400.pdf} &
 \includegraphics[scale = 0.4, clip = true, trim = 0 0 0 0.6in]{sub_800.pdf} 
 \end{tabular}
-\caption{Estimated average accuracy using subsampled datasets of size
-  $k$, compared to the ground truth (average $k$-class test accuracy
-  using all 1672 classes).}
+\caption{\textbf{Comparing different $k_1$s:}
+The plots show predicted accuracies using a different source dataset size $k_1$ (vertical line). Each red curve represents the estimated accuracies using a single subsample. The black curve shows the true average accuracy. }
 \label{fig:lfw_extrapolation2}
 \end{figure}
 
@@ -1036,23 +1035,34 @@ RMSE & 0.291 & 0.189 & 0.068 & 0.020 \\\hline
 
 \section{Simulation study}\label{sec:simulation_study}
 
-We ran a simulation study in order to understand how well the proposed extrapolation method
-scales with different numbers of classes, $k_1$, and on problems of varying difficulty, on a large multi-class dataset,
-as well as how the performance depends on the choice of basis.
-Similarly to the toy example, we generated data according to a mixture of isotropic multivariate gaussian distributions.
-We generated the labels $Y \sim N(0, I_{10})$, and the distribution of examples for each label is
-$X|Y \sim N(Y, \sigma^2 I_{10})$, where $\sigma$ is a noise parameter that we vary in the simulations.
-Analagously to the real-data example, we consider a 1-nearest neighbor classifier which is given a single
-training instance per class.
+We ran simulations to check how the proposed extrapolation method
+performs in different settings.  The results are displayed in Figure
+\ref{fig:sim_study}. We varied the number of classes $k_1$ in the
+source dataset, the difficulty of classification, and the basis
+functions. We generated data according to a mixture of isotropic
+multivariate Gaussian distributions: labels $Y$ were sampled from $Y
+\sim N(0, I_{10})$, and the examples for each label sampled from $X|Y
+\sim N(Y, \sigma^2 I_{10})$. The noise-level parameter $\sigma$
+determines the difficulty of classification. Similarly to the
+real-data example, we consider a 1-nearest neighbor classifier, which
+is given a single training instance per class. In all simulations, we
+predict the average accuracy for $k = 2000$ classes. 
+%We vary $k_1$,
+%the number of classes in the source task; and $\sigma$, which controls
+%the noise level, and hence the true average accuracy.
 
-All of the spline bases that we consider are linear spline bases, of the form $h_\ell(u) = [u - t_\ell]_+$ for some set of knots $\{t_\ell\}_{\ell = 1}^m$.  However, we vary the number of knots, and the spacings of the knots.  One type of spacing is \emph{linear spacing}, which chooses knots $\{t_\ell\}_{\ell = 1}^m$ according to
+For the estimation, we compare several spline bases, all of the form $h_\ell(u) = [u - t_\ell]_+$ for some set of knots $\{t_\ell\}_{\ell = 1}^m$. Spline bases vary by the number and the spacing of knots: 
+\begin{itemize}
+\item \emph{linear spacing} chooses knots according to
 \[
 t_\ell = \frac{\ell}{m+1}.
 \]
-We also consider \emph{quadratic spacing}, which has an increased density of knots near 1:
+\item \emph{quadratic spacing}  has an increased density of knots near 1
 \[
 t_\ell = \left(1 - \frac{m + 1 -\ell}{m+1}\right)^2.
 \]
+\end{itemize}
+
 The rationale for increasing the density of knots near 1 is that
 when attempting to extrapolate to a large number of
 classes, the behavior of ${D}(u)$ for $u$ close to 1 is far more
@@ -1065,35 +1075,38 @@ We compare linear and quadratic spacings for spline bases of size $m = \{100,100
 For all spline bases, we fit the coefficients using a non-negativity constraint on $\beta$, 
 which enforces convexity of the estimated $\hat{D}(u).$
 
-In all simulations, we consider predicting the average accuracy for $k = 2000$ classes.  
-We vary the parameters $k_1$, the number of classes in the source task, and $\sigma$, 
-which controls the noise level, and hence the true average accuracy.
-The results are displayed in figure \ref{fig:sim_study}.  
-
-In figure \ref{fig:sim_study} (top right) we see how the accuracy of prediction
-improves as we increase the number of classes in the training set, $k_1=\{50,\hdots,2000\}$, while fixing $\sigma = 0.55$.
-We see that the performance curves of the spline bases can be roughly clustered into two groups.
-The {\tt lin2} spline basis with linear spacing and $m=100$ forms a group on its own,
-while the other spline bases form the other group.
-The first group enjoys better RMSE for $k_1 < 150$; however, for $k_1 > 400$ the second group has far better extrapolation peformance.
-The relatively poor performance of the {\tt lin2} spline basis can be explained by the fact that 
-the {\tt lin2} spline basis cannot approximate the true $D(u)$ function (bottom left of figure) to a sufficiently high resolution.
-When there is insufficient data to fit $D(u)$ with a more accurate model, such as when $k_1 < 150$,
-this may not be a disadvantage, but as more data becomes available and the variance of estimation
-decreases, models which can better fit $D(u)$ (and hence have lower bias) 
-demonstrate better convergence properties.
-However, it is worth noting that the {\tt lin2q} basis, which also has $m=100$ knots, but which
-are quadratically spaced rather than linearly spaced, matches the performance of much larger spline bases
-up to $k_1 = 2000$.  This suggests that a small spline basis with $m << k_1$ can perform almost as well
-as an optimally sized spline basis, as long as appropriate spacing is used for the knots.
+\subsection*{Results}
+In Figure \ref{fig:sim_study} (top right) we see how the accuracy of
+prediction improves as we increase the number of classes in the
+training set, $k_1=\{50,\hdots,2000\}$, while fixing $\sigma = 0.55$.
+We see that the performance curves of most spline bases are similar. An
+outlier is the spline basis with linear spacing and $m=100$ ({\tt
+  lin2}). This case enjoys better RMSE for $k_1 < 150$; however, for
+$k_1 > 400$ the main group has far better extrapolation performance.
+A possible explanation for the relatively poor performance of the {\tt
+  lin2} is that this basis cannot approximate the true $D(u)$ function
+(bottom left of figure) to a sufficiently high resolution.  When the
+source dataset too small to accurately fit $D(u)$, such as when $k_1 <
+150$, this may not be a disadvantage. But as more data becomes
+available and the variance of estimation decreases, models with lower
+bias obtain better results.  Note that quadratic spacing with the same
+number of knots ($m=100$) matches the performance of much larger
+spline bases.  This suggests that a small spline basis with $m << k_1$
+can perform almost as well as an optimally sized spline basis, as long
+as appropriate spacing is used.
  
-In the bottom right of figure \ref{fig:sim_study}, we see how the error depends on the true parameter 
-$\sigma=\{0.3,\hdots,0.7\}$ while fixing $k_1 = 500$,
-which allows us to evaluate the reliability of the extrapolation across a wide range of possible signal-to-noise ratios.
-The true average accuracy $\text{AGA}_{2000}$ varies from 0.838 for $\sigma = 0.3$ to 0.102 for $\sigma = 0.7$.
-In this case, the spline bases can be divided into three groups.
-Once again, {\tt lin2} forms a group by itself--the worst performing group, but {\tt lin3} with $m = 1000$ linearly spaced knots is also alone in the best group, and the other spline bases form the third group performing similarly to {\tt lin3}.
-We do not currently have an explanation of why {\tt lin3} has the best performance across all noise levels.
+In the bottom right of Figure \ref{fig:sim_study}, we fix $k_1=500$
+and vary $\sigma=\{0.3,\hdots,0.7\}$. This allows us to evaluate the
+reliability of the extrapolation across a wide range of possible
+signal-to-noise ratios.  The true average accuracy $\text{AGA}_{2000}$
+varies from 0.838 for $\sigma = 0.3$ to 0.102 for $\sigma = 0.7$.  In
+this case, the spline bases can be divided into three groups.  Once
+again, {\tt lin2} forms a group by itself--the worst performing group,
+but {\tt lin3} with $m = 1000$ linearly spaced knots is also alone in
+the best group, and the other spline bases form the third group
+performing similarly to {\tt lin3}.  We do not currently have an
+explanation of why {\tt lin3} has the best performance across all
+noise levels.
 
 
 
@@ -1110,17 +1123,21 @@ We do not currently have an explanation of why {\tt lin3} has the best performan
 \includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0.6in]{fig_mgs2.pdf} &
 \includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0.6in]{fig_mcgs2fovs_02.pdf}\\ 
 \end{tabular}
-\caption{ Comparison of various linear spline bases for extrapolation,
-  in multivariate Gaussian simulation with $Y \sim N(0, I_{10})$, $X|Y
+\caption{\textbf{Simulation results:} Simulation study consisting of
+  multivariate Gaussian $Y$ with nearest neighbor classifier.
+  Comparison of various linear spline bases for extrapolation, in
+  multivariate Gaussian simulation with $Y \sim N(0, I_{10})$, $X|Y
   \sim N(Y, \sigma^2 I_{10})$, and $r=1$ training set.  The spline
   bases are lin2 (100 knots), lin3 (1000 knots) and lin4 (10000) knots
   with uniform knot spacings from [0,1], and lin2q, lin3q, and lin4q
   are corresponding bases with quadratic spacing of knots (more
-  densely packed near 1).  \emph{Top left:} Extrapolating from $k_1 = 500$ up to $k
-  = 2000$ compared to true accuracy, with $\sigma = 0.55$. \emph{Top right:} The
-  RMSE of $\widehat{\text{AGA}_{2000}}$ for varying $k_1$ and $\sigma
-  = 0.55$. \emph{Bottom right:} The actual distribution functions
-  $D(u)$ for varying $\sigma$.} \emph{Bottom left:} The RMSE of $\widehat{\text{AGA}_{2000}}$ for $k_1 = 500$ and varying $\sigma$. 
+  densely packed near 1).  \emph{Top left:} Extrapolating from $k_1 =
+  500$ up to $k = 2000$ compared to true accuracy, with $\sigma =
+  0.55$. \emph{Top right:} The RMSE of $\widehat{\text{AGA}_{2000}}$
+  for varying $k_1$ and $\sigma = 0.55$. \emph{Bottom right:} The
+  actual distribution functions $D(u)$ for varying $\sigma$.
+  \emph{Bottom left:} The RMSE of $\widehat{\text{AGA}_{2000}}$ for
+  $k_1 = 500$ and varying $\sigma$.}
 \label{fig:sim_study}
 \end{figure}
 
@@ -1195,14 +1212,14 @@ forthcoming work.
 \end{itemize}
 
 \subsubsection*{Comparison to Kay et al.}
-The extrapolation method of \citep{Kay2008a} can be described in our
+The extrapolation method of \cite{Kay2008a} can be described in our
 framework as follows.  Let $F_x$ be the cumulative distribution
 function of $M_{Y'}(x)$ for a random label $Y' \sim \pi$.  For each
 test instance $x^{(i)}_j$, let
 $\hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$ be an estimate of
 $F_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$.  The particular estimation
-method recommended by \citep{Kay2008a} is to estimate the density
-$f_{x^{(i)}_j}$ by using kernel-density estimation with a gaussian
+method recommended by \cite{Kay2008a} is to estimate the density
+$f_{x^{(i)}_j}$ by using kernel-density estimation with a Gaussian
 kernel and a bandwidth chosen via pseudolikelihood cross-validation
 \citep{cao1994comparative}; however, our criticism is not specific to
 the use of a particular estimator for $\hat{F}_x$.  Extrapolate using
@@ -1210,7 +1227,7 @@ the formula
 \[
 \widehat{\text{AGA}_k} = \frac{1}{k_1 r} \sum_{i=1}^k \sum_{j=1}^r \hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))^{k-1}
 \]
-While no justification is given for the method in (\cite{Kay2008a}),  one possible justificiation is the fact that
+While no justification is given for the method in \cite{Kay2008a},  one possible justificiation is the fact that
 \[\text{AGA}_k = \E[F_X(M_{Y}(X))^{k-1}].\]
 Therefore, the method can give good extrapolations when the estimated
 probabilities $\hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$ are close
@@ -1299,4 +1316,5 @@ target task without training data \citep{pan2010survey}.
 \bibliography{example}
 
 \end{document}
+
 
