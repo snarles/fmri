@@ -117,7 +117,8 @@ pdf("approximation/fig_mcgs2fovs_02.pdf", width = 5, height = 4)
 source("approximation/mcgs2_colscheme.R")
 #final_pred_err_mat <- apply(errs[, , sample(length(res), replace = TRUE)], c(1, 2), mean)
 matplot(sqrt(sigma2s), sqrt(final_pred_err_mat), 
-        type = "l", lwd = 3, ylab = "RMSE", xlab = expression(sigma), col = cols, lty = ltys)
+        type = "l", lwd = 3, ylab = "RMSE", xlab = expression(sigma), col = cols, lty = ltys,
+        ylim = c(0, 0.15))
 #legend(0.62, 0.15, legend = names(basis_vecs), col = cols, lty = ltys, lwd =2 )
 dev.off()
 
