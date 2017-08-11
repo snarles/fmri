@@ -5,7 +5,7 @@ source("icoeff/reg_graphon.R")
 
 set.seed(0)
 mc.cores <- 40
-p <- 5
+p <- 2
 self.loop <- TRUE
 normalize <- TRUE
 shape <- 1
