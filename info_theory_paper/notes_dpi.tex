@@ -257,6 +257,8 @@ definitions \eqref{eq:f_divergence} and \eqref{eq:Q_delta}.  The left-hand side 
 &\times (q(x) + \delta (Qq(x)-q(x)) dx\\
 =& \int f\left(\frac{p(x)}{q(x)}\right) (Qq(x)-q(x)) dx \\
 &+ \int f'\left(\frac{p(x)}{q(x)}\right) \left(Qp(x) - p(x) - \frac{p(x) (Qq(x) - q(x))}{q(x)}\right)  dx
+\\&=  \int \left[f\left(\frac{p(x)}{q(x)}\right) - \frac{p(x)}{q(x)}f'\left(\frac{p(x)}{q(x)}\right) \right] (Qq(x)-q(x)) dx\\
+&+ \int f'\left(\frac{p(x)}{q(x)}\right) (Qp(x) - p(x))  dx
 \end{align*}
 
 \end{document}
