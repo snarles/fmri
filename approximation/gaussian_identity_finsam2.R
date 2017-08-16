@@ -4,11 +4,21 @@ library(Rcpp)
 sourceCpp("approximation/count_distances_exdiag.cpp")
 mcc <- 4
 
+count_acc <- function(counts, m = 1:length(counts)) {
+  K <- length(counts)
+  nbads <- counts + 1
+  p_i <- 1 - nbads/K
+  rowMeans(dhyper(zeros(length(m), length(p_i)), 
+                  repmat(nbads, length(m), 1) - 1, 
+                  K - repmat(nbads, length(m), 1), repmat(t(t(m)), 1, length(p_i)) - 
+                    1))
+}
+
 
 ## query points x_i which are within distance r of x
 
-sigma2 <- 0.05
-sigma2_tr <- 0.05
+sigma2 <- 0.25
+sigma2_tr <- 0.25
 
 p <- 10
 n <- 1e5
@@ -35,3 +45,12 @@ counts <- countDistEx(muhs, ys, rSqs)
 # sum(counts != counts0)
 # 1 - mean(counts != 0) ## accuracy
 # rbind(cpp_time, naive_time)
+# 
+# library(lineId)
+# accs <- 1 - resample_misclassification(-t(dd), 1:n, 1:n)
+# accs2 <- count_acc(counts)
+# plot(accs, type = "l")
+# lines(accs2, col = "red")
+
+accs <- count_acc(counts)
+plot(accs, type = "l", ylim = c(0,1))
