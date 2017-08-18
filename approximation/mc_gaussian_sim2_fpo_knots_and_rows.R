@@ -18,8 +18,8 @@ mc.reps <- 100
 # accs <- 1 - resample_misclassification(pmat, 1:K, 1:K)
 # plot(accs, type = "l")
 
-nsplines <- c(100, 400)
-nrows <- c(250, 500, 1000)
+nsplines <- c(100, 200, 400)
+nrows <- c(125, 250, 500, 1000)
 combmat <- cbind(nsplines = rep(nsplines, each = length(nrows)), 
                  nrows = rep(nrows, length(nsplines)))
 
@@ -62,8 +62,6 @@ subfun <- function (repno) {
   }
   list(preds = preds, accs = accs)
 }  
-
-## !!TBC!!
 
 t1 <- proc.time()
 res <- mclapply(1:mc.reps, subfun, mc.cores = mcc)

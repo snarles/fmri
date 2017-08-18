@@ -17,22 +17,22 @@ count_acc <- function(counts, m = 1:length(counts)) {
 
 ## query points x_i which are within distance r of x
 
-sigma2 <- 0.25
-sigma2_tr <- 0.25
-
-p <- 10
-n <- 1e5
-mus <- randn(n, p)
-
-muhs <- mus + sqrt(sigma2_tr) * randn(n, p)
-ys <- mus + sqrt(sigma2) * randn(n, p)
-rSqs <- rowSums((ys - muhs)^2)
-
-t1 <- proc.time()
-counts <- countDistEx(muhs, ys, rSqs)
-(cpp_time <- proc.time() - t1)
-
-1 - mean(counts != 0) ## accuracy
+# sigma2 <- 0.25
+# sigma2_tr <- 0.25
+# 
+# p <- 10
+# n <- 1e5
+# mus <- randn(n, p)
+# 
+# muhs <- mus + sqrt(sigma2_tr) * randn(n, p)
+# ys <- mus + sqrt(sigma2) * randn(n, p)
+# rSqs <- rowSums((ys - muhs)^2)
+# 
+# t1 <- proc.time()
+# counts <- countDistEx(muhs, ys, rSqs)
+# (cpp_time <- proc.time() - t1)
+# 
+# 1 - mean(counts != 0) ## accuracy
 
 ## takes 290s for 1e5
 
@@ -52,5 +52,5 @@ counts <- countDistEx(muhs, ys, rSqs)
 # plot(accs, type = "l")
 # lines(accs2, col = "red")
 
-accs <- count_acc(counts)
-plot(accs, type = "l", ylim = c(0,1))
+# accs <- count_acc(counts)
+# plot(accs, type = "l", ylim = c(0,1))
