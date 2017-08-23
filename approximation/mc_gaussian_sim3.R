@@ -1,14 +1,14 @@
-mcc <- 30
 source("approximation/gaussian_identity_finsam.R")
 source("approximation/gaussian_identity_finsam2.R")
 source("extrapolation/ku_source.R")
 
+mcc <- 30
 
 p <- 10
-sigma2 <- 0.2
+sigma2 <- 0.08
 sigma2_tr <- sigma2 ## equivalent to 1 nn
-K <- 16000
-ksub <- 4000
+K <- 52000
+ksub <- 13000
 mc.reps <- 30
 
 # mus <- randn(K, p)
@@ -17,6 +17,11 @@ mc.reps <- 30
 # pmat <- -pdist2(mu_hats, ys)
 # accs <- 1 - resample_misclassification(pmat, 1:K, 1:K)
 # plot(accs, type = "l")
+
+kseq <- function(nr, ksub) {
+  interv <- floor(ksub/nr)
+  seq(interv, ksub, by = interv)
+}
 
 nsplines <- c(100, 200)
 nrows <- c(125, 250)
@@ -27,10 +32,6 @@ combmat <- cbind(nsplines = rep(nsplines, each = length(nrows)),
 
 basis_vecs <- list()
 
-kseq <- function(nr, ksub) {
-  interv <- floor(ksub/nr)
-  seq(interv, ksub, by = interv)
-}
 
 for (ii in 1:nrow(combmat)) {
   ns <- combmat[ii, 1]
@@ -84,8 +85,18 @@ subfun <- function (repno, orig = FALSE) {
 
 t1 <- proc.time()
 res <- mclapply(1:mc.reps, subfun, mc.cores = mcc)
-(runtime2 <- proc.time() - t1) #116s
+(runtime2 <- proc.time() - t1)
 
+
+# 30 mcc, K 20000 sub 5000, 31s
+# 30 mcc, K 24000 sub 6000, 39s
+# 30 mcc, K 28000 sub 7000, 45s
+# 30 mcc, K 32000 sub 8000, 53s
+# 30 mcc, K 36000 sub 9000, 64s
+# 30 mcc, K 40000 sub 10000, 76s
+# 30 mcc, K 44000 sub 11000, 114s
+# 30 mcc, K 48000 sub 12000, 139s
+# 30 mcc, K 52000 sub 13000, 163s
 
 resa <- lapply(res, `[[`, "accs")
 true_accs <- colMeans(do.call(rbind, resa))
