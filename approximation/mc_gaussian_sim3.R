@@ -5,10 +5,10 @@ source("extrapolation/ku_source.R")
 mcc <- 30
 
 p <- 10
-sigma2 <- 0.08
+sigma2 <- 0.07
 sigma2_tr <- sigma2 ## equivalent to 1 nn
-K <- 52000
-ksub <- 13000
+K <- 100000
+ksub <- 25000
 mc.reps <- 30
 
 # mus <- randn(K, p)
@@ -23,7 +23,7 @@ kseq <- function(nr, ksub) {
   seq(interv, ksub, by = interv)
 }
 
-nsplines <- c(100, 200)
+nsplines <- c(100, 200, 400)
 nrows <- c(125, 250)
 kz <- kseq(1000, K)
 
@@ -88,15 +88,20 @@ res <- mclapply(1:mc.reps, subfun, mc.cores = mcc)
 (runtime2 <- proc.time() - t1)
 
 
-# 30 mcc, K 20000 sub 5000, 31s
-# 30 mcc, K 24000 sub 6000, 39s
-# 30 mcc, K 28000 sub 7000, 45s
-# 30 mcc, K 32000 sub 8000, 53s
-# 30 mcc, K 36000 sub 9000, 64s
-# 30 mcc, K 40000 sub 10000, 76s
-# 30 mcc, K 44000 sub 11000, 114s
-# 30 mcc, K 48000 sub 12000, 139s
-# 30 mcc, K 52000 sub 13000, 163s
+
+# 30 mcc, K 52000 sub 13000, 159s
+# 30 mcc, K 56000 sub 14000, 223s
+# 30 mcc, K 60000 sub 15000, 197s
+# 30 mcc, K 64000 sub 16000, 301s
+# 30 mcc, K 68000 sub 17000, 288s
+# 30 mcc, K 72000 sub 18000, 313s
+# 30 mcc, K 76000 sub 19000, 381s
+# 30 mcc, K 80000 sub 20000, 379s
+# 30 mcc, K 84000 sub 21000, 451s
+# 30 mcc, K 88000 sub 22000, 463s
+# 30 mcc, K 92000 sub 22000, 488s
+# 30 mcc, K 96000 sub 24000, 588s
+# 30 mcc, K 100000 sub 25000, 712s
 
 resa <- lapply(res, `[[`, "accs")
 true_accs <- colMeans(do.call(rbind, resa))
