@@ -13,7 +13,7 @@ sigma2_seq <- 0.01 * 1:20
 K <- 100000
 ksub <- 25000
 mc.reps <- 800
-sigma2s <- rep(sigma2_seq, 3)
+sigma2s <- rep(sigma2_seq, floor(mc.reps/length(sigma2_seq)))
 
 # mus <- randn(K, p)
 # ys <- mus + sqrt(sigma2) * randn(K, p)
