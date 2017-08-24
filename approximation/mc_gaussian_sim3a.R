@@ -104,13 +104,24 @@ for (ii in 1:length(sigma2_seq)) {
 }
 colnames(rmses) <- names(basis_vecs)
 
-temp <- data.frame(sigma2_seq, rmses)
-#View(temp)
+# temp <- data.frame(sigma2_seq, rmses)
+# temp2 <- melt(data = temp, id.vars = "sigma2_seq")
+# colnames(temp2)[3] <- "rmse"
+# library(ggplot2)
+# ggplot(data = temp2, aes(x = sigma2_seq, y = rmse, colour = variable)) +
+#   geom_line() + ggtitle("Predicting K=100,000 from k=25,000")
+# ggsave("approximation/simulation_large_01.png", width = 6, height = 4)
+
+
+temp <- data.frame(true_acc = true_accs[, ncol(true_accs)], rmses)
 library(reshape2)
-temp2 <- melt(data = temp, id.vars = "sigma2_seq")
+temp2 <- melt(data = temp, id.vars = "true_acc")
 colnames(temp2)[3] <- "rmse"
 
 library(ggplot2)
-ggplot(data = temp2, aes(x = sigma2_seq, y = rmse, colour = variable)) +
-  geom_line()
+ggplot(data = temp2, aes(x = true_acc, y = rmse, colour = variable)) +
+  geom_line() + coord_cartesian(xlim = c(0, 1)) + 
+  ggtitle("Predicting K=100,000 from k=25,000")
+ggsave("approximation/simulation_large_01.png", width = 6, height = 4)
 
+save(p, K, ksub, sigma2_seq, true_accs, all_final_preds, file = "approximation/simulation_large.RData")
