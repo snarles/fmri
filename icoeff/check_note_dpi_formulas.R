@@ -22,6 +22,20 @@ formula_rhs <- function(dens_p, dens_q, dens_Qp, dens_Qq) {
   )
 }
 
+formula_rhs2 <- function(dens_p, dens_q, dens_Qp, dens_Qq) {
+  sim_delt * sum(
+    f(dens_p/dens_q) * (dens_Qq - dens_q) + 
+      f1(dens_p/dens_q) * (dens_Qp - (dens_p/dens_q)*dens_Qq)
+  )
+}
+
+formula_rhs_sp <- function(dens_p, dens_q, dens_Qp, dens_Qq) {
+  sim_delt * sum(
+    (dens_Qp - dens_p) * log(dens_p/dens_q) + dens_Qp - (dens_p/dens_q)*dens_Qq
+  )
+}
+
+
 mu1 <- 0; sigma2_1 <- 1
 mu2 <- 0.2; sigma2_2 <- 1
 
@@ -41,7 +55,9 @@ res <- sapply(num_deltas, function(num_delta) {
   f_div(dens_p, dens_q)
   f_div(dens_Qdp, dens_Qdq)
   c((f_div(dens_Qdp, dens_Qdq) - f_div(dens_p, dens_q))/num_delta,
-    formula_rhs(dens_p, dens_q, dens_Qp, dens_Qq))
+    formula_rhs(dens_p, dens_q, dens_Qp, dens_Qq),
+    formula_rhs2(dens_p, dens_q, dens_Qp, dens_Qq),
+    formula_rhs_sp(dens_p, dens_q, dens_Qp, dens_Qq))
 })
 
 matplot(-log(num_deltas), t(res), type = "l")
