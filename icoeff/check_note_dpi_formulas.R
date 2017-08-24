@@ -60,4 +60,8 @@ res <- sapply(num_deltas, function(num_delta) {
     formula_rhs_sp(dens_p, dens_q, dens_Qp, dens_Qq))
 })
 
+plot((dens_Qp - dens_p) * log(dens_p/dens_q) + dens_Qp - (dens_p/dens_q)*dens_Qq,
+     f(dens_p/dens_q) * (dens_Qq - dens_q) + 
+       f1(dens_p/dens_q) * (dens_Qp - (dens_p/dens_q)*dens_Qq), type = "l")
+
 matplot(-log(num_deltas), t(res), type = "l")
