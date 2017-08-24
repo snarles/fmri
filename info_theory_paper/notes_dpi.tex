@@ -264,9 +264,10 @@ definitions \eqref{eq:f_divergence} and \eqref{eq:Q_delta}.  The left-hand side 
 
 For the special case of KL divergence, $f(x) = x\log(x)$, we have
 \begin{align*}
-\frac{d}{d\delta} D_f(Q^\delta p||Q^\delta q)=& \int (Qp(x) - p(x)) \log\left(\frac{p(x)}{q(x)}\right) + Qp(x) - \left(\frac{p(x)}{q(x)}\right) Qq(x) dx
-\\=& \int \left(p(x) \log\left(\frac{p(x)}{q(x)}\right)\right)(Qq(x) - q(x)) 
+\frac{d}{d\delta} D_f(Q^\delta p||Q^\delta q)
+=& \int \left(\frac{p(x)}{q(x)} \log\left(\frac{p(x)}{q(x)}\right)\right)(Qq(x) - q(x)) 
 \\&+ \left(\log\left(\frac{p(x)}{q(x)}\right) + 1\right)\left(Qp(x) - \left(\frac{p(x)}{q(x)}\right) Qq(x)\right) dx
+\\=& \int (Qp(x) - p(x)) \log\left(\frac{p(x)}{q(x)}\right) + Qp(x) - \left(\frac{p(x)}{q(x)}\right) Qq(x) dx
 \end{align*}
 
 \end{document}

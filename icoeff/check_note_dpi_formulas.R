@@ -44,7 +44,7 @@ sigma2_Q <- 0.1
 dens_p <- dnorm(xs, mean = mu1, sd = sqrt(sigma2_1))
 dens_q <- dnorm(xs, mean = mu2, sd = sqrt(sigma2_2))
 dens_Qp <- dnorm(xs, mean = mu1, sd = sqrt(sigma2_1 + sigma2_Q))
-dens_Qq <- dnorm(xs, mean = mu2, sd = sqrt(sigma2_1 + sigma2_Q))
+dens_Qq <- dnorm(xs, mean = mu2, sd = sqrt(sigma2_2 + sigma2_Q))
 
 num_deltas <- 10^(-(1:10))
 
@@ -59,9 +59,5 @@ res <- sapply(num_deltas, function(num_delta) {
     formula_rhs2(dens_p, dens_q, dens_Qp, dens_Qq),
     formula_rhs_sp(dens_p, dens_q, dens_Qp, dens_Qq))
 })
-
-plot((dens_Qp - dens_p) * log(dens_p/dens_q) + dens_Qp - (dens_p/dens_q)*dens_Qq,
-     f(dens_p/dens_q) * (dens_Qq - dens_q) + 
-       f1(dens_p/dens_q) * (dens_Qp - (dens_p/dens_q)*dens_Qq), type = "l")
 
 matplot(-log(num_deltas), t(res), type = "l")
