@@ -121,7 +121,7 @@ colnames(temp2)[3] <- "rmse"
 library(ggplot2)
 ggplot(data = temp2, aes(x = true_acc, y = rmse, colour = variable)) +
   geom_line() + coord_cartesian(xlim = c(0, 1)) + 
-  ggtitle("Predicting K=100,000 from k=25,000")
+  ggtitle("Predicting K=100,000 from k=10,000")
 ggsave("approximation/simulation_large_02.png", width = 6, height = 4)
 
 save(p, K, ksub, sigma2_seq, true_accs, all_final_preds, file = "approximation/simulation_large_02.RData")
