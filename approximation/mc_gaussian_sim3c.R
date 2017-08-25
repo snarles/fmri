@@ -11,7 +11,7 @@ sigma2_seq <- 0.01 * 1:20
 # sigma2 <- 0.07
 # sigma2_tr <- sigma2 ## equivalent to 1 nn
 K <- 100000
-ksub <- 10000
+ksub <- 5000
 mc.reps <- 800
 sigma2s <- rep(sigma2_seq, floor(mc.reps/length(sigma2_seq)))
 
@@ -29,7 +29,7 @@ kseq <- function(nr, ksub) {
 
 nsplines <- c(100, 200, 400)
 nrows <- c(125, 250)
-kz <- kseq(2500, K)
+kz <- kseq(5000, K)
 
 combmat <- cbind(nsplines = rep(nsplines, each = length(nrows)), 
                  nrows = rep(nrows, length(nsplines)))
@@ -121,7 +121,7 @@ colnames(temp2)[3] <- "rmse"
 library(ggplot2)
 ggplot(data = temp2, aes(x = true_acc, y = rmse, colour = variable)) +
   geom_line() + coord_cartesian(xlim = c(0, 1)) + 
-  ggtitle("Predicting K=100,000 from k=10,000")
+  ggtitle("Predicting K=100,000 from k=5,000")
 ggsave("approximation/simulation_large_02.png", width = 6, height = 4)
 
-save(p, K, ksub, sigma2_seq, true_accs, all_final_preds, file = "approximation/simulation_large_02.RData")
+save(p, K, ksub, sigma2_seq, true_accs, all_final_preds, file = "approximation/simulation_large_03.RData")
