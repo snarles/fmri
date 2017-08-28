@@ -29,7 +29,8 @@ kseq <- function(nr, ksub) {
 
 nsplines <- c(100, 200, 400)
 nrows <- c(125, 250)
-kz <- kseq(25000, K)
+kz <- kseq(1000, K)
+kref <- kseq(250, ksub)
 
 combmat <- cbind(nsplines = rep(nsplines, each = length(nrows)), 
                  nrows = rep(nrows, length(nsplines)))
@@ -63,12 +64,11 @@ subfun <- function (repno, orig = FALSE) {
     accs_sub <- 1 - resample_misclassification(pmat_sub, 1:ksub, 1:ksub)    
     kref <- 1:K
   } else {
-    kref <- kz
     rSqs <- rowSums((ys - mu_hats)^2)
     counts <- countDistEx(mu_hats, ys, rSqs)
-    accs <- count_acc(counts, kz)    
+    accs <- sapply(kz, function(k) count_acc(counts, k))    
     counts_sub <- countDistEx(mu_hats[1:ksub,], ys[1:ksub,], rSqs[1:ksub])
-    accs_sub <- count_acc(counts_sub, kz[kz <=ksub])
+    accs_sub <- count_acc(counts_sub, kref)
   }
   preds <- numeric(length(basis_vecs))
   for (ind in 1:length(basis_vecs)) {
