@@ -68,7 +68,7 @@ subfun <- function (repno, orig = FALSE) {
     counts <- countDistEx(mu_hats, ys, rSqs)
     accs <- sapply(kz, function(k) count_acc(counts, k))    
     counts_sub <- countDistEx(mu_hats[1:ksub,], ys[1:ksub,], rSqs[1:ksub])
-    accs_sub <- count_acc(counts_sub, kref)
+    accs_sub <- sapply(kref, function(k) count_acc(counts_sub, k))
   }
   preds <- numeric(length(basis_vecs))
   for (ind in 1:length(basis_vecs)) {
