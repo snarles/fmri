@@ -106,6 +106,15 @@ for (ii in 1:length(sigma2_seq)) {
 }
 colnames(rmses) <- names(basis_vecs)
 
+
+resids2 <- (all_final_preds > .5) - (facc[match(sigma2s, sigma2_seq)] > .5)
+
+acc_class <- matrix(NA, length(sigma2_seq), ncol(all_final_preds))
+for (ii in 1:length(sigma2_seq)) {
+  acc_class[ii, ] <- colMeans(abs(resids[sigma2s == sigma2_seq[ii], ]))
+}
+
+
 # temp <- data.frame(sigma2_seq, rmses)
 # temp2 <- melt(data = temp, id.vars = "sigma2_seq")
 # colnames(temp2)[3] <- "rmse"
@@ -125,5 +134,14 @@ ggplot(data = temp2, aes(x = true_acc, y = rmse, colour = variable)) +
   geom_line() + coord_cartesian(xlim = c(0, 1)) + 
   ggtitle("Predicting K=100,000 from k=1,000")
 ggsave("approximation/simulation_large_04.png", width = 6, height = 4)
+
+temp <- data.frame(true_acc = true_accs[, ncol(true_accs)], acc_class)
+temp2 <- melt(data = temp, id.vars = "true_acc")
+colnames(temp2)[3] <- "error_prob"
+ggplot(data = temp2, aes(x = true_acc, y = error_prob, colour = variable)) +
+  geom_line() + coord_cartesian(xlim = c(0, 1)) + 
+  ggtitle("Guessing whether accuracy at K=100,000 is >0.5 from k=1,000")
+ggsave("approximation/simulation_large_04b.png", width = 6, height = 4)
+
 
 save(p, K, ksub, sigma2_seq, true_accs, all_final_preds, file = "approximation/simulation_large_04.RData")
