@@ -27,7 +27,7 @@ kseq <- function(nr, ksub) {
   seq(interv, ksub, by = interv)
 }
 
-nsplines <- c(100, 200, 400)
+nsplines <- c(400, 600, 800)
 nrows <- c(125, 250)
 kz <- kseq(1000, K)
 kref <- kseq(250, ksub)
@@ -95,6 +95,8 @@ matplot(kz, t(true_accs), type = "l", ylim = c(0, 1))
 
 (facc <- true_accs[, match(K, kz)])
 all_final_preds <- do.call(rbind, lapply(res, `[[`, "preds"))
+sum(all_final_preds < 0)
+all_final_preds[all_final_preds < 0] <- 0
 colnames(all_final_preds) <- names(basis_vecs)
 resids <- all_final_preds - facc[match(sigma2s, sigma2_seq)]
 
