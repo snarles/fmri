@@ -1,22 +1,37 @@
 ## Extrapolation method based on Kernel Density estimation
 
+## KDE estimate of f(x), then get CDF F(x)
+gaussian_kernel_cdf <- function(xs, x, bw = "bcv") {
+  dens <- density(xs, bw=bw)
+  ps <- pnorm(x, mean = xs, sd = dens$bw)
+  mean(ps)
+}
 
-## quickly generate some data
-p <- 10
-K <- 1e4
-sigma2 <- 0.3
-sigma2_tr <- sigma2
-mus <- randn(K, p)
-ys <- mus + sqrt(sigma2) * randn(K, p)
-mu_hats <- mus + sqrt(sigma2_tr) * randn(K, p)
-pmat <- -pdist2(ys, mu_hats)
+raccs <- function(pmat) {
+  sapply(1:nrow(pmat), function(ind) gaussian_kernel_cdf(pmat[ind, ], pmat[ind, ind]))
+}
 
-TOL <- 1e-9
-raccs <- sapply(1:K, function(ind) {
-  dens <- density(pmat[ind, ], bw = "bcv", from = min(pmat[ind, ]), to = max(pmat[ind, ]) + 7 * sd(pmat[ind, ]), n = 2048)
-  stopifnot(dens$y[length(dens$y)] < TOL)
-  ind.at <- min(which(dens$x > pmat[ind, ind]))
-  stopifnot(abs(dens$x[ind.at] - dens$y[ind.at + 1]) < TOL)
-  (racc <- 1 - sum(dens$y[dens$x > pmat[ind, ind]]) * (dens$x[2] - dens$x[1]))
-  racc  
-})
+kernel_extrap <- function(pmat, Ks) {
+  racs <- raccs(pmat)
+  sapply(Ks, function(k) mean(racs^(k-1)))
+}
+
+
+## test it out
+# source("approximation/gaussian_identity_finsam2.R")
+# p <- 10
+# K <- 1e4
+# ksub <- 1e3
+# kz <- (1:1e2)*1e2
+# sigma2 <- 0.3
+# sigma2_tr <- sigma2
+# mus <- randn(K, p)
+# ys <- mus + sqrt(sigma2) * randn(K, p)
+# mu_hats <- mus + sqrt(sigma2_tr) * randn(K, p)
+# pmat <- -pdist2(ys, mu_hats)
+# rSqs <- rowSums((ys - mu_hats)^2)
+# counts <- countDistEx(mu_hats, ys, rSqs)
+# accs <- count_acc(counts, kz)    
+# accs_kern <- kernel_extrap(pmat, kz)
+# plot(kz, accs, type = "l", ylim = c(0, 1))
+# lines(kz, accs_kern, col = "red")
