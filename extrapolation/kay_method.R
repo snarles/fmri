@@ -8,7 +8,7 @@ gaussian_kernel_cdf <- function(xs, x, bw = "bcv") {
 }
 
 raccs <- function(pmat) {
-  sapply(1:nrow(pmat), function(ind) gaussian_kernel_cdf(pmat[ind, ], pmat[ind, ind]))
+  sapply(1:nrow(pmat), function(ind) gaussian_kernel_cdf(pmat[ind, -ind], pmat[ind, ind]))
 }
 
 kernel_extrap <- function(pmat, Ks) {

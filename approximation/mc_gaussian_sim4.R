@@ -5,15 +5,15 @@ source("approximation/gaussian_identity_finsam2.R")
 source("extrapolation/ku_source.R")
 source("extrapolation/kay_method.R")
 
-mcc <- 60
+mcc <- 200
 
 p <- 10
-sigma2_seq <- 0.01 * 1:20
+sigma2_seq <- 0.02 * 1:20
 # sigma2 <- 0.07
 # sigma2_tr <- sigma2 ## equivalent to 1 nn
 K <- 10000 ## multiple of 1000
 ksub <- 5000 ## multiple of 250
-mc.reps <- 120
+mc.reps <- 800
 sigma2s <- rep(sigma2_seq, floor(mc.reps/length(sigma2_seq)))
 
 # mus <- randn(K, p)
@@ -101,7 +101,7 @@ rmses <- matrix(NA, length(sigma2_seq), ncol(all_final_preds))
 for (ii in 1:length(sigma2_seq)) {
   rmses[ii, ] <- sqrt(colMeans(resids[sigma2s == sigma2_seq[ii], ]^2))
 }
-colnames(rmses) <- names(basis_vecs)
+colnames(rmses) <- c(names(basis_vecs), "kde")
 
 
 resids2 <- (all_final_preds > .5) - (facc[match(sigma2s, sigma2_seq)] > .5)
@@ -129,7 +129,21 @@ colnames(temp2)[3] <- "rmse"
 library(ggplot2)
 ggplot(data = temp2, aes(x = true_acc, y = rmse, colour = variable)) +
   geom_line() + coord_cartesian(xlim = c(0, 1)) + 
-  ggtitle("Predicting K=100,000 from k=1,000")
-#ggsave("approximation/simulation_large_04.png", width = 6, height = 4)
+  ggtitle("Predicting K=10,000 from k=5,000")
+ggsave("approximation/sim_large4_K10_k5_1.png", width = 6, height = 4)
 
-#save(p, K, ksub, sigma2_seq, true_accs, all_final_preds, file = "approximation/simulation_large_04.RData")
+save(p, K, ksub, sigma2_seq, true_accs, all_final_preds, file = "approximation/sim_large4_K10_k5.RData")
+
+
+
+temp <- data.frame(true_acc = true_accs[, ncol(true_accs)], rmses[, 1:6])
+library(reshape2)
+temp2 <- melt(data = temp, id.vars = "true_acc")
+colnames(temp2)[3] <- "rmse"
+
+library(ggplot2)
+ggplot(data = temp2, aes(x = true_acc, y = rmse, colour = variable)) +
+  geom_line() + coord_cartesian(xlim = c(0, 1)) + 
+  ggtitle("Predicting K=10,000 from k=5,000")
+ggsave("approximation/sim_large4_K10_k5_2.png", width = 6, height = 4)
+
