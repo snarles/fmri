@@ -15,7 +15,7 @@ sigma2_seq <- 0.01 * 1:20
 K <- 100000 ## multiple of 1000
 Ktarg <- c(10000, 20000, 50000, 100000)
 ksub <- 5000 ## multiple of 250
-mc.reps <- 300
+mc.reps <- 800
 sigma2s <- rep(sigma2_seq, floor(mc.reps/length(sigma2_seq)))
 
 # mus <- randn(K, p)
@@ -90,30 +90,47 @@ subfun <- function (repno) {
 # res <- mclapply(1:mc.reps, subfun, mc.cores = mcc)
 # (runtime2 <- proc.time() - t1)
 
-res <- mclapply(1:100, subfun, mc.cores = mcc)
+res <- mclapply(1:50, subfun, mc.cores = mcc)
 saveRDS(res, "approximation/temp_results1.rds")
-res <- mclapply(101:200, subfun, mc.cores = mcc)
+res <- mclapply(51:100, subfun, mc.cores = mcc)
 saveRDS(res, "approximation/temp_results2.rds")
-res <- mclapply(201:300, subfun, mc.cores = mcc)
+res <- mclapply(101:150, subfun, mc.cores = mcc)
 saveRDS(res, "approximation/temp_results3.rds")
-res <- mclapply(301:400, subfun, mc.cores = mcc)
+res <- mclapply(151:200, subfun, mc.cores = mcc)
 saveRDS(res, "approximation/temp_results4.rds")
-res <- mclapply(401:500, subfun, mc.cores = mcc)
+res <- mclapply(201:250, subfun, mc.cores = mcc)
 saveRDS(res, "approximation/temp_results5.rds")
-res <- mclapply(501:600, subfun, mc.cores = mcc)
+res <- mclapply(251:300, subfun, mc.cores = mcc)
 saveRDS(res, "approximation/temp_results6.rds")
-res <- mclapply(601:700, subfun, mc.cores = mcc)
+res <- mclapply(301:350, subfun, mc.cores = mcc)
 saveRDS(res, "approximation/temp_results7.rds")
-res <- mclapply(701:800, subfun, mc.cores = mcc)
+res <- mclapply(351:400, subfun, mc.cores = mcc)
 saveRDS(res, "approximation/temp_results8.rds")
+res <- mclapply(401:450, subfun, mc.cores = mcc)
+saveRDS(res, "approximation/temp_results9.rds")
+res <- mclapply(451:500, subfun, mc.cores = mcc)
+saveRDS(res, "approximation/temp_results10.rds")
+res <- mclapply(501:550, subfun, mc.cores = mcc)
+saveRDS(res, "approximation/temp_results11.rds")
+res <- mclapply(551:600, subfun, mc.cores = mcc)
+saveRDS(res, "approximation/temp_results12.rds")
+res <- mclapply(601:650, subfun, mc.cores = mcc)
+saveRDS(res, "approximation/temp_results13.rds")
+res <- mclapply(651:700, subfun, mc.cores = mcc)
+saveRDS(res, "approximation/temp_results14.rds")
+res <- mclapply(701:750, subfun, mc.cores = mcc)
+saveRDS(res, "approximation/temp_results15.rds")
+res <- mclapply(751:800, subfun, mc.cores = mcc)
+saveRDS(res, "approximation/temp_results16.rds")
 
 
 
 
-# res <- c(readRDS("approximation/temp_results1.rds"),
-#          readRDS("approximation/temp_results2.rds"),
-#          readRDS("approximation/temp_results3.rds"))
-# length(res)
+res <- readRDS("approximation/temp_results1.rds")
+for (i in 2:16) {
+  res <- c(res, readRDS(paste0("approximation/temp_results",i,".rds")))
+}
+length(res)
 
 sigma2s <- sigma2s[1:length(res)]
 
@@ -167,7 +184,7 @@ library(ggplot2)
 ggplot(data = temp2, aes(x = true_acc, y = rmse, colour = variable)) +
   geom_line() + coord_cartesian(xlim = c(0, 1)) + 
   ggtitle(paste0("Predicting K=", Ktarg[ind], " from k=", ksub))
-#ggsave("approximation/sim_large5_K10_k0.5_1.png", width = 6, height = 4)
+#ggsave("approximation/sim_large5_K100_k5_1.png", width = 6, height = 4)
 
 save(p, K, Ktarg, ksub, sigma2_seq, true_accs, all_final_predZ, file = "approximation/sim_large5_k0.5.RData")
 
