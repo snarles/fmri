@@ -1,18 +1,19 @@
 ## Extrapolation method based on Kernel Density estimation
 
 ## KDE estimate of f(x), then get CDF F(x)
-gaussian_kernel_cdf <- function(xs, x, bw = "bcv") {
+gaussian_kernel_cdf <- function(xs, x, bw = "bcv", return.bw = FALSE) {
   dens <- density(xs, bw=bw)
   ps <- pnorm(x, mean = xs, sd = dens$bw)
+  if (return.bw) return(dens$bw)
   mean(ps)
 }
 
-raccs <- function(pmat) {
-  sapply(1:nrow(pmat), function(ind) gaussian_kernel_cdf(pmat[ind, -ind], pmat[ind, ind]))
+raccs <- function(pmat, ...) {
+  sapply(1:nrow(pmat), function(ind) gaussian_kernel_cdf(pmat[ind, -ind], pmat[ind, ind], ...))
 }
 
-kernel_extrap <- function(pmat, Ks) {
-  racs <- raccs(pmat)
+kernel_extrap <- function(pmat, Ks, ...) {
+  racs <- raccs(pmat, ...)
   sapply(Ks, function(k) mean(racs^(k-1)))
 }
 
