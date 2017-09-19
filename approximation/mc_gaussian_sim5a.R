@@ -151,6 +151,7 @@ matplot(Ktarg, t(true_accs), type = "l", ylim = c(0, 1))
 
 rmseZ <- list()
 all_final_predZ <- list()
+mse_sdZ <- list()
 
 ind <- 1
 ind <- 2
@@ -165,11 +166,15 @@ for (ind in 1:length(Ktarg)) {
   all_final_predZ[[ind]] <- all_final_preds
   resids <- all_final_preds - facc[,ind][match(sigma2s, sigma2_seq)]
   rmses <- matrix(NA, length(sigma2_seq), ncol(all_final_preds))
+  mse_sd <- matrix(NA, length(sigma2_seq), ncol(all_final_preds))
   for (ii in 1:length(sigma2_seq)) {
     rmses[ii, ] <- sqrt(colMeans(resids[sigma2s == sigma2_seq[ii], ]^2))
+    mse_sd[ii, ] <- sd(resids[sigma2s == sigma2_seq[ii], ]^2)
   }
   colnames(rmses) <- column_names
+  colnames(mse_sd) <- column_names
   rmseZ[[ind]] <- rmses
+  mse_sdZ[[ind]] <- mse_sd
 }
 
 
@@ -196,5 +201,26 @@ ggplot(data = temp2, aes(x = true_acc, y = rmse, colour = variable)) +
 
 save(p, K, Ktarg, ksub, sigma2_seq, true_accs, all_final_predZ, file = "approximation/sim_large5_k5.RData")
 
+#sapply(rmseZ, apply, 2, max)
+# [,1]       [,2]       [,3]       [,4]
+# spline100 0.01079504 0.02175442 0.04898044 0.10257038
+# spline200 0.01097517 0.02930803 0.09784745 0.16317179
+# spline400 0.01101895 0.03134821 0.12395889 0.22972492
+# kde_bcv   0.03786020 0.02802888 0.03582598 0.06475902
+# kde_ucv   0.02811807 0.01857903 0.05247966 0.08637028
+# kde_0.1   0.04939988 0.08863203 0.15466449 0.20763780
+# kde_0.2   0.06827790 0.06380990 0.05803423 0.05325977
+# kde_0.3   0.20606936 0.22645263 0.25357806 0.27370192
+# kde_0.4   0.36935658 0.41276801 0.47240333 0.51341967
 
-
+#sapply(mse_sdZ, apply, 2, max)/sqrt(mc.reps/length(sigma2_seq)) * 1/sqrt(2 * sapply(rmseZ, apply, 2, max))
+# [,1]        [,2]        [,3]        [,4]
+# spline100 0.029242021 0.025667447 0.022364333 0.018218907
+# spline200 0.029001057 0.022113789 0.015823135 0.014444775
+# spline400 0.028943394 0.021382087 0.014058158 0.012173887
+# kde_bcv   0.015614498 0.022612759 0.026149790 0.022928899
+# kde_ucv   0.018118686 0.027774417 0.021605869 0.019854143
+# kde_0.1   0.013669623 0.012716310 0.012585543 0.012805015
+# kde_0.2   0.011627315 0.014986920 0.020545899 0.025283296
+# kde_0.3   0.006692876 0.007955505 0.009829048 0.011153069
+# kde_0.4   0.004999155 0.005892552 0.007201298 0.008143237
