@@ -123,11 +123,16 @@ saveRDS(res, "approximation/temp_results15.rds")
 res <- mclapply(751:800, subfun, mc.cores = mcc)
 saveRDS(res, "approximation/temp_results16.rds")
 
-
+mc.reps <- 2000
+sigma2s <- rep(sigma2_seq, floor(mc.reps/length(sigma2_seq)))
+for (i in 17:40) {
+  res <- mclapply((50 * (i-1)) + (1:50), subfun, mc.cores = mcc)
+  saveRDS(res, paste0("approximation/temp_results",i,".rds"))
+}
 
 
 res <- readRDS("approximation/temp_results1.rds")
-for (i in 2:16) {
+for (i in 2:40) {
   res <- c(res, readRDS(paste0("approximation/temp_results",i,".rds")))
 }
 length(res)
@@ -184,9 +189,12 @@ library(ggplot2)
 ggplot(data = temp2, aes(x = true_acc, y = rmse, colour = variable)) +
   geom_line() + coord_cartesian(xlim = c(0, 1)) + 
   ggtitle(paste0("Predicting K=", Ktarg[ind], " from k=", ksub))
-#ggsave("approximation/sim_large5_K100_k5_1.png", width = 6, height = 4)
+#ggsave("approximation/sim_large5_K10_k5.png", width = 6, height = 4)
+#ggsave("approximation/sim_large5_K20_k5.png", width = 6, height = 4)
+#ggsave("approximation/sim_large5_K50_k5.png", width = 6, height = 4)
+#ggsave("approximation/sim_large5_K100_k5.png", width = 6, height = 4)
 
-save(p, K, Ktarg, ksub, sigma2_seq, true_accs, all_final_predZ, file = "approximation/sim_large5_k0.5.RData")
+save(p, K, Ktarg, ksub, sigma2_seq, true_accs, all_final_predZ, file = "approximation/sim_large5_k5.RData")
 
 
 
