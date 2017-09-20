@@ -84,5 +84,5 @@ subfun <- function (repno) {
   list(preds = preds, accs = accs)
 }  
 
-res <- sapply(as.numeric(args[1]):as.numeric(args[2]), subfun)
-save(res, paste0(args[3], "_", args[1], "_", args[2]))
+res <- lapply(as.numeric(args[1]):as.numeric(args[2]), subfun)
+save(res, file = paste0(args[3], "_", args[1], "_", args[2], ".RData"))
