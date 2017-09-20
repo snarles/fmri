@@ -3,7 +3,7 @@
 require(pracma)
 
 ##function itself
-acc_k <- function(ks, mu, tau, mc.reps = 1e4) {
+par2_acc_k <- function(ks, mu, tau, mc.reps = 1e4) {
   xs <- ((1:mc.reps) - 0.5)/mc.reps
   ts <- qnorm(xs, mean = mu, sd = sqrt(tau))
   Ts <- repmat(t(ts), length(ks), 1)
@@ -11,6 +11,17 @@ acc_k <- function(ks, mu, tau, mc.reps = 1e4) {
   Ks <- repmat(t(t(ks-1)), 1, length(ts))
   fs <- rowMeans(pts^Ks)
   fs
+}
+
+##extrapolation
+par2_extrapolate <- function(ks, accs, Ktarg, mc.reps = 1e4) {
+  mu.init <- init.mu(accs, ks)
+  tau.init <- 1
+  res <- nlm(function(x) objective_function(accs, ks, x[1], x[2], mc.reps),
+             c(mu.init, tau.init))
+  (mu.hat <- res$estimate[1])
+  (tau.hat <- res$estimate[2])
+  par2_acc_k(Ktarg, mu.hat, tau.hat, mc.reps)
 }
 
 ## objectives
