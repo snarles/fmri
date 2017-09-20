@@ -6,7 +6,7 @@ source("approximation/gaussian_identity_finsam2.R")
 source("extrapolation/ku_source.R")
 source("extrapolation/kay_method.R")
 
-mcc <- 200
+mcc <- 50
 
 p <- 10
 sigma2_seq <- 0.02 * 1:20
@@ -15,7 +15,7 @@ sigma2_seq <- 0.02 * 1:20
 K <- 10000 ## multiple of 1000
 Ktarg <- c(1000, 2000, 5000, 10000)
 ksub <- 500 ## multiple of 250
-mc.reps <- 200
+mc.reps <- 800
 sigma2s <- rep(sigma2_seq, floor(mc.reps/length(sigma2_seq)))
 
 # mus <- randn(K, p)
@@ -31,8 +31,8 @@ kseq <- function(nr, ksub) {
 }
 
 nsplines <- c(100, 200, 400)
-nrow <- 250
-kz <- kseq(1000, K)
+nrow <- 125
+#kz <- kseq(1000, K)
 kref <- kseq(nrow, ksub)
 kde_bdwids <- list("bcv", "ucv", 0.1, 0.2, 0.3, 0.4)
 
@@ -62,10 +62,10 @@ subfun <- function (repno) {
   pmat_sub <- -pdist2(ys[1:ksub, ], mu_hats[1:ksub, ])
   rSqs <- rowSums((ys - mu_hats)^2)
   counts <- countDistEx(mu_hats, ys, rSqs)
-  accs <- sapply(kz, function(k) count_acc(counts, k))    
+  accs <- count_acc(counts, Ktarg)    
   counts_sub <- countDistEx(mu_hats[1:ksub,], ys[1:ksub,], rSqs[1:ksub])
-  accs_sub <- sapply(kref, function(k) count_acc(counts_sub, k))
-  preds <- matrix(NA, length(column_names), length(kz))
+  accs_sub <- count_acc(counts_sub, kref)
+  preds <- matrix(NA, length(column_names), length(Ktarg))
   rownames(preds) <- column_names
   for (ind in 1:length(column_names)) {
     if (ind <= length(basis_vecs)) {
@@ -78,40 +78,33 @@ subfun <- function (repno) {
       preds[ind, ] <- kernel_extrap(pmat_sub, Ktarg, bw = bw)
     }
   }
-  ## kde method
   list(preds = preds, accs = accs)
 }  
 
 #tester <- subfun(10)
 
-mc.reps <- 600
-sigma2s <- rep(sigma2_seq, floor(mc.reps/length(sigma2_seq)))
+# mc.reps <- 600
+# sigma2s <- rep(sigma2_seq, floor(mc.reps/length(sigma2_seq)))
 
 t1 <- proc.time()
-res <- mclapply(401:600, subfun, mc.cores = mcc)
+res <- mclapply(1:mc.reps, subfun, mc.cores = mcc)
 (runtime2 <- proc.time() - t1)
 
-#saveRDS(res, "approximation/temp_results3.rds")
 
-# res <- c(readRDS("approximation/temp_results1.rds"),
-#          readRDS("approximation/temp_results2.rds"),
-#          readRDS("approximation/temp_results3.rds"))
-# length(res)
-
-sigma2s <- sigma2s[1:length(res)]
 
 resa <- do.call(rbind, lapply(res, `[[`, "accs"))
 true_accs <- matrix(NA, length(sigma2_seq), ncol(resa))
 for (ii in 1:length(sigma2_seq)) {
   true_accs[ii, ] <- colMeans(resa[sigma2s == sigma2_seq[ii], ])
 }
-matplot(kz, t(true_accs), type = "l", ylim = c(0, 1))
+matplot(Ktarg, t(true_accs), type = "l", ylim = c(0, 1))
 
 
-(facc <- true_accs[, match(Ktarg, kz)])
+(facc <- true_accs)
 
 rmseZ <- list()
 all_final_predZ <- list()
+mse_sdZ <- list()
 
 ind <- 1
 ind <- 2
@@ -126,11 +119,15 @@ for (ind in 1:length(Ktarg)) {
   all_final_predZ[[ind]] <- all_final_preds
   resids <- all_final_preds - facc[,ind][match(sigma2s, sigma2_seq)]
   rmses <- matrix(NA, length(sigma2_seq), ncol(all_final_preds))
+  mse_sd <- matrix(NA, length(sigma2_seq), ncol(all_final_preds))
   for (ii in 1:length(sigma2_seq)) {
     rmses[ii, ] <- sqrt(colMeans(resids[sigma2s == sigma2_seq[ii], ]^2))
+    mse_sd[ii, ] <- sd(resids[sigma2s == sigma2_seq[ii], ]^2)
   }
   colnames(rmses) <- column_names
+  colnames(mse_sd) <- column_names
   rmseZ[[ind]] <- rmses
+  mse_sdZ[[ind]] <- mse_sd
 }
 
 
@@ -141,7 +138,7 @@ ind <- 2
 ind <- 3
 ind <- 4
 rmses <- rmseZ[[ind]]
-temp <- data.frame(true_acc = true_accs[, match(Ktarg[ind], kz)], rmses)
+temp <- data.frame(true_acc = true_accs[, ind], rmses)
 library(reshape2)
 temp2 <- melt(data = temp, id.vars = "true_acc")
 colnames(temp2)[3] <- "rmse"
@@ -150,9 +147,33 @@ library(ggplot2)
 ggplot(data = temp2, aes(x = true_acc, y = rmse, colour = variable)) +
   geom_line() + coord_cartesian(xlim = c(0, 1)) + 
   ggtitle(paste0("Predicting K=", Ktarg[ind], " from k=", ksub))
-#ggsave("approximation/sim_large5_K10_k0.5_1.png", width = 6, height = 4)
+#ggsave("approximation/sim_large5_K1_k0.5.png", width = 6, height = 4)
+#ggsave("approximation/sim_large5_K2_k0.5.png", width = 6, height = 4)
+#ggsave("approximation/sim_large5_K5_k0.5.png", width = 6, height = 4)
+#ggsave("approximation/sim_large5_K10_k0.5.png", width = 6, height = 4)
 
 save(p, K, Ktarg, ksub, sigma2_seq, true_accs, all_final_predZ, file = "approximation/sim_large5_k0.5.RData")
 
+sapply(rmseZ, apply, 2, max)
+# [,1]       [,2]       [,3]       [,4]
+# spline100 0.04013241 0.08099923 0.22341812 0.28150591
+# spline200 0.04021022 0.08272697 0.23597806 0.30720315
+# spline400 0.04022913 0.08318922 0.23807945 0.31295652
+# kde_bcv   0.09175596 0.08594437 0.07947018 0.07786111
+# kde_ucv   0.06759396 0.05752887 0.05065847 0.04550220
+# kde_0.1   0.07779276 0.12662877 0.20539093 0.26503722
+# kde_0.2   0.02942975 0.04814230 0.09120395 0.12756712
+# kde_0.3   0.09954355 0.09898549 0.10357383 0.10946501
+# kde_0.4   0.20509675 0.22677891 0.26204699 0.29067162
 
-
+sapply(mse_sdZ, apply, 2, max)/sqrt(mc.reps/length(sigma2_seq)) * 1/(2 * sapply(rmseZ, apply, 2, max))
+# [,1]        [,2]        [,3]       [,4]
+# spline100 0.016021576 0.009681700 0.009936950 0.01256630
+# spline200 0.015990571 0.009479499 0.009408056 0.01151515
+# spline400 0.015983056 0.009426825 0.009325016 0.01130345
+# kde_bcv   0.007007550 0.009124627 0.027936199 0.04543332
+# kde_ucv   0.009512455 0.013631596 0.043824753 0.07774325
+# kde_0.1   0.008265351 0.006192986 0.010809118 0.01334714
+# kde_0.2   0.021848115 0.016289423 0.024342091 0.02773041
+# kde_0.3   0.006459328 0.007922477 0.021434901 0.03231616
+# kde_0.4   0.003135030 0.003458039 0.008472125 0.01217005
