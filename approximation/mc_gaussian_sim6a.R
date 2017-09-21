@@ -158,7 +158,7 @@ ggplot(data = temp2, aes(x = true_acc, y = rmse, colour = variable)) +
 #ggsave("approximation/sim_large6_K50_k5.png", width = 6, height = 4)
 #ggsave("approximation/sim_large6_K100_k5.png", width = 6, height = 4)
 
-save(p, K, Ktarg, ksub, sigma2_seq, true_accs, all_final_predZ, file = "approximation/sim_large6_k0.5.RData")
+save(p, K, Ktarg, ksub, sigma2_seq, true_accs, all_final_predZ, file = "approximation/sim_large6_k5.RData")
 
 sapply(rmseZ, apply, 2, max)
 # [,1]       [,2]       [,3]       [,4]
