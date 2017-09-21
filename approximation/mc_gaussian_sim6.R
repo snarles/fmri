@@ -8,7 +8,7 @@ source("extrapolation/kay_method.R")
 source("par2/objective_function.R")
 
 
-mcc <- 20
+mcc <- 40
 
 p <- 10
 sigma2_seq <- 0.02 * 1:20
@@ -17,7 +17,7 @@ sigma2_seq <- 0.02 * 1:20
 K <- 10000 ## multiple of 1000
 Ktarg <- c(1000, 2000, 5000, 10000)
 ksub <- 500 ## multiple of 250
-mc.reps <- 800
+mc.reps <- 4000
 sigma2s <- rep(sigma2_seq, floor(mc.reps/length(sigma2_seq)))
 
 # mus <- randn(K, p)
@@ -53,7 +53,7 @@ for (ii in 1:length(nsplines)) {
 (kde.names <- sapply(kde_bdwids, function(v) paste0("kde_", v)))
 column_names <- c(names(basis_vecs), kde.names, "par2")
 
-repno <- 10
+repno <- 2
 subfun <- function (repno) {
   set.seed(repno)
   sigma2 <- sigma2s[repno]
@@ -85,16 +85,16 @@ subfun <- function (repno) {
   list(preds = preds, accs = accs)
 }  
 
-res <- lapply(1:60, subfun)
+#res <- lapply(1:60, subfun)
 
 #tester <- subfun(10)
 
 # mc.reps <- 600
 # sigma2s <- rep(sigma2_seq, floor(mc.reps/length(sigma2_seq)))
 
-# t1 <- proc.time()
-# res <- mclapply(1:mc.reps, subfun, mc.cores = mcc)
-# (runtime2 <- proc.time() - t1)
+t1 <- proc.time()
+res <- mclapply(1:mc.reps, subfun, mc.cores = mcc)
+(runtime2 <- proc.time() - t1)
 
 sigma2s <- rep(sigma2_seq, floor(length(res)/length(sigma2_seq)))
 
@@ -158,7 +158,7 @@ ggplot(data = temp2, aes(x = true_acc, y = rmse, colour = variable)) +
 #ggsave("approximation/sim_large5_K5_k0.5.png", width = 6, height = 4)
 #ggsave("approximation/sim_large5_K10_k0.5.png", width = 6, height = 4)
 
-save(p, K, Ktarg, ksub, sigma2_seq, true_accs, all_final_predZ, file = "approximation/sim_large5_k0.5.RData")
+save(p, K, Ktarg, ksub, sigma2_seq, true_accs, all_final_predZ, file = "approximation/sim_large6_k0.5.RData")
 
 sapply(rmseZ, apply, 2, max)
 # [,1]       [,2]       [,3]       [,4]

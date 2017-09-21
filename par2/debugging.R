@@ -53,7 +53,7 @@ for (ii in 1:length(nsplines)) {
 (kde.names <- sapply(kde_bdwids, function(v) paste0("kde_", v)))
 column_names <- c(names(basis_vecs), kde.names, "par2")
 
-repno <- 5
+repno <- 1
 subfun <- function (repno) {
   set.seed(repno)
   sigma2 <- sigma2s[repno]
@@ -93,8 +93,9 @@ abline(v = max(kref))
 
 accs <- accs_sub
 ks <- kref
+plot(ks, accs, type = "l")
 
-mu.init <- par2_initialize_mu(accs, ks)
+(mu.init <- par2_initialize_mu(accs, ks))
 tau.init <- 1
 res <- nlm(function(x) objective_function(accs, ks, x[1], x[2], mc.reps),
            c(mu.init, tau.init))

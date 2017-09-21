@@ -15,6 +15,9 @@ par2_acc_k <- function(ks, mu, tau, mc.reps = 1e4) {
 
 ##extrapolation
 par2_extrapolate <- function(ks, accs, Ktarg, mc.reps = 1e4) {
+  if (min(accs) == 1) {
+    return(rep(1, length(Ktarg)))
+  }
   mu.init <- par2_initialize_mu(accs, ks)
   tau.init <- 1
   res <- nlm(function(x) objective_function(accs, ks, x[1], x[2], mc.reps),
