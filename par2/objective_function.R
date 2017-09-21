@@ -20,7 +20,7 @@ par2_extrapolate <- function(ks, accs, Ktarg, mc.reps = 1e4) {
   }
   mu.init <- par2_initialize_mu(accs, ks)
   tau.init <- 1
-  res <- nlm(function(x) objective_function(accs, ks, x[1], x[2], mc.reps),
+  res <- nlm(function(x) par2_objective_function(accs, ks, x[1], x[2], mc.reps),
              c(mu.init, tau.init))
   (mu.hat <- res$estimate[1])
   (tau.hat <- res$estimate[2])
