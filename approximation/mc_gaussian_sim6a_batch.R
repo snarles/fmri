@@ -20,7 +20,7 @@ sigma2_seq <- 0.01 * 1:20
 K <- 100000 ## multiple of 1000
 Ktarg <- c(10000, 20000, 50000, 100000)
 ksub <- 5000 ## multiple of 250
-mc.reps <- 200
+mc.reps <- 10000
 sigma2s <- rep(sigma2_seq, floor(mc.reps/length(sigma2_seq)))
 
 # mus <- randn(K, p)
