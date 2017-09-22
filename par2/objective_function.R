@@ -21,15 +21,22 @@ par2_extrapolate <- function(ks, accs, Ktarg, mc.reps = 1e4) {
   mu.init <- par2_initialize_mu(accs, ks)
   tau.init <- 1
   res <- tryCatch({
-    nlm(function(x) par2_objective_function(accs_sub, kref, x[1], x[2]),
+    nlm(function(x) par2_objective_function(accs, ks, x[1], x[2]),
         c(mu.init, tau.init))},
     error = function(e) e)
   if ("error" %in% class(res)) {
-    lala <- warnings()
-    stopifnot("sqrt(tau)" %in% lala)
-    res2 <- optimize(function(x) par2_objective_function(accs_sub, kref, x, 0), interval = c(-20, 20))
-    (mu.hat <- res2$minimum)
-    tau.hat <- 0
+    lala <- tryCatch({
+      nlm(function(x) par2_objective_function(accs, ks, x[1], x[2]),
+          c(mu.init, tau.init))},
+      warning = function(e) e)
+    if("sqrt(tau)" %in% lala) {
+      res2 <- optimize(function(x) par2_objective_function(accs, ks, x, 0), interval = c(-20, 20))
+      (mu.hat <- res2$minimum)
+      tau.hat <- 0      
+    } else {
+      print(lala)
+      stop("unknown error")
+    }    
   } else {
     (mu.hat <- res$estimate[1])
     (tau.hat <- res$estimate[2])
