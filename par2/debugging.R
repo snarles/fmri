@@ -105,3 +105,27 @@ res
 lines(kref, par2_acc_k(ks, mu.hat, tau.hat), type = "l", col = "red")
 objective_function(accs, ks, mu.hat, tau.hat)
 objective_function(accs, ks, mu.init, 1)
+
+
+##
+
+
+
+mu.init <- par2_initialize_mu(accs_sub, kref)
+tau.init <- 1
+res <- tryCatch({
+  nlm(function(x) par2_objective_function(accs_sub, kref, x[1], x[2]),
+           c(mu.init, tau.init))},
+  error = function(e) e)
+if ("error" %in% class(res)) {
+  lala <- warnings()
+  stopifnot("sqrt(tau)" %in% lala)
+  res2 <- optimize(function(x) par2_objective_function(accs_sub, kref, x, 0), interval = c(-20, 20))
+  (mu.hat <- res2$minimum)
+  tau.hat <- 0
+} else {
+  (mu.hat <- res$estimate[1])
+  (tau.hat <- res$estimate[2])
+}
+plot(c(kref, Ktarg), par2_acc_k(c(kref, Ktarg), mu.hat, tau.hat), type = "o")
+lines(kref, accs_sub, col = "blue")
