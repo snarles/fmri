@@ -44,6 +44,13 @@ lines(c(kref, Ktarg), c(nnls_fit$fitted, acc_pred), col = "red")
 ####
 ##  mass production
 ####
+rmse_table <- function(accs_hat) {
+  resids <- accs_hat - facc_rep
+  resids2 <- resids^2
+  biases <- t(sapply(1:50, function(ind) colMeans(resids[sigma2s==sigma2s[ind], ])))
+  rmses <- t(sapply(1:50, function(ind) sqrt(colMeans(resids2[sigma2s==sigma2s[ind], ]))))
+  list(biases = biases, rmses = rmses)
+}
 
 get_basis_mat <- function(max.mu, kernel_sigma, mc.reps = 1e4) {
   (n_half <- ceiling(max.mu/kernel_sigma))
@@ -60,10 +67,14 @@ get_pred <- function(ind, Xmat, Xtarg) {
   as.numeric(Xtarg %*% nnls_fit$x)
 }
 
-set1 <- get_basis_mat(max.mu, 0.25)
+set1 <- get_basis_mat(max.mu, 0.5)
 t1 <- proc.time()
 preds <- mclapply(1:nrow(accsZ), get_pred, Xmat = set1$Xmat, Xtarg = set1$Xtarg, 
                   mc.cores = mcc)
 proc.time() - t1
+accs_hat <- do.call(rbind, preds)
 
-
+evalres <- rmse_table(accs_hat)
+matplot(Ktarg, t(evalres$biases), type = "l")
+matplot(Ktarg, t(evalres$rmses), type = "l")
+apply(evalres$rmses, 2, max)
