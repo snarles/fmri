@@ -78,3 +78,87 @@ evalres <- rmse_table(accs_hat)
 matplot(Ktarg, t(evalres$biases), type = "l")
 matplot(Ktarg, t(evalres$rmses), type = "l")
 apply(evalres$rmses, 2, max)
+
+## cross-validating the bandwidth??
+
+bdwids <- seq(0.1, 1, by = 0.1)
+basis_sets <- lapply(bdwids, function(x) get_basis_mat(max.mu, x))
+
+get_fit <- function(ind, Xmat) {
+  nnls_fit <- nnls(Xmat, accs_subs[ind, ])
+  sqrt(mean(nnls_fit$residuals^2))
+}
+
+bdwid_cv_curve <- function(accs_sub, basis_sets) {
+  ans <- numeric()
+  for (j in 1:length(basis_sets)) {
+    set1 <- basis_sets[[j]]
+    nnls_fit <- nnls(Xmat[-length(accs_sub), ], accs_sub[-length(accs_sub)])
+    pred <- sum(Xmat[length(accs_sub), ] * nnls_fit$x)
+    ans[j] <- pred - accs_sub[length(accs_sub)]
+  }
+  ans
+}
+
+bdwid_cv_curve <- function(accs_sub, basis_sets, cv.frac = 0.5) {
+  ans <- numeric()
+  ntr <- length(accs_sub)
+  tr.inds <- 1:floor(ntr * cv.frac)
+  for (j in 1:length(basis_sets)) {
+    set1 <- basis_sets[[j]]
+    Xmat <- set1$Xmat
+    nnls_fit <- nnls(Xmat[tr.inds, ], accs_sub[tr.inds])
+    pred <- sum(Xmat[-tr.inds, ] * nnls_fit$x)
+    ans[j] <- sqrt(mean((pred - accs_sub[-tr.inds])^2))
+  }
+  ans
+}
+
+bdwid_fit_curve <- function(accs_sub, basis_sets) {
+  ans <- numeric()
+  ntr <- length(accs_sub)
+  for (j in 1:length(basis_sets)) {
+    set1 <- basis_sets[[j]]
+    Xmat <- set1$Xmat
+    nnls_fit <- nnls(Xmat, accs_sub)
+    ans[j] <- sqrt(mean(nnls_fit$residuals^2))
+  }
+  ans
+}
+
+
+fsizes <- sapply(basis_sets, function(set1) {
+  mean(unlist(mclapply(1:nrow(accsZ), get_fit, Xmat = set1$Xmat, 
+           mc.cores = mcc))^2)
+})
+plot(bdwids, fsizes)
+
+rank(abs(bdwid_cv_curve(accs_subs[157, ], basis_sets)))
+plot(abs(bdwid_cv_curve(accs_subs[157, ], basis_sets)))
+plot(bdwid_cv_curve(accs_subs[22, ], basis_sets, cv.frac = 0.9))
+
+
+plot(bdwid_fit_curve(accs_subs[22, ], basis_sets))
+plot(bdwid_fit_curve(accs_subs[28, ], basis_sets)); abline(h = 1/max(kref))
+
+####
+##  method for choosing bandwidth and predicting
+####
+
+bdwid_select_predict <- function(accs_sub, basis_sets, kref) {
+  curve <- bdwid_fit_curve(accs_sub, basis_sets)
+  basis_ind <- max(which(curve < min(curve) + 1/max(kref)))
+  nnls_fit <- nnls(basis_sets[[basis_ind]]$Xmat, accs_subs[ind, ])
+  as.numeric(basis_sets[[basis_ind]]$Xtarg %*% nnls_fit$x)
+}
+
+t1 <- proc.time()
+preds <- mclapply(1:nrow(accsZ), function(ind) bdwid_select_predict(accs_subs[ind, ], basis_sets, kref),
+                  mc.cores = mcc)
+proc.time() - t1
+accs_hat <- do.call(rbind, preds)
+
+evalres <- rmse_table(accs_hat)
+matplot(Ktarg, t(evalres$biases), type = "l")
+matplot(Ktarg, t(evalres$rmses), type = "l")
+apply(evalres$rmses, 2, max)
