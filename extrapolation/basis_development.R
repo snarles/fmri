@@ -81,8 +81,9 @@ apply(evalres$rmses, 2, max)
 
 ## cross-validating the bandwidth??
 
-bdwids <- seq(0.1, 1, by = 0.1)
+bdwids <- seq(0.05, 1, by = 0.05)
 basis_sets <- lapply(bdwids, function(x) get_basis_mat(max.mu, x))
+saveRDS(basis_sets, file = "extrapolation/basis_sets_01.rds")
 
 get_fit <- function(ind, Xmat) {
   nnls_fit <- nnls(Xmat, accs_subs[ind, ])
@@ -108,7 +109,7 @@ bdwid_cv_curve <- function(accs_sub, basis_sets, cv.frac = 0.5) {
     set1 <- basis_sets[[j]]
     Xmat <- set1$Xmat
     nnls_fit <- nnls(Xmat[tr.inds, ], accs_sub[tr.inds])
-    pred <- sum(Xmat[-tr.inds, ] * nnls_fit$x)
+    pred <- Xmat[-tr.inds, ] %*% nnls_fit$x
     ans[j] <- sqrt(mean((pred - accs_sub[-tr.inds])^2))
   }
   ans
@@ -126,6 +127,19 @@ bdwid_fit_curve <- function(accs_sub, basis_sets) {
   ans
 }
 
+bdwid_all_preds <- function(accs_sub, basis_sets) {
+  ans <- matrix(NA, length(basis_sets), length(Ktarg))
+  ntr <- length(accs_sub)
+  for (j in 1:length(basis_sets)) {
+    set1 <- basis_sets[[j]]
+    Xmat <- set1$Xmat
+    nnls_fit <- nnls(Xmat, accs_sub)
+    ans[j, ] <- set1$Xtarg %*% nnls_fit$x
+  }
+  ans
+}
+
+
 
 fsizes <- sapply(basis_sets, function(set1) {
   mean(unlist(mclapply(1:nrow(accsZ), get_fit, Xmat = set1$Xmat, 
@@ -139,21 +153,53 @@ plot(bdwid_cv_curve(accs_subs[22, ], basis_sets, cv.frac = 0.9))
 
 
 plot(bdwid_fit_curve(accs_subs[22, ], basis_sets))
-plot(bdwid_fit_curve(accs_subs[28, ], basis_sets)); abline(h = 1/max(kref))
+
+ind <- 30
+curve <- bdwid_fit_curve(accs_subs[ind, ], basis_sets)
+cv_curve <- bdwid_cv_curve(accs_subs[ind, ], basis_sets)
+#plot(cv_curve); abline(h = min(cv_curve) + sqrt(1/max(kref)))
+rank(cv_curve)
+# plot(curve);abline(h=min(curve) + max(curve)/max(kref))
+# plot(log(curve));abline(h=log(min(curve) + max(curve)/max(kref)))
+# plot(diff(curve))
+plot(bdwid_all_preds(accs_subs[ind, ], basis_sets)[,length(Ktarg)],
+     ylim = c(0, 1));abline(h = facc_rep[ind, length(Ktarg)])
+# plot(diff(diff(curve)))
+plot(curve);abline(h=min(curve) + max(curve)/max(kref))
+
+plot(bdwid_cv_curve(accs_subs[ind, ], basis_sets))
+
+
+(1-accs_subs[ind, ncol(accs_subs)])
+facc[, 20]
 
 ####
 ##  method for choosing bandwidth and predicting
 ####
 
+bdwid_select <- function(accs_sub, basis_sets, kref) {
+#   curve <- bdwid_fit_curve(accs_sub, basis_sets)
+#   basis_ind <- max(which(curve < min(curve) + 1/max(kref)))
+  curve <- bdwid_cv_curve(accs_sub, basis_sets)
+  basis_ind <- max(which(curve < min(curve) + 1/sqrt(max(kref))))
+  basis_ind
+}
+
+t1 <- proc.time()
+selected <- mclapply(1:nrow(accsZ), function(ind) bdwid_select(accs_subs[ind, ], basis_sets[10:11], kref),
+                  mc.cores = mcc)
+proc.time() - t1
+table(unlist(selected))
+plot(facc_rep[, 20], unlist(selected) + runif(nrow(facc_rep), -.3, .3), col = rgb(0,0,0,0.5))
+
 bdwid_select_predict <- function(accs_sub, basis_sets, kref) {
-  curve <- bdwid_fit_curve(accs_sub, basis_sets)
-  basis_ind <- max(which(curve < min(curve) + 1/max(kref)))
-  nnls_fit <- nnls(basis_sets[[basis_ind]]$Xmat, accs_subs[ind, ])
+  basis_ind <- bdwid_select(accs_sub, basis_sets, kref)
+  nnls_fit <- nnls(basis_sets[[basis_ind]]$Xmat, accs_sub)
   as.numeric(basis_sets[[basis_ind]]$Xtarg %*% nnls_fit$x)
 }
 
 t1 <- proc.time()
-preds <- mclapply(1:nrow(accsZ), function(ind) bdwid_select_predict(accs_subs[ind, ], basis_sets, kref),
+preds <- mclapply(1:nrow(accsZ), function(ind) bdwid_select_predict(accs_subs[ind, ], basis_sets[7:12], kref),
                   mc.cores = mcc)
 proc.time() - t1
 accs_hat <- do.call(rbind, preds)
