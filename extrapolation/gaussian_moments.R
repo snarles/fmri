@@ -13,6 +13,7 @@ logmeanexp <- function(v) logsumexp(v - log(length(v)))
 # ks <- seq(100, 5000, 100)
 
 gaussian_basis <- function(mu, sigma2, ks, mc.reps = 1e4) {
+  if (mu == Inf) return(rep(1, length(ks)))
   samp_qs <- (1:mc.reps - 0.5)/mc.reps
   samp <- qnorm(samp_qs, mu, sqrt(sigma2))
   #c(sd(samp), sqrt(sigma2), sd(samp) - sqrt(sigma2))
