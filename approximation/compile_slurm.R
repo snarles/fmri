@@ -1,6 +1,6 @@
 seq1 <- nits*10-9
 seq2 <- nits * 10
-str2 <- "/data/MLcore/temp/sim6a"
+str2 <- "/data/MLcore/temp/sim5cd"
 lf <- paste0(str2, "_", seq1, "_", seq2, ".RData")
 
 resZ <- list()
