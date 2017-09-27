@@ -53,6 +53,21 @@ bdwid_cv_curve <- function(accs_sub, basis_sets, cv.frac = 0.5) {
   ans
 }
 
+bdwid_cv_curve_f <- function(accs_sub, basis_sets, cv.frac = 0.5) {
+  ans <- numeric()
+  ntr <- length(accs_sub)
+  tr.inds <- 1:floor(ntr * cv.frac)
+  for (j in 1:length(basis_sets)) {
+    set1 <- basis_sets[[j]]
+    Xmat <- set1$Xmat
+    nnls_fit <- nnls(Xmat[tr.inds, ], accs_sub[tr.inds])
+    pred <- Xmat[nrow(Xmat), , drop = FALSE] %*% nnls_fit$x
+    ans[j] <- abs(pred - accs_sub[nrow(Xmat)])
+  }
+  ans
+}
+
+
 bdwid_fit_curve <- function(accs_sub, basis_sets) {
   ans <- numeric()
   ntr <- length(accs_sub)
