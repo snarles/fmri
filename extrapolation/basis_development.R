@@ -2,6 +2,7 @@
 library(parallel)
 source("extrapolation/ku_source.R")
 source("extrapolation/gaussian_moments.R")
+source("extrapolation/basis_source.R")
 
 load("approximation/sim_large5_k5_raw.RData", verbose = TRUE)
 mcc <- 20
