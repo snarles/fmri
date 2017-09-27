@@ -98,5 +98,11 @@ dats$accs_sub[length(kref)]
 
 all_sub_preds <- t(apply(dats$accs_subsub, 1, bdwid_all_preds, basis_sets = sub_basis_sets))
 sd_curve <- apply(all_sub_preds, 2, sd)
-cv_curve <- bdwid_cv_curve(accs_sub, basis_sets)
-fit_curve <- bdwid_fit_curve(accs_sub, basis_sets)
+cv_curve <- bdwid_cv_curve(dats$accs_sub, basis_sets)
+fit_curve <- bdwid_fit_curve(dats$accs_sub, basis_sets)
+
+plot(bdwids, cv_curve)
+plot(bdwids, fit_curve)
+plot(bdwids, sd_curve)
+plot(bdwids, sd_curve + cv_curve)
+
