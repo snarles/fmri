@@ -8,6 +8,7 @@ source("approximation/gaussian_identity_finsam.R")
 source("approximation/gaussian_identity_finsam2.R")
 source("extrapolation/ku_source.R")
 source("extrapolation/kay_method.R")
+source("extrapolation/basis_source.R")
 
 p <- 10
 sigma2_seq <- 0.005 * 1:50
@@ -20,15 +21,6 @@ ksub_sub <- 2500
 nsub_sub <- 100
 mc.reps <- 10000
 sigma2s <- rep(sigma2_seq, floor(mc.reps/length(sigma2_seq)))
-subsub_kref_inds <- which(kref < ksub_sub)
-ssi <- subsub_kref_inds
-
-# mus <- randn(K, p)
-# ys <- mus + sqrt(sigma2) * randn(K, p)
-# mu_hats <- mus + sqrt(sigma2_tr) * randn(K, p)
-# pmat <- -pdist2(mu_hats, ys)
-# accs <- 1 - resample_misclassification(pmat, 1:K, 1:K)
-# plot(accs, type = "l")
 
 kseq <- function(nr, ksub) {
   interv <- floor(ksub/nr)
@@ -36,8 +28,13 @@ kseq <- function(nr, ksub) {
 }
 
 nrow <- 500
-#kz <- kseq(1000, K)
 kref <- kseq(nrow, ksub)
+
+
+subsub_kref_inds <- which(kref <= ksub_sub)
+ssi <- subsub_kref_inds
+
+
 
 repno <- 20
 subfun_no_accs <- function (repno) {
@@ -77,7 +74,11 @@ sqrt(colMeans((accsZ - facc_rep)^2))
 (max.mu <- (qnorm(1- 1/(max(kref)^2))))
 
 ## setup constructing basis 
-
+bdwids <- seq(0.05, 1, by = 0.05)
+basis_sets <- readRDS("extrapolation/basis_sets_01.rds")
+sub_basis_sets <- lapply(basis_sets, function(set1) {
+  list(Xmat = set1$Xmat[ssi, ], Xtarg = set1$Xmat[length(kref), , drop = FALSE])
+})
 
 ## actually try bandwid-sel?
 
@@ -88,3 +89,14 @@ proc.time() - t1
 matplot(kref[ssi], t(dats$accs_subsub), type = "l")
 
 ## variance of difference bandwidths on predicting ksub
+
+accs_sub <- dats$accs_subsub[1, ]
+accs_sub
+get_pred(accs_sub, sub_basis_sets[[5]])
+bdwid_all_preds(dats$accs_subsub[1, ], sub_basis_sets)
+dats$accs_sub[length(kref)]
+
+all_sub_preds <- t(apply(dats$accs_subsub, 1, bdwid_all_preds, basis_sets = sub_basis_sets))
+sd_curve <- apply(all_sub_preds, 2, sd)
+cv_curve <- bdwid_cv_curve(accs_sub, basis_sets)
+fit_curve <- bdwid_fit_curve(accs_sub, basis_sets)

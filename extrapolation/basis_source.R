@@ -1,7 +1,7 @@
 library(parallel)
 source("extrapolation/ku_source.R")
 source("extrapolation/gaussian_moments.R")
-
+library(nnls)
 
 
 rmse_table <- function(accs_hat) {
@@ -22,7 +22,71 @@ get_basis_mat <- function(max.mu, kernel_sigma, mc.reps = 1e4) {
   list(Xmat = Xmat, Xtarg = Xtarg)
 }
 
-get_pred <- function(ind, Xmat, Xtarg) {
-  nnls_fit <- nnls(Xmat, accs_subs[ind, ])
-  as.numeric(Xtarg %*% nnls_fit$x)
+get_pred <- function(accs_sub, set1) {
+  nnls_fit <- nnls(set1$Xmat, accs_sub)
+  as.numeric(set1$Xtarg %*% nnls_fit$x)
+}
+
+bdwid_all_preds <- function(accs_sub, basis_sets) {
+  ans <- matrix(NA, length(basis_sets), nrow(basis_sets[[1]]$Xtarg))
+  ntr <- length(accs_sub)
+  for (j in 1:length(basis_sets)) {
+    set1 <- basis_sets[[j]]
+    Xmat <- set1$Xmat
+    nnls_fit <- nnls(Xmat, accs_sub)
+    ans[j, ] <- set1$Xtarg %*% nnls_fit$x
+  }
+  ans
+}
+
+bdwid_cv_curve <- function(accs_sub, basis_sets, cv.frac = 0.5) {
+  ans <- numeric()
+  ntr <- length(accs_sub)
+  tr.inds <- 1:floor(ntr * cv.frac)
+  for (j in 1:length(basis_sets)) {
+    set1 <- basis_sets[[j]]
+    Xmat <- set1$Xmat
+    nnls_fit <- nnls(Xmat[tr.inds, ], accs_sub[tr.inds])
+    pred <- Xmat[-tr.inds, ] %*% nnls_fit$x
+    ans[j] <- sqrt(mean((pred - accs_sub[-tr.inds])^2))
+  }
+  ans
+}
+
+bdwid_fit_curve <- function(accs_sub, basis_sets) {
+  ans <- numeric()
+  ntr <- length(accs_sub)
+  for (j in 1:length(basis_sets)) {
+    set1 <- basis_sets[[j]]
+    Xmat <- set1$Xmat
+    nnls_fit <- nnls(Xmat, accs_sub)
+    ans[j] <- sqrt(mean(nnls_fit$residuals^2))
+  }
+  ans
+}
+
+bdwid_cv_curve <- function(accs_sub, basis_sets, cv.frac = 0.5) {
+  ans <- numeric()
+  ntr <- length(accs_sub)
+  tr.inds <- 1:floor(ntr * cv.frac)
+  for (j in 1:length(basis_sets)) {
+    set1 <- basis_sets[[j]]
+    Xmat <- set1$Xmat
+    nnls_fit <- nnls(Xmat[tr.inds, ], accs_sub[tr.inds])
+    pred <- Xmat[-tr.inds, ] %*% nnls_fit$x
+    ans[j] <- sqrt(mean((pred - accs_sub[-tr.inds])^2))
+  }
+  ans
+}
+
+bdwid_fit_curve <- function(accs_sub, basis_sets) {
+  ans <- numeric()
+  ntr <- length(accs_sub)
+  for (j in 1:length(basis_sets)) {
+    set1 <- basis_sets[[j]]
+    Xmat <- set1$Xmat
+    nnls_fit <- nnls(Xmat, accs_sub)
+    ans[j] <- sqrt(mean(nnls_fit$residuals^2))
+  }
+  ans
 }
