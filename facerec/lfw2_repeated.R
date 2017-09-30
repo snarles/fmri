@@ -11,7 +11,7 @@ load("facerec/temp_setup.RData", verbose = TRUE)
 
 ## set up bases
 method.inds <- match(c("kde_bcv", "kde_ucv", "r.cv.gauss"), column_names)
-ksub <- 800
+ksub <- 100
 ksub2 <- ksub/2
 lsub2 <- length(kref)/2
 kseq <- function(nr, ksub) {
@@ -110,7 +110,7 @@ predZ <- abind(lapply(res, `[[`, "preds"), along = 3)
 dim(predZ)
 
 nplot <- 100
-tred <- rgb(1,0,0,0.5)
+tred <- rgb(1,0,0,0.2)
 for (method.ind in method.inds) {
   pdf(paste0("facerec/repeat_", ksub, "_", column_names[method.ind], ".pdf"))
   plot(Ktarg, accs_full, type = "l", ylim = c(0, 1), xlab = "no. faces", ylab = "accuracy",
@@ -123,3 +123,19 @@ for (method.ind in method.inds) {
 resids <- predZ[,K,] - accs_full[K]
 rmses <- sqrt(rowMeans(resids^2))
 rmses
+
+# K 100 
+# r.gauss0.4 r.gauss0.5 r.gauss0.6 r.gauss0.7    kde_bcv    kde_ucv    kde_0.1    kde_0.2    kde_0.3    kde_0.4 r.cv.gauss       par2 
+# 0.15203103 0.13746924 0.12305661 0.11410614 0.05396484 0.08152962 0.08733085 0.37055522 0.43322116 0.43600007 0.12795548 0.06698956
+
+# K 200
+# r.gauss0.4 r.gauss0.5 r.gauss0.6 r.gauss0.7    kde_bcv    kde_ucv    kde_0.1    kde_0.2    kde_0.3    kde_0.4 r.cv.gauss       par2 
+# 0.08434667 0.07746195 0.07168023 0.06286829 0.03659644 0.05703899 0.11631254 0.37811422 0.43366656 0.43600156 0.08109960 0.04234642 
+
+# K 400
+# r.gauss0.4 r.gauss0.5 r.gauss0.6 r.gauss0.7    kde_bcv    kde_ucv    kde_0.1    kde_0.2    kde_0.3    kde_0.4 r.cv.gauss       par2 
+# 0.04549484 0.04216129 0.04013809 0.03798940 0.02235095 0.03327859 0.13911457 0.38291629 0.43386896 0.43600224 0.04657844 0.03067437 
+
+## K 800
+# r.gauss0.4 r.gauss0.5 r.gauss0.6 r.gauss0.7    kde_bcv    kde_ucv    kde_0.1    kde_0.2    kde_0.3    kde_0.4 r.cv.gauss       par2 
+# 0.01819409 0.01785265 0.01753511 0.01724386 0.01351021 0.01677904 0.15485711 0.38495207 0.43399104 0.43600278 0.01645264 0.01486782
