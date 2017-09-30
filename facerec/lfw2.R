@@ -95,6 +95,8 @@ sub_basis_sets <- lapply(basis_sets, function(set1) {
 (kde.names <- sapply(kde_bdwids, function(v) paste0("kde_", v)))
 (column_names <- c(names(basis_vecs), kde.names, "r.cv.gauss", "par2"))
 
+save(xf, yf, K, Ktarg, basis_sets, basis_vecs, column_names, nboot, accs_full, liks, file = "facerec/temp_setup.RData")
+
 pmat_sub <- liks[1:ksub, 1:ksub]
 rSqs <- rowSums((xtr - xte)^2)
 counts <- countDistEx(xtr, xte, rSqs)
@@ -108,6 +110,7 @@ for (ii in 1:nboot) {
   counts_subsub <- countDistEx(xtr[subinds,], xte[subinds,], rSqs[subinds])
   boot_accs[ii, ] <- count_acc(counts_subsub, kref[1:lsub2])
 }
+
 
 ## do predictions
 
