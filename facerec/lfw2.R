@@ -5,6 +5,7 @@ library(parallel)
 source("extrapolation/kay_method.R")
 source("par2/objective_function.R")
 source("extrapolation/basis_source.R")
+source("approximation/gaussian_identity_finsam2.R")
 
 # x <- read.csv("facerec/reps.csv", header = FALSE)
 # x <- as.matrix(x)
@@ -59,93 +60,93 @@ yte <- yf[te_inds]
 liks <- -pdist2(xte, xtr)
 accs_full <- 1 - resample_misclassification(liks, 1:ncol(split_ind_m), 
                                        1:ncol(split_ind_m))
+## set up bases
+
+K <- length(yte) ## 1672
+Ktarg <- 1:K
+ksub <- nsub
+ksub2 <- ksub/2
+nboot <- 20 ## number of bootstraps for CV
+
+kseq <- function(nr, ksub) {
+  interv <- floor(ksub/nr)
+  seq(interv, ksub, by = interv)
+}
+
+nrow <- 100
+kref <- kseq(nrow, ksub)
+kde_bdwids <- list("bcv", "ucv", 0.1, 0.2, 0.3, 0.4)
+(max.mu <- (qnorm(1- 1/(max(kref)^2))))
+fixed.gb <- c(0.4, 0.5, 0.6, 0.7)
+lsub2 <- length(kref)/2
+basis_vecs <- list()
+
+for (gb in fixed.gb) {
+  nm <- paste0("r.gauss", gb)
+  basis_vecs[[nm]] <- get_basis_mat(max.mu, kernel_sigma = gb)
+}
+(bdwids <- seq(0.1, 1, 0.1))
+basis_sets <- lapply(bdwids, function(bd) get_basis_mat(max.mu, bd))
+
+sub_basis_sets <- lapply(basis_sets, function(set1) {
+  list(Xmat = set1$Xmat[1:lsub2, ], Xtarg = set1$Xmat[length(kref), , drop = FALSE])
+})
+
+(kde.names <- sapply(kde_bdwids, function(v) paste0("kde_", v)))
+(column_names <- c(names(basis_vecs), kde.names, "r.cv.gauss", "par2"))
+
+save(xf, yf, K, Ktarg, basis_sets, basis_vecs, column_names, nboot, accs_full, liks, file = "facerec/temp_setup.RData")
+
+pmat_sub <- liks[1:ksub, 1:ksub]
+rSqs <- rowSums((xtr - xte)^2)
+counts <- countDistEx(xtr, xte, rSqs)
+accs_f2 <- count_acc(counts, Ktarg)    
+counts_sub <- countDistEx(xtr[1:ksub,], xte[1:ksub,], rSqs[1:ksub])
+accs_sub <- count_acc(counts_sub, kref)
+
+boot_accs <- matrix(NA, nboot, lsub2)
+for (ii in 1:nboot) {
+  subinds <- sample(ksub, ksub2, replace = FALSE)
+  counts_subsub <- countDistEx(xtr[subinds,], xte[subinds,], rSqs[subinds])
+  boot_accs[ii, ] <- count_acc(counts_subsub, kref[1:lsub2])
+}
 
 
-## fit spline model
+## do predictions
 
-nsplines <- 10000
-acs <- 1 - accs
-knts <- seq(0, 1, length.out = nsplines + 2)
-knts <- knts[-c(1, nsplines + 2)]
-MM <- spline1_moments(knts, 1:ncol(split_ind_m))
-xmat <- spline1_moments(knts, 1:nsub)
-bt <- nnls::nnls(xmat, acs)$x
-xs <- seq(0, 1, 0.01)
-plot(xs, spline1_dm(knts, xs) %*% bt, type = "l", main = "estimated D(u)", ylab = "D(u)", xlab = "u",
-     cex.lab = 1.2)
+preds <- matrix(NA, length(column_names), length(Ktarg))
+rownames(preds) <- column_names
+for (ind in 1:length(column_names)) {
+  if (ind <= length(basis_vecs)) {
+    Xmat <- basis_vecs[[ind]]$Xmat
+    Xpred <- basis_vecs[[ind]]$Xtarg
+    bt <- nnls::nnls(Xmat, accs_sub)
+    preds[ind, ] <- (Xpred %*% bt$x)
+  } else if(ind <= length(basis_vecs) + length(kde_bdwids)) {
+    bw <- kde_bdwids[[ind - length(basis_vecs)]]
+    preds[ind, ] <- kernel_extrap(pmat_sub, Ktarg, bw = bw)
+  } else if (column_names[ind] == "par2") {
+    preds[ind, ] <- par2_extrapolate(kref, accs_sub, Ktarg)
+  } else if (column_names[ind] == "r.cv.gauss") {
+    all_sub_preds <- t(apply(boot_accs, 1, bdwid_all_preds, basis_sets = sub_basis_sets))
+    cv_curve <- sqrt(colMeans((all_sub_preds - accs_sub[length(kref)])^2))
+    sel_ind <- which.min(cv_curve)
+    Xmat <- basis_sets[[sel_ind]]$Xmat
+    Xpred <- basis_sets[[sel_ind]]$Xtarg
+    bt <- nnls::nnls(Xmat, accs_sub)
+    preds[ind, ] <- (Xpred %*% bt$x)
+  }
+}
 
-acs_hat <- 1 - as.numeric(MM %*% bt)
+abs(preds[, K] - accs_f2[K])
 
-pdf("facerec/acc_plot2.pdf")
-plot(accs_full, type = "l", ylim = c(0, 1), xlab = "faces", ylab = "accuracy",
-     main = "Full set (1672)", cex.lab = 1.5, col = "black")
-#lines(1:nsub, accs, col = "black", lwd = 3)
-lines(acs_hat, col = "red")
+plotcols <- c("black", "green", "blue", "red")
+
+pdf("facerec/version2_acc_plot2.pdf")
+matplot(Ktarg, t(rbind(accs_full, preds[c(5, 6, 11), ])), type = "l",
+        ylim = c(0, 1), xlab = "no. faces", ylab = "accuracy",
+        main = "Full set (1672)", cex.lab = 1.5, col = plotcols, lwd = 2)
 abline(v = nsub, lty = 2, col = "red")
-legend(500, 0.3, c("estimate", "full1672"), col = c("red", "black"), 
-       lwd = c(2, 1, 1), cex = 1.5)
+legend(500, 0.3, c("true", "kdeBCV", "kdeUCV", "regCV"), col = plotcols, 
+       lwd = 2, cex = 1.5)
 dev.off()
-
-## multiple repeats
-
-draw_sub_accs <- function(nsub) {
-  clsub <- sample(ncol(split_ind_m), nsub)
-  tr_inds <- split_ind_m[1, clsub]
-  te_inds <- split_ind_m[2, clsub]
-  xtr <- xf[tr_inds, ]
-  xte <- xf[te_inds, ]
-  ytr <- yf[tr_inds]
-  yte <- yf[te_inds]
-  liks <- -pdist2(xte, xtr)
-  accs <- 1 - resample_misclassification(liks, 1:nsub, 1:nsub)
-  nsplines <- 10000
-  acs <- 1 - accs
-  knts <- seq(0, 1, length.out = nsplines + 2)
-  knts <- knts[-c(1, nsplines + 2)]
-  MM <- spline1_moments(knts, 1:ncol(split_ind_m))
-  xmat <- spline1_moments(knts, 1:nsub)
-  bt <- nnls::nnls(xmat, acs)$x
-  xs <- seq(0, 1, 0.01)
-  acs_hat <- pmax(1 - as.numeric(MM %*% bt), 0)
-  acs_hat
-}
-
-nreps <- 20
-nsubs <- c(100, 200, 400, 800)
-#nsub <- 400
-
-for (nsub in nsubs) {
-  pdf(paste0("facerec/sub_", nsub, ".pdf"))
-  plot(accs_full, type = "l", ylim = c(0, 1), xlab = "faces", ylab = "accuracy",
-       main = paste(nsub), cex.lab = 1.5, col = "black", lwd = 3)
-  abline(v = nsub, lty = 2)
-  for (i in 1:nreps) lines(draw_sub_accs(nsub), col = "red")
-  lines(accs_full, col = "black", lwd = 3)
-  dev.off()
-}
-
-
-set.seed(0)
-t1 <- proc.time()
-nreps <- 300
-accs_final <- list()
-for (nsub in nsubs) {
-  accs <- unlist(mclapply(1:nreps, function(i) min(draw_sub_accs(nsub)),
-                 mc.cores = 2))
-  accs_final[[paste(nsub)]] <- accs
-}
-proc.time() - t1
-
-boxplot(accs_final, ylim = c(0, 1), main = "Predicted accuracy (1672)")
-abline(h = min(accs_full), col = "blue")
-
-saveRDS(accs_final, file = "lfw_sub_preds.rds")
-
-(true_acc <- min(accs_full))
-
-(bias <- sapply(accs_final, function(v) mean((v - true_acc))))
-(sd <- sapply(accs_final, sd))
-
-
-mses <- sapply(accs_final, function(v) mean((v - true_acc)^2))
-sqrt(mses)
