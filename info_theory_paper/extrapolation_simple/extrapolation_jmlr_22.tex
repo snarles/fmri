@@ -1000,59 +1000,6 @@ In the following simulations, we compare the regression method to the KDE method
 
 
 
-\subsubsection*{Fitting  ${D}(u)$}
-[[Needs Adaptation to new location]]
-Estimation accuracy of ${D}(u)$ will depend on how well it is
-approximated by basis functions $h_\ell(u)$, and penalty and
-constraints used for fitting the regression.  Based on our experience
-with simulated and real data examples, we can offer a couple of
-practical suggestions for the fitting procedure.
-
-\begin{itemize}
-\item Although ${D}(u)$ is unknown, it has to be monotone and bounded by one,
-because it is a cumulative distribution function.  Furthermore, in
-many real and simulated examples, including the examples of sections \ref{sec:simulation_study} and \ref{sec:extrapolation_example},
-${D}(u)$ also has the property
-of convexity.  We have found that including the monotonicity and
-convexity constraint in the estimation procedure improves estimation
-performance.  A convenient way to impose both is to choose $\{h_\ell\}$ to be a family of
-linear splines, $h_\ell(u) = [u - u_\ell]_+$, and then to require that
-the spline coefficients $\beta_\ell$ are non-negative (see Section \ref{sec:exp_details}). 
-We expect that higher-order spline
-bases should also do well, although it may be harder to impose the 
-convexity and monotonicity constraints.
-\item The number and location of knots for the spline basis is also
-important.  
-%When attempting to extrapolate to a large number of
-%classes, the behavior of ${D}(u)$ for $u$ close to 1 is far more
-%important than the shape of ${D}(u)$ in the rest of the interval.
-%This is because the weighting density $\text{Beta}(k-1, 1)$ used to
-%compute the higher moments is concentrated near 1 for large $k$.  A
-%good heuristic is to consider that the mean of the weighting density
-%is $\frac{k-1}{k}$, which suggests that the scale of discretization
-%near 1 should be smaller than $1/k_2$ when the goal is to estimate the
-%average accuracy for $k_2$ classes.  Meanwhile, the standard deviation
-%of the weighing density is approximately $1/k$, meaning that the
-%behavior of ${D}(u)$ for $u$ smaller than $1 - \frac{5}{k_2}$
-%(that is, $u$ which are more than 4 standard deviations away from the
-%mean of the weighting density) has negligible effect on the
-%extrapolation.  Therefore, a coarser discretization can be used for
-%knots while are smaller than $1 - \frac{5}{k_2}$.  Still, the overall
-%discretization should not be coarser than order $1/k_1$, so that the
-%model has sufficient degrees of freedom to explain the subsampled
-%accuracy curve. 
-We found that controlling the number of basis functions is crucial for preventing overfitting in the unconstrained linear model. When
-at least one of either the monotonicity or convexity constraint is
-adopted, however, the fit is less sensitive to the number of basis
-functions, as long as the knots form a sufficiently fine
-discretization of the unit interval.  Even then, careful choice of knots can reduce the computational load.
-\item An alternative to a linear basis representation is to
-consider parametric families for the function ${D}(u)$.  When the
-family is a good fit to the the data, this can considerably improve
-extrapolation power, especially when the size of the dataset is
-limited.  We discuss parametric models for ${D}(u)$ in
-forthcoming work.
-\end{itemize}
 
 
 
@@ -1159,24 +1106,11 @@ the full dataset $\hat{AGA}_{1672}$.  We compare the prediction to the
 observed accuracy on full dataset $\text{TA}_{1672}$, which
 approximates the ground truth.
 
-
-\begin{figure}
-\centering
-\begin{tabular}{c}
-\begin{myfont}Predicting $\text{AGA}$ ($k_1= 400$) \end{myfont}\\
-\includegraphics[scale = 0.5, clip = true, trim = 0 0 0 0.6in]{acc_plot2.pdf}
-\end{tabular}
-\caption{\textbf{Estimated accuracy for face recognition:}
-Estimated average accuracy for $k > 400$ (red) compared to the ground truth (black). Estimation is based on observed accuracies using one subset of $k_1=400$ classes, whereas ground truth uses all 1672 classes. The results are for 1-NN classifier.}
-\label{fig:lfw_extrapolation1}
-\end{figure}
-
 \subsection{Results}
 
-The extrapolation results can be seen in Figures
-\ref{fig:lfw_extrapolation1} and \ref{fig:lfw_extrapolation2}. In the
-first, we show a extrapolation estimate for $k_1 = 400$. In the
-second, we see multiple instances for different values of $k_1$. As
+The extrapolation results can be seen in Figure \ref{fig:lfw_extrapolation2}. 
+
+ As
 can be seen, both the accuracy as well as the variances decrease
 rapidly as $k_1$ increases. In general, for $k_1>400$ the paths of the
 different extrapolation curves are not very different. The
@@ -1185,18 +1119,29 @@ root-mean-square errors between at $k_2=1672$ can be seen in Table
 
 \begin{figure}
 \centering
-\begin{tabular}{cc}
+\begin{tabular}{cccc}
+&
 \begin{myfont}$k_1 = 100$\end{myfont} & 
-\begin{myfont}$k_1 = 200$\end{myfont}\\
-\includegraphics[scale = 0.4, clip = true, trim = 0 0 0 0.6in]{sub_100.pdf} &
-\includegraphics[scale = 0.4, clip = true, trim = 0 0 0 0.6in]{sub_200.pdf} \\
-\begin{myfont}$k_1 = 400$\end{myfont} & 
-\begin{myfont}$k_1 = 800$\end{myfont}\\
-\includegraphics[scale = 0.4, clip = true, trim = 0 0 0 0.6in]{sub_400.pdf} &
-\includegraphics[scale = 0.4, clip = true, trim = 0 0 0 0.6in]{sub_800.pdf} 
+\begin{myfont}$k_1 = 200$\end{myfont} &
+\begin{myfont}$k_1 = 400$\end{myfont}\\
+CV reg & 
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in]{repeat_100_r_cv_gauss.pdf} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in]{repeat_200_r_cv_gauss.pdf} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in]{repeat_400_r_cv_gauss.pdf} \\
+KDE UCV & 
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in]{repeat_100_kde_ucv.pdf} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in]{repeat_200_kde_ucv.pdf} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in]{repeat_400_kde_ucv.pdf} \\
+KDE BCV & 
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in]{repeat_100_kde_bcv.pdf} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in]{repeat_200_kde_bcv.pdf} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in]{repeat_400_kde_bcv.pdf} \\
 \end{tabular}
-\caption{\textbf{Comparing different $k_1$s:}
-The plots show predicted accuracies using a different source dataset size $k_1$ (vertical line). Each red curve represents the estimated accuracies using a single subsample. The black curve shows the true average accuracy. }
+\caption{\textbf{Comparison of KDE and CV regression methods}: The
+  plots show predicted accuracies using a different source dataset
+  size $k_1$. Each red curve represents the estimated accuracies using
+  a single subsample. The black curve shows the true average
+  accuracy. }
 \label{fig:lfw_extrapolation2}
 \end{figure}
 
@@ -1204,14 +1149,13 @@ The plots show predicted accuracies using a different source dataset size $k_1$ 
 \centering
 \begin{tabular}{c||c|c|c|c}
 \hline
-$k_1$ & 100 & 200 & 300 & 400 \\\hline
-Bias & -0.090 & -0.062 & -0.016 & -0.001\\\hline
-sd & 0.277 & 0.178 & 0.066 & 0.020 \\ \hline
-RMSE & 0.291 & 0.189 & 0.068 & 0.020 \\\hline
+$k_1$ & 100 & 200 & 400 \\\hline
+CV reg & 0.128 & 0.081 & 0.047\\\hline
+KDE UCV & 0.082 & 0.057 & 0.033 \\ \hline
+KDE BCV & \textbf{0.054} & \textbf{0.037} & \textbf{0.022} \\\hline
 \end{tabular}
-\caption{Bias, standard deviation, and RMSE on predicting $\text{TA}_{1672}$ from $\widehat{\text{AGA}_{k_1}}$}\label{tab:lfw_accuracy}
+\caption{RMSE on predicting $\text{TA}_{1672}$ from $\widehat{\text{AGA}_{k_1}}$}\label{tab:lfw_accuracy}
 \end{table}
-
 
 
 \section{Discussion}
