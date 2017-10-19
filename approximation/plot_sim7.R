@@ -133,8 +133,8 @@ ggplot(data = temp3, aes(x = true_acc, y = rmse, colour = variable)) +
   geom_errorbar(aes(ymin = rmse_low, max = rmse_high)) + 
   scale_linetype_manual(values = c(1,1,1,1,1, 2,2,2,2,2,2,2, 1, 3))+
   ggtitle(paste0("Predicting K=", Ktarg[ind], " from k=", ksub))
-  #ggsave("approximation/sim_large7_K1_k0.5.png", width = 6, height = 4)
-  #ggsave("approximation/sim_large7_K2_k0.5.png", width = 6, height = 4)
-  #ggsave("approximation/sim_large7_K5_k0.5.png", width = 6, height = 4)
-  #ggsave("approximation/sim_large7_K10_k0.5.png", width = 6, height = 4)
+  #ggsave("approximation/sim_large7_K1_k0_5.png", width = 6, height = 3)
+  #ggsave("approximation/sim_large7_K2_k0_5.png", width = 6, height = 3)
+  #ggsave("approximation/sim_large7_K5_k0_5.png", width = 6, height = 3)
+  #ggsave("approximation/sim_large7_K10_k0_5.png", width = 6, height = 3)
   

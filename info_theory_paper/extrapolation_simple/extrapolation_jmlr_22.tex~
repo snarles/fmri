@@ -805,8 +805,8 @@ $\rho$ increases.
 Next, we discuss how to use data from smaller classification tasks to
 extrapolate average accuracy.  Assume that we have data from a
 $k_1$-class random classification task, and would like to estimate the
-average accuracy $\text{AGA}_{k_2}$ for $k_2>k_1$ classes.  
-Our estimation method will use the $k$-class average test accuracies,
+average accuracy $\text{AGA}_{k_2}$ for $k_2>k_1$ classes.  Our
+estimation method will use the $k$-class average test accuracies,
 $\text{ATA}_2,...,\text{ATA}_{k_1}$ (see Eq \ref{eq:avtestrisk}), for
 its inputs.
 
@@ -815,10 +815,7 @@ $\text{AGA}_k$ is the function ${D}$.  We adopt a linear model
 \begin{equation}\label{eq:linearKu}
 {D}(u) = \sum_{\ell = 1}^m \beta_\ell h_\ell(u),
 \end{equation}
-where $h_\ell(u)$ are known basis functions, and $\beta_\ell$ are the
-linear coefficients to be estimated.  Since our proposed method is
-based on the linearity assumption \eqref{eq:linearKu}, we call it the
-\emph{regression method} for extrapolation.
+where $h_\ell(u)$ are known basis functions, and $\beta_\ell$ are the linear coefficients to be estimated. 
 
 Conveniently, the $\text{AGA}_k$ can also be expressed in terms of the $\beta_\ell$ coefficients.
 If we plug in the assumed linear model \eqref{eq:linearKu} into the
@@ -847,44 +844,12 @@ from \eqref{eq:avrisk_linear}, via
 \widehat{\text{AGA}_{k_2}} = 1 - \sum_{\ell=1}^m \hat{\beta}_\ell H_{\ell, k_2}.
 \end{equation}
 
-\subsection{Model selection}\label{sec:modelselection}
-
-Accurate extrapolation using the regression method depends on a good
-fit between the linear model \eqref{eq:linearKu} and the true
-discriminability function $D(u)$.  However, since the function $D(u)$
-depends on the unknown joint distribution of the data, it makes sense
-to let the data help us choose a good basis $\{h_u\}$ from a set of
-candidate bases.
-
-Extending the analogy to established regression methodologies, we
-consider using \emph{cross-validation} for model selection
-\citep{Hastie2009a}.  However, it is necessary to usual adjust the
-cross-validation procedure because unlike in the standard prediction
-problem, in the case of prediction extrapolation, (i) the training
-data (the average test accuracies) are not i.i.d., and (ii) the
-prediction is to be made in a particular direction (extrapolating to
-large $k$).  In light of (i), the dependency of the data eliminates
-the motivation to split the data into a large number of random
-subsamples.  Instead, we split the training data into two halves, the
-first half consisting of $\{\text{ATA}_{2},\hdots, \text{ATA}_{\lfloor
-  k_1/2 \rfloor}\}$ and the second half consisting of
-$\{\text{ATA}_{\lfloor k_1/2 \rfloor + 1},\hdots, \text{ATA}_{k_1}\}$.
-Meanwhile, because of (ii), we break the usual symmetry of
-cross-validation, and only train on the first half of the data and
-only predict on the held-out point $\text{ATA}_{k_1}$ to evaluate
-cross-validation accuracy, since we are only interested in how well
-the models \emph{extrapolate} from small numbers of classes to a
-larger number of classes, and not in any other direction of
-prediction.  Using $\text{ATA}_{k_1}$ as the ground truth, we choose
-the basis that yields the closest prediction for
-$\hat{\text{AGA}}_{k_1}$.
 
 \section{Simulation study}\label{sec:simulation_study}
 
 We ran simulations to check how the proposed extrapolation method
 performs in different settings.  The results are displayed in Figure
-\ref{fig:sim_study}. 
-We varied the number of classes $k_1$ in the
+\ref{fig:sim_study}. We varied the number of classes $k_1$ in the
 source dataset, the difficulty of classification, and the basis
 functions. We generated data according to a mixture of isotropic
 multivariate Gaussian distributions: labels $Y$ were sampled from $Y
@@ -892,109 +857,120 @@ multivariate Gaussian distributions: labels $Y$ were sampled from $Y
 \sim N(Y, \sigma^2 I_{10})$. The noise-level parameter $\sigma$
 determines the difficulty of classification. Similarly to the
 real-data example, we consider a 1-nearest neighbor classifier, which
-is given a single training instance per class.
+is given a single training instance per class. In all simulations, we
+predict the average accuracy for $k = 2000$ classes. 
 %We vary $k_1$,
 %the number of classes in the source task; and $\sigma$, which controls
 %the noise level, and hence the true average accuracy.
 
-For the estimation, we use the cross-validation procedure described
-in section \ref{sec:modelselection} to select the parameter $h$ of the
-``radial basis''
+For the estimation, we compare several spline bases, all of the form $h_\ell(u) = [u - t_\ell]_+$ for some set of knots $\{t_\ell\}_{\ell = 1}^m$. Spline bases vary by the number and the spacing of knots: 
+\begin{itemize}
+\item \emph{linear spacing} chooses knots according to
 \[
-h_\ell(u) = \Phi\left(\frac{\Phi^{-1}(u) - t_\ell}{h}\right).
+t_\ell = \frac{\ell}{m+1}.
 \]
-where $t_\ell$ are a set of regularly spaced knots which are
-determined by $h$ and the problem parameters.  The rationale behind
-the radial basis is to model the density of $\Phi^{-1}(U^*)$ as a
-mixture of gaussians with variance $h^2$.  To control overfitting, the
-knots are separated by at least a distance of $h/2$, and the largest
-knots have absolute value $\Phi^{-1}(1 - \frac{1}{k_1^2}).$
+\item \emph{quadratic spacing}  has an increased density of knots near 1
+\[
+t_\ell = \left(1 - \frac{m + 1 -\ell}{m+1}\right)^2.
+\]
+\end{itemize}
+
+The rationale for increasing the density of knots near 1 is that
+when attempting to extrapolate to a large number of
+classes, the behavior of ${D}(u)$ for $u$ close to 1 is far more
+important than the shape of ${D}(u)$ in the rest of the interval.
+This is because the weighting density $\text{Beta}(k-1, 1)$ used to
+compute the higher moments is concentrated near 1 for large $k$.
 
 
+We compare linear and quadratic spacings for spline bases of size $m = \{100,1000,10000\}$.
+For all spline bases, we fit the coefficients using a non-negativity constraint on $\beta$, 
+which enforces convexity of the estimated $\hat{D}(u).$
+
+In Figure \ref{fig:sim_study} (top right) we see how the accuracy of
+prediction improves as we increase the number of classes in the
+training set, $k_1=\{50,\hdots,2000\}$, while fixing $\sigma = 0.55$.
+We see that the performance curves of most spline bases are similar. An
+outlier is the spline basis with linear spacing and $m=100$ ({\tt
+  lin2}). This case enjoys better RMSE for $k_1 < 150$; however, for
+$k_1 > 400$ the main group has far better extrapolation performance.
+A possible explanation for the relatively poor performance of the {\tt
+  lin2} is that this basis cannot approximate the true $D(u)$ function
+(bottom left of figure) to a sufficiently high resolution.  When the
+source dataset too small to accurately fit $D(u)$, such as when $k_1 <
+150$, this may not be a disadvantage. But as more data becomes
+available and the variance of estimation decreases, models with lower
+bias obtain better results.  Note that quadratic spacing with the same
+number of knots ($m=100$) matches the performance of much larger
+spline bases.  This suggests that a small spline basis with $m << k_1$
+can perform almost as well as an optimally sized spline basis, as long
+as appropriate spacing is used.
+ 
+In the bottom right of Figure \ref{fig:sim_study}, we fix $k_1=500$
+and vary $\sigma=\{0.3,\hdots,0.7\}$. This allows us to evaluate the
+reliability of the extrapolation across a wide range of possible
+signal-to-noise ratios.  The true average accuracy $\text{AGA}_{2000}$
+varies from 0.838 for $\sigma = 0.3$ to 0.102 for $\sigma = 0.7$.  In
+this case, the spline bases can be divided into three groups.  Once
+again, {\tt lin2} forms a group by itself--the worst performing group,
+but {\tt lin3} with $m = 1000$ linearly spaced knots is also alone in
+the best group, and the other spline bases form the third group
+performing similarly to {\tt lin3}.  We do not currently have an
+explanation of why {\tt lin3} has the best performance across all
+noise levels.
 
 \subsection*{Comparison to Kay}
 \label{sec:KDEcomparison}
-In their paper, \cite{Kay2008a} ( page 29 of supplementary) proposed a
-method for extrapolating classification accuracy to a larger number of
-classes. The method depends on repeated kernel-density estimation
-(KDE) steps. Because the method is only briefly motivated in the
-original text, we present it in our notation. It is perhaps worthwhile
-to compare this to their original presentation.
+In their paper, \cite{Kay2008a} ( page 29 of supplementary) proposed a method 
+for extrapolating classification accuracy to a larger number of classes. The method depends on repeated kernel-density estimation (KDE) steps. Because the method is only briefly motivated in the original text, we present it in our notation. It is perhaps worthwhile to compare this to their original presentation. 
 
-For $k_1$ observed classes, let $m_{y_j}(x_i)\, 1\leq i,j\leq k_1$ be
-the observed score comparing feature vector of the $i$'th class $x_i$
-to the label of the $j$'th class $y_j$. The KDE method proposes to
-estimate the density of scores for each distractor class using a
-Gaussian kernel function $K$ $\hat{f}_i(m) = \frac{1}{k_1-1}
-\sum_{j\neq i} K(m_{y_i}(x_j), m)$. Probability of error against a
-single competitor is then computed for each class separately by
-integrating the density above the observed true score $m_{y_i}(x_i)$,
-in $h_2(i) = \int_{m_{y_i}(x_i)}^\infty \hat{f}(m)dm$. The probability
-of accurate classification of the $i$'th class against $k_2-1$
-competitors is $h_{k_2}(i) = (1-h(i))^{k_2-1}$. The average over the
-$k_1$ classes is the estimated generalization accuracy
-$\hat{AGA}_{KDE} = \frac{1}{k_1} \sum_{i}^{k_1} h_{k_2}(i)$.
+For $k_1$ observed classes, let $m_{y_j}(x_i)\, 1\leq i,j\leq k_1$ be the observed score comparing feature vector of the $i$'th class $x_i$ to the label of the $j$'th class $y_j$. The KDE method proposes to estimate the density of scores for each distractor class using a Gaussian kernel function $K$
+$\hat{f}_i(m) = \frac{1}{k_1-1} \sum_{j\neq i} K(m_{y_i}(x_j), m)$. Probability of error against a single competitor is then computed for each class separately by integrating the density above the observed true score $m_{y_i}(x_i)$, in $h_2(i) = \int_{m_{y_i}(x_i)}^\infty \hat{f}(m)dm$. The probability of accurate classification of the $i$'th class against $k_2-1$ competitors is $h_{k_2}(i) = (1-h(i))^{k_2-1}$. The average over the $k_1$ classes is the estimated generalization accuracy $\hat{AGA}_{KDE} = \frac{1}{k_1} \sum_{i}^{k_1} h_{k_2}(i)$. 
 
-Note that the method depends heavily on the density estimation
-step. If the kernel bandwidth is too small compared to the number of
-classes, the extrapolated accuracy will be upward biased.  To see
-this, consider a class $i$ that is correctly classified in the
-original class set. That is, $m_{y_i}(x_i)>m_{y_j}(x_i)$ for every
-$j\neq i$. If we use for $\hat{f}_i$ the unsmoothed empirical density,
-$h_2(i)$ will be 1 and therefore $h_{k_2}(i)$ will be 1 as well. In
-other words, the method relies on smoothing of each class to generate
-a the tail density that exceeds $m_{y_i}(x_i)$, and therefore it is
-highly dependent on the choice of kernel bandwidth.
+Note that the method depends heavily on the density estimation step. If the kernel bandwidth is too small compared to the number of classes, the extrapolated accuracy will be upward biased.  
+To see this, consider a class $i$ that is correctly classified in the original class set. That is, $m_{y_i}(x_i)>m_{y_j}(x_i)$ for every $j\neq i$. If 
+we use for $\hat{f}_i$ the unsmoothed empirical density, $h_2(i)$ will be 1 and therefore $h_{k_2}(i)$ will be 1 as well. In other words, the method relies on 
+smoothing of each class to generate a the tail density that exceeds $m_{y_i}(x_i)$, and therefore it is highly dependent on the choice of kernel bandwidth. 
 
-In the following simulations, we compare the regression method to the KDE method. 
+In the following simulations, we compare the regression method to the KDE method. %\frac{1}{k_1-1} \sum_{j\neq i} K(m_{y_i}(x_j), m).\]
 
-%\frac{1}{k_1-1} \sum_{j\neq i} K(m_{y_i}(x_j), m).\] The
-%extrapolation method relies on estimating for each class in the
-%source set its own incorrect-label favorability. That is, for each
-%class in the source set $x_1,...,x_{k_1}$, they
-%estimated \[\hat{h}(x_i) = \hat{P}(x_i > M_{y_i}(X^*))\] they
-%estimated the misclassification probability against a single (random)
-%competitor (what we call the incorrect-label favorability). by using
-%a kernel-density estimator for the competitor distribution.  In our
-%notation, they estimated \[\hat{U}_pooling and smoothikernal-ng the
-%observed scores for all competitors.  \begin{enumerate}
-%$P(h^{(2)}(X_i)\neq y_i)$. They then extrapolated using the
-%formula \[GA_{k_2} = 1-\frac{1}{k_1}P(h^{(2)}(x_i)\neq
-%y_i)^{k_2-1}.\] Their method can be interpreted within the framework
-%of our theory, and often achieves good extrapolation
-%performance. However, as we discuss below, estimating the probability
-%$P(h(2)(X_i)\neq y_i)$ is strongly dependent on tuning parameters,
-%and the approach can be unstable when the source set ($S_{k_1}$) is
-%not large enough.
+%The extrapolation method relies on estimating for each class in the source set its own incorrect-label favorability. That is, for each class in the source set $x_1,...,x_{k_1}$, they estimated
+%\[\hat{h}(x_i) = \hat{P}(x_i > M_{y_i}(X^*))\] they estimated the 
+%misclassification probability against a single (random) competitor (what we call the incorrect-label favorability). by using a kernel-density estimator for the competitor distribution. 
+%In our notation, they estimated 
+%\[\hat{U}_pooling and smoothikernal-ng the observed scores for all competitors. 
+%\begin{enumerate}
+%$P(h^{(2)}(X_i)\neq y_i)$. They then extrapolated using the formula
+%\[GA_{k_2} = 1-\frac{1}{k_1}P(h^{(2)}(x_i)\neq y_i)^{k_2-1}.\]
+%Their method can be interpreted within the framework of our theory, and often achieves good extrapolation performance. However, as we discuss below, estimating the probability $P(h(2)(X_i)\neq y_i)$ is strongly dependent on tuning parameters, and the approach can be unstable when the source set ($S_{k_1}$) is not large enough.
+
+
 
 
 \begin{figure}
 \centering
 \begin{tabular}{cc}
-\multicolumn{2}{c}{\begin{myfont}Extrapolating from $k_1 = 500$\end{myfont}}\\
-\begin{myfont}Predicting $\text{AGA}_{1000}$\end{myfont} &
-\begin{myfont}Predicting $\text{AGA}_{2000}$\end{myfont}\\
-\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0in]{sim_large7_K1_k0_5.png} &
-\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0in]{sim_large7_K2_k0_5.png}\\
-\begin{myfont}Predicting $\text{AGA}_{5000}$\end{myfont} &
-\begin{myfont}Predicting $\text{AGA}_{10000}$\end{myfont}\\
-\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0in]{sim_large7_K5_k0_5.png} &
-\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0in]{sim_large7_K10_k0_5.png}\\ 
-\multicolumn{2}{c}{\begin{myfont}Extrapolating from $k_1 = 5000$\end{myfont}}\\
-\begin{myfont}Predicting $\text{AGA}_{10000}$\end{myfont} &
-\begin{myfont}Predicting $\text{AGA}_{20000}$\end{myfont}\\
-\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0in]{sim_large7_K10_k5.png} &
-\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0in]{sim_large7_K20_k5.png}\\
-\begin{myfont}Predicting $\text{AGA}_{50000}$\end{myfont} &
-\begin{myfont}Predicting $\text{AGA}_{100000}$\end{myfont}\\
-\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0in]{sim_large7_K50_k5.png} &
-\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0in]{sim_large7_K100_k5.png}\\ 
+\begin{myfont}Predicting $\text{AGA}_{2000}$ from $k_1 = 500$\end{myfont} &
+\begin{myfont}Error versus $k_1$ ($\sigma = 0.55$)\end{myfont}\\
+\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0.6in]{mcgs2_oneplot.pdf} &
+\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0.6in]{fig_mcgs2f.pdf}\\
+\begin{myfont}Simulated $D(u)$ functions\end{myfont} &
+\begin{myfont}Error versus $\sigma$ ($k_1 = 500$)\end{myfont}\\
+\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0.6in]{fig_mgs2.pdf} &
+\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0.6in]{fig_mcgs2fovs_02.pdf}\\ 
 \end{tabular}
 \caption{\textbf{Simulation results:} Simulation study consisting of
   multivariate Gaussian $Y$ with nearest neighbor classifier.
-  Comparison of cross-validated regression method with radial basis
-  ({\tt r.cv.gauss}), KDE-based methods with biased cross-validation
-  ({\tt kde\_bcv}) and unbiased cross-validation ({\tt kde\_ucv}).}
+  Comparison of linear spline bases for extrapolation: lin2 (100
+  knots), lin3 (1000 knots) and lin4 (10000) knots with uniform knot
+  spacings, and lin2q, lin3q, and lin4q with quadratic spacing of
+  knots (more densely packed near 1).  \emph{Top left:} Extrapolating
+  from $k_1 = 500$ up to $k = 2000$ compared to true accuracy, with
+  $\sigma = 0.55$. \emph{Top right:} The RMSE of
+  $\widehat{\text{AGA}_{2000}}$ for varying $k_1$ and $\sigma =
+  0.55$. \emph{Bottom right:} The actual distribution functions $D(u)$
+  for varying $\sigma$.  \emph{Bottom left:} The RMSE of
+  $\widehat{\text{AGA}_{2000}}$ for $k_1 = 500$ and varying $\sigma$.}
 \label{fig:sim_study}
 \end{figure}
 
