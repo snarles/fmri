@@ -11,7 +11,7 @@ load("facerec/temp_setup.RData", verbose = TRUE)
 
 ## set up bases
 method.inds <- match(c("kde_bcv", "kde_ucv", "r.cv.gauss"), column_names)
-ksub <- 100
+ksub <- 400
 ksub2 <- ksub/2
 lsub2 <- length(kref)/2
 kseq <- function(nr, ksub) {
@@ -132,3 +132,12 @@ rbind(rmses[c(5,6,11)],apply(lala, 2, sd))
 # [1,] 0.0525161915 0.081718288  0.1135644
 # [2,] 0.0009616969 0.001420026  0.0024238
 
+# K 200
+# kde_bcv      kde_ucv  r.cv.gauss
+# [1,] 0.0371640266 0.0572785678 0.057687125
+# [2,] 0.0006194464 0.0006909294 0.001639736
+
+# K 400
+# kde_bcv      kde_ucv r.cv.gauss
+# [1,] 0.0235400757 0.0353089459 0.05011585
+# [2,] 0.0006912956 0.0007197251 0.00100908
