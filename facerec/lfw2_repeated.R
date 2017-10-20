@@ -87,7 +87,7 @@ subfun <- function(repno) {
 }
 
 library(parallel)
-mc.reps <- 100; mcc <- 20
+mc.reps <- 1000; mcc <- 20
 t1 <- proc.time()
 res <- mclapply(1:mc.reps, subfun, mc.cores = mcc)
 (runtime <- proc.time() - t1)
@@ -96,12 +96,12 @@ plotcols <- c("black", "green", "blue", "red")
 
 mc.ind <- 5
 #pdf("facerec/version2_acc_plot2.pdf")
-matplot(Ktarg, t(rbind(accs_full, res[[mc.ind]]$preds[method.inds, ])), type = "l",
-        ylim = c(0, 1), xlab = "no. faces", ylab = "accuracy",
-        main = "Full set (1672)", cex.lab = 1.5, col = plotcols, lwd = 2)
-abline(v = ksub, lty = 2, col = "red")
-legend(500, 0.3, c("true", column_names[method.inds]), col = plotcols, 
-       lwd = 2, cex = .5)
+# matplot(Ktarg, t(rbind(accs_full, res[[mc.ind]]$preds[method.inds, ])), type = "l",
+#         ylim = c(0, 1), xlab = "no. faces", ylab = "accuracy",
+#         main = "Full set (1672)", cex.lab = 1.5, col = plotcols, lwd = 2)
+# abline(v = ksub, lty = 2, col = "red")
+# legend(500, 0.3, c("true", column_names[method.inds]), col = plotcols, 
+#        lwd = 2, cex = .5)
 #dev.off()
 
 library(abind)
@@ -109,33 +109,26 @@ help(abind)
 predZ <- abind(lapply(res, `[[`, "preds"), along = 3)
 dim(predZ)
 
-nplot <- 100
-tred <- rgb(1,0,0,0.2)
-for (method.ind in method.inds) {
-  pdf(paste0("facerec/repeat_", ksub, "_", column_names[method.ind], ".pdf"))
-  plot(Ktarg, accs_full, type = "l", ylim = c(0, 1), xlab = "no. faces", ylab = "accuracy",
-       main = paste0(column_names[method.ind], " (", ksub, ")"), cex.lab = 1.5, lwd = 2)
-  matplot(Ktarg, predZ[method.ind, , 1:nplot], type = "l", col = tred, lty = 1, add= TRUE)
-  lines(Ktarg, accs_full, type = "l", col = "black", lwd = 2)
-  dev.off()
-}
+# nplot <- 100
+# tred <- rgb(1,0,0,0.2)
+# for (method.ind in method.inds) {
+#   pdf(paste0("facerec/repeat_", ksub, "_", column_names[method.ind], ".pdf"))
+#   plot(Ktarg, accs_full, type = "l", ylim = c(0, 1), xlab = "no. faces", ylab = "accuracy",
+#        main = paste0(column_names[method.ind], " (", ksub, ")"), cex.lab = 1.5, lwd = 2)
+#   matplot(Ktarg, predZ[method.ind, , 1:nplot], type = "l", col = tred, lty = 1, add= TRUE)
+#   lines(Ktarg, accs_full, type = "l", col = "black", lwd = 2)
+#   dev.off()
+# }
 
 resids <- predZ[,K,] - accs_full[K]
 rmses <- sqrt(rowMeans(resids^2))
-rmses
+lala <- matrix(0, 20, 3)
+for (i in 1:20)
+  lala[i, ] <- sqrt(rowMeans(resids[, sample(mc.reps, mc.reps, replace = TRUE)]^2))[c(5,6,11)]
+rbind(rmses[c(5,6,11)],apply(lala, 2, sd))
 
 # K 100 
-# r.gauss0.4 r.gauss0.5 r.gauss0.6 r.gauss0.7    kde_bcv    kde_ucv    kde_0.1    kde_0.2    kde_0.3    kde_0.4 r.cv.gauss       par2 
-# 0.15203103 0.13746924 0.12305661 0.11410614 0.05396484 0.08152962 0.08733085 0.37055522 0.43322116 0.43600007 0.12795548 0.06698956
+# kde_bcv     kde_ucv r.cv.gauss
+# [1,] 0.0525161915 0.081718288  0.1135644
+# [2,] 0.0009616969 0.001420026  0.0024238
 
-# K 200
-# r.gauss0.4 r.gauss0.5 r.gauss0.6 r.gauss0.7    kde_bcv    kde_ucv    kde_0.1    kde_0.2    kde_0.3    kde_0.4 r.cv.gauss       par2 
-# 0.08434667 0.07746195 0.07168023 0.06286829 0.03659644 0.05703899 0.11631254 0.37811422 0.43366656 0.43600156 0.08109960 0.04234642 
-
-# K 400
-# r.gauss0.4 r.gauss0.5 r.gauss0.6 r.gauss0.7    kde_bcv    kde_ucv    kde_0.1    kde_0.2    kde_0.3    kde_0.4 r.cv.gauss       par2 
-# 0.04549484 0.04216129 0.04013809 0.03798940 0.02235095 0.03327859 0.13911457 0.38291629 0.43386896 0.43600224 0.04657844 0.03067437 
-
-## K 800
-# r.gauss0.4 r.gauss0.5 r.gauss0.6 r.gauss0.7    kde_bcv    kde_ucv    kde_0.1    kde_0.2    kde_0.3    kde_0.4 r.cv.gauss       par2 
-# 0.01819409 0.01785265 0.01753511 0.01724386 0.01351021 0.01677904 0.15485711 0.38495207 0.43399104 0.43600278 0.01645264 0.01486782
