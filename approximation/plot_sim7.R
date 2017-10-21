@@ -45,6 +45,10 @@ basis_vecs <- list()
 
 for (gb in fixed.gb) {
   nm <- paste0("r.gauss", gb)
+  basis_vecs[[nm]] <- 0
+}
+for (gb in fixed.gb) {
+  nm <- paste0("r.gauss", gb)
   basis_vecs[[nm]] <- get_basis_mat(max.mu, kernel_sigma = gb)
 }
 
@@ -109,6 +113,48 @@ for (ind in 1:length(Ktarg)) {
 }
 
 
+minimax_rmses <- list()
+minimax_rmse_sds <- list()
+master_inds <- rep(1:200, each = 50)
+nboot <- 1000
+
+set.seed(0)
+for (ind in 1:length(Ktarg)) {
+  rmses <- rmseZ[[ind]]
+  minimax_rmses[[ind]] <- apply(rmses, 2, max)
+  resids <- all_final_predZ[[ind]] - facc[,ind][match(sigma2s, sigma2_seq)]
+  mm_boot <- matrix(NA, nboot, ncol(all_final_preds))
+  colnames(mm_boot) <- column_names
+  for (ind.boot in 1:nboot) {
+    boot.inds <- sample(200, 200, TRUE)
+    rmses <- matrix(NA, length(sigma2_seq), ncol(all_final_preds))
+    for (ii in 1:length(sigma2_seq)) {
+      rmses[ii, ] <- sqrt(colMeans(resids[sigma2s == sigma2_seq[ii], ][boot.inds, ]^2))
+    }
+    mm_boot[ind.boot, ] <- apply(rmses, 2, max)
+  }
+  minimax_rmse_sds[[ind]] <- apply(mm_boot, 2, sd)
+}
+
+ind <- 1
+ind <- 2
+ind <- 3
+ind <- 4
+sel_vars <- c("r.cv.gauss", "kde_bcv", "kde_ucv")
+
+rbind(minimax_rmses[[ind]][sel_vars], minimax_rmse_sds[[ind]][sel_vars])
+# r.cv.gauss     kde_bcv     kde_ucv
+# [1,] 0.032012576 0.090849604 0.067092107
+# [2,] 0.001004484 0.001093817 0.001147322
+# r.cv.gauss     kde_bcv     kde_ucv
+# [1,] 0.043983286 0.087769100 0.059097824
+# [2,] 0.001591107 0.001130881 0.001029907
+# r.cv.gauss     kde_bcv      kde_ucv
+# [1,] 0.073465930 0.079319514 0.0510825724
+# [2,] 0.003623713 0.001112792 0.0009787097
+# r.cv.gauss     kde_bcv      kde_ucv
+# [1,] 0.097685388 0.075615097 0.0454476003
+# [2,] 0.004153768 0.001218799 0.0009587312
 
 library(reshape2)
 library(ggplot2)
