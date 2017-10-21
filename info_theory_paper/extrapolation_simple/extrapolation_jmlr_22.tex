@@ -942,7 +942,8 @@ higher mean value than $u = 1-\frac{1}{rk_1^2}$.  However, in
 simulations we find that the performance of the basis depends only
 weakly on the exact positioning and maximum size of the knots, as long
 as sufficiently large knots are included; the bandwidth $h$ is the
-most crucial parameter.
+most crucial parameter.  In the simulation, we use a grid $h = \{0.1,
+0.2, \hdots, 1\}$ for the cross-validated selection of the bandwidth.
 
 
 
@@ -1018,18 +1019,60 @@ $k_1$ & $k_2$ & CV-reg & KDE-BCV & KDE-UCV \\\hline
   variance from selection.}\label{tab:sim_max_error}
 \end{table}
 
-We studied how the difficulty of extrapolation relates
-to both the absolute size of the number of classes and the factor of
-increase from the source number of classes $k_1$ to the target number
-of classes $k_2$.  Our simulation has two settings for 
-$k_1 = \{500,5000\}$, and within each setting we have extrapolations to 2 times, 4
-times, 10 times, and 20 times the number of classes.  The results
-indicate that the difficulty mainly depends on the factor of increase
-between $k_1$ and $k_2$, although different methods show different
+We studied how the difficulty of extrapolation relates to both the
+absolute size of the number of classes and the factor of increase from
+the source number of classes $k_1$ to the target number of classes
+$k_2$.  Our simulation has two settings for $k_1 = \{500,5000\}$, and
+within each setting we have extrapolations to 2 times, 4 times, 10
+times, and 20 times the number of classes.  The results indicate that
+the difficulty mainly depends on the extrapolation factor
+$\frac{k_2}{k_1}$, although different methods show different
 sensitivities to the absolute number of classes.  The cross-validated
 regression method improves in worst-case RMSE when moving from $k_1 =
-500$ to $k_1 = 5000$ while keeping the factor of increase fixed.
+500$ to $k_1 = 5000$ while keeping the factor of increase fixed, most
+dramatically in the case $\frac{k_2}{k_1} = 2$ when it improves from a
+maximum RMSE of $0.032\pm0.001$ to 0.009 when going from $k_1 = 500$
+to $k_1 = 5000$, which is 3.5-factor reduction in worst-case RMSE, but
+also gaining at least a 1.8-factor reduction in RMSE when going from
+the smaller problem to the larger problem in the other three cases.
+KDE-BCV also improves in worst-case RMSE when going from 500 to 5000
+training classes while keeping the extrapolation factor fixed, but
+KDE-UCV breaks the pattern, slightly increasing in worst-case RMSE for
+extrapolation factor $\frac{k_2}{k_1} = 10$, from $0.051\pm0.001$ to
+0.053, and greatly increasing for $\frac{k_2}{k_1} = 20$, from
+$0.045\pm0.001$ to 0.086.  While collecting more simulation data
+points would be helpful in confirming these trends, the results
+suggest that both CV-reg and KDE-BCV benefit from having more data to
+tune its bandwidth parameter.  In theory, KDE-UCV should also enjoy
+the same benefit of having more data to tune the kernel bandwidth, but
+other effects may lead to its loss of calibration in larger
+extrapolation problems, as we shall discuss.
 
+Inspecting the curves in Figure \ref{fig:sim_study}, we see that the
+RMSE curves of KDE-BCV and KDE-UCV vary more smoothly with respect to
+the signal-to-noise ratio (and hence true target accuracy) than
+CV-reg, which looks quite jagged.  From simulation studies where we
+fixed the bandwidth of the regression method, we see that the
+roughness is an intrinsic property of the regression method with a
+finite basis set rather than a consequence of the discontinuity of
+bandwidth selection.  This can be explained by the fact that the set
+of possible fits of the regression model to the training data are
+constrained to a polyhedral cone.  As the distribution of the training
+data moves within $(k_1-1)$-dimensional space, the projection of the
+mean of the data distribution onto the cone traces out a discontinuous
+curve as the signal-to-noise parameter $\sigma$ for generating the
+data is varied.  This observation suggests that carefully adjusting
+the placement of the basis knots could improve the worst-case
+goodness-of-fit to the multivariate gaussian model (or any parametric
+data model) by flattening out the ``peaks'' seen in Figure
+\ref{fig:sim_study}, but we leave this idea to future work.
+
+Compared to the regression method, the error curves of the KDE methods
+are more easily interpretable.  In the first six plots of
+\ref{fig:sim_study}, all of the error curves contain a prominent mode
+located at the higher accuracy (higher SNR) settings of the
+simulation.  This suggests that for these settings, the bias of both
+KDE-UCV and KDE-BCV is worst 
 
 
 %\frac{1}{k_1-1} \sum_{j\neq i} K(m_{y_i}(x_j), m).\] The
