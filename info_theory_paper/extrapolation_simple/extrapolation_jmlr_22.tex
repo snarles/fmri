@@ -23,6 +23,7 @@
 \usepackage{xcolor}
 \usepackage{chngcntr}
 \usepackage{apptools}
+\usepackage[export]{adjustbox}
 \AtAppendix{\counterwithin{lemma}{section}}
 %\usepackage[comma,authoryear]{natbib}
 
@@ -974,21 +975,21 @@ In the following simulations, we compare the regression method to the KDE method
 \multicolumn{2}{c}{\begin{myfont}Extrapolating from $k_1 = 500$\end{myfont}}\\
 \begin{myfont}Predicting $\text{AGA}_{1000}$\end{myfont} &
 \begin{myfont}Predicting $\text{AGA}_{2000}$\end{myfont}\\
-\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0in]{sim_large7_K1_k0_5.png} &
-\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0in]{sim_large7_K2_k0_5.png}\\
+\includegraphics[scale = 0.55, clip = true, trim = 0 0 1.25in 0.45in]{sim_large7_K1_k0_5.png} &
+\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0.45in]{sim_large7_K2_k0_5.png}\\
 \begin{myfont}Predicting $\text{AGA}_{5000}$\end{myfont} &
 \begin{myfont}Predicting $\text{AGA}_{10000}$\end{myfont}\\
-\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0in]{sim_large7_K5_k0_5.png} &
-\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0in]{sim_large7_K10_k0_5.png}\\ 
+\includegraphics[scale = 0.55, clip = true, trim = 0 0 1.25in 0.45in]{sim_large7_K5_k0_5.png} &
+\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0.45in]{sim_large7_K10_k0_5.png}\\ 
 \multicolumn{2}{c}{\begin{myfont}Extrapolating from $k_1 = 5000$\end{myfont}}\\
 \begin{myfont}Predicting $\text{AGA}_{10000}$\end{myfont} &
 \begin{myfont}Predicting $\text{AGA}_{20000}$\end{myfont}\\
-\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0in]{sim_large7_K10_k5.png} &
-\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0in]{sim_large7_K20_k5.png}\\
+\includegraphics[scale = 0.55, clip = true, trim = 0 0 1.25in 0.45in]{sim_large7_K10_k5.png} &
+\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0.45in]{sim_large7_K20_k5.png}\\
 \begin{myfont}Predicting $\text{AGA}_{50000}$\end{myfont} &
 \begin{myfont}Predicting $\text{AGA}_{100000}$\end{myfont}\\
-\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0in]{sim_large7_K50_k5.png} &
-\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0in]{sim_large7_K100_k5.png}\\ 
+\includegraphics[scale = 0.55, clip = true, trim = 0 0 1.25in 0.45in]{sim_large7_K50_k5.png} &
+\includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0.45in]{sim_large7_K100_k5.png}\\ 
 \end{tabular}
 \caption{\textbf{Simulation results:} Simulation study consisting of
   multivariate Gaussian $Y$ with nearest neighbor classifier.
@@ -1124,18 +1125,18 @@ root-mean-square errors between at $k_2=1672$ can be seen in Table
 \begin{myfont}$k_1 = 100$\end{myfont} & 
 \begin{myfont}$k_1 = 200$\end{myfont} &
 \begin{myfont}$k_1 = 400$\end{myfont}\\
-CV reg & 
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in]{repeat_100_r_cv_gauss.pdf} &
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in]{repeat_200_r_cv_gauss.pdf} &
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in]{repeat_400_r_cv_gauss.pdf} \\
-KDE UCV & 
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in]{repeat_100_kde_ucv.pdf} &
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in]{repeat_200_kde_ucv.pdf} &
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in]{repeat_400_kde_ucv.pdf} \\
-KDE BCV & 
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in]{repeat_100_kde_bcv.pdf} &
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in]{repeat_200_kde_bcv.pdf} &
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in]{repeat_400_kde_bcv.pdf} \\
+\begin{myfont}CV reg\end{myfont} & 
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_100_r_cv_gauss.pdf} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_200_r_cv_gauss.pdf} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_400_r_cv_gauss.pdf} \\
+\begin{myfont}KDE UCV\end{myfont} & 
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_100_kde_ucv.pdf} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_200_kde_ucv.pdf} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_400_kde_ucv.pdf} \\
+\begin{myfont}KDE BCV\end{myfont} & 
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_100_kde_bcv.pdf} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_200_kde_bcv.pdf} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_400_kde_bcv.pdf} \\
 \end{tabular}
 \caption{\textbf{Comparison of KDE and CV regression methods}: The
   plots show predicted accuracies using a different source dataset
@@ -1154,7 +1155,7 @@ CV reg & 0.113 (0.002) & 0.058 (0.002) & 0.050 (0.001)\\\hline
 KDE UCV & 0.082 (0.001) & 0.057 (0.001) & 0.035 (0.001) \\ \hline
 KDE BCV & \textbf{0.053} (0.001) & \textbf{0.037} (0.001) & \textbf{0.024} (0.001)\\\hline
 \end{tabular}
-\caption{RMSE (sd) on predicting $\text{TA}_{1672}$ from $\widehat{\text{AGA}_{k_1}}$}\label{tab:lfw_accuracy}
+\caption{RMSE (se) on predicting $\text{TA}_{1672}$ from $\widehat{\text{AGA}_{k_1}}$}\label{tab:lfw_accuracy}
 \end{table}
 
 
