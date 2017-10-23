@@ -1057,22 +1057,14 @@ roughness is an intrinsic property of the regression method with a
 finite basis set rather than a consequence of the discontinuity of
 bandwidth selection.  This can be explained by the fact that the set
 of possible fits of the regression model to the training data are
-constrained to a polyhedral cone.  As the distribution of the training
-data moves within $(k_1-1)$-dimensional space, the projection of the
-mean of the data distribution onto the cone traces out a discontinuous
-curve as the signal-to-noise parameter $\sigma$ for generating the
-data is varied.  This observation suggests that carefully adjusting
-the placement of the basis knots could improve the worst-case
-goodness-of-fit to the multivariate gaussian model (or any parametric
-data model) by flattening out the ``peaks'' seen in Figure
-\ref{fig:sim_study}, but we leave this idea to future work.
+constrained to a polyhedral cone, as we will elaborate in the discussion.
 
-Compared to the regression method, the error curves of the KDE methods
-are more easily interpretable.  In the first six plots of
-\ref{fig:sim_study}, all of the error curves contain a prominent mode
-located at the higher accuracy (higher SNR) settings of the
-simulation.  This suggests that for these settings, the bias of both
-KDE-UCV and KDE-BCV is worst 
+If we look at the mean predicted accuracy versus the true accuracy for
+the simulations, displayed in Figure \ref{fig:sim_study_bias}, we see
+that the CV regression method has less overall bias than the KDE
+methods for both the small and large extrapolation problems.  This can
+be explained as a consequence of the intrinsic bias in the KDE
+extrapolation method, which we also elaborate upon in the discussion.
 
 
 %\frac{1}{k_1-1} \sum_{j\neq i} K(m_{y_i}(x_j), m).\] The
@@ -1117,15 +1109,40 @@ KDE-UCV and KDE-BCV is worst
 \includegraphics[scale = 0.55, clip = true, trim = 0 0 1.25in 0.45in]{sim_large7_K50_k5.png} &
 \includegraphics[scale = 0.55, clip = true, trim = 0 0 0 0.45in]{sim_large7_K100_k5.png}\\ 
 \end{tabular}
-\caption{\textbf{Simulation results:} Simulation study consisting of
+\caption{\textbf{Simulation results (RMSE):} Simulation study consisting of
   multivariate Gaussian $Y$ with nearest neighbor classifier.
-  Comparison of cross-validated regression method with radial basis
+  Prediction RMSE vs true $k_2$-class accuracy for cross-validated regression method with radial basis
   ({\tt r.cv.gauss}), KDE-based methods with biased cross-validation
   ({\tt kde\_bcv}) and unbiased cross-validation ({\tt kde\_ucv}).}
 \label{fig:sim_study}
 \end{figure}
 
-
+\begin{figure}
+\centering
+\begin{tabular}{ccc}
+\multicolumn{3}{c}{\begin{myfont}Extrapolating from $k_1 = 500$\end{myfont}}\\
+\begin{myfont}Predicting $\text{AGA}_{2000}$\end{myfont} &
+\begin{myfont}Predicting $\text{AGA}_{5000}$\end{myfont} &
+\begin{myfont}Predicting $\text{AGA}_{10000}$\end{myfont}\\
+\includegraphics[scale = 0.45, clip = true, trim = .0in 0 1.25in 1.03in]{sim_large7_bias_K2_k0_5.png} &
+\includegraphics[scale = 0.45, clip = true, trim = .5in 0 1.25in 1.03in]{sim_large7_bias_K5_k0_5.png} &
+\includegraphics[scale = 0.45, clip = true, trim = .5in 0 0.00in 1.03in]{sim_large7_bias_K10_k0_5.png}\\ 
+\multicolumn{3}{c}{\begin{myfont}Extrapolating from $k_1 = 5000$\end{myfont}}\\
+\begin{myfont}Predicting $\text{AGA}_{20000}$\end{myfont} &
+\begin{myfont}Predicting $\text{AGA}_{50000}$\end{myfont} &
+\begin{myfont}Predicting $\text{AGA}_{100000}$\end{myfont}\\
+\includegraphics[scale = 0.45, clip = true, trim = .0in 0 1.25in 1.03in]{sim_large7_bias_K20_k5.png} &
+\includegraphics[scale = 0.45, clip = true, trim = .5in 0 1.25in 1.03in]{sim_large7_bias_K50_k5.png} &
+\includegraphics[scale = 0.45, clip = true, trim = .5in 0 0.00in 1.03in]{sim_large7_bias_K100_k5.png}\\ 
+\end{tabular}
+\caption{\textbf{Simulation results (biases):} Simulation study
+  consisting of multivariate Gaussian $Y$ with nearest neighbor
+  classifier.  Mean predicted accuracy vs true $k_2$-class accuracy
+  for cross-validated regression method with radial basis ({\tt
+    r.cv.gauss}), KDE-based methods with biased cross-validation ({\tt
+    kde\_bcv}) and unbiased cross-validation ({\tt kde\_ucv}).}
+\label{fig:sim_study_bias}
+\end{figure}
 
 
 
@@ -1235,14 +1252,35 @@ approximates the ground truth.
 
 \subsection{Results}
 
-The extrapolation results can be seen in Figure \ref{fig:lfw_extrapolation2}. 
+The extrapolation results can be seen in Figure
+\ref{fig:lfw_extrapolation2}, which plots the extrapolated accuracy
+curves for each method for 100 different subsamples of size $k_1$.  As
+can be seen, for all three methods, the variances decrease rapidly as
+$k_1$ increases. In general, for $k_1>400$ the paths of the different
+extrapolation curves are not very different. 
 
- As
-can be seen, both the accuracy as well as the variances decrease
-rapidly as $k_1$ increases. In general, for $k_1>400$ the paths of the
-different extrapolation curves are not very different. The
-root-mean-square errors between at $k_2=1672$ can be seen in Table
-\ref{tab:lfw_accuracy}.
+The root-mean-square errors between at $k_2=1672$ can be seen in Table
+\ref{tab:lfw_accuracy}.  KDE-BCV achieves the best extrapolation for
+all three cases $k_1= \{100,200,400\}$ with KDE-UCV consistently
+achieving second place.  These results differ from the ranking of the
+RMSEs for the analagous simulation when predicting $k_2 = 2000$ from
+$k_1 = 500$ for accuracies around 0.45: in the first row and second
+column of Figure \ref{fig:sim_study}, where the true accuracy is 0.43
+(from setting $\sigma^2=0.2$), the lowest RMSE belongs to KDE-UCV
+(RMSE=$0.0361 \pm 0.001$), followed closely by CV-reg (RMSE=$0.0372
+\pm 0.002$), and KDE-BCV (RMSE=$0.0635\pm0.001$) having the highest
+RMSE.  These discrepancies could be explained by differences between
+the data distributions between the simulation and the face recognition
+example, and also by the fact that we only have access to the $k_2 =
+1672$-class ground truth for the real data example.  In simulations,
+we see that the empirical test accuracy for $k_2 = 1600$ classes and
+$r=1$ repeats varies by a standard deviation of 0.01 in
+signal-to-noise settings with true accuracies around 0.4.  Since the
+RMSEs of the simulation and the real-data example differ by a little
+more than 2 standard deviations, it is plausible that evaluating the
+methods with respect to the true population accuracy
+$\text{AGA}_{1672}$ would yield a ranking that was consistent with the
+simulation.
 
 \begin{figure}
 \centering
@@ -1329,7 +1367,26 @@ p^k = \E[\hat{p}]^k \neq \E[\hat{p}^k].
 unless $\hat{p}$ is a degenerate random variable
 (constant). Otherwise, for large $k$, $\hat{p}^k$ may be an extremely
 biased estimate of $p$.  Our proposed method avoids this source of
-bias by estimating the $(k-1)$st moment of $D(u)$ directly.
+bias by estimating the $(k-1)$st moment of $D(u)$ directly.  As we see
+in Figure \ref{fig:sim_study_bias}, correcting for the bias of
+exponentiation helps greatly to reduce the overall bias, although some
+residual bias for the regression method still remains due to the
+nonnegativity constraint on the coefficients and model
+mispecification.
+
+\subsubsection*{Behavior of RMSE curves}
+As we saw in \ref{fig:sim_study}, the error curves of the KDE method
+vary much more smoothly than the regression method with respect to
+changes in the parameters of the data distribution.  In the
+multivariate gaussian simulation, as the distribution of the training
+data moves within $(k_1-1)$-dimensional space, the projection of the
+mean of the data distribution onto the cone traces out a piecewise
+smooth curve as the signal-to-noise parameter $\sigma$ for generating
+the data is varied.  This observation suggests that carefully
+adjusting the placement of the basis knots could improve the
+worst-case goodness-of-fit to the multivariate gaussian model (or any
+parametric data model) by flattening out the ``peaks'' seen in Figure
+\ref{fig:sim_study}, but we leave this idea to future work.
 
 \subsubsection*{Marginal classifiers}
 One limitation of our analysis of average accuracy is that it applies
