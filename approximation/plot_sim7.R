@@ -82,6 +82,7 @@ matplot(Ktarg, t(true_accs), type = "l", ylim = c(0, 1))
 (facc <- true_accs)
 
 rmseZ <- list()
+biaseZ <- list()
 all_final_predZ <- list()
 rmse_sdZ <- list()
 nboot <- 1000
@@ -95,9 +96,11 @@ for (ind in 1:length(Ktarg)) {
   all_final_predZ[[ind]] <- all_final_preds
   resids <- all_final_preds - facc[,ind][match(sigma2s, sigma2_seq)]
   rmses <- matrix(NA, length(sigma2_seq), ncol(all_final_preds))
+  biases <- matrix(NA, length(sigma2_seq), ncol(all_final_preds))
   rmse_sd <- matrix(NA, length(sigma2_seq), ncol(all_final_preds))
   for (ii in 1:length(sigma2_seq)) {
     rmses[ii, ] <- sqrt(colMeans(resids[sigma2s == sigma2_seq[ii], ]^2))
+    biases[ii, ] <- colMeans(all_final_preds[sigma2s == sigma2_seq[ii], ])
     rmse_boots <- matrix(NA, nboot, ncol(rmses))
     orig_inds <- which(sigma2s == sigma2_seq[ii])
     for (jj in 1:nboot) {
@@ -110,6 +113,7 @@ for (ind in 1:length(Ktarg)) {
   colnames(rmse_sd) <- column_names
   rmseZ[[ind]] <- rmses
   rmse_sdZ[[ind]] <- rmse_sd
+  biaseZ[[ind]] <- biases
 }
 
 
@@ -174,13 +178,34 @@ temp_se <- melt(data = temp_se, id.vars = "true_acc")
 temp3 <- data.frame(temp2, rmse_low = temp2[, 3] - temp_se[, 3], rmse_high = temp2[, 3] + temp_se[, 3])
 colnames(temp3)[3] <- "rmse"
 
-ggplot(data = temp3, aes(x = true_acc, y = rmse, colour = variable)) +
-  geom_line(aes(linetype=variable)) + coord_cartesian(xlim = c(0, 1)) + 
+ggplot(data = temp3, aes(x = true_acc, y = rmse, colour = variable, linetype=variable)) +
+  geom_line() + coord_cartesian(xlim = c(0, 1)) + 
   geom_errorbar(aes(ymin = rmse_low, max = rmse_high)) + 
-  scale_linetype_manual(values = c(1,1,1,1,1, 2,2,2,2,2,2,2, 1, 3))+
+  scale_linetype_manual(values = c(1,4,6))+
   ggtitle(paste0("Predicting K=", Ktarg[ind], " from k=", ksub))
   #ggsave("approximation/sim_large7_K1_k0_5.png", width = 6, height = 3)
   #ggsave("approximation/sim_large7_K2_k0_5.png", width = 6, height = 3)
   #ggsave("approximation/sim_large7_K5_k0_5.png", width = 6, height = 3)
   #ggsave("approximation/sim_large7_K10_k0_5.png", width = 6, height = 3)
   
+
+## plot biases
+ind <- 1
+ind <- 2
+ind <- 3
+ind <- 4
+biases <- biaseZ[[ind]]
+colnames(biases) <- column_names
+sel_vars <- c("r.cv.gauss", "kde_bcv", "kde_ucv")
+temp <- data.frame(true_acc = true_accs[, ind], biases[, sel_vars])
+temp2 <- melt(data = temp, id.vars = "true_acc")
+colnames(temp2)[3] <- "mean"
+ggplot(data = temp2, aes(x = true_acc, y = mean, colour = variable, linetype = variable)) +
+  geom_line(aes()) + coord_cartesian(xlim = c(0, 1), ylim = c(0,1)) + 
+  scale_linetype_manual(values = c(1,4,6))+
+  geom_abline(slope = 1)+coord_fixed()+
+  ggtitle(paste0("Predicting K=", Ktarg[ind], " from k=", ksub))
+#ggsave("approximation/sim_large7_bias_K1_k0_5.png", width = 5, height = 5)
+#ggsave("approximation/sim_large7_bias_K2_k0_5.png", width = 5, height = 5)
+#ggsave("approximation/sim_large7_bias_K5_k0_5.png", width = 5, height = 5)
+#ggsave("approximation/sim_large7_bias_K10_k0_5.png", width = 5, height = 5)
