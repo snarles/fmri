@@ -40,3 +40,21 @@ for (ff in fl) {
   lprobs[[ff]] <- tab
 }
 saveRDS(lprobs, file = "rakesh/converted2.rds")
+
+###
+## Train_tel
+###
+
+errates <- read.table("rakesh/train_tel/error_rates", sep = " ", header = TRUE)
+errates[, 3:4] <- 1 - errates[, 3:4]/100
+colnames(errates)[3:4] <- c("tr_acc", "te_acc")
+true_accs <- errates
+
+lprobs <- list()
+fl <- list.files("rakesh/train_tel/sub_sub_runs/")
+for (ff in fl) {
+  tab <- read.table(paste0("rakesh/train_tel/sub_sub_runs/", ff), header = FALSE)
+  lprobs[[ff]] <- tab
+}
+
+save(true_accs, lprobs, file = "rakesh/converted3.rds")
