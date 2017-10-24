@@ -53,8 +53,23 @@ true_accs <- errates
 lprobs <- list()
 fl <- list.files("rakesh/train_tel/sub_sub_runs/")
 for (ff in fl) {
-  tab <- read.table(paste0("rakesh/train_tel/sub_sub_runs/", ff), header = FALSE)
+  tab <- t(as.matrix(read.table(paste0("rakesh/train_tel/sub_sub_runs/", ff), header = FALSE)))
   lprobs[[ff]] <- tab
 }
 
-save(true_accs, lprobs, file = "rakesh/converted3.rds")
+accs400 <- true_accs[true_accs$num_sub_classes==400, 4]
+names(accs400) <- true_accs[true_accs$num_sub_classes==400, 1]
+accs400
+
+accs100 <- true_accs[true_accs$num_sub_classes==100, 4]
+names(accs100) <- true_accs[true_accs$num_sub_classes==100, 1]
+accs100
+
+
+lp20 <- lprobs[c(1,3,6)]
+lp100 <- lprobs[c(2,4,5)]
+methods <- names(gt_accs)
+names(lp100) <- methods
+names(lp20) <- methods
+
+save(true_accs, lprobs, lp20, lp100, methods, accs100, accs400, file = "rakesh/converted3.rda")

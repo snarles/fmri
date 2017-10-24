@@ -36,3 +36,13 @@ kernel_extrap <- function(pmat, Ks, ...) {
 # accs_kern <- kernel_extrap(pmat, kz)
 # plot(kz, accs, type = "l", ylim = c(0, 1))
 # lines(kz, accs_kern, col = "red")
+
+## multiple repeats kernel extrapolation
+raccs2 <- function(pmat, i_chosen, ...) {
+  sapply(1:nrow(pmat), function(ind) gaussian_kernel_cdf(pmat[ind, -i_chosen[ind]], pmat[ind, i_chosen[ind]], ...))
+}
+
+kernel_extrap2 <- function(pmat, i_chosen, Ks, ...) {
+  racs <- raccs2(pmat, i_chosen, ...)
+  sapply(Ks, function(k) mean(racs^(k-1)))
+}
