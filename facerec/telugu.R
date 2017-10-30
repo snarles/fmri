@@ -8,7 +8,7 @@ source("extrapolation/basis_source2.R")
 source("approximation/gaussian_identity_finsam2.R")
 
 load("rakesh/converted3.rda", verbose = TRUE)
-
+set.seed(0)
 
 accZ20 <- lapply(lp20, function(v) 1- resample_misclassification(v, rep(1:20, each = 50), 1:20))
 accZ100 <- lapply(lp100, function(v) 1- resample_misclassification(v, rep(1:100, each = 50), 1:100))
@@ -44,12 +44,12 @@ subfun <- function(v) {
 }
 
 (preds <- lapply(lp100, subfun))
-(resids <- lapply(methods, function(m) preds[[m]] - accs100[m]))
+(resids <- lapply(methods, function(m) preds[[m]] - accs400[m]))
 do.call(rbind, resids)
-#          kde_bcv    kde_ucv   r.cv.gauss
-# [1,] -0.09975622 -0.1283254 -0.007104109
-# [2,] -0.14015135 -0.1714465 -0.127566828
-# [3,] -0.32129946 -0.4054130 -0.161328883
+#           kde_bcv     kde_ucv   r.cv.gauss
+# [1,] -0.094956221 -0.12352541 -0.002304109
+# [2,] -0.001851355 -0.03314655  0.010733172
+# [3,] -0.108299464 -0.19241302  0.051671117
 
 (preds100 <- cbind(do.call(rbind, preds), accs400))
 #            kde_bcv   kde_ucv r.cv.gauss accs400
@@ -87,16 +87,16 @@ subfun <- function(v) {
 (preds <- lapply(lp20, subfun))
 (resids <- lapply(methods, function(m) preds[[m]] - accs400[m]))
 do.call(rbind, resids)
-#          kde_bcv      kde_ucv   r.cv.gauss
-# [1,] -0.49572055 -0.599681566 0.0000736115
-# [2,]  0.03597772 -0.009158706 0.1716585276
-# [3,] -0.02888129 -0.138234058 0.2651826849
+#          kde_bcv      kde_ucv  r.cv.gauss
+# [1,] -0.49572055 -0.599681566 -0.02457179
+# [2,]  0.03597772 -0.009158706  0.17165853
+# [3,] -0.02888129 -0.138234058  0.12726166
 
 (preds20 <- cbind(do.call(rbind, preds), accs400))
 #            kde_bcv   kde_ucv r.cv.gauss accs400
-# deepslim 0.4902794 0.3863184  0.9860736  0.9860
+# deepslim 0.4902794 0.3863184  0.9614282  0.9860
 # logistic 0.7466777 0.7015413  0.8823585  0.7107
-# svm      0.5163187 0.4069659  0.8103827  0.5452
+# svm      0.5163187 0.4069659  0.6724617  0.5452
 
 ## predict 20 -> 100
 
@@ -131,10 +131,10 @@ do.call(rbind, resids)
 #           kde_bcv     kde_ucv    r.cv.gauss
 # [1,] -0.276940767 -0.34009654 -0.0002775256
 # [2,] -0.007515977 -0.03287432  0.0489710983
-# [3,] -0.103793049 -0.18108809  0.1112545880
+# [3,] -0.103793049 -0.18108809  0.0610080879
 
 (preds20_100 <- cbind(do.call(rbind, preds), accs100))
 #            kde_bcv   kde_ucv r.cv.gauss accs100
 # deepslim 0.7138592 0.6507035  0.9905225  0.9908
 # logistic 0.8414840 0.8161257  0.8979711  0.8490
-# svm      0.6544070 0.5771119  0.8694546  0.7582
+# svm      0.6544070 0.5771119  0.8192081  0.7582
