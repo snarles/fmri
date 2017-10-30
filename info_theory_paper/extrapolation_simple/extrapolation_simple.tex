@@ -1154,7 +1154,9 @@ We demonstrate the extrapolation of average accuracy by predicting the
 accuracy of a face recognition on a large set of labels from the
 system's accuracy on a smaller subset.
 
-\subsection{Data}
+\subsection{Face recognition}
+
+\subsubsection*{Data}
 From the ``Labeled Faces in the Wild'' dataset (\cite{LFWTech}), we
 selected the 1672 individuals with at least 2 face photos.  We form a
 dataset consisting of photo-label pairs $(x_j^{(i)}, y^{(i)})$
@@ -1191,7 +1193,7 @@ $y^{(4)}$=Patricia &
 \label{fig:face_rec}
 \end{figure}
 
-\subsection{Classifier}
+\subsubsection*{Classifier}
 We implement a two-step face recognition system based on a precomputed neural-network based embedding followed by a one nearest neighbor classifier.
 
 We used the OpenFace (\cite{amos2016openface}) embedding for feature
@@ -1221,7 +1223,7 @@ in $I$.  Note that the assumptions of our estimation method are met in
 this example because one-nearest neighbor is a marginal classifier.
 We note that $m$-nearest neighbor for $m > 1$ is not marginal.
 
-\subsection{Experimental Details}\label{sec:exp_details}
+\subsubsection*{Experimental Details}\label{sec:exp_details}
 We treat the full data-set of $1672$ as our population of labels. In
 each experiment, we choose a random subset of size $k_1<1672$, for
 which we observe both training and test data. From this data, we will
@@ -1250,7 +1252,7 @@ the full dataset $\hat{AGA}_{1672}$.  We compare the prediction to the
 observed accuracy on full dataset $\text{TA}_{1672}$, which
 approximates the ground truth.
 
-\subsection{Results}
+\subsubsection*{Results}
 
 The extrapolation results can be seen in Figure
 \ref{fig:lfw_extrapolation2}, which plots the extrapolated accuracy
@@ -1322,6 +1324,39 @@ KDE-BCV & \textbf{0.053} (0.001) & \textbf{0.037} (0.001) & \textbf{0.024} (0.00
 \caption{RMSE (se) on predicting $\text{TA}_{1672}$ from $k_1$ classes}\label{tab:lfw_accuracy}
 \end{table}
 
+\subsection{Telugu OCR}
+
+We apply performance
+extrapolation in an optical character recognition example
+(\cite{achanta2015telugu}) for predicting the accuracy on 400 classes
+of Telugu characters from a subsample of size $K = 20$.  We consider
+the use of five different classifiers: Naive Bayes, logistic
+regression, SVM, $\epsilon$-nearest neighbors\footnote{$m$-nearest
+  neighbors with $m = \epsilon n$ for fixed $\epsilon > 0$}, and a
+deep convolutional neural network\footnote{The network architecture is
+  as follows: {\tt
+    48x48-4C3-MP2-6C3-8C3-MP2-32C3-50C3-MP2-200C3-SM.}}.  Of the five
+classifiers, only Naive Bayes satisfies the marginal classifier
+assumption.  Again, we compare the result of our model to the ground
+truth obtained by using the full dataset.
+
+\begin{table}
+\centering
+\begin{tabular}{c|c||c|c||c|c|c}
+$k_1$ & $k_2$ & Classifier & True & KDE-BCV & KDE-UCV & CV-reg \\ \hline
+ 20 & 100 & Deep CNN & 0.9908 & 0.7138 & 0.6507 & \textbf{0.9905} \\ 
+    &     & Logistic & 0.8490 & \textbf{0.8414} & 0.8161 & 0.8980 \\
+    &     & SVM      & 0.7582 & 0.6544 & 0.5771 & \textbf{0.8192} \\ \hline
+ 20 & 400 & Deep CNN & 0.9860 & 0.4903 & 0.3863 & \textbf{0.9614} \\
+    &     & Logistic & 0.7107 & 0.7467 & \textbf{0.7015} & 0.8824 \\
+    &     & SVM      & 0.5452 & \textbf{0.5163} & 0.4070 & 0.6725 \\ \hline
+100 & 400 & Deep CNN & 0.9860 & 0.8910 & 0.8625 & \textbf{0.9837} \\ 
+    &     & Logistic & 0.7107 & \textbf{0.7089} & 0.6776 & 0.7214 \\
+    &     & SVM      & 0.5452 & 0.4369 & 0.3528 & \textbf{0.5969} \\ 
+\hline
+\end{tabular}
+\caption{Extrapolating from $k_1$ to $k_2$ classes in Telugu OCR for three different classifiers: logistic regression, support vector machine, and deep convolutional network}\label{tab:lfw_accuracy}
+\end{table}
 
 \section{Discussion}
 \label{sec:discussion}
