@@ -1150,9 +1150,10 @@ extrapolation method, which we also elaborate upon in the discussion.
 
 \section{Experimental Evaluation}\label{sec:extrapolation_example}
 
-We demonstrate the extrapolation of average accuracy by predicting the
+We demonstrate the extrapolation of average accuracy in two data examples:
+(i) predicting the
 accuracy of a face recognition on a large set of labels from the
-system's accuracy on a smaller subset.
+system's accuracy on a smaller subset, and (ii) extrapolating the performance of various classifiers on an optical character recognition (OCR) problem in the Telugu script, which has over 400 glyphs.
 
 \subsection{Face recognition}
 
@@ -1328,16 +1329,22 @@ KDE-BCV & \textbf{0.053} (0.001) & \textbf{0.037} (0.001) & \textbf{0.024} (0.00
 
 We apply performance
 extrapolation in an optical character recognition example
-(\cite{achanta2015telugu}) for predicting the accuracy on 400 classes
-of Telugu characters from a subsample of size $K = 20$.  We consider
-the use of five different classifiers: Naive Bayes, logistic
-regression, SVM, $\epsilon$-nearest neighbors\footnote{$m$-nearest
-  neighbors with $m = \epsilon n$ for fixed $\epsilon > 0$}, and a
+(\cite{achanta2015telugu}).  We consider
+the use of three different classifiers: logistic
+regression, linear support-vector machine (SVM), and a
 deep convolutional neural network\footnote{The network architecture is
   as follows: {\tt
-    48x48-4C3-MP2-6C3-8C3-MP2-32C3-50C3-MP2-200C3-SM.}}.  Of the five
-classifiers, only Naive Bayes satisfies the marginal classifier
-assumption.  Again, we compare the result of our model to the ground
+    48x48-4C3-MP2-6C3-8C3-MP2-32C3-50C3-MP2-200C3-SM.}}. 
+The full data consists of 400 classes with 50 training and 50 test observations for each class. We also create a nested hierarchy of subsampled data consisting of (i) a subset of size 100 randomly sampled from the 400 classes, and (ii) yet another subsampled dataset consisting of 20 classes random subsampled from the size-100 subsample.   We therefore study three different prediction extrapolation problems:
+\begin{enumerate}
+\item Predicting the accuracy on $k_2 = 100$ classes from $k_1 = 20$ classes, comparing the predicted accuracy to the test accuracy of the classifier on the 100-class subsample as ground truth.
+\item Same as (1), but setting $k_2 = 400$ and $k_1 = 20$, and using the full dataset for the ground truth.
+\item Same as (2), but setting $k_2 = 400$ and $k_1 = 100$.
+\end{enumerate}
+Note that unlike in the case of the face recognition example,
+here the assumption of marginal classification is satisfied for none of
+the classifiers.  
+We compare the result of our model to the ground
 truth obtained by using the full dataset.
 
 \begin{table}
@@ -1355,8 +1362,14 @@ $k_1$ & $k_2$ & Classifier & True & KDE-BCV & KDE-UCV & CV-reg \\ \hline
     &     & SVM      & 0.5452 & 0.4369 & 0.3528 & \textbf{0.5969} \\ 
 \hline
 \end{tabular}
-\caption{Extrapolating from $k_1$ to $k_2$ classes in Telugu OCR for three different classifiers: logistic regression, support vector machine, and deep convolutional network}\label{tab:lfw_accuracy}
+\caption{Extrapolating from $k_1$ to $k_2$ classes in Telugu OCR for three different classifiers: logistic regression, support vector machine, and deep convolutional network}\label{tab:tel_accuracy}
 \end{table}
+
+The results are displayed in table \ref{tab:tel_accuracy}.  If we rank the three extrapolation methods in terms of distance to the ground truth accuracy, we see a consistent pattern of rankings between the 20-to-100 extrapolation and the 100-to-400 extrapolation.  As we remarked in the simulation, the difficulty of extrapolation appears to be primarily sensitive to the extrapolation ratio $\frac{k_2}{k_1}$, which are similar (5 versus 4) in the 20-to-100 and 100-to-400 problems.  In both settings, CV regression comes closest to the ground truth for the Deep CNN and the SVM, but KDE-BCV comes closest to ground truth for the Logistic regression.  However, even for logistic regression, CV regression does better or comparably to KDE-UCV.
+
+In the 20-to-400 extrapolation, which has the highest extrapolation ratio ($\frac{k_2}{k_1} = 20$), none of the three extrapolation methods performs consistently well for all three classifiers.  It could be the case that the variability is a dominating effect given the small training set, making it difficult to compare extrapolation methods using the 20-to-400 extrapolation task.
+
+Unlike in the face recognition example, we did not resample training classes here, because that would require retraining all of the classifiers--which would be prohibitively time-consuming for the Deep CNN.  Thus, we cannot comment on the robustness of the comparisons from this example, though it is likely that we would obtain different rankings under a new resampling of the training classes.
 
 \section{Discussion}
 \label{sec:discussion}
