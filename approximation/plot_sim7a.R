@@ -42,11 +42,11 @@ for (gb in fixed.gb) {
 }
 
 (bdwids <- seq(0.1, 1, 0.1))
-basis_sets <- lapply(bdwids, function(bd) get_basis_mat(max.mu, bd))
-
-sub_basis_sets <- lapply(basis_sets, function(set1) {
-  list(Xmat = set1$Xmat[1:lsub2, ], Xtarg = set1$Xmat[length(kref), , drop = FALSE])
-})
+# basis_sets <- lapply(bdwids, function(bd) get_basis_mat(max.mu, bd))
+# 
+# sub_basis_sets <- lapply(basis_sets, function(set1) {
+#   list(Xmat = set1$Xmat[1:lsub2, ], Xtarg = set1$Xmat[length(kref), , drop = FALSE])
+# })
 
 (kde.names <- sapply(kde_bdwids, function(v) paste0("kde_", v)))
 (column_names <- c(names(basis_vecs), kde.names, "r.cv.gauss", "par2"))
@@ -74,6 +74,7 @@ rmseZ <- list()
 biaseZ <- list()
 all_final_predZ <- list()
 rmse_sdZ <- list()
+bias_sdZ <- list()
 nboot <- 1000
 
 for (ind in 1:length(Ktarg)) {
@@ -87,22 +88,29 @@ for (ind in 1:length(Ktarg)) {
   rmses <- matrix(NA, length(sigma2_seq), ncol(all_final_preds))
   biases <- matrix(NA, length(sigma2_seq), ncol(all_final_preds))
   rmse_sd <- matrix(NA, length(sigma2_seq), ncol(all_final_preds))
+  bias_sd <- matrix(NA, length(sigma2_seq), ncol(all_final_preds))
   for (ii in 1:length(sigma2_seq)) {
     rmses[ii, ] <- sqrt(colMeans(resids[sigma2s == sigma2_seq[ii], ]^2))
-    biases[ii, ] <- colMeans(all_final_preds[sigma2s == sigma2_seq[ii], ])
+    biases[ii, ] <- colMeans(resids[sigma2s == sigma2_seq[ii], ])
     rmse_boots <- matrix(NA, nboot, ncol(rmses))
+    bias_boots <- matrix(NA, nboot, ncol(rmses))
     orig_inds <- which(sigma2s == sigma2_seq[ii])
     for (jj in 1:nboot) {
       boot_inds <- sample(orig_inds, length(orig_inds), replace = TRUE)
       rmse_boots[jj, ] <- sqrt(colMeans(resids[boot_inds, ]^2))
+      bias_boots[jj,] <- colMeans(resids[boot_inds, ])
     }
     rmse_sd[ii, ] <- apply(rmse_boots, 2, sd)
+    bias_sd[ii,] <- apply(bias_boots,2,sd)
   }
   colnames(rmses) <- column_names
   colnames(rmse_sd) <- column_names
+  colnames(biases) <- column_names
+  colnames(bias_sd) <- column_names
   rmseZ[[ind]] <- rmses
   rmse_sdZ[[ind]] <- rmse_sd
   biaseZ[[ind]] <- biases
+  bias_sdZ[[ind]] <- bias_sd
 }
 
 minimax_rmses <- list()
@@ -170,30 +178,36 @@ ggplot(data = temp3, aes(x = true_acc, y = rmse, colour = variable, linetype=var
   geom_line() + coord_cartesian(xlim = c(0, 1)) + 
   geom_errorbar(aes(ymin = rmse_low, max = rmse_high)) + 
   scale_linetype_manual(values = c(1,4,6))+
-  ggtitle(paste0("Predicting K=", Ktarg[ind], " from k=", ksub))
+  ggtitle(paste0("Predicting K=", Ktarg[ind], " from k=", ksub)) + ylim(c(0,0.11))
 #ggsave("approximation/sim_large7_K10_k5.png", width = 6, height = 3)
 #ggsave("approximation/sim_large7_K20_k5.png", width = 6, height = 3)
 #ggsave("approximation/sim_large7_K50_k5.png", width = 6, height = 3)
 #ggsave("approximation/sim_large7_K100_k5.png", width = 6, height = 3)
 
 
-## plot biases
+
+## plot biases type 2
 ind <- 1
 ind <- 2
 ind <- 3
 ind <- 4
+sd_mult <- 2.95
 biases <- biaseZ[[ind]]
-colnames(biases) <- column_names
+sds <- bias_sdZ[[ind]]
 sel_vars <- c("r.cv.gauss", "kde_bcv", "kde_ucv")
 temp <- data.frame(true_acc = true_accs[, ind], biases[, sel_vars])
 temp2 <- melt(data = temp, id.vars = "true_acc")
-colnames(temp2)[3] <- "mean"
-ggplot(data = temp2, aes(x = true_acc, y = mean, colour = variable, linetype = variable)) +
-  geom_line(aes()) + coord_cartesian(xlim = c(0, 1), ylim = c(0,1)) + 
+temp_se <- data.frame(true_acc = true_accs[, ind], sds[, sel_vars])
+temp_se <- melt(data = temp_se, id.vars = "true_acc")
+temp3 <- data.frame(temp2, bias_low = temp2[, 3] - temp_se[, 3], bias_high = temp2[, 3] + temp_se[, 3])
+colnames(temp3)[3] <- "pred_minus_mean"
+
+ggplot(data = temp3, aes(x = true_acc, y = pred_minus_mean, colour = variable, linetype=variable)) +
+  geom_line() + coord_cartesian(xlim = c(0, 1)) + 
+  geom_errorbar(aes(ymin = bias_low, max = bias_high)) + 
   scale_linetype_manual(values = c(1,4,6))+
-  geom_abline(slope = 1)+coord_fixed()+
-  ggtitle(paste0("Predicting K=", Ktarg[ind], " from k=", ksub))
-#ggsave("approximation/sim_large7_bias_K10_k5.png", width = 5, height = 5)
-#ggsave("approximation/sim_large7_bias_K20_k5.png", width = 5, height = 5)
-#ggsave("approximation/sim_large7_bias_K50_k5.png", width = 5, height = 5)
-#ggsave("approximation/sim_large7_bias_K100_k5.png", width = 5, height = 5)
+  ggtitle(paste0("Predicting K=", Ktarg[ind], " from k=", ksub)) + ylim(c(-0.1,0.1))
+#ggsave("approximation/sim_large7_biaz_K10_k5.png", width = 6, height = 3)
+#ggsave("approximation/sim_large7_biaz_K20_k5.png", width = 6, height = 3)
+#ggsave("approximation/sim_large7_biaz_K50_k5.png", width = 6, height = 3)
+#ggsave("approximation/sim_large7_biaz_K100_k5.png", width = 6, height = 3)
