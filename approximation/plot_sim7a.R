@@ -207,7 +207,7 @@ ggplot(data = temp3, aes(x = true_acc, y = pred_minus_mean, colour = variable, l
   geom_errorbar(aes(ymin = bias_low, max = bias_high)) + 
   scale_linetype_manual(values = c(1,4,6))+
   ggtitle(paste0("Predicting K=", Ktarg[ind], " from k=", ksub)) + ylim(c(-0.1,0.1))
-#ggsave("approximation/sim_large7_biaz_K10_k5.png", width = 6, height = 3)
-#ggsave("approximation/sim_large7_biaz_K20_k5.png", width = 6, height = 3)
-#ggsave("approximation/sim_large7_biaz_K50_k5.png", width = 6, height = 3)
-#ggsave("approximation/sim_large7_biaz_K100_k5.png", width = 6, height = 3)
+#ggsave("approximation/sim_large7_biaz_K10_k5.png", width = 6, height = 3,dpi=300)
+#ggsave("approximation/sim_large7_biaz_K20_k5.png", width = 6, height = 3,dpi=300)
+#ggsave("approximation/sim_large7_biaz_K50_k5.png", width = 6, height = 3,dpi=300)
+#ggsave("approximation/sim_large7_biaz_K100_k5.png", width = 6, height = 3,dpi=300)
