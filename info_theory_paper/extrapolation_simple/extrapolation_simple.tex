@@ -1124,20 +1124,20 @@ extrapolation method, which we also elaborate upon in the discussion.
 \begin{myfont}Predicting $\text{AGA}_{2000}$\end{myfont} &
 \begin{myfont}Predicting $\text{AGA}_{5000}$\end{myfont} &
 \begin{myfont}Predicting $\text{AGA}_{10000}$\end{myfont}\\
-\includegraphics[scale = 0.45, clip = true, trim = .0in 0 1.25in 1.03in]{sim_large7_bias_K2_k0_5.png} &
-\includegraphics[scale = 0.45, clip = true, trim = .5in 0 1.25in 1.03in]{sim_large7_bias_K5_k0_5.png} &
-\includegraphics[scale = 0.45, clip = true, trim = .5in 0 0.00in 1.03in]{sim_large7_bias_K10_k0_5.png}\\ 
+\includegraphics[scale = 0.45, clip = true, trim = .22in 0 1.23in 0.4in]{sim_large7_biaz_K2_k0_5.png} &
+\includegraphics[scale = 0.45, clip = true, trim = .3in 0 1.23in 0.4in]{sim_large7_biaz_K5_k0_5.png} &
+\includegraphics[scale = 0.45, clip = true, trim = .3in 0 0.00in 0.4in]{sim_large7_biaz_K10_k0_5.png}\\ 
 \multicolumn{3}{c}{\begin{myfont}Extrapolating from $k_1 = 5000$\end{myfont}}\\
 \begin{myfont}Predicting $\text{AGA}_{20000}$\end{myfont} &
 \begin{myfont}Predicting $\text{AGA}_{50000}$\end{myfont} &
 \begin{myfont}Predicting $\text{AGA}_{100000}$\end{myfont}\\
-\includegraphics[scale = 0.45, clip = true, trim = .0in 0 1.25in 1.03in]{sim_large7_bias_K20_k5.png} &
-\includegraphics[scale = 0.45, clip = true, trim = .5in 0 1.25in 1.03in]{sim_large7_bias_K50_k5.png} &
-\includegraphics[scale = 0.45, clip = true, trim = .5in 0 0.00in 1.03in]{sim_large7_bias_K100_k5.png}\\ 
+\includegraphics[scale = 0.45, clip = true, trim = .22in 0 1.23in 0.4in]{sim_large7_biaz_K20_k5.png} &
+\includegraphics[scale = 0.45, clip = true, trim = .3in 0 1.23in 0.4in]{sim_large7_biaz_K50_k5.png} &
+\includegraphics[scale = 0.45, clip = true, trim = .3in 0 0.00in 0.4in]{sim_large7_biaz_K100_k5.png}\\ 
 \end{tabular}
 \caption{\textbf{Simulation results (biases):} Simulation study
   consisting of multivariate Gaussian $Y$ with nearest neighbor
-  classifier.  Mean predicted accuracy vs true $k_2$-class accuracy
+  classifier.  Bias (mean predicted minus true accuracy) vs true $k_2$-class accuracy
   for cross-validated regression method with radial basis ({\tt
     r.cv.gauss}), KDE-based methods with biased cross-validation ({\tt
     kde\_bcv}) and unbiased cross-validation ({\tt kde\_ucv}).}

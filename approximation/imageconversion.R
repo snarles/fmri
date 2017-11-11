@@ -1,0 +1,6 @@
+ff <- scan("approximation/temp.txt", character())
+cmds <- sapply(ff, function(s)
+  paste0("convert -units PixelsPerInch ",s," -density 300 ",s,"\n"))
+sink("approximation/temp2.txt")
+for (c in cmds) cat(c)
+sink()
