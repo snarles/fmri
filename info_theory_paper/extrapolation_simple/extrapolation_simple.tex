@@ -971,6 +971,27 @@ competitors is $h_{k_2}(i) = (1-h(i))^{k_2-1}$. The average over the
 $k_1$ classes is the estimated generalization accuracy
 $\hat{AGA}_{KDE} = \frac{1}{k_1} \sum_{i}^{k_1} h_{k_2}(i)$.
 
+This extrapolation method can be described in our
+framework as follows.  Let $F_x$ be the cumulative distribution
+function of $M_{Y'}(x)$ for a random label $Y' \sim \pi$.  For each
+test instance $x^{(i)}_j$, let
+$\hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$ be an estimate of
+$F_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$.  The particular estimation
+method recommended by \cite{Kay2008a} is to estimate the density
+$f_{x^{(i)}_j}$ by using kernel-density estimation with a Gaussian
+kernel and a bandwidth chosen via pseudolikelihood cross-validation
+\citep{cao1994comparative}; however, our criticism is not specific to
+the use of a particular estimator for $\hat{F}_x$.  Extrapolate using
+the formula
+\[
+\widehat{\text{AGA}_k} = \frac{1}{k_1 r} \sum_{i=1}^k \sum_{j=1}^r \hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))^{k-1}
+\]
+While no justification is given for the method in \cite{Kay2008a},  one possible justification is the fact that
+\[\text{AGA}_k = \E[F_X(M_{Y}(X))^{k-1}].\]
+Therefore, the method can give good extrapolations when the estimated
+probabilities $\hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$ are close
+to the true probabilities $F_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$.
+
 Note that the method depends heavily on the density estimation
 step. If the kernel bandwidth is too small compared to the number of
 classes, the extrapolated accuracy will be upwardly biased.  To see
@@ -1065,9 +1086,21 @@ the smaller problem to the larger problem in the other three cases.
 
 The kernel-density method produces comparable results, but can be seen to depend strongly on the choice of bandwidth selection: KDE-UCV and KDE-BCV show very different performance profiles, although they differ only in the choice between unbiased and biased cross-vaidation, respectively.
 Also, the KDE methods show significant estimation bias, as can be seen from Figure \ref{fig:sim_study_bias}.  
-This can be explained as a consequence of the intrinsic bias in the KDE
-extrapolation method, as we elaborate in the discussion.
-CV-reg shows comparable bias for the 500 to 10000 extrapolation, but shows very little bias in all of the $k_1 = 5000$ extrapolations.
+This can be explained by the fact that
+the KDE method ignores the bias introduced by exponentiation.
+That is, even if $\hat{p}$ is an unbiased estimator of $p$, $\hat{p}^k$ may \emph{not} be a very good estimate of $p^k$, since
+\[
+p^k = \E[\hat{p}]^k \neq \E[\hat{p}^k].
+\]
+unless $\hat{p}$ is a degenerate random variable
+(constant). Otherwise, for large $k$, $\hat{p}^k$ may be an extremely
+biased estimate of $p$.  Our proposed method avoids this source of
+bias by estimating the $(k-1)$st moment of $D(u)$ directly.  As we see
+in Figure \ref{fig:sim_study_bias}, correcting for the bias of
+exponentiation helps greatly to reduce the overall bias.   Indeed, while
+CV-reg shows comparable bias for the 500 to 10000 extrapolation,
+the bias is very well-controlled in all of the $k_1 = 5000$ extrapolations.
+
 
 
 
@@ -1159,14 +1192,31 @@ We demonstrate the extrapolation of average accuracy in two data examples:
 accuracy of a face recognition on a large set of labels from the
 system's accuracy on a smaller subset, and (ii) extrapolating the performance of various classifiers on an optical character recognition (OCR) problem in the Telugu script, which has over 400 glyphs.
 
-\subsection{Face recognition}
-
-\subsubsection*{Data}
-From the ``Labeled Faces in the Wild'' dataset (\cite{LFWTech}), we
-selected the 1672 individuals with at least 2 face photos.  We form a
+The face-recognition example takes data from the ``Labeled Faces in the Wild'' dataset (\cite{LFWTech}), where we selected the 1672 individuals with at least 2 face photos.  We form a
 dataset consisting of photo-label pairs $(x_j^{(i)}, y^{(i)})$
 for $i = 1,\hdots, 1672$ and $j = 1,2$ by randomly selecting 2 face
 photos for each individual. 
+We used the OpenFace (\cite{amos2016openface}) embedding for feature
+extraction\footnote{For each photo $x$, a 128-dimensional feature vector
+$g(x)$ is obtained as follows.  The computer vision library DLLib is
+used to detect landmarks in $x$, and to apply a nonlinear
+transformation to align $x$ to a template.  The aligned photograph is
+then downsampled to a $96 \times 96$ image. The downsampled image is
+fed into a pre-trained deep convolutional neural network to obtain the
+128-dimensional feature vector $g(x)$. More details are found in
+(\cite{amos2016openface}).}.
+In order to identify a new photo $\vec{z}^*$, we obtain the feature
+vector $g(x^*)$ from the OpenFace network, and guess the label $\hat{y}$
+with the minimal Euclidean distance between $g(y^{(i)})$ and $g(x^*)$,
+which implies a score function
+\[
+M_{y^{(i)}}(x^*) = -||g(x_1^{(i)}) - g(x^*)||^2.
+\]
+In this way, we can compute the test accuracy on all 1672 classes, $\text{TA}_{1672}$, but we also subsample $k_1 = \{100,200,400\}$ classes in order to extrapolate from $k_1$ to 1672 classes.
+
+
+
+
 
 \begin{figure}
 \centering
@@ -1199,64 +1249,24 @@ $y^{(4)}$=Patricia &
 \label{fig:face_rec}
 \end{figure}
 
-\subsubsection*{Classifier}
-We implement a two-step face recognition system based on a precomputed neural-network based embedding followed by a one nearest neighbor classifier.
-
-We used the OpenFace (\cite{amos2016openface}) embedding for feature
-extraction.  For each photo $x$, a 128-dimensional feature vector
-$g(x)$ is obtained as follows.  The computer vision library DLLib is
-used to detect landmarks in $x$, and to apply a nonlinear
-transformation to align $x$ to a template.  The aligned photograph is
-then downsampled to a $96 \times 96$ image. The downsampled image is
-fed into a pre-trained deep convolutional neural network to obtain the
-128-dimensional feature vector $g(x)$. More details are found in
-(\cite{amos2016openface}).
-
-The recognition system then works as follows.  Suppose we want to
-perform facial recognition on a subset of the individuals, $I \subset
-\{1,\hdots, 1672\}$.  Then, for all $i \in I$, we load one example-label pair, into the system, $(x_1^{(i)}, y^{(i)})$.  In
-order to identify a new photo $\vec{z}^*$, we obtain the feature
-vector $g(x^*)$, and guess the label $\hat{y}$
-with the minimal Euclidean distance between $g(y^{(i)})$ and $g(x^*)$,
-which implies a score function
-\[
-M_{y^{(i)}}(x^*) = -||g(x_1^{(i)}) - g(x^*)||^2.
-\]
-
-
-The test accuracy is assessed on the unused repeat for all individuals
-in $I$.  Note that the assumptions of our estimation method are met in
-this example because one-nearest neighbor is a marginal classifier.
-We note that $m$-nearest neighbor for $m > 1$ is not marginal.
-
-\subsubsection*{Experimental Details}\label{sec:exp_details}
-We treat the full data-set of $1672$ as our population of labels. In
-each experiment, we choose a random subset of size $k_1<1672$, for
-which we observe both training and test data. From this data, we will
-estimate $\text{AGA}_{k_2}$ for $k_2$ between $k_2 =
-k_1+1,...,1672$. We use $k_1 = 100,200,400,800$, with $B = 300$
-repeats for each subset size.
-
-For the selected subset of size $k_1$, we can estimate the test
-accuracy at every $k \leq k_1$, getting the vector
-$(\text{ATA}_2,...,\text{ATA}_{k_1})$.  Specifically, we use a linear
-spline basis,
-\[
-h_\ell(u) = \left[u - \frac{\ell}{m + 1}\right]_+
-\]
-for $\ell = 1,\hdots, m$.  Here we take $m = 10000$. 
-We fit the $\beta$ coefficient vector using non-negative least squares: 
-\[
-\hat{\beta} = \argmin_{\beta: \beta_\ell \geq 0} \sum_{k=2}^{k_1} \left( (1 - \text{ATA}_k) - \sum_{\ell=1}^m \beta_\ell H_{\ell, k}\right)^2
-\]
-The non-negativity constraint on the coefficients $\beta$, combined
-with the linear spline basis, ensures that ${D}(u)$ is a monotonic
-and convex function on $[0,1]$.
-
-Based on the $\beta$ coefficients, we can compute the prediction for
-the full dataset $\hat{AGA}_{1672}$.  We compare the prediction to the
-observed accuracy on full dataset $\text{TA}_{1672}$, which
-approximates the ground truth.
+In the Telugu optical character recognition example
+(\cite{achanta2015telugu}), we consider
+the use of three different classifiers: logistic
+regression, linear support-vector machine (SVM), and a
+deep convolutional neural network\footnote{The network architecture is
+  as follows: {\tt
+    48x48-4C3-MP2-6C3-8C3-MP2-32C3-50C3-MP2-200C3-SM.}}. 
+The full data consists of 400 classes with 50 training and 50 test observations for each class. We also create a nested hierarchy of subsampled data consisting of (i) a subset of size 100 randomly sampled from the 400 classes, and (ii) yet another subsampled dataset consisting of 20 classes random subsampled from the size-100 subsample.   We therefore study three different prediction extrapolation problems:
+\begin{enumerate}
+\item Predicting the accuracy on $k_2 = 100$ classes from $k_1 = 20$ classes, comparing the predicted accuracy to the test accuracy of the classifier on the 100-class subsample as ground truth.
+\item Same as (1), but setting $k_2 = 400$ and $k_1 = 20$, and using the full dataset for the ground truth.
+\item Same as (2), but setting $k_2 = 400$ and $k_1 = 100$.
+\end{enumerate}
+Note that unlike in the case of the face recognition example,
+here the assumption of marginal classification is satisfied for none of
+the classifiers.  
+We compare the result of our model to the ground
+truth obtained by using the full dataset.
 
 \subsubsection*{Results}
 
@@ -1310,7 +1320,7 @@ simulation.
 \includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_200_kde_bcv.pdf} &
 \includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_400_kde_bcv.pdf} \\
 \end{tabular}
-\caption{\textbf{Comparison of KDE and CV regression methods}: The
+\caption{\textbf{Predicted accuracy curves for face-recognition example}: The
   plots show predicted accuracies using a different source dataset
   size $k_1$. Each red curve represents the estimated accuracies using
   a single subsample. The black curve shows the true average
@@ -1327,30 +1337,10 @@ CV-reg & 0.113 (0.002) & 0.058 (0.002) & 0.050 (0.001)\\\hline
 KDE-UCV & 0.082 (0.001) & 0.057 (0.001) & 0.035 (0.001) \\ \hline
 KDE-BCV & \textbf{0.053} (0.001) & \textbf{0.037} (0.001) & \textbf{0.024} (0.001)\\\hline
 \end{tabular}
-\caption{RMSE (se) on predicting $\text{TA}_{1672}$ from $k_1$ classes}\label{tab:lfw_accuracy}
+\caption{\textbf{Face-recognition extrapolation RMSEs}: RMSE (se) on predicting $\text{TA}_{1672}$ from $k_1$ classes}\label{tab:lfw_accuracy}
 \end{table}
 
-\subsection{Telugu OCR}
-
-We apply performance
-extrapolation in an optical character recognition example
-(\cite{achanta2015telugu}).  We consider
-the use of three different classifiers: logistic
-regression, linear support-vector machine (SVM), and a
-deep convolutional neural network\footnote{The network architecture is
-  as follows: {\tt
-    48x48-4C3-MP2-6C3-8C3-MP2-32C3-50C3-MP2-200C3-SM.}}. 
-The full data consists of 400 classes with 50 training and 50 test observations for each class. We also create a nested hierarchy of subsampled data consisting of (i) a subset of size 100 randomly sampled from the 400 classes, and (ii) yet another subsampled dataset consisting of 20 classes random subsampled from the size-100 subsample.   We therefore study three different prediction extrapolation problems:
-\begin{enumerate}
-\item Predicting the accuracy on $k_2 = 100$ classes from $k_1 = 20$ classes, comparing the predicted accuracy to the test accuracy of the classifier on the 100-class subsample as ground truth.
-\item Same as (1), but setting $k_2 = 400$ and $k_1 = 20$, and using the full dataset for the ground truth.
-\item Same as (2), but setting $k_2 = 400$ and $k_1 = 100$.
-\end{enumerate}
-Note that unlike in the case of the face recognition example,
-here the assumption of marginal classification is satisfied for none of
-the classifiers.  
-We compare the result of our model to the ground
-truth obtained by using the full dataset.
+The results for Telugu OCR classification are displayed in table \ref{tab:tel_accuracy}.  If we rank the three extrapolation methods in terms of distance to the ground truth accuracy, we see a consistent pattern of rankings between the 20-to-100 extrapolation and the 100-to-400 extrapolation.  As we remarked in the simulation, the difficulty of extrapolation appears to be primarily sensitive to the extrapolation ratio $\frac{k_2}{k_1}$, which are similar (5 versus 4) in the 20-to-100 and 100-to-400 problems.  In both settings, CV regression comes closest to the ground truth for the Deep CNN and the SVM, but KDE-BCV comes closest to ground truth for the Logistic regression.  However, even for logistic regression, CV regression does better or comparably to KDE-UCV.
 
 \begin{table}
 \centering
@@ -1367,10 +1357,8 @@ $k_1$ & $k_2$ & Classifier & True & KDE-BCV & KDE-UCV & CV-reg \\ \hline
     &     & SVM      & 0.5452 & 0.4369 & 0.3528 & \textbf{0.5969} \\ 
 \hline
 \end{tabular}
-\caption{Extrapolating from $k_1$ to $k_2$ classes in Telugu OCR for three different classifiers: logistic regression, support vector machine, and deep convolutional network}\label{tab:tel_accuracy}
+\caption{\textbf{Telugu OCR extrapolated accuracies}: Extrapolating from $k_1$ to $k_2$ classes in Telugu OCR for three different classifiers: logistic regression, support vector machine, and deep convolutional network}\label{tab:tel_accuracy}
 \end{table}
-
-The results are displayed in table \ref{tab:tel_accuracy}.  If we rank the three extrapolation methods in terms of distance to the ground truth accuracy, we see a consistent pattern of rankings between the 20-to-100 extrapolation and the 100-to-400 extrapolation.  As we remarked in the simulation, the difficulty of extrapolation appears to be primarily sensitive to the extrapolation ratio $\frac{k_2}{k_1}$, which are similar (5 versus 4) in the 20-to-100 and 100-to-400 problems.  In both settings, CV regression comes closest to the ground truth for the Deep CNN and the SVM, but KDE-BCV comes closest to ground truth for the Logistic regression.  However, even for logistic regression, CV regression does better or comparably to KDE-UCV.
 
 In the 20-to-400 extrapolation, which has the highest extrapolation ratio ($\frac{k_2}{k_1} = 20$), none of the three extrapolation methods performs consistently well for all three classifiers.  It could be the case that the variability is a dominating effect given the small training set, making it difficult to compare extrapolation methods using the 20-to-400 extrapolation task.
 
@@ -1390,65 +1378,6 @@ the description of the method.  In this discussion, we discuss these
 decisions and map some alternative models or strategies for future
 work.
 
-
-\subsubsection*{Comparison to Kay et al.}
-The extrapolation method of \cite{Kay2008a} can be described in our
-framework as follows.  Let $F_x$ be the cumulative distribution
-function of $M_{Y'}(x)$ for a random label $Y' \sim \pi$.  For each
-test instance $x^{(i)}_j$, let
-$\hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$ be an estimate of
-$F_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$.  The particular estimation
-method recommended by \cite{Kay2008a} is to estimate the density
-$f_{x^{(i)}_j}$ by using kernel-density estimation with a Gaussian
-kernel and a bandwidth chosen via pseudolikelihood cross-validation
-\citep{cao1994comparative}; however, our criticism is not specific to
-the use of a particular estimator for $\hat{F}_x$.  Extrapolate using
-the formula
-\[
-\widehat{\text{AGA}_k} = \frac{1}{k_1 r} \sum_{i=1}^k \sum_{j=1}^r \hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))^{k-1}
-\]
-While no justification is given for the method in \cite{Kay2008a},  one possible justification is the fact that
-\[\text{AGA}_k = \E[F_X(M_{Y}(X))^{k-1}].\]
-Therefore, the method can give good extrapolations when the estimated
-probabilities $\hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$ are close
-to the true probabilities $F_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$.
-However, the method ignores the bias introduced by exponentiation.
-That is, even if $\hat{p}$ is an unbiased estimator of $p$, $\hat{p}^k$ may \emph{not} be a very good estimate of $p^k$, since
-\[
-p^k = \E[\hat{p}]^k \neq \E[\hat{p}^k].
-\]
-unless $\hat{p}$ is a degenerate random variable
-(constant). Otherwise, for large $k$, $\hat{p}^k$ may be an extremely
-biased estimate of $p$.  Our proposed method avoids this source of
-bias by estimating the $(k-1)$st moment of $D(u)$ directly.  As we see
-in Figure \ref{fig:sim_study_bias}, correcting for the bias of
-exponentiation helps greatly to reduce the overall bias, although some
-residual bias for the regression method still remains due to the
-nonnegativity constraint on the coefficients and model
-mispecification.
-
-\subsubsection*{Behavior of RMSE curves}
-As we saw in \ref{fig:sim_study}, the error curves of the KDE method
-vary much more smoothly than the regression method with respect to
-changes in the parameters of the data distribution.  In the
-multivariate gaussian simulation, as the distribution of the training
-data moves within $(k_1-1)$-dimensional space, the projection of the
-mean of the data distribution onto the cone traces out a piecewise
-smooth curve as the signal-to-noise parameter $\sigma$ for generating
-the data is varied.  This observation suggests that carefully
-adjusting the placement of the basis knots could improve the
-worst-case goodness-of-fit to the multivariate gaussian model (or any
-parametric data model) by flattening out the ``peaks'' seen in Figure
-\ref{fig:sim_study}, but we leave this idea to future work.
-
-\subsubsection*{Marginal classifiers}
-One limitation of our analysis of average accuracy is that it applies
-only to marginal classifiers.  Theoretically, it may be possible to
-extend the analysis to certain non-marginal classifiers, for instance,
-by showing that in the large-$k$ limit such classifiers become
-``asymptotically'' marginal, in some sense. Furthermore,  
-there is no obstacle in testing the extrapolation method to
-see how well it would recover accuracy curves for non-marginal classifiers. 
 
 \subsubsection*{Sampling}
 Our analysis is currently restricted to
@@ -1478,21 +1407,9 @@ cost function.  However, it is possible to extend our analysis to risk
 functions with arbitrary cost functions, which is the subject of
 forthcoming work.
 
-\subsubsection*{Predicting the generalization accuracy}
-In this work, our focus was on estimating the average generalization accuracy.  However, rather being interested in the average accuracy for a new label set, one might be interested in predicting the generalization accuracy on a particular problem.  When the source task and target tasks are independent, then the average generalization accuracy is also Bayes estimate which minimizes mean-squared prediction error.  However, it may be known that there is overlap between the labels or data used in the source task or target task.  Conditioning on this information may yield a more accurate prediction.  However, we leave this problem to future work.
+\subsubsection*{Parametric models}
 
-\subsubsection*{Confidence and prediction intervals}
-In many of the applications discussed in the introduction, it would be useful to construct either confidence intervals for the average generalization accuracy $\text{AGA}_k$, or prediction intervals for the generalization accuracy, $\text{GA}_k$.
-The key to constructing such intervals is to understand the variability properties of the inputs to our estimation procedure, the average test accuracies $\text{ATA}_k$.  We discuss the issue of constructing confidence and prediction intervals in forthcoming work.
-
-\subsubsection*{Other transfer learning setups}
-In our analysis, we also limited the training set sizes to be the same in both the source and target tasks.  It would be very nice to be able to relax this assumption, since in most practical applications, the training set sizes are varied within label sets as well as between tasks.  The idea of extrapolating from learning curves \citep{cortes1994learning} may be one way to adjust for varying training set sizes.  
-
-
-Many other aspects of transfer learning could also be considered in
-conjunction with the issue of transferring from one label set to
-another, such as transfer to a different domain, or transfer to a
-target task without training data \citep{pan2010survey}. 
+Our CV-reg method adopts a non-parametric model of the discriminability function $D(u)$, in the sense that $D(u)$ was defined via a spline expansion.   However, an alternative approach is to assume a parametric family for $D(u)$ defined by a small number of parameters.  In forthcoming work, we show that under certain limiting conditions, $D(u)$ is well-described by a two-parameter family.  This substantially increases the efficiency of estimation in cases where the limiting conditions are well-approximated.
 
 % \begin{itemize}
 % \item Basis function (and convexity)
