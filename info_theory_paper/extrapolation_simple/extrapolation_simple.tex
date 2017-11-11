@@ -993,10 +993,12 @@ environment: biased cross-validation and unbiased cross-validation \citep{Scott1
 We see in \ref{fig:sim_study} that the cross-validated regression
 method (CV-reg) and the KDE methods with unbiased and biased
 cross-validation (KDE-UCV, KDE-BCV) perform comparably in the gaussian
-simulations.  Within each problem setting defined by the number of
-source and target classes $(k_1,k_2)$, we use the maximum RMSE across
-all signal-to-noise settings to quantify the overall performance of
-the method, as displayed in Table \ref{tab:sim_max_error}.
+simulations.  We studied how the difficulty of extrapolation relates to both the
+absolute size of the number of classes and the factor of increase from
+the source number of classes $k_1$ to the target number of classes
+$k_2$.  Our simulation has two settings for $k_1 = \{500,5000\}$, and
+within each setting we have extrapolations to 2 times, 4 times, 10
+times, and 20 times the number of classes.
 
 \begin{table}
 \centering
@@ -1019,52 +1021,54 @@ $k_1$ & $k_2$ & CV-reg & KDE-BCV & KDE-UCV \\\hline
   variance from selection.}\label{tab:sim_max_error}
 \end{table}
 
-We studied how the difficulty of extrapolation relates to both the
-absolute size of the number of classes and the factor of increase from
-the source number of classes $k_1$ to the target number of classes
-$k_2$.  Our simulation has two settings for $k_1 = \{500,5000\}$, and
-within each setting we have extrapolations to 2 times, 4 times, 10
-times, and 20 times the number of classes.  The results indicate that
-the difficulty mainly depends on the extrapolation factor
-$\frac{k_2}{k_1}$, although different methods show different
-sensitivities to the absolute number of classes.  The cross-validated
-regression method improves in worst-case RMSE when moving from $k_1 =
-500$ to $k_1 = 5000$ while keeping the factor of increase fixed, most
-dramatically in the case $\frac{k_2}{k_1} = 2$ when it improves from a
+Within each problem setting defined by the number of
+source and target classes $(k_1,k_2)$, we use the maximum RMSE across
+all signal-to-noise settings to quantify the overall performance of
+the method, as displayed in Table \ref{tab:sim_max_error}.
+%The cross-validated regression method (CV-reg) performs
+%consistently well, with a worst-case RMSE less than 
+%0.10 in all six combinations of $(k_1,k_2)$.
+% bias of our method?
+
+The results also indicate that more accurate extrapolation
+appears to be possible for smaller extrapolation ratios
+$\frac{k_2}{k_1}$ and larger $k_1$.
+The cross-validated regression method improves in worst-case RMSE when moving from $k_1 =500$ to $k_1 = 5000$ while keeping the factor of increase fixed, most dramatically in the case $\frac{k_2}{k_1} = 2$ when it improves from a
 maximum RMSE of $0.032\pm0.001$ to 0.009 when going from $k_1 = 500$
 to $k_1 = 5000$, which is 3.5-factor reduction in worst-case RMSE, but
 also gaining at least a 1.8-factor reduction in RMSE when going from
 the smaller problem to the larger problem in the other three cases.
-KDE-BCV also improves in worst-case RMSE when going from 500 to 5000
-training classes while keeping the extrapolation factor fixed, but
-KDE-UCV breaks the pattern, slightly increasing in worst-case RMSE for
-extrapolation factor $\frac{k_2}{k_1} = 10$, from $0.051\pm0.001$ to
-0.053, and greatly increasing for $\frac{k_2}{k_1} = 20$, from
-$0.045\pm0.001$ to 0.086.  While collecting more simulation data
-points would be helpful in confirming these trends, the results
-suggest that both CV-reg and KDE-BCV benefit from having more data to
-tune its bandwidth parameter.  In theory, KDE-UCV should also enjoy
-the same benefit of having more data to tune the kernel bandwidth, but
-other effects may lead to its loss of calibration in larger
-extrapolation problems, as we shall discuss.
 
-Inspecting the curves in Figure \ref{fig:sim_study}, we see that the
-RMSE curves of KDE-BCV and KDE-UCV vary more smoothly with respect to
-the signal-to-noise ratio (and hence true target accuracy) than
-CV-reg, which looks quite jagged.  From simulation studies where we
-fixed the bandwidth of the regression method, we see that the
-roughness is an intrinsic property of the regression method with a
-finite basis set rather than a consequence of the discontinuity of
-bandwidth selection.  This can be explained by the fact that the set
-of possible fits of the regression model to the training data are
-constrained to a polyhedral cone, as we will elaborate in the discussion.
+%KDE-BCV also improves in worst-case RMSE when going from 500 to 5000
+%training classes while keeping the extrapolation factor fixed, but
+%KDE-UCV breaks the pattern, slightly increasing in worst-case RMSE for
+%extrapolation factor $\frac{k_2}{k_1} = 10$, from $0.051\pm0.001$ to
+%0.053, and greatly increasing for $\frac{k_2}{k_1} = 20$, from
+%$0.045\pm0.001$ to 0.086.  While collecting more simulation data
+%points would be helpful in confirming these trends, the results
+%suggest that both CV-reg and KDE-BCV benefit from having more data to
+%tune its bandwidth parameter.  In theory, KDE-UCV should also enjoy
+%the same benefit of having more data to tune the kernel bandwidth, but
+%other effects may lead to its loss of calibration in larger
+%extrapolation problems, as we shall discuss.
 
-If we look at the mean predicted accuracy versus the true accuracy for
-the simulations, displayed in Figure \ref{fig:sim_study_bias}, we see
-that the CV regression method has less overall bias than the KDE
-methods for both the small and large extrapolation problems.  This can
-be explained as a consequence of the intrinsic bias in the KDE
-extrapolation method, which we also elaborate upon in the discussion.
+%Inspecting the curves in Figure \ref{fig:sim_study}, we see that the
+%RMSE curves of KDE-BCV and KDE-UCV vary more smoothly with respect to
+%the signal-to-noise ratio (and hence true target accuracy) than
+%CV-reg, which looks quite jagged.  From simulation studies where we
+%fixed the bandwidth of the regression method, we see that the
+%roughness is an intrinsic property of the regression method with a
+%finite basis set rather than a consequence of the discontinuity of
+%bandwidth selection.  This can be explained by the fact that the set
+%of possible fits of the regression model to the training data are
+%constrained to a polyhedral cone, as we will elaborate in the discussion.
+
+The kernel-density method produces comparable results, but can be seen to depend strongly on the choice of bandwidth selection: KDE-UCV and KDE-BCV show very different performance profiles, although they differ only in the choice between unbiased and biased cross-vaidation, respectively.
+Also, the KDE methods show significant estimation bias, as can be seen from Figure \ref{fig:sim_study_bias}.  
+This can be explained as a consequence of the intrinsic bias in the KDE
+extrapolation method, as we elaborate in the discussion.
+CV-reg shows comparable bias for the 500 to 10000 extrapolation, but shows very little bias in all of the $k_1 = 5000$ extrapolations.
+
 
 
 %\frac{1}{k_1-1} \sum_{j\neq i} K(m_{y_i}(x_j), m).\] The
