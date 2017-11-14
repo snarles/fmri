@@ -78,7 +78,7 @@
        Stanford University\\
        Palo Alto, CA 
        \AND
-       \name Rakesh Achanta \email  \\
+       \name Rakesh Achanta \email rakesha@stanford.edu \\
        \addr Department of Statistics\\
        Stanford University\\
        Palo Alto, CA 
@@ -870,26 +870,26 @@ depends on the unknown joint distribution of the data, it makes sense
 to let the data help us choose a good basis $\{h_u\}$ from a set of
 candidate bases.
 
-Let $B_1,\hdots, B_s$ be a set of candidate bases, with $B_i = \{h_u^{(i)}\}_{u=1}^{m_i}$.  Ideally, we would like our model selection procedure to choose the $B_i$ that obtains the best RMSE on the extrapolation from $k_1$ to $k_2$ classes.  We can make the problem if we assume that a basis $\{h_u\}$ is that is a good fit to the discrimination function $D(u)$ should work well for extrapolation regardless of the particular values of $k_1$ or $k_2$.  Therefore, we might be settle for a model selection procedure that picked the best basis $B_i$ for a different extrapolation--say, from $\frac{k_1}{2}$ source classes to $k_1$ target classes.  Even then, we would need to know the joint distribution of the data to evaluate the population RMSE.  However, we can use the ``bootstrap principle'' to approximate the joint distribution of the data with the observed data.  What this amounts to is a resampling-based model selection approach, where we perform extrapolations from $\lfloor \frac{k_1}{2} \rfloor$ classes to $k_1$ classes, and evaluate methods based on how closely the predicted $\widehat{\text{ABA}}_{k_1}$ matches the test accuracy $\text{ATA}_{k_1}$.  To elaborate, our model selection procedure is as follows.
+Let $B_1,\hdots, B_s$ be a set of candidate bases, with $B_i = \{h_u^{(i)}\}_{u=1}^{m_i}$.  Ideally, we would like our model selection procedure to choose the $B_i$ that obtains the best RMSE on the extrapolation from $k_1$ to $k_2$ classes.  As an approximation, we estimate the RMSE of extrapolation from $\frac{k_1}{2}$ source classes to $k_1$ target classes, by means of the ``bootstrap principle.''  This amounts to is a resampling-based model selection approach, where we perform extrapolations from $k_0 = \lfloor \frac{k_1}{2} \rfloor$ classes to $k_1$ classes, and evaluate methods based on how closely the predicted $\widehat{\text{ABA}}_{k_1}$ matches the test accuracy $\text{ATA}_{k_1}$.  To elaborate, our model selection procedure is as follows.
 
 \begin{enumerate}
-\item For $\eta=1,\hdots,L$ resampling steps:
+\item For $\ell=1,\hdots,L$ resampling steps:
 \begin{enumerate}
-\item Subsample $\mathcal{S}_{\lfloor \frac{k_1}{2} \rfloor}^{(\eta)}$ from $\mathcal{S}_{k_1}$ uniformly with replacement.
-\item Compute average test accuracies $\text{ATA}_{\lfloor \frac{k_1}{2} \rfloor}^{(\eta)}$ from the subsample $\mathcal{S}_{\lfloor \frac{k_1}{2} \rfloor}^{(\ell)}$.
+\item Subsample $\mathcal{S}_{k_0}^{(\ell)}$ from $\mathcal{S}_{k_1}$ uniformly with replacement.
+\item Compute average test accuracies $\text{ATA}_{2}^{(\ell)},\hdots,\text{ATA}_{k_0}^{(\ell)}$ from the subsample $\mathcal{S}_{k_0}^{(\ell)}$.
 \item For each candidate basis $B_i$, with $i = 1,\hdots, s$:
 \begin{enumerate}
-\item Compute $\hat{\beta}^{(i,\eta)}$ by solving the least-squares problem
-\[\hat{\beta}^{(i,\eta)} = \argmin_\beta \sum_{k=2}^{\lfloor \frac{k_1}{2} \rfloor} \left( (1 - \text{ATA}_k^{(l)}) - \sum_{\ell=1}^{m_i} \beta_\ell H_{\ell, k}^{(i)}\right)^2.\]
-\item Estimate $\widehat{\text{AGA}}_{k_1}^{(i,\eta)}$ by
+\item Compute $\hat{\beta}^{(i,\ell)}$ by solving the least-squares problem
+\[\hat{\beta}^{(i,\ell)} = \argmin_\beta \sum_{k=2}^{k_0} \left( (1 - \text{ATA}_k^{(\ell)}) - \sum_{j=1}^{m_i} \beta_j H_{j, k}^{(i)}\right)^2.\]
+\item Estimate $\widehat{\text{AGA}}_{k_1}^{(i,\ell)}$ by
 \[
-\widehat{\text{AGA}}_{k_1}^{(i,\eta)} = \sum_{\ell=1}^{m_i} \beta_\ell H_{\ell, k_1}^{(i)}.
+\widehat{\text{AGA}}_{k_1}^{(i,\ell)} = \sum_{\ell=1}^{m_i} \beta_j H_{j, k_1}^{(i)}.
 \]
 \end{enumerate}
 \end{enumerate}
 \item Select the basis $B_{i^*}$ by
 \[
-i^* = \text{argmin}_{i=1}^s \sum_{\eta=1}^L (\widehat{\text{AGA}}_{k_1}^{(i,\eta)} - \text{ATA}_{k_1})^2.
+i^* = \text{argmin}_{i=1}^s \sum_{\ell=1}^L (\widehat{\text{AGA}}_{k_1}^{(i,\ell)} - \text{ATA}_{k_1})^2.
 \]
 \item Use the basis $B_{i^*}$ to extrapolate from $k_1$ classes (the full data) to $k_2$ classes.
 \end{enumerate}
@@ -960,7 +960,7 @@ with a kernel function $K(\cdot,\cdot)$ with bandwidth,
 \[\hat{f}_i(m) = \frac{1}{k_1-1} \sum_{j\neq i} K_h(m_{y_j}(x_i), m).\]
 An estimate of favorability for $x_i$ against a
 single competitor is obtained by integrating the density below the observed true score $m_{y_i}(x_i)$, 
-\[acc_2(x_i) = \int_{0,m_{y_i}(x_i)}^\infty \hat{f}_i(m)dm,\]
+\[acc_2(x_i) = \int_{0}^{m_{y_i}(x_i)} \hat{f}_i(m)dm,\]
 and the probability of accurate classification against $K-1$ random
 competitors is $acc_{K}(x_i) = (acc_2(x_i))^{K-1}$. The average of these probabilities is the estimate for generalization accuracy
 \[\hat{AGA}_{K}^{(KDE)} = \frac{1}{k_1} \sum_{i}^{k_1} acc_{K}(x_i).\]
@@ -1274,20 +1274,20 @@ simulation.
 \begin{tabular}{cccc}
 &
 \begin{myfont}CV-reg\end{myfont} & 
-\begin{myfont}KDE-UCV\end{myfont} &
-\begin{myfont}KDE-BCV\end{myfont}\\
+\begin{myfont}KDE-BCV\end{myfont} &
+\begin{myfont}KDE-UCV\end{myfont}\\
 \begin{myfont}$k_1 = 100$\end{myfont} & 
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_100_r_cv_gauss.pdf} &
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_100_kde_ucv.pdf} &
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_100_kde_bcv.pdf} \\
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_100_r_cv_gauss.png} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_100_kde_bcv.png} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_100_kde_ucv.png} \\
 \begin{myfont}$k_1 = 200$\end{myfont} & 
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_200_r_cv_gauss.pdf} &
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_200_kde_ucv.pdf} &
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_200_kde_bcv.pdf} \\
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_200_r_cv_gauss.png} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_200_kde_bcv.png} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_200_kde_ucv.png} \\
 \begin{myfont}$k_1 = 400$\end{myfont} & 
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_400_r_cv_gauss.pdf} &
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_400_kde_ucv.pdf} &
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_400_kde_bcv.pdf} \\
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_400_r_cv_gauss.png} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_400_kde_bcv.png} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_400_kde_ucv.png} \\
 \end{tabular}
 \caption{\textbf{Predicted accuracy curves for face-recognition example}: The
   plots show predicted accuracies using a different source dataset
