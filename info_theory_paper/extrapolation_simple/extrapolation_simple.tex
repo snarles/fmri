@@ -203,7 +203,7 @@ Our paper presents two main contributions related to extrapolation.
 First, we present a theoretical formula describing how average accuracy
 for smaller $k$ is linked to average accuracy for label set of size
 $K>k$.  We show that accuracy at any size depends on a
-\emph{favorability} function ${D}$, which is determined by properties
+\emph{discriminability} function ${D}$, which is determined by properties
 of the data distribution and the classifier.  Second, we propose an
 estimation procedure that allows extrapolation of the observed average
 accuracy curve from $k_1$-class data to a larger number of classes,
@@ -342,7 +342,7 @@ other labels $y^{(j)}$ or their training samples.  Therefore, each
 $M_y$ can be considered to have been drawn from a distribution
 $\nu_y$.  Classes ``compete'' only through selecting the highest
 score, but not in constructing the score functions.  The operation of
-a marginal classifier is illustrated in figure
+a marginal classifier is illustrated in Figure
 \ref{fig:classification_rule}.
 
 
@@ -478,7 +478,7 @@ a bivariate normal joint distribution,
 \[
 (Y, X) \sim N\left(\begin{pmatrix}0 \\0\end{pmatrix}, \begin{pmatrix}1 & \rho \\ \rho & 1\end{pmatrix}\right),
 \]
-as illustrated in figure \ref{fig:toy1}(a).  Therefore, for a given
+as illustrated in Figure \ref{fig:toy1}(a).  Therefore, for a given
 randomly drawn label $Y$, the conditional
 distribution of $X$ for that label is univariate normal with mean $\rho Y$ and variance $1-\rho^2$:
 \[
@@ -488,8 +488,8 @@ Supposing we draw $k = 3$ labels $y_1,y_2, y_3$, the classification
 problem will be to assign a test instance $X^*$ to the correct label.
 The test instance $X^*$ would be drawn with equal probability from one
 of three conditional distributions $ X | Y=y^{(i)}$, as illustrated in
-figure \ref{fig:toy1}(b, top).  The Bayes rule assigns $X^*$ to the
-class with the highest density $p(x|y_i)$, as illustrated by figure
+Figure \ref{fig:toy1}(b, top).  The Bayes rule assigns $X^*$ to the
+class with the highest density $p(x|y_i)$, as illustrated by Figure
 \ref{fig:toy1}(b, bottom): it is therefore a marginal classifier, with
 score function
 \[
@@ -525,7 +525,7 @@ are the sorted labels, and $y^{[0]} = -\infty$ and $y^{[k+1]} =
 \infty$.  We numerically computed $\text{GA}_k(y_1,\hdots, y_k)$ for
 randomly drawn labels $Y_1,\hdots, Y_k \stackrel{iid}{\sim} N(0, 1)$;
 the distributions of $\text{GA}_k$ for $k = 2,\hdots, 10$ are
-illustrated in figure \ref{fig:toy2}.  The mean of the distribution of
+illustrated in Figure \ref{fig:toy2}.  The mean of the distribution of
 $\text{GA}_k$ is the $k$-class average risk, $\text{AGA}_k$. The
 theory presented in the next section deals with how to analyze the
 average risk $\text{AGA}_k$ as a function of $k$.
@@ -736,9 +736,10 @@ Theorem \ref{theorem:avrisk_identity} expresses the average accuracy
 as a weighted integral of the function ${D}(u)$.  Having this
 theoretical result allows us to understand how the expected $k$-class
 risk scales with $k$ in problems where all the relevant densities are
-known.  However, applying this result in practice to estimate
-$\text{AGA}_k$ requires some means of estimating the unknown function
-${D}$--which we discuss in the section ?.
+known.  
+However, applying this result in practice to estimate AGAk requires specifying an estimator for the unknown function D. 
+We propose using non-parametric regression in Section \ref{sec:extrapolation_estimation}.
+
 
 \subsection{Favorability and average accuracy for the toy example}
 
@@ -767,9 +768,9 @@ N(0,1)$ to exceed $Y = y$.
 
 Using the formula above, we can calculate the correct-label
 favorability $U^* = U_{X^*}(M_{Y^*})$ and its cumulative distribution
-function ${D}(u)$.  The function ${D}$ is illustrated in figure
+function ${D}(u)$.  The function ${D}$ is illustrated in Figure
 \ref{fig:toy3}(b) for the current example with $\rho = 0.7$.  The red
-curve in figure \ref{fig:toy2} was computed using the formula
+curve in Figure \ref{fig:toy2} was computed using the formula
 \[
 \text{AGA}_k = 1-(k-1) \int {D}(u) u^{k-2} du.
 \]
@@ -791,11 +792,11 @@ curve in figure \ref{fig:toy2} was computed using the formula
 
 It is illuminating to consider how the average accuracy curves and the
 ${D}(u)$ functions vary as we change the parameter $\rho$.  Higher
-correlations $\rho$ lead to higher accuracy, as seen in figure
+correlations $\rho$ lead to higher accuracy, as seen in Figure
 \ref{fig:toy4}(a), where the accuracy curves are shifted upward as
 $\rho$ increases from 0.3 to 0.9.  The favorability $U_{x^*}(m_y)$
 tends to be higher on average as well, which leads to lower values of
-the cumulative distribution function--as we see in figure
+the cumulative distribution function--as we see in Figure
 \ref{fig:toy4}(b), where the function ${D}(u)$ becomes smaller as
 $\rho$ increases.
 
@@ -847,8 +848,7 @@ where
 H_{\ell,k} = (k-1) \int_0^1 h_\ell(u) u^{k-2} du.
 \end{equation}
 The constants $H_{\ell, k}$ are moments of the basis function
-$h_\ell$: hence we call this method the \emph{moment method.}  Note
-that $H_{\ell, k}$ can be precomputed numerically for any $k \geq 2$.
+$h_\ell$.  Note that $H_{\ell, k}$ can be precomputed numerically for any $k \geq 2$.
 
 Now, since the test accuracies $\text{ATA}_k$ are unbiased estimates
 of $\text{AGA}_{k}$, this implies that the regression estimate
@@ -870,34 +870,29 @@ depends on the unknown joint distribution of the data, it makes sense
 to let the data help us choose a good basis $\{h_u\}$ from a set of
 candidate bases.
 
-Extending the analogy between the regression method for prediction
-extrapolation and the well-studied problem of using regression to
-predict out-of-sample, we consider using \emph{cross-validation} for
-model selection \citep{Hastie2009a}.  However, it is necessary to
-adjust the cross-validation procedure because of two particular
-differences betweem the usual prediction problem and the problem of
-prediction extrapolation: (i) while cross-validation is motivated for
-a setup with i.i.d. training and test data, in prediction
-extrapolation the the training data (the average test accuracies) are
-in fact highly corrrelated, and (ii) in prediction extrapolation, we
-know that the prediction is to be made in a particular direction
-(extrapolating to large $k$).  Therefore, we use deterministic splits
-to minimize the dependence between the folds, splitting the training
-data into two halves: the first half consisting of
-$\{\text{ATA}_{2},\hdots, \text{ATA}_{\lfloor k_1/2 \rfloor}\}$ and
-the second half consisting of $\{\text{ATA}_{\lfloor k_1/2 \rfloor +
-  1},\hdots, \text{ATA}_{k_1}\}$.  Furthermore, since we are only
-interested in how well the models \emph{extrapolate} from small
-numbers of classes to a larger number of classes, and not in any other
-direction of prediction, we train on the first half of the data and
-only predict on the held-out point $\text{ATA}_{k_1}$ in the second
-half of the data\footnote{Alternatively, one could also evaluate
-  predictions for all points in the held-out data, but due to
-  correlation, this makes only a minor difference to the result.} to
-evaluate cross-validation accuracy.  Then, using $\text{ATA}_{k_1}$ as
-the ground truth, we choose the basis that yields the closest
-prediction for $\hat{\text{AGA}}_{k_1}$ in terms of absolute
-difference.
+Let $B_1,\hdots, B_s$ be a set of candidate bases, with $B_i = \{h_u^{(i)}\}_{u=1}^{m_i}$.  Ideally, we would like our model selection procedure to choose the $B_i$ that obtains the best RMSE on the extrapolation from $k_1$ to $k_2$ classes.  We can make the problem if we assume that a basis $\{h_u\}$ is that is a good fit to the discrimination function $D(u)$ should work well for extrapolation regardless of the particular values of $k_1$ or $k_2$.  Therefore, we might be settle for a model selection procedure that picked the best basis $B_i$ for a different extrapolation--say, from $\frac{k_1}{2}$ source classes to $k_1$ target classes.  Even then, we would need to know the joint distribution of the data to evaluate the population RMSE.  However, we can use the ``bootstrap principle'' to approximate the joint distribution of the data with the observed data.  What this amounts to is a resampling-based model selection approach, where we perform extrapolations from $\lfloor \frac{k_1}{2} \rfloor$ classes to $k_1$ classes, and evaluate methods based on how closely the predicted $\widehat{\text{ABA}}_{k_1}$ matches the test accuracy $\text{ATA}_{k_1}$.  To elaborate, our model selection procedure is as follows.
+
+\begin{enumerate}
+\item For $\eta=1,\hdots,L$ resampling steps:
+\begin{enumerate}
+\item Subsample $\mathcal{S}_{\lfloor \frac{k_1}{2} \rfloor}^{(\eta)}$ from $\mathcal{S}_{k_1}$ uniformly with replacement.
+\item Compute average test accuracies $\text{ATA}_{\lfloor \frac{k_1}{2} \rfloor}^{(\eta)}$ from the subsample $\mathcal{S}_{\lfloor \frac{k_1}{2} \rfloor}^{(\ell)}$.
+\item For each candidate basis $B_i$, with $i = 1,\hdots, s$:
+\begin{enumerate}
+\item Compute $\hat{\beta}^{(i,\eta)}$ by solving the least-squares problem
+\[\hat{\beta}^{(i,\eta)} = \argmin_\beta \sum_{k=2}^{\lfloor \frac{k_1}{2} \rfloor} \left( (1 - \text{ATA}_k^{(l)}) - \sum_{\ell=1}^{m_i} \beta_\ell H_{\ell, k}^{(i)}\right)^2.\]
+\item Estimate $\widehat{\text{AGA}}_{k_1}^{(i,\eta)}$ by
+\[
+\widehat{\text{AGA}}_{k_1}^{(i,\eta)} = \sum_{\ell=1}^{m_i} \beta_\ell H_{\ell, k_1}^{(i)}.
+\]
+\end{enumerate}
+\end{enumerate}
+\item Select the basis $B_{i^*}$ by
+\[
+i^* = \text{argmin}_{i=1}^s \sum_{\eta=1}^L (\widehat{\text{AGA}}_{k_1}^{(i,\eta)} - \text{ATA}_{k_1})^2.
+\]
+\item Use the basis $B_{i^*}$ to extrapolate from $k_1$ classes (the full data) to $k_2$ classes.
+\end{enumerate}
 
 \section{Simulation study}\label{sec:simulation_study}
 
@@ -959,50 +954,24 @@ presentation.
 
 For $k_1$ observed classes, let $m_{y_j}(x_i)\, 1\leq i,j\leq k_1$ be
 the observed score comparing feature vector of the $i$'th class $x_i$
-to the label of the $j$'th class $y_j$. The KDE method proposes to
-estimate the density of scores for each distractor class using a
-Gaussian kernel function $K$ $\hat{f}_i(m) = \frac{1}{k_1-1}
-\sum_{j\neq i} K(m_{y_i}(x_j), m)$. Probability of error against a
-single competitor is then computed for each class separately by
-integrating the density above the observed true score $m_{y_i}(x_i)$,
-in $h_2(i) = \int_{m_{y_i}(x_i)}^\infty \hat{f}(m)dm$. The probability
-of accurate classification of the $i$'th class against $k_2-1$
-competitors is $h_{k_2}(i) = (1-h(i))^{k_2-1}$. The average over the
-$k_1$ classes is the estimated generalization accuracy
-$\hat{AGA}_{KDE} = \frac{1}{k_1} \sum_{i}^{k_1} h_{k_2}(i)$.
+to the model trained for the $j$'th class $m_{y_j}$. 
+For each feature-vector $x_i$, the density of wrong-class scores is estimated by smoothing the observed scores
+with a kernel function $K(\cdot,\cdot)$ with bandwidth,
+\[\hat{f}_i(m) = \frac{1}{k_1-1} \sum_{j\neq i} K_h(m_{y_j}(x_i), m).\]
+An estimate of favorability for $x_i$ against a
+single competitor is obtained by integrating the density below the observed true score $m_{y_i}(x_i)$, 
+\[acc_2(x_i) = \int_{0,m_{y_i}(x_i)}^\infty \hat{f}_i(m)dm,\]
+and the probability of accurate classification against $K-1$ random
+competitors is $acc_{K}(x_i) = (acc_2(x_i))^{K-1}$. The average of these probabilities is the estimate for generalization accuracy
+\[\hat{AGA}_{K}^{(KDE)} = \frac{1}{k_1} \sum_{i}^{k_1} acc_{K}(x_i).\]
 
-This extrapolation method can be described in our
-framework as follows.  Let $F_x$ be the cumulative distribution
-function of $M_{Y'}(x)$ for a random label $Y' \sim \pi$.  For each
-test instance $x^{(i)}_j$, let
-$\hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$ be an estimate of
-$F_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$.  The particular estimation
-method recommended by \cite{Kay2008a} is to estimate the density
-$f_{x^{(i)}_j}$ by using kernel-density estimation with a Gaussian
-kernel and a bandwidth chosen via pseudolikelihood cross-validation
-\citep{cao1994comparative}; however, our criticism is not specific to
-the use of a particular estimator for $\hat{F}_x$.  Extrapolate using
-the formula
-\[
-\widehat{\text{AGA}_k} = \frac{1}{k_1 r} \sum_{i=1}^k \sum_{j=1}^r \hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))^{k-1}
-\]
-While no justification is given for the method in \cite{Kay2008a},  one possible justification is the fact that
-\[\text{AGA}_k = \E[F_X(M_{Y}(X))^{k-1}].\]
-Therefore, the method can give good extrapolations when the estimated
-probabilities $\hat{F}_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$ are close
-to the true probabilities $F_{x^{(i)}_j}(m_{y^{(i)}}(x^{(i)}_j))$.
-
-Note that the method depends heavily on the density estimation
-step. If the kernel bandwidth is too small compared to the number of
-classes, the extrapolated accuracy will be upwardly biased.  To see
-this, consider a class $i$ that is correctly classified in the
-original class set. That is, $m_{y_i}(x_i)>m_{y_j}(x_i)$ for every
+Note that the KDE method depends non-trivially on the smoothing bandwidth used in the density estimation step: when the kernel bandwidth is too small compared to the number of classes, the extrapolated accuracy will be upwardly biased.  To see
+this, consider a feature vector $x_i$ that is correctly classified in the original class set. That is, $m_{y_i}(x_i)>m_{y_j}(x_i)$ for every
 $j\neq i$. If we use for $\hat{f}_i$ the unsmoothed empirical density,
-$h_2(i)$ will be 1 and therefore $h_{k_2}(i)$ will be 1 as well. In
-other words, the method relies on smoothing of each class to generate
-a the tail density that exceeds $m_{y_i}(x_i)$, and therefore it is
-highly dependent on the choice of kernel bandwidth.
+$acc_2(x_i)=1$ and therefore $acc_K(x_i) = 1$ as well. The method relies on smoothing of each class to generate a the tail density that exceeds $m_{y_i}(x_i)$, and therefore it is highly dependent on the choice of kernel bandwidth. 
 
+\cite{Kay2008a} recommended using a Gaussian
+kernel, with the bandwidth chosen via pseudolikelihood cross-validation \citep{cao1994comparative}.
 In our simulation, we tested our own implementation of the KDE method,
 using the two methods for cross-validated KDE estimation provided in
 the {\tt stats} package in the {\tt R} statistical computing
@@ -1011,7 +980,11 @@ environment: biased cross-validation and unbiased cross-validation \citep{Scott1
 
 \subsection*{Simulation Results}
 
-We see in \ref{fig:sim_study} that the cross-validated regression
+%The cross-validated regression method (CV-reg) performs
+%consistently well, with a worst-case RMSE less than 
+%0.10 in all eight combinations of $(k_1,k_2)$.
+% bias of our method?
+We see in Figure \ref{fig:sim_study} that the cross-validated regression
 method (CV-reg) and the KDE methods with unbiased and biased
 cross-validation (KDE-UCV, KDE-BCV) perform comparably in the gaussian
 simulations.  We studied how the difficulty of extrapolation relates to both the
@@ -1046,10 +1019,6 @@ Within each problem setting defined by the number of
 source and target classes $(k_1,k_2)$, we use the maximum RMSE across
 all signal-to-noise settings to quantify the overall performance of
 the method, as displayed in Table \ref{tab:sim_max_error}.
-%The cross-validated regression method (CV-reg) performs
-%consistently well, with a worst-case RMSE less than 
-%0.10 in all six combinations of $(k_1,k_2)$.
-% bias of our method?
 
 The results also indicate that more accurate extrapolation
 appears to be possible for smaller extrapolation ratios
@@ -1084,7 +1053,7 @@ the smaller problem to the larger problem in the other three cases.
 %of possible fits of the regression model to the training data are
 %constrained to a polyhedral cone, as we will elaborate in the discussion.
 
-The kernel-density method produces comparable results, but can be seen to depend strongly on the choice of bandwidth selection: KDE-UCV and KDE-BCV show very different performance profiles, although they differ only in the choice between unbiased and biased cross-vaidation, respectively.
+The kernel-density method produces comparable results, but can be seen to depend strongly on the choice of bandwidth selection: KDE-UCV and KDE-BCV show very different performance profiles, although they differ only in the choice between unbiased and biased cross-validation, respectively.
 Also, the KDE methods show significant estimation bias, as can be seen from Figure \ref{fig:sim_study_bias}.  
 This can be explained by the fact that
 the KDE method ignores the bias introduced by exponentiation.
@@ -1270,7 +1239,7 @@ truth obtained by using the full dataset.
 
 \subsubsection*{Results}
 
-The extrapolation results can be seen in Figure
+The extrapolation results for the face recognition problem can be seen in Figure
 \ref{fig:lfw_extrapolation2}, which plots the extrapolated accuracy
 curves for each method for 100 different subsamples of size $k_1$.  As
 can be seen, for all three methods, the variances decrease rapidly as
@@ -1304,20 +1273,20 @@ simulation.
 \centering
 \begin{tabular}{cccc}
 &
-\begin{myfont}$k_1 = 100$\end{myfont} & 
-\begin{myfont}$k_1 = 200$\end{myfont} &
-\begin{myfont}$k_1 = 400$\end{myfont}\\
 \begin{myfont}CV-reg\end{myfont} & 
+\begin{myfont}KDE-UCV\end{myfont} &
+\begin{myfont}KDE-BCV\end{myfont}\\
+\begin{myfont}$k_1 = 100$\end{myfont} & 
 \includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_100_r_cv_gauss.pdf} &
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_200_r_cv_gauss.pdf} &
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_400_r_cv_gauss.pdf} \\
-\begin{myfont}KDE-UCV\end{myfont} & 
 \includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_100_kde_ucv.pdf} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_100_kde_bcv.pdf} \\
+\begin{myfont}$k_1 = 200$\end{myfont} & 
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_200_r_cv_gauss.pdf} &
 \includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_200_kde_ucv.pdf} &
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_400_kde_ucv.pdf} \\
-\begin{myfont}KDE-BCV\end{myfont} & 
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_100_kde_bcv.pdf} &
-\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_200_kde_bcv.pdf} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_200_kde_bcv.pdf} \\
+\begin{myfont}$k_1 = 400$\end{myfont} & 
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_400_r_cv_gauss.pdf} &
+\includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_400_kde_ucv.pdf} &
 \includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_400_kde_bcv.pdf} \\
 \end{tabular}
 \caption{\textbf{Predicted accuracy curves for face-recognition example}: The
@@ -1332,29 +1301,30 @@ simulation.
 \centering
 \begin{tabular}{c||c|c|c|c}
 \hline
-$k_1$ & 100 & 200 & 400 \\\hline
-CV-reg & 0.113 (0.002) & 0.058 (0.002) & 0.050 (0.001)\\\hline
-KDE-UCV & 0.082 (0.001) & 0.057 (0.001) & 0.035 (0.001) \\ \hline
-KDE-BCV & \textbf{0.053} (0.001) & \textbf{0.037} (0.001) & \textbf{0.024} (0.001)\\\hline
+$k_1$ & CV-reg & KDE-BCV & KDE-UCV \\\hline
+100 & 0.113 (0.002) & \textbf{0.053} (0.001) & 0.082 (0.001) \\\hline
+200 & 0.058 (0.002)& \textbf{0.037} (0.001)  & 0.057 (0.001) \\ \hline
+400 & 0.050 (0.001) & \textbf{0.024} (0.001)& 0.035 (0.001) \\\hline
 \end{tabular}
 \caption{\textbf{Face-recognition extrapolation RMSEs}: RMSE (se) on predicting $\text{TA}_{1672}$ from $k_1$ classes}\label{tab:lfw_accuracy}
 \end{table}
 
-The results for Telugu OCR classification are displayed in table \ref{tab:tel_accuracy}.  If we rank the three extrapolation methods in terms of distance to the ground truth accuracy, we see a consistent pattern of rankings between the 20-to-100 extrapolation and the 100-to-400 extrapolation.  As we remarked in the simulation, the difficulty of extrapolation appears to be primarily sensitive to the extrapolation ratio $\frac{k_2}{k_1}$, which are similar (5 versus 4) in the 20-to-100 and 100-to-400 problems.  In both settings, CV regression comes closest to the ground truth for the Deep CNN and the SVM, but KDE-BCV comes closest to ground truth for the Logistic regression.  However, even for logistic regression, CV regression does better or comparably to KDE-UCV.
+
+The results for Telugu OCR classification are displayed in Table \ref{tab:tel_accuracy}.  If we rank the three extrapolation methods in terms of distance to the ground truth accuracy, we see a consistent pattern of rankings between the 20-to-100 extrapolation and the 100-to-400 extrapolation.  As we remarked in the simulation, the difficulty of extrapolation appears to be primarily sensitive to the extrapolation ratio $\frac{k_2}{k_1}$, which are similar (5 versus 4) in the 20-to-100 and 100-to-400 problems.  In both settings, CV regression comes closest to the ground truth for the Deep CNN and the SVM, but KDE-BCV comes closest to ground truth for the Logistic regression.  However, even for logistic regression, CV regression does better or comparably to KDE-UCV.
 
 \begin{table}
 \centering
 \begin{tabular}{c|c||c|c||c|c|c}
-$k_1$ & $k_2$ & Classifier & True & KDE-BCV & KDE-UCV & CV-reg \\ \hline
- 20 & 100 & Deep CNN & 0.9908 & 0.7138 & 0.6507 & \textbf{0.9905} \\ 
-    &     & Logistic & 0.8490 & \textbf{0.8414} & 0.8161 & 0.8980 \\
-    &     & SVM      & 0.7582 & 0.6544 & 0.5771 & \textbf{0.8192} \\ \hline
- 20 & 400 & Deep CNN & 0.9860 & 0.4903 & 0.3863 & \textbf{0.9614} \\
-    &     & Logistic & 0.7107 & 0.7467 & \textbf{0.7015} & 0.8824 \\
-    &     & SVM      & 0.5452 & \textbf{0.5163} & 0.4070 & 0.6725 \\ \hline
-100 & 400 & Deep CNN & 0.9860 & 0.8910 & 0.8625 & \textbf{0.9837} \\ 
-    &     & Logistic & 0.7107 & \textbf{0.7089} & 0.6776 & 0.7214 \\
-    &     & SVM      & 0.5452 & 0.4369 & 0.3528 & \textbf{0.5969} \\ 
+$k_1$ & $k_2$ & Classifier & True & CV-reg & KDE-BCV & KDE-UCV \\ \hline
+ 20 & 100 & Deep CNN & 0.9908 & \textbf{0.9905} & 0.7138 & 0.6507 \\ 
+    &     & Logistic & 0.8490 & 0.8980 & \textbf{0.8414} & 0.8161 \\
+    &     & SVM      & 0.7582 & \textbf{0.8192} & 0.6544 & 0.5771 \\ \hline
+ 20 & 400 & Deep CNN & 0.9860 & \textbf{0.9614} & 0.4903 & 0.3863 \\
+    &     & Logistic & 0.7107 & 0.8824 & 0.7467 & \textbf{0.7015} \\
+    &     & SVM      & 0.5452 & 0.6725 & \textbf{0.5163} & 0.4070 \\ \hline
+100 & 400 & Deep CNN & 0.9860 & \textbf{0.9837}& 0.8910 & 0.8625  \\ 
+    &     & Logistic & 0.7107 & 0.7214& \textbf{0.7089} & 0.6776  \\
+    &     & SVM      & 0.5452 & \textbf{0.5969}& 0.4369 & 0.3528  \\ 
 \hline
 \end{tabular}
 \caption{\textbf{Telugu OCR extrapolated accuracies}: Extrapolating from $k_1$ to $k_2$ classes in Telugu OCR for three different classifiers: logistic regression, support vector machine, and deep convolutional network}\label{tab:tel_accuracy}
@@ -1373,7 +1343,9 @@ We show that average generalized accuracy decreases with increased
 class-set size like the $(k-1)$th moment of a distribution function.
 Furthermore, we introduce an algorithm for estimating this underlying
 distribution, that allows efficient computation of higher order
-moments.  There are many choices and simplifying assumptions used in
+moments. Code for the methods and the simulations can be found in [CHARLES TODO].
+
+There are many choices and simplifying assumptions used in
 the description of the method.  In this discussion, we discuss these
 decisions and map some alternative models or strategies for future
 work.
@@ -1424,7 +1396,7 @@ Our CV-reg method adopts a non-parametric model of the discriminability function
  
 
 \acks{We thank Jonathan Taylor, Trevor Hastie, John Duchi, Steve
-  Mussmann, Qingyun Sun, and Robert Tibshirani for useful discussion.  CZ
+  Mussmann, Qingyun Sun, and Robert Tibshirani, and Gal Elidan for useful discussion.  CZ
   is supported by an NSF graduate research fellowship, and would also
   like to thank the European Research Council under the ERC grant agreement $\text{n}^\circ$[PSARPS-294519]  for travel support.
 }
