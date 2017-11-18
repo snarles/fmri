@@ -180,6 +180,7 @@ rmses <- rmseZ[[ind]]
 sds <- rmse_sdZ[[ind]]
 sel_vars <- c("r.cv.gauss", "kde_bcv", "kde_ucv")
 temp <- data.frame(true_acc = true_accs[, ind], rmses[, sel_vars])
+colnames(temp)[2:4] <- c("ClassExReg", "KDE_BCV", "KDE_UCV")
 temp2 <- melt(data = temp, id.vars = "true_acc")
 temp_se <- data.frame(true_acc = true_accs[, ind], sds[, sel_vars])
 temp_se <- melt(data = temp_se, id.vars = "true_acc")
@@ -207,6 +208,7 @@ biases <- biaseZ[[ind]]
 sds <- bias_sdZ[[ind]]
 sel_vars <- c("r.cv.gauss", "kde_bcv", "kde_ucv")
 temp <- data.frame(true_acc = true_accs[, ind], biases[, sel_vars])
+colnames(temp)[2:4] <- c("ClassExReg", "KDE_BCV", "KDE_UCV")
 temp2 <- melt(data = temp, id.vars = "true_acc")
 temp_se <- data.frame(true_acc = true_accs[, ind], sds[, sel_vars])
 temp_se <- melt(data = temp_se, id.vars = "true_acc")
