@@ -255,9 +255,6 @@ Perhaps the most similar method that deals with extrapolation of classification 
 
 \section{Randomized Classification}\label{sec:rc_motivation}
 
-
-\subsection{Setup}
-
 The randomized classification model we study has the following
 features.  We assume that there exists an infinite, perhaps
 continuous, label space $\mathcal{Y}$ and a example space $\mathcal{X}
@@ -325,7 +322,7 @@ previous line are identical.  The definition of average
 \caption{\textbf{Average generalization accuracy:} A diagram of the random quantities underlying the average generalization accuracy for $k$ labels ($\text{AGA}_k$). At the training stage (left), a set of $k$ labels $\mathcal{S}$ is sampled from the prior $\pi$, and score functions are trained from examples for these classes. At the test stage (right), one true class $Y^*$ is sampled uniformly from $\mathcal{S}$, as well as a test example $X^*$. $\text{AGA}_k$ measures the expected accuracy over these random variables.}\label{fig:average_risk}
 \end{figure}
 
-\subsubsection{Marginal Classifier}
+\subsection{Marginal Classifier}
 
 In our analysis, we do not want the classifier to rely too strongly on
 complicated interactions between the labels in the set. We therefore
@@ -376,13 +373,13 @@ be
 \[ h^{EB}(x) = \text{argmax}_{y \in \mathcal{S}}(m^{EB}_y(x)).\]
 \item Both Quadratic Discriminant Analysis (QDA) and na\:{i}ve Bayes
   classifiers can be seen as specific instances of an estimated Bayes
-  classifier
+  classifier.
 \footnote{QDA is the special case of the estimated Bayes classifier
   when $\hat{f_y}$ is obtained as the multivariate Gaussian density
   with mean and covariance parameters estimated from the data.  Naive
   Bayes is the estimated Bayes classifier when $\hat{f_y}$ is obtained
   as the product of estimated componentwise marginal distributions of
-  $p(x_i|y)$}.  For QDA, the score function is given by
+  $p(x_i|y)$}  For QDA, the score function is given by
 \[
 m_y^{QDA}(x) = -(x - \mu(\hat{F}_y))^T \Sigma(\hat{F}_y)^{-1} (x-\mu(\hat{F}_y)) - \log\det(\Sigma(\hat{F}_y)),
 \]
@@ -951,7 +948,7 @@ most crucial parameter.  In the simulation, we use a grid $h = \{0.1,
 
 \subsection{Comparison to Kay}
 \label{sec:KDEcomparison}
-In their paper\footnote{The KDE extrapolation method is described in page 29 of supplement to \cite{Kay2008a}.},
+In their paper,\footnote{The KDE extrapolation method is described in page 29 of supplement to \cite{Kay2008a}.}
 \cite{Kay2008a} proposed a method for extrapolating classification
 accuracy to a larger number of classes. The method depends on repeated
 kernel-density estimation (KDE) steps. Because the method is only
@@ -1142,14 +1139,14 @@ data set consisting of photo-label pairs $(x_j^{(i)}, y^{(i)})$
 for $i = 1,\hdots, 1672$ and $j = 1,2$ by randomly selecting 2 face
 photos for each individual. 
 We used the OpenFace (\cite{amos2016openface}) embedding for feature
-extraction\footnote{For each photo $x$, a 128-dimensional feature vector
+extraction.\footnote{For each photo $x$, a 128-dimensional feature vector
 $g(x)$ is obtained as follows.  The computer vision library DLLib is
 used to detect landmarks in $x$, and to apply a nonlinear
 transformation to align $x$ to a template.  The aligned photograph is
 then downsampled to a $96 \times 96$ image. The downsampled image is
 fed into a pre-trained deep convolutional neural network to obtain the
 128-dimensional feature vector $g(x)$. More details are found in
-(\cite{amos2016openface}).}.
+(\cite{amos2016openface}).}
 In order to identify a new photo $\vec{z}^*$, we obtain the feature
 vector $g(x^*)$ from the OpenFace network, and guess the label $\hat{y}$
 with the minimal Euclidean distance between $g(y^{(i)})$ and $g(x^*)$,
@@ -1198,9 +1195,9 @@ In the Telugu optical character recognition example
 (\cite{achanta2015telugu}), we consider
 the use of three different classifiers: logistic
 regression, linear support-vector machine (SVM), and a
-deep convolutional neural network\footnote{The network architecture is
+deep convolutional neural network.\footnote{The network architecture is
   as follows: {\tt
-    48x48-4C3-MP2-6C3-8C3-MP2-32C3-50C3-MP2-200C3-SM.}}. 
+    48x48-4C3-MP2-6C3-8C3-MP2-32C3-50C3-MP2-200C3-SM.}} 
 The full data consists of 400 classes with 50 training and 50 test observations for each class. We also create a nested hierarchy of subsampled data consisting of (i) a subset of size 100 randomly sampled from the 400 classes, and (ii) yet another subsampled data set consisting of 20 classes random subsampled from the size-100 subsample.   We therefore study three different prediction extrapolation problems:
 \begin{enumerate}
 \item Predicting the accuracy on $k_2 = 100$ classes from $k_1 = 20$ classes, comparing the predicted accuracy to the test accuracy of the classifier on the 100-class subsample as ground truth.
