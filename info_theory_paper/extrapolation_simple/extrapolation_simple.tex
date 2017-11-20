@@ -72,7 +72,7 @@
 
 \title{Extrapolating Expected Accuracies for Recognition Tasks}
 
-\editor{No One Yet}
+\editor{}
 
 \author{\name Charles Zheng \email charles.y.zheng@gmail.com \\
        \addr Section on Functional Imaging Methods\\
@@ -948,7 +948,10 @@ most crucial parameter.  In the simulation, we use a grid $h = \{0.1,
 
 \subsection{Comparison to Kay}
 \label{sec:KDEcomparison}
-In their paper,\footnote{The KDE extrapolation method is described in page 29 of supplement to \cite{Kay2008a}.}
+In their paper,\footnote{The KDE extrapolation method is described in page 29 of supplement to \cite{Kay2008a}.  While the method is only described for
+a one-nearest neighbor classifier and for the setting where there is at most
+one test observation per class, it is straightforward to generalize the
+original method to our setting.}
 \cite{Kay2008a} proposed a method for extrapolating classification
 accuracy to a larger number of classes. The method depends on repeated
 kernel-density estimation (KDE) steps. Because the method is only
@@ -956,23 +959,23 @@ briefly motivated in the original text, we present it in our
 notation. It is perhaps worthwhile to compare this to their original
 presentation.
 
-For $k_1$ observed classes, let $m_{y_j}(x_i)\, 1\leq i,j\leq k_1$ be
-the observed score comparing feature vector of the $i$'th class $x_i$
-to the model trained for the $j$'th class $m_{y_j}$. 
-For each feature-vector $x_i$, the density of wrong-class scores is estimated by smoothing the observed scores
-with a kernel function $K(\cdot,\cdot)$ with bandwidth,
-\[\hat{f}_i(m) = \frac{1}{k_1-1} \sum_{j\neq i} K_h(m_{y_j}(x_i), m).\]
-An estimate of favorability for $x_i$ against a
-single competitor is obtained by integrating the density below the observed true score $m_{y_i}(x_i)$, 
-\[acc_2(x_i) = \int_{0}^{m_{y_i}(x_i)} \hat{f}_i(m)dm,\]
+For $k_1$ observed classes, let $m_{y^{(j)}}(x^{(i)}_\ell)\, 1\leq i,j\leq k_1$ be
+the observed score comparing feature vector of the $\ell$'th test example of the $i$'th class $x^{(i)}_\ell$
+to the model trained for the $j$'th class $m_{y^{(j)}}$. 
+For each feature-vector $x^{(i)}_\ell$, the density of wrong-class scores is estimated by smoothing the observed scores
+with a kernel function $K(\cdot,\cdot)$ with bandwidth $h$,
+\[\hat{f}_i(m) = \frac{1}{k_1-1} \sum_{j\neq i} K_h(m_{y^{(j)}}(x^{(i)}_\ell), m).\]
+An estimate of favorability for $x^{(i)}_\ell$ against a
+single competitor is obtained by integrating the density below the observed true score $m_{y^{(i)}}(x^{(i)}_\ell)$, 
+\[acc_2(x_i) = \int_{0}^{m_{y^{(i)}}(x^{(i)}_\ell)} \hat{f}_i(m)dm,\]
 and the probability of accurate classification against $K-1$ random
-competitors is $acc_{K}(x_i) = (acc_2(x_i))^{K-1}$. The average of these probabilities is the estimate for generalization accuracy
-\[\hat{AGA}_{K}^{(KDE)} = \frac{1}{k_1} \sum_{i}^{k_1} acc_{K}(x_i).\]
+competitors is $acc_{K}(x^{(i)}_\ell) = (acc_2(x^{(i)}_\ell))^{K-1}$. The average of these probabilities is the estimate for generalization accuracy
+\[\hat{AGA}_{K}^{(KDE)} = \frac{1}{k_1 r} \sum_{i=1}^{k_1} \sum_{\ell=1}^{r} acc_{K}(x^{(i)}_\ell).\]
 
 Note that the KDE method depends non-trivially on the smoothing bandwidth used in the density estimation step: when the kernel bandwidth is too small compared to the number of classes, the extrapolated accuracy will be upwardly biased.  To see
-this, consider a feature vector $x_i$ that is correctly classified in the original class set. That is, $m_{y_i}(x_i)>m_{y_j}(x_i)$ for every
+this, consider a feature vector $x^{(i)}_\ell$ that is correctly classified in the original class set. That is, $m_{y^{(i)}}(x^{(i)}_\ell)>m_{y^{(j)}}(x^{(i)}_\ell)$ for every
 $j\neq i$. If we use for $\hat{f}_i$ the unsmoothed empirical density,
-$acc_2(x_i)=1$ and therefore $acc_K(x_i) = 1$ as well. The method relies on smoothing of each class to generate a the tail density that exceeds $m_{y_i}(x_i)$, and therefore it is highly dependent on the choice of kernel bandwidth. 
+$acc_2(x^{(i)}_\ell)=1$ and therefore $acc_K(x^{(i)}_\ell) = 1$ as well. The method relies on smoothing of each class to generate a the tail density that exceeds $m_{y^{(i)}}(x^{(i)}_\ell)$, and therefore it is highly dependent on the choice of kernel bandwidth. 
 
 \cite{Kay2008a} recommended using a Gaussian
 kernel, with the bandwidth chosen via pseudolikelihood cross-validation \citep{cao1994comparative}.
