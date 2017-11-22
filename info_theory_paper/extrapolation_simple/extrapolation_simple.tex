@@ -70,7 +70,7 @@
 
 \begin{document}
 
-\title{Extrapolating Expected Accuracies for Recognition Tasks}
+\title{Extrapolating Expected Accuracies for Large Multi-Class Problems}
 
 \editor{}
 
@@ -95,9 +95,8 @@
 The difficulty of multi-class classification generally increases with
 the number of classes.  Using data from a subset of the classes, can
 we predict how well a classifier will scale with an increased number
-of classes?  Under the assumption that the classes are sampled
-identically and independently from a population, and under the
-assumption that the classifier is based on independently learned
+of classes?  Under the assumptions that the classes are sampled
+identically and independently from a population, and that the classifier is based on independently learned
 scoring functions, we show that the expected accuracy when the
 classifier is trained on $k$ classes is the $k-1$st moment of a
 certain distribution that can be estimated from data.  We present an
@@ -123,8 +122,7 @@ these examples, the algorithm observes an input $x$, and uses the
 classifier function $h$ to guess the label $y$ from a large label set
 $\mathcal{S}$.
 
-There are multiple practical challenges in developing recognition
-systems for large label sets. Collecting high quality training data is
+There are multiple practical challenges in developing classifiers for large label sets. Collecting high quality training data is
 perhaps the main obstacle, as the costs scale with the number of
 classes.  It can be affordable to first collect data for a small set
 of classes, even if the long-term goal is to generalize to a larger
@@ -133,10 +131,10 @@ training first on fewer classes, as each training cycle may require
 substantially less resources.  Indeed, due to interest in how
 small-set performance generalizes to larger sets, such comparisons can
 found in the literature \citep{oquab2014learning, griffin2007caltech}.
-A natural question is how does changing the size of the label set
+A natural question is: how does changing the size of the label set
 affect the classification accuracy?
 
-Technically, we consider a pair of classification problems on finite
+We consider a pair of classification problems on finite
 label sets: a source task with label set $\mathcal{S}_{k_1}$ of size
 $k_1$, and a target task with a larger label set $\mathcal{S}_{k_2}$
 of size $k_2 > k_1$.  For each label set $\mathcal{S}_k$, one
@@ -161,7 +159,7 @@ how well the algorithm will perform on the client's problem,
 accounting for the difference in label set size.
 
 Extrapolation should be possible when the source and target
-classifications are two instances of a similar recognition problem.  In
+classifications belong to the same problem domain.  In
 many cases, the set of categories $\mathcal{S}$ is to some degree a
 random or arbitrary selection out of a larger, perhaps infinite, set
 of potential categories $\mathcal{Y}$. Yet any specific experiment
@@ -182,7 +180,7 @@ problems.
 
 In this paper, we assume that both $\mathcal{S}_{k_1}$ and
 $\mathcal{S}_{k_2}$ are independent identically distributed (i.i.d.)
-samples from a population (or distribution) of labels $ \pi$, which is
+samples from a population (or prior distribution) of labels $ \pi$, which is
 defined on the label space $\mathcal{Y}$.  These assumptions help
 concretely analyze the generalization accuracy, although both are only
 approximate characterizations of the label selection process, which is
@@ -218,10 +216,10 @@ introduced in Section \ref{sec:rc_motivation}, and there we also
 introduce a toy example which is revisited throughout the
 paper. Section \ref{sec:extrapolation} develops our theory of
 extrapolation, and Section \ref{sec:extrapolation_estimation} we
-suggest an estimation method. In Section
+suggest an estimation method. We evaluate our method using simulations in Section 4.
+In Section
 \ref{sec:extrapolation_example}, we demonstrate our method on a facial
-recognition problem, making use of the OpenFace feature extraction
-network \cite{amos2016openface}. In Section \ref{sec:discussion} we
+recognition problem, as well as an optical character recognition problem. In Section \ref{sec:discussion} we
 discuss modeling choices and limitations of our theory, as well as
 potential extensions.
 
@@ -284,7 +282,7 @@ highest score.  That is, there exist real-valued \emph{score
 training data, it is convenient to view it (and its associated score
 functions) as random.  We write $H(x)$ when we wish to work with the
 classifier as a random function, and likewise $M_y(x)$ to denote the
-score functions when they are considered as random.
+score functions whenever they are considered as random.
 
 For a fixed instance of the classification task with labels
 $\mathcal{S} = \{y^{(i)}\}_{i=1}^k$ and associated score functions
@@ -305,7 +303,7 @@ the classification task.  Then the $k$-class \emph{average
   generalization accuracy} of a classifier is the expected value of
 the generalization accuracy $\text{GA}_k(H)$ resulting from a random
 set of $k$ labels, $Y^{(1)}, \hdots, Y^{(k)} \stackrel{iid}{\sim
-  \pi}$, and their associated score functions:
+  \pi}$, and their associated score functions,
 \begin{align*}
 \text{AGA}_k &= \frac{1}{k} \sum_{i=1}^k \Pr[M_{Y^{(i)}}(X^{(i)}) = \max_j
 M_{Y^{(j)}}(X^{(i)})]
@@ -332,7 +330,7 @@ classification models:
 \begin{definition}
 The classifier $H(x)$ is called a \emph{marginal classifier} if the
 score function $M_{y^{(i)}}(x)$ only depends on the label $y^{(i)}$
-and the class training set $X_{j, train}^{(i)}$.
+and the class training set $X_{j, train}^{(i)}$; that is, for some function $g$,
 \[M_{y^{(i)}}(x) = g(x; y^{(i)},X_{1, train}^{(i)},...,X_{r_{train}, train}^{(i)}).\]
 \end{definition}
 This means that the score function for $y^{(i)}$ does not depend on
@@ -347,7 +345,7 @@ a marginal classifier is illustrated in Figure
 \begin{figure}[t]
 \centering
 \includegraphics[scale = 0.4]{classification_rule.png}
-\caption{\textbf{Classification rule:} Top: Score functions for three classes for a one-dimensional example space. Bottom: The classification rule chooses between $y^{(1)},y^{(2)}$ or $y^{(3)}$ by choosing the maximal score function. 
+\caption{\textbf{Classification rule:} Top: Score functions for three classes in a one-dimensional example space. Bottom: The classification rule chooses between $y^{(1)},y^{(2)}$ or $y^{(3)}$ by choosing the maximal score function. 
 %A classifier is marginal if each score function does not depend on labels or training samples for other classes. 
 }
 \label{fig:classification_rule}
@@ -367,10 +365,10 @@ $M_{Y^{(i)}}$ is independent of $Y^{(j)}$ and $M_{Y^{(j)}}$ for $i \neq j$.
   distribution under label $y$ obtained from the empirical
   distribution $\hat{F_y}$. Then, we can use the estimated density to
   produce the score functions:
-\[ m^{EB}_y(x) = \log(\hat{f_{y}}(x)).\]
+\[ M^{EB}_y(x) = \log(\hat{f_{y}}(x)).\]
 The resulting empirical approximation for the Bayes classifier would
 be
-\[ h^{EB}(x) = \text{argmax}_{y \in \mathcal{S}}(m^{EB}_y(x)).\]
+\[ H^{EB}(x) = \text{argmax}_{Y \in \mathcal{S}}(M^{EB}_Y(x)).\]
 \item Both Quadratic Discriminant Analysis (QDA) and na\:{i}ve Bayes
   classifiers can be seen as specific instances of an estimated Bayes
   classifier.
@@ -379,7 +377,7 @@ be
   with mean and covariance parameters estimated from the data.  Naive
   Bayes is the estimated Bayes classifier when $\hat{f_y}$ is obtained
   as the product of estimated componentwise marginal distributions of
-  $p(x_i|y)$}  For QDA, the score function is given by
+  $p(x_i|y)$.}  For QDA, the score function is given by
 \[
 m_y^{QDA}(x) = -(x - \mu(\hat{F}_y))^T \Sigma(\hat{F}_y)^{-1} (x-\mu(\hat{F}_y)) - \log\det(\Sigma(\hat{F}_y)),
 \]
@@ -397,7 +395,6 @@ $\hat{F}_y$.
 \begin{equation}
 M_y^{embed} = -\|g(y) - \tilde{g}(x)\|_2.
 \end{equation}
-This describes, for example, a 1-nearest neighbor classifier.
 \item There are many classifiers which do not satisfy the marginal
   property, such as multinomial logistic regression, multilayer neural
   networks, decision trees, and k-nearest neighbors.
@@ -467,7 +464,7 @@ test accuracy for all ${k_1}\choose{k_2}$ subsets $\mathcal{S}_2$ is
 \text{ATA}_{k_2} = \frac{1}{{{k_1}\choose{k_2}}}\frac{1}{r k_2} \sum_{i=1}^{k_1} \sum_{j=1}^{r} {{R_{j}^{i,i}-1}\choose{k_2-1}}.
 \end{equation}
 
-\subsection{Toy Example: Bivariate Normals}
+\subsection{Toy Example: Bivariate Normal}
 \label{sec:toyExA}
 
 Let us illustrate these ideas using a toy example.  Let $(Y, X)$ have
@@ -477,11 +474,11 @@ a bivariate normal joint distribution,
 \]
 as illustrated in Figure \ref{fig:toy1}(a).  Therefore, for a given
 randomly drawn label $Y$, the conditional
-distribution of $X$ for that label is univariate normal with mean $\rho Y$ and variance $1-\rho^2$:
+distribution of $X$ for that label is univariate normal with mean $\rho Y$ and variance $1-\rho^2$,
 \[
 X|Y = y \sim N(\rho Y, 1-\rho^2).
 \]
-Supposing we draw $k = 3$ labels $y_1,y_2, y_3$, the classification
+Supposing we draw $k = 3$ labels $\{y_1,y_2, y_3\}$, the classification
 problem will be to assign a test instance $X^*$ to the correct label.
 The test instance $X^*$ would be drawn with equal probability from one
 of three conditional distributions $ X | Y=y^{(i)}$, as illustrated in
@@ -532,7 +529,7 @@ label set $\{y^{(1)},\hdots, y^{(k)}\}$ is given by
 \end{align*}
 where $\Phi$ is the standard normal cdf, $y^{[1]} < \cdots < y^{[k]}$
 are the sorted labels, $y^{[0]} = -\infty$ and $y^{[k+1]} =
-\infty$.  We numerically computed $\text{GA}_k(y_1,\hdots, y_k)$ for
+\infty$.  We numerically computed $\text{GA}_k(Y_1,\hdots, Y_k)$ for
 randomly drawn labels $Y_1,\hdots, Y_k \stackrel{iid}{\sim} N(0, 1)$, and 
 the distributions of $\text{GA}_k$ for $k = 2,\hdots, 10$ are
 illustrated in Figure \ref{fig:toy2}.  The mean of the distribution of
@@ -546,7 +543,7 @@ average accuracy $\text{AGA}_k$ as a function of $k$.
 The section is organized as follows.  We begin by introducing an
 explicit formula for the average accuracy $\text{AGA}_{k}$.  The
 formula reveals that $\text{AGA}_{k}$ is determined by moments of a
-one-dimensional function ${D}(u)$.  Through this formula, we can estimate 
+one-dimensional function ${D}(u)$.  Using this formula, we can estimate 
 ${D}(u)$ using subsampled accuracies.  These estimates allow us to extrapolate the average
 generalization accuracy to an arbitrary number of labels.
 
@@ -592,8 +589,8 @@ true label and $M_{Y^*}$ its score function.
 
 The function ${D}$ is related to a favorability
 function. Favorability measures the probability that the score for the
-example $x^*$ is going to be maximized by the score function $m_y$,
-compared to a random competitor $M_{Y'}$.  Formally, we write:
+example $x^*$ is going to be maximized by a particular score function $m_y$,
+compared to a random competitor $M_{Y'}$.  Formally, we write
 \begin{equation}\label{eq:U_function}
 U_{x^*}(m_{y}) = \Pr[m_{y}(x^*) > M_{Y'}(x^*)].
 \end{equation}
@@ -640,16 +637,15 @@ result:
 \begin{lemma}\label{lemma:U_function}
 Under the tie-breaking condition, the incorrect-label favorability
 $U_{x^*}(M_Y)$ is uniformly distributed for any $x^* \in \mathcal{X}$,
-and \begin{equation}\label{eq:Uniform} \Pr[U_{x^*}(M_Y) \leq u] = u.
+meaning \begin{equation}\label{eq:Uniform} \Pr[U_{x^*}(M_Y) \leq u] = u
 \end{equation}
+for all $u \in [0,1].$
 \end{lemma}
 
-\begin{proof} Define $Z = M_Y(x)$ and $Z' =
+\begin{proof} Write $U_{x^*}(M_Y) = \Pr[Z > Z'|Z]$, where $Z = M_Y(x)$ and $Z' =
 M_{Y'}(x)$ for $Y, Y' \stackrel{i.i.d.}{\sim} \pi$.
-Then, conditional on $X = x$, we have $U = \Pr[Z > Z'|Z].$
-The tie-breaking condition implies that $Z$ has a continuous
-distribution, so therefore $U$ is uniformly distributed conditional on
-$X = x$.
+The tie-breaking condition implies that $\Pr[Z=Z']=0$.  Now observe that for independent random variables $Z, Z'$ with $Z \stackrel{D}{=} Z'$ and $\Pr[Z=Z']=0$, the conditional probability
+$\Pr[Z > Z'|Z]$ is uniformly distributed.
 \end{proof}
 
 %\rule{0.7em}{0.7em}
@@ -658,9 +654,9 @@ $X = x$.
 
 The correct-label favorability is 
 \begin{equation}
-U^* = U_{X^*}(M_{Y^*}) = \Pr[M_{Y^*}(X^*) > M'_{Y'}(X^*)|Y^*,M_{Y^*},X^*].
+U^* = U_{X^*}(M_{Y^*}) = \Pr[M_{Y^*}(X^*) > M_{Y'}(X^*)|Y^*,M_{Y^*},X^*].
 \end{equation}
-The distribution of $U^*$ will depend on $\pi$, $F_y$ and $\nu_y$, and
+The distribution of $U^*$ will depend on $\pi$, $\{F_y\}_{y \in \mathcal{S}}$ and $\{\nu_y\}_{y \in \mathcal{S}}$, and
 generally cannot be written in a closed form.  However, this
 distribution is central to our analysis--indeed, we will see that the
 function ${D}$ appearing in theorem \ref{theorem:avrisk_identity}
@@ -675,8 +671,7 @@ value than a random distractor:
 \text{AGA}_2 = \Pr[M_{Y^*}(X^*) > M_{Y'}(X^*)].
 \]
 where $Y^*$ is the correct label, and $Y'$ is a random incorrect
-label.  If we condition on $Y^* = y^*$, $M_{Y^*} = m_{y^*}$ and $X^* =
-x^*$, we get
+label.  If we condition on $Y^*$, $M_{Y^*}$ and $X^*$, we get
 \[
 \text{AGA}_2 = \E[\Pr[M_{Y^*}(X^*) > M_{Y'}(X^*)|Y^*, M_{Y^*}, X^*]].
 \]
@@ -706,7 +701,7 @@ u^* = U_{x^*}(m_{y^*}).
 \]
 Therefore,
 \begin{align*}
-\text{AGA}_k &=\E[\Pr[U^* > \max_{i=1}^{k-1} U_{X^*}(M_{Y^{(i)}})|X^* = x^*, Y^* = y^*, M_{Y^*} = y^*]]
+\text{AGA}_k &=\E[\Pr[U^* > \max_{i=1}^{k-1} U_{X^*}(M_{Y^{(i)}})|X^* = x^*, Y^* = y^*, M_{Y^*} = m_{y^*}]]
 \\&= \E[\Pr[U^* > \max_{i=1}^{k-1} U_{X^*}(M_{Y^{(i)}})|X^* = x^*, U^* = u^*]].
 \end{align*}
 Now define $U_{max, k-1} = \max_{i=1}^{k-1} U_{X^*}(M_{Y^{(i)}})$. 
@@ -722,7 +717,7 @@ $X^*$.  Therefore, the conditional probability can be computed as
 \]
 Consequently,
 \begin{align}
-\text{AGA}_k &= \E[\Pr[U^* > \max_{i=1}^{k-1} U_{x^*}(M_{Y^{(i)}})|X^* = x^*, U^* = u^*]]
+\text{AGA}_k &= \E[\Pr[U^* > \max_{i=1}^{k-1} U_{X^*}(M_{Y^{(i)}})|X^* = x^*, U^* = u^*]]
 \\&= \E[\int_0^{U^*} (k-1) u^{k-2} du|U^* = u^*]
 \\&= \E[\int_0^1 I\{u \leq U^*\} (k-1) u^{k-2} du ]
 \\&= (k-1) \int_0^1 \Pr[U^* \geq u] u^{k-2} du
@@ -738,12 +733,10 @@ and substituting this definition into \eqref{eq:lala}, we obtain the identity \e
 
 
 Theorem \ref{theorem:avrisk_identity} expresses the average accuracy
-as a weighted integral of the function ${D}(u)$.  Having this
-theoretical result allows us to understand how the expected $k$-class
-accuracy scales with $k$ in problems where all the relevant densities are
-known.  
-However, applying this result to estimate $\text{AGA}_k$ requires specifying an estimator for the unknown function D. 
-We propose using non-parametric regression in Section \ref{sec:extrapolation_estimation}.
+as a weighted integral of the function ${D}(u)$.  Essentially, this theoretical result allows us
+to reduce the problem of estimating $\text{AGA}_k$ to one of estimating $D(u)$.
+But how shall we estimate $D(u)$ from data?
+We propose using non-parametric regression for this purpose in Section \ref{sec:extrapolation_estimation}.
 
 
 \subsection{Favorability and Average Accuracy for the Toy Example}
@@ -765,7 +758,7 @@ U_{x^*}(m_y) &= \Pr[|\rho y - x^*|> |\rho Y' - x^*|]
 where $\Phi$ is the standard normal cumulative distribution function.
 Figure \ref{fig:toy3}(a) illustrates the level sets of the function
 $U_{x^*}(m_y)$.  The highest values of $U_{x^*}(m_y)$ are near the
-line $x^* = \rho y$ corresponding to the conditional mean of $X|Y$: as
+line $x^* = \rho y$ corresponding to the conditional mean of $X|Y$, and as
 one moves farther from the line, $U_{x^*}(m_y)$ decays.  Note, however,
 that large values of $x^*$ and $y$ (with the same sign) result in
 larger values of $U_{x^*}(m_y)$ since it becomes unlikely for $Y' \sim
@@ -793,7 +786,7 @@ $\rho$ increases.
 \begin{figure}[p]
 \centering
 \begin{tabular}{cc}
-\begin{myfont}$U_x^*(m_y)$ for $\rho=0.7$\end{myfont}
+\begin{myfont}$U_x^*(M_y)$ for $\rho=0.7$\end{myfont}
 & 
 \begin{myfont}$D(u)$ for $\rho = 0.7$\end{myfont}\\
 \includegraphics[scale = 0.6, clip = true, trim = 0.1in 0 0 0.8in]{illus_ufunc_0_7.pdf} &
@@ -801,7 +794,7 @@ $\rho$ increases.
 \end{tabular}
 
 \caption{\textbf{Favorability for toy example:}
-\emph{Left:} The level curves of the function $U_{x^*}(m_y)$ in the bivariate normal model with $\rho = 0.7$.
+\emph{Left:} The level curves of the function $U_{x^*}(M_y)$ in the bivariate normal model with $\rho = 0.7$.
 \emph{Right:} The function ${D}(u)$ gives the cumulative distribution function of the random variable $U_{X^*}(M_Y)$.}\label{fig:toy3}
 \end{figure}
 
@@ -940,7 +933,7 @@ to prevent the inclusion of a basis element that has on average a
 higher mean value than $u = 1-\frac{1}{rk_1^2}$.  However, in
 simulations we find that the performance of the basis depends only
 weakly on the exact positioning and maximum size of the knots, as long
-as sufficiently large knots are included; the bandwidth $h$ is the
+as sufficiently large knots are included. As is the case throughout non-parametric statistics, the bandwidth $h$ is the
 most crucial parameter.  In the simulation, we use a grid $h = \{0.1,
 0.2, \hdots, 1\}$ for bandwidth selection.
 
@@ -950,24 +943,22 @@ most crucial parameter.  In the simulation, we use a grid $h = \{0.1,
 \label{sec:KDEcomparison}
 In their paper,\footnote{The KDE extrapolation method is described in page 29 of supplement to \cite{Kay2008a}.  While the method is only described for
 a one-nearest neighbor classifier and for the setting where there is at most
-one test observation per class, it is straightforward to generalize the
-original method to our setting.}
+one test observation per class, we have taken the liberty of extending it to a generic multi-class classification problem.}
 \cite{Kay2008a} proposed a method for extrapolating classification
 accuracy to a larger number of classes. The method depends on repeated
 kernel-density estimation (KDE) steps. Because the method is only
 briefly motivated in the original text, we present it in our
-notation. It is perhaps worthwhile to compare this to their original
-presentation.
+notation. 
 
 For $k_1$ observed classes, let $m_{y^{(j)}}(x^{(i)}_\ell)\, 1\leq i,j\leq k_1$ be
 the observed score comparing feature vector of the $\ell$'th test example of the $i$'th class $x^{(i)}_\ell$
 to the model trained for the $j$'th class $m_{y^{(j)}}$. 
 For each feature-vector $x^{(i)}_\ell$, the density of wrong-class scores is estimated by smoothing the observed scores
 with a kernel function $K(\cdot,\cdot)$ with bandwidth $h$,
-\[\hat{f}_i(m) = \frac{1}{k_1-1} \sum_{j\neq i} K_h(m_{y^{(j)}}(x^{(i)}_\ell), m).\]
+\[\hat{f}_\ell^{(i)}(m) = \frac{1}{k_1-1} \sum_{j\neq i} K_h(m_{y^{(j)}}(x^{(i)}_\ell), m).\]
 An estimate of favorability for $x^{(i)}_\ell$ against a
 single competitor is obtained by integrating the density below the observed true score $m_{y^{(i)}}(x^{(i)}_\ell)$, 
-\[acc_2(x_i) = \int_{0}^{m_{y^{(i)}}(x^{(i)}_\ell)} \hat{f}_i(m)dm,\]
+\[acc_2(x_\ell^{(i)}) = \int_{0}^{m_{y^{(i)}}(x^{(i)}_\ell)} \hat{f}_\ell^{(i)}(m)dm,\]
 and the probability of accurate classification against $K-1$ random
 competitors is $acc_{K}(x^{(i)}_\ell) = (acc_2(x^{(i)}_\ell))^{K-1}$. The average of these probabilities is the estimate for generalization accuracy
 \[\hat{AGA}_{K}^{(KDE)} = \frac{1}{k_1 r} \sum_{i=1}^{k_1} \sum_{\ell=1}^{r} acc_{K}(x^{(i)}_\ell).\]
@@ -988,11 +979,9 @@ environment: biased cross-validation and unbiased cross-validation \citep{Scott1
 \subsection{Simulation Results}
 
 We see in Figure \ref{fig:sim_study} that ClassExReg and the KDE methods with unbiased and biased
-cross-validation (KDE-UCV, KDE-BCV) perform comparably in the gaussian
+cross-validation (KDE-UCV, KDE-BCV) perform comparably in the Gaussian
 simulations.  We studied how the difficulty of extrapolation relates to both the
-absolute size of the number of classes and the factor of increase from
-the source number of classes $k_1$ to the target number of classes
-$k_2$.  Our simulation has two settings for $k_1 = \{500,5000\}$, and
+absolute size of the number of classes and the extrapolation factor $\frac{k_2}{k_1}$.  Our simulation has two settings for $k_1 = \{500,5000\}$, and
 within each setting we have extrapolations to 2 times, 4 times, 10
 times, and 20 times the number of classes.
 
@@ -1013,8 +1002,7 @@ $k_1$ & $k_2$ & ClassExReg & KDE-BCV & KDE-UCV \\\hline
 \caption{Maximum RMSE (se) across all signal-to-noise-levels in
   predicting $\text{TA}_{k_2}$ from $k_1$ classes in multivariate
   gaussian simulation.  Standard errors were computed by nesting the
-  maximum operation within the bootstrap, to account for added
-  variance from selection.}\label{tab:sim_max_error}
+  maximum operation within the bootstrap, to properly account for the variance of a maximum of estimated means.}\label{tab:sim_max_error}
 \end{table}
 
 Within each problem setting defined by the number of
@@ -1025,13 +1013,12 @@ the method, as displayed in Table \ref{tab:sim_max_error}.
 The results also indicate that more accurate extrapolation
 appears to be possible for smaller extrapolation ratios
 $\frac{k_2}{k_1}$ and larger $k_1$.
-ClassExReg improves in worst-case RMSE when moving from $k_1 =500$ to $k_1 = 5000$ while keeping the factor of increase fixed, most dramatically in the case $\frac{k_2}{k_1} = 2$ when it improves from a
-maximum RMSE of $0.032\pm0.001$ to 0.009 when going from $k_1 = 500$
-to $k_1 = 5000$, which is 3.5-factor reduction in worst-case RMSE, but
-also gaining at least a 1.8-factor reduction in RMSE when going from
+ClassExReg improves in worst-case RMSE when moving from $k_1 =500$ to $k_1 = 5000$ while keeping the extrapolation factor fixed, most dramatically in the case $\frac{k_2}{k_1} = 2$ when it improves from a
+maximum RMSE of $0.032\pm0.001$ ($k_1 = 500$) to $0.009 \pm 0.000$ ($k_1 = 5000$), which is 3.5-fold reduction in worst-case RMSE, but
+also benefiting from at least a 1.8-fold reduction in RMSE when going from
 the smaller problem to the larger problem in the other three cases.
 
-The kernel-density method produces comparable results, but can be seen to depend strongly on the choice of bandwidth selection: KDE-UCV and KDE-BCV show very different performance profiles, although they differ only in the choice between unbiased and biased cross-validation, respectively.
+The kernel-density method produces comparable results, but is seen to depend strongly on the choice of bandwidth selection: KDE-UCV and KDE-BCV show very different performance profiles, although they differ only in the method used to choose the bandwidth.
 Also, the KDE methods show significant estimation bias, as can be seen from Figure \ref{fig:sim_study_bias}.  
 This can be explained by the fact that
 the KDE method ignores the bias introduced by exponentiation.
@@ -1149,8 +1136,8 @@ transformation to align $x$ to a template.  The aligned photograph is
 then downsampled to a $96 \times 96$ image. The downsampled image is
 fed into a pre-trained deep convolutional neural network to obtain the
 128-dimensional feature vector $g(x)$. More details are found in
-(\cite{amos2016openface}).}
-In order to identify a new photo $\vec{z}^*$, we obtain the feature
+\cite{amos2016openface}.}
+In order to identify a new photo $x^*$, we obtain the feature
 vector $g(x^*)$ from the OpenFace network, and guess the label $\hat{y}$
 with the minimal Euclidean distance between $g(y^{(i)})$ and $g(x^*)$,
 which implies a score function
@@ -1201,7 +1188,7 @@ regression, linear support-vector machine (SVM), and a
 deep convolutional neural network.\footnote{The network architecture is
   as follows: {\tt
     48x48-4C3-MP2-6C3-8C3-MP2-32C3-50C3-MP2-200C3-SM.}} 
-The full data consists of 400 classes with 50 training and 50 test observations for each class. We also create a nested hierarchy of subsampled data consisting of (i) a subset of size 100 randomly sampled from the 400 classes, and (ii) yet another subsampled data set consisting of 20 classes random subsampled from the size-100 subsample.   We therefore study three different prediction extrapolation problems:
+The full data consists of 400 classes with 50 training and 50 test observations for each class. We create a nested hierarchy of subsampled data sets consisting of (i) a subset of 100 classes uniformly sampled without replacement from the 400 classes, and (ii) a subset consisting of 20 classes uniformly sampled without replacement from the size-100 subsample.   We therefore study three different prediction extrapolation problems:
 \begin{enumerate}
 \item Predicting the accuracy on $k_2 = 100$ classes from $k_1 = 20$ classes, comparing the predicted accuracy to the test accuracy of the classifier on the 100-class subsample as ground truth.
 \item Same as (1), but setting $k_2 = 400$ and $k_1 = 20$, and using the full data set for the ground truth.
@@ -1219,8 +1206,7 @@ The extrapolation results for the face recognition problem can be seen in Figure
 \ref{fig:lfw_extrapolation2}, which plots the extrapolated accuracy
 curves for each method for 100 different subsamples of size $k_1$.  As
 can be seen, for all three methods, the variances decrease rapidly as
-$k_1$ increases. In general, for $k_1>400$ the paths of the different
-extrapolation curves are not very different. 
+$k_1$ increases. 
 
 The root-mean-square errors between at $k_2=1672$ can be seen in Table
 \ref{tab:lfw_accuracy}.  KDE-BCV achieves the best extrapolation for
@@ -1235,15 +1221,7 @@ column of Figure \ref{fig:sim_study}, where the true accuracy is 0.43
 RMSE.  These discrepancies could be explained by differences between
 the data distributions between the simulation and the face recognition
 example, and also by the fact that we only have access to the $k_2 =
-1672$-class ground truth for the real data example.  In simulations,
-we see that the empirical test accuracy for $k_2 = 1600$ classes and
-$r=1$ repeats varies by a standard deviation of 0.01 in
-signal-to-noise settings with true accuracies around 0.4.  Since the
-RMSEs of the simulation and the real-data example differ by a little
-more than 2 standard deviations, it is plausible that evaluating the
-methods with respect to the true population accuracy
-$\text{AGA}_{1672}$ would yield a ranking that was consistent with the
-simulation.
+1672$-class ground truth for the real data example.
 
 \begin{figure}[t]
 \centering
@@ -1266,10 +1244,8 @@ simulation.
 \includegraphics[scale = 0.2, clip = true, trim = 0 0 0 0.6in, valign=c]{repeat_400_kde_ucv.png} \\
 \end{tabular}
 \caption{\textbf{Predicted accuracy curves for face-recognition example}: The
-  plots show predicted accuracies using a different source data set
-  size $k_1$. Each red curve represents the estimated accuracies using
-  a single subsample. The black curve shows the true average
-  accuracy. }
+  plots show predicted accuracies. Each red curve represents the predicted accuracies using
+  a single subsample of size $k_1$. The black curve shows the average test accuracy obtained from the full data set. }
 \label{fig:lfw_extrapolation2}
 \end{figure}
 
@@ -1316,7 +1292,7 @@ In this work, we suggest treating the class set in a classification
 task as random, in order to extrapolate classification performance on
 a small task to the expected performance on a larger unobserved task.
 We show that average generalized accuracy decreases with increased
-class-set size like the $(k-1)$th moment of a distribution function.
+label set size like the $(k-1)$th moment of a distribution function.
 Furthermore, we introduce an algorithm for estimating this underlying
 distribution, that allows efficient computation of higher order
 moments. Code for the methods and the simulations can be found in \url{https://github.com/snarles/ClassEx}.
@@ -1329,19 +1305,15 @@ work.
 
 %\noindent\textsl{Sampling}
 
-One direction for future work is to generalize the sampling mechanism,.
-Our analysis is currently restricted to i.i.d. sampling of classes.
-Extension to other sampling mechanisms, such as cluster sampling, may
-be possible if one can work out how the dependence between classes
-translates into dependence between the favorabilities
-$U_{X^*}(m_{Y^{(k)}})$.  More broadly, the assumption that the labels in $\mathcal{S}_k$ are a
-random sample from a distribution $\pi$ may be inappropriate.  Many
+Since our analysis is currently restricted to i.i.d. sampling of classes, 
+one direction for future work is to generalize the sampling mechanism,
+such as to cluster sampling.  More broadly, the assumption that the labels in $\mathcal{S}_k$ are a
+random sample from a homogeneous distribution $\pi$ may be inappropriate.  Many
 natural classification problems arise from hierarchically partitioning
 a space of instances into a set of labels.  Therefore, rather than
 modeling $\mathcal{S}_k$ as a random sample, it may be more suitable
-to model it as a random hierarchical partition of $\mathcal{Y}$ (for
-instance, arising from an optional P{\'o}lya tree process,
-\cite{wong2010optional}).
+to model it as a random hierarchical partition of $\mathcal{Y}$, such as one arising from an optional P{\'o}lya tree process
+\citep{wong2010optional}.
 Finally, note that we assume no knowledge about the new class-set
 except for its size. Better accuracy might be achieved if some partial information 
 is known.
