@@ -3,6 +3,8 @@ library(pracma)
 
 fcs1 = readMat("~/Desktop/Results/All_Sub_REST1_TP.mat")
 fcs2 = readMat("~/Desktop/Results/All_Sub_REST2_TP.mat")
+fc = fcs1[[1]][1,,]
+hist(fc[upper.tri(fc)])
 upper.tri(matrix(1:4, 2, 2))
 
 fc_flatten <- function(arr) {
@@ -23,43 +25,29 @@ fcz2 <- fc_flatten(fcs2[[1]])[,shufind]
 r12 <- cor(fcz1, fcz2)
 #r12 <- -pdist2(t(fcz1), t(fcz2))/100 + 1
 image(r12)
-mean(apply(r12, 1, which.max) == 1:339)
 
-layout(t(t(1:2)))
 
-plot(density(diag(r12)), xlim = c(-1.3, 1.3), ylim = c(0, 12), lwd = 2)
-for (i in 1:33 * 10) {
-  lines(density(r12[i, -i]), col = "red")
+display_results <- function(r12) {
+  print(mean(apply(r12, 1, which.max) == 1:339))
+  layout(t(t(1:2)))
+  plot(density(diag(r12)), xlim = c(-1.3, 1.3), ylim = c(0, 12), lwd = 2)
+  for (i in 1:33 * 10) {
+    lines(density(r12[i, -i]), col = "red")
+  }
+  lines(density(r12[upper.tri(r12)]), col = "blue", lwd = 2)
+  
+  r_mean <- rowSums(r12 - diag(diag(r12)))/(ncol(r12) - 1)
+  r_std <- apply((r12 - diag(diag(r12))), 2, std)
+  r_sub2 <- (r12 - r_mean)/r_std / 15
+  plot(density(diag(r_sub2)), xlim = c(-1.3, 1.3), ylim = c(0, 12), lwd = 2)
+  for (i in 1:33 * 10) {
+    lines(density(r_sub2[i, -i], bw = 0.03), col = "red")
+  }
+  lines(density(r_sub2[upper.tri(r12)]), col = "blue", lwd = 2)
+
 }
-lines(density(r12[upper.tri(r12)]), col = "blue", lwd = 2)
 
-r_sub <- r12 - t(t(diag(r12))) %*% ones(1, nrow(r12))
-plot(0,0, xlim = c(-1.3, 1.3), ylim = c(0, 12), lwd = 2)
-for (i in 1:33 * 10) {
-  lines(density(r_sub[i, -i]), col = "red")
-}
-lines(density(r_sub[upper.tri(r12)]), col = "blue", lwd = 2)
-
-layout(t(t(1:2)))
-
-r_mean <- rowSums(r12 - diag(diag(r12)))/(ncol(r12) - 1)
-r_sub2 <- r12 - t(t(r_mean)) %*% ones(1, nrow(r12))
-plot(density(diag(r_sub2)), xlim = c(-1.3, 1.3), ylim = c(0, 12), lwd = 2)
-for (i in 1:33 * 10) {
-  lines(density(r_sub2[i, -i], bw = 0.03), col = "red")
-}
-lines(density(r_sub2[upper.tri(r12)]), col = "blue", lwd = 2)
-
-r_mean <- rowSums(r12 - diag(diag(r12)))/(ncol(r12) - 1)
-r_std <- apply((r12 - diag(diag(r12))), 2, std)
-r_sub2 <- (r12 - r_mean)/r_std / 15
-plot(density(diag(r_sub2)), xlim = c(-1.3, 1.3), ylim = c(0, 12), lwd = 2)
-for (i in 1:33 * 10) {
-  lines(density(r_sub2[i, -i], bw = 0.03), col = "red")
-}
-lines(density(r_sub2[upper.tri(r12)]), col = "blue", lwd = 2)
-
-
+display_results(r12)
 
 ####
 ##  Extrapolation
@@ -99,11 +87,32 @@ regr <- nlsLM(accs ~ c + b * exp(-tt/x), data = list(accs = accs_sub, tt=1:nsb),
 regr
 accs_E <- coef(regr)['c'] + coef(regr)['b'] * exp(-(1:nsubs)/coef(regr)['x'])
 
+layout(1)
+plot(accs, type = "l", ylim = c(0,1), lwd =2)
+lines(accs_sub, col = "red", lwd = 4)
+lines(accs_par2, col = "green", lwd =2)
+lines(accs_YB, col = "blue", lwd =2)
+lines(accs_W, col = "purple", lwd =2)
+lines(accs_KK, col = "orange", lwd =2)
+lines(accs_E, col = "pink", lwd =2)
 
-plot(accs, type = "l", ylim = c(0,1))
-lines(accs_sub, col = "red", lwd = 2)
-lines(accs_par2, col = "green")
-lines(accs_YB, col = "blue")
-lines(accs_W, col = "purple")
-lines(accs_KK, col = "orange")
-lines(accs_E, col = "pink")
+
+####
+## Simulate data
+####
+
+mats1 <- fcs1[[1]]
+mats2 <- fcs2[[1]]
+
+t1 <- proc.time()
+nsb <- 20
+klds <- matrix(0, nsb, nsb)
+for (i in 1:nsb) {
+  for (j in 1:nsb) {
+    vstuff <- solve(mats2[i,,], mats1[j,,])
+    klds[i,j] <- sum(diag(vstuff)) - log(det(vstuff))
+  }
+}
+
+mean(apply(-klds, 1, which.max) == 1:nrow(klds))
+proc.time() - t1
