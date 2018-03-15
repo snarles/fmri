@@ -1,5 +1,7 @@
 library(R.matlab)
 library(pracma)
+library(parallel)
+mcc <- 20
 
 fcs1 = readMat("~/Desktop/Results/All_Sub_REST1_TP.mat")
 fcs2 = readMat("~/Desktop/Results/All_Sub_REST2_TP.mat")
@@ -30,7 +32,7 @@ image(r12)
 display_results <- function(r12) {
   print(mean(apply(r12, 1, which.max) == 1:339))
   layout(t(t(1:2)))
-  plot(density(diag(r12)), xlim = c(-1.3, 1.3), ylim = c(0, 12), lwd = 2)
+  plot(density(diag(r12)), xlim = c(min(r12), max(r12)), ylim = c(0, 12/(max(r12) - min(r12))), lwd = 2)
   for (i in 1:33 * 10) {
     lines(density(r12[i, -i]), col = "red")
   }
@@ -39,7 +41,7 @@ display_results <- function(r12) {
   r_mean <- rowSums(r12 - diag(diag(r12)))/(ncol(r12) - 1)
   r_std <- apply((r12 - diag(diag(r12))), 2, std)
   r_sub2 <- (r12 - r_mean)/r_std / 15
-  plot(density(diag(r_sub2)), xlim = c(-1.3, 1.3), ylim = c(0, 12), lwd = 2)
+  plot(density(diag(r_sub2)), xlim = c(min(r_sub2), max(r_sub2)), ylim = c(0, 12/(max(r_sub2) - min(r_sub2))), lwd = 2)
   for (i in 1:33 * 10) {
     lines(density(r_sub2[i, -i], bw = 0.03), col = "red")
   }
@@ -116,3 +118,18 @@ for (i in 1:nsb) {
 
 mean(apply(-klds, 1, which.max) == 1:nrow(klds))
 proc.time() - t1
+
+ijs <- apply(cbind(rep(1:nsubs, each=nsubs), rep(1:nsubs, nsubs)), 1, list)
+get_kl_subroutine <- function(ij) {
+  i <- ij[[1]][1]
+  j <- ij[[1]][2]
+  vstuff <- solve(mats1[i,,], mats2[j,,])
+  sum(diag(vstuff)) - log(det(vstuff))
+}
+
+t1 <- proc.time()
+kls <- mclapply(ijs, get_kl_subroutine, mc.cores = mcc)
+proc.time() - t1
+
+klds <- t(matrix(unlist(kls), nsubs, nsubs))
+display_results(-klds)
