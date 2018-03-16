@@ -14,7 +14,7 @@ par2_acc_k <- function(ks, mu, tau, mc.reps = 1e4) {
 }
 
 ##extrapolation
-par2_extrapolate <- function(ks, accs, Ktarg, mc.reps = 1e4) {
+par2_extrapolate <- function(ks, accs, Ktarg, mc.reps = 1e4, verbose = FALSE) {
   if (min(accs) == 1) {
     return(rep(1, length(Ktarg)))
   }
@@ -41,6 +41,7 @@ par2_extrapolate <- function(ks, accs, Ktarg, mc.reps = 1e4) {
     (mu.hat <- res$estimate[1])
     (tau.hat <- res$estimate[2])
   }
+  if (verbose) print(c(mu.hat, tau.hat))
   par2_acc_k(Ktarg, mu.hat, tau.hat, mc.reps)
 }
 
