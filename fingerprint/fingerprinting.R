@@ -5,6 +5,10 @@ mcc <- 20
 
 fcs1 = readMat("~/Desktop/Results/All_Sub_REST1_TP.mat")
 fcs2 = readMat("~/Desktop/Results/All_Sub_REST2_TP.mat")
+
+fcs1 = readMat("~/Desktop/Results/All_Sub_Rest1.mat")
+fcs2 = readMat("~/Desktop/Results/All_Sub_Rest2.mat")
+
 fc = fcs1[[1]][1,,]
 hist(fc[upper.tri(fc)])
 upper.tri(matrix(1:4, 2, 2))
@@ -66,6 +70,7 @@ nsb <- 100
 
 accs <- 1 - resample_misclassification(r12, 1:nsubs, 1:nsubs)
 accs_sub <- 1 - resample_misclassification(r12[1:nsb, 1:nsb], 1:nsb, 1:nsb)
+#accs_sub <- accs[1:nsb]
 accs_par2 <- par2_extrapolate(1:nsb, accs_sub, 1:nsubs)
 r_mean <- rowSums(r12 - diag(diag(r12)))/(ncol(r12) - 1)
 r_std <- apply((r12 - diag(diag(r12))), 2, std)
@@ -104,25 +109,13 @@ lines(accs_sub, col = "red", lwd = 4)
 mats1 <- fcs1[[1]]
 mats2 <- fcs2[[1]]
 
-t1 <- proc.time()
-nsb <- 20
-klds <- matrix(0, nsb, nsb)
-for (i in 1:nsb) {
-  for (j in 1:nsb) {
-    vstuff <- solve(mats2[i,,], mats1[j,,])
-    klds[i,j] <- sum(diag(vstuff)) - log(det(vstuff))
-  }
-}
-
-mean(apply(-klds, 1, which.max) == 1:nrow(klds))
-proc.time() - t1
-
 ijs <- apply(cbind(rep(1:nsubs, each=nsubs), rep(1:nsubs, nsubs)), 1, list)
 get_kl_subroutine <- function(ij) {
   i <- ij[[1]][1]
   j <- ij[[1]][2]
   vstuff <- solve(mats1[i,,], mats2[j,,])
-  sum(diag(vstuff)) - log(det(vstuff))
+  vstuff2 <- solve(mats2[i,,], mats1[j,,])  
+  pmin(sum(diag(vstuff)) - log(det(vstuff)), sum(diag(vstuff2)) - log(det(vstuff2)))
 }
 
 t1 <- proc.time()
