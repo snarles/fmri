@@ -139,9 +139,9 @@ display_results(-klds)
 library(MCMCpack)
 nrois <- 268
 nsubs2 <- 1000
-ncomps <- 10
+ncomps <- 20
 df_sig <- 300
-df_obs <- 1200
+df_obs <- 900
 diralpha <- rep(.2, ncomps)
 
 templates <- array(0, dim = c(ncomps, nrois, nrois))
@@ -172,7 +172,7 @@ r12 <- cor(obs1f, obs2f)
 display_results(r12)
 
 ####
-##  Extrapolation
+## Extrapolation setup
 ####
 
 source("par2/objective_function.R")
@@ -182,11 +182,33 @@ library(lineId)
 source("approximation/gaussian_identity_finsam.R")
 source("approximation/gaussian_identity_finsam2.R")
 source("extrapolation/kay_method.R")
+source("extrapolation/ku_source.R")
+source("extrapolation/basis_source.R")
+
+
 nsb <- 200
+kref <- 1:nsb
+Ktarg <- 1:nsubs2
+(max.mu <- (qnorm(1- 1/(max(kref)^2))))
+lsub2 <- length(kref)/2
+(bdwids <- seq(0.1, 1, 0.1))
+basis_sets <- lapply(bdwids, function(bd) get_basis_mat(max.mu, bd))
+
+sub_basis_sets <- lapply(basis_sets, function(set1) {
+  list(Xmat = set1$Xmat[1:lsub2, ], Xtarg = set1$Xmat[length(kref), , drop = FALSE])
+})
+
+
+####
+##  Extrapolation
+####
+
+
+
 
 accs <- 1 - resample_misclassification(r12, 1:nsubs2, 1:nsubs2)
-#accs_sub <- 1 - resample_misclassification(r12[1:nsb, 1:nsb], 1:nsb, 1:nsb)
-accs_sub <- accs[1:nsb]
+accs_sub <- 1 - resample_misclassification(r12[1:nsb, 1:nsb], 1:nsb, 1:nsb)
+#accs_sub <- accs[1:nsb]
 accs_par2 <- par2_extrapolate(1:nsb, accs_sub, 1:nsubs2, verbose = TRUE)
 r_mean <- rowSums(r12 - diag(diag(r12)))/(ncol(r12) - 1)
 r_std <- apply((r12 - diag(diag(r12))), 2, std)
@@ -202,6 +224,23 @@ accs_W <- par2_acc_k(1:nsubs2, (mean_id - mean_nonid)/sqrt(tau_W), 1)
 
 accs_KK <- kernel_extrap(r12[1:nsb, 1:nsb], 1:nsubs2, bw = 'ucv')
 
+
+nboot <- 20
+boot_accs <- matrix(NA, nboot, lsub2)
+for (ii in 1:nboot) {
+  subinds <- sample(nsb, lsub2, replace = FALSE)
+  boot_accs[ii, ] <- 1- resample_misclassification(r12[subinds, subinds], 1:lsub2, 1:lsub2)
+}
+
+all_sub_preds <- t(apply(boot_accs, 1, bdwid_all_preds, basis_sets = sub_basis_sets))
+cv_curve <- sqrt(colMeans((all_sub_preds - accs_sub[length(kref)])^2))
+plot(bdwids, cv_curve, type ="l")
+sel_ind <- which.min(cv_curve)
+Xmat <- basis_sets[[sel_ind]]$Xmat
+Xpred <- basis_sets[[sel_ind]]$Xtarg
+bt <- nnls::nnls(Xmat, accs_sub)
+accs_cvr <- Xpred %*% bt$x
+
 library(minpack.lm)
 
 regr <- nlsLM(accs ~ c + b * exp(-tt/x), data = list(accs = accs_sub, tt=1:nsb), start = list(c = 0.5, b = 0.1, x = 70))
@@ -215,6 +254,7 @@ lines(accs_YB, col = "blue", lwd =2)
 lines(accs_W, col = "purple", lwd =2)
 lines(accs_KK, col = "orange", lwd =2)
 lines(accs_E, col = "pink", lwd =2)
+lines(accs_cvr, col = "brown", lwd = 2)
 lines(accs_sub, col = "red", lwd = 4)
 
 #saveRDS(r12, 'par2example.rds')
