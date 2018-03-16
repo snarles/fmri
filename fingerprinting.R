@@ -238,7 +238,9 @@ plot(bdwids, cv_curve, type ="l")
 sel_ind <- which.min(cv_curve)
 Xmat <- basis_sets[[sel_ind]]$Xmat
 Xpred <- basis_sets[[sel_ind]]$Xtarg
-bt <- nnls::nnls(Xmat, accs_sub)
+pen <- 1000
+bt <- nnls::nnls(rbind(Xmat, rep(pen, ncol(Xmat))), c(accs_sub, pen))
+sum(bt$x)
 accs_cvr <- Xpred %*% bt$x
 
 library(minpack.lm)
