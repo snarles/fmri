@@ -49,3 +49,9 @@ dbplot(100,100,2,col = 0,newp = 1)
 for (i in 1:200){
     dbplot(8,8,i,col = 1, pch = 20, cex = 0.3)
 }
+
+
+
+cor(as.numeric(dat_1$All.Sub[7,,]),as.numeric(dat_2$All.Sub[8,,]))
+
+
