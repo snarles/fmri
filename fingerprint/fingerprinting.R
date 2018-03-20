@@ -378,9 +378,9 @@ plotresults <- function(results) {
   lines(accs_sub, col = "red", lwd = 4)
 }
 
-summaryresults <- function(results) {
+summaryresults <- function(results, sel_rows = 1:nsubs2) {
   diffs <- t(t(results[3:8, ]) - results[1, ])
-  sqrt(rowMeans(diffs^2))
+  sqrt(rowMeans(diffs[, sel_rows, drop = FALSE]^2))
 }
 
 
@@ -419,4 +419,24 @@ rowMeans(sapply(results1500, summaryresults))
 # 0.04383392 0.17575085 0.08736941 0.04724770 0.04430104 0.05214578
 
 
+rowMeans(sapply(results300, summaryresults, sel_rows = 1000))
+rowMeans(sapply(results600, summaryresults, sel_rows = 1000))
+rowMeans(sapply(results900, summaryresults, sel_rows = 1000))
+rowMeans(sapply(results1200, summaryresults, sel_rows = 1000))
+rowMeans(sapply(results1500, summaryresults, sel_rows = 1000))
 
+# > rowMeans(sapply(results300, summaryresults, sel_rows = 1000))
+# par2         yb         wl        kay       exex        cvr 
+# 0.04645720 0.67675421 0.65123713 0.25369290 0.14856859 0.04105121 
+# > rowMeans(sapply(results600, summaryresults, sel_rows = 1000))
+# par2         yb         wl        kay       exex        cvr 
+# 0.06710622 0.57053176 0.50502455 0.22507151 0.09167060 0.06306193 
+# > rowMeans(sapply(results900, summaryresults, sel_rows = 1000))
+# par2         yb         wl        kay       exex        cvr 
+# 0.05479273 0.44797352 0.35848232 0.17523901 0.08775081 0.09510723 
+# > rowMeans(sapply(results1200, summaryresults, sel_rows = 1000))
+# par2         yb         wl        kay       exex        cvr 
+# 0.07262386 0.34477589 0.23945394 0.12552560 0.07998243 0.09107651 
+# > rowMeans(sapply(results1500, summaryresults, sel_rows = 1000))
+# par2         yb         wl        kay       exex        cvr 
+# 0.06899284 0.25979021 0.14339937 0.08337639 0.07387766 0.08173827 
