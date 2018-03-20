@@ -21,7 +21,7 @@ par2_extrapolate <- function(ks, accs, Ktarg, mc.reps = 1e4, verbose = FALSE) {
   mu.init <- par2_initialize_mu(accs, ks)
   tau.init <- 1
   res <- tryCatch({
-    nlm(function(x) par2_objective_function(accs, ks, x[1], x[2]),
+nlm(function(x) par2_objective_function(accs, ks, x[1], x[2]),
         c(mu.init, tau.init))},
     error = function(e) e)
   if ("error" %in% class(res)) {
