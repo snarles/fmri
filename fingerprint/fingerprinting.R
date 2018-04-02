@@ -357,6 +357,27 @@ results900 <- mclapply(1:mcc, function(i) simulate_and_run(i, ncomps, diralpha, 
 results1200 <- mclapply(1:mcc, function(i) simulate_and_run(i, ncomps, diralpha, df_sig, 1200), mc.cores = mcc)
 results1500 <- mclapply(1:mcc, function(i) simulate_and_run(i, ncomps, diralpha, df_sig, 1500), mc.cores = mcc)
 
+# plotresults <- function(results) {
+#   accs <- results["true_accs", ]
+#   accs_sub <- results["sub_accs", 1:nsb]
+#   accs_par2 <- results["par2", ]
+#   accs_YB <- results["yb", ]
+#   accs_W <- results["wl", ]
+#   accs_KK <- results["kay", ]
+#   accs_E <- results["exex", ]
+#   accs_cvr <- results["cvr", ]
+#   layout(1)
+#   plot(accs, type = "l", ylim = c(0,1), lwd =2)
+#   lines(accs_par2, col = "green", lwd =2)
+#   lines(accs_YB, col = "blue", lwd =2)
+#   lines(accs_W, col = "purple", lwd =2)
+#   lines(accs_KK, col = "orange", lwd =2)
+#   lines(accs_E, col = "pink", lwd =2)
+#   #lines(accs_E2, col = "blue", lwd =2)
+#   lines(accs_cvr, col = "brown", lwd = 2)
+#   lines(accs_sub, col = "red", lwd = 4)
+# }
+
 plotresults <- function(results) {
   accs <- results["true_accs", ]
   accs_sub <- results["sub_accs", 1:nsb]
@@ -369,13 +390,15 @@ plotresults <- function(results) {
   layout(1)
   plot(accs, type = "l", ylim = c(0,1), lwd =2)
   lines(accs_par2, col = "green", lwd =2)
-  lines(accs_YB, col = "blue", lwd =2)
+  #lines(accs_YB, col = "blue", lwd =2)
   lines(accs_W, col = "purple", lwd =2)
-  lines(accs_KK, col = "orange", lwd =2)
-  lines(accs_E, col = "pink", lwd =2)
+  #lines(accs_KK, col = "orange", lwd =2)
+  lines(accs_E, col = "orange", lwd =2)
   #lines(accs_E2, col = "blue", lwd =2)
-  lines(accs_cvr, col = "brown", lwd = 2)
+  #lines(accs_cvr, col = "brown", lwd = 2)
   lines(accs_sub, col = "red", lwd = 4)
+  legend(0, 0.4, legend = c("true", "subset", "waller", "expo", "par2"), lwd = 2, 
+         col = c("black", "red", "purple", "orange", "green"))
 }
 
 summaryresults <- function(results, sel_rows = 1:nsubs2) {
@@ -385,22 +408,24 @@ summaryresults <- function(results, sel_rows = 1:nsubs2) {
 
 
 i <- 0
-i <- i + 1; plotresults(results1500[[i]])
+i <- i + 1; plotresults(results1500[[i]]); title(paste("High SNR", i))
 
 i <- 0
-i <- i + 1; plotresults(results1200[[i]])
+i <- i + 1; plotresults(results1200[[i]]); title(paste("Med. High SNR", i))
 
 i <- 0
-i <- i + 1; plotresults(results900[[i]])
+i <- i + 1; plotresults(results900[[i]]); title(paste("Medium SNR", i))
 
 i <- 0
-i <- i + 1; plotresults(results600[[i]])
+i <- i + 1; plotresults(results600[[i]]); title(paste("Low SNR", i))
 
-rowMeans(sapply(results300, summaryresults))
-rowMeans(sapply(results600, summaryresults))
-rowMeans(sapply(results900, summaryresults))
-rowMeans(sapply(results1200, summaryresults))
-rowMeans(sapply(results1500, summaryresults))
+
+inds <- c(3, 5, 1)
+rowMeans(sapply(results300, summaryresults))[inds]
+rowMeans(sapply(results600, summaryresults))[inds]
+rowMeans(sapply(results900, summaryresults))[inds]
+rowMeans(sapply(results1200, summaryresults))[inds]
+rowMeans(sapply(results1500, summaryresults))[inds]
 
 # > rowMeans(sapply(results300, summaryresults))
 # par2         yb         wl        kay       exex        cvr 
