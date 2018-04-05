@@ -14,8 +14,8 @@ Let's first read the data from the two repeats.
 
 library('R.matlab')
 
-dat_1 = R.matlab::readMat('/Users/yuvalb/Dropbox/File requests/Matrices/Charles Zheng - All_Sub_Rest1.mat')
-dat_2 = R.matlab::readMat('/Users/yuvalb/Dropbox/File requests/Matrices/Charles Zheng - All_Sub_Rest2.mat')
+dat_1 = R.matlab::readMat('/Users/zhengchy/Desktop/Results/All_Sub_Rest1.mat')
+dat_2 = R.matlab::readMat('/Users/zhengchy/Desktop/Results/All_Sub_Rest2.mat')
 
 ```
 
