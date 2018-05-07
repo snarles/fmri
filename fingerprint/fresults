@@ -1,0 +1,16 @@
+Identification results
+
+Rest1 -> Rest2
+0.941, 0.979 (KLD)
+
+Rest1 -> Emotion
+0.431, 0.667
+
+Rest1 -> Language
+0.410, 0.708
+
+Rest1 -> Relational
+0.345, 0.611
+
+Rest1 -> Social
+0.381, 0.805

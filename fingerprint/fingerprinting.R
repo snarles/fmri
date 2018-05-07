@@ -3,15 +3,25 @@ library(pracma)
 library(parallel)
 mcc <- 20
 
-fcs1 = readMat("~/Desktop/Results/All_Sub_REST1_TP.mat")
-fcs2 = readMat("~/Desktop/Results/All_Sub_REST2_TP.mat")
+#fcs1 = readMat("/data/HCP_preproc/fingerprinting/Results/All_Sub_REST1_RP.mat")
+#fcs2 = readMat("/data/HCP_preproc/fingerprinting/Results/All_Sub_REST2_RP.mat")
 
-fcs1 = readMat("~/Desktop/Results/All_Sub_Rest1.mat")
-fcs2 = readMat("~/Desktop/Results/All_Sub_Rest2.mat")
+#fcs1 = readMat("/data/HCP_preproc/fingerprinting/Results/All_Sub_REST1_errts.mat")
+#fcs2 = readMat("/data/HCP_preproc/fingerprinting/Results/All_Sub_REST2_errts.mat")
 
-fc = fcs1[[1]][1,,]
-hist(fc[upper.tri(fc)])
-upper.tri(matrix(1:4, 2, 2))
+fcs1 = readMat("/data/HCP_preproc/fingerprinting/Results/All_Sub_REST1_errts.mat")
+fcs2 = readMat("/data/HCP_preproc/fingerprinting/Results/All_Sub_SOCIAL_errts.mat")
+dim(fcs2[[1]])
+
+#fcs1 = readMat("~/Desktop/Results/All_Sub_REST1_TP.mat")
+#fcs2 = readMat("~/Desktop/Results/All_Sub_REST2_TP.mat")
+
+#fcs1 = readMat("~/Desktop/Results/All_Sub_Rest1.mat")
+#fcs2 = readMat("~/Desktop/Results/All_Sub_Rest2.mat")
+
+#fc = fcs1[[1]][1,,]
+#hist(fc[upper.tri(fc)])
+#upper.tri(matrix(1:4, 2, 2))
 
 fc_flatten <- function(arr) {
   apply(arr, 1, function(a) {
