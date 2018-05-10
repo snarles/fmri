@@ -10,7 +10,7 @@ mcc <- 20
 #fcs2 = readMat("/data/HCP_preproc/fingerprinting/Results/All_Sub_REST2_errts.mat")
 
 fcs1 = readMat("/data/HCP_preproc/fingerprinting/Results/All_Sub_REST1_errts.mat")
-fcs2 = readMat("/data/HCP_preproc/fingerprinting/Results/All_Sub_EMOTION_errts.mat")
+fcs2 = readMat("/data/HCP_preproc/fingerprinting/Results/All_Sub_REST1_dropout_errts.mat")
 
 #subject 332 for motor
 
@@ -88,5 +88,6 @@ klds <- t(matrix(unlist(kls), nsubs2, nsubs1))
 #display_results(-klds)
 
 image(klds)
+image(klds[200:300,200:300])
 image(klds[300:338,300:338])
 #image(apply(klds, 1, rank))
