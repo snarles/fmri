@@ -25,8 +25,6 @@ outfile <- paste0("/data/MLcore/fmri/fingerprint/results", i1, "_", i2, ".txt")
 remove.sub332 <- logical()
 remove.sub332["All_Sub_REST1_errts.mat"] <- TRUE
 remove.sub332["All_Sub_REST2_errts.mat"] <- TRUE
-remove.sub332["All_Sub_REST1_dropout_errts.mat"] <- TRUE
-remove.sub332["All_Sub_REST2_dropout_errts.mat"] <- TRUE
 remove.sub332["All_Sub_EMOTION_errts.mat"] <- TRUE
 remove.sub332["All_Sub_GAMBLING_errts.mat"] <- FALSE
 remove.sub332["All_Sub_LANGUAGE_errts.mat"] <- TRUE
