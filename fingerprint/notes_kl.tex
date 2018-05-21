@@ -1,0 +1,111 @@
+\title{Fingerprinting using KL divergence}
+\author{Charles Zheng and Yuval Benjamini}
+\date{\today}
+
+\documentclass[12pt]{article} 
+
+% packages with special commands
+\usepackage{amssymb, amsmath}
+\usepackage{epsfig}
+\usepackage{array}
+\usepackage{ifthen}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{csquotes}
+\definecolor{grey}{rgb}{0.5,0.5,0.5}
+
+\begin{document}
+\maketitle
+
+\newcommand{\tr}{\text{tr}}
+\newcommand{\E}{\textbf{E}}
+\newcommand{\diag}{\text{diag}}
+\newcommand{\argmax}{\text{argmax}}
+\newcommand{\Cov}{\text{Cov}}
+\newcommand{\Var}{\text{Var}}
+\newcommand{\argmin}{\text{argmin}}
+\newcommand{\Vol}{\text{Vol}}
+\newcommand{\comm}[1]{}
+
+\subsection{Motivation}
+
+Functional connectivity (FC) matrices are a useful statistic for summarizing fMRI resting-state data.
+Let ${\bf X}^t$ be a vector of ROI-averaged activations for time $t$.
+From observations ${\bf X}^1,\cdots, {\bf X}^T$, we construct the functional connectivity matrix ${\bf R}$ via the empirical correlation matrix, with entry $R_{ij}$ indicating the correlation between ROI $X_i$ and $X_j$,
+\[
+R_{ij} = \frac{\hat{\text{Cov}}(X_i, X_j)}{\sqrt{\hat{\text{Var}}(X_i)\hat{\text{Var}}(X_j)}}.
+\]
+
+Often it is useful to find the \emph{nearest neighbors} of a given FC matrix ${\bf R}^*$ from a collection of other FC matrices ${\bf R}^{(1)},\hdots, {\bf R}^{(m)}$.  
+Given a similarity metric $S(\cdot,\cdot)$, the nearest neighbor is the FC matrix ${\bf R}^{(i)}$ with maximal similarity to the query,
+\[
+\text{argmax}_{i=1}^m S({\bf R}^*, {\bf R}^{(i)}).
+\]
+Some applications include:
+\begin{itemize}
+\item \emph{Individual identification (fingerprinting).}  Each of $n$ individuals is scanned for two sessions, yielding for individual $i$ the FC matrices ${\bf R}^{(i, 1)}, {\bf R}^{(i, 2)}$, one from each session.  An individual can be \emph{identified} from session 1 to session 2 if ${\bf R}^{(i,1)}$ is the nearest neighbor to ${\bf R}^{(i,2)}$ among all of the FC matrices for $n$ subjects with the same session number, i.e., if
+\[
+i = \text{argmax}_{j=1}^m S({\bf R}^{(i,1)}, {\bf R}^{(j, 2)}).
+\]
+The identification rate (from session $k$ to session $l$) is therefore
+\[
+\text{IDRate}(k \to l) = \frac{1}{m}\sum_{i=1}^m I\{i = \text{argmax}_{j=1}^m S({\bf R}^{(i,k)}, {\bf R}^{(j, l)})\}.
+\]
+Interesting variations include when session $k$ and $l$ are not the same type of scan, e.g. session $k$ may be resting-state and $l$ may be task.
+\item \emph{Classification.} Each of $n$ individuals has a phenotype $y_i$ as well as an FC matrix ${\bf R}^{(i)}$.  We wish to predict the phenotype of a new individual based on their FC matrix ${\bf R}^{*}$.  A simple classification rule is $k$-nearest neighbor, defining $i_1,\hdots, i_k$ as top $k$ the indices maximizing $S({\bf R}^*, {\bf R}^{(i)})$ and then predicting $y^*$ as the majority label among $\{y_{i_1},\hdots, y_{i_k}\}$.
+\end{itemize}
+
+\subsection{Symmetric KL works better than elementwise correlation}
+
+A variety of similarity scores can be considered for the application.
+\begin{enumerate}
+\item \emph{Elementwise Correlation}.  
+\[S_{Cor}({\bf R}, {\bf R'}) =   Corr(vec({\bf R}),vec({\bf R}')).\]
+\item \emph{Elementwise MSE}.  
+\[S_{MSE}({\bf R}, {\bf R'}) =   -\|vec({\bf R}_a)-vec({\bf R}_a))\|.\]
+\item \emph{Gaussian KL divergence}.  
+\[S_{KL}({\bf R}, {\bf R'}) =\text{tr}({\bf R'} {\bf R}^{-1}) - \log(|{\bf R'} {\bf R}^{-1}|).\]
+\item \emph{Symmetrized KL divergence}.  
+\[S_{SKL}({\bf R}, {\bf R'}) =\text{min} S_{KL}({\bf R}, {\bf R'}), S_{KL}({\bf R'}, {\bf R}).\]
+\end{enumerate}
+
+The most commonly used similarity measure is elementwise correlation.
+$S_{Cor}$ works much better than $S_{MSE}$ in practice, due to benefits of normalization.
+
+However, a more principled approach from the theoretical point of view is Gaussian KL divergence.
+This is because assuming that the fMRI signal ${\bf X}_t$ has a multivariate Gaussian distribution with covariance $\Sigma$, the KL divergence provides a theoretically optimal (under large-sample conditions) test statistic for testing whether a given fMRI time series ${\bf X}_1,\hdots, {\bf X}_T$ has a given covariance $\Sigma_0$.  Since fMRI signals do not have meaningful units, we can assume that the signals are normalized, and so the population covariance matrix is the same as the population correlation matrix.  And while the population correlation is unknown for a given individual, one can take the empirical correlation (or FC matrix) ${\bf R}$ as an estimate.  Therefore, to test if another FC matrix ${\bf R}'$ was obtained from the same individual, it makes sense to test for whether that matrix was generated from a Gaussian distribution with covariance ${\bf R}$.  This implies the use of the KL divergence as a similarity measure, $S_{KL}({\bf R}, {\bf R'})$.
+
+Note however that KL divergence is not symmetric.  Empirically, we find that symmetrized KL $S_{SKL}$ divergence yields much better identification rates than $S_{KL}$.  We do not yet have a theoretical explanation of this.
+
+\subsection{Properties of KL divergence}
+
+One can understand KL divergence in terms of the eigendecomposition of the FC matrices.
+First note that
+\[\text{tr}({\bf R'} {\bf R}^{-1}) - \log(|{\bf R'} {\bf R}^{-1}|)
+= \text{tr}({\bf R}^{-1/2} {\bf R'} {\bf R}^{-1/2}) - \log(|{\bf R}^{-1/2}{\bf R'} {\bf R}^{-1/2}|)
+\]
+Hence, defining
+\[
+\Delta = {\bf R}^{-1/2} {\bf R'} {\bf R}^{-1/2}
+\]
+we have
+\[
+S_{KL}({\bf R}, {\bf R'}) = S_{KL}(I, \Delta).
+\]
+Now, let $\delta_1,\hdots, \delta_R$ be the eigenvalues of $\Delta$.  ($R$ is the number of ROIs).
+Then, we have
+\[
+S_{KL}(I, \Delta) = \sum_{i=1}^R (\delta_i - \log \delta_i).
+\]
+The function $f(x) = x - \log(x)$ is minimized by $x=1$, hence we see that $S_{KL}$ is minimized if $\Delta = I$, implying ${\bf R} = {\bf R}'$.
+
+However, what this implies in general is that KL divergence can be decomposed as a sum of how much the eigenvalues of ${\bf R}^{-1/2} {\bf R'} {\bf R}^{-1/2}$ differ from 1.  An interesting possibility is to change the weighting of the terms in the sum to see if one can find even more effective similarity metrics.
+
+
+
+\end{document}
+
+
+
