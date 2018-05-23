@@ -20,9 +20,9 @@ for (i in 1:8) {
     fname <- paste0("fingerprint/results/results", i, "_", j, ".txt")
     temp <- read.table(fname, header = FALSE)
     tab[i, j] <- temp[1,2]
-    tab[j, i] <- temp[1,2]
+    tab[j, i] <- temp[3,2]
     tab2[i, j] <- temp[2,2]
-    tab2[j, i] <- temp[2,2]
+    tab2[j, i] <- temp[4,2]
     
   }
 }
@@ -32,11 +32,12 @@ write.table(tab, file = "fingerprint/cor_ident.csv", sep = ",")
 write.table(tab2, file = "fingerprint/KL_ident.csv", sep = ",")
 
 pdf("fingerprint/cor_vs_KL.pdf", width = 15, height = 15)
-plot(tab[row(tab) < col(tab)], tab2[row(tab) < col(tab)], xlab = "cor_ident", ylab = "KL_ident")
+plot(tab[row(tab) != col(tab)], tab2[row(tab) != col(tab)], xlab = "cor_ident", ylab = "KL_ident")
 abline(0, 1)
-for (i in 1:8) {
-  for (j in (i+1):9) {
-    text(tab[i,j], tab2[i, j] - 0.005, paste(rownames(tab)[i], "->", rownames(tab)[j]), cex = 0.6)
+for (i in 1:9) {
+  for (j in 1:9) {
+    if (i != j)
+      text(tab[i,j], tab2[i, j] - 0.005, paste(rownames(tab)[i], "->", rownames(tab)[j]), cex = 0.6)
   }
 }
 dev.off()
