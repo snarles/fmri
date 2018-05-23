@@ -53,6 +53,7 @@ fcz2 <- fc_flatten(mats2)
 r12 <- cor(fcz1, fcz2)
 
 cor_ident_rate <- mean(apply(r12, 1, which.max) == 1:nrow(r12))
+cor_ident_rate2 <- mean(apply(t(r12), 1, which.max) == 1:nrow(r12))
 
 get_kl_subroutine <- function(ij) {
   i <- ij[[1]][1]
@@ -68,8 +69,12 @@ kls <- mclapply(ijs, get_kl_subroutine, mc.cores = mcc)
 klds <- t(matrix(unlist(kls), nsubs, nsubs))
 
 kl_ident_rate <- mean(apply(-klds, 1, which.max) == 1:nrow(r12))
+kl_ident_rate2 <- mean(apply(-t(klds), 1, which.max) == 1:nrow(r12))
+
 
 sink(outfile)
 print(cor_ident_rate)
 print(kl_ident_rate)
+print(cor_ident_rate2)
+print(kl_ident_rate2)
 sink()
