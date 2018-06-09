@@ -696,15 +696,15 @@ Reviewer 3 suggests dropping the superscript on y.
 For this model, the generalization accuracy of the Bayes rule for any
 label set $\{y^{(1)},\hdots, y^{(k)}\}$ is given by
 \begin{align*}
-\text{GA}_k(h, \{y_1,\hdots, y_k\}) &= \frac{1}{k}\sum_{i=1}^k \Pr_{X \sim p(x|y_i)}[p(X|y_i) = \max_{j=1}^k p(X|y_j)]
+\text{GA}_k(h, \{y^{(1)},\hdots, y^{(k)}\}) &= \frac{1}{k}\sum_{i=1}^k \Pr_{X \sim p(x|y^{(i)})}[p(X|y^{(i)}) = \max_{j=1}^k p(X|y^{(j)})]
 \\&= \frac{1}{k}\sum_{i=1}^k \Phi\left(\frac{y^{[i+1]} - y^{[i]}}{2\sqrt{1-\rho^2}}\right) - \Phi\left(\frac{y^{[i-1]} - y^{[i]}}{2\sqrt{1-\rho^2}}\right),
 \end{align*}
 where $\Phi$ is the standard normal cdf, $y^{[1]} < \cdots < y^{[k]}$
 are the sorted labels, $y^{[0]} = -\infty$ and $y^{[k+1]} =
 \infty$,
 and $h$ is the maximum-margin classifier $h(x) = \argmax_{y \in \{y^{(1)},\hdots, y^{(k)}\}} m_y(x)$.
-We numerically computed $\text{GA}_k(h, \{Y_1,\hdots, Y_k\})$ for
-randomly drawn labels $Y_1,\hdots, Y_k \stackrel{iid}{\sim} N(0, 1)$, and 
+We numerically computed $\text{GA}_k(h, \{Y^{(1)},\hdots, Y^{(k)}\})$ for
+randomly drawn labels $Y^{(1)},\hdots, Y^{(k)} \stackrel{iid}{\sim} N(0, 1)$, and 
 the distributions of $\text{GA}_k$ for $k = 2,\hdots, 10$ are
 illustrated in Figure \ref{fig:toy2}.  The mean of the distribution of
 $\text{GA}_k$ is the $k$-class average accuracy, $\text{AGA}_k$. The
@@ -1145,16 +1145,17 @@ briefly motivated in the original text, we present it in our
 notation. 
 
 The idea of the method is to estimate separately for each example $x_\ell^{(i)}$ associated with class $y^{(i)}$ the probability of outscoring a random competitor:  
-\[Acc_2 (x_\ell^{(i)}; m) := P( m_{y^{(i)}}(x_\ell^{(i)}) > m_Y (x_\ell^{(i)})).\]
+\[\mathrm{Acc}_2 (x_\ell^{(i)}; m) := \Pr[ m_\ell^{(i,i)} > m_Y (x_\ell^{(i)})],\]
+recalling that we defined $m_\ell^{(i,j)} = m_{y^{(j)}}(x_\ell^{(i)})$.
 For a given example, accurate classification against $k-1$ independent (random) distractor classes 
 is equivalent to $k-1$ independent accurate classifications of a single random competitor. Therefore, 
-\[\mathrm{Acc}_k (x_\ell^{(i)} ; m_{y^{(i)}}) := P( m_\ell^{(i,i)} > \mbox{max}_{j \neq i}\ m_\ell^{(i,j)} \}) = \mathrm{Acc}_2(x_\ell^{(i)})^{k-1}, \]
-recalling that we defined $m_\ell^{(i,j)} = m_{y^{(j)}}(x_\ell^{(i)})$.
-Given estimated accuracy values $a_\ell^{(i)} = \widehat{Acc}_2 (x_\ell^{(i)})$, $\ell =1,\hdots, r$, $i = 1,...,k$, 
-we can average the $K-1$ powers: 
-\[\widehat{\mathrm{AGA}}_K  = \widehat{\E[\mathrm{Acc}_K (x_\ell^{(i)})} ]= \frac{1}{rk} \sum_{i = 1}^k \sum_{\ell=1}^r (1-(1-a_\ell^{(i)})^{K-1}) \]
+\[\mathrm{Acc}_k (x_\ell^{(i)} ; m_{y^{(i)}}) := \Pr[ m_\ell^{(i,i)} > \mbox{max}_{j \neq i}\ m_\ell^{(i,j)} ] = \mathrm{Acc}_2(x_\ell^{(i)}; m_{y^{(i)}})^{k-1}. \]
+Given estimated accuracy values $a_\ell^{(i)} = \widehat{\mathrm{Acc}}_2 (x_\ell^{(i)})$, $\ell =1,\hdots, r$, $i = 1,...,k_1$, 
+we can average the $k-1$ powers:
+%= \widehat{\E[\mathrm{Acc}_k (x_\ell^{(i)})} ]
+\[\widehat{\mathrm{AGA}}_k  = \frac{1}{rk_1} \sum_{i = 1}^{k_1} \sum_{\ell=1}^r (1-(1-a_\ell^{(i)})^{k-1}) \]
 Note that if we have noisy but unbiased estimates of $\mathrm{Acc}_2(x_\ell^{(i)} ; m_{y^{(i)}})$,
-then the estimates for $\mathrm{Acc}_K(x_\ell)$ and $\widehat{\mathrm{AGA}}_K$ will be upward biased
+then the estimates for $\mathrm{Acc}_k(x_\ell^{(i)} ; m_{y^{(i)}})$ and $\widehat{\mathrm{AGA}}_K$ will be upward biased
 because $\E[X^K] \geq \E[X]^K$.
  
 Accuracy for each example $\mathrm{Acc}_2(x_\ell^{(i)})$ is estimated in two steps:
@@ -1162,7 +1163,7 @@ Accuracy for each example $\mathrm{Acc}_2(x_\ell^{(i)})$ is estimated in two ste
 \item The density of the wrong-class scores is estimated by smoothing the observed scores with a kernel function $K(\cdot,\cdot)$ and bandwidth $h$
 \[\hat{f}_\ell^{(i)}(m) = \frac{1}{k_1-1} \sum_{j\neq i} K_h(m_\ell^{(i,j)}, m).\]
 \item Integrate the estimated density below the observed true value $m_\ell^{(i,i)}$:
-\[\mathrm{Acc}_2(x_\ell^{(i)}) = \int_{-\infty}^{m_\ell^{(i,i)}} \hat{f}_\ell^{(i)}(m)dm.\]
+\[a_\ell^{(i)} = \widehat{\mathrm{Acc}}_2(x_\ell^{(i)}) = \int_{-\infty}^{m_\ell^{(i,i)}} \hat{f}_\ell^{(i)}(m)dm.\]
 \end{enumerate}
 The smoothed density usually over-estimates the size of the right-tail of wrong class distribution compared
 to the observed proportion of errors, biasing downward the accuracy of each individual example. 
