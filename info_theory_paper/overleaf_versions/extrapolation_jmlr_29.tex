@@ -380,10 +380,6 @@ m_{y^{(j)}}(X^{(i)})],
 \]
 where $X^{(i)} \sim F_{y^{(i)}}$ for $i =1,\hdots, k$.  Here we have used the assumption that the test labels are uniformly drawn\footnote{In Section \ref{sec:discussion}, we discuss extensions of our framework that can accommodate the case that the test labels are not uniformly drawn from $\mathcal{S}$, i.e. that one has a non-uniform prior distribution over test labels.} from $\{y^{(1)},\hdots, y^{(k)}\}$.
 One can also view $\text{GA}_k(h, \mathcal{S})$ as a \emph{balanced accuracy} which equally weights the accuracies of the individual classes.
-However, when
-we consider the labels $\{Y^{(i)}\}_{i=1}^k$ and associated score
-functions to be random, the generalization accuracy also becomes a
-random variable.
 
 \begin{comment}
 Reviewer 3
@@ -397,6 +393,10 @@ equally likely (when the class sizes are not all the same, this is still sensibl
 and could be seen as a kind of balanced error).
 \end{comment}
 
+However, when we consider the labels $\{Y^{(i)}\}_{i=1}^k$ and associated score
+functions to be random, the generalization accuracy also becomes a
+random variable.
+%EDIT023
 Suppose we specify $k$ but do not fix any of the random quantities in
 the classification task.  Then the $k$-class \emph{average
   generalization accuracy} of a classifier is the expected value of
@@ -533,8 +533,8 @@ $\hat{F}_y$.
 \begin{equation}
 M_y^{embed} = -\|g(y) - \tilde{g}(x)\|_2.
 \end{equation}
-This would be the case when features from publicly available embeddings (e.g. word embeddding vectors) are used for classification; see our example in Section 5.
-See also \cite{pereira2018toward} for an example using word embedding vectors, 
+This would be the case when features from publicly available embeddings (e.g. word embedding vectors) are used for classification; see our example in Section 5.
+See also \cite{pereira2018toward} for an example using word embedding vectors. 
 Note that if the embeddings $g$ or $\tilde{g}$ are informed by the specific set of classes in the experiment, this would no longer be a marginal classifier. %EDIT002
 \begin{comment}
 Reviewer 1
@@ -553,13 +553,12 @@ This should be discussed in the context.
   networks, decision trees, and k-nearest neighbors.
 \end{enumerate}
 
-\emph{Notational remark.}  Henceforth, we shall relax the assumption
-that the classifier $H(x)$ is based on a training set.  Instead, we
-assume that there exist score functions $\{M_{Y^{(i)}}\}_{i=1}^k$
-associated with the random label set $\{Y^{(i)}\}_{i=1}^k$, and that
-the score functions $M_{Y^{(i)}}$ are independent of the test set.
-The classifier $H(x)$ is marginal if and only if $M_{Y^{(i)}}$ are
-independent of both $Y^{(j)}$ and $M_{Y^{(j)}}$ for $j \neq i$.
+\emph{Remark.}  Henceforth, we shall relax the assumption
+that the classifier $H(x)$ is based on a training set.  Instead, it is sufficient 
+that the score functions $\{M_{Y^{(i)}}\}_{i=1}^k$ associated with the random label set $\{Y^{(i)}\}_{i=1}^k$
+are independent of the test instances. The classifier $H(x)$ is marginal if and only if $M_{Y^{(i)}}$ are
+independent of both $Y^{(j)}$ and $M_{Y^{(j)}}$ for $j \neq i$. Due to this abstraction, 
+our framework can accommodate scenarios where the classes have differing or stochastically determined number of instances, as long as the number of training instances for different labels are conditionally independent. %EDIT021 %EDIT007
 
 \subsection{Estimation of Average Accuracy}\label{sec:estimation_average_accuracy}
 
@@ -573,7 +572,7 @@ In doing so one could write \hat{AGA} in place of TA_k and ATA_k2 in Eqns 3 and 
 Before tackling extrapolation, it is useful to discuss a simpler task of generalizing accuracy results when the target set is \emph{not} larger than the source set. Suppose we have training and test data for a classification task with $k_1$
 classes.  
 That is, we have a label set $\mathcal{S}_{k_1} =
-\{y^{(i)}\}_{i=1}^{k_1}$ and,
+\{y^{(i)}\}_{i=1}^{k_1}$, and
 we assume that the training data has been used to obtain its associated set of score functions
 $M_{y^{(i)}}$.
 The test set, composed of $(x_1^{(i)},\hdots,
@@ -784,13 +783,11 @@ As noted, I would be in favour of a notation such as GA_k(S), where S = { y_1, .
 
 \end{comment}
 
-For the following analysis, we can relax some of the assumptions made in section 2.  
-We shall abstract away the fact that the model $M_Y$ is trained using training data: for the following theory,  it is sufficient that $M_Y$ is obtained in a way so that it is independent of the other labels, and that it is independent of a test instance $X$ drawn from $F_Y$. %EDIT006
-Due to this abstraction, our framework can also accommodate scenarios where the classes have differing or stochastically determined numbers of training instances: it is not necessary, as in our earlier definitions, to have the same $r_{train}$ instances for every class, as long as the numbers of training instances for the different labels are conditionally independent. %EDIT007
-
-Within this framework, we often consider a random label with
-its associated score function and example vector. Explicitly, this
-sampling can be written:
+%For the following analysis, we can relax some of the assumptions made in Section 2.  
+Recall that for marginal classifiers, the model $M_Y$ should be independent of the other labels and independent of the test instances. 
+We often consider a random label ($Y$) with
+its associated score function ($M_Y$) and an example vector ($X$) drawn from label $Y$. Explicitly, this
+sampling can be written: %EDIT022
 \[Y \sim \pi,\quad M_{Y}|Y \sim \nu_{Y},\quad X|Y \sim F_{Y}. \]
 %\[Y^* \sim \pi,\, M_{Y^*}|Y^* \sim \nu_{Y^*},\, X^*|Y^* \sim F_{Y^*},\, \]
 %\[Y' \sim \pi,\, M_{Y'}|Y' \sim \nu_{Y'}\, X'|Y' \sim F_{Y'},\, \]
@@ -802,7 +799,8 @@ true label and $M_{Y^*}$ its score function.
 The function ${D}$ is related to a favorability
 function. Favorability measures the probability that the score for the
 example $x$ is going to be maximized by a particular score function $m_y$,
-compared to a random competitor $M_{Y'}$.  Formally, we write
+compared to a random competitor $M_{Y'}$. %EDIT024 
+Formally, we write
 \begin{equation}\label{eq:U_function}
 U_{x}(m_{y}) = \Pr[m_{y}(x) > M_{Y'}(x)].
 \end{equation}
@@ -859,6 +857,7 @@ meaning \begin{equation}\label{eq:Uniform} \Pr[U_{x^*}(M_Y) \leq u] = u
 \end{equation}
 for all $u \in [0,1].$
 \end{lemma}
+
 
 \begin{proof} Write $U_{x^*}(M_Y) = \Pr[Z > Z'|Z]$, where $Z = M_Y(x)$ and $Z' =
 M_{Y'}(x)$ for $Y, Y' \stackrel{i.i.d.}{\sim} \pi$.
@@ -1178,7 +1177,7 @@ in smoothing the wrong-class densities. The result of the KDE method therefore d
 and therefore a larger bias after extrapolating. The regression estimator, on the other hand, estimates the average accuracy pooling together information across classes. This might lead to higher variance. 
 
 \item The regression method does not look at the scores directly, only at the rankings. It is therefore blind to monotone transformations 
-on the score functions. The KDE method, on the other hand, is sensitive to the distribution of observe scores. 
+on the score functions. The KDE method, on the other hand, is sensitive to the distribution of observed scores. 
 \end{enumerate}
 
 
@@ -1576,7 +1575,7 @@ distribution, that allows efficient computation of higher order
 moments. Code for the methods and the simulations can be found in \url{https://github.com/snarles/ClassEx}.
 
 There are many choices and simplifying assumptions used in
-the description of the method.  In this discussion, we discuss these
+the description of the method.  Here we discuss these
 decisions and map some alternative models or strategies for future
 work.
 
@@ -1584,6 +1583,11 @@ work.
 %\noindent\textsl{Sampling}
 
 % First, it is easy to relax some of the assumptions used in our work.  One can relax the assumption that there are $r_train$ examples per class with no modification to our theorems, as long as the number of examples per class is conditionally independent of the class labels.  For instance, the number of examples per class could be Poisson($\lambda$) where $\lambda$ depends on the class label.  %EDIT003
+
+Two important practical aspects of real-world problems not currently handled by our analysis are (i) non-uniform prior distributions on the labels,
+and (ii) cost functions other than zero-one loss.  In fact, a theory for arbitrary cost functions can double as a theory for non-uniform priors, because the risk incurred under
+non-uniform priors is equivalent to the risk incurred under a uniform prior but with a weighted cost function.
+Hence, we address both (i) and (ii) in forthcoming work that shows how performance extrapolation is possible under arbitrary cost functions. %EDIT010
 
 Since our analysis is currently restricted to i.i.d. sampling of classes, 
 one direction for future work is to generalize the sampling mechanism,
@@ -1598,13 +1602,7 @@ Finally, note that we assume no knowledge about the new class-set
 except for its size. Better accuracy might be achieved if some partial information 
 is known.
 
-%\noindent\textsl{Arbitrary cost functions}
 
-Also, we only discussed extrapolating the
-classification accuracy--or equivalently, the risk for the zero-one
-cost function.  However, it is possible to extend our analysis to risk
-functions with arbitrary cost functions, which is the subject of
-forthcoming work; this also allows for relaxing the assumption that the test examples are uniformly distributed over the labels. %EDIT010
 
 %\noindent\textsl{Parametric models}
 
