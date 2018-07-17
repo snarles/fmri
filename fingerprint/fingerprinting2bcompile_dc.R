@@ -66,3 +66,28 @@ for (i in 1:9) {
   }
 }
 dev.off()
+
+tab <- tab_not_gsr; tab2 <- tab_gsr
+pdf("fingerprint/cor_not_gsr_vs_gsr.pdf", width = 15, height = 15)
+plot(tab[row(tab) != col(tab)], tab2[row(tab) != col(tab)], xlab = "notGSR", ylab = "GSR")
+abline(0, 1)
+for (i in 1:9) {
+  for (j in 1:9) {
+    if (i != j)
+      text(tab[i,j], tab2[i, j] - 0.005, paste(rownames(tab)[i], "->", rownames(tab)[j]), cex = 0.6)
+  }
+}
+dev.off()
+
+tab <- tab2_not_gsr; tab2 <- tab2_gsr
+pdf("fingerprint/KL_not_gsr_vs_gsr.pdf", width = 15, height = 15)
+plot(tab[row(tab) != col(tab)], tab2[row(tab) != col(tab)], xlab = "notGSR", ylab = "GSR")
+abline(0, 1)
+for (i in 1:9) {
+  for (j in 1:9) {
+    if (i != j)
+      text(tab[i,j], tab2[i, j] - 0.005, paste(rownames(tab)[i], "->", rownames(tab)[j]), cex = 0.6)
+  }
+}
+dev.off()
+
