@@ -349,7 +349,7 @@ For now, we can also assume that the training set is
 obtained by sampling $r_{train}$ observations $X_{\ell, train}^{(i)}$
 i.i.d. from $F_{Y^{(i)}}$ for $\ell = 1,\hdots, r_{train}$ and $i =
 1,\hdots, k$.
-However, later on we will relax these assumptions on the sampling of the training sets,
+However, later we will relax these assumptions on the sampling of the training sets,
 so that we can accommodate classes have differing or stochastically determined number of instances, as long as the number of training instances for different labels are conditionally independent. %EDIT021 %EDIT007
 
 Recalling the face recognition example, 
@@ -366,7 +366,7 @@ highest score.  That is, there exist real-valued \emph{score
   functions} $m_{y^{(i)}}(x)$ for each label $y^{(i)} \in
 \mathcal{S}$.  
 Here we used the lower-case notation $y^{(i)}$ for the labels,
-since we are treating them as fixed for now. %EDIT014
+treating them as fixed for now. %EDIT014
 Since the classifier is allowed to depend on the
 training data, it is convenient to view it (and its associated score
 functions) as random.  We write $H(x)$ when we wish to work with the
@@ -403,9 +403,8 @@ and could be seen as a kind of balanced error).
 \end{comment}
 
 %post-FP
-However, in the case of \emph{randomized} classification, as is the case in face recognition (with faces drawn from a larger population) or a large multi-class problem where only an arbitrary subset of labels has been collected, it would be appropriate to model
-the labels $\{Y^{(i)}\}_{i=1}^k$ and associated score
-functions as being randomly sampled from their respective distributions.
+Often, however, it is appropriate to model the labels $\{Y^{(i)}\}_{i=1}^k$
+ as a random sample from a distribution. Examples for such \emph{randomized classification} problems include face recognition, where faces are drawn from a larger population, and large multi-class problem where only an arbitrary subset of labels have been collected. The score functions in this model are random because they depend on both the label and the training set.
 %EDIT023
 
 %post-FP
@@ -458,7 +457,6 @@ drawn from the same distribution $\pi$.
 The theoretical analysis of the average generalization accuracy is made much simpler
 if we can assume that the learning of the scoring functions $M_{Y^{(i)}}$ occurs independently
 for each labels--that is, there is no information shared between classes.
-
 For example, if there exists some function $g$ such that
 \[M_{y^{(i)}}(x) = g(x; y^{(i)},(X_{1, train}^{(i)},...,X_{r_{train}, train}^{(i)})),\]
 the $H$ is a marginal classifier
@@ -1157,7 +1155,7 @@ Accuracy for each example $\mathrm{Acc}_2(x_\ell^{(i)})$ is estimated in two ste
 \begin{enumerate}
 \item The density of the wrong-class scores is estimated by smoothing the observed scores with a kernel function $K(\cdot,\cdot)$ and bandwidth $h$
 \[\hat{f}_\ell^{(i)}(m) = \frac{1}{k_1-1} \sum_{j\neq i} K_h(m_\ell^{(i,j)}, m).\]
-\item Integrate the estimated density below the observed true value $m_\ell^{(i,i)}$:
+\item The density $\hat{f}_\ell^{(i)}(m)$ is integrated below the observed true value $m_\ell^{(i,i)}$:
 \[a_\ell^{(i)} = \widehat{\mathrm{Acc}}_2(x_\ell^{(i)}) = \int_{-\infty}^{m_\ell^{(i,i)}} \hat{f}_\ell^{(i)}(m)dm.\]
 \end{enumerate}
 The smoothed density usually over-estimates the size of the right-tail of wrong class distribution compared
@@ -1165,7 +1163,7 @@ to the observed proportion of errors, biasing downward the accuracy of each indi
 
 Briefly, let us point out several key differences between our regression method and Kay's KDE method: 
 \begin{enumerate}
-\item This KDE method balances two biases: an upward bias in exponentiating the estimated accuracy, and a downward bias 
+\item The KDE method balances two biases: an upward bias in exponentiating the estimated accuracy, and a downward bias 
 in smoothing the wrong-class densities. 
 The upward bias occurs because even if $\widehat{\mathrm{Acc}}_2(x_\ell^{(i)})$ is unbiased,
 $\widehat{\mathrm{Acc}}_2(x_\ell^{(i)})^k$ will \emph{not} be unbiased for  $\mathrm{Acc}_2(x_\ell^{(i)})^k$, and will typically be larger.
@@ -1201,7 +1199,7 @@ is given a single training instance per class.
 %the noise level, and hence the true average accuracy.
 
 For the estimation, we use the model selection procedure described
-in section \ref{sec:modelselection} to select the parameter $h$ of the
+in Section \ref{sec:modelselection} to select the parameter $h$ of the
 ``radial basis''
 \[
 h_\ell(u) = \Phi\left(\frac{\Phi^{-1}(u) - t_\ell}{h}\right).
@@ -1279,7 +1277,7 @@ maximum RMSE of $0.032\pm0.001$ ($k_1 = 500$) to $0.009 \pm 0.000$ ($k_1 = 5000$
 also benefiting from at least a 1.8-fold reduction in RMSE when going from
 the smaller problem to the larger problem in the other three cases.
 
-The kernel-density method produces comparable results, but is seen to depend strongly on the choice of bandwidth selection: KDE-UCV and KDE-BCV show very different performance profiles, although they differ only in the method used to choose the bandwidth.  This matches our analysis in section \ref{sec:compare_kay} (item 1), where we noted the sensitivity of the tail densities to the bandwidth.
+The kernel-density method produces comparable results, but is seen to depend strongly on the choice of bandwidth selection: KDE-UCV and KDE-BCV show very different performance profiles, although they differ only in the method used to choose the bandwidth.  This matches our analysis in Section \ref{sec:compare_kay} (item 1), where we noted the sensitivity of the tail densities to the bandwidth.
 Also, the KDE methods show significant estimation bias, as can be seen from Figure \ref{fig:sim_study_bias}.  
 As we discussed in \ref{sec:compare_kay} (item 1), this is due to the fact that
 the KDE method ignores the bias introduced by exponentiation.
@@ -1555,7 +1553,7 @@ $k_1$ & $k_2$ & Classifier & True & ClassExReg & KDE-BCV & KDE-UCV \\ \hline
 \caption{\textbf{Telugu OCR extrapolated accuracies}: Extrapolating from $k_1$ to $k_2$ classes in Telugu OCR for three different classifiers: logistic regression, support vector machine, and deep convolutional network}\label{tab:tel_accuracy}
 \end{table}
 
-These empirical results indicate that in comparison to the KDE methods of Kay et al., ClassExReg has lower bias and better performance at small $k$ (up to 500 classes), while the KDE methods start to achieve comparable results to ClassExReg when $k$ is around 5,000 or more classes.  This matches the theoretical intuition we developed in section \ref{sec:compare_kay} (item 2): since the Kay et al. method works by estimating each the favorability of each example separately, that it requires more data (meaning more classes in the training set) to achieve robust estimation.  %EDIT016
+These empirical results indicate that in comparison to the KDE methods of Kay et al., ClassExReg has lower bias and better performance at small $k$ (up to 500 classes), while the KDE methods start to achieve comparable results to ClassExReg when $k$ is around 5,000 or more classes.  This matches the theoretical intuition we developed in Section \ref{sec:compare_kay} (item 2): since the Kay et al. method works by estimating each the favorability of each example separately, that it requires more data (meaning more classes in the training set) to achieve robust estimation.  %EDIT016
 
 \section{Discussion}
 \label{sec:discussion}
