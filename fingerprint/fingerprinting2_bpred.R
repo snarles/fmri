@@ -1,30 +1,12 @@
 library(R.matlab)
 library(pracma)
 library(parallel)
-mcc <- 20
+mcc <- 7
 
-fcs1 = readMat(gzfile("/data/HCP_preproc/fingerprinting/Results/FL_Matrices/All_Sub_REST1_FL_GSR.mat.gz"))
-fcs2 = readMat(gzfile("/data/HCP_preproc/fingerprinting/Results/FL_Matrices/All_Sub_REST2_FL_GSR.mat.gz"))
-
-#fcs1 = readMat("/data/HCP_preproc/fingerprinting/Results/All_Sub_REST1_errts.mat")
-#fcs2 = readMat("/data/HCP_preproc/fingerprinting/Results/All_Sub_REST2_errts.mat")
-
-#fcs1 = readMat("/data/HCP_preproc/fingerprinting/Results/All_Sub_REST1_errts.mat")
-#fcs2 = readMat("/data/HCP_preproc/fingerprinting/Results/All_Sub_REST1_dropout_errts.mat")
-
-#subject 332 for motor
+fcs1 = readMat(gzfile("fingerprint/fingerprint_data/FL_Matrices/All_Sub_REST1_FL_GSR.mat.gz"))
+fcs2 = readMat(gzfile("fingerprint/fingerprint_data/FL_Matrices/All_Sub_REST1_FL_GSR.mat.gz"))
 
 dim(fcs2[[1]])
-
-#fcs1 = readMat("~/Desktop/Results/All_Sub_REST1_TP.mat")
-#fcs2 = readMat("~/Desktop/Results/All_Sub_REST2_TP.mat")
-
-#fcs1 = readMat("~/Desktop/Results/All_Sub_Rest1.mat")
-#fcs2 = readMat("~/Desktop/Results/All_Sub_Rest2.mat")
-
-#fc = fcs1[[1]][1,,]
-#hist(fc[upper.tri(fc)])
-#upper.tri(matrix(1:4, 2, 2))
 
 fc_flatten <- function(arr) {
   apply(arr, 1, function(a) {
@@ -33,16 +15,12 @@ fc_flatten <- function(arr) {
 }
 
 nsubs <- nrow(fcs1[[1]])
-## shuffle subjects
-shufind <- sample(nsubs, nsubs, replace = FALSE)
 
 fcz1 <- fc_flatten(fcs1[[1]])
 fcz2 <- fc_flatten(fcs2[[1]])
 
-fscores <- read.csv('/data/HCP_preproc/fingerprinting/Results/PMAT24_A_CR_338', header = FALSE)
+fscores <- read.csv('fingerprint/fingerprint_data/PMAT24_A_CR_338', header = FALSE)
 y <- fscores[[1]]
-
-#r12 <- atanh(cor(fcz1, fcz2))
 
 r12 <- cor(fcz1, fcz2)
 
@@ -52,15 +30,9 @@ r12 <- cor(fcz1, fcz2)
 ####
 
 
-#mats1 <- fcs1[[1]]
 mats2 <- fcs2[[1]]
 mats1 <- fcs1[[1]]
 
-
-#nsubs1 <- dim(mats1)[1]
-#nsubs1
-#nsubs2 <- dim(mats2)[1]
-#nsubs2
 
 nsubs1 <- 338
 nsubs2 <- 338
