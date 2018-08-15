@@ -1140,7 +1140,7 @@ to the observed proportion of errors, biasing downward the accuracy of each indi
 
 Briefly, let us point out several key differences between our regression method and Kay's KDE method: 
 \begin{enumerate}
-\item The KDE method balances two biases: an upward bias in exponentiating the estimated accuracy, and a downward bias 
+\item[i.] The KDE method balances two biases: an upward bias in exponentiating the estimated accuracy, and a downward bias 
 in smoothing the wrong-class densities. 
 The upward bias occurs because even if $\widehat{\mathrm{Acc}}_2(x_\ell^{(i)})$ is unbiased,
 $\widehat{\mathrm{Acc}}_2(x_\ell^{(i)})^k$ will \emph{not} be unbiased for  $\mathrm{Acc}_2(x_\ell^{(i)})^k$, and will typically be larger.
@@ -1148,10 +1148,10 @@ The bias becomes more prominent for larger $k$, but decreases as the true accura
 The result of the KDE method therefore depends non-trivially on the choice of smoothing bandwidth used in the density estimation step. 
 (Without smoothing, however, any example that was correctly estimated in the smaller set would have $\widehat{\mathrm{Acc}}_K = 1$). The method relies on smoothing of each class to generate the tail density that exceeds $m_\ell^{(i,i)}$, and therefore it is highly dependent on the choice of kernel bandwidth. 
 
-\item The KDE method estimates the accuracy separately for every class. When the source-set size $k$ is small, this might lead to less stable estimation for each class 
+\item[ii.] The KDE method estimates the accuracy separately for every class. When the source-set size $k$ is small, this might lead to less stable estimation for each class 
 and therefore a larger bias after extrapolating. The regression estimator, on the other hand, estimates the average accuracy pooling together information across classes. This might lead to higher variance. 
 
-\item The regression method does not look at the scores directly, only at the rankings. It is therefore blind to monotone transformations 
+\item[iii.] The regression method does not look at the scores directly, only at the rankings. It is therefore blind to monotone transformations 
 on the score functions. The KDE method, on the other hand, is sensitive to the distribution of observed scores. 
 \end{enumerate}
 
@@ -1254,9 +1254,9 @@ maximum RMSE of $0.032\pm0.001$ ($k_1 = 500$) to $0.009 \pm 0.000$ ($k_1 = 5000$
 also benefiting from at least a 1.8-fold reduction in RMSE when going from
 the smaller problem to the larger problem in the other three cases.
 
-The kernel-density method produces comparable results, but is seen to depend strongly on the choice of bandwidth selection: KDE-UCV and KDE-BCV show very different performance profiles, although they differ only in the method used to choose the bandwidth.  This matches our analysis in Section \ref{sec:KDEcomparison} (item 1), where we noted the sensitivity of the tail densities to the bandwidth.
+The kernel-density method produces comparable results, but is seen to depend strongly on the choice of bandwidth selection: KDE-UCV and KDE-BCV show very different performance profiles, although they differ only in the method used to choose the bandwidth.  This matches our analysis in Section \ref{sec:KDEcomparison} (item i), where we noted the sensitivity of the tail densities to the bandwidth.
 Also, the KDE methods show significant estimation bias, as can be seen from Figure \ref{fig:sim_study_bias}.  
-As we discussed in \ref{sec:KDEcomparison} (item 1), this is due to the fact that
+As we discussed in \ref{sec:KDEcomparison} (item i), this is due to the fact that
 the KDE method ignores the bias introduced by exponentiation.
 Meanwhile, ClassExReg avoids this source of
 bias by estimating the $(k-1)$st moment of $D(u)$ directly.  As we see
@@ -1530,7 +1530,7 @@ $k_1$ & $k_2$ & Classifier & True & ClassExReg & KDE-BCV & KDE-UCV \\ \hline
 \caption{\textbf{Telugu OCR extrapolated accuracies}: Extrapolating from $k_1$ to $k_2$ classes in Telugu OCR for three different classifiers: logistic regression, support vector machine, and deep convolutional network}\label{tab:tel_accuracy}
 \end{table}
 
-These empirical results indicate that in comparison to the KDE methods of Kay et al., ClassExReg has lower bias and better performance at small $k$ (up to 500 classes), while the KDE methods start to achieve comparable results to ClassExReg when $k$ is around 5,000 or more classes.  This matches the theoretical intuition we developed in Section \ref{sec:KDEcomparison} (item 2): since the Kay et al. method works by estimating each the favorability of each example separately, that it requires more data (meaning more classes in the training set) to achieve robust estimation.  %EDIT016
+These empirical results indicate that in comparison to the KDE methods of Kay et al., ClassExReg has lower bias and better performance at small $k$ (up to 500 classes), while the KDE methods start to achieve comparable results to ClassExReg when $k$ is around 5,000 or more classes.  This matches the theoretical intuition we developed in Section \ref{sec:KDEcomparison} (item ii): since the Kay et al. method works by estimating each the favorability of each example separately, that it requires more data (meaning more classes in the training set) to achieve robust estimation.  %EDIT016
 
 \section{Discussion}
 \label{sec:discussion}
