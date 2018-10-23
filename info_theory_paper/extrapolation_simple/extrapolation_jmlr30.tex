@@ -27,6 +27,7 @@
 \usepackage{hyperref}
 \AtAppendix{\counterwithin{lemma}{section}}
 \usepackage{comment}
+\usepackage{lastpage}
 %\usepackage[comma,authoryear]{natbib}
 
 %\addbibresource{example.bib} % The filename of the bibliography
@@ -62,7 +63,7 @@
 
 % Heading arguments are {volume}{year}{pages}{submitted}{published}{author-full-names}
 
-\jmlrheading{0}{00}{0-00}{0/00}{00/00}{zheng00}{Charles Zheng and Rakesh Achanta and Yuval Benjamini}
+\jmlrheading{19}{2018}{1-\pageref{LastPage}]}{11/17; Revised 8/18}{10/18}{17-701}{Charles Zheng and Rakesh Achanta and Yuval Benjamini}
 
 % Short headings should be running head and authors last names
 
@@ -73,7 +74,7 @@
 
 \title{Extrapolating Expected Accuracies for Large Multi-Class Problems}
 
-\editor{}
+\editor{Christoph Lampert}
 
 \author{\name Charles Zheng \email charles.y.zheng@gmail.com \\
        \addr Section on Functional Imaging Methods\\
@@ -93,7 +94,7 @@
 \maketitle
 
 \begin{abstract}%   <- trailing '%' for backward compatibility of .sty file
-The difficulty of multi-class classification generally increases with the number of classes. Using data for a small set of the classes, can we predict how well the classifier scales as the number of classes increases? We propose a framework for studying this question, assuming that classes in both sets are sampled from the same population and that the classifier is based on independently learned scoring functions. Under this framework, we can express the classification accuracy on a set of $k$ classes as the $k − 1$st moment of a discriminability function; the discriminability function itself does not depend on $k$. We leverage this result to develop a non-parametric regression estimator for the discriminability function, which can extrapolate accuracy results to larger unobserved sets. We also formalize an alternative approach that extrapolates accuracy separately for each class, and identify tradeoffs between the two methods. We show that both methods can accurately predict classifier performance on label sets up to ten times the size of the original set, both in simulations as well as in realistic face recognition or character recognition tasks.
+The difficulty of multi-class classification generally increases with the number of classes. Using data for a small set of the classes, can we predict how well the classifier scales as the number of classes increases? We propose a framework for studying this question, assuming that classes in both sets are sampled from the same population and that the classifier is based on independently learned scoring functions. Under this framework, we can express the classification accuracy on a set of $k$ classes as the $(k - 1)$st moment of a discriminability function; the discriminability function itself does not depend on $k$. We leverage this result to develop a non-parametric regression estimator for the discriminability function, which can extrapolate accuracy results to larger unobserved sets. We also formalize an alternative approach that extrapolates accuracy separately for each class, and identify tradeoffs between the two methods. We show that both methods can accurately predict classifier performance on label sets up to ten times the size of the original set, both in simulations as well as in realistic face recognition or character recognition tasks.
 \end{abstract}
 
 \begin{keywords}
@@ -200,8 +201,8 @@ $\mathcal{S}_{k_2}$ are samples consisting of independent and identically distri
 labels from a population (or prior distribution) $ \pi$, which is
 defined on the label space $\mathcal{Y}$. We have no constraints on the dependence between $\mathcal{S}_{k_1}$ and
 $\mathcal{S}_{k_2}$: for example, $\mathcal{S}_{k_1}$ may be independent of
-$\mathcal{S}_{k_2}$, or alternatively $\mathcal{S}_{k_1}$ may be a subsample of $\mathcal{S}_{k_2}$ (the latter case is used in our experiments in Section \ref{sec:extrapolation_example}).%EDIT018
-The sampling assumption is an approximate characterization of the label selection process, which is often at least partially manual.
+$\mathcal{S}_{k_2}$, or alternatively $\mathcal{S}_{k_1}$ may be a subsample of $\mathcal{S}_{k_2}$ (the latter case is used in our experiments in Section \ref{sec:extrapolation_example}). %EDIT018
+ The sampling assumption is an approximate characterization of the label selection process, which is often at least partially manual.
 Nevertheless, it provides the exact properties we need without having to derive specialized metrics of how similar $\mathcal{S}_{k_2}$ is to $\mathcal{S}_{k_1}$.
 This simplifies the theory, and demonstrates that in a very general setting, extrapolation is possible.
 We also make the assumption that the classifiers train a
@@ -248,7 +249,7 @@ discuss related work.  The framework of randomized classification is
 introduced in Section \ref{sec:rc_motivation}, and there we also
 introduce a toy example which is revisited throughout the
 paper. Section \ref{sec:extrapolation} develops our theory of
-extrapolation, and Section \ref{sec:extrapolation_estimation} we
+extrapolation, and in Section \ref{sec:extrapolation_estimation} we
 suggest an estimation method. We evaluate our method using simulations in Section 4.
 % on a facial recognition and optical character recognition problems.
 In Section
@@ -627,7 +628,7 @@ score function
 % M_{y^{(i)}}(x) = \log(p(x|y^{(i)})) = -\frac{(x - \rho y^{(i)})^2}{2(1-\rho^2)}  + \text{const.}
 % \]
 \[
-M_y(x) = \log(p(x|y) = -\frac{(x - \rho y)^2}{2(1-\rho^2)}  + \text{const.}
+M_y(x) = \log(p(x|y)) = -\frac{(x - \rho y)^2}{2(1-\rho^2)}  + \text{const.}
 \] %EDIT001
 
 \begin{comment}
@@ -819,7 +820,7 @@ The incorrect-label favorability can be written explicitly as
 \begin{equation} %EDIT015
 U_{x^*}(M_Y) = \Pr[M_{Y}(x^*) > M_{Y'}(x^*)|M_{Y}(x^*)].
 \end{equation}
-Note that $M_Y$ and $M_{Y'}$ are identically distributed, and are both
+Note that $M_Y$ and $M_{Y'}$ are identically distributed, and both
 are unrelated to $x^*$ that is fixed. This leads to the following
 result:
 \begin{lemma}\label{lemma:U_function}
@@ -1187,7 +1188,7 @@ constant element to the basis, equivalent to adding an intercept to
 the linear model \eqref{eq:linearKu}. 
 
 The rationale behind the radial basis is to model the density of
-$\Phi^{-1}(U^*)$ as a mixture of gaussian kernels with variance $h^2$.
+$\Phi^{-1}(U^*)$ as a mixture of Gaussian kernels with variance $h^2$.
 To control overfitting, the knots are separated by at least a distance
 of $h/2$, and the largest knots have absolute value $\Phi^{-1}(1 -
 \frac{1}{rk_1^2}).$ The size of the maximum knot is set this way since
@@ -1237,7 +1238,7 @@ $k_1$ & $k_2$ & ClassExReg & KDE-BCV & KDE-UCV \\\hline
 \end{tabular}
 \caption{Maximum RMSE (se) across all signal-to-noise-levels in
   predicting $\text{TA}_{k_2}$ from $k_1$ classes in multivariate
-  gaussian simulation.  Standard errors were computed by nesting the
+  Gaussian simulation.  Standard errors were computed by nesting the
   maximum operation within the bootstrap, to properly account for the variance of a maximum of estimated means.}\label{tab:sim_max_error}
 \end{table}
 
