@@ -63,7 +63,7 @@
 
 % Heading arguments are {volume}{year}{pages}{submitted}{published}{author-full-names}
 
-\jmlrheading{19}{2018}{1-\pageref{LastPage}]}{11/17; Revised 8/18}{10/18}{17-701}{Charles Zheng and Rakesh Achanta and Yuval Benjamini}
+\jmlrheading{19}{2018}{1-\pageref{LastPage}]}{11/17; Revised 8/18}{10/18}{17-701}{Charles Zheng, Rakesh Achanta, and Yuval Benjamini}
 
 % Short headings should be running head and authors last names
 
@@ -98,7 +98,7 @@ The difficulty of multi-class classification generally increases with the number
 \end{abstract}
 
 \begin{keywords}
-Multiclass problems, face recognition, object recognition, transfer learning, nonparametric models
+Multi-class problems, face recognition, object recognition, transfer learning, nonparametric models
 \end{keywords}
 
 \begin{comment}
@@ -284,7 +284,7 @@ be used to improve performance for general classifiers, but doesn't apply for di
 
 The theoretical framework we adopt is one where there exists a family
 of classification problems with increasing number of classes. This
-framework can be traced back to \cite{Shannon1948}, who considered the error rate of a random codebook, which is a special case of randomized classification. More recently, a number of authors have considered the problem of high-dimensional feature selection for multiclass
+framework can be traced back to \cite{Shannon1948}, who considered the error rate of a random codebook, which is a special case of randomized classification. More recently, a number of authors have considered the problem of high-dimensional feature selection for multi-class
 classification with a large number of classes \citep{pan2016ultrahigh,
   abramovich2015feature, davis2011bayesian}.  All of these works
 assume specific distributional models for classification compared to
@@ -358,7 +358,7 @@ For a fixed instance of the classification task with labels
 $\mathcal{S} = \{y^{(i)}\}_{i=1}^k$ and associated score functions
 $\{m_{y^{(i)}}\}_{i=1}^k$, recall the definition of the $k$-class
 generalization error \eqref{eq:ga_k}.  
-We will use the assumption that the test labels are uniformly distributed\footnote{In Section \ref{sec:discussion}, we discuss extensions of our framework that can accommodate the case that the test labels are not uniformly drawn from $\mathcal{S}$, i.e. that one has a non-uniform prior distribution over test labels.} over $\mathcal{S}$, which makes $\text{GA}_k(h, \mathcal{S})$ a \emph{balanced accuracy} which equally weights the accuracies of the individual classes.
+We will use the assumption that the test labels are uniformly distributed\footnote{In Section \ref{sec:discussion}, we discuss extensions of our framework that can accommodate the case that the test labels are not uniformly drawn from $\mathcal{S}$, i.e. that one has a non-uniform prior distribution over test labels.} over $\mathcal{S}$, which makes $\text{GA}_k(h, \mathcal{S})$ a \emph{balanced accuracy}, which equally weights the accuracies of the individual classes.
 Assuming that there are no ties, it can be written in terms of score functions as
 \[
 \text{GA}_k(h, \mathcal{S}) = \frac{1}{k} \sum_{i=1}^k  \Pr[m_{y^{(i)}}(X^{(i)}) = \max_j
@@ -1024,8 +1024,7 @@ $\text{AGA}_k$ is the function ${D}$.  We adopt a linear model
 {D}(u) = \sum_{\ell = 1}^m \beta_\ell h_\ell(u),
 \end{equation}
 where $h_\ell(u)$ are known basis functions, and $\beta_\ell$ are the
-linear coefficients to be estimated.  Since our proposed method is
-based on the linearity assumption \eqref{eq:linearKu}, we refer to it as ClassExReg,
+linear coefficients to be estimated.  The linearity assumption \eqref{eq:linearKu} means that linear regression can be used to estimate the average accuracy curve.  This the the idea behind our proposed method ClassExReg,
 meaning \emph{Classification Extrapolation using Regression}.
 
 Conveniently, $\text{AGA}_k$ can also be expressed in terms of the $\beta_\ell$ coefficients.
