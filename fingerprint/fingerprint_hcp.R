@@ -47,6 +47,9 @@ est_gsr_kl <- numeric()
 est_ngsr_kl <- numeric()
 est_gsr_cor <- numeric()
 est_ngsr_cor <- numeric()
+acc_gsr_cor <- numeric()
+acc_ngsr_cor <- numeric()
+
 
 nreps <- 100
 nsubsample <- 20
@@ -61,13 +64,30 @@ for (i in 1:nreps) {
   set.seed(i)
   inds <- sample(nsubs, nsubsample)
   all_inds[i, ] <- inds
-  est_gsr_kl[i] <- mi_est_pipeline(gsr_kl[inds, inds])[[variable]]
-  est_ngsr_kl[i] <- mi_est_pipeline(ngsr_kl[inds, inds])[[variable]]
-  est_gsr_cor[i] <- mi_est_pipeline(gsr_cor[inds, inds])[[variable]]
-  est_ngsr_cor[i] <- mi_est_pipeline(ngsr_cor[inds, inds])[[variable]]
+  # est_gsr_kl[i] <- mi_est_pipeline(gsr_kl[inds, inds])[[variable]]
+  # est_ngsr_kl[i] <- mi_est_pipeline(ngsr_kl[inds, inds])[[variable]]
+  # est_gsr_cor[i] <- mi_est_pipeline(gsr_cor[inds, inds])[[variable]]
+  # est_ngsr_cor[i] <- mi_est_pipeline(ngsr_cor[inds, inds])[[variable]]
+  est_gsr_cor[i] <- mi_est_pipeline(gsr_cor[inds, inds])$mi_est
+  est_ngsr_cor[i] <- mi_est_pipeline(ngsr_cor[inds, inds])$mi_est
+  acc_gsr_cor[i] <- mi_est_pipeline(gsr_cor[inds, inds])$empirical_acc
+  acc_ngsr_cor[i] <- mi_est_pipeline(ngsr_cor[inds, inds])$empirical_acc
 }
 
-results <- cbind(est_gsr_kl, est_ngsr_kl, est_gsr_cor, est_ngsr_cor)
-hist(results[,1] - results[,2])
+#results <- cbind(est_gsr_kl, est_ngsr_kl, est_gsr_cor, est_ngsr_cor)
+#results <- cbind(acc_gsr_cor, acc_ngsr_cor, est_gsr_cor, est_ngsr_cor)
+plot(jitter(acc_gsr_cor, 0.4), jitter(acc_ngsr_cor, 0.4), main = "Accuracy: GSR vs. no GSR")
+abline(0, 1)
+
+plot(est_gsr_cor, est_ngsr_cor, main = "I(X;Y): GSR vs. no GSR")
+abline(0, 1)
+
+
+plot(acc_gsr_cor - acc_ngsr_cor, est_gsr_cor - est_ngsr_cor, main = "delta I(X;Y) vs delta Acc")
+abline(0, 0)
+abline(v=0)
+
+
+
 hist(results[,3] - results[,4])
 
