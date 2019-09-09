@@ -89,5 +89,6 @@ abline(v=0)
 
 
 
-hist(results[,3] - results[,4])
-
+table(acc_gsr_cor - acc_ngsr_cor)
+table(sign(est_gsr_cor - est_ngsr_cor))
+table(acc_gsr_cor - acc_ngsr_cor, sign(est_gsr_cor - est_ngsr_cor ))
