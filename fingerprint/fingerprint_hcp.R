@@ -44,10 +44,10 @@ for (i in 1:nreps) {
   # est_ngsr_kl[i] <- mi_est_pipeline(ngsr_kl[inds, inds])[[variable]]
   # est_gsr_cor[i] <- mi_est_pipeline(gsr_cor[inds, inds])[[variable]]
   # est_ngsr_cor[i] <- mi_est_pipeline(ngsr_cor[inds, inds])[[variable]]
-  est_gsr_cor[i] <- mi_est_pipeline(gsr_cor[inds, inds])$mi_est
-  est_ngsr_cor[i] <- mi_est_pipeline(ngsr_cor[inds, inds])$mi_est
-  acc_gsr_cor[i] <- mi_est_pipeline(gsr_cor[inds, inds])$empirical_acc
-  acc_ngsr_cor[i] <- mi_est_pipeline(ngsr_cor[inds, inds])$empirical_acc
+  est_gsr_cor[i] <- mi_est_pipeline2(gsr_cor[inds, inds])$mi_est
+  est_ngsr_cor[i] <- mi_est_pipeline2(ngsr_cor[inds, inds])$mi_est
+  acc_gsr_cor[i] <- mi_est_pipeline2(gsr_cor[inds, inds])$empirical_acc
+  acc_ngsr_cor[i] <- mi_est_pipeline2(ngsr_cor[inds, inds])$empirical_acc
 }
 
 #results <- cbind(est_gsr_kl, est_ngsr_kl, est_gsr_cor, est_ngsr_cor)
