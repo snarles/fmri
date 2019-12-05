@@ -114,4 +114,20 @@ run_hcube_experiment <- function(base, order, expand, n, mc.reps = 10000) {
 
 # run_simplex_experiment(K=200, expand=15, n=30)
 
-run_hcube_experiment(base=6, order=4, expand=50, n=150)
+run_hcube_experiment(base=7, order=3, expand=50, n=20)
+
+###
+## plots
+###
+set.seed(0)
+
+n0 <- 10
+bases <- rep(3:7, each = 50)
+results <- sapply(bases, function(b) {
+  res <- run_hcube_experiment(base=b, order=3, expand=50, n=n0)
+  c(res$mi_est, res$mi_true)
+})
+plot(bases, results[1, ], ylab=expression(paste(hat(I), "(X; Y)")), xlab='L', main=paste0('Simulation (n=', n0, ')'), col = 'blue')
+medians <- sapply(unique(bases), function(x) median(results[1, bases == x]))
+lines(unique(bases), medians, col = 'blue', lwd = 2)
+lines(bases, results[2, ], col = 'black', lwd = 2)

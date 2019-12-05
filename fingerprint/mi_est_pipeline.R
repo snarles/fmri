@@ -36,7 +36,7 @@ mi_est_pipeline2 <- function(pmat) {
 
   ## get MI estimate
   #mi_est <- Ihat_LI(1-acc_at_k, kchosen)
-  mi_grid <- log(K) * (1:400)/200
+  mi_grid <- log(K) * (1:800)/200
   pi_ests <- piK(sqrt(2 * mi_grid), K)
   mi_est <- max(mi_grid[(1-pi_ests) < accs_kay ])
   
