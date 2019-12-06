@@ -47,20 +47,20 @@ mi_simulation <- function(K, d, p, sigma2) {
 }
 
 
-nreps <- 20
+nreps <- 40
 dpars <- c(5, 10, 15, 20, 25, 30, 35, 40, 45)
-exp_params <- cbind(80, rep(dpars, each = nreps), 100, 0.7)
+exp_params <- cbind(80, rep(dpars, each = nreps), 100, 0.5)
 results <- apply(exp_params, 1, function(x) mi_simulation(x[1], x[2], x[3], x[4]))
 saveRDS(results, 'fingerprint/mi_xx_to_xy_sim.rds')
 
 #results
-results2 <- array(results, dim=c(4, nreps, len(dpars)))
+results2 <- array(results, dim=c(4, nreps, length(dpars)))
 meds <- apply(results2, c(1, 3), median)
-plot(results[3, ], results[2, ], ylim = c(0, 20), xlab='true I(X; Y)', ylab='est', col = 'red')
+plot(results[3, ], results[2, ], ylim = c(0, 30), xlab='true I(X; Y)', ylab='est', col = 'red')
 points(results[3, ], results[1, ], col='blue')
 lines(meds[3, ], meds[2, ], col = 'red')
 lines(meds[3, ], meds[1, ], col = 'blue')
 abline(0, 1)
 legend(3, 20, c(expression(hat(I)(X,Y)), "median", expression(hat(I)(X, X^I)), "median"), 
        col=c('red', 'red', 'blue', 'blue'), pch=c('o', NA, 'o', NA), lty=c(NA, 1, NA, 1))
-help(legend)
+
