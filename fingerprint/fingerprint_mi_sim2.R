@@ -8,10 +8,10 @@ library(lineId) ## use devtools::install('lineId')
 source('fingerprint/mi_est_pipeline.R')
 
 
-K <- 50
-d <- 18
-p <- 35
-sigma2 <- 0.7
+K <- 80
+d <- 10
+p <- 100
+sigma2 <- 0.4
 
 xs <- randn(K, d)
 amat <- randn(d, p)
